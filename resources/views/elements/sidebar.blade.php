@@ -31,16 +31,28 @@
                     <span class="pcoded-mcaret"></span>
                 </a>
                 <ul class="pcoded-submenu">
-                    {{-- <li class="{{request()->routeIs('branches.*') ? "active" : null}}"><a href="{{ route('branches.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Branches </span><span class="pcoded-mcaret"></span></a></li> --}}
-                    {{-- <li class="{{request()->routeIs('apsections.*') ? "active" : null}}"><a href="{{ route('apsections.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Sections </span><span class="pcoded-mcaret"></span></a></li> --}}
-                    {{-- <li class="{{request()->routeIs('teams.*') ? "active" : null}}"><a href="{{ route('teams.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Teams </span><span class="pcoded-mcaret"></span></a></li> --}}
-                    <li class="pcoded-hasmenu {{ request()->routeIs('teams.*') ? 'active pcoded-trigger' : null }}">
-                        <a href="javascript:void(0)">
-                            <span class="pcoded-micon"><i class="far fa-building"></i><b>BC</b></span>
-                            <span class="pcoded-mtext">Team Details</span>
+                    <li class="{{ request()->routeIs('departments.*') ? 'active' : null }}">
+                        <a href="{{ route('departments.index') }}">
+                            <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
+                            <span class="pcoded-mtext"> Departments </span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
+                    <li class="{{ request()->routeIs('designations.*') ? 'active' : null }}">
+                        <a href="{{ route('designations.index') }}">
+                            <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
+                            <span class="pcoded-mtext"> Designations </span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+                    <li class="{{ request()->routeIs('employees.*') ? 'active' : null }}">
+                        <a href="javascript:void(0)">
+                            <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
+                            <span class="pcoded-mtext"> Employee </span>
+                            <span class="pcoded-mcaret"></span>
+                        </a>
+                    </li>
+
 {{--                    <li class="{{ request()->routeIs('departments.*') ? 'active' : null }}"><a href="{{ route('departments.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Departments </span><span class="pcoded-mcaret"></span></a></li>--}}
 {{--                    <li class="{{ request()->routeIs('designations.*') ? 'active' : null }}"><a href="{{ route('designations.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Designations </span><span class="pcoded-mcaret"></span></a></li>--}}
 {{--                    <li class="{{ request()->routeIs('employees.*') ? 'active' : null }}"><a href="{{ route('employees.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Employee </span><span class="pcoded-mcaret"></span></a></li>--}}

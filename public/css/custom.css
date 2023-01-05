@@ -177,43 +177,43 @@ input[type=number] {
 
 
 .pcoded .pcoded-header[header-theme="themelight5"] {
-    background: linear-gradient(0.1deg, #f9f9f9 0.7%, #227447 88.4%);
-    border-bottom: 1px solid #07995D;
-    box-shadow: 0px 0px 2px 1px #015130;
+    background: linear-gradient(0.1deg, #f9f9f9 0.7%, #356600 88.4%);
+    border-bottom: 1px solid #66be08;
+    box-shadow: 0px 0px 2px 1px #56a700;
 }
 .bg-primary {
-    background-color: #227447 !important;
+    background-color: #13007d !important;
 }
 .custom-form .input-group-addon {
     min-width: 110px !important;
     max-width: 110px !important;
-    background-color: #227447 !important;
+    background-color: #13007d !important;
     padding-left: 4px !important;
     padding-right: 4px !important;
 }
 .table th {
-    background: #227447;
+    background: #13007d;
     color: #ffffff;
     border: 1px solid #ffffff !important;
 }
 .pcoded .pcoded-navbar[active-item-theme="theme10"] .pcoded-item .pcoded-hasmenu[subitem-icon="style7"] .pcoded-submenu > li.active > a > .pcoded-mtext::after, .pcoded .pcoded-navbar[active-item-theme="theme10"] .pcoded-item .pcoded-hasmenu[subitem-icon="style7"] .pcoded-submenu > li:hover > a > .pcoded-mtext::after {
-    background-color: #227447;
+    background-color: #13007d;
 }
 .pcoded .pcoded-navbar[active-item-theme="theme10"] .pcoded-item li:hover > a .pcoded-micon {
-    color: #227447 !important;
+    color: #13007d !important;
 }
 .pcoded .pcoded-navbar[active-item-theme="theme10"] .pcoded-item li:hover > a {
-    color: #227447 !important;
+    color: #13007d !important;
 }
 .pcoded .pcoded-navbar[active-item-theme="theme10"] .pcoded-item li .pcoded-submenu li.active > a, .pcoded .pcoded-navbar[active-item-theme="theme10"] .pcoded-item li .pcoded-submenu li:hover > a {
-    color: #227447 !important;
+    color: #13007d !important;
 }
 .pcoded .pcoded-navbar[active-item-theme="theme10"] .pcoded-item > li.active > a::before {
-    border-left-color: #227447;
+    border-left-color: #13007d;
 }
 .page-item.active .page-link {
-    background-color: #227447;
-    border-color: #227447;
+    background-color: #13007d;
+    border-color: #13007d;
 }
 .pcoded .pcoded-navbar .pcoded-navigation-label[menu-title-theme="theme1"] {
     color: #ffffff;

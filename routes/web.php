@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DepartmentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,4 +23,7 @@ Route::get('/password-change-config', 'Auth\ResetOldPasswordController@PasswordR
 Route::post('/password-change', 'Auth\ResetOldPasswordController@ResetPassword')->name('password-change');
 
 Route::resource('users', UserController::class);
+Route::resource('departments', DepartmentController::class);
+Route::resource('designations', DesignationController::class);
+Route::resource('employees', EmployeeController::class);
 

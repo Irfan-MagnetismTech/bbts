@@ -74,7 +74,7 @@
                     </div>
                     <a href="">
                         <h4 class="my-0">
-                            <img src="{{asset('images/ranksfc_log.png')}}" alt="">
+                            <img src="{{asset('images/bbts_logo.png')}}" alt="">
                         </h4>
                     </a>
                     <a class="mobile-options">
