@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Apsection;
-use App\Department;
-use App\Employee;
-use App\Http\Requests\UserRequest;
+use App\Models\User;
 
 //use Illuminate\Foundation\Auth\User;
-use App\Models\User;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Dataencoding\Employee;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Dataencoding\Department;
+use Illuminate\Database\QueryException;
 
 
 class UserController extends Controller
@@ -45,8 +45,8 @@ class UserController extends Controller
     {
         $formType = "create";
         $roles = Role::orderBy('name')->pluck('name', 'id');
-        $departments=Department::orderBy('name')->pluck('name','id');
-        $employees = Employee::orderBy('fname')->get(['fname', 'lname', 'id'])->pluck('fullName', 'id');
+        $departments = Department::orderBy('name')->pluck('name','id');
+        $employees = Employee::orderBy('name')->get(['name', 'id'])->pluck('fullName', 'id');
         return view('users.create', compact('formType','roles','employees','departments'));
     }
 
@@ -67,10 +67,12 @@ class UserController extends Controller
             $input = $request->all();
             $input['password'] = Hash::make($request['password']);
 
-            $user = User::create($input);
-            $user->assignRole($request->input('role'));
-
-            return redirect()->route('users.index')->with('success','User created successfully');
+            DB::transaction(function() use($input, $request) {
+                $user = User::create($input);
+                $user->assignRole($request->input('role'));
+            });
+            
+            return redirect()->route('users.index')->with('success','User created successfully.');
         }catch(QueryException $e){
             return redirect()->route('users.edit')->withInput()->withErrors($e->getMessage());
         }
@@ -139,7 +141,7 @@ class UserController extends Controller
     {
         try{
             $user->delete();
-            return redirect()->route('users.index')->with('message', 'Data has been deleted successfully');
+            return redirect()->route('users.index')->with('message', 'User has been deleted successfully.');
         }catch(QueryException $e){
             return redirect()->back()->withErrors($e->getMessage());
         }
