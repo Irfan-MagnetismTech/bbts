@@ -15,6 +15,7 @@ Business information like `name`, `logo path`, `shortname` etc. should be added 
 
 ### File System Information
 Default `storage` => `storage/app/public`
+
 When using **`storeAs`** or similar method where we need to explicitly give storage path, please use the above convention
 
 ### Branching
