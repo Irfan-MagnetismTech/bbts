@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dataencoding;
 
 use Illuminate\Http\Request;
-use App\Models\Department;
+use App\Http\Controllers\Controller;
+use App\Models\Dataencoding\Department;
 
 class DepartmentController extends Controller
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dataencoding;
 
-use App\Model\Department;
-use App\Model\Designation;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use App\Models\Dataencoding\Designation;
 
 class DesignationController extends Controller
 {
