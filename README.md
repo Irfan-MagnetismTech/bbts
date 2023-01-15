@@ -7,18 +7,20 @@ php artisan migrate
 php artisan db:seed
 ```
 ### Branching
-Main
+```
+Project Repository
 |
 └──main
     |
     |
-    └──jahangir/**
+    └──jahangir/task-or-feature
     |   
-    └──saleha/**
+    └──saleha/task-or-feature
     |   
-    └──delowar/**
+    └──delowar/task-or-feature
     |   
-    └──username*/**
+    └──username*/task-or-feature
+```
 
 ### Instruction from GM Mr. Hasan Md Shahriare
 - Complete a task and then merge to main with assistance of Project Leader.
