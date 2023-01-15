@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{{config('app.name')}} || @yield('title', "BBTS Ltd")</title>
+    <title>{{ config('businessinfo.name')}} || @yield('title', "BBTS Ltd")</title>
     <!--[if lt IE 10]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -74,7 +74,7 @@
                     </div>
                     <a href="">
                         <h4 class="my-0">
-                            <img src="{{asset('images/bbts_logo.png')}}" alt="">
+                            <img src="{{ config('businessinfo.logo') }}" alt="">
                         </h4>
                     </a>
                     <a class="mobile-options">
