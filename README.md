@@ -6,6 +6,17 @@ cp .env.example .env
 php artisan migrate
 php artisan db:seed
 ```
+
+### Notes
+- ***Models***, ***Controllers*** and ***Routes*** should be placed according to **Module**.
+
+### File System Information
+
+Default `storage` => `storage/app/public`
+
+When using **`storeAs`** or similar method where we need to explicitly give storage path, please use the above convention
+
+
 ### Branching
 ```
 Project Repository
