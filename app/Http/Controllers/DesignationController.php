@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Department;
+use App\Model\Designation;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Spatie\Permission\Traits\HasRoles;
 
 class DesignationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    use HasRoles;
-    function __construct()
-    {
-        $this->middleware('permission:designation-view|designation-create|designation-edit|designation-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:designation-create', ['only' => ['create','store']]);
-        $this->middleware('permission:designation-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:designation-delete', ['only' => ['destroy']]);
-    }
+    // use HasRoles;
+    // function __construct()
+    // {
+    //     $this->middleware('permission:designation-view|designation-create|designation-edit|designation-delete', ['only' => ['index','show']]);
+    //     $this->middleware('permission:designation-create', ['only' => ['create','store']]);
+    //     $this->middleware('permission:designation-edit', ['only' => ['edit','update']]);
+    //     $this->middleware('permission:designation-delete', ['only' => ['destroy']]);
+    // }
     public function index()
     {
         $designations = Designation::latest()->get();
@@ -58,10 +57,10 @@ class DesignationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Designation  $designation
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Designation $designation)
     {
         //
     }
@@ -69,10 +68,10 @@ class DesignationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Designation  $designation
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Designation $designation)
     {
         $formType = "edit";
         $designations = Designation::latest()->get();
@@ -83,10 +82,10 @@ class DesignationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Designation  $designation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Designation $designation)
     {
         try{
             $data = $request->all();
@@ -100,10 +99,10 @@ class DesignationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Designation  $designation
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Designation $designation)
     {
         try{
             if($designation->employees->isNotEmpty()){

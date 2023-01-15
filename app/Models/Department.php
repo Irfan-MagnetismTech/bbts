@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Department extends Model
 {
-    use HasFactory;
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'description','is_allocate'];
+
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
+    public function requisitionApproval(){
+        return $this->hasOne(RequisitionApproval::class);
+    }
 }

@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('description')->nullable();
+            $table->tinyInteger('is_allocate')->default(0);
             $table->timestamps();
         });
     }

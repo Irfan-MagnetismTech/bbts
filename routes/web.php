@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\DepartmentController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------

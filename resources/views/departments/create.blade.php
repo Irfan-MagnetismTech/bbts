@@ -11,6 +11,7 @@
     {{--<span class="text-danger">*</span> Marked are required.--}}
 @endsection
 @section('content')
+    @can('department-create')
         @if(!empty($department))
             {!! Form::open(array('url' => "departments/$department->id",'method' => 'PUT', 'class'=>'custom-form')) !!}
         @else
@@ -39,6 +40,7 @@
             </div>
         </div><!-- end form row -->
         {!! Form::close() !!}
+    @endcan
         <br>
         <hr class="my-2 bg-success">
         <div class="table-responsive">
@@ -70,13 +72,13 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                          
+                                    @can('department-edit')
                                         <a href="{{ url("departments/$data->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                   
-                                  
+                                    @endcan
+                                    @can('department-delete')
                                         {!! Form::open(array('url' => "departments/$data->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
                                         {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
-                             
+                                    @endcan
                                         {!! Form::close() !!}
                                 </nobr>
                             </div>

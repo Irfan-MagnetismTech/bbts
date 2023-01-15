@@ -7,5 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Designation extends Model
 {
-    use HasFactory;
+    protected $fillable = ['name'];
+
+//    public function department()
+//    {
+//        return $this->belongsTo(Department::class)->withDefault();
+//    }
+    public function employees()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }
