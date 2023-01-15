@@ -26,3 +26,9 @@ Route::post('/password-change', 'Auth\ResetOldPasswordController@ResetPassword')
 Route::resource('users', UserController::class);
 
 require base_path('routes/dataencoding.php');
+
+require base_path('routes/sales.php');
+require base_path('routes/feasibility.php');
+require base_path('routes/scm.php');
+require base_path('routes/ticketing.php');
+require base_path('routes/billing.php');
