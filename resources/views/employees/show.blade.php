@@ -1,165 +1,251 @@
 @extends('layouts.backend-layout')
-@section('title', 'Employee')
+@section('title', 'Employee Details')
+
+@section('style')
+<link rel="stylesheet" type="text/css" href="{{asset('css/Datatables/dataTables.bootstrap4.min.css')}}">
+<style>
+    td{
+        text-align: left;
+        padding-left: 20px;
+        word-break: break-all;
+        white-space: normal !important;
+    }
+</style>
+@endsection
 
 @section('breadcrumb-title')
-    Profile : <strong>{{strtoupper($employee->fullname)}}</strong>
+Employee Details
 @endsection
+
 
 @section('breadcrumb-button')
-    <a href="{{ url('employees') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+<a href="{{ url('employees/create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
 @endsection
-
-@section('sub-title')
-{{--    <span class="text-danger">*</span> Marked are required.--}}
-@endsection
-
-@section('content-grid', 'offset-lg-1 col-lg-10 my-3')
 
 @section('content')
-<div class="row">
-    <div class="col-12">
-        <div class="tableHeading">
-            <h5> <span>&#10070;</span> Personal Information <span>&#10070;</span> </h5>
-        </div>
-        <div class="table-responsive">
-            <table id="dataTable" class="table table-striped table-bordered">
-                <tbody class="text-left">
-
-                <tr>
-                    <td class="background-info"> <strong>Employee Name</strong> </td>
-                    <td colspan="3" class="breakWords background-info">{{$employee->fullname}} </td>
-                </tr>
-                {{--<tr><td> <strong>Designation</strong> </td> <td>{{$employee->designation->name}} </td></tr>--}}
-                {{--<tr><td> <strong>Department</strong> </td> <td>{{$employee->department->name}} </td></tr>--}}
-                {{--                    <tr><td> <strong>Team</strong> </td> <td>{{$employee->team->name}} </td></tr>--}}
-                <tr>
-                    <td> <strong> Employee ID</strong> </td> <td>{{$employee->employee_code}}</td>
-                    <td> <strong>Date of Birth</strong> </td> <td> {{$employee->dob}}</td>
-                </tr>
-                <tr>
-                    <td> <strong> Department</strong> </td>
-                    <td>{{$employee->department->name}}</td>
-                    <td> <strong> Designation</strong> </td>
-                    <td>{{$employee->designation->name}}</td>
-                </tr>
-                <tr>
-                    <td> <strong>Contact</strong> </td> <td>{{$employee->contact}} </td>
-                    <td> <strong>Email</strong> </td> <td> {{$employee->email}}</td>
-
-                </tr>
-
-                <tr><td> <strong>NID</strong> </td> <td colspan="3">{{$employee->nid}} </td></tr>
-                <tr><td colspan="4" class="background-info"> <strong>Present Address</strong> </td> </tr>
-                <tr><td> <strong>Street</strong> </td> <td colspan="3">{{$employee->pre_street_address}} </td></tr>
-                <tr><td> <strong>Thana</strong> </td> <td colspan="3">{{$employee->preThana->name ?? '' }} </td></tr>
-                <tr><td> <strong>District</strong> </td> <td colspan="3">{{$employee->preThana->district->name ?? '' }} </td></tr>
-                <tr><td> <strong>Division</strong> </td> <td colspan="3">{{$employee->preThana->district->division->name ?? '' }} </td></tr>
-                <tr><td colspan="4" class="background-info"> <strong>Permanent Address</strong> </td> </tr>
-                <tr><td> <strong>Street</strong> </td> <td colspan="3">{{$employee->per_street_address}} </td></tr>
-                <tr><td> <strong>Thana</strong> </td> <td colspan="3">{{$employee->perThana->name ?? ''}} </td></tr>
-                <tr><td> <strong>District</strong> </td> <td colspan="3">{{$employee->perThana->district->name ?? ''}} </td></tr>
-                <tr><td> <strong>Division</strong> </td> <td colspan="3">{{$employee->perThana->district->division->name ?? ''}} </td></tr>
-                <tr><td><strong>Picture</strong></td>
-                    <td colspan="3">
-                        @if($employee && $employee->picture)
-                            <img src="{{asset($employee->picture)}}" alt="" width="auto" height="80px">
-                        @else
-                            <strong>Not Uploaded</strong>
-                        @endif
-                    </td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div> <!-- col-md-6 -->
-
-    @if($employee->user && $employee->user->leads)
-        @php
-            $leads  = $employee->user->leads->groupBy('lead_stage')->map(function($item, $key){
-                return collect($item)->count();
-            });
-        @endphp
-        <div class="col-12">
-            <div class="tableHeading">
-                <h5> <span>&#10070;</span> Leads <span>&#10070;</span> </h5>
-            </div>
-            <div class="table-responsive">
-                <table id="dataTable" class="table table-striped table-bordered text-center">
-                    <thead>
+<div class="card-">
+    <div class="card-">
+        <img src="{{ asset('/images/Employees') }}/{{ $employee->picture }}" alt="" class="img-rounded" width="100px" height="80px">
+    </div>
+    <div class="card-">
+        <table>
+            <tr>
+                <th>
+                    Name:
+                </th>
+                <td>
+                    {{ $employee->name }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Department:
+                </th>
+                <td>
+                    {{ $employee->department->name }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Designation:
+                </th>
+                <td>
+                    {{ $employee->designation->name }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    NID:
+                </th>
+                <td>
+                    {{ $employee->nid }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Date of Birth:
+                </th>
+                <td>
+                    {{ $employee->dob }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Contact:
+                </th>
+                <td>
+                    {{ $employee->contact }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Email:
+                </th>
+                <td>
+                    {{ $employee->email }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Blood Group:
+                </th>
+                <td>
+                    {{ $employee->blood_group }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Emergency Contact:
+                </th>
+                <td>
+                    {{ $employee->emergency }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Father:
+                </th>
+                <td>
+                    {{ $employee->father }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Mother:
+                </th>
+                <td>
+                    {{ $employee->mother }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Joining Date:
+                </th>
+                <td>
+                    {{ $employee->joining_date }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Reference:
+                </th>
+                <td>
+                    {{ $employee->reference }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Job Experience:
+                </th>
+                <td>
+                    {{ $employee->job_experience }}
+                </td>
+            </tr>
+        </table>
+        <div class="row mt-3">
+            <div class="col-md-6">
+            <h4>Present Address</h4>
+            <table>
                     <tr>
-                        <td class="bg-info"> Stage - <strong> A </strong> <br>(Almost Final) </td>
-                        <td class="bg-info"> Stage - <strong> B </strong> <br>(Processing) </td>
-                        <td class="bg-info"> Stage - <strong> C </strong> <br>(Initial) </td>
-                        <td class="bg-info"> Stage - <strong> D </strong> <br>(Dead) </td>
-                        <td class="bg-info"><strong>Total</strong></td>
+                        <th>
+                            Address:
+                        </th>
+                        <td>
+                            {{ $employee->pre_street_address }}
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="bg-white">
-                        <td> {{$leads['A'] ?? 0}} </td>
-                        <td> {{$leads['B'] ?? 0}} </td>
-                        <td> {{$leads['C'] ?? 0}} </td>
-                        <td> {{$leads['D'] ?? 00}} </td>
-                        <td>{{$employee->user->leads->count()}}</td>
+                    <tr>
+                        <th>
+                            Division:
+                        </th>
+                        <td>
+                            {{ $employee->preThana->district->division->name }}
+                        </td>
                     </tr>
-                    </tbody>
+                    <tr>
+                        <th>
+                            District:
+                        </th>
+                        <td>
+                        {{ $employee->preThana->district->name }}
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Thana:
+                        </th>
+                        <td>
+                        {{ $employee->preThana->name }}
+
+                        </td>
+                    </tr>
                 </table>
             </div>
-        </div> <!-- end col-lg-6 -->
-    @endif
+            <div class="col-md-6">
+            <h4>Permanent Address</h4>
 
+                <table>
+                    <tr>
+                        <th>
+                            Address:
+                        </th>
+                        <td>
+                            {{ $employee->per_street_address }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Division:
+                        </th>
+                        <td>
+                            {{ $employee->perThana->district->division->name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            District:
+                        </th>
+                        <td>
+                        {{ $employee->perThana->district->name }}
 
-    @if($employee->user && $employee->user->sells)
-    <div class="col-12">
-        <div class="tableHeading">
-            <h5> <span>&#10070;</span> Sales <span>&#10070;</span> </h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Thana:
+                        </th>
+                        <td>
+                        {{ $employee->perThana->name }}
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div class="table-responsive">
-            <table id="dataTable" class="table table-striped table-bordered text-center">
-                <thead>
-                <tr>
-                    <td class="bg-info"> # </td>
-                    <td class="bg-info"> Project Name </td>
-                    <td class="bg-info"> Client's Name </td>
-                    <td class="bg-info"> Apartment ID </td>
-                    <td class="bg-info"> Rate (Per Sft) </td>
-                    <td class="bg-info"> Total Value </td>
-                    <td class="bg-info"> Received </td>
-                    <td class="bg-info"> Balance </td>
-                    <td class="bg-info"> Sold Date </td>
-                </tr>
-                </thead>
-                <tbody class="text-center">
-                    @foreach($employee->user->sells as $sell)
-                        <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td class="text-left breakWords"> <strong><a href="{{route('projects.show', $sell->apartment->project->id)}}" target="_blank">{{$sell->apartment->project->name}}</a></strong> </td>
-                            <td class="text-left breakWords"> <strong><a href="{{route('sells.show', $sell->id)}}" target="_blank">{{$sell->sellClient->client->name}}</a></strong> </td>
-                            <td> <strong><a href="{{route('apartments.show', $sell->apartment->id)}}" target="_blank">{{$sell->apartment->name}}</a></strong> </td>
-                            <td>{{$sell->apartment->apartment_rate}}</td>
-                            <td>{{$sell->apartment->total_value}}</td>
-                            <td>{{$sell->salesCollections->sum('received_amount')}}</td>
-                            <td>
-                                {{$sell->apartment->total_value - $sell->salesCollections->sum('received_amount')}}
-                            </td>
-                            <td>
-                                {{$sell->sell_date}}
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div> <!-- end col-lg-6 -->
-    @endif
-
-
-
-</div> <!-- end row -->
-
-
+    </div>
+</div>
 
 @endsection
 
 @section('script')
+<script src="{{asset('js/Datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('js/Datatables/dataTables.bootstrap4.min.js')}}"></script>
+<script>
+    $(window).scroll(function() {
+        //set scroll position in session storage
+        sessionStorage.scrollPos = $(window).scrollTop();
+    });
+    var init = function() {
+        //get scroll position in session storage
+        $(window).scrollTop(sessionStorage.scrollPos || 0)
+    };
+    window.onload = init;
 
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            stateSave: true
+        });
+    });
+</script>
 @endsection

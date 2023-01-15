@@ -11,9 +11,7 @@
 
 
 @section('breadcrumb-button')
-    @can('employee-create')
-        <a href="{{ url('employees/create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
-    @endcan
+    <a href="{{ url('employees/create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
 @endsection
 
 @section('sub-title')
@@ -28,57 +26,37 @@
             <thead>
             <tr>
                 <th>SL</th>
-                <th>Name</th>
+                <th> Name</th>
                 <th>Department</th>
-
                 <th>Designation</th>
-                <th>NID</th>
-                <th>DOB</th>
+                <th>Joining Date</th>
                 <th>Contact</th>
                 <th>Email</th>
+                <th>Image</th>
                 <th>Action</th>
             </tr>
             </thead>
-            <tfoot>
-            <tr>
-                <th>SL</th>
-                <th>Name</th>
-                <th>Department</th>
-
-                <th>Designation</th>
-                <th>NID</th>
-                <th>DOB</th>
-                <th>Contact</th>
-                <th>Email</th>
-                <th>Action</th>
-            </tr>
-            </tfoot>
             <tbody>
             @foreach($employees as $key => $employee)
                 <tr>
                     <td>{{$loop->iteration}}</td>
-                    <td> {{ $employee->fullName}}</td>
+                    <td> {{ $employee->name}}</td>
                     <td> {{ $employee->department->name ?? ''}}</td>
-{{--                    <td> {{ $employee->team->name ?? ''}}</td>--}}
                     <td> {{ $employee->designation->name ?? ''}}</td>
-                    <td> {{ $employee->nid}}</td>
-                    <td> {{ $employee->dob}}</td>
+                    <td> {{ !empty($employee->joining_date) ? date('d-m-Y',strtotime($employee->joining_date)): null}}</td>
                     <td> {{ $employee->contact}}</td>
                     <td> {{ $employee->email}}</td>
+
+                    <td><img class="" style="width: 80px;height: 60px"
+                             src='{{asset("images/Employees/$employee->picture")}}' alt=""></td>
                     <td>
                         <div class="icon-btn">
                             <nobr>
-                                @can('employee-view')
-                                    <a href="{{ url("employees/$employee->id") }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                @endcan
-                                @can('employee-edit')
-                                    <a href="{{ url("employees/$employee->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                @endcan
-                                @can('employee-delete')
-                                    {!! Form::open(array('url' => "employees/$employee->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
-                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
-                                @endcan
-                                    {!! Form::close() !!}
+                                <a href="{{ url("employees/$employee->id") }}" data-toggle="tooltip" title="View" class="btn btn-outline-info"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url("employees/$employee->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                {!! Form::open(array('url' => "employees/$employee->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
+                                {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
+                                {!! Form::close() !!}
                             </nobr>
                         </div>
                     </td>

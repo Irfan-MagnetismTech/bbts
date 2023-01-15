@@ -53,7 +53,7 @@
                 <tr>
                     <td>{{$key  + 1}}</td>
                     <td class="text-left">{{$user->name ?? ''}}</td>
-                    <td class="text-left">{{$user->department->name ??''}}</td>
+                    <td class="text-left">{{$user->employee->department->name ??''}}</td>
                     <td class="text-left">{{$user->designation->name ??''}}</td>
                     <td class="text-left">{{$user->email}}</td>
                     <td>
