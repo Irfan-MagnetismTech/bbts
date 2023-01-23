@@ -18,7 +18,7 @@ use App\Models\Dataencoding\Department;
 use Illuminate\Database\QueryException;
 
 
-class UserController extends Controller
+class UserControllerCopy extends Controller
 {
     use HasRoles;
 

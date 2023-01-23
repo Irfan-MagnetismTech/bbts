@@ -1,5 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Modules\Admin\Http\Controllers\RoleController;
+use Modules\Admin\Http\Controllers\PermissionController;
+use Modules\Admin\Http\Controllers\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,4 +18,9 @@
 
 Route::prefix('admin')->group(function() {
     Route::get('/', 'AdminController@index');
+    Route::resources([
+        'roles' => RoleController::class,
+        'permissions' => PermissionController::class,
+        'users' => UserController::class,
+    ]);
 });

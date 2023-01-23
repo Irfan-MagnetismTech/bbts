@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Dataencoding\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+// use App\Http\Controllers\UserController;
 use App\Http\Controllers\Dataencoding\EmployeeController;
 use App\Http\Controllers\Dataencoding\DepartmentController;
 use App\Http\Controllers\Dataencoding\DesignationController;

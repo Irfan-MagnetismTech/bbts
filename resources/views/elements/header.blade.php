@@ -104,9 +104,9 @@
                             <ul class="show-notification profile-notification">
 
 
-                                <li >
+                                {{-- <li >
                                    <a href="{{route('password-change-form')}}"><i class="ti-settings"></i>Change Password</a>
-                                </li>
+                                </li> --}}
 
                                 <li>
 {{--                                    <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">--}}

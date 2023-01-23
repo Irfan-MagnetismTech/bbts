@@ -2,7 +2,7 @@
     <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
     <div class="pcoded-inner-navbar main-menu">
         <ul class="pcoded-item pcoded-left-item">
-            @hasanyrole('super-admin|admin')
+            {{-- @hasanyrole('super-admin|admin') --}}
             <li class="pcoded-hasmenu {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*']) ? 'active pcoded-trigger' : null }}">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -21,7 +21,7 @@
                     </li>
                 </ul>
             </li>
-            @endhasanyrole
+            {{-- @endhasanyrole --}}
             {{-- @endrole --}}
             <li class="pcoded-hasmenu {{ request()->routeIs(['branches.*','apsections.*','teams.*','departments.*','designations.*','employees.*','sellCollectionHeads.*'])? 'active pcoded-trigger': null }}">
                 <a href="javascript:void(0)">
