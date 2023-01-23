@@ -1,0 +1,11 @@
+{
+    "name": "Dataencoding",
+    "alias": "dataencoding",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Dataencoding\\Providers\\DataencodingServiceProvider"
+    ],
+    "files": []
+}

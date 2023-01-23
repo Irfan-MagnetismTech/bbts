@@ -12,6 +12,12 @@ php artisan db:seed
 -   **_Models_**, **_Controllers_** and **_Routes_** should be placed according to **Laravel Module Package**.
 -   Follow https://docs.laravelmodules.com/v9/introduction for **Laravel Module Package** usage.
 
+### Module Naming Convention
+
+-   **_Modules_** should be named in **singular** form.
+-   **_Modules_** should be named in **PascalCase**.
+-   **_Modules_** short formed name should be in **UPPERCASE**. Ex: `HRM` for `Human Resource Management`
+
 ### Business Info
 
 Business information like `name`, `logo path`, `shortname` etc. should be added in `config/businessinfo.php` and this config should be used everywhere in the **ERP** inlcuding `pages`, `printables`, and `mails.`

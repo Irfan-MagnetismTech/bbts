@@ -1,0 +1,11 @@
+{
+    "name": "Feasibility",
+    "alias": "feasibility",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Feasibility\\Providers\\FeasibilityServiceProvider"
+    ],
+    "files": []
+}

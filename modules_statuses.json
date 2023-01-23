@@ -1,0 +1,9 @@
+{
+    "Admin": true,
+    "Billing": true,
+    "Dataencoding": true,
+    "Feasibility": true,
+    "Sales": true,
+    "SCM": true,
+    "Ticketing": true
+}

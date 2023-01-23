@@ -1,0 +1,11 @@
+{
+    "name": "SCM",
+    "alias": "scm",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\SCM\\Providers\\SCMServiceProvider"
+    ],
+    "files": []
+}
