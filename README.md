@@ -10,6 +10,7 @@ php artisan db:seed
 ### Notes
 
 -   **_Models_**, **_Controllers_** and **_Routes_** should be placed according to **Laravel Module Package**.
+-   Follow https://docs.laravelmodules.com/v9/introduction for **Laravel Module Package** usage.
 
 ### Business Info
 
