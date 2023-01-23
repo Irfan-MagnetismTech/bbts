@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dataencoding;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use App\Models\Dataencoding\Designation;

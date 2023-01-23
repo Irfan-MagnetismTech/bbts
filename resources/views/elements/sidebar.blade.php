@@ -31,22 +31,22 @@
                     <span class="pcoded-mcaret"></span>
                 </a>
                 <ul class="pcoded-submenu">
-                    <li class="{{ request()->routeIs('departments.*') ? 'active' : null }}">
-                        <a href="{{ route('departments.index') }}">
+                    <li class="{{ request()->routeIs('dataencoding.departments.*') ? 'active' : null }}">
+                        <a href="{{ route('dataencoding.departments.index') }}">
                             <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
                             <span class="pcoded-mtext"> Departments </span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class="{{ request()->routeIs('designations.*') ? 'active' : null }}">
-                        <a href="{{ route('designations.index') }}">
+                    <li class="{{ request()->routeIs('dataencoding.designations.*') ? 'active' : null }}">
+                        <a href="{{ route('dataencoding.designations.index') }}">
                             <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
                             <span class="pcoded-mtext"> Designations </span>
                             <span class="pcoded-mcaret"></span>
                         </a>
                     </li>
-                    <li class="{{ request()->routeIs('employees.*') ? 'active' : null }}">
-                        <a href="{{ route('employees.index') }}">
+                    <li class="{{ request()->routeIs('dataencoding.employees.*') ? 'active' : null }}">
+                        <a href="javascript:void(0)">
                             <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
                             <span class="pcoded-mtext"> Employee </span>
                             <span class="pcoded-mcaret"></span>

@@ -23,9 +23,12 @@ Route::get('/', function () {
 
 Route::get('/password-change-config', 'Auth\ResetOldPasswordController@PasswordResetForm')->name('password-change-form');
 Route::post('/password-change', 'Auth\ResetOldPasswordController@ResetPassword')->name('password-change');
-
 Route::resource('users', UserController::class);
-Route::resource('departments', DepartmentController::class);
-Route::resource('designations', DesignationController::class);
-Route::resource('employees', EmployeeController::class);
 
+require base_path('routes/dataencoding.php');
+
+require base_path('routes/sales.php');
+require base_path('routes/feasibility.php');
+require base_path('routes/scm.php');
+require base_path('routes/ticketing.php');
+require base_path('routes/billing.php');
