@@ -12,6 +12,4 @@ Route::prefix('dataencoding')->as('dataencoding.')->group(function ()
     Route::resource('departments', DepartmentController::class);
     Route::resource('designations', DesignationController::class);
     Route::resource('employees', EmployeeController::class);
-
-    Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
 });

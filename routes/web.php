@@ -1,10 +1,8 @@
 <?php
 
+use App\Http\Controllers\Dataencoding\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\DesignationController;
-use App\Http\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,14 +15,14 @@ use App\Http\Controllers\EmployeeController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
 
 Route::get('/password-change-config', 'Auth\ResetOldPasswordController@PasswordResetForm')->name('password-change-form');
 Route::post('/password-change', 'Auth\ResetOldPasswordController@ResetPassword')->name('password-change');
 Route::resource('users', UserController::class);
-
+Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
 require base_path('routes/dataencoding.php');
 
 require base_path('routes/sales.php');
