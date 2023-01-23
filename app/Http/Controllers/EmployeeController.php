@@ -28,13 +28,13 @@ class EmployeeController extends Controller
         'AB+'=>'AB+',
         'AB-'=>'AB-'
     ];
-    function __construct()
-    {
-        $this->middleware('permission:employee-list|employee-create|employee-edit|employee-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:employee-create', ['only' => ['create','store']]);
-        $this->middleware('permission:employee-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:employee-delete', ['only' => ['destroy']]);
-    }
+    // function __construct()
+    // {
+    //     $this->middleware('permission:employee-list|employee-create|employee-edit|employee-delete', ['only' => ['index','show']]);
+    //     $this->middleware('permission:employee-create', ['only' => ['create','store']]);
+    //     $this->middleware('permission:employee-edit', ['only' => ['edit','update']]);
+    //     $this->middleware('permission:employee-delete', ['only' => ['destroy']]);
+    // }
     public function index()
 
     {
@@ -53,24 +53,20 @@ class EmployeeController extends Controller
     public function create()
     {
         $user = Auth::user();
-        $sectionId = Session::get('section_id');
         $formType = "create";
-        if($user->hasRole(['super-admin','admin'])) {
-            $departments = Department::where('section_id',$sectionId)->orderBy('name')->pluck('name', 'id');
-        }else{
-            $departments = Department::where('section_id',$user->section_id)->orderBy('name')->pluck('name', 'id');
-        }
+      
+            $departments = Department::orderBy('name')->pluck('name', 'id');
+        
         $designations = Designation::orderBy('name')->pluck('name', 'id');
         $divisions=Division::orderBy('name')->pluck('name', 'id');
         $predistrict= [];
         $perdistrict= [];
         $prethanas=[];
         $perthanas=[];
-        $section= Apsection::orderBy('name')->pluck('name', 'id');
 
         $bloodgroups = self::BLOODGROUPS;
 
-        return view('employees.create', compact('prethanas','perthanas','formType','designations','departments','predistrict','perdistrict','divisions','section','bloodgroups'));
+        return view('employees.create', compact('prethanas','perthanas','formType','designations','departments','predistrict','perdistrict','divisions','bloodgroups'));
     }
 
     /**

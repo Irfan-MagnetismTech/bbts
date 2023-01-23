@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Department;
+use App\Models\Dataencoding\Department;
 
 class DepartmentController extends Controller
 {
