@@ -171,7 +171,7 @@
 {{--                            <h2 style="color: white">Magnetism Tech Ltd.</h2>--}}
                             <img src="{{asset('images/ranksfc_logo_big.png')}}" alt="RanksFC" class="loginLogo">
                             <p style="margin-top:165%" id="fixed_position">
-                                Atlas Rangs Plaza(Level-9 & 10), 7 SK Mujib Road Agrabad C/A, Chattogram.
+                                Amin Future Park (5th Floor), 1440/A, Stand Road, Barik Building Circle, Chattogram.
                             </p>
                         </div>
                     </form>
