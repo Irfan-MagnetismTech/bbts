@@ -38,7 +38,7 @@
                         <div class="icon-btn">
                             <nobr>
                                 <a href="{{ route('roles.edit', $role->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                <form action="{{ url("roles/$role->id") }}" method="POST" data-toggle="tooltip" title="Delete" class="d-inline">
+                                <form action="{{ url("admin/roles/$role->id") }}" method="POST" data-toggle="tooltip" title="Delete" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-outline-danger btn-sm delete"><i class="fas fa-trash"></i></button>

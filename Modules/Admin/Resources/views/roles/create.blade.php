@@ -23,9 +23,9 @@
 @section('content')
 
         @if($formType == 'edit')
-            {!! Form::open(array('url' => "roles/$role->id",'method' => 'PUT', 'class'=>"custom-form")) !!}
+            {!! Form::open(array('url' => "admin/roles/$role->id",'method' => 'PUT', 'class'=>"custom-form")) !!}
         @else
-            {!! Form::open(array('url' => "roles",'method' => 'POST', 'class'=>"custom-form")) !!}
+            {!! Form::open(array('url' => "admin/roles",'method' => 'POST', 'class'=>"custom-form")) !!}
         @endif
 
 

@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
-use Nwidart\Modules\Routing\Controller;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 
 
@@ -17,10 +18,10 @@ class RoleController extends Controller
 
     function __construct()
     {
-        $this->middleware('permission:role-view|role-create|role-edit|role-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:role-create', ['only' => ['create','store']]);
-        $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
+        // $this->middleware('permission:role-view|role-create|role-edit|role-delete', ['only' => ['index','show']]);
+        // $this->middleware('permission:role-create', ['only' => ['create','store']]);
+        // $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
+        // $this->middleware('permission:role-delete', ['only' => ['destroy']]);
     }
 
     public function index()
@@ -51,17 +52,16 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        try{
-            $this->validate($request,
-                [
-                    'name' => 'required|unique:roles,name',
-                    'permission' => 'required',
-                ]
-            );
-            $userRole = Role::create(['name'=>$request->name]);
+        try {
+            Validator::make($request->all(), [
+                'name' => 'required|unique:roles,name',
+                'permission' => 'required',
+            ])->validate();
+
+            $userRole = Role::create(['name' => $request->name]);
             $userRole->syncPermissions([$request->permission]);
             return redirect()->route('roles.index')->with('success', 'Data has been inserted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
@@ -89,26 +89,27 @@ class RoleController extends Controller
         $permission = Permission::orderBy('name')->get();
         $permissions = Permission::orderBy('name')->get();
 
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$role->id)
-            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
+        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id", $role->id)
+            ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
             ->all();
-        return view('admin::roles.create',compact('role','permission','permissions','rolePermissions','formType'));
+        return view('admin::roles.create', compact('role', 'permission', 'permissions', 'rolePermissions', 'formType'));
     }
 
     public function update(Request $request, Role $role)
     {
-        try{
-            $this->validate($request,
+        try {
+            $this->validate(
+                $request,
                 [
                     'name' => 'required',
                     'permission' => 'required',
                 ]
             );
 
-            $role->update(['name'=>$request->name]);
+            $role->update(['name' => $request->name]);
             $role->syncPermissions($request->permission);
             return redirect()->route('roles.index')->with('success', 'Data has been inserted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
@@ -121,10 +122,10 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        try{
+        try {
             $role->delete();
             return redirect()->route('roles.index')->with('success', 'Data has been deleted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->back()->withErrors($e->getMessage());
         }
     }
