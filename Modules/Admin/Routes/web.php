@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Admin\Http\Controllers\RoleController;
 use Modules\Admin\Http\Controllers\UnitController;
 use Modules\Admin\Http\Controllers\UserController;
+use Modules\Admin\Http\Controllers\BrandController;
 use Modules\Admin\Http\Controllers\PermissionController;
 
 /*
@@ -24,5 +25,6 @@ Route::prefix('admin')->group(function() {
         'permissions'   => PermissionController::class,
         'users'         => UserController::class,
         'units'         => UnitController::class,
+        'brands'        => BrandController::class,
     ]);
 });
