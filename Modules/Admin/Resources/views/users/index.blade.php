@@ -72,7 +72,7 @@
                         <div class="icon-btn">
                             <nobr>
                                 <a href="{{ route('users.edit', $user->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                <form action="{{ url("users/$user->id") }}" method="POST" data-toggle="tooltip" title="Delete" class="d-inline">
+                                <form action="{{ url("admin/users/$user->id") }}" method="POST" data-toggle="tooltip" title="Delete" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-outline-danger btn-sm delete"><i class="fas fa-trash"></i></button>
