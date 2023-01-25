@@ -9,7 +9,7 @@ class $CLASS$ extends Model
 {
     use HasFactory;
 
-    protected $fillable = $FILLABLE$;
+    protected $guarded = [];
     
     protected static function newFactory()
     {
