@@ -2,78 +2,114 @@
 
 namespace Modules\Admin\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\Unit;
 use Illuminate\Routing\Controller;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\QueryException;
+use Modules\Admin\Http\Requests\UnitRequest;
 
 class UnitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
+    use HasRoles;
+    function __construct()
+    {
+        // $this->middleware('permission:unit-view|unit-create|unit-edit|unit-delete', ['only' => ['index','show']]);
+        // $this->middleware('permission:unit-create', ['only' => ['create','store']]);
+        // $this->middleware('permission:unit-edit', ['only' => ['edit','update']]);
+        // $this->middleware('permission:unit-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
-        return view('admin::index');
+        $units = Unit::latest()->get();
+        $formType = "create";
+        return view('admin::units.create', compact('units', 'formType'));
     }
 
     /**
      * Show the form for creating a new resource.
-     * @return Renderable
+     *
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        return view('admin::create');
+        $formType = "create";
+        $units = Unit::latest()->get();
+        return view('admin::units.create', compact('units', 'formType'));
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */ 
+    public function store(UnitRequest $request)
     {
-        //
+        try{
+            $data = $request->all();
+            Unit::create($data);
+            return redirect()->route('units.create')->with('message', 'Data has been inserted successfully');
+        }catch(QueryException $e){
+            return redirect()->route('units.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Display the specified resource.
+     *
+     * @param  \App\Unit  $unit
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Unit $unit)
     {
-        return view('admin::show');
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \App\Unit  $unit
+     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Unit $unit)
     {
-        return view('admin::edit');
+        $formType = "edit";
+        $units = Unit::latest()->get();
+        return view('admin::units.create', compact('unit', 'units', 'formType'));
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Unit  $unit
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(unitRequest $request, Unit $unit)
     {
-        //
+        try{
+            $data = $request->all();
+            $unit->update($data);
+            return redirect()->route('units.create')->with('message', 'Data has been updated successfully');
+        }catch(QueryException $e){
+            return redirect()->route('units.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \App\Unit  $unit
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Unit $unit)
     {
-        //
+        try{
+            $unit->delete();
+            return redirect()->route('units.create')->with('message', 'Data has been deleted successfully');
+        }catch(QueryException $e){
+            return redirect()->route('units.create')->withErrors($e->getMessage());
+        }
     }
 }

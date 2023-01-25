@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Admin\Http\Controllers\RoleController;
-use Modules\Admin\Http\Controllers\PermissionController;
+use Modules\Admin\Http\Controllers\UnitController;
 use Modules\Admin\Http\Controllers\UserController;
+use Modules\Admin\Http\Controllers\PermissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,9 @@ use Modules\Admin\Http\Controllers\UserController;
 Route::prefix('admin')->group(function() {
     Route::get('/', 'AdminController@index');
     Route::resources([
-        'roles' => RoleController::class,
-        'permissions' => PermissionController::class,
-        'users' => UserController::class,
+        'roles'         => RoleController::class,
+        'permissions'   => PermissionController::class,
+        'users'         => UserController::class,
+        'units'         => UnitController::class,
     ]);
 });

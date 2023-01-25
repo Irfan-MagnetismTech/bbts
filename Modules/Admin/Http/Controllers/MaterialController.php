@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-class TestController extends Controller
+class MaterialController extends Controller
 {
     /**
      * Display a listing of the resource.
