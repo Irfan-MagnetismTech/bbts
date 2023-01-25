@@ -5,7 +5,7 @@ namespace Modules\Admin\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class TestSeederTableSeeder extends Seeder
+class UnitSeederTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

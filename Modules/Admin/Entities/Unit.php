@@ -5,14 +5,14 @@ namespace Modules\Admin\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Test extends Model
+class Unit extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
+    protected $guarded = [];
     
     protected static function newFactory()
     {
-        return \Modules\Admin\Database\factories\TestFactory::new();
+        return \Modules\Admin\Database\factories\UnitFactory::new();
     }
 }
