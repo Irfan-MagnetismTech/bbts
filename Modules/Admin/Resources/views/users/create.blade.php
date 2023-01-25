@@ -28,9 +28,9 @@
 
 @section('content')
     @if($formType == 'create')
-        {!! Form::open(array('url' => "users",'method' => 'POST', 'class'=>'custom-form')) !!}
+        {!! Form::open(array('url' => "admin/users",'method' => 'POST', 'class'=>'custom-form')) !!}
     @else
-        {!! Form::open(array('url' => "users/$user->id",'method' => 'PUT', 'class'=>'custom-form')) !!}
+        {!! Form::open(array('url' => "admin/users/$user->id",'method' => 'PUT', 'class'=>'custom-form')) !!}
     @endif
      <div class="row">
          <div class="col-12">

@@ -3,10 +3,10 @@
 namespace Modules\Admin\Http\Controllers;
 
 use App\Apsection;
-use App\Models\User;
 
 //use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\User;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -16,7 +16,7 @@ use App\Models\Dataencoding\Employee;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Dataencoding\Department;
 use Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -58,11 +58,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->input('role'));
         try{
-            $this->validate($request, [
+            Validator::make($request->all(), [
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|same:confirm-password',
-            ]);
+            ])->validate();
 
             $input = $request->all();
             $input['password'] = Hash::make($request['password']);
