@@ -5,6 +5,7 @@ use Modules\Admin\Http\Controllers\RoleController;
 use Modules\Admin\Http\Controllers\UnitController;
 use Modules\Admin\Http\Controllers\UserController;
 use Modules\Admin\Http\Controllers\BrandController;
+use Modules\Admin\Http\Controllers\MaterialController;
 use Modules\Admin\Http\Controllers\PermissionController;
 
 /*
@@ -26,5 +27,6 @@ Route::prefix('admin')->group(function() {
         'users'         => UserController::class,
         'units'         => UnitController::class,
         'brands'        => BrandController::class,
+        'materials'     => MaterialController::class,
     ]);
 });
