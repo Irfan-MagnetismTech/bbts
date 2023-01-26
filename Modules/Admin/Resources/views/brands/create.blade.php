@@ -38,14 +38,14 @@
                 <thead>
                 <tr>
                     <th>SL</th>
-                    <th>brand Name</th>
+                    <th>Brand Name</th>
                     <th>Action</th>
                 </tr>
                 </thead>
                 <tfoot>
                 <tr>
                     <th>SL</th>
-                    <th>brand Name</th>
+                    <th>Brand Name</th>
                     <th>Action</th>
                 </tr>
                 </tfoot>
