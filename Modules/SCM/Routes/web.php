@@ -1,5 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Modules\SCM\Http\Controllers\UnitController;
+use Modules\SCM\Http\Controllers\MaterialController;
+use Modules\SCM\Http\Controllers\SupplierController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,5 +17,9 @@
 */
 
 Route::prefix('scm')->group(function() {
-    Route::get('/', 'SCMController@index');
+    Route::resources([
+        'suppliers'     => SupplierController::class,
+        'units'         => UnitController::class,
+        'materials'     => MaterialController::class,
+    ]);
 });

@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Admin\Http\Controllers;
+namespace Modules\SCM\Http\Controllers;
 
-use Modules\Admin\Entities\Unit;
+use Modules\SCM\Entities\Unit;
 use Illuminate\Routing\Controller;
-use Modules\Admin\Entities\Material;
+use Modules\SCM\Entities\Material;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
-use Modules\Admin\Http\Requests\BrandRequest;
+use Modules\SCM\Http\Requests\MaterialRequest;
 
 class MaterialController extends Controller
 {
@@ -23,7 +23,7 @@ class MaterialController extends Controller
     {
         $materials = Material::with('unit')->latest()->get();
 
-        return view('admin::materials.index', compact('materials'));
+        return view('scm::materials.index', compact('materials'));
     }
 
     /**
@@ -39,7 +39,7 @@ class MaterialController extends Controller
 
         $types = ['Drum', 'Item'];
 
-        return view('admin::materials.create', compact('materials', 'formType', 'types', 'units'));
+        return view('scm::materials.create', compact('materials', 'formType', 'types', 'units'));
     }
 
     /**
@@ -48,7 +48,7 @@ class MaterialController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */ 
-    public function store(BrandRequest $request)
+    public function store(MaterialRequest $request)
     {
         try{
             $data = $request->all();
@@ -83,7 +83,7 @@ class MaterialController extends Controller
         $units = Unit::latest()->get();
 
         $types = ['Drum', 'Item'];
-        return view('admin::materials.create', compact('material', 'materials', 'formType', 'types', 'units'));
+        return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units'));
     }
 
     /**
@@ -93,7 +93,7 @@ class MaterialController extends Controller
      * @param  \App\Material  $material
      * @return \Illuminate\Http\Response
      */
-    public function update(BrandRequest $request, Material $material)
+    public function update(MaterialRequest $request, Material $material)
     {
         try{
             $data = $request->all();

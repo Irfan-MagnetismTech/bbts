@@ -4,7 +4,7 @@ namespace Modules\Admin\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Unit extends Model
+class Branch extends Model
 {
     protected $guarded = [];
 }

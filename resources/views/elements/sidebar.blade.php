@@ -3,7 +3,8 @@
     <div class="pcoded-inner-navbar main-menu">
         <ul class="pcoded-item pcoded-left-item">
             {{-- @hasanyrole('super-admin|admin') --}}
-            <li class="pcoded-hasmenu {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*']) ? 'active pcoded-trigger' : null }}">
+            <li
+                class="pcoded-hasmenu {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*', 'brands.*', 'branchs.*', 'pops.*']) ? 'active pcoded-trigger' : null }}">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
                     <span class="pcoded-mtext">Control Users</span>
@@ -11,19 +12,41 @@
                 </a>
                 <ul class="pcoded-submenu">
                     <li class="{{ request()->routeIs('users.*') ? 'active' : null }}">
-                        <a href="{{ route('users.index') }}"> <span class="pcoded-micon"><i class="ti-angle-right"></i></span><span class="pcoded-mtext">User</span><span class="pcoded-mcaret"></span></a>
+                        <a href="{{ route('users.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">User</span><span
+                                class="pcoded-mcaret"></span></a>
                     </li>
                     <li class="{{ request()->routeIs('roles.*') ? 'active' : null }}">
-                        <a href="{{ route('roles.index') }}"> <span class="pcoded-micon"><i class="ti-angle-right"></i></span><span class="pcoded-mtext">Role</span><span class="pcoded-mcaret"></span></a>
+                        <a href="{{ route('roles.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Role</span><span
+                                class="pcoded-mcaret"></span></a>
                     </li>
                     <li class="{{ request()->routeIs('permissions.*') ? 'active' : null }}">
-                        <a href="{{ route('permissions.index') }}"> <span class="pcoded-micon"><i class="ti-angle-right"></i></span><span class="pcoded-mtext">Permission</span><span class="pcoded-mcaret"></span></a>
+                        <a href="{{ route('permissions.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Permission</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('brands.*') ? 'active' : null }}">
+                        <a href="{{ route('brands.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Brands</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('branchs.*') ? 'active' : null }}">
+                        <a href="{{ route('branchs.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Brands</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('pops.*') ? 'active' : null }}">
+                        <a href="{{ route('pops.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Brands</span><span
+                                class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>
             </li>
             {{-- @endhasanyrole --}}
             {{-- @endrole --}}
-            <li class="pcoded-hasmenu {{ request()->routeIs(['branches.*','apsections.*','teams.*','departments.*','designations.*','employees.*','sellCollectionHeads.*'])? 'active pcoded-trigger': null }}">
+            <li
+                class="pcoded-hasmenu {{ request()->routeIs(['branches.*', 'apsections.*', 'teams.*', 'departments.*', 'designations.*', 'employees.*', 'sellCollectionHeads.*']) ? 'active pcoded-trigger' : null }}">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="ti-settings"></i><b>P</b></span>
                     <span class="pcoded-mtext">Configurations</span>
@@ -53,12 +76,39 @@
                         </a>
                     </li>
 
-{{--                    <li class="{{ request()->routeIs('departments.*') ? 'active' : null }}"><a href="{{ route('departments.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Departments </span><span class="pcoded-mcaret"></span></a></li>--}}
-{{--                    <li class="{{ request()->routeIs('designations.*') ? 'active' : null }}"><a href="{{ route('designations.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Designations </span><span class="pcoded-mcaret"></span></a></li>--}}
-{{--                    <li class="{{ request()->routeIs('employees.*') ? 'active' : null }}"><a href="{{ route('employees.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Employee </span><span class="pcoded-mcaret"></span></a></li>--}}
-{{--                    <li class="{{ request()->routeIs('leayer-name.*') ? 'active' : null }}"><a href="{{ route('leayer-name.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Layer Name </span><span class="pcoded-mcaret"></span></a></li>--}}
+                    {{--                    <li class="{{ request()->routeIs('departments.*') ? 'active' : null }}"><a href="{{ route('departments.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Departments </span><span class="pcoded-mcaret"></span></a></li> --}}
+                    {{--                    <li class="{{ request()->routeIs('designations.*') ? 'active' : null }}"><a href="{{ route('designations.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Designations </span><span class="pcoded-mcaret"></span></a></li> --}}
+                    {{--                    <li class="{{ request()->routeIs('employees.*') ? 'active' : null }}"><a href="{{ route('employees.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Employee </span><span class="pcoded-mcaret"></span></a></li> --}}
+                    {{--                    <li class="{{ request()->routeIs('leayer-name.*') ? 'active' : null }}"><a href="{{ route('leayer-name.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Layer Name </span><span class="pcoded-mcaret"></span></a></li> --}}
                 </ul>
             </li>
+            {{-- @hasanyrole('super-admin|admin') --}}
+            <li
+                class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*']) ? 'active pcoded-trigger' : null }}">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                    <span class="pcoded-mtext">SCM</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class="{{ request()->routeIs('units.*') ? 'active' : null }}">
+                        <a href="{{ route('units.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Units</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('materials.*') ? 'active' : null }}">
+                        <a href="{{ route('materials.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Materials</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('suppliers.*') ? 'active' : null }}">
+                        <a href="{{ route('suppliers.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Suppliers</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                </ul>
+            </li>
+            {{-- @endhasanyrole --}}
         </ul>
         <div class="p-5"></div>
     </div>

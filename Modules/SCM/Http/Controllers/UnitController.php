@@ -1,13 +1,13 @@
 <?php
 
-namespace Modules\Admin\Http\Controllers;
+namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Modules\Admin\Entities\Unit;
+use Modules\SCM\Entities\Unit;
 use Illuminate\Routing\Controller;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
-use Modules\Admin\Http\Requests\UnitRequest;
+use Modules\SCM\Http\Requests\UnitRequest;
 
 class UnitController extends Controller
 {
@@ -23,7 +23,7 @@ class UnitController extends Controller
     {
         $units = Unit::latest()->get();
         $formType = "create";
-        return view('admin::units.create', compact('units', 'formType'));
+        return view('scm::units.create', compact('units', 'formType'));
     }
 
     /**
@@ -35,7 +35,7 @@ class UnitController extends Controller
     {
         $formType = "create";
         $units = Unit::latest()->get();
-        return view('admin::units.create', compact('units', 'formType'));
+        return view('scm::units.create', compact('units', 'formType'));
     }
 
     /**
@@ -76,7 +76,7 @@ class UnitController extends Controller
     {
         $formType = "edit";
         $units = Unit::latest()->get();
-        return view('admin::units.create', compact('unit', 'units', 'formType'));
+        return view('scm::units.create', compact('unit', 'units', 'formType'));
     }
 
     /**
@@ -86,7 +86,7 @@ class UnitController extends Controller
      * @param  \App\Unit  $unit
      * @return \Illuminate\Http\Response
      */
-    public function update(unitRequest $request, Unit $unit)
+    public function update(UnitRequest $request, Unit $unit)
     {
         try{
             $data = $request->all();

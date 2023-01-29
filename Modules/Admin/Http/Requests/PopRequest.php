@@ -4,7 +4,7 @@ namespace Modules\Admin\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MaterialRequest extends FormRequest
+class PopRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,6 +12,18 @@ class MaterialRequest extends FormRequest
      * @return array
      */
     public function rules()
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     * 
+     * @return array
+     */
+    public function messages()
     {
         return [
             //

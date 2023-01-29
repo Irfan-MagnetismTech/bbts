@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Admin\Entities;
+namespace Modules\SCM\Entities;
 
 use Modules\Admin\Entities\Unit;
 use Illuminate\Database\Eloquent\Model;
