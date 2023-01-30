@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Admin\Http\Requests;
+namespace Modules\SCM\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UnitRequest extends FormRequest
+class MaterialRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

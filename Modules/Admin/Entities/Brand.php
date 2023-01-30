@@ -1,10 +1,10 @@
 <?php
 
-namespace $NAMESPACE$;
+namespace Modules\Admin\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class $CLASS$ extends Model
+class Brand extends Model
 {
     protected $guarded = [];
 }

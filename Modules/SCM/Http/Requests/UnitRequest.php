@@ -1,10 +1,10 @@
 <?php
 
-namespace $NAMESPACE$;
+namespace Modules\SCM\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class $CLASS$ extends FormRequest
+class UnitRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -12,18 +12,6 @@ class $CLASS$ extends FormRequest
      * @return array
      */
     public function rules()
-    {
-        return [
-            //
-        ];
-    }
-
-    /**
-     * Get the error messages for the defined validation rules.
-     * 
-     * @return array
-     */
-    public function messages()
     {
         return [
             //

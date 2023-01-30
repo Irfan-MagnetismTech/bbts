@@ -1,10 +1,10 @@
 <?php
 
-namespace $NAMESPACE$;
+namespace Modules\Admin\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class $CLASS$ extends FormRequest
+class BranchRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

@@ -1,10 +1,10 @@
 <?php
 
-namespace $NAMESPACE$;
+namespace Modules\Admin\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class $CLASS$ extends FormRequest
+class BrandRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,7 @@ class $CLASS$ extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|unique:brands,name'
         ];
     }
 
@@ -26,7 +26,8 @@ class $CLASS$ extends FormRequest
     public function messages()
     {
         return [
-            //
+            'name.required' => 'Name is required',
+            'name.unique' => 'Name already exists'
         ];
     }
 

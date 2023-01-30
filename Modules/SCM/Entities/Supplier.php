@@ -1,10 +1,10 @@
 <?php
 
-namespace $NAMESPACE$;
+namespace Modules\SCM\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class $CLASS$ extends Model
+class Supplier extends Model
 {
     protected $guarded = [];
 }

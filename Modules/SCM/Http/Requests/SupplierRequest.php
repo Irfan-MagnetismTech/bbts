@@ -1,10 +1,10 @@
 <?php
 
-namespace $NAMESPACE$;
+namespace Modules\SCM\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class $CLASS$ extends FormRequest
+class SupplierRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
