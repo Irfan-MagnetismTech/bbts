@@ -5,6 +5,7 @@ namespace Modules\Admin\Http\Controllers;
 use Illuminate\Http\Request;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use App\Models\Dataencoding\District;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Admin\Http\Requests\BrandRequest;
@@ -43,14 +44,14 @@ class BrandController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */ 
+     */
     public function store(BrandRequest $request)
     {
-        try{
+        try {
             $data = $request->all();
             Brand::create($data);
             return redirect()->route('brands.create')->with('message', 'Data has been inserted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('brands.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -88,11 +89,11 @@ class BrandController extends Controller
      */
     public function update(BrandRequest $request, Brand $brand)
     {
-        try{
+        try {
             $data = $request->all();
             $brand->update($data);
             return redirect()->route('brands.create')->with('message', 'Data has been updated successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('brands.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -105,10 +106,10 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
-        try{
+        try {
             $brand->delete();
             return redirect()->route('brands.create')->with('message', 'Data has been deleted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('brands.create')->withErrors($e->getMessage());
         }
     }

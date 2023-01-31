@@ -13,6 +13,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Admin\Http\Requests\BranchRequest;
 use Termwind\Components\Dd;
 
+use function Psy\info;
+
 class BranchController extends Controller
 {
     /**
@@ -79,8 +81,8 @@ class BranchController extends Controller
     {
         $formType = "edit";
         $divisions = Division::latest()->get();
-        $districts = District::latest()->get();
-        $thanas = Thana::latest()->get();
+        $districts = District::where('division_id', $branch->division_id)->get();
+        $thanas = Thana::where('district_id', $branch->district_id)->latest()->get();
 
         return view('admin::branchs.create', compact('branch', 'divisions', 'districts', 'thanas', 'formType'));
     }
@@ -97,6 +99,7 @@ class BranchController extends Controller
         try {
             $data = $request->all();
             $branch->update($data);
+            
             return redirect()->route('branchs.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
             return redirect()->route('branchs.create')->withInput()->withErrors($e->getMessage());
@@ -117,5 +120,17 @@ class BranchController extends Controller
         } catch (QueryException $e) {
             return redirect()->route('branchs.index')->withErrors($e->getMessage());
         }
+    }
+
+    public function getDistricts()
+    {
+        $districts = District::where('division_id', request('division_id'))->get();
+        return response()->json($districts);
+    }
+
+    public function getThanas()
+    {
+        $thanas = Thana::where('district_id', request('district_id'))->get();
+        return response()->json($thanas);
     }
 }
