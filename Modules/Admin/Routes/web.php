@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Admin\Http\Controllers\PopController;
+use Modules\Admin\Http\Controllers\AuthController;
 use Modules\Admin\Http\Controllers\RoleController;
 use Modules\Admin\Http\Controllers\UserController;
 use Modules\Admin\Http\Controllers\BrandController;
@@ -29,6 +30,16 @@ Route::prefix('admin')->group(function () {
         'branchs'       => BranchController::class,
         'pops'          => PopController::class,
     ]);
+    
     Route::get('get_districts', [BranchController::class, 'getDistricts'])->name('get_districts');
     Route::get('get_thanas', [BranchController::class, 'getThanas'])->name('get_thanas');
+    
+    Route::middleware(['guest'])->group(function () {
+        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [AuthController::class, 'login']);
+    });
+    
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    });
 });

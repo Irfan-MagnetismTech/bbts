@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\Dataencoding\AuthController;
+// use App\Http\Controllers\Dataencoding\AuthController;
 use App\Http\Controllers\UserControllerCopy;
 // use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Modules\Admin\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 //Route::get('/', function () {
 //    return view('welcome');
 //});
-Route::get('/login', [AuthController::class, 'login'])->name('login');
+// Route::get('/login', [AuthController::class, 'login'])->name('login');
 
 // Route::get('/password-change-config', 'Auth\ResetOldPasswordController@PasswordResetForm')->name('password-change-form');
 // Route::post('/password-change', 'Auth\ResetOldPasswordController@ResetPassword')->name('password-change');
@@ -32,3 +33,4 @@ require base_path('routes/feasibility.php');
 require base_path('routes/scm.php');
 require base_path('routes/ticketing.php');
 require base_path('routes/billing.php');
+

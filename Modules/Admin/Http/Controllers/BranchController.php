@@ -5,15 +5,11 @@ namespace Modules\Admin\Http\Controllers;
 use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Division;
 use App\Models\Dataencoding\Thana;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Admin\Http\Requests\BranchRequest;
-use Termwind\Components\Dd;
-
-use function Psy\info;
 
 class BranchController extends Controller
 {
@@ -25,6 +21,7 @@ class BranchController extends Controller
     {
         $formType = "create";
         $branchs = Branch::with('division', 'district', 'thana')->latest()->get();
+        
         return view('admin::branchs.index', compact('branchs', 'formType'));
     }
 

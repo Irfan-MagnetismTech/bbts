@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Dataencoding;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\AuthRequest;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class AuthController extends Controller
+class AuthController2 extends Controller
 {
     /**
      * Register User and Token Creation
@@ -57,7 +58,7 @@ class AuthController extends Controller
     public function login(AuthRequest $request)
     {
         try {
-            $user = User::with('warehouse:id,name')->where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->first();
 
             if (!$user || !Hash::check($request->password, $user->password)) {
                 return response()->json(['success' => false, 'error' => 'Incorrect email/password !', 'message' => 'Incorrect email/password !'], 200);
@@ -83,7 +84,6 @@ class AuthController extends Controller
                     'email' => $user->email,
                     'roles' => $user->getRoleNames(),
                     'permissions' => $allPermissions,
-                    'warehouse' => $user->warehouse,
                 ]
             ];
 

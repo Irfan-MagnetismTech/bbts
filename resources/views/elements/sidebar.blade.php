@@ -79,7 +79,7 @@
                     {{--                    <li class="{{ request()->routeIs('departments.*') ? 'active' : null }}"><a href="{{ route('departments.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Departments </span><span class="pcoded-mcaret"></span></a></li> --}}
                     {{--                    <li class="{{ request()->routeIs('designations.*') ? 'active' : null }}"><a href="{{ route('designations.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Designations </span><span class="pcoded-mcaret"></span></a></li> --}}
                     {{--                    <li class="{{ request()->routeIs('employees.*') ? 'active' : null }}"><a href="{{ route('employees.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Employee </span><span class="pcoded-mcaret"></span></a></li> --}}
-                    {{--                    <li class="{{ request()->routeIs('leayer-name.*') ? 'active' : null }}"><a href="{{ route('leayer-name.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Layer Name </span><span class="pcoded-mcaret"></span></a></li> --}}
+                    {{-- <li class="{{ request()->routeIs('leayer-name.*') ? 'active' : null }}"><a href="{{ route('leayer-name.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Layer Name </span><span class="pcoded-mcaret"></span></a></li> --}}
                 </ul>
             </li>
             {{-- @hasanyrole('super-admin|admin') --}}
