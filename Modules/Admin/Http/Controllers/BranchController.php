@@ -2,9 +2,16 @@
 
 namespace Modules\Admin\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use App\Models\Dataencoding\District;
+use App\Models\Dataencoding\Division;
+use App\Models\Dataencoding\Thana;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Admin\Entities\Branch;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Admin\Http\Requests\BranchRequest;
+use Termwind\Components\Dd;
 
 class BranchController extends Controller
 {
@@ -14,7 +21,9 @@ class BranchController extends Controller
      */
     public function index()
     {
-        return view('admin::index');
+        $formType = "create";
+        $branchs = Branch::with('division', 'district', 'thana')->latest()->get();
+        return view('admin::branchs.index', compact('branchs', 'formType'));
     }
 
     /**
@@ -23,57 +32,90 @@ class BranchController extends Controller
      */
     public function create()
     {
-        return view('admin::create');
+        $formType = "create";
+        $divisions = Division::latest()->get();
+        $districts = District::latest()->get();
+        $thanas = Thana::latest()->get();
+
+        return view('admin::branchs.create', compact('divisions', 'districts', 'thanas', 'formType'));
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BranchRequest $request)
     {
-        //
+        try {
+            $data = $request->all();
+            Branch::create($data);
+
+            return redirect()->route('branchs.index')->with('message', 'Data has been inserted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('branchs.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Display the specified resource.
+     *
+     * @param  \App\Branch  $Branch
+     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Branch $branch)
     {
-        return view('admin::show');
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \App\Branch  $Branch
+     * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Branch $branch)
     {
-        return view('admin::edit');
+        $formType = "edit";
+        $divisions = Division::latest()->get();
+        $districts = District::latest()->get();
+        $thanas = Thana::latest()->get();
+
+        return view('admin::branchs.create', compact('branch', 'divisions', 'districts', 'thanas', 'formType'));
     }
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Branch  $Branch
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BranchRequest $request, Branch $branch)
     {
-        //
+        try {
+            $data = $request->all();
+            $branch->update($data);
+            return redirect()->route('branchs.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('branchs.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
+     *
+     * @param  \App\Branch  $Branch
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Branch $branch)
     {
-        //
+        try {
+            $branch->delete();
+            return redirect()->route('branchs.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('branchs.index')->withErrors($e->getMessage());
+        }
     }
 }

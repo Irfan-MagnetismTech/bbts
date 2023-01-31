@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('pops', function (Blueprint $table) {
             $table->id();
-
+            $table->integer('branch_id')->nullable();
+            $table->string('name')->nullable();
+            $table->string('address')->nullable();
             $table->timestamps();
         });
     }

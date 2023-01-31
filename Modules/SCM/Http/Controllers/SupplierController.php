@@ -9,7 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\SCM\Http\Requests\SupplierRequest;
 
-class MaterialController extends Controller
+class SupplierController extends Controller
 {
     use HasRoles;
     function __construct()
@@ -21,7 +21,7 @@ class MaterialController extends Controller
     }
     public function index()
     {
-        $suppliers = Supplier::with('unit')->latest()->get();
+        $suppliers = Supplier::latest()->get();
 
         return view('scm::suppliers.index', compact('suppliers'));
     }

@@ -46,43 +46,29 @@
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="unit_id">Unit <span class="text-danger">*</span></label>
-                        <select class="form-control" id="unit_id" name="unit_id" required>
-                            <option value="">Select Unit</option>
-                            @foreach ($units as $unit)
-                                <option value="{{ $unit->id }}"
-                                    {{ (old('unit_id') ?? ($supplier->unit_id ?? '')) == $unit->id ? 'selected' : '' }}>
-                                    {{ $unit->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <label class="input-group-addon" for="contact_person">Contact Person <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="contact_person" name="contact_person"
+                            placeholder="Enter contact person" value="{{ old('contact_person') ?? ($supplier->contact_person ?? '') }}" required>
                     </div>
                 </div>
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="type">Type <span class="text-danger">*</span></label>
-                        <select class="form-control" id="type" name="type" required>
-                            <option value="">Select Type</option>
-                            @foreach ($types as $type)
-                                <option value="{{ $type }}"
-                                    {{ (old('type') ?? ($supplier->type ?? '')) == $type ? 'selected' : '' }}>
-                                    {{ $type }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <label class="input-group-addon" for="email">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" name="email"
+                            placeholder="Enter supplier email" value="{{ old('email') ?? ($supplier->email ?? '') }}" required>
                     </div>
                 </div>
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="code">Code <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="code" name="code"
-                            placeholder="Enter supplier code" value="{{ old('code') ?? ($supplier->code ?? '') }}"
-                            required>
+                        <label class="input-group-addon" for="address">Supplier Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address" name="address"
+                            placeholder="Enter supplier address" value="{{ old('address') ?? ($supplier->address ?? '') }}" required>
                     </div>
                 </div>
             </div>
+
 
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">

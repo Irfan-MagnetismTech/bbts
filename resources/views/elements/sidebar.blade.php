@@ -33,12 +33,12 @@
                     </li>
                     <li class="{{ request()->routeIs('branchs.*') ? 'active' : null }}">
                         <a href="{{ route('branchs.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Brands</span><span
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Branches</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                     <li class="{{ request()->routeIs('pops.*') ? 'active' : null }}">
-                        <a href="{{ route('pops.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Brands</span><span
+                        <a href="{{ route('pops.create') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">POP</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>
@@ -84,7 +84,7 @@
             </li>
             {{-- @hasanyrole('super-admin|admin') --}}
             <li
-                class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*']) ? 'active pcoded-trigger' : null }}">
+                class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'curriers.*']) ? 'active pcoded-trigger' : null }}">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
                     <span class="pcoded-mtext">SCM</span>
@@ -104,6 +104,11 @@
                     <li class="{{ request()->routeIs('suppliers.*') ? 'active' : null }}">
                         <a href="{{ route('suppliers.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Suppliers</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('couriers.*') ? 'active' : null }}">
+                        <a href="{{ route('couriers.create') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Couriers</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>
