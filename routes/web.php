@@ -22,8 +22,8 @@ use Modules\Admin\Http\Controllers\AuthController;
 //});
 // Route::get('/login', [AuthController::class, 'login'])->name('login');
 
-// Route::get('/password-change-config', 'Auth\ResetOldPasswordController@PasswordResetForm')->name('password-change-form');
-// Route::post('/password-change', 'Auth\ResetOldPasswordController@ResetPassword')->name('password-change');
+Route::get('/password-change-config', 'Auth\ResetOldPasswordController@PasswordResetForm')->name('password-change-form');
+Route::post('/password-change', 'Auth\ResetOldPasswordController@ResetPassword')->name('password-change');
 // Route::resource('users', UserControllerCopy::class);
 Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
 require base_path('routes/dataencoding.php');

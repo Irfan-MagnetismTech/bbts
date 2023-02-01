@@ -21,25 +21,27 @@ use Modules\Admin\Http\Controllers\PermissionController;
 */
 
 Route::prefix('admin')->group(function () {
-    Route::get('/', 'AdminController@index');
-    Route::resources([
-        'roles'         => RoleController::class,
-        'permissions'   => PermissionController::class,
-        'users'         => UserController::class,
-        'brands'        => BrandController::class,
-        'branchs'       => BranchController::class,
-        'pops'          => PopController::class,
-    ]);
-    
-    Route::get('get_districts', [BranchController::class, 'getDistricts'])->name('get_districts');
-    Route::get('get_thanas', [BranchController::class, 'getThanas'])->name('get_thanas');
-    
-    Route::middleware(['guest'])->group(function () {
-        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-        Route::post('/login', [AuthController::class, 'login']);
-    });
-    
+
     Route::middleware(['auth'])->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/password-change-config', [AuthController::class, 'passwordResetForm'])->name('password-change-form');
+        Route::post('/password-change', [AuthController::class, 'resetPassword'])->name('password-change');
+
+        Route::resources([
+            'roles'         => RoleController::class,
+            'permissions'   => PermissionController::class,
+            'users'         => UserController::class,
+            'brands'        => BrandController::class,
+            'branchs'       => BranchController::class,
+            'pops'          => PopController::class,
+        ]);
     });
+
+    Route::get('get_districts', [BranchController::class, 'getDistricts'])->name('get_districts');
+    Route::get('get_thanas', [BranchController::class, 'getThanas'])->name('get_thanas');
+});
+
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
 });
