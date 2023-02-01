@@ -114,6 +114,22 @@
                 </ul>
             </li>
             {{-- @endhasanyrole --}}
+
+            {{-- Ticketing and Support --}}
+            <li
+                class="pcoded-hasmenu">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="fas fa-headset"></i><b>D</b></span>
+                    <span class="pcoded-mtext">Support & Ticketing</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class="">
+                        <a href="{{ route('support-tickets.index') }}"> <span class="pr-2"><i class="fa fa-ticket-alt"></i></span><span class="pcoded-mtext">New Ticket</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                </ul>
+            </li>
         </ul>
         <div class="p-5"></div>
     </div>

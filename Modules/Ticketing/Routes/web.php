@@ -1,4 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
+use Modules\Ticketing\Http\Controllers\SupportTicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,7 +12,10 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
-Route::prefix('ticketing')->group(function() {
-    Route::get('/', 'TicketingController@index');
+    Route::resources([
+        'support-tickets'     => SupportTicketController::class
+    ]);
+
 });
