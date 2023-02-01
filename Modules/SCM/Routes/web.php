@@ -17,7 +17,7 @@ use Modules\SCM\Http\Controllers\SupplierController;
 |
 */
 
-Route::prefix('scm')->group(function() {
+Route::prefix('scm')->middleware(['auth'])->group(function() {
     Route::resources([
         'suppliers'     => SupplierController::class,
         'units'         => UnitController::class,

@@ -1,9 +1,19 @@
-@extends('admin::layouts.master')
+@extends('layouts.backend-layout')
+@section('title', 'Dashboard')
 
+@section('style')
+    <style>
+        .input-group-addon {
+            min-width: 120px;
+        }
+
+        .input-group-info .input-group-addon {
+            /*background-color: #04748a!important;*/
+        }
+    </style>
+@endsection
+
+@section('content-grid', 'offset-md-1 col-md-10 offset-lg-2 col-lg-8 my-3')
 @section('content')
-    <h1>Hello World</h1>
-
-    <p>
-        This view is loaded from module: {!! config('admin.name') !!}
-    </p>
+    Dashboard
 @endsection

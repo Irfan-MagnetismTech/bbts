@@ -27,7 +27,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         $data = ['token' => $user->createToken('web')->plainTextToken];
 
-        return redirect()->route('users')->with($data);
+        return redirect()->route('users.index');
     }
 
     public function logout()
@@ -59,4 +59,8 @@ class AuthController extends Controller
         }
     }
 
+    public function dashboard()
+    {
+        return view('admin::index');
+    }
 }
