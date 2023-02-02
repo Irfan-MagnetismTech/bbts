@@ -109,6 +109,7 @@ button.close {
     padding-right: 4px!important;
 }
 .custom-form .form-control {
+    height: 35px!important;
     padding-left: 4px!important;
     padding-right: 4px!important;
 }

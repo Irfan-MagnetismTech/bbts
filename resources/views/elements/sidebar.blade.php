@@ -111,6 +111,11 @@
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Couriers</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
+                    <li class="{{ request()->routeIs('requisitions.*') ? 'active' : null }}">
+                        <a href="{{ route('requisitions.create') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Requisitions</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
                 </ul>
             </li>
             {{-- @endhasanyrole --}}

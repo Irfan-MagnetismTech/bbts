@@ -34,8 +34,9 @@
 
         .select2-container--default .select2-selection--single {
             border-radius: 0 !important;
+            height: 35px;
             font-size: 13px !important;
-            border: 1px solid #efefef !important;
+            border: 1px solid #cccccc !important;
         }
     </style>
 </head>
@@ -106,9 +107,10 @@
                                 <ul class="show-notification profile-notification">
 
 
-                                    <li >
-                                   <a href="{{route('password-change-form')}}"><i class="ti-settings"></i>Change Password</a>
-                                </li>
+                                    <li>
+                                        <a href="{{ route('password-change-form') }}"><i class="ti-settings"></i>Change
+                                            Password</a>
+                                    </li>
 
                                     <li>
                                         <a href="{{ route('logout') }}"
