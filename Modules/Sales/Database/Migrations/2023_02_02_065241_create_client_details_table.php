@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('client_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('client_id');
             $table->string('fr_id')->nullable();
             $table->string('fr_composite_key')->nullable();
             $table->string('link_name')->nullable();

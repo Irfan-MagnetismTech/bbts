@@ -1,9 +1,10 @@
 <?php
 
 // use App\Http\Controllers\Dataencoding\AuthController;
-use App\Http\Controllers\UserControllerCopy;
-// use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+// use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserControllerCopy;
+use App\Http\Controllers\CommonApiController;
 use Modules\Admin\Http\Controllers\AuthController;
 
 /*
@@ -27,6 +28,8 @@ use Modules\Admin\Http\Controllers\AuthController;
 // Route::resource('users', UserControllerCopy::class);
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('search-client', [CommonApiController::class, 'searchClient'])->name('search-client');
+    Route::get('search-material', [CommonApiController::class, 'searchMaterial'])->name('search-material');
 });
 
 require base_path('routes/dataencoding.php');

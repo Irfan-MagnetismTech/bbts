@@ -2,13 +2,14 @@
 
 namespace Modules\SCM\Http\Controllers;
 
-use Modules\Admin\Entities\Unit;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Http\Requests\SupplierRequest;
+use Modules\SCM\Http\Requests\ScmRequisitionRequest;
 
 class ScmRequisitionController extends Controller
 {
@@ -36,8 +37,9 @@ class ScmRequisitionController extends Controller
     {
         $formType = "create";
         $requisitions = ScmRequisition::latest()->get();
+        $brands = Brand::latest()->get();
 
-        return view('scm::requisitions.create', compact('requisitions', 'formType'));
+        return view('scm::requisitions.create', compact('requisitions', 'formType', 'brands'));
     }
 
     /**
@@ -46,27 +48,28 @@ class ScmRequisitionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SupplierRequest $request)
+    public function store(ScmRequisitionRequest $request)
     {
         try {
-            $requestData = $request->only('mrs_no', 'type', 'client_id', 'fr_composit_key', 'date', 'remarks', 'branch_id', 'pop_id', 'purpose');
+            $requestData = $request->only('mrs_no', 'type', 'client_id', 'fr_composit_key', 'date', 'branch_id', 'pop_id', 'purpose');
             $requestData['requisition_by'] = auth()->id();
             $requisitionDetails = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
-                    'floor_id' => !empty($request->floor_id[$key]) ? $request->floor_id[$key] : null,
                     'material_id' => $request->material_id[$key],
                     'quantity' => $request->quantity[$key],
-                    'required_date' => $request->required_date[$key]
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                    'remarks' => $request->remarks[$key],
                 ];
             }
 
             DB::beginTransaction();
             $requisition = ScmRequisition::create($requestData);
-            $requisition->requisitionDetails()->createMany($requisitionDetails);
+            $requisition->scmRequisitiondetails()->createMany($requisitionDetails);
             DB::commit();
 
-            return redirect()->route('requisitions.index')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('requisitions.create')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
             DB::rollBack();
             return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());

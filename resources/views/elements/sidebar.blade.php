@@ -84,7 +84,7 @@
             </li>
             {{-- @hasanyrole('super-admin|admin') --}}
             <li
-                class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'couriers.*']) ? 'active pcoded-trigger' : null }}">
+                class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'couriers.*', 'requisitions.*']) ? 'active pcoded-trigger' : null }}">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
                     <span class="pcoded-mtext">SCM</span>

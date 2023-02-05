@@ -70,21 +70,21 @@
             </div>
             <div class="row">
                 <div class="form-group  col-3">
-                    <label for="irsNo">IRS No:</label>
-                    <input type="text" class="form-control" id="irsNo" aria-describedby="irsNo"
-                        value="{{ old('irsNo') ?? ($requisition->irsNo ?? '') }}" placeholder="Search...">
+                    <label for="mrs_no">MRS No:</label>
+                    <input type="text" class="form-control mrs_no" id="mrs_no" name="mrs_no" aria-describedby="mrs_no"
+                        value="{{ old('mrs_no') ?? ($requisition->mrs_no ?? '') }}" placeholder="Input MRS no...">
                 </div>
 
                 <div class="form-group col-3">
-                    <label for="mqId">MQ ID:</label>
-                    <input type="text" class="form-control" id="mqId" aria-describedby="mqId"
-                        value="{{ old('mqId') ?? ($requisition->mqId ?? '') }}" placeholder="Search...">
+                    <label for="mq_id">MQ ID:</label>
+                    <input type="text" class="form-control" id="mq_id" name="mq_id" aria-describedby="mq_id"
+                        value="{{ old('mq_id') ?? ($requisition->mq_id ?? '') }}" placeholder="Search...">
                 </div>
 
                 <div class="form-group col-3">
-                    <label for="frId">FR ID:</label>
-                    <input type="text" class="form-control" id="frId" aria-describedby="frId"
-                        value="{{ old('frId') ?? ($requisition->frId ?? '') }}" placeholder="Search...">
+                    <label for="fr_id">FR ID:</label>
+                    <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
+                        value="{{ old('fr_id') ?? ($requisition->fr_id ?? '') }}" placeholder="Search...">
                 </div>
 
                 <div class="form-group col-3">
@@ -97,28 +97,27 @@
             <div class="row">
                 <div class="form-group col-3">
                     <label for="client_name">Client Name:</label>
-                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
                         value="{{ old('client_name') ?? ($requisition->client_name ?? '') }}" placeholder="Search...">
+                    <input type="hidden" name="client_id" id="client_id">
                 </div>
 
                 <div class="form-group col-3">
                     <label for="select2">Client Links</label>
-                    <select class="form-control select2" id="select2">
-                        <option>Option 1</option>
-                        <option>Option 2</option>
-                        <option>Option 3</option>
+                    <select class="form-control select2" id="client_links" name="client_links">
                     </select>
                 </div>
 
                 <div class="form-group col-3">
-                    <label for="client_id">Client ID:</label>
-                    <input type="text" class="form-control" id="client_id" aria-describedby="client_id" disabled
-                        value="{{ old('client_id') ?? ($requisition->client_id ?? '') }}">
+                    <label for="client_no">Client No:</label>
+                    <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no" disabled
+                        value="{{ old('client_no') ?? ($requisition->client_no ?? '') }}">
+
                 </div>
 
                 <div class="form-group col-3">
                     <label for="address">Address:</label>
-                    <input type="text" class="form-control" id="address" aria-describedby="address" disabled
+                    <input type="text" class="form-control" id="address" name="address" aria-describedby="address" disabled
                         value="{{ old('address') ?? ($requisition->address ?? '') }}">
                 </div>
             </div>
@@ -126,10 +125,10 @@
             <table class="table table-bordered" id="material_requisition">
                 <thead>
                     <tr>
-                        <th> Material Name <span class="text-danger">*</span></th>
-                        <th> Unit <span class="text-danger">*</span></th>
-                        <th> Requisition Qty. <span class="text-danger">*</span></th>
-                        <th> Brand <span class="text-danger">*</span></th>
+                        <th> Material Name</th>
+                        <th> Unit</th>
+                        <th> Requisition Qty.</th>
+                        <th> Brand</th>
                         <th> Model </th>
                         <th> Remarks </th>
                         <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
@@ -138,28 +137,41 @@
                 <tbody></tbody>
                 <tfoot>
                     <tr>
-                        <td> <input type="text" name="material_name[]" class="form-control material_name" required
-                                autocomplete="off"> </td>
                         <td>
-                            <select class="form-control unit_id" name="unit_id[]" required>
-                                <option value="">Select Unit</option>
+                            <input type="text" name="material_name[]" class="form-control material_name" required
+                                autocomplete="off">
+                            <input type="hidden" name="material_id[]" class="form-control material_id">
+
+                        </td>
+                        <td>
+                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
+                                disabled>
+                        </td>
+                        <td>
+                            <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
+                        </td>
+                        <td>
+                            <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <option value="">Select Brand</option>
+                                @foreach ($brands as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                @endforeach
                             </select>
                         </td>
-                        <td> <input type="text" name="quantity[]" class="form-control quantity"
-                                autocomplete="off"> </td>
-                        <td> <input type="number" name="unit_price[]" class="form-control unit_price"
-                                autocomplete="off"> </td>
-                        <td> <input type="number" name="unit_price[]" class="form-control unit_price"
-                                autocomplete="off"> </td>
-                        <td> <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
+                        <td>
+                            <input type="number" name="model[]" class="form-control model" autocomplete="off">
                         </td>
-                        <td> <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i> </td>
+                        <td>
+                            <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
+                        </td>
+                        <td>
+                            <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                        </td>
                     </tr>
                     <tr>
                     </tr>
                 </tfoot>
             </table>
-
 
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
@@ -200,25 +212,36 @@
         function appendCalculationRow() {
             let row = `
                         <tr>
-                            <td> <input type="text" name="material_name[]" class="form-control material_name"
-                                    required autocomplete="off"> </td>
                             <td>
-                                <select class="form-control unit_id" name="unit_id[]" required>
-                                    <option value="">Select Unit</option>
-                                </select>
+                                <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
+                                <input type="hidden" name="material_id[]" class="form-control material_id">
                             </td>
-                            <td> <input type="text" name="quantity[]"
-                                    class="form-control quantity" autocomplete="off"> </td>
-                            <td> <input type="number" name="unit_price[]" class="form-control unit_price"
-                                    autocomplete="off"> </td>
-                            <td> <input type="number" name="unit_price[]" class="form-control unit_price"
-                                    autocomplete="off"> </td>
-                            <td> <input type="text" name="remarks[]" class="form-control remarks"
-                                    autocomplete="off"> </td>
-                            <td> <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i> </td>
+                            <td>
+                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" disabled>
+                            </td>
+                            <td>
+                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
+                                
+                            </td>
+                            <td> 
+                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <option value="">Select Brand</option>
+                                    @foreach ($brands as $brand)
+                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>    
+                            </td>
+                            <td>
+                                <input type="number" name="model[]" class="form-control model" autocomplete="off">
+                            </td>
+                            <td>
+                                <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                            </td>
                         </tr>
                     `;
-
             $('#material_requisition tbody').append(row);
         }
 
@@ -230,5 +253,86 @@
             .on('click', '.remove-calculation-row', function() {
                 $(this).closest('tr').remove();
             });
+
+        //Search Client
+        var client_details = [];
+        $(document).on('keyup focus', '#client_name', function() {
+            $(this).autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ url('search-client') }}",
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+
+                    });
+                },
+                select: function(event, ui) {
+                    $('#client_name').val(ui.item.label);
+                    $('#client_id').val(ui.item.value);
+                    $('#client_no').val(ui.item.client_no);
+                    $('#address').val(ui.item.address);
+                    //map client details
+
+                    $('#client_links').html('');
+                    var link_options = '<option value="">Select link</option>';
+
+                    ui.item.details.forEach(function(element) {
+                        link_options +=
+                            `<option value="${element.link_name}">${element.link_name}</option>`;
+                    });
+                    client_details = ui.item.details;
+                    $('#client_links').html(link_options);
+
+                    return false;
+                }
+
+            });
+
+        });
+
+        //Select FR key based on link name
+        $('#client_links').on('change', function() {
+            var link_name = $(this).val();
+            var client_id = $('#client_id').val();
+
+            var client = client_details.find(function(element) {
+                return element.link_name == link_name;
+            });
+
+            $('#fr_id').val(client.fr_id);
+        });
+
+        //Search Material
+        $(document).on('keyup focus', '.material_name', function() {
+            $(this).autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ url('search-material') }}",
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                            console.log(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $(this).closest('tr').find('.material_name').val(ui.item.label);
+                    $(this).closest('tr').find('.material_id').val(ui.item.value);
+                    $(this).closest('tr').find('.unit').val(ui.item.unit);
+                    return false;
+                }
+            });
+
+        });
     </script>
 @endsection
