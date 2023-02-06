@@ -1,10 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\SCM\Http\Controllers\CourierController;
 use Modules\SCM\Http\Controllers\UnitController;
+use Modules\SCM\Http\Controllers\CourierController;
 use Modules\SCM\Http\Controllers\MaterialController;
 use Modules\SCM\Http\Controllers\SupplierController;
+use Modules\SCM\Http\Controllers\ScmRequisitionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,5 +24,6 @@ Route::prefix('scm')->middleware(['auth'])->group(function() {
         'units'         => UnitController::class,
         'materials'     => MaterialController::class,
         'couriers'      => CourierController::class,
+        'requisitions'  => ScmRequisitionController::class,
     ]);
 });
