@@ -98,8 +98,9 @@ class ScmRequisitionController extends Controller
     {
         $formType = "edit";
         $requisitions = ScmRequisition::latest()->get();
+        $brands = Brand::latest()->get();
 
-        return view('scm::requisitions.create', compact('requisition', 'requisitions', 'formType'));
+        return view('scm::requisitions.create', compact('requisition', 'requisitions', 'formType', 'brands'));
     }
 
     /**

@@ -18,7 +18,7 @@ class ScmRequisition extends Model
     }
 
     public function scmRequisitiondetailsWithMaterial(){
-        return $this->hasMany(ScmRequisitionDetail::class)->with('material');
+        return $this->hasMany(ScmRequisitionDetail::class)->with('material', 'brand');
     }
 
     public function client(){
