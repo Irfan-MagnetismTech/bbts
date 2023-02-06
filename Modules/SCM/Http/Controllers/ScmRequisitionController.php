@@ -23,7 +23,7 @@ class ScmRequisitionController extends Controller
     }
     public function index()
     {
-        $requisitions = ScmRequisition::latest()->get();
+        $requisitions = ScmRequisition::with('client', 'requisitionBy')->latest()->get();
 
         return view('scm::requisitions.index', compact('requisitions'));
     }
@@ -84,7 +84,8 @@ class ScmRequisitionController extends Controller
      */
     public function show(ScmRequisition $requisition)
     {
-        //
+        // dd($requisition->scmRequisitiondetailsWithMaterial);
+        return view('scm::requisitions.show', compact('requisition'));
     }
 
     /**
