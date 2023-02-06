@@ -69,32 +69,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group  col-3">
-                    <label for="mrs_no">MRS No:</label>
-                    <input type="text" class="form-control mrs_no" id="mrs_no" name="mrs_no" aria-describedby="mrs_no"
-                        value="{{ old('mrs_no') ?? ($requisition->mrs_no ?? '') }}" placeholder="Input MRS no...">
-                </div>
-
-                <div class="form-group col-3">
-                    <label for="mq_id">MQ ID:</label>
-                    <input type="text" class="form-control" id="mq_id" name="mq_id" aria-describedby="mq_id"
-                        value="{{ old('mq_id') ?? ($requisition->mq_id ?? '') }}" placeholder="Search...">
-                </div>
-
-                <div class="form-group col-3">
-                    <label for="fr_id">FR ID:</label>
-                    <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                        value="{{ old('fr_id') ?? ($requisition->fr_id ?? '') }}" placeholder="Search...">
-                </div>
-
-                <div class="form-group col-3">
-                    <label for="date">Applied Date:</label>
-                    <input type="date" class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? ($requisition->date ?? '') }}">
-                </div>
-            </div>
-
-            <div class="row">
                 <div class="form-group col-3">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
@@ -119,6 +93,20 @@
                     <label for="address">Address:</label>
                     <input type="text" class="form-control" id="address" name="address" aria-describedby="address" disabled
                         value="{{ old('address') ?? ($requisition->address ?? '') }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-3">
+                    <label for="fr_id">FR ID:</label>
+                    <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
+                        value="{{ old('fr_id') ?? ($requisition->fr_id ?? '') }}"  disabled>
+                    <input type="hidden" name="fr_composite_key" id="fr_composite_key">
+                </div>
+
+                <div class="form-group col-3">
+                    <label for="date">Applied Date:</label>
+                    <input type="date" class="form-control" id="date" name="date" aria-describedby="date"
+                        value="{{ old('date') ?? ($requisition->date ?? '') }}">
                 </div>
             </div>
 
@@ -276,7 +264,7 @@
                     $('#client_name').val(ui.item.label);
                     $('#client_id').val(ui.item.value);
                     $('#client_no').val(ui.item.client_no);
-                    $('#address').val(ui.item.address);
+                    // $('#address').val(ui.item.address);
                     //map client details
 
                     $('#client_links').html('');
@@ -306,6 +294,8 @@
             });
 
             $('#fr_id').val(client.fr_id);
+            $('#fr_composite_key').val(client.fr_composite_key);
+            // $('#address').val(element.address);
         });
 
         //Search Material

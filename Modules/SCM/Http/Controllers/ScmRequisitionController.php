@@ -7,9 +7,12 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Admin\Entities\Brand;
+use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Http\Requests\SupplierRequest;
 use Modules\SCM\Http\Requests\ScmRequisitionRequest;
+use Termwind\Components\Dd;
 
 class ScmRequisitionController extends Controller
 {
@@ -51,7 +54,13 @@ class ScmRequisitionController extends Controller
     public function store(ScmRequisitionRequest $request)
     {
         try {
-            $requestData = $request->only('mrs_no', 'type', 'client_id', 'fr_composit_key', 'date', 'branch_id', 'pop_id', 'purpose');
+            $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'pop_id', 'purpose', 'fr_composite_key');
+            $lastMRSId = ScmRequisition::latest()->first();
+            if ($lastMRSId) {
+                $requestData['mrs_no'] = now()->format('Y') . '-' . $lastMRSId->id + 1;
+            } else {
+                $requestData['mrs_no'] = now()->format('Y') . '-' . 1;
+            }
             $requestData['requisition_by'] = auth()->id();
             $requisitionDetails = [];
             foreach ($request->material_id as $key => $data) {
@@ -69,7 +78,7 @@ class ScmRequisitionController extends Controller
             $requisition->scmRequisitiondetails()->createMany($requisitionDetails);
             DB::commit();
 
-            return redirect()->route('requisitions.create')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('requisitions.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
             DB::rollBack();
             return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
