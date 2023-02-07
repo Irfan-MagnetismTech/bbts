@@ -138,7 +138,7 @@
                         <th> Requisition Qty.</th>
                         <th> Brand</th>
                         <th> Model </th>
-                        <th> Remarks </th>
+                        <th> Purpose </th>
                         <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
                     </tr>
                 </thead>
@@ -173,7 +173,7 @@
                             <input type="number" name="model[]" class="form-control model" autocomplete="off">
                         </td>
                         <td>
-                            <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
+                            <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
                         </td>
                         <td>
                             <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
@@ -217,6 +217,7 @@
 
             $('.select2').select2();
 
+            //using form custom function js file
             pushDataList("{{ route('searchBranch') }}", '#branch_id');
         });
 
@@ -250,7 +251,7 @@
                                 <input type="number" name="model[]" class="form-control model" autocomplete="off">
                             </td>
                             <td>
-                                <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
+                                <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>

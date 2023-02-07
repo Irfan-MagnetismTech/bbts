@@ -54,7 +54,7 @@ class ScmRequisitionController extends Controller
     public function store(ScmRequisitionRequest $request)
     {
         try {
-            $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'pop_id', 'purpose', 'fr_composite_key');
+            $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'pop_id', 'fr_composite_key');
             $lastMRSId = ScmRequisition::latest()->first();
             if ($lastMRSId) {
                 $requestData['mrs_no'] = now()->format('Y') . '-' . $lastMRSId->id + 1;
@@ -62,6 +62,8 @@ class ScmRequisitionController extends Controller
                 $requestData['mrs_no'] = now()->format('Y') . '-' . 1;
             }
             $requestData['requisition_by'] = auth()->id();
+
+            dd($requestData);
             $requisitionDetails = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
