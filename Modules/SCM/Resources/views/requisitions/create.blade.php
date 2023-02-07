@@ -76,33 +76,34 @@
                     </select>
                 </div>
 
-                <div class="form-group col-3">
+                <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
                         value="{{ old('client_name') ?? ($requisition->client_name ?? '') }}" placeholder="Search...">
                     <input type="hidden" name="client_id" id="client_id">
                 </div>
 
-                <div class="form-group col-3">
+                <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>
                     <select class="form-control select2" id="client_links" name="client_links">
+                        <option value="" disabled selected>Select Client Link</option>
                     </select>
                 </div>
 
-                <div class="form-group col-3">
+                <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no" disabled
                         value="{{ old('client_no') ?? ($requisition->client_no ?? '') }}">
 
                 </div>
 
-                <div class="form-group col-3">
+                <div class="form-group col-3 address">
                     <label for="address">Address:</label>
                     <input type="text" class="form-control" id="address" name="address" aria-describedby="address" disabled
                         value="{{ old('address') ?? ($requisition->address ?? '') }}">
                 </div>
 
-                <div class="form-group col-3">
+                <div class="form-group col-3 fr_id">
                     <label for="fr_id">FR ID:</label>
                     <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
                         value="{{ old('fr_id') ?? ($requisition->fr_id ?? '') }}"  disabled>
@@ -113,18 +114,12 @@
                     <label for="date">Applied Date:</label>
                     <input type="date" class="form-control" id="date" name="date" aria-describedby="date"
                         value="{{ old('date') ?? ($requisition->date ?? '') }}">
-                </div>            
-
-                <div class="form-group col-3">
-                    <label for="fr_id">FR ID:</label>
-                    <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                        value="{{ old('fr_id') ?? ($requisition->fr_id ?? '') }}"  disabled>
-                    <input type="hidden" name="fr_composite_key" id="fr_composite_key">
                 </div>
 
-                <div class="form-group col-3">
-                    <label for="select2">Client Links</label>
-                    <select class="form-control select2" id="client_links" name="client_links">
+                <div class="form-group col-3 pop_id" style="display: none">
+                    <label for="select2">Pop Name</label>
+                    <select class="form-control select2" id="pop_id" name="pop_id">
+                        <option value="" disabled selected>Select Pop</option>
                     </select>
                 </div>                
             </div>
@@ -135,6 +130,7 @@
                         <th> Material Name</th>
                         <th> Unit</th>
                         <th> Description</th>
+                        <th class="current_stock" style="display: none"> Current Stock</th>
                         <th> Requisition Qty.</th>
                         <th> Brand</th>
                         <th> Model </th>
@@ -157,7 +153,11 @@
                         </td>
                         <td>
                             <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                        </td>                        
+                        </td>
+                        <td class="current_stock" style="display: none">
+                            <input type="text" class="form-control current_stock" autocomplete="off" disabled>
+                        </td>
+
                         <td>
                             <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
                         </td>
@@ -210,21 +210,12 @@
         };
         window.onload = init;
 
-        $(document).ready(function() {
-            $('#dataTable').DataTable({
-                stateSave: true
-            });
-
-            $('.select2').select2();
-
-            //using form custom function js file
-            pushDataList("{{ route('searchBranch') }}", '#branch_id');
-        });
+        
 
         /* Appends re row */
         function appendCalculationRow() {
-            let row = `
-                        <tr>
+            var type = $("input[name=type]:checked").val()
+            let row = `<tr>
                             <td>
                                 <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
                                 <input type="hidden" name="material_id[]" class="form-control material_id">
@@ -234,10 +225,14 @@
                             </td>
                             <td>
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                            </td> 
+                            </td>
+                            ${ type === 'warehouse' || type === 'pop' ? `<td class="current_stock" style="display: block">
+                                <input type="text" class="form-control current_stock" autocomplete="off" disabled>
+                            </td>` : `<td class="current_stock" style="display: none">
+                                <input type="text" class="form-control current_stock" autocomplete="off" disabled>
+                            </td>` }                          
                             <td>
                                 <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
-                                
                             </td>
                             <td> 
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
@@ -292,7 +287,6 @@
                     $('#client_name').val(ui.item.label);
                     $('#client_id').val(ui.item.value);
                     $('#client_no').val(ui.item.client_no);
-                    // $('#address').val(ui.item.address);
                     //map client details
 
                     $('#client_links').html('');
@@ -353,19 +347,43 @@
 
         });
 
-        // axios.get("{{ route('searchBranch') }}")
-        // .then(function (response) {
-        //     let data = response.data.map(function (item) {
-        //         console.log(item);
-        //         return {
-        //             id: item.id,
-        //             text: item.text
-        //         };
-        //     });
-        //     $('#branch_id').select2({
-        //         data: data
-        //     });
-        // });
 
+        $(document).ready(function() {
+            $('#dataTable').DataTable({
+                stateSave: true
+            });
+
+            $('.select2').select2();
+
+            //using form custom function js file
+            pushDataList("{{ route('searchBranch') }}", '#branch_id');
+            pushDataList("{{ route('searchPop') }}", '#pop_id');
+
+            //show inputs for client
+            $('#client').click(function() {
+                $('.pop_id').hide('slow');
+                $('.fr_id').show('slow');
+                $('.address').show('slow');
+                $('.client_name').show('slow');
+                $('.client_no').show('slow');
+                $('.client_links').show('slow');
+                $('.current_stock').hide('slow');
+            });
+
+            $('#pop, #warehouse').click(function() {
+                $('.pop_id').show('slow');
+                $('.fr_id').hide('slow');
+                $('.address').hide('slow');
+                $('.client_name').hide('slow');
+                $('.client_no').hide('slow');
+                $('.current_stock').show('slow');
+                $('.client_links').hide('slow');
+                //add display block css on .current_stock td
+                // $('.add-requisition-row').click(function(){
+                //     $('.current_stock td').css('display', 'block');
+                // });
+
+            });
+        });
     </script>
 @endsection

@@ -31,6 +31,7 @@ class CommonApiController extends Controller
     {
         $results = Material::query()
             ->where('name', 'LIKE', request('search') . '%')
+            ->orWhere('code', 'LIKE', request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -60,8 +61,8 @@ class CommonApiController extends Controller
             ->where('name', 'LIKE', request('search') . '%')
             ->get()
             ->map(fn ($item) => [
-                'value' => $item->id,
-                'label' => $item->name,
+                'id' => $item->id,
+                'text' => $item->name,
                 'address' => $item->address,
             ]);
 
