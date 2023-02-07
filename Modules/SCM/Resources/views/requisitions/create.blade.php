@@ -70,6 +70,13 @@
             </div>
             <div class="row">
                 <div class="form-group col-3">
+                    <label for="select2">Warehouse/Branch Name</label>
+                    <select class="form-control select2" id="branch_id" name="branch_id">
+                        <option value="" disabled selected>Select Branch</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-3">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
                         value="{{ old('client_name') ?? ($requisition->client_name ?? '') }}" placeholder="Search...">
@@ -94,8 +101,7 @@
                     <input type="text" class="form-control" id="address" name="address" aria-describedby="address" disabled
                         value="{{ old('address') ?? ($requisition->address ?? '') }}">
                 </div>
-            </div>
-            <div class="row">
+
                 <div class="form-group col-3">
                     <label for="fr_id">FR ID:</label>
                     <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
@@ -107,7 +113,20 @@
                     <label for="date">Applied Date:</label>
                     <input type="date" class="form-control" id="date" name="date" aria-describedby="date"
                         value="{{ old('date') ?? ($requisition->date ?? '') }}">
+                </div>            
+
+                <div class="form-group col-3">
+                    <label for="fr_id">FR ID:</label>
+                    <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
+                        value="{{ old('fr_id') ?? ($requisition->fr_id ?? '') }}"  disabled>
+                    <input type="hidden" name="fr_composite_key" id="fr_composite_key">
                 </div>
+
+                <div class="form-group col-3">
+                    <label for="select2">Client Links</label>
+                    <select class="form-control select2" id="client_links" name="client_links">
+                    </select>
+                </div>                
             </div>
 
             <table class="table table-bordered" id="material_requisition">
@@ -115,6 +134,7 @@
                     <tr>
                         <th> Material Name</th>
                         <th> Unit</th>
+                        <th> Description</th>
                         <th> Requisition Qty.</th>
                         <th> Brand</th>
                         <th> Model </th>
@@ -135,6 +155,9 @@
                             <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
                                 disabled>
                         </td>
+                        <td>
+                            <input type="text" name="description[]" class="form-control description" autocomplete="off">
+                        </td>                        
                         <td>
                             <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
                         </td>
@@ -173,6 +196,7 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('js/custom-function.js') }}"></script>
     <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
@@ -190,10 +214,10 @@
             $('#dataTable').DataTable({
                 stateSave: true
             });
-        });
 
-        $(document).ready(function() {
             $('.select2').select2();
+
+            pushDataList("{{ route('searchBranch') }}", '#branch_id');
         });
 
         /* Appends re row */
@@ -207,6 +231,9 @@
                             <td>
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" disabled>
                             </td>
+                            <td>
+                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
+                            </td> 
                             <td>
                                 <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
                                 
@@ -324,5 +351,20 @@
             });
 
         });
+
+        // axios.get("{{ route('searchBranch') }}")
+        // .then(function (response) {
+        //     let data = response.data.map(function (item) {
+        //         console.log(item);
+        //         return {
+        //             id: item.id,
+        //             text: item.text
+        //         };
+        //     });
+        //     $('#branch_id').select2({
+        //         data: data
+        //     });
+        // });
+
     </script>
 @endsection

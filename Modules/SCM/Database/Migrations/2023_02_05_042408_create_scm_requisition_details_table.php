@@ -17,11 +17,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('scm_requisition_id');
             $table->integer('material_id')->nullable();
+            $table->string('description')->nullable();
             $table->string('item_code')->nullable();
             $table->integer('quantity')->nullable();
             $table->integer('brand_id')->nullable();
             $table->string('model')->nullable();
-            $table->string('remarks')->nullable();
+            $table->string('purpose')->nullable();
             $table->timestamps();
         });
     }

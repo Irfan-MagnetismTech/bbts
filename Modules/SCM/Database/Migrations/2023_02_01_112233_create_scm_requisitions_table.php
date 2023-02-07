@@ -24,7 +24,6 @@ return new class extends Migration
             $table->integer('branch_id')->nullable();
             $table->integer('pop_id')->nullable();
             $table->integer('requisition_by')->nullable();
-            $table->string('purpose')->nullable()->comment('1=Stock, 2=Other.s'); 
             $table->timestamps();
         });
     }

@@ -122,8 +122,7 @@
     </div>
 @endsection
 
-@section('script')
-    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+@section('script')    
     <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
