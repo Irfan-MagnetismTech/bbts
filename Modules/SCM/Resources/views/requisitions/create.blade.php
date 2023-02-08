@@ -70,7 +70,7 @@
             </div>
             <div class="row">
                 <div class="form-group col-3">
-                    <label for="select2">Warehouse/Branch Name</label>
+                    <label for="select2">Branch Name</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
                         <option value="" disabled selected>Select Branch</option>
                     </select>
@@ -210,6 +210,30 @@
         };
         window.onload = init;
 
+        const pop = "{{ route('searchPop') }}"
+
+        $('#division_id').on('change', function() {
+            let division_id = $(this).val();
+            axios.get(districts, {
+                    params: {
+                        division_id: division_id
+                    }
+                })
+                .then(function(response) {
+                    $('#district_id').html('');
+                    var district_options = '<option value="">Select district</option>';
+                    response.data.map(function(district) {
+                        district_options += `<option value="${district.id}">${district.name}</option>`;
+                    });
+                    $('#district_id').html(district_options);
+                    console.log(response.data);
+
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        });
+
         /* Append row */
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
@@ -299,9 +323,7 @@
 
                     return false;
                 }
-
             });
-
         });
 
         //Select FR key based on link name
@@ -345,7 +367,6 @@
 
         });
 
-
         $(document).ready(function() {
             $('#dataTable').DataTable({
                 stateSave: true
@@ -354,8 +375,8 @@
             $('.select2').select2();
 
             //using form custom function js file
-            pushDataList("{{ route('searchBranch') }}", '#branch_id');
-            pushDataList("{{ route('searchPop') }}", '#pop_id');
+            fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
+            fillSelect2Options("{{ route('searchPop') }}", '#pop_id');
 
             //show inputs for client
             $('#client').click(function() {
@@ -368,7 +389,17 @@
                 $('.current_stock').hide('slow');
             });
 
-            $('#pop, #warehouse').click(function() {
+            $('#warehouse').click(function() {
+                $('.pop_id').hide('slow');
+                $('.fr_id').hide('slow');
+                $('.address').hide('slow');
+                $('.client_name').hide('slow');
+                $('.client_no').hide('slow');
+                $('.current_stock').show('slow');
+                $('.client_links').hide('slow');
+            });
+
+            $('#pop').click(function() {
                 $('.pop_id').show('slow');
                 $('.fr_id').hide('slow');
                 $('.address').hide('slow');
@@ -376,7 +407,6 @@
                 $('.client_no').hide('slow');
                 $('.current_stock').show('slow');
                 $('.client_links').hide('slow');
-
             });
         });
     </script>

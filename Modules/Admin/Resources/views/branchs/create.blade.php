@@ -72,7 +72,7 @@
                                 class="text-danger">*</span></label>
                         <select class="form-control" id="district_id" name="district_id" required>
                             <option value="">Select district</option>
-                            @if($formType == 'edit')
+                            @if ($formType == 'edit')
                                 @foreach (@$districts as $district)
                                     <option value="{{ $district->id }}"
                                         {{ (old('district_id') ?? ($branch->district_id ?? '')) == $district->id ? 'selected' : '' }}>
@@ -89,7 +89,7 @@
                         <label class="input-group-addon" for="district_id">thana <span class="text-danger">*</span></label>
                         <select class="form-control" id="thana_id" name="thana_id" required>
                             <option value="">Select thana</option>
-                            @if($formType == 'edit')
+                            @if ($formType == 'edit')
                                 @foreach (@$thanas as $thana)
                                     <option value="{{ $thana->id }}"
                                         {{ (old('thana_id') ?? ($branch->thana_id ?? '')) == $thana->id ? 'selected' : '' }}>
@@ -122,7 +122,8 @@
     </div>
 @endsection
 
-@section('script')    
+@section('script')
+    <script src="{{ asset('js/custom-function.js') }}"></script>
     <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
@@ -142,51 +143,8 @@
             });
         });
 
-        const divisions = "{{ route('get_districts') }}"
-        const thanas = "{{ route('get_thanas') }}"
-
-        $('#division_id').on('change', function() {
-            let division_id = $(this).val();
-            axios.get(divisions, {
-                    params: {
-                        division_id: division_id
-                    }
-                })
-                .then(function(response) {
-                    $('#district_id').html('');
-                    var district_options = '<option value="">Select district</option>';
-                    response.data.map(function(district) {
-                        district_options += `<option value="${district.id}">${district.name}</option>`;
-                    });
-                    $('#district_id').html(district_options);
-                    console.log(response.data);
-
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
-        });
-
-        $('#district_id').on('change', function() {
-            let district_id = $(this).val();
-            axios.get(thanas, {
-                    params: {
-                        district_id: district_id
-                    }
-                })
-                .then(function(response) {
-                    $('#thana_id').html('');
-                    var thana_options = '<option value="">Select thana</option>';
-                    response.data.map(function(thana) {
-                        thana_options += `<option value="${thana.id}">${thana.name}</option>`;
-                    });
-                    $('#thana_id').html(thana_options);
-                    console.log(response.data);
-
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
-        });
+        // get data by associative dropdown
+        associativeDropdown("{{ route('get_districts') }}", 'division_id', '#division_id', '#district_id', 'get', null)
+        associativeDropdown("{{ route('get_thanas') }}", 'district_id', '#district_id', '#thana_id', 'get', null)
     </script>
 @endsection

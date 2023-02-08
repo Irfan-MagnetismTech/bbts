@@ -63,15 +63,15 @@ class ScmRequisitionController extends Controller
             }
             $requestData['requisition_by'] = auth()->id();
 
-            dd($request->all());
             $requisitionDetails = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
                     'material_id' => $request->material_id[$key],
+                    'description' => $request->description[$key],
                     'quantity' => $request->quantity[$key],
                     'brand_id' => $request->brand_id[$key],
                     'model' => $request->model[$key],
-                    'remarks' => $request->remarks[$key],
+                    'purpose' => $request->purpose[$key],
                 ];
             }
 
