@@ -210,9 +210,7 @@
         };
         window.onload = init;
 
-        
-
-        /* Appends re row */
+        /* Append row */
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
@@ -378,10 +376,6 @@
                 $('.client_no').hide('slow');
                 $('.current_stock').show('slow');
                 $('.client_links').hide('slow');
-                //add display block css on .current_stock td
-                // $('.add-requisition-row').click(function(){
-                //     $('.current_stock td').css('display', 'block');
-                // });
 
             });
         });
