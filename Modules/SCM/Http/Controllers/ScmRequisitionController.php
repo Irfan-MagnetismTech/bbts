@@ -2,17 +2,18 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Termwind\Components\Dd;
+use Modules\Admin\Entities\Pop;
+use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\Client;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
-use Modules\Admin\Entities\Brand;
-use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Http\Requests\SupplierRequest;
 use Modules\SCM\Http\Requests\ScmRequisitionRequest;
-use Termwind\Components\Dd;
 
 class ScmRequisitionController extends Controller
 {
@@ -62,7 +63,6 @@ class ScmRequisitionController extends Controller
                 $requestData['mrs_no'] = now()->format('Y') . '-' . 1;
             }
             $requestData['requisition_by'] = auth()->id();
-
             $requisitionDetails = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
@@ -108,10 +108,12 @@ class ScmRequisitionController extends Controller
     public function edit(ScmRequisition $requisition)
     {
         $formType = "edit";
-        $requisitions = ScmRequisition::latest()->get();
         $brands = Brand::latest()->get();
-
-        return view('scm::requisitions.create', compact('requisition', 'requisitions', 'formType', 'brands'));
+        $pops = Pop::latest()->get();
+        $clients = Client::latest()->get();
+        $clientDetails = ClientDetail::latest()->get();
+        $clientInfo = ClientDetail::where('client_id', $requisition->client_id)->get();
+        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfo'));
     }
 
     /**

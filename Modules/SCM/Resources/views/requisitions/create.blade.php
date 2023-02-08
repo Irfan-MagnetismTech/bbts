@@ -46,14 +46,14 @@
                     <div class="typeSection mt-2 mb-2">
                         <div class="form-check-inline">
                             <label class="form-check-label" for="client">
-                                <input type="radio" class="form-check-input" id="client" name="type" value="client"
-                                    checked> Client
+                                <input type="radio" class="form-check-input rd" id="client" name="type" value="client" @checked(@$requisition->type == "client")
+                                    > Client
                             </label>
                         </div>
 
                         <div class="form-check-inline">
                             <label class="form-check-label" for="warehouse">
-                                <input type="radio" class="form-check-input" id="warehouse" name="type"
+                                <input type="radio" class="form-check-input rd" id="warehouse" name="type" @checked(@$requisition->type == "warehouse")
                                     value="warehouse">
                                 Warehouse
                             </label>
@@ -61,7 +61,8 @@
 
                         <div class="form-check-inline">
                             <label class="form-check-label" for="pop">
-                                <input type="radio" class="form-check-input" id="pop" name="type" value="pop">
+                                <input type="radio" class="form-check-input rd" id="pop" name="type" value="pop" @checked(@$requisition->type == "pop")
+                                >
                                 POP
                             </label>
                         </div>
@@ -73,20 +74,27 @@
                     <label for="select2">Branch Name</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
                         <option value="" disabled selected>Select Branch</option>
+                        @if($formType == 'edit')
+                            <option value="{{ $requisition->branch_id }}" selected>{{ $requisition->branch->name }}</option>
+                        @endif
                     </select>
                 </div>
 
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
-                        value="{{ old('client_name') ?? ($requisition->client_name ?? '') }}" placeholder="Search...">
+                        value="{{ old('client_name') ?? ($requisition->client->name ?? '') }}" placeholder="Search...">
                     <input type="hidden" name="client_id" id="client_id">
                 </div>
-
                 <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>
                     <select class="form-control select2" id="client_links" name="client_links">
                         <option value="" disabled selected>Select Client Link</option>
+                        @if($formType == 'edit')
+                            @foreach($clientDetails as $clientDetail)
+                                <option value="{{ $clientDetail->link_name }}" @selected($clientDetail->fr_composite_key == $requisition->fr_composite_key)>{{ $clientDetail->link_name }}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>
 
@@ -102,11 +110,10 @@
                     <input type="text" class="form-control" id="address" name="address" aria-describedby="address" disabled
                         value="{{ old('address') ?? ($requisition->address ?? '') }}">
                 </div>
-
                 <div class="form-group col-3 fr_id">
                     <label for="fr_id">FR ID:</label>
                     <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                        value="{{ old('fr_id') ?? ($requisition->fr_id ?? '') }}"  disabled>
+                        value="{{ old('fr_id') ?? ($requisition->clientDetailsWithCompositeKey->fr_id ?? '') }}"  disabled>
                     <input type="hidden" name="fr_composite_key" id="fr_composite_key">
                 </div>
 
@@ -197,19 +204,11 @@
 
 @section('script')
     <script src="{{ asset('js/custom-function.js') }}"></script>
-    <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script>
-        $(window).scroll(function() {
-            //set scroll position in session storage
-            sessionStorage.scrollPos = $(window).scrollTop();
-        });
-        var init = function() {
-            //get scroll position in session storage
-            $(window).scrollTop(sessionStorage.scrollPos || 0)
-        };
-        window.onload = init;
+    <script> 
 
+        // $(function(){
+           
+        // });
         /* Append row */
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
@@ -265,6 +264,10 @@
 
         //Search Client
         var client_details = [];
+        @if($formType === 'edit')        
+            client_details = {!! collect($clientInfo) !!}
+        @endif
+        console.log(client_details);
         $(document).on('keyup focus', '#client_name', function() {
             $(this).autocomplete({
                 source: function(request, response) {
@@ -304,17 +307,20 @@
 
         //Select FR key based on link name
         $('#client_links').on('change', function() {
+            var link_name = $("input[name='gender']:checked").val();
             var link_name = $(this).val();
             var client_id = $('#client_id').val();
-
             var client = client_details.find(function(element) {
                 return element.link_name == link_name;
             });
-
+            console.log(link_name,client_details);
             $('#fr_id').val(client.fr_id);
             $('#fr_composite_key').val(client.fr_composite_key);
-            // $('#address').val(element.address);
         });
+
+        function changeClintLink(){ 
+            
+        }
 
         //Search Material
         $(document).on('keyup focus', '.material_name', function() {
@@ -343,49 +349,53 @@
 
         });
 
-        $(document).ready(function() {
-            $('#dataTable').DataTable({
-                stateSave: true
-            });
+        // $(function(){
+        //     onChangeRadioButton()
+        // })
 
+        $(function() { 
+            onChangeRadioButton();
             $('.select2').select2();
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
             fillSelect2Options("{{ route('searchPop') }}", '#pop_id');
             associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
-
-
-            //show inputs for client
-            $('#client').click(function() {
-                $('.pop_id').hide('slow');
-                $('.fr_id').show('slow');
-                $('.address').show('slow');
-                $('.client_name').show('slow');
-                $('.client_no').show('slow');
-                $('.client_links').show('slow');
-                $('.current_stock').hide('slow');
-            });
-
-            $('#warehouse').click(function() {
-                $('.pop_id').hide('slow');
-                $('.fr_id').hide('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.client_no').hide('slow');
-                $('.current_stock').show('slow');
-                $('.client_links').hide('slow');
-            });
-
-            $('#pop').click(function() {
-                $('.pop_id').show('slow');
-                $('.fr_id').hide('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.client_no').hide('slow');
-                $('.current_stock').show('slow');
-                $('.client_links').hide('slow');
-            });
+ 
+            $(".rd").click(function() {
+                onChangeRadioButton()
+            });  
         });
+
+        
+
+        function onChangeRadioButton() {
+                var radioValue = $("input[name='type']:checked").val();
+                if (radioValue == 'client') {
+                    $('.pop_id').hide('slow');
+                    $('.fr_id').show('slow');
+                    $('.address').show('slow');
+                    $('.client_name').show('slow');
+                    $('.client_no').show('slow');
+                    $('.current_stock').hide('slow');
+                    $('.client_links').show('slow');
+                } else if (radioValue == 'warehouse') {
+                    $('.pop_id').hide('slow');
+                    $('.fr_id').hide('slow');
+                    $('.address').hide('slow');
+                    $('.client_name').hide('slow');
+                    $('.client_no').hide('slow');
+                    $('.current_stock').show('slow');
+                    $('.client_links').hide('slow');
+                } else if (radioValue == 'pop') {
+                    $('.pop_id').show('slow');
+                    $('.fr_id').hide('slow');
+                    $('.address').hide('slow');
+                    $('.client_name').hide('slow');
+                    $('.client_no').hide('slow');
+                    $('.current_stock').show('slow');
+                    $('.client_links').hide('slow');
+                }
+            }
     </script>
 @endsection

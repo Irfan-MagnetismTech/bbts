@@ -7,6 +7,7 @@ use Modules\Admin\Entities\User;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 
 class ScmRequisition extends Model
@@ -35,5 +36,9 @@ class ScmRequisition extends Model
 
     public function requisitionBy(){
         return $this->belongsTo(User::class, 'requisition_by');
+    }
+
+    public function clientDetailsWithCompositeKey(){
+        return $this->belongsTo(ClientDetail::class, 'fr_composite_key', 'fr_composite_key');
     }
 }
