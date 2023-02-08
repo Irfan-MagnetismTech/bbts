@@ -58,7 +58,7 @@ class CommonApiController extends Controller
     public function searchPop()
     {
         $results = Pop::query()
-            ->where('name', 'LIKE', request('search') . '%')
+            ->where('branch_id', 'LIKE', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,

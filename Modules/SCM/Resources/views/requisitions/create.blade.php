@@ -210,30 +210,6 @@
         };
         window.onload = init;
 
-        const pop = "{{ route('searchPop') }}"
-
-        $('#division_id').on('change', function() {
-            let division_id = $(this).val();
-            axios.get(districts, {
-                    params: {
-                        division_id: division_id
-                    }
-                })
-                .then(function(response) {
-                    $('#district_id').html('');
-                    var district_options = '<option value="">Select district</option>';
-                    response.data.map(function(district) {
-                        district_options += `<option value="${district.id}">${district.name}</option>`;
-                    });
-                    $('#district_id').html(district_options);
-                    console.log(response.data);
-
-                })
-                .catch(function(error) {
-                    console.log(error);
-                });
-        });
-
         /* Append row */
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
@@ -377,6 +353,8 @@
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
             fillSelect2Options("{{ route('searchPop') }}", '#pop_id');
+            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
+
 
             //show inputs for client
             $('#client').click(function() {

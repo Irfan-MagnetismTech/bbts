@@ -23,12 +23,21 @@ function fillSelect2Options(routeLink, idSelector) {
  * @param {string} method
  * @param {string} csrf
  */
-function associativeDropdown(routeLink, queryString, idSelector, idSelectorChange, method = 'get', csrf = null) {
+function associativeDropdown(
+    routeLink,
+    queryString,
+    idSelector,
+    idSelectorChange,
+    method = "get",
+    csrf = null
+) {
     $(idSelector).on("change", function () {
         let selector_id = $(this).val();
         axios[method](routeLink, {
+            headers: {
+                "X-CSRF-TOKEN": csrf,
+            },
             params: {
-                _token: csrf,
                 [queryString]: selector_id,
             },
         })
@@ -36,7 +45,7 @@ function associativeDropdown(routeLink, queryString, idSelector, idSelectorChang
                 $(idSelectorChange).html("");
                 var dropdownOptions = '<option value="">Select option</option>';
                 response.data.map(function (dataValue) {
-                    dropdownOptions += `<option value="${dataValue.id}">${dataValue.name}</option>`;
+                    dropdownOptions += `<option value="${dataValue.id}">${dataValue.text}</option>`;
                 });
                 $(idSelectorChange).html(dropdownOptions);
             })
