@@ -37,6 +37,7 @@ class CommonApiController extends Controller
                 'value' => $item->id,
                 'label' => $item->name . ' - ' . $item->code,
                 'unit' => $item->unit,
+                'item_code' => $item->code,
             ]);
 
         return response()->json($results);

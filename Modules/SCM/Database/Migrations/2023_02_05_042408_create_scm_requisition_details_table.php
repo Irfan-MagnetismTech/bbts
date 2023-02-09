@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('scm_requisition_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('scm_requisition_id');
+            $table->string('req_key')->comment('requisition_composite_Key');
             $table->integer('material_id')->nullable();
             $table->string('description')->nullable();
             $table->string('item_code')->nullable();

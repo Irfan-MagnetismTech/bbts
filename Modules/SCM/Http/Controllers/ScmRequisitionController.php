@@ -54,7 +54,9 @@ class ScmRequisitionController extends Controller
      */
     public function store(ScmRequisitionRequest $request)
     {
+        // dd($request->all());
         try {
+            DB::beginTransaction();
             $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'pop_id', 'fr_composite_key');
             $lastMRSId = ScmRequisition::latest()->first();
             if ($lastMRSId) {
@@ -63,10 +65,14 @@ class ScmRequisitionController extends Controller
                 $requestData['mrs_no'] = now()->format('Y') . '-' . 1;
             }
             $requestData['requisition_by'] = auth()->id();
+            $requisition = ScmRequisition::create($requestData);
+
             $requisitionDetails = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
                     'material_id' => $request->material_id[$key],
+                    'item_code' => $request->item_code[$key],
+                    'req_key' => $requisition->id . '-' . $request->item_code[$key],
                     'description' => $request->description[$key],
                     'quantity' => $request->quantity[$key],
                     'brand_id' => $request->brand_id[$key],
@@ -75,8 +81,6 @@ class ScmRequisitionController extends Controller
                 ];
             }
 
-            DB::beginTransaction();
-            $requisition = ScmRequisition::create($requestData);
             $requisition->scmRequisitiondetails()->createMany($requisitionDetails);
             DB::commit();
 
@@ -112,8 +116,9 @@ class ScmRequisitionController extends Controller
         $pops = Pop::latest()->get();
         $clients = Client::latest()->get();
         $clientDetails = ClientDetail::latest()->get();
-        $clientInfo = ClientDetail::where('client_id', $requisition->client_id)->get();
-        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfo'));
+        $clientInfos = ClientDetail::where('client_id', $requisition->client_id)->get();
+        // $fr_composite_key = $requisition->fr_composite_key;
+        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfos'));
     }
 
     /**
@@ -125,11 +130,35 @@ class ScmRequisitionController extends Controller
      */
     public function update(SupplierRequest $request, ScmRequisition $requisition)
     {
+        // dd($request->all());
         try {
-            $data = $request->all();
-            $requisition->update($data);
+            DB::beginTransaction();
+            $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'pop_id', 'fr_composite_key');
+            $requestData['requisition_by'] = auth()->id();
+
+            $requisition->update($requestData);
+
+            $requisitionDetails = [];
+            foreach ($request->material_id as $key => $data) {
+                $requisitionDetails[] = [
+                    'material_id' => $request->material_id[$key],
+                    'item_code' => $request->item_code[$key],
+                    'req_key' => $requisition->id . '-' . $request->item_code[$key],
+                    'description' => $request->description[$key],
+                    'quantity' => $request->quantity[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                    'purpose' => $request->purpose[$key],
+                ];
+            }
+
+            $requisition->scmRequisitiondetails()->delete();
+            $requisition->scmRequisitiondetails()->createMany($requisitionDetails);
+            DB::commit();
+
             return redirect()->route('requisitions.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
+            DB::rollBack();
             return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
         }
     }

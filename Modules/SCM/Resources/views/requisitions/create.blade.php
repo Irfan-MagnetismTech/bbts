@@ -35,7 +35,7 @@
 @section('content')
     <div class="container">
         <form
-            action="{{ $formType == 'edit' ? route('requisitions.update', $requisition->id) : route('requisitions.store') }}"
+            action="{{ $formType == 'edit' ? route('requisitions.update', @$requisition->id) : route('requisitions.store') }}"
             method="post" class="custom-form">
             @if ($formType == 'edit')
                 @method('PUT')
@@ -46,14 +46,14 @@
                     <div class="typeSection mt-2 mb-2">
                         <div class="form-check-inline">
                             <label class="form-check-label" for="client">
-                                <input type="radio" class="form-check-input rd" id="client" name="type" value="client" @checked(@$requisition->type == "client")
-                                    > Client
+                                <input type="radio" class="form-check-input radioButton" id="client" name="type" value="client" @checked(@$requisition->type == "client")
+                                > Client
                             </label>
                         </div>
 
                         <div class="form-check-inline">
                             <label class="form-check-label" for="warehouse">
-                                <input type="radio" class="form-check-input rd" id="warehouse" name="type" @checked(@$requisition->type == "warehouse")
+                                <input type="radio" class="form-check-input radioButton" id="warehouse" name="type" @checked(@$requisition->type == "warehouse")
                                     value="warehouse">
                                 Warehouse
                             </label>
@@ -61,7 +61,7 @@
 
                         <div class="form-check-inline">
                             <label class="form-check-label" for="pop">
-                                <input type="radio" class="form-check-input rd" id="pop" name="type" value="pop" @checked(@$requisition->type == "pop")
+                                <input type="radio" class="form-check-input radioButton" id="pop" name="type" value="pop" @checked(@$requisition->type == "pop")
                                 >
                                 POP
                             </label>
@@ -75,7 +75,7 @@
                     <select class="form-control select2" id="branch_id" name="branch_id">
                         <option value="" disabled selected>Select Branch</option>
                         @if($formType == 'edit')
-                            <option value="{{ $requisition->branch_id }}" selected>{{ $requisition->branch->name }}</option>
+                            <option value="{{ @$requisition->branch_id }}" selected>{{ @$requisition->branch->name }}</option>
                         @endif
                     </select>
                 </div>
@@ -83,16 +83,16 @@
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
-                        value="{{ old('client_name') ?? ($requisition->client->name ?? '') }}" placeholder="Search...">
-                    <input type="hidden" name="client_id" id="client_id">
+                        value="{{ old('client_name') ?? (@$requisition->client->name ?? '') }}" placeholder="Search...">
+                    <input type="hidden" name="client_id" id="client_id" value="{{ @$requisition?->client->id }}">
                 </div>
                 <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>
                     <select class="form-control select2" id="client_links" name="client_links">
                         <option value="" disabled selected>Select Client Link</option>
                         @if($formType == 'edit')
-                            @foreach($clientDetails as $clientDetail)
-                                <option value="{{ $clientDetail->link_name }}" @selected($clientDetail->fr_composite_key == $requisition->fr_composite_key)>{{ $clientDetail->link_name }}</option>
+                            @foreach($clientInfos as $clientInfo)
+                                <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$requisition->fr_composite_key)>{{ $clientInfo->link_name }}</option>
                             @endforeach
                         @endif
                     </select>
@@ -101,26 +101,27 @@
                 <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no" disabled
-                        value="{{ old('client_no') ?? ($requisition->client_no ?? '') }}">
+                        value="{{ old('client_no') ?? (@$requisition->client->client_no ?? '') }}">
 
                 </div>
 
                 <div class="form-group col-3 address">
                     <label for="address">Address:</label>
                     <input type="text" class="form-control" id="address" name="address" aria-describedby="address" disabled
-                        value="{{ old('address') ?? ($requisition->address ?? '') }}">
+                        value="{{ old('address') ?? (@$requisition->address ?? '') }}">
                 </div>
+                {{-- @dd(@$requisition->clientDetailsWithCompositeKey) --}}
                 <div class="form-group col-3 fr_id">
                     <label for="fr_id">FR ID:</label>
                     <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                        value="{{ old('fr_id') ?? ($requisition->clientDetailsWithCompositeKey->fr_id ?? '') }}"  disabled>
-                    <input type="hidden" name="fr_composite_key" id="fr_composite_key">
+                        value="{{ @$requisition->clientDetailsWithCompositeKey->fr_id }}"  disabled>
+                    <input type="hidden" name="fr_composite_key" id="fr_composite_key" value="{{  @$requisition->fr_composite_key  }}}}">
                 </div>
 
                 <div class="form-group col-3">
                     <label for="date">Applied Date:</label>
                     <input type="date" class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? ($requisition->date ?? '') }}">
+                        value="{{ old('date') ?? (@$requisition->date ?? '') }}">
                 </div>
 
                 <div class="form-group col-3 pop_id" style="display: none">
@@ -147,47 +148,99 @@
                 </thead>
                 <tbody></tbody>
                 <tfoot>
-                    <tr>
-                        <td>
-                            <input type="text" name="material_name[]" class="form-control material_name" required
-                                autocomplete="off">
-                            <input type="hidden" name="material_id[]" class="form-control material_id">
+                    @if($formType == 'create')
+                        <tr>
+                            <td>
+                                <input type="text" name="material_name[]" class="form-control material_name" required
+                                    autocomplete="off">
+                                <input type="hidden" name="material_id[]" class="form-control material_id">
+                                <input type="hidden" name="item_code[]" class="form-control item_code">
+                            </td>
+                            <td>
+                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
+                                    disabled>
+                            </td>
+                            <td>
+                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
+                            </td>
+                            <td class="current_stock" style="display: none">
+                                <input type="text" class="form-control current_stock" autocomplete="off" disabled>
+                            </td>
 
-                        </td>
-                        <td>
-                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                disabled>
-                        </td>
-                        <td>
-                            <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                        </td>
-                        <td class="current_stock" style="display: none">
-                            <input type="text" class="form-control current_stock" autocomplete="off" disabled>
-                        </td>
+                            <td>
+                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
+                            </td>
+                            <td>
+                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                    <option value="">Select Brand</option>
+                                    @foreach ($brands as $brand)
+                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" name="model[]" class="form-control model" autocomplete="off">
+                            </td>
+                            <td>
+                                <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                        </tr>
+                    @else
+                        @foreach (@$requisition->scmRequisitiondetails as $requisitionDetail)
+                            <tr>
+                                <td>
+                                    <input type="text" name="material_name[]" class="form-control material_name" required
+                                        autocomplete="off" value="{{ $requisitionDetail->material->name . '-' . $requisitionDetail->material->code }}">
+                                    <input type="hidden" name="material_id[]" class="form-control material_id"
+                                        value="{{ $requisitionDetail->material_id }}">
+                                    <input type="hidden" name="item_code[]" class="form-control item_code"
+                                        value="{{ $requisitionDetail->material->code }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
+                                        disabled value="{{ $requisitionDetail->material->unit }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="description[]" class="form-control description" autocomplete="off"
+                                        value="{{ $requisitionDetail->description }}">
+                                </td>
+                                <td class="current_stock" style="display: none">
+                                    <input type="text" class="form-control current_stock" autocomplete="off" disabled
+                                        value="{{ $requisitionDetail->material->current_stock }}">
+                                </td>
 
-                        <td>
-                            <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
-                        </td>
-                        <td>
-                            <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                <option value="">Select Brand</option>
-                                @foreach ($brands as $brand)
-                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" name="model[]" class="form-control model" autocomplete="off">
-                        </td>
-                        <td>
-                            <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
-                        </td>
-                        <td>
-                            <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                    </tr>
+                                <td>
+                                    <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
+                                        value="{{ $requisitionDetail->quantity }}">
+                                </td>
+                                <td>
+                                    <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                        <option value="">Select Brand</option>
+                                        @foreach ($brands as $brand)
+                                            <option value="{{ $brand->id }}" @selected($brand->id == $requisitionDetail->brand_id)>{{ $brand->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" name="model[]" class="form-control model" autocomplete="off"
+                                        value="{{ $requisitionDetail->model }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
+                                        value="{{ $requisitionDetail->purpose }}">
+                                </td>
+                                <td>
+                                    <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+
                 </tfoot>
             </table>
 
@@ -204,11 +257,7 @@
 
 @section('script')
     <script src="{{ asset('js/custom-function.js') }}"></script>
-    <script> 
-
-        // $(function(){
-           
-        // });
+    <script>
         /* Append row */
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
@@ -216,6 +265,7 @@
                             <td>
                                 <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
                                 <input type="hidden" name="material_id[]" class="form-control material_id">
+                                <input type="hidden" name="item_code[]" class="form-control item_code">
                             </td>
                             <td>
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" disabled>
@@ -265,9 +315,8 @@
         //Search Client
         var client_details = [];
         @if($formType === 'edit')        
-            client_details = {!! collect($clientInfo) !!}
+            client_details = {!! collect($clientInfos) !!}
         @endif
-        console.log(client_details);
         $(document).on('keyup focus', '#client_name', function() {
             $(this).autocomplete({
                 source: function(request, response) {
@@ -281,7 +330,6 @@
                         success: function(data) {
                             response(data);
                         }
-
                     });
                 },
                 select: function(event, ui) {
@@ -313,14 +361,10 @@
             var client = client_details.find(function(element) {
                 return element.link_name == link_name;
             });
-            console.log(link_name,client_details);
+
             $('#fr_id').val(client.fr_id);
             $('#fr_composite_key').val(client.fr_composite_key);
         });
-
-        function changeClintLink(){ 
-            
-        }
 
         //Search Material
         $(document).on('keyup focus', '.material_name', function() {
@@ -335,13 +379,13 @@
                         },
                         success: function(data) {
                             response(data);
-                            console.log(data);
                         }
                     });
                 },
                 select: function(event, ui) {
                     $(this).closest('tr').find('.material_name').val(ui.item.label);
                     $(this).closest('tr').find('.material_id').val(ui.item.value);
+                    $(this).closest('tr').find('.item_code').val(ui.item.item_code);
                     $(this).closest('tr').find('.unit').val(ui.item.unit);
                     return false;
                 }
@@ -349,12 +393,9 @@
 
         });
 
-        // $(function(){
-        //     onChangeRadioButton()
-        // })
-
         $(function() { 
             onChangeRadioButton();
+
             $('.select2').select2();
 
             //using form custom function js file
@@ -362,7 +403,7 @@
             fillSelect2Options("{{ route('searchPop') }}", '#pop_id');
             associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
  
-            $(".rd").click(function() {
+            $(".radioButton").click(function() {
                 onChangeRadioButton()
             });  
         });
