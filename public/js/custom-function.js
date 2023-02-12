@@ -1,17 +1,36 @@
 //Axios get data and display in Select2
 
 function fillSelect2Options(routeLink, idSelector) {
-    axios.get(routeLink).then(function (response) {
-        let data = response.data.map(function (item) {
-            return {
-                id: item.id,
-                text: item.text,
-            };
+    axios
+        .get(routeLink)
+        .then(function (response) {
+            let data = response.data.map(function (item) {
+                return {
+                    id: item.id,
+                    text: item.text,
+                };
+            });
+            // $(idSelector).select2({
+            //     data: data,
+            // });
+
+            // Store the previous value before setting the options
+            previousValue = $(idSelector).val();
+
+            // Set the options
+            $(idSelector).select2({
+                data: data,
+            });
+
+            // Set the selected option
+            $(idSelector).val(previousValue).trigger("change");
+        })
+        .catch(function (error) {
+            console.error(error);
+
+            // Set the selected option using the previous value
+            $(idSelector).val(previousValue).trigger("change");
         });
-        $(idSelector).select2({
-            data: data,
-        });
-    });
 }
 
 /**

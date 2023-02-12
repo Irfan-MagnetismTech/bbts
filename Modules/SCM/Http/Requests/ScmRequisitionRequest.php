@@ -14,7 +14,13 @@ class ScmRequisitionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'date' => 'required',
+            // 'requisition_type' => 'required',
+            // 'requisition_by' => 'required',
+            // 'requisition_to' => 'required',
+            // 'requisition_status' => 'required',
+            // 'requisition_remarks' => 'required',
+            // 'requisition_details' => 'required',
         ];
     }
 
@@ -26,7 +32,13 @@ class ScmRequisitionRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'date.required' => 'Requisition Date is required',
+            // 'requisition_type.required' => 'Requisition Type is required',
+            // 'requisition_by.required' => 'Requisition By is required',
+            // 'requisition_to.required' => 'Requisition To is required',
+            // 'requisition_status.required' => 'Requisition Status is required',
+            // 'requisition_remarks.required' => 'Requisition Remarks is required',
+            // 'requisition_details.required' => 'Requisition Details is required'
         ];
     }
 

@@ -7,6 +7,7 @@ use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
@@ -42,8 +43,9 @@ class ScmRequisitionController extends Controller
         $formType = "create";
         $requisitions = ScmRequisition::latest()->get();
         $brands = Brand::latest()->get();
+        $branchs = Branch::latest()->get();
 
-        return view('scm::requisitions.create', compact('requisitions', 'formType', 'brands'));
+        return view('scm::requisitions.create', compact('requisitions', 'formType', 'brands', 'branchs'));
     }
 
     /**
@@ -54,7 +56,6 @@ class ScmRequisitionController extends Controller
      */
     public function store(ScmRequisitionRequest $request)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
             $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'pop_id', 'fr_composite_key');
@@ -113,12 +114,13 @@ class ScmRequisitionController extends Controller
     {
         $formType = "edit";
         $brands = Brand::latest()->get();
+        $branchs = Branch::latest()->get();
         $pops = Pop::latest()->get();
         $clients = Client::latest()->get();
         $clientDetails = ClientDetail::latest()->get();
         $clientInfos = ClientDetail::where('client_id', $requisition->client_id)->get();
         // $fr_composite_key = $requisition->fr_composite_key;
-        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfos'));
+        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfos', 'branchs'));
     }
 
     /**

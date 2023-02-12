@@ -13,4 +13,9 @@ class Material extends Model
     {
         return $this->belongsTo(Unit::class);
     }
+
+    public function getMaterialNameWithCodeAttribute()
+    {
+        return $this->name . '-' . $this->code;
+    }
 }

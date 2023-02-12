@@ -46,14 +46,14 @@
                     <div class="typeSection mt-2 mb-2">
                         <div class="form-check-inline">
                             <label class="form-check-label" for="client">
-                                <input type="radio" class="form-check-input radioButton" id="client" name="type" value="client" @checked(@$requisition->type == "client")
+                                <input type="radio" class="form-check-input radioButton" id="client" name="type" value="client" @checked((@$requisition->type == "client") || (old('type') == 'client')) 
                                 > Client
                             </label>
                         </div>
 
                         <div class="form-check-inline">
                             <label class="form-check-label" for="warehouse">
-                                <input type="radio" class="form-check-input radioButton" id="warehouse" name="type" @checked(@$requisition->type == "warehouse")
+                                <input type="radio" class="form-check-input radioButton" id="warehouse" name="type" @checked((@$requisition->type == "warehouse") || (old('type') == 'warehouse'))
                                     value="warehouse">
                                 Warehouse
                             </label>
@@ -61,7 +61,7 @@
 
                         <div class="form-check-inline">
                             <label class="form-check-label" for="pop">
-                                <input type="radio" class="form-check-input radioButton" id="pop" name="type" value="pop" @checked(@$requisition->type == "pop")
+                                <input type="radio" class="form-check-input radioButton" id="pop" name="type" value="pop" @checked((@$requisition->type == "pop") || (old('type') == 'pop'))
                                 >
                                 POP
                             </label>
@@ -73,10 +73,13 @@
                 <div class="form-group col-3">
                     <label for="select2">Branch Name</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
-                        <option value="" disabled selected>Select Branch</option>
-                        @if($formType == 'edit')
-                            <option value="{{ @$requisition->branch_id }}" selected>{{ @$requisition->branch->name }}</option>
-                        @endif
+                        <option value="" readonly selected>Select Branch</option>
+                        @foreach($branchs as $option)
+                            <option value="{{ $option->id }}"
+                                {{ old('branch_id', @$requisition->branch_id) == $option->id ? 'selected' : '' }}>
+                                {{ $option->name }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
 
@@ -89,7 +92,10 @@
                 <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>
                     <select class="form-control select2" id="client_links" name="client_links">
-                        <option value="" disabled selected>Select Client Link</option>
+                        <option value="" readonly selected>Select Client Link</option>
+                        @if($formType == 'create')
+                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
+                        @endif 
                         @if($formType == 'edit')
                             @foreach($clientInfos as $clientInfo)
                                 <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$requisition->fr_composite_key)>{{ $clientInfo->link_name }}</option>
@@ -100,22 +106,21 @@
 
                 <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>
-                    <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no" disabled
+                    <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no" readonly
                         value="{{ old('client_no') ?? (@$requisition->client->client_no ?? '') }}">
 
                 </div>
 
                 <div class="form-group col-3 address">
                     <label for="address">Address:</label>
-                    <input type="text" class="form-control" id="address" name="address" aria-describedby="address" disabled
+                    <input type="text" class="form-control" id="address" name="address" aria-describedby="address" readonly
                         value="{{ old('address') ?? (@$requisition->address ?? '') }}">
                 </div>
-                {{-- @dd(@$requisition->clientDetailsWithCompositeKey) --}}
                 <div class="form-group col-3 fr_id">
                     <label for="fr_id">FR ID:</label>
                     <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                        value="{{ @$requisition->clientDetailsWithCompositeKey->fr_id }}"  disabled>
-                    <input type="hidden" name="fr_composite_key" id="fr_composite_key" value="{{  @$requisition->fr_composite_key  }}}}">
+                        value="{{ old('fr_id') ?? @$requisition->clientDetailsWithCompositeKey->fr_id }}"  readonly>
+                    <input type="hidden" name="fr_composite_key" id="fr_composite_key" value="{{  old('fr_composite_key') ?? @$requisition->fr_composite_key }}">
                 </div>
 
                 <div class="form-group col-3">
@@ -127,7 +132,7 @@
                 <div class="form-group col-3 pop_id" style="display: none">
                     <label for="select2">Pop Name</label>
                     <select class="form-control select2" id="pop_id" name="pop_id">
-                        <option value="" disabled selected>Select Pop</option>
+                        <option value="" readonly selected>Select Pop</option>
                     </select>
                 </div>                
             </div>
@@ -148,99 +153,66 @@
                 </thead>
                 <tbody></tbody>
                 <tfoot>
-                    @if($formType == 'create')
-                        <tr>
-                            <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" required
-                                    autocomplete="off">
-                                <input type="hidden" name="material_id[]" class="form-control material_id">
-                                <input type="hidden" name="item_code[]" class="form-control item_code">
-                            </td>
-                            <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                    disabled>
-                            </td>
-                            <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                            </td>
-                            <td class="current_stock" style="display: none">
-                                <input type="text" class="form-control current_stock" autocomplete="off" disabled>
-                            </td>
-
-                            <td>
-                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
-                            </td>
-                            <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                    <option value="">Select Brand</option>
-                                    @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="number" name="model[]" class="form-control model" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
-                            </td>
-                        </tr>
-                        <tr>
-                        </tr>
-                    @else
-                        @foreach (@$requisition->scmRequisitiondetails as $requisitionDetail)
+                    @php
+                        $material_name_with_code = old('material_name', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('material.materialNameWithCode')) : []);
+                        $material_id = old('material_id', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('material_id')) : []);
+                        $item_code = old('item_code', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('material.code')) : []);
+                        $unit = old('unit', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('material.unit')) : []);
+                        $description = old('description', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('description')) : []);
+                        $current_stock = old('current_stock', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('material.current_stock')) : []);
+                        $quantity = old('quantity', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('quantity')) : []);
+                        $brand_id = old('brand_id', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('brand_id')) : []);
+                        $model = old('model', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('model')) : []);
+                        $purpose = old('purpose', !empty($requisition) ?  ($requisition->scmRequisitiondetails->pluck('purpose')) : []);
+                    @endphp
+                        @foreach ($material_name_with_code as $key => $requisitionDetail)
                             <tr>
                                 <td>
                                     <input type="text" name="material_name[]" class="form-control material_name" required
-                                        autocomplete="off" value="{{ $requisitionDetail->material->name . '-' . $requisitionDetail->material->code }}">
+                                        autocomplete="off" value="{{ $material_name_with_code[$key] }}">
                                     <input type="hidden" name="material_id[]" class="form-control material_id"
-                                        value="{{ $requisitionDetail->material_id }}">
+                                        value="{{ $material_id[$key] }}">
                                     <input type="hidden" name="item_code[]" class="form-control item_code"
-                                        value="{{ $requisitionDetail->material->code }}">
+                                        value="{{ $item_code[$key] }}">
                                 </td>
                                 <td>
                                     <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                        disabled value="{{ $requisitionDetail->material->unit }}">
+                                        readonly value="{{ $unit[$key] }}">
                                 </td>
                                 <td>
                                     <input type="text" name="description[]" class="form-control description" autocomplete="off"
-                                        value="{{ $requisitionDetail->description }}">
+                                        value="{{ $description[$key] }}">
                                 </td>
                                 <td class="current_stock" style="display: none">
-                                    <input type="text" class="form-control current_stock" autocomplete="off" disabled
-                                        value="{{ $requisitionDetail->material->current_stock }}">
+                                    <input type="text" class="form-control current_stock" autocomplete="off" readonly
+                                        value="{{ $current_stock[$key] }}">
                                 </td>
 
                                 <td>
                                     <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
-                                        value="{{ $requisitionDetail->quantity }}">
+                                        value="{{ $quantity[$key] }}">
                                 </td>
                                 <td>
                                     <select name="brand_id[]" class="form-control brand" autocomplete="off">
                                         <option value="">Select Brand</option>
                                         @foreach ($brands as $brand)
-                                            <option value="{{ $brand->id }}" @selected($brand->id == $requisitionDetail->brand_id)>{{ $brand->name }}</option>
+                                            <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
                                 </td>
                                 <td>
                                     <input type="number" name="model[]" class="form-control model" autocomplete="off"
-                                        value="{{ $requisitionDetail->model }}">
+                                        value="{{ $model[$key] }}">
                                 </td>
                                 <td>
                                     <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
-                                        value="{{ $requisitionDetail->purpose }}">
+                                        value="{{ $purpose[$key] }}">
                                 </td>
                                 <td>
                                     <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
                                 </td>
                             </tr>
                         @endforeach
-                    @endif
-
                 </tfoot>
             </table>
 
@@ -259,6 +231,9 @@
     <script src="{{ asset('js/custom-function.js') }}"></script>
     <script>
         /* Append row */
+        @if(empty($requisition))
+                appendCalculationRow();
+        @endif
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
@@ -268,15 +243,15 @@
                                 <input type="hidden" name="item_code[]" class="form-control item_code">
                             </td>
                             <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" disabled>
+                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                             <td>
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off">
                             </td>
                             ${ type === 'warehouse' || type === 'pop' ? `<td class="current_stock" style="display: block">
-                                <input type="text" class="form-control current_stock" autocomplete="off" disabled>
+                                <input type="text" class="form-control current_stock" autocomplete="off" readonly>
                             </td>` : `<td class="current_stock" style="display: none">
-                                <input type="text" class="form-control current_stock" autocomplete="off" disabled>
+                                <input type="text" class="form-control current_stock" autocomplete="off" readonly>
                             </td>` }                          
                             <td>
                                 <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
@@ -336,7 +311,6 @@
                     $('#client_name').val(ui.item.label);
                     $('#client_id').val(ui.item.value);
                     $('#client_no').val(ui.item.client_no);
-                    //map client details
 
                     $('#client_links').html('');
                     var link_options = '<option value="">Select link</option>';
@@ -361,7 +335,6 @@
             var client = client_details.find(function(element) {
                 return element.link_name == link_name;
             });
-
             $('#fr_id').val(client.fr_id);
             $('#fr_composite_key').val(client.fr_composite_key);
         });
@@ -407,8 +380,6 @@
                 onChangeRadioButton()
             });  
         });
-
-        
 
         function onChangeRadioButton() {
                 var radioValue = $("input[name='type']:checked").val();
