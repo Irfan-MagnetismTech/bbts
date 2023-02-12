@@ -87,7 +87,7 @@
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
                         value="{{ old('client_name') ?? (@$requisition->client->name ?? '') }}" placeholder="Search...">
-                    <input type="hidden" name="client_id" id="client_id" value="{{ @$requisition?->client->id }}">
+                    <input type="hidden" name="client_id" id="client_id" value="{{ old('client_id') ?? @$requisition?->client->id }}">
                 </div>
                 <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>
@@ -128,11 +128,16 @@
                     <input type="date" class="form-control" id="date" name="date" aria-describedby="date"
                         value="{{ old('date') ?? (@$requisition->date ?? '') }}">
                 </div>
-
+                
                 <div class="form-group col-3 pop_id" style="display: none">
                     <label for="select2">Pop Name</label>
                     <select class="form-control select2" id="pop_id" name="pop_id">
                         <option value="" readonly selected>Select Pop</option>
+                        @if($formType == 'edit')
+                            @foreach($branchwisePops as $branchwisePop)
+                                <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$requisition->pop_id)>{{ $branchwisePop->name }}</option>
+                            @endforeach
+                        @endif
                     </select>
                 </div>                
             </div>
@@ -185,7 +190,7 @@
                                 </td>
                                 <td class="current_stock" style="display: none">
                                     <input type="text" class="form-control current_stock" autocomplete="off" readonly
-                                        value="{{ $current_stock[$key] }}">
+                                        value="{{ @$current_stock[$key] }}">
                                 </td>
 
                                 <td>
@@ -231,7 +236,7 @@
     <script src="{{ asset('js/custom-function.js') }}"></script>
     <script>
         /* Append row */
-        @if(empty($requisition))
+        @if(empty($requisition) && empty(old('material_name')))
                 appendCalculationRow();
         @endif
         function appendCalculationRow() {
@@ -373,7 +378,6 @@
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            fillSelect2Options("{{ route('searchPop') }}", '#pop_id');
             associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
  
             $(".radioButton").click(function() {

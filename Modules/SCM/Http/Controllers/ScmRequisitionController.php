@@ -119,8 +119,10 @@ class ScmRequisitionController extends Controller
         $clients = Client::latest()->get();
         $clientDetails = ClientDetail::latest()->get();
         $clientInfos = ClientDetail::where('client_id', $requisition->client_id)->get();
+        // $branchwisePops = ScmRequisition::with('pop')->where('id', $requisition->id)->get();
+        $branchwisePops = Pop::where('branch_id', $requisition->branch_id)->get();
         // $fr_composite_key = $requisition->fr_composite_key;
-        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfos', 'branchs'));
+        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfos', 'branchs', 'branchwisePops'));
     }
 
     /**
