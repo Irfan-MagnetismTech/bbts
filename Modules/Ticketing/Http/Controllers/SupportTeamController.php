@@ -2,9 +2,11 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use App\Models\Dataencoding\Employee;
+use Illuminate\Contracts\Support\Renderable;
 
 class SupportTeamController extends Controller
 {

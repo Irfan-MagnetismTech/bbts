@@ -33,6 +33,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-branch', [CommonApiController::class, 'searchBranch'])->name('searchBranch');
     Route::get('search-pop', [CommonApiController::class, 'searchPop'])->name('searchPop');
     Route::get('search-brand', [CommonApiController::class, 'searchBrand'])->name('searchBrand');
+    Route::get('search-department', [CommonApiController::class, 'searchDepartment'])->name('searchDepartment');
+    Route::get('search-employee', [CommonApiController::class, 'searchEmployee'])->name('searchEmployee');
 });
 
 require base_path('routes/dataencoding.php');
