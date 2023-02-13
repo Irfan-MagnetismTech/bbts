@@ -61,7 +61,7 @@
                                     <a href="{{ route('requisitions.edit', $requisition->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ url("admin/requisitions/$requisition->id") }}" method="POST"
+                                    <form action="{{ url("scm/requisitions/$requisition->id") }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')

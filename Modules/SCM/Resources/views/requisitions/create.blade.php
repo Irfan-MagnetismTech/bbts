@@ -73,7 +73,7 @@
                 <div class="form-group col-3">
                     <label for="select2">Branch Name</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
-                        <option value="" readonly selected>Select Branch</option>
+                        <option value="20"  selected>Select Branch</option>
                         @foreach($branchs as $option)
                             <option value="{{ $option->id }}"
                                 {{ old('branch_id', @$requisition->branch_id) == $option->id ? 'selected' : '' }}>
@@ -235,7 +235,7 @@
 @section('script')
     <script src="{{ asset('js/custom-function.js') }}"></script>
     <script>
-        $('#date').datepicker({format: "dd-mm-yyyy",autoclose: true,todayHighlight: true,showOtherMonths: true});
+        $('#date').datepicker({format: "dd-mm-yyyy",autoclose: true,todayHighlight: true,showOtherMonths: true}).datepicker("setDate", new Date());;
         /* Append row */
         @if(empty($requisition) && empty(old('material_name')))
                 appendCalculationRow();
