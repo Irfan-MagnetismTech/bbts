@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Requisitions')
+@section('title', 'Purchase Requisitions')
 
 @section('breadcrumb-title')
     @if ($formType == 'edit')
@@ -7,7 +7,7 @@
     @else
         Create
     @endif
-    MRS (Material Requisition Slip)
+    PRS (Purchaase Requisition Slip)
 @endsection
 
 @section('style')
@@ -22,7 +22,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('purchase-requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -35,54 +35,32 @@
 @section('content')
     <div class="container">
         <form
-            action="{{ $formType == 'edit' ? route('requisitions.update', @$requisition->id) : route('requisitions.store') }}"
+            action="{{ $formType == 'edit' ? route('purchase-requisitions.update', @$requisition->id) : route('purchase-requisitions.store') }}"
             method="post" class="custom-form">
             @if ($formType == 'edit')
                 @method('PUT')
             @endif
             @csrf
             <div class="row">
-                <div class="col-md-12">
-                    <div class="typeSection mt-2 mb-2">
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="client">
-                                <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                    value="client" @checked(@$requisition->type == 'client' || old('type') == 'client')> Client
-                            </label>
-                        </div>
+                <div class="typeSection mt-2 mb-2">
+                    <div class="form-check-inline">
+                        <label class="form-check-label" for="client">
+                            <input type="radio" class="form-check-input radioButton" id="client" name="type"
+                                value="client" @checked(@$requisition->type == 'client' || old('type') == 'client')> Client Purpose
+                        </label>
+                    </div>
 
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="warehouse">
-                                <input type="radio" class="form-check-input radioButton" id="warehouse" name="type"
-                                    @checked(@$requisition->type == 'warehouse' || old('type') == 'warehouse') value="warehouse">
-                                Warehouse
-                            </label>
-                        </div>
-
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="pop">
-                                <input type="radio" class="form-check-input radioButton" id="pop" name="type"
-                                    value="pop" @checked(@$requisition->type == 'pop' || old('type') == 'pop')>
-                                POP
-                            </label>
-                        </div>
+                    <div class="form-check-inline">
+                        <label class="form-check-label" for="internal">
+                            <input type="radio" class="form-check-input radioButton" id="internal" name="type"
+                                @checked(@$requisition->type == 'internal' || old('type') == 'internal') value="internal">
+                            Internal Purpose
+                        </label>
                     </div>
                 </div>
             </div>
+            
             <div class="row">
-                <div class="form-group col-3">
-                    <label for="select2">Branch Name</label>
-                    <select class="form-control select2" id="branch_id" name="branch_id">
-                        <option value="20" selected>Select Branch</option>
-                        @foreach ($branchs as $option)
-                            <option value="{{ $option->id }}"
-                                {{ old('branch_id', @$requisition->branch_id) == $option->id ? 'selected' : '' }}>
-                                {{ $option->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
@@ -114,11 +92,6 @@
 
                 </div>
 
-                <div class="form-group col-3 address">
-                    <label for="address">Address:</label>
-                    <input type="text" class="form-control" id="address" name="address" aria-describedby="address"
-                        readonly value="{{ old('address') ?? (@$requisition->address ?? '') }}">
-                </div>
                 <div class="form-group col-3 fr_id">
                     <label for="fr_id">FR ID:</label>
                     <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
@@ -140,7 +113,8 @@
                         @if ($formType == 'edit')
                             @foreach ($branchwisePops as $branchwisePop)
                                 <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$requisition->pop_id)>
-                                    {{ $branchwisePop->name }}</option>
+                                    {{ $branchwisePop->name }}
+                                </option>
                             @endforeach
                         @endif
                     </select>
@@ -207,7 +181,8 @@
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
                                         <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                            {{ $brand->name }}</option>
+                                            {{ $brand->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </td>
@@ -264,15 +239,11 @@
                             <td>
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off">
                             </td>
-                            ${ type === 'warehouse' || type === 'pop' ? 
-                            `<td class="current_stock" style="display: block">
-                                <input type="text" class="form-control current_stock" autocomplete="off" readonly>
-                            </td>` 
-                            : 
-                            `<td class="current_stock" style="display: none">
-                                <input type="text" class="form-control current_stock" autocomplete="off" readonly>
-                            </td>` 
-                            }                          
+                            ${ type === 'warehouse' || type === 'pop' ? `<td class="current_stock" style="display: block">
+                                        <input type="text" class="form-control current_stock" autocomplete="off" readonly>
+                                    </td>` : `<td class="current_stock" style="display: none">
+                                        <input type="text" class="form-control current_stock" autocomplete="off" readonly>
+                                    </td>` }                          
                             <td>
                                 <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
                             </td>
@@ -293,7 +264,7 @@
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
                             </td>
-                    </tr>
+                        </tr>
                     `;
             $('#material_requisition tbody').append(row);
         }
@@ -410,16 +381,8 @@
                 $('.client_no').show('slow');
                 $('.current_stock').hide('slow');
                 $('.client_links').show('slow');
-            } else if (radioValue == 'warehouse') {
+            } else if (radioValue == 'internal') {
                 $('.pop_id').hide('slow');
-                $('.fr_id').hide('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.client_no').hide('slow');
-                $('.current_stock').show('slow');
-                $('.client_links').hide('slow');
-            } else if (radioValue == 'pop') {
-                $('.pop_id').show('slow');
                 $('.fr_id').hide('slow');
                 $('.address').hide('slow');
                 $('.client_name').hide('slow');

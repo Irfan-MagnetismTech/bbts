@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->date('date')->nullable();
             $table->integer('client_id')->nullable();
-            $table->string('fr_compound_key')->nullable();
+            $table->string('fr_composite_key')->nullable();
             $table->string('assessment_no')->nullable();
             $table->integer('requisition_by');
             $table->integer('branch_id')->nullable();
