@@ -233,7 +233,6 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/custom-function.js') }}"></script>
     <script>
         $('#date').datepicker({format: "dd-mm-yyyy",autoclose: true,todayHighlight: true,showOtherMonths: true}).datepicker("setDate", new Date());;
         /* Append row */
