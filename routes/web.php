@@ -28,8 +28,11 @@ use Modules\Admin\Http\Controllers\AuthController;
 // Route::resource('users', UserControllerCopy::class);
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
-    Route::get('search-client', [CommonApiController::class, 'searchClient'])->name('search-client');
-    Route::get('search-material', [CommonApiController::class, 'searchMaterial'])->name('search-material');
+    Route::get('search-client', [CommonApiController::class, 'searchClient'])->name('searchClient');
+    Route::get('search-material', [CommonApiController::class, 'searchMaterial'])->name('searchMaterial');
+    Route::get('search-branch', [CommonApiController::class, 'searchBranch'])->name('searchBranch');
+    Route::get('search-pop', [CommonApiController::class, 'searchPop'])->name('searchPop');
+    Route::get('search-brand', [CommonApiController::class, 'searchBrand'])->name('searchBrand');
 });
 
 require base_path('routes/dataencoding.php');

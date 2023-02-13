@@ -49,14 +49,14 @@
                 <tr>
                     <td>{{$key  + 1}}</td>
                     <td class="text-center">{{$material->name}}</td>
-                    <td class="text-center">{{$material->unit->name ??''}}</td>
+                    <td class="text-center">{{$material->unit ??''}}</td>
                     <td class="text-center">{{$material->type ??''}}</td>
                     <td class="text-center">{{$material->code}}</td>
                     <td>
                         <div class="icon-btn">
                             <nobr>
                                 <a href="{{ route('materials.edit', $material->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                <form action="{{ url("admin/materials/$material->id") }}" method="POST" data-toggle="tooltip" title="Delete" class="d-inline">
+                                <form action="{{ url("scm/materials/$material->id") }}" method="POST" data-toggle="tooltip" title="Delete" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-outline-danger btn-sm delete"><i class="fas fa-trash"></i></button>

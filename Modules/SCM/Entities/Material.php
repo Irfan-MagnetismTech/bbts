@@ -2,7 +2,7 @@
 
 namespace Modules\SCM\Entities;
 
-use Modules\Admin\Entities\Unit;
+use Modules\SCM\Entities\Unit;
 use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
@@ -12,5 +12,10 @@ class Material extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function getMaterialNameWithCodeAttribute()
+    {
+        return $this->name . '-' . $this->code;
     }
 }

@@ -2,11 +2,16 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Termwind\Components\Dd;
+use Modules\Admin\Entities\Pop;
+use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Admin\Entities\Branch;
+use Modules\Sales\Entities\Client;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
-use Modules\Admin\Entities\Brand;
+use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Http\Requests\SupplierRequest;
 use Modules\SCM\Http\Requests\ScmRequisitionRequest;
@@ -23,7 +28,7 @@ class ScmRequisitionController extends Controller
     }
     public function index()
     {
-        $requisitions = ScmRequisition::latest()->get();
+        $requisitions = ScmRequisition::with('client', 'requisitionBy')->latest()->get();
 
         return view('scm::requisitions.index', compact('requisitions'));
     }
@@ -38,8 +43,9 @@ class ScmRequisitionController extends Controller
         $formType = "create";
         $requisitions = ScmRequisition::latest()->get();
         $brands = Brand::latest()->get();
+        $branchs = Branch::latest()->get();
 
-        return view('scm::requisitions.create', compact('requisitions', 'formType', 'brands'));
+        return view('scm::requisitions.create', compact('requisitions', 'formType', 'brands', 'branchs'));
     }
 
     /**
@@ -51,25 +57,42 @@ class ScmRequisitionController extends Controller
     public function store(ScmRequisitionRequest $request)
     {
         try {
-            $requestData = $request->only('mrs_no', 'type', 'client_id', 'fr_composit_key', 'date', 'branch_id', 'pop_id', 'purpose');
+            DB::beginTransaction();
+            if (request()->has('client')) {
+                $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'fr_composite_key');
+            } elseif (request()->has('warehouse')) {
+                $requestData = $request->only('type', 'date', 'branch_id');
+            } else {
+                $requestData = $request->only('type', 'date', 'branch_id', 'pop_id');
+            }
+
+            $lastMRSId = ScmRequisition::latest()->first();
+            if ($lastMRSId) {
+                $requestData['mrs_no'] = now()->format('Y') . '-' . $lastMRSId->id + 1;
+            } else {
+                $requestData['mrs_no'] = now()->format('Y') . '-' . 1;
+            }
             $requestData['requisition_by'] = auth()->id();
+            $requisition = ScmRequisition::create($requestData);
+
             $requisitionDetails = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
                     'material_id' => $request->material_id[$key],
+                    'item_code' => $request->item_code[$key],
+                    'req_key' => $requisition->id . '-' . $request->item_code[$key],
+                    'description' => $request->description[$key],
                     'quantity' => $request->quantity[$key],
                     'brand_id' => $request->brand_id[$key],
                     'model' => $request->model[$key],
-                    'remarks' => $request->remarks[$key],
+                    'purpose' => $request->purpose[$key],
                 ];
             }
 
-            DB::beginTransaction();
-            $requisition = ScmRequisition::create($requestData);
             $requisition->scmRequisitiondetails()->createMany($requisitionDetails);
             DB::commit();
 
-            return redirect()->route('requisitions.create')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('requisitions.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
             DB::rollBack();
             return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
@@ -84,7 +107,8 @@ class ScmRequisitionController extends Controller
      */
     public function show(ScmRequisition $requisition)
     {
-        //
+        // dd($requisition->scmRequisitiondetailsWithMaterial);
+        return view('scm::requisitions.show', compact('requisition'));
     }
 
     /**
@@ -96,9 +120,16 @@ class ScmRequisitionController extends Controller
     public function edit(ScmRequisition $requisition)
     {
         $formType = "edit";
-        $requisitions = ScmRequisition::latest()->get();
-
-        return view('scm::requisitions.create', compact('requisition', 'requisitions', 'formType'));
+        $brands = Brand::latest()->get();
+        $branchs = Branch::latest()->get();
+        $pops = Pop::latest()->get();
+        $clients = Client::latest()->get();
+        $clientDetails = ClientDetail::latest()->get();
+        $clientInfos = ClientDetail::where('client_id', $requisition->client_id)->get();
+        // $branchwisePops = ScmRequisition::with('pop')->where('id', $requisition->id)->get();
+        $branchwisePops = Pop::where('branch_id', $requisition->branch_id)->get();
+        // $fr_composite_key = $requisition->fr_composite_key;
+        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfos', 'branchs', 'branchwisePops'));
     }
 
     /**
@@ -110,11 +141,41 @@ class ScmRequisitionController extends Controller
      */
     public function update(SupplierRequest $request, ScmRequisition $requisition)
     {
+        // dd($request->all());
         try {
-            $data = $request->all();
-            $requisition->update($data);
+            DB::beginTransaction();
+            if (request()->has('client')) {
+                $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'fr_composite_key');
+            } elseif (request()->has('warehouse')) {
+                $requestData = $request->only('type', 'date', 'branch_id');
+            } else {
+                $requestData = $request->only('type', 'date', 'branch_id', 'pop_id');
+            }
+            $requestData['requisition_by'] = auth()->id();
+
+            $requisition->update($requestData);
+
+            $requisitionDetails = [];
+            foreach ($request->material_id as $key => $data) {
+                $requisitionDetails[] = [
+                    'material_id' => $request->material_id[$key],
+                    'item_code' => $request->item_code[$key],
+                    'req_key' => $requisition->id . '-' . $request->item_code[$key],
+                    'description' => $request->description[$key],
+                    'quantity' => $request->quantity[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                    'purpose' => $request->purpose[$key],
+                ];
+            }
+
+            $requisition->scmRequisitiondetails()->delete();
+            $requisition->scmRequisitiondetails()->createMany($requisitionDetails);
+            DB::commit();
+
             return redirect()->route('requisitions.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
+            DB::rollBack();
             return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
         }
     }

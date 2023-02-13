@@ -57,7 +57,7 @@
                                 <nobr>
                                     <a href="{{ route('suppliers.edit', $supplier->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    <form action="{{ url("admin/suppliers/$supplier->id") }}" method="POST"
+                                    <form action="{{ url("scm/suppliers/$supplier->id") }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')

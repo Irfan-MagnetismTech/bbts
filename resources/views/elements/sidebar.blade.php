@@ -81,13 +81,16 @@
                     {{--                    <li class="{{ request()->routeIs('employees.*') ? 'active' : null }}"><a href="{{ route('employees.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Employee </span><span class="pcoded-mcaret"></span></a></li> --}}
                     {{-- <li class="{{ request()->routeIs('leayer-name.*') ? 'active' : null }}"><a href="{{ route('leayer-name.index') }}"><span class="pcoded-micon"><i class="icon-pie-chart"></i></span><span class="pcoded-mtext"> Layer Name </span><span class="pcoded-mcaret"></span></a></li> --}}
                 </ul>
-            </li>
+            </li>        
+        </ul>
+        <div class="pcoded-navigation-label text-uppercase bg-primary">SUPPLY CHAIN (SCM)</div>
+        <ul class="pcoded-item pcoded-left-item">
             {{-- @hasanyrole('super-admin|admin') --}}
             <li
-                class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'couriers.*', 'requisitions.*']) ? 'active pcoded-trigger' : null }}">
+                class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'couriers.*']) ? 'active pcoded-trigger' : null }}">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
-                    <span class="pcoded-mtext">SCM</span>
+                    <span class="pcoded-mtext">Configurations</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
                 <ul class="pcoded-submenu">
@@ -111,9 +114,25 @@
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Couriers</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
-                    <li class="{{ request()->routeIs('requisitions.*') ? 'active' : null }}">
+                </ul>
+            </li>
+
+            <li
+                class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'couriers.*', 'requisitions.*']) ? 'active pcoded-trigger' : null }}">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                    <span class="pcoded-mtext">Requisitions</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class="{{ request()->routeIs('requisitions.create') ? 'active' : null }}">
                         <a href="{{ route('requisitions.create') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Requisitions</span><span
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Create New</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('requisitions.index') ? 'active' : null }}">
+                        <a href="{{ route('requisitions.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>
@@ -155,6 +174,7 @@
                 </ul>
             </li>
         </ul>
+            
         <div class="p-5"></div>
     </div>
 </nav>

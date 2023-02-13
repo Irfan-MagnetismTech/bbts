@@ -16,15 +16,14 @@ return new class extends Migration
         Schema::create('scm_requisitions', function (Blueprint $table) {
             $table->id();
             $table->string('mrs_no')->nullable();
-            $table->string('type')->nullable()->comment('1=Client, 2=Warehouse, POP');
+            $table->string('type')->nullable()->comment('1=Client, 2=Warehouse, 3=POP');
             $table->integer('client_id')->nullable();
-            $table->string('fr_composit_key')->nullable();
+            $table->string('fr_composite_key')->nullable();
             $table->string('date')->nullable();
             $table->string('remarks')->nullable();
             $table->integer('branch_id')->nullable();
             $table->integer('pop_id')->nullable();
             $table->integer('requisition_by')->nullable();
-            $table->string('purpose')->nullable()->comment('1=Stock, 2=Other.s'); 
             $table->timestamps();
         });
     }
