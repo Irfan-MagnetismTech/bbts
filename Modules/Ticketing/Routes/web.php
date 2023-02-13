@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use Modules\Ticketing\Http\Controllers\SupportTeamController;
 use Modules\Ticketing\Http\Controllers\SupportTicketController;
 
 /*
@@ -15,7 +16,8 @@ use Modules\Ticketing\Http\Controllers\SupportTicketController;
 Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::resources([
-        'support-tickets'     => SupportTicketController::class
+        'support-tickets'     => SupportTicketController::class,
+        'support-teams'       => SupportTeamController::class
     ]);
 
 });
