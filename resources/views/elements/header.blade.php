@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>{{ config('businessinfo.name') }} || @yield('title', 'BBTS Ltd')</title>
+    <title>@yield('title', 'BBTS Ltd') | {{ config('businessinfo.name') }}</title>
     <!--[if lt IE 10]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -34,8 +34,9 @@
 
         .select2-container--default .select2-selection--single {
             border-radius: 0 !important;
+            height: 35px;
             font-size: 13px !important;
-            border: 1px solid #efefef !important;
+            border: 1px solid #cccccc !important;
         }
     </style>
 </head>
@@ -106,9 +107,10 @@
                                 <ul class="show-notification profile-notification">
 
 
-                                    <li >
-                                   <a href="{{route('password-change-form')}}"><i class="ti-settings"></i>Change Password</a>
-                                </li>
+                                    <li>
+                                        <a href="{{ route('password-change-form') }}"><i class="ti-settings"></i>Change
+                                            Password</a>
+                                    </li>
 
                                     <li>
                                         <a href="{{ route('logout') }}"

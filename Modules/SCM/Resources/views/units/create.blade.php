@@ -14,10 +14,10 @@
 @endsection
 @section('content')
     @if ($formType == 'edit')
-        {!! Form::open(['url' => "admin/units/$unit->id", 'method' => 'PUT']) !!}
+        {!! Form::open(['url' => "scm/units/$unit->id", 'method' => 'PUT']) !!}
         <input type="hidden" name="id" value="{{ old('id') ? old('id') : (!empty($unit->id) ? $unit->id : null) }}">
     @else
-        {!! Form::open(['url' => 'admin/units', 'method' => 'POST']) !!}
+        {!! Form::open(['url' => 'scm/units', 'method' => 'POST']) !!}
     @endif
     <div class="row">
         <div class="col-md-5 pr-md-1 my-1 my-md-0">
@@ -56,10 +56,10 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ url("admin/units/$data->id/edit") }}" data-toggle="tooltip" title="Edit"
+                                    <a href="{{ url("scm/units/$data->id/edit") }}" data-toggle="tooltip" title="Edit"
                                         class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     {!! Form::open([
-                                        'url' => "admin/units/$data->id",
+                                        'url' => "scm/units/$data->id",
                                         'method' => 'delete',
                                         'class' => 'd-inline',
                                         'data-toggle' => 'tooltip',

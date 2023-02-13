@@ -46,12 +46,12 @@
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="unit_id">Unit <span class="text-danger">*</span></label>
-                        <select class="form-control" id="unit_id" name="unit_id" required>
+                        <label class="input-group-addon" for="unit">Unit <span class="text-danger">*</span></label>
+                        <select class="form-control" id="unit" name="unit" required>
                             <option value="">Select Unit</option>
                             @foreach ($units as $unit)
-                                <option value="{{ $unit->id }}"
-                                    {{ (old('unit_id') ?? ($material->unit_id ?? '')) == $unit->id ? 'selected' : '' }}>
+                                <option value="{{ $unit->name }}"
+                                    {{ (old('unit') ?? ($material->unit ?? '')) == $unit->name ? 'selected' : '' }}>
                                     {{ $unit->name }}
                                 </option>
                             @endforeach
