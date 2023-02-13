@@ -22,7 +22,6 @@ class MaterialController extends Controller
     public function index()
     {
         $materials = Material::with('unit')->latest()->get();
-
         return view('scm::materials.index', compact('materials'));
     }
 
@@ -53,7 +52,7 @@ class MaterialController extends Controller
         try{
             $data = $request->all();
             Material::create($data);
-            return redirect()->route('materials.create')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('materials.index')->with('message', 'Data has been inserted successfully');
         }catch(QueryException $e){
             return redirect()->route('materials.create')->withInput()->withErrors($e->getMessage());
         }

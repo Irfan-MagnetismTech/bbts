@@ -70,7 +70,7 @@
                     <tr>
                         <td> {{ $requisitiondetail->material->name }} </td>
                         <td> {{ $requisitiondetail->description }} </td>
-                        <td> {{ $requisitiondetail->material->name }} </td>
+                        <td> {{ $requisitiondetail->material->unit }} </td>
                         <td> {{ $requisitiondetail->quantity }} </td>
                         <td> {{ $requisitiondetail->brand->name }} </td>
                         <td> {{ $requisitiondetail->model }} </td>

@@ -125,8 +125,8 @@
 
                 <div class="form-group col-3">
                     <label for="date">Applied Date:</label>
-                    <input type="date" class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$requisition->date ?? '') }}">
+                    <input class="form-control" id="date" name="date" aria-describedby="date"
+                        value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
                 </div>
                 
                 <div class="form-group col-3 pop_id" style="display: none">
@@ -206,7 +206,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" name="model[]" class="form-control model" autocomplete="off"
+                                    <input type="text" name="model[]" class="form-control model" autocomplete="off"
                                         value="{{ $model[$key] }}">
                                 </td>
                                 <td>
@@ -235,6 +235,7 @@
 @section('script')
     <script src="{{ asset('js/custom-function.js') }}"></script>
     <script>
+        $('#date').datepicker({format: "dd-mm-yyyy",autoclose: true,todayHighlight: true,showOtherMonths: true});
         /* Append row */
         @if(empty($requisition) && empty(old('material_name')))
                 appendCalculationRow();
@@ -270,7 +271,7 @@
                                 </select>    
                             </td>
                             <td>
-                                <input type="number" name="model[]" class="form-control model" autocomplete="off">
+                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
                             </td>
                             <td>
                                 <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">

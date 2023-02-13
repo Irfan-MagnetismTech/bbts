@@ -2,7 +2,7 @@
 
 namespace Modules\SCM\Entities;
 
-use Modules\Admin\Entities\Unit;
+use Modules\SCM\Entities\Unit;
 use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
