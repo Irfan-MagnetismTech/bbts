@@ -9,6 +9,7 @@
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ asset('js/SmoothScroll.js') }}"></script>
 <script src="{{ asset('js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+<script src="{{ asset('js/custom-function.js') }}"></script>
 @yield('script')
 <script src="{{ asset('js/pcoded.min.js') }}"></script>
 <script src="{{ asset('js/vertical-layout.min.js') }}"></script>
