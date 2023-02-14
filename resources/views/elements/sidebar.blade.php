@@ -84,9 +84,7 @@
             </li>        
         </ul>
         @include('scm::layouts.sidebar')
-        @include('ticketing::layouts.sidebar')
-
-            
+        @include('ticketing::layouts.sidebar')            
         <div class="p-5"></div>
     </div>
 </nav>

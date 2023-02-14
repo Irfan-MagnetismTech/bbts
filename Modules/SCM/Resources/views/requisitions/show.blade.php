@@ -20,24 +20,24 @@
                     <tbody class="text-left">
                         <tr style="background-color: #0C4A77;color: white">
                             <td> <strong>MRS No.</strong> </td>
-                            <td> <strong>{{ 'MRS-' . $requisition->mrs_no }}</strong></td>
+                            <td> <strong>{{ $requisition->mrs_no }}</strong></td>
                         </tr>
                         <tr>
                             <td> <strong>Type</strong> </td>
                             <td> {{ ucfirst($requisition->type) }}</td>
                         </tr>
-                        @if ($requisition?->client)
+                        @if ($requisition?->type == 'client')
                             <tr>
                                 <td> <strong>Client Name</strong> </td>
                                 <td> {{ ucfirst($requisition->client->name) }}</td>
                             </tr>
                         @endif
-                        @if($requisition?->pop)
+                        @if ($requisition?->type == 'pop')
                             <tr>
                                 <td> <strong>Pop Name</strong> </td>
                                 <td> {{ ucfirst($requisition->pop->name) }}</td>
                             </tr>
-                        @endif  
+                        @endif
                         <tr>
                             <td> <strong>Date</strong> </td>
                             <td> {{ $requisition->date }}</td>

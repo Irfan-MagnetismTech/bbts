@@ -16,7 +16,7 @@ class CommonApiController extends Controller
     {
         $results = Client::query()
             ->with('clientDetails')
-            ->where('name', 'LIKE', request('search') . '%')
+            ->where('name', 'LIKE', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -32,8 +32,8 @@ class CommonApiController extends Controller
     public function searchMaterial()
     {
         $results = Material::query()
-            ->where('name', 'LIKE', request('search') . '%')
-            ->orWhere('code', 'LIKE', request('search') . '%')
+            ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->orWhere('code', 'LIKE', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -48,7 +48,7 @@ class CommonApiController extends Controller
     public function searchBranch()
     {
         $results = Branch::query()
-            ->where('name', 'LIKE', request('search') . '%')
+            ->where('name', 'LIKE', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,
@@ -75,7 +75,7 @@ class CommonApiController extends Controller
     public function searchBrand()
     {
         $results = Brand::query()
-            ->where('name', 'LIKE', request('search') . '%')
+            ->where('name', 'LIKE', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,

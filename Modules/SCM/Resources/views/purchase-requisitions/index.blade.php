@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Requisition')
+@section('title', 'Purchase Requisitions Slip')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of Requisition Info
+    List of Purchase Requisitions Slip Info
 @endsection
 
 @section('style')
@@ -14,10 +14,10 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('requisitions.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('purchase-requisitions.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    Total: {{ count($requisitions) }}
+    Total: {{ count($purchaseRequisitions) }}
 @endsection
 
 
@@ -45,23 +45,23 @@
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($requisitions as $key => $requisition)
+                @foreach ($purchaseRequisitions as $key => $requisition)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $requisition->mrs_no }}</td>
+                        <td class="text-center">{{ $requisition->prs_no }}</td>
                         <td class="text-center">{{ ucfirst($requisition->type) }}</td>
                         <td class="text-center">{{ ucfirst($requisition->requisitionBy->name) }}</td>
                         <td class="text-center">{{ $requisition->date }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ url("scm/requisitions/$requisition->id") }}" data-toggle="tooltip"
+                                    <a href="{{ url("scm/purchase-requisitions/$requisition->id") }}" data-toggle="tooltip"
                                         title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('requisitions.edit', $requisition->id) }}" data-toggle="tooltip"
+                                    <a href="{{ route('purchase-requisitions.edit', $requisition->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ url("scm/requisitions/$requisition->id") }}" method="POST"
+                                    <form action="{{ url("scm/purchase-requisitions/$requisition->id") }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')

@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('scm_purchase_requisitions', function (Blueprint $table) {
             $table->id();
-            $table->string('psr_no');
+            $table->string('prs_no');
             $table->string('type')->nullable();
-            $table->date('date')->nullable();
+            $table->string('date')->nullable();
             $table->integer('client_id')->nullable();
             $table->string('fr_composite_key')->nullable();
             $table->string('assessment_no')->nullable();
