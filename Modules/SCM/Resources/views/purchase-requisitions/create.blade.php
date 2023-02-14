@@ -42,24 +42,26 @@
             @endif
             @csrf
             <div class="row">
-                <div class="typeSection mt-2 mb-2">
-                    <div class="form-check-inline">
-                        <label class="form-check-label" for="client">
-                            <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                value="client" @checked(@$requisition->type == 'client' || old('type') == 'client')> Client Purpose
-                        </label>
-                    </div>
-
-                    <div class="form-check-inline">
-                        <label class="form-check-label" for="internal">
-                            <input type="radio" class="form-check-input radioButton" id="internal" name="type"
-                                @checked(@$requisition->type == 'internal' || old('type') == 'internal') value="internal">
-                            Internal Purpose
-                        </label>
+                <div class="col-12">
+                    <div class="typeSection mt-2 mb-4">
+                        <div class="form-check-inline">
+                            <label class="form-check-label" for="client">
+                                <input type="radio" class="form-check-input radioButton" id="client" name="type"
+                                    value="client" @checked(@$requisition->type == 'client' || old('type') == 'client')> Client Purpose
+                            </label>
+                        </div>
+    
+                        <div class="form-check-inline">
+                            <label class="form-check-label" for="internal">
+                                <input type="radio" class="form-check-input radioButton" id="internal" name="type"
+                                    @checked(@$requisition->type == 'internal' || old('type') == 'internal') value="internal">
+                                Internal Purpose
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
@@ -106,17 +108,17 @@
                         value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
                 </div>
 
-                <div class="form-group col-3 pop_id" style="display: none">
-                    <label for="select2">Pop Name</label>
-                    <select class="form-control select2" id="pop_id" name="pop_id">
-                        <option value="" readonly selected>Select Pop</option>
-                        @if ($formType == 'edit')
+                <div class="form-group col-3 assesment_no">
+                    <label for="select2">Assesment No</label>
+                    <select class="form-control select2" id="assesment_no" name="assesment_no">
+                        <option value="" readonly selected>Select Assesment No</option>
+                        {{-- @if ($formType == 'edit')
                             @foreach ($branchwisePops as $branchwisePop)
-                                <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$requisition->pop_id)>
+                                <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$requisition->assesment_no)>
                                     {{ $branchwisePop->name }}
                                 </option>
                             @endforeach
-                        @endif
+                        @endif --}}
                     </select>
                 </div>
             </div>
@@ -126,11 +128,11 @@
                     <tr>
                         <th> Material Name</th>
                         <th> Unit</th>
-                        <th> Description</th>
-                        <th class="current_stock" style="display: none"> Current Stock</th>
-                        <th> Requisition Qty.</th>
                         <th> Brand</th>
                         <th> Model </th>
+                        <th> Unit Price </th>
+                        <th> Quantity </th>
+                        <th> Total Amount </th>
                         <th> Purpose </th>
                         <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
                     </tr>
@@ -164,19 +166,6 @@
                                     readonly value="{{ $unit[$key] }}">
                             </td>
                             <td>
-                                <input type="text" name="description[]" class="form-control description"
-                                    autocomplete="off" value="{{ $description[$key] }}">
-                            </td>
-                            <td class="current_stock" style="display: none">
-                                <input type="text" class="form-control current_stock" autocomplete="off" readonly
-                                    value="{{ @$current_stock[$key] }}">
-                            </td>
-
-                            <td>
-                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
-                                    value="{{ $quantity[$key] }}">
-                            </td>
-                            <td>
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
@@ -189,6 +178,18 @@
                             <td>
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off"
                                     value="{{ $model[$key] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="unit_price[]" class="form-control unit_price"
+                                    autocomplete="off" value="{{ $unit_price[$key] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
+                                    value="{{ $quantity[$key] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="total_amount[]" class="form-control total_amount"
+                                    autocomplete="off" value="{{ $total_amount[$key] }}">
                             </td>
                             <td>
                                 <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
@@ -233,23 +234,9 @@
                                 <input type="hidden" name="material_id[]" class="form-control material_id">
                                 <input type="hidden" name="item_code[]" class="form-control item_code">
                             </td>
-                            <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                            </td>
-                            ${ type === 'warehouse' || type === 'pop' ? `<td class="current_stock" style="display: block">
-                                        <input type="text" class="form-control current_stock" autocomplete="off" readonly>
-                                    </td>` : `<td class="current_stock" style="display: none">
-                                        <input type="text" class="form-control current_stock" autocomplete="off" readonly>
-                                    </td>` }                          
-                            <td>
-                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
-                            </td>
                             <td> 
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                <option value="">Select Brand</option>
+                                    <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
@@ -257,6 +244,18 @@
                             </td>
                             <td>
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off">
+                            </td>
+                            <td>
+                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="unit_price[]" class="form-control unit_price" autocomplete="off">
+                            </td>
+                            <td>
+                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
+                            </td>
+                            <td>
+                                <input type="text" name="total_amount[]" class="form-control total_amount" autocomplete="off">
                             </td>
                             <td>
                                 <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
