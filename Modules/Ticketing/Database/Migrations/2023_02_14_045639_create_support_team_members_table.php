@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('support_teams', function (Blueprint $table) {
+        Schema::create('support_team_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('branches_id');
             $table->foreignId('users_id');
-            $table->foreignId('departments_id');
+            $table->foreignId('support_teams_id');
+            $table->integer('type')->comment('User Level');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('support_teams');
+        Schema::dropIfExists('support_team_members');
     }
 };

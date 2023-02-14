@@ -97,11 +97,12 @@ class CommonApiController extends Controller
     }
 
     public function searchEmployee() {
-        $results = Employee::where('name', 'LIKE', '%'.request('search') . '%')
+        $results = Employee::select('id', 'designation_id', 'name')->with('designation')->where('name', 'LIKE', '%'.request('search') . '%')
         ->get()
         ->map(fn ($item) => [
             'value' => $item->id,
             'label' => $item->name,
+            'designation' => $item->designation->name
         ]);
 
         return response()->json($results);

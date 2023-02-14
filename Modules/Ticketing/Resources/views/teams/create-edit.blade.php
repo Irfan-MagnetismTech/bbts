@@ -33,25 +33,25 @@
                 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label for="department_id">Department Name:</label>
+                            <label for="departments_id">Department Name:</label>
                             <input type="text" class="form-control" id="department_name" name="department_name" aria-describedby="department_name"
                                 value="{{ old('department_name') ?? ($team->department_name ?? '') }}" placeholder="Department Name">
 
-                            <input type="hidden" class="form-control" id="department_id" name="department_id" aria-describedby="department_id"
-                                value="{{ old('department_id') ?? ($team->department_id ?? '') }}">
+                            <input type="hidden" class="form-control" id="departments_id" name="departments_id" aria-describedby="departments_id"
+                                value="{{ old('departments_id') ?? ($team->departments_id ?? '') }}">
                         </div>
                         <div class="form-group col-6">
-                            <label for="user_id">Department Head:</label>
+                            <label for="employee_name">Department Head:</label>
 
                             <input type="text" class="form-control" id="employee_name" name="employee_name" aria-describedby="employee_name"
                                 value="{{ old('employee_name') ?? ($team->employee_name ?? '') }}" placeholder="Department Head">
 
-                            <input type="hidden" class="form-control" id="user_id" name="user_id" aria-describedby="user_id"
-                                value="{{ old('user_id') ?? ($team->user_id ?? '') }}">
+                            <input type="hidden" class="form-control" name="employee_id" aria-describedby="employee_id"
+                                value="{{ old('employee_id') ?? ($team->users_id ?? '') }}">
                         </div>
                     </div>
 
-                    Team Members
+                    <strong>Team Members</strong>
                     <div class="dt-responsive table-responsive">
                         <table class="table table-striped table-bordered" id="teamMembers">
                             <thead>
@@ -68,20 +68,28 @@
                                     <td>1</td>
                                     <td>
                                         <input type="text" value="" placeholder="Search Employee" class="employee-search form-control" />
-                                        <input type="hidden" name="user_id[]" value="" placeholder="Search Employee" class="form-control" />
+                                        <input type="hidden" name="users_id[]" value="" placeholder="Search Employee" class="member_id form-control" />
                                     </td>
                                     <td></td>
                                     <td>
                                         <select name="type[]" class="form-control">
-                                            <option>Level 1</option>
-                                            <option>Level 2</option>
-                                            <option>Level 3</option>
-                                        </select> 
+                                            @foreach($levels as $id => $level)
+                                             <option value="{{ $id }}">{{ $level }}</option>
+                                            @endforeach
+                                         </select> 
                                     </td>
                                     <td><i class="btn btn-danger btn-sm fa fa-minus remove-row"></i></td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+
+                    <div class="row">
+                        <div class="offset-md-4 col-md-4 mt-2">
+                            <div class="input-group input-group-sm ">
+                                <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -108,7 +116,7 @@
                 },
                 select: function(event, ui) {
                     $("#department_name").val(ui.item.label)
-                    $("#department_id").val(ui.item.value)
+                    $("#departments_id").val(ui.item.value)
                     return false;
                 }
             });
@@ -154,12 +162,14 @@
                 },
                 select: function(event, ui) {
                     let currentRow = $(this).closest("tr")
-                    $(currentRow)
+                    $(currentRow).find("td:nth-child(3)").html(ui.item.designation);
+                    $(currentRow).find("td:nth-child(2)").find('.employee-search').val(ui.item.label);
+                    $(currentRow).find("td:nth-child(2)").find('.member_id').val(ui.item.value);
+                    
                     return false;
                 }
             });
         });
-
 
         $(".add-more").on("click", function() {
         
@@ -167,14 +177,16 @@
             let tableRow = `<tr>
                                 <td>${length}</td>
                                 <td>
-                                    <input type="text" name="user_id[]" value="" placeholder="Search Employee" class="employee-search form-control" />
+                                    <input type="text" value="" placeholder="Search Employee" class="employee-search form-control" />
+                                    <input type="hidden" name="users_id[]" value="" placeholder="Search Employee" class="member_id form-control" />
+
                                 </td>
                                 <td></td>
                                 <td>
                                     <select name="type[]" class="form-control">
-                                        <option>Level 1</option>
-                                        <option>Level 2</option>
-                                        <option>Level 3</option>
+                                       @foreach($levels as $id => $level)
+                                        <option value="{{ $id }}">{{ $level }}</option>
+                                       @endforeach
                                     </select> 
                                 </td>
                                 <td><i class="btn btn-danger btn-sm fa fa-minus remove-row"></i></td>

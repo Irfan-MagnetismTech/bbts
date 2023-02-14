@@ -2,26 +2,19 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use App\Models\Dataencoding\Employee;
-use Illuminate\Contracts\Support\Renderable;
 
-class SupportTeamController extends Controller
+class SupportTeamMemberController extends Controller
 {
-    CONST EMPLOYEELEVELS = [
-            '1' => 'Level 1',
-            '2' => 'Level 2',
-            '3' => 'Level 3',
-    ];
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('ticketing::teams.index');
+        return view('ticketing::index');
     }
 
     /**
@@ -30,9 +23,7 @@ class SupportTeamController extends Controller
      */
     public function create()
     {
-        $formType = 'create';
-        $levels = self::EMPLOYEELEVELS;
-        return view('ticketing::teams.create-edit', compact('formType', 'levels'));
+        return view('ticketing::create');
     }
 
     /**
@@ -42,7 +33,7 @@ class SupportTeamController extends Controller
      */
     public function store(Request $request)
     {
-        return $request->all();
+        //
     }
 
     /**
