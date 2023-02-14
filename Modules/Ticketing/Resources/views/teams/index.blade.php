@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-   List of  Support Tickets
+   List of Support Teams
 @endsection
 
 @section('style')
@@ -14,10 +14,10 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('support-tickets.create')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('support-teams.create')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    Total: 
+    Total Team: 
 @endsection
 
 

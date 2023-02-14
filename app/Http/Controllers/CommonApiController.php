@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dataencoding\Department;
+use App\Models\Dataencoding\Employee;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\Brand;
 use Modules\Admin\Entities\Branch;
@@ -82,4 +84,28 @@ class CommonApiController extends Controller
 
         return response()->json($results);
     }
+
+    public function searchDepartment() {
+        $results = Department::where('name', 'LIKE', '%'.request('search') . '%')
+        ->get()
+        ->map(fn ($item) => [
+            'value' => $item->id,
+            'label' => $item->name,
+        ]);
+
+        return response()->json($results);
+    }
+
+    public function searchEmployee() {
+        $results = Employee::select('id', 'designation_id', 'name')->with('designation')->where('name', 'LIKE', '%'.request('search') . '%')
+        ->get()
+        ->map(fn ($item) => [
+            'value' => $item->id,
+            'label' => $item->name,
+            'designation' => $item->designation->name
+        ]);
+
+        return response()->json($results);
+    }
+
 }

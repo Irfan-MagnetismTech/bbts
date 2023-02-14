@@ -2,14 +2,18 @@
 
 namespace App\Models\Dataencoding;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
 
 class Employee extends Model
 {
-    use HasFactory;
+    protected $guarded = [];
 
     public function department() {
         return $this->belongsTo(Department::class, 'departments_id', 'id');
+    }
+
+    public function designation() {
+        return $this->belongsTo(Department::class, 'designation_id', 'id');
     }
 }

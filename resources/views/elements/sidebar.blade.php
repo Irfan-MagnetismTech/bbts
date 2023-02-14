@@ -159,6 +159,41 @@
                 </ul>
             </li>
             {{-- @endhasanyrole --}}
+
+            {{-- Ticketing and Support --}}
+            <li
+                class="pcoded-hasmenu">
+                <a href="javascript:void(0)">
+                    <span class="pcoded-micon"><i class="fas fa-headset"></i><b>D</b></span>
+                    <span class="pcoded-mtext">Support & Ticketing</span>
+                </a>
+                <ul class="pcoded-submenu">
+                    <li class="">
+                        <a href="{{ route('support-tickets.create') }}"> 
+                            <span class="pr-2 w-25px d-inline-block"><i class="fa fa-ticket-alt"></i></span>
+                            <span class="pcoded-mtext">New Ticket</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="{{ route('support-tickets.index') }}"> 
+                            <span class="pr-2 w-25px d-inline-block"><i class="fas fa-clipboard-list"></i></span>
+                            <span class="pcoded-mtext">Ticket List</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="{{ route('support-tickets.index') }}"> 
+                            <span class="pr-2 w-25px d-inline-block"><i class="fas fa-mail-bulk"></i></span>
+                            <span class="pcoded-mtext">Bulk Email</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a href="{{ route('support-teams.index') }}"> 
+                            <span class="pr-2 w-25px d-inline-block"><i class="fas fa-users"></i></span>
+                            <span class="pcoded-mtext">Support Teams</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
             
         <div class="p-5"></div>
