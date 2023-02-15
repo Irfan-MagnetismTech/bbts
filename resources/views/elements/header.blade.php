@@ -38,6 +38,10 @@
             font-size: 13px !important;
             border: 1px solid #cccccc !important;
         }
+
+        .ui-menu-item {
+            text-align: center;
+        }
     </style>
 </head>
 

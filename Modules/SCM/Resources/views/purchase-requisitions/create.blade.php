@@ -2,7 +2,7 @@
 @section('title', 'Purchase Requisitions Slip')
 
 @section('breadcrumb-title')
-    @if ($formType == 'edit')
+    @if (!empty($purchaseRequisition))
         Edit
     @else
         Create
@@ -35,9 +35,9 @@
 @section('content')
     <div class="container">
         <form
-            action="{{ $formType == 'edit' ? route('purchase-requisitions.update', @$purchaseRequisition->id) : route('purchase-requisitions.store') }}"
+            action="{{ !empty($purchaseRequisition) ? route('purchase-requisitions.update', @$purchaseRequisition->id) : route('purchase-requisitions.store') }}"
             method="post" class="custom-form">
-            @if ($formType == 'edit')
+            @if (!empty($purchaseRequisition))
                 @method('PUT')
             @endif
             @csrf
@@ -75,14 +75,13 @@
                     <label for="select2">Client Links</label>
                     <select class="form-control select2" id="client_links" name="client_links">
                         <option value="" readonly selected>Select Client Link</option>
-                        @if ($formType == 'create')
-                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
-                        @endif
-                        @if ($formType == 'edit')
+                        @if (!empty($purchaseRequisition))
                             @foreach ($clientInfos as $clientInfo)
                                 <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$purchaseRequisition->fr_composite_key)>
                                     {{ $clientInfo->link_name }}</option>
                             @endforeach
+                        @else
+                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
                         @endif
                     </select>
                 </div>
@@ -105,14 +104,15 @@
                 <div class="form-group col-3">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly placeholder="Select a Date">
+                        value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly
+                        placeholder="Select a Date">
                 </div>
 
                 <div class="form-group col-3 assesment_no">
                     <label for="select2">Assesment No</label>
                     <select class="form-control select2" id="assesment_no" name="assesment_no">
                         <option value="" readonly selected>Select Assesment No</option>
-                        {{-- @if ($formType == 'edit')
+                        {{-- @if (!empty($purchaseRequisition))
                             @foreach ($branchwisePops as $branchwisePop)
                                 <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$purchaseRequisition->assesment_no)>
                                     {{ $branchwisePop->name }}
@@ -188,8 +188,8 @@
                                     value="{{ $quantity[$key] }}">
                             </td>
                             <td>
-                                <input name="total_amount[]" class="form-control total_amount"
-                                    autocomplete="off" value="{{ $total_amount[$key] }}" readonly>
+                                <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
+                                    value="{{ $total_amount[$key] }}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
@@ -286,7 +286,7 @@
 
         //Search Client
         var client_details = [];
-        @if ($formType === 'edit')
+        @if (!empty($purchaseRequisition))
             client_details = {!! collect($clientInfos) !!}
         @endif
         $(document).on('keyup focus', '#client_name', function() {

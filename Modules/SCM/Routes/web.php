@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\SCM\Http\Controllers\UnitController;
 use Modules\SCM\Http\Controllers\CourierController;
+use Modules\SCM\Http\Controllers\CsController;
 use Modules\SCM\Http\Controllers\MaterialController;
 use Modules\SCM\Http\Controllers\ScmPurchaseRequisitionController;
 use Modules\SCM\Http\Controllers\SupplierController;
@@ -27,5 +28,6 @@ Route::prefix('scm')->middleware(['auth'])->group(function() {
         'couriers'      => CourierController::class,
         'requisitions'  => ScmRequisitionController::class,
         'purchase-requisitions'  => ScmPurchaseRequisitionController::class,
+        'cs'  => CsController::class,
     ]);
 });

@@ -39,11 +39,9 @@ class ScmPurchaseRequisitionController extends Controller
      */
     public function create()
     {
-        $formType = "create";
-        $purchaseRequisitions = ScmPurchaseRequisition::latest()->get();
         $brands = Brand::latest()->get();
 
-        return view('scm::purchase-requisitions.create', compact('purchaseRequisitions', 'formType', 'brands'));
+        return view('scm::purchase-requisitions.create', compact('brands'));
     }
 
     /**
