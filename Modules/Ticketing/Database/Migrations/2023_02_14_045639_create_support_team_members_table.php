@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('support_team_members', function (Blueprint $table) {
             $table->id();
             $table->foreignId('users_id');
+            $table->foreignId('branches_id');
             $table->foreignId('support_teams_id');
             $table->integer('type')->comment('User Level');
             $table->timestamps();

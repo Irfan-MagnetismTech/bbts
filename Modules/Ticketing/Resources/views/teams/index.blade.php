@@ -30,25 +30,20 @@
                 <th>Name</th>
                 <th>Department</th>
                 <th>Designation</th>
-                <th>Email</th>
-                <th>User Role</th>
-                <th>Profile</th>
                 <th>Action</th>
             </tr>
             </thead>
-            <tfoot>
-            <tr>
-                <th>#SL</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Designation</th>
-                <th>Email</th>
-                <th>User Role</th>
-                <th>Profile</th>
-                <th>Action</th>
-            </tr>
-            </tfoot>
+            
             <tbody>
+                @foreach ($teams as $team)
+                    <tr>
+                        <td>{{ $loop->index + 1 }}</td>
+                        <td>{{ $team->teamLead }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                @endforeach
             </tbody>
         </table>
     </div>

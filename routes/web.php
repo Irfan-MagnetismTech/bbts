@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-brand', [CommonApiController::class, 'searchBrand'])->name('searchBrand');
     Route::get('search-department', [CommonApiController::class, 'searchDepartment'])->name('searchDepartment');
     Route::get('search-employee', [CommonApiController::class, 'searchEmployee'])->name('searchEmployee');
+    Route::get('search-user', [CommonApiController::class, 'searchUser'])->name('searchUser');
 });
 
 require base_path('routes/dataencoding.php');

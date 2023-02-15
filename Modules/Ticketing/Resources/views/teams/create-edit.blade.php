@@ -24,10 +24,12 @@
         <div class="row">
             <div class="col-md-12">
                 <form
-                action="{{ ($formType == 'edit') ? route('support-teams.update', $requisition->id) : route('support-teams.store') }}"
+                action="{{ route('support-teams.store') }}"
                 method="post" class="custom-form">
                 @if ($formType == 'edit')
                     @method('PUT')
+                @else
+                    @method('POST')
                 @endif
                 @csrf
                 
@@ -35,18 +37,18 @@
                         <div class="form-group col-6">
                             <label for="departments_id">Department Name:</label>
                             <input type="text" class="form-control" id="department_name" name="department_name" aria-describedby="department_name"
-                                value="{{ old('department_name') ?? ($team->department_name ?? '') }}" placeholder="Department Name">
+                                value="{{ old('department_name') ?? ($team->department_name ?? '') }}" placeholder="Department Name" required>
 
                             <input type="hidden" class="form-control" id="departments_id" name="departments_id" aria-describedby="departments_id"
                                 value="{{ old('departments_id') ?? ($team->departments_id ?? '') }}">
                         </div>
                         <div class="form-group col-6">
-                            <label for="employee_name">Department Head:</label>
+                            <label for="user_name">Department Head:</label>
 
-                            <input type="text" class="form-control" id="employee_name" name="employee_name" aria-describedby="employee_name"
-                                value="{{ old('employee_name') ?? ($team->employee_name ?? '') }}" placeholder="Department Head">
+                            <input type="text" class="form-control" id="user_name" name="user_name" aria-describedby="user_name"
+                                value="{{ old('user_name') ?? ($team->user_name ?? '') }}" placeholder="Department Head" required>
 
-                            <input type="hidden" class="form-control" name="employee_id" aria-describedby="employee_id"
+                            <input type="hidden" class="form-control" id="employee_id" name="employee_id" aria-describedby="employee_id"
                                 value="{{ old('employee_id') ?? ($team->users_id ?? '') }}">
                         </div>
                     </div>
@@ -67,7 +69,7 @@
                                 <tr>
                                     <td>1</td>
                                     <td>
-                                        <input type="text" value="" placeholder="Search Employee" class="employee-search form-control" />
+                                        <input type="text" value="" placeholder="Search Employee" class="user-search form-control" />
                                         <input type="hidden" name="users_id[]" value="" placeholder="Search Employee" class="member_id form-control" />
                                     </td>
                                     <td></td>
@@ -122,11 +124,11 @@
             });
         });
 
-        $(document).on('keyup focus', '#employee_name', function() {
+        $(document).on('keyup focus', '#user_name', function() {
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url: "{{ url('search-employee') }}",
+                        url: "{{ url('search-user') }}",
                         type: 'get',
                         dataType: "json",
                         data: {
@@ -138,18 +140,18 @@
                     });
                 },
                 select: function(event, ui) {
-                    $("#employee_name").val(ui.item.label)
+                    $("#user_name").val(ui.item.label)
                     $("#employee_id").val(ui.item.value)
                     return false;
                 }
             });
         });
 
-        $(document).on('keyup focus', '.employee-search', function() {
+        $(document).on('keyup focus', '.user-search', function() {
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url: "{{ url('search-employee') }}",
+                        url: "{{ url('search-user') }}",
                         type: 'get',
                         dataType: "json",
                         data: {
@@ -163,7 +165,7 @@
                 select: function(event, ui) {
                     let currentRow = $(this).closest("tr")
                     $(currentRow).find("td:nth-child(3)").html(ui.item.designation);
-                    $(currentRow).find("td:nth-child(2)").find('.employee-search').val(ui.item.label);
+                    $(currentRow).find("td:nth-child(2)").find('.user-search').val(ui.item.label);
                     $(currentRow).find("td:nth-child(2)").find('.member_id').val(ui.item.value);
                     
                     return false;
@@ -177,7 +179,7 @@
             let tableRow = `<tr>
                                 <td>${length}</td>
                                 <td>
-                                    <input type="text" value="" placeholder="Search Employee" class="employee-search form-control" />
+                                    <input type="text" value="" placeholder="Search Employee" class="user-search form-control" />
                                     <input type="hidden" name="users_id[]" value="" placeholder="Search Employee" class="member_id form-control" />
 
                                 </td>
