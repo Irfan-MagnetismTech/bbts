@@ -2,8 +2,9 @@
 
 namespace Modules\Ticketing\Entities;
 
-use App\Models\Dataencoding\Department;
+use Modules\Admin\Entities\User;
 use App\Models\Dataencoding\Employee;
+use App\Models\Dataencoding\Department;
 use Illuminate\Database\Eloquent\Model;
 
 class SupportTeam extends Model

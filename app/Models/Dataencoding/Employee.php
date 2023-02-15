@@ -14,6 +14,6 @@ class Employee extends Model
     }
 
     public function designation() {
-        return $this->belongsTo(Department::class, 'designation_id', 'id');
+        return $this->belongsTo(Designation::class, 'designation_id', 'id');
     }
 }

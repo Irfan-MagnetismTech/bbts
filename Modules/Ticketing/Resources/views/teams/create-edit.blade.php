@@ -1,12 +1,16 @@
 @extends('layouts.backend-layout')
-@section('title', 'Support Tickets')
+@section('title', 'Support Team')
 
 @section('style')
     
 @endsection
 
 @section('breadcrumb-title')
-   Create New Support Team
+    @if (!empty($supportTeam))
+    Edit Support Team
+    @else
+    Create New Support Team
+    @endif
 @endsection
 
 @section('style')
@@ -24,9 +28,9 @@
         <div class="row">
             <div class="col-md-12">
                 <form
-                action="{{ route('support-teams.store') }}"
+                action="{{ (!empty($supportTeam)) ? route('support-teams.update', ['support_team' => $supportTeam->id]) : route('support-teams.store') }}"
                 method="post" class="custom-form">
-                @if ($formType == 'edit')
+                @if (!empty($supportTeam))
                     @method('PUT')
                 @else
                     @method('POST')
@@ -37,19 +41,19 @@
                         <div class="form-group col-6">
                             <label for="departments_id">Department Name:</label>
                             <input type="text" class="form-control" id="department_name" name="department_name" aria-describedby="department_name"
-                                value="{{ old('department_name') ?? ($team->department_name ?? '') }}" placeholder="Department Name" required>
+                                value="{{ old('department_name') ?? ($supportTeam?->department?->name ?? '') }}" placeholder="Department Name" required>
 
                             <input type="hidden" class="form-control" id="departments_id" name="departments_id" aria-describedby="departments_id"
-                                value="{{ old('departments_id') ?? ($team->departments_id ?? '') }}">
+                                value="{{ old('departments_id') ?? ($supportTeam->departments_id ?? '') }}">
                         </div>
                         <div class="form-group col-6">
                             <label for="user_name">Department Head:</label>
 
                             <input type="text" class="form-control" id="user_name" name="user_name" aria-describedby="user_name"
-                                value="{{ old('user_name') ?? ($team->user_name ?? '') }}" placeholder="Department Head" required>
+                                value="{{ old('user_name') ?? ($supportTeam?->teamLead?->name ?? '') }}" placeholder="Department Head" required>
 
                             <input type="hidden" class="form-control" id="employee_id" name="employee_id" aria-describedby="employee_id"
-                                value="{{ old('employee_id') ?? ($team->users_id ?? '') }}">
+                                value="{{ old('employee_id') ?? ($supportTeam->users_id ?? '') }}">
                         </div>
                     </div>
 
@@ -66,6 +70,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                                @if(empty($supportTeam) || empty($supportTeam?->teamMembers))
                                 <tr>
                                     <td>1</td>
                                     <td>
@@ -82,6 +87,27 @@
                                     </td>
                                     <td><i class="btn btn-danger btn-sm fa fa-minus remove-row"></i></td>
                                 </tr>
+                                @else
+                                    @foreach($supportTeam->teamMembers as $teamMember)
+                                        <tr>
+                                            <td>{{ $loop->index+1 }}</td>
+                                            <td>
+                                                
+                                                <input type="text" value="{{ $teamMember->user->name }}" placeholder="Search Employee" class="user-search form-control" />
+                                                <input type="hidden" name="users_id[]" value="{{ $teamMember->users_id }}" placeholder="Search Employee" class="member_id form-control" />
+                                            </td>
+                                            <td>{{ $teamMember?->user?->employee?->designation?->name }}</td>
+                                            <td>
+                                                <select name="type[]" class="form-control">
+                                                    @foreach($levels as $id => $level)
+                                                     <option value="{{ $id }}" {{ ($teamMember?->type == $id) ? 'selected' : null }}>{{ $level }}</option>
+                                                    @endforeach
+                                                 </select> 
+                                            </td>
+                                            <td><i class="btn btn-danger btn-sm fa fa-minus remove-row"></i></td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>

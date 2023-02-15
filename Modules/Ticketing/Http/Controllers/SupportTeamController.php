@@ -2,21 +2,22 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
-use App\Models\Dataencoding\Employee;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Models\Dataencoding\Employee;
+use Illuminate\Database\QueryException;
 use Modules\Ticketing\Entities\SupportTeam;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Ticketing\Http\Requests\SupportTeamRequest;
 
 class SupportTeamController extends Controller
 {
     const EMPLOYEELEVELS = [
-        '1' => 'Level 1',
-        '2' => 'Level 2',
-        '3' => 'Level 3',
+        '1' => '1st Layer',
+        '2' => '2nd Layer',
+        '3' => '3rd Layer',
     ];
     /**
      * Display a listing of the resource.
@@ -24,15 +25,14 @@ class SupportTeamController extends Controller
      */
     public function index()
     {
-        $teams = SupportTeam::select('users_id', 'departments_id')
+        $teams = SupportTeam::select('id', 'users_id', 'departments_id')
                 ->with([
                     'teamLead' => function ($query) {
-                        return $query->select('id', 'name');
+                        return $query->select('id', 'name', 'employees_id');
                     }, 'department' => function ($q) {
                         return $q->select('id', 'name');
                     },
                 ])->paginate(15);
-        // dd($teams);
         return view('ticketing::teams.index', compact('teams'));
     }
 
@@ -42,10 +42,9 @@ class SupportTeamController extends Controller
      */
     public function create()
     {
-        $formType = 'create';
         $levels   = self::EMPLOYEELEVELS;
 
-        return view('ticketing::teams.create-edit', compact('formType', 'levels'));
+        return view('ticketing::teams.create-edit', compact('levels'));
     }
 
     /**
@@ -58,45 +57,37 @@ class SupportTeamController extends Controller
        
         try {
             
-            DB::transaction(function () use ($request)
+            $leader = User::where('id', $request->employee_id)->first();
+
+            $teamMembers = [];
+            foreach ($request->users_id as $key => $data)
             {
-                
-                $leader = Employee::find($request->employee_id);
+                $teamMembers[] = [
+                    'users_id'    => $request->users_id[$key],
+                    'type'        => $request->type[$key],
+                    'branches_id' => $leader->employee->branches_id
+                ];
+            }
+
+            DB::transaction(function () use ($request, $leader, $teamMembers)
+            {
                 if($leader){
                     $team   = SupportTeam::create([
-                        'departments_id' => $leader->departments_id,
+                        'departments_id' => $request->departments_id,
                         'users_id'       => $request->employee_id,
-                        'branches_id'    => $leader->branches_id,
+                        'branches_id'    => $leader->employee->branches_id
                     ]);
-                }else{
-                    dd('not fine');
                 }
                 
-                dd($request->all());
-                $teamMembers = [];
-                foreach ($request->users_id as $key => $data)
-                {
-                    $teamMembers[] = [
-                        'users_id'    => $request->users_id[$key],
-                        'type'        => $request->type[$key],
-                        'branches_id' => $leader->branches_id,
-                    ];
-                }
-
                 $team->teamMembers()->createMany($teamMembers);
             });
 
-            return 'fine';
-
-            return redirect()->route('support-teams')->with('message', 'Support Team Created Successfully');
+            return redirect()->route('support-teams.index')->with('message', 'Support Team Created Successfully');
         }
         catch (QueryException $e)
         {
-            return 'not fine';
             return redirect()->route('support-teams.create')->withInput()->withErrors($e->getMessage());
         }
-
-        
 
     }
 
@@ -105,9 +96,10 @@ class SupportTeamController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(SupportTeam $supportTeam)
     {
-        return view('ticketing::show');
+        $levels   = self::EMPLOYEELEVELS;
+        return view('ticketing::teams.details', compact('supportTeam', 'levels'));
     }
 
     /**
@@ -115,9 +107,10 @@ class SupportTeamController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(SupportTeam $supportTeam)
     {
-        return view('ticketing::edit');
+        $levels   = self::EMPLOYEELEVELS;
+        return view('ticketing::teams.create-edit', compact('supportTeam', 'levels'));
     }
 
     /**
@@ -126,9 +119,42 @@ class SupportTeamController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(SupportTeam $supportTeam, Request $request)
     {
-        //
+        try {
+            
+            $leader = User::where('id', $request->employee_id)->first();
+
+            $teamMembers = [];
+            foreach ($request->users_id as $key => $data)
+            {
+                $teamMembers[] = [
+                    'users_id'    => $request->users_id[$key],
+                    'type'        => $request->type[$key],
+                    'branches_id' => $leader->employee->branches_id
+                ];
+            }
+
+            DB::transaction(function () use ($request, $leader, $teamMembers, $supportTeam)
+            {
+                if($leader){
+                    $supportTeam->update([
+                        'departments_id' => $request->departments_id,
+                        'users_id'       => $request->employee_id,
+                        'branches_id'    => $leader->employee->branches_id
+                    ]);
+                }
+                
+                $supportTeam->teamMembers()->delete();
+                $supportTeam->teamMembers()->createMany($teamMembers);
+            });
+
+            return redirect()->route('support-teams.index')->with('message', 'Support Team Updated Successfully');
+        }
+        catch (QueryException $e)
+        {
+            return redirect()->route('support-teams.edit')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**

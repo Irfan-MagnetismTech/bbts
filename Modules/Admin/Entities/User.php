@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Dataencoding\Department;
+use App\Models\Dataencoding\Designation;
 use App\Models\Dataencoding\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -49,8 +50,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function employee()
-    {
+    public function employee() {
         return $this->belongsTo(Employee::class, 'employees_id', 'id');
     }
+
 }
