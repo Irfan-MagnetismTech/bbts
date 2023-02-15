@@ -14,7 +14,7 @@ class SupportTicketController extends Controller
      */
     public function index()
     {
-        return view('ticketing::index');
+        return view('ticketing::support-tickets.index');
     }
 
     /**
@@ -23,7 +23,7 @@ class SupportTicketController extends Controller
      */
     public function create()
     {
-        return view('ticketing::create');
+        return view('ticketing::support-tickets.create-edit');
     }
 
     /**

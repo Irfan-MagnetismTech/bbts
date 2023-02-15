@@ -41,19 +41,19 @@
                         <div class="form-group col-6">
                             <label for="departments_id">Department Name:</label>
                             <input type="text" class="form-control" id="department_name" name="department_name" aria-describedby="department_name"
-                                value="{{ old('department_name') ?? ($supportTeam?->department?->name ?? '') }}" placeholder="Department Name" required>
+                                value="{{ old('department_name') ?? (!empty($supportTeam) ? $supportTeam?->department?->name : '') }}" placeholder="Department Name" required>
 
                             <input type="hidden" class="form-control" id="departments_id" name="departments_id" aria-describedby="departments_id"
-                                value="{{ old('departments_id') ?? ($supportTeam->departments_id ?? '') }}">
+                                value="{{ old('departments_id') ?? (!empty($supportTeam) ? $supportTeam->departments_id : '') }}">
                         </div>
                         <div class="form-group col-6">
                             <label for="user_name">Department Head:</label>
 
                             <input type="text" class="form-control" id="user_name" name="user_name" aria-describedby="user_name"
-                                value="{{ old('user_name') ?? ($supportTeam?->teamLead?->name ?? '') }}" placeholder="Department Head" required>
+                                value="{{ old('user_name') ?? (!empty($supportTeam) ? $supportTeam?->teamLead?->name : '') }}" placeholder="Department Head" required>
 
                             <input type="hidden" class="form-control" id="employee_id" name="employee_id" aria-describedby="employee_id"
-                                value="{{ old('employee_id') ?? ($supportTeam->users_id ?? '') }}">
+                                value="{{ old('employee_id') ?? (!empty($supportTeam) ? $supportTeam->users_id : '') }}">
                         </div>
                     </div>
 
