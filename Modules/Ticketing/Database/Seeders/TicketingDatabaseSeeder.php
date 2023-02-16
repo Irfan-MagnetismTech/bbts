@@ -4,6 +4,7 @@ namespace Modules\Ticketing\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Ticketing\Database\Seeders\ComplainTypeSeeder;
 
 class TicketingDatabaseSeeder extends Seeder
 {
@@ -16,6 +17,6 @@ class TicketingDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
+        $this->call(ComplainTypeSeeder::class);
     }
 }

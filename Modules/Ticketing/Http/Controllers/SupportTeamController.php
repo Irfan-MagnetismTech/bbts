@@ -171,7 +171,7 @@ class SupportTeamController extends Controller
     {
         try {
             SupportTeam::where('id', $id)->delete();
-            return redirect()->route('support-teams.index')->with('message', 'Support Team Updated Successfully');
+            return redirect()->route('support-teams.index')->with('message', 'Support Team Deleted Successfully');
         } catch (\Throwable $th) {
             return redirect()->route('support-teams.index')->withInput()->withErrors($th->getMessage());
         }

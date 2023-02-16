@@ -25,4 +25,10 @@
             <span class="pcoded-mtext">Support Teams</span>
         </a>
     </li>
+    <li class="">
+        <a href="{{ route('support-complain-types.index') }}">
+            <span class="pr-2 w-25px d-inline-block"><i class="fas fa-chalkboard-teacher"></i></span>
+            <span class="pcoded-mtext">Complain Types</span>
+        </a>
+    </li>
 </ul>

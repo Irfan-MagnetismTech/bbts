@@ -25,6 +25,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/Datatables/dataTables.bootstrap4.min.css')}}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .select2-container--default .select2-selection--single .select2-selection__rendered {
