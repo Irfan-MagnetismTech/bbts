@@ -118,10 +118,12 @@
                                             class="form-control unit text-center" readOnly tabindex="-1">
                                     </td>
                                     <td>
-                                        <select name="brand_id[]" id="brand_id" class="form-control brand_id" required
-                                            style="width: 160px">
-                                            @foreach ($Taxes as $data)
-                                                <option value="{{ $data }}">{{ $data }}</option>
+                                        <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
+                                            <option value="">Select Brand</option>
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
+                                                    {{ $brand->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -156,10 +158,9 @@
                                     </span>
                                 </th>
                                 <th> Supplier Info </th>
+                                <th> Quotation No. <span class="text-danger">*</span></th>
                                 <th> Vat/Tax <span class="text-danger">*</span></th>
                                 <th> Credit Period <span class="text-danger">*</span></th>
-                                <th> Material Availability <span class="text-danger">*</span></th>
-                                <th> Required Time <span class="text-danger">*</span></th>
                                 <th><i class="btn btn-primary btn-sm fa fa-plus addSupplier"></i></th>
                             </tr>
                         </thead>
@@ -174,10 +175,9 @@
                                     $checked_supplier = $is_old ? isset(old('checked_supplier')[$supplier_key]) ?? false : $supplier_value->is_checked ?? false;
                                     $address = $is_old ? old('address')[$supplier_key] : $supplier_value->supplier->address ?? '---';
                                     $contact = $is_old ? old('contact')[$supplier_key] : $supplier_value->supplier->contact ?? '---';
+                                    $quotation_no = $is_old ? old('quotation_no')[$supplier_key] : $supplier_value->quotation_no;
                                     $vat_tax = $is_old ? old('vat_tax')[$supplier_key] : $supplier_value->vat_tax;
                                     $credit_period = $is_old ? old('credit_period')[$supplier_key] : $supplier_value->credit_period;
-                                    $material_availability = $is_old ? old('material_availability')[$supplier_key] : $supplier_value->material_availability;
-                                    $required_time = $is_old ? old('required_time')[$supplier_key] : $supplier_value->required_time;
                                 @endphp
                                 <tr>
                                     <td>
@@ -192,7 +192,7 @@
                                                 Mark as selected
                                             </label>
                                         </div>
-                                        <input type="text" name="supplier_name[]" value="{{ $supplier_name }}"
+                                        <input type="text" value="{{ $supplier_name }}"
                                             class="form-control supplier_name" autocomplete="off" required>
                                     </td>
                                     <td>
@@ -202,13 +202,11 @@
                                             <span><b>Address : </b></span>
                                             <span class="address_div"> {{ $address }} </span>
                                         </div>
-                                        <input type="number" name="contact[]" value="{{ $contact }}"
-                                            class="form-control contact" hidden autocomplete="off" readonly
-                                            tabindex="-1">
-                                        <div>
-                                            <span><b>Contact : </b></span>
-                                            <span class="contact_div">{{ $contact }}</span>
-                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="quotation_no[]" value="{{ $quotation_no }}"
+                                            class="form-control quotation_no" placeholder="Quotation No"
+                                            autocomplete="off" required>
                                     </td>
                                     <td>
                                         <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax" required
@@ -220,33 +218,6 @@
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td>
-                                        <input type="text" name="credit_period[]" value="{{ $credit_period }}"
-                                            class="form-control credit_period" placeholder="Collection Way"
-                                            autocomplete="off" required>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="material_availability[]"
-                                            class="form-control material_availability" readonly value="Available"
-                                            placeholder="Material Availability" autocomplete="off" required
-                                            style="width: 160px">
-                                    </td>
-                                    <td>
-                                        <select name="delivery_condition[]" id="delivery_condition"
-                                            class="form-control delivery_condition" required style="width: 160px">
-                                            @foreach ($delivery_conditions as $data)
-                                                <option value="{{ $data }}"
-                                                    @if ($delivery_condition == $data) Selected @endif>{{ $data }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="required_time[]" class="form-control required_time"
-                                            placeholder="Required Time" readonly value="As per our requirement"
-                                            autocomplete="off" required style="width: 150px">
-                                    </td>
-
                                     <td>
                                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
                                     </td>
@@ -342,13 +313,14 @@
                     <td>
                         <input type="text" name="unit[]" class="form-control unit text-center" readOnly tabindex="-1">
                     </td>
-                    <td>
-                        <select name="brand_id[]" id="brand_id" class="form-control brand_id" required>
-                            @foreach ($Taxes as $data)
-                                <option value="{{ $data }}" class="text-center">{{ $data }}</option>
+                    <td> 
+                        <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
+                            <option value="">Select Brand</option>
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                             @endforeach
-                        </select>
-                    </td>                    
+                        </select>    
+                    </td>                  
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
                     </td>
@@ -408,7 +380,7 @@
                                 Mark as selected
                             </label>
                         </div>
-                        <input type="text" name="supplier_name[]" class="form-control supplier_name" autocomplete="off" required>
+                        <input type="text" class="form-control supplier_name" autocomplete="off" required>
                     </td>
                     <td>
                         <input type="text" name="address[]" class="form-control address" hidden tabindex="-1">
@@ -416,29 +388,20 @@
                             <span><b>Address : </b></span>
                             <span class="address_div">---</span>
                         </div>
-                        <input type="number" name="contact[]" class="form-control contact" hidden autocomplete="off" readonly tabindex="-1">
-                        <div>
-                            <span><b>Contact : </b></span>
-                            <span class="contact_div">---</span>
-                        </div>
                     </td>
                     <td>
-                        <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax" required style="width: 160px">
+                        <input type="text" name="quotation_no[]"  class="form-control text-center quotation_no" placeholder="Quotation No." autocomplete="off" required>
+                    </td> 
+                    <td>
+                        <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax text-center" required>
                             @foreach ($Taxes as $data)
                                 <option value="{{ $data }}">{{ $data }}</option>
                             @endforeach
                         </select>
                     </td>
                     <td>
-                        <input type="text" name="credit_period[]"  class="form-control credit_period" placeholder="Collection Way" autocomplete="off" required>
-                    </td>
-                    <td>
-                        <input type="text" name="material_availability[]" class="form-control material_availability" placeholder="Material Availability" readonly value="Available" autocomplete="off" required style="width: 160px">
-                    </td>
-                    <td>
-                        <input type="text" value="As per our requirement" name="required_time[]" class="form-control required_time" placeholder="Required Time" autocomplete="off" readonly required style="width: 150px">
-                    </td>
-                    
+                        <input type="text" name="credit_period[]"  class="form-control credit_period text-center" placeholder="Credit Period" autocomplete="off" required>
+                    </td>                
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
                     </td>
@@ -512,6 +475,36 @@
 
         var CSRF_TOKEN = "{{ csrf_token() }}";
         $(function() {
+            $(document).on('keyup', ".supplier_name", function() {
+                $(this).autocomplete({
+                    source: function(request, response) {
+                        $.ajax({
+                            url: "{{ route('searchSupplier') }}",
+                            type: 'post',
+                            dataType: "json",
+                            data: {
+                                _token: CSRF_TOKEN,
+                                search: request.term
+                            },
+                            success: function(data) {
+                                response(data);
+                            }
+                        });
+                    },
+                    select: function(event, ui) {
+                        $(this).closest('tr').find('.supplier_name').val(ui.item.label);
+                        $(this).closest('tr').find('.supplier_id').val(ui.item.value);
+                        $(this).closest('tr').find('.checked_supplier_id').val(ui.item.value);
+                        $(this).closest('tr').find('.address').val(ui.item.address);
+                        $(this).closest('tr').find('.address_div').html(ui.item.address);
+                        $(this).closest('tr').find('.contact').val(ui.item.contact);
+                        $(this).closest('tr').find('.contact_div').html(ui.item.contact);
+
+                        changeCsColumn($(this).closest('tr'), ui.item.label);
+                        return false;
+                    }
+                });
+            });
             // {{--  $(document).on('keyup', ".project_name", function() {
             //     $(this).autocomplete({
             //         source: function(request, response) {
@@ -535,36 +528,7 @@
             //         }
             //     });
             // });
-            // $(document).on('keyup', ".supplier_name", function() {
-            //     $(this).autocomplete({
-            //         source: function(request, response) {
-            //             $.ajax({
-            //                 url: "{{ route('supplierAutoSuggest') }}",
-            //                 type: 'post',
-            //                 dataType: "json",
-            //                 data: {
-            //                     _token: CSRF_TOKEN,
-            //                     search: request.term
-            //                 },
-            //                 success: function(data) {
-            //                     response(data);
-            //                 }
-            //             });
-            //         },
-            //         select: function(event, ui) {
-            //             $(this).closest('tr').find('.supplier_name').val(ui.item.label);
-            //             $(this).closest('tr').find('.supplier_id').val(ui.item.value);
-            //             $(this).closest('tr').find('.checked_supplier_id').val(ui.item.value);
-            //             $(this).closest('tr').find('.address').val(ui.item.address);
-            //             $(this).closest('tr').find('.address_div').html(ui.item.address);
-            //             $(this).closest('tr').find('.contact').val(ui.item.contact);
-            //             $(this).closest('tr').find('.contact_div').html(ui.item.contact);
-
-            //             changeCsColumn($(this).closest('tr'), ui.item.label);
-            //             return false;
-            //         }
-            //     });
-            // });
+    
             // $(document).on('keyup', ".material_name", function() {
             //     $(this).autocomplete({
             //         source: function(request, response) {

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('quotattion_no')->nullable();
             $table->string('vat_tax')->nullable();
             $table->string('credit_period')->nullable();
+            $table->boolean('is_checked')->default(false);
             $table->timestamps();
         });
     }
