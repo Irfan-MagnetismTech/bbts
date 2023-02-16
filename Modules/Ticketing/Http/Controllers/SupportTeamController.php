@@ -10,6 +10,7 @@ use App\Models\Dataencoding\Employee;
 use Illuminate\Database\QueryException;
 use Modules\Ticketing\Entities\SupportTeam;
 use Illuminate\Contracts\Support\Renderable;
+use App\Http\Controllers\Services\BbtsGlobalService;
 use Modules\Ticketing\Http\Requests\SupportTeamRequest;
 
 class SupportTeamController extends Controller
@@ -43,8 +44,9 @@ class SupportTeamController extends Controller
     public function create()
     {
         $levels   = self::EMPLOYEELEVELS;
+        $departments = (new BbtsGlobalService())->getDepartments();
 
-        return view('ticketing::teams.create-edit', compact('levels'));
+        return view('ticketing::teams.create-edit', compact('levels', 'departments'));
     }
 
     /**
@@ -110,7 +112,9 @@ class SupportTeamController extends Controller
     public function edit(SupportTeam $supportTeam)
     {
         $levels   = self::EMPLOYEELEVELS;
-        return view('ticketing::teams.create-edit', compact('supportTeam', 'levels'));
+        $departments = (new BbtsGlobalService())->getDepartments();
+
+        return view('ticketing::teams.create-edit', compact('supportTeam', 'levels', 'departments'));
     }
 
     /**
@@ -121,6 +125,7 @@ class SupportTeamController extends Controller
      */
     public function update(SupportTeam $supportTeam, Request $request)
     {
+
         try {
             
             $leader = User::where('id', $request->employee_id)->first();

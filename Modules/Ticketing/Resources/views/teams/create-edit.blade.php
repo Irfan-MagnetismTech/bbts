@@ -40,11 +40,15 @@
                     <div class="row">
                         <div class="form-group col-6">
                             <label for="departments_id">Department Name:</label>
-                            <input type="text" class="form-control" id="department_name" name="department_name" aria-describedby="department_name"
-                                value="{{ old('department_name') ?? (!empty($supportTeam) ? $supportTeam?->department?->name : '') }}" placeholder="Department Name" required>
 
-                            <input type="hidden" class="form-control" id="departments_id" name="departments_id" aria-describedby="departments_id"
-                                value="{{ old('departments_id') ?? (!empty($supportTeam) ? $supportTeam->departments_id : '') }}">
+                            <select name="departments_id" id="departments_id" class="form-control">
+                                <option value="">Select Department</option>
+                                @foreach($departments as $department)
+                                <option value="{{ $department->id }}" 
+                                    {{ old('departments_id', (!empty($supportTeam) ? $supportTeam?->departments_id : '')) == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
+                                @endforeach
+                            </select>
+
                         </div>
                         <div class="form-group col-6">
                             <label for="user_name">Department Head:</label>
