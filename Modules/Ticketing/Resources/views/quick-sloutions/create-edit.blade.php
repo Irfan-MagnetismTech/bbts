@@ -1,15 +1,15 @@
 @extends('layouts.backend-layout')
-@section('title', 'Complain Type')
+@section('title', 'Support Solutions')
 
 @section('style')
     
 @endsection
 
 @section('breadcrumb-title')
-    @if (!empty($supportComplainType))
-    Edit Complain Type
+    @if (!empty($supportSolution))
+    Edit Support Solutions
     @else
-    Create Complain Type
+    Create Support Solutions
     @endif
 @endsection
 
@@ -18,7 +18,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('support-complain-types.index')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('support-solutions.index')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', 'offset-md-1 col-md-10 offset-lg-2 col-lg-8 my-3')
@@ -28,9 +28,9 @@
         <div class="row">
             <div class="col-md-12">
                 <form
-                action="{{ (!empty($supportComplainType)) ? route('support-complain-types.update', ['support_complain_type' => $supportComplainType->id]) : route('support-complain-types.store') }}"
+                action="{{ (!empty($supportSolution)) ? route('support-solutions.update', ['support_solution' => $supportSolution->id]) : route('support-solutions.store') }}"
                 method="post" class="custom-form">
-                @if (!empty($supportComplainType))
+                @if (!empty($supportSolution))
                     @method('PUT')
                 @else
                     @method('POST')
@@ -40,9 +40,9 @@
                     <div class="row">
                         <div class="form-group col-12">
                             <div class="form-group">
-                                <label for="complain_type">Complain Type:</label>
+                                <label for="complain_type">Support Solutions:</label>
                                 <input type="text" class="form-control" id="complain_type" name="name" aria-describedby="name"
-                                    value="{{ old('name') ?? (!empty($supportComplainType) ? $supportComplainType?->name : '') }}" placeholder="Complain Type">
+                                    value="{{ old('name') ?? (!empty($supportSolution) ? $supportSolution?->name : '') }}" placeholder="Support Solutions">
                             </div>
 
                         </div>

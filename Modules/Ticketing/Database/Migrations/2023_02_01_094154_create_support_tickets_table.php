@@ -27,13 +27,12 @@ return new class extends Migration
             $table->foreignId('created_by');
             $table->foreignId('updated_by');
             $table->foreignId('reopened_by');
+            $table->dateTime('opening_date');
             $table->dateTime('closing_date');
             $table->dateTime('closed_by');
             $table->bigInteger('feedback_to_bbts');
             $table->bigInteger('feedback_to_client');
             $table->bigInteger('clients_feedback');
-            $table->dateTime('created_at');
-            $table->dateTime('updated_at');
             $table->bigInteger('current_authorized_person');
             $table->timestamps();
         });

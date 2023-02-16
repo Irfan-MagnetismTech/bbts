@@ -2,9 +2,11 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
+use App\Http\Controllers\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use PhpParser\Node\Stmt\TryCatch;
 
 class SupportTicketController extends Controller
 {
@@ -23,7 +25,8 @@ class SupportTicketController extends Controller
      */
     public function create()
     {
-        return view('ticketing::support-tickets.create-edit');
+        $complainTypes = (new BbtsGlobalService())->getComplainTypes();
+        return view('ticketing::support-tickets.create-edit', compact('complainTypes'));
     }
 
     /**
@@ -33,7 +36,15 @@ class SupportTicketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+
+        try {
+            $time = decrypt($request->opening_date);
+        } catch (\Throwable $th) {
+            
+        }
+        
+        return ['opening_date' => decrypt("eyJpdiI6IkRDaW4ybmY5ejk4UER5WmgvaHVZcWc9PSIsInZhbHVlIjoiYnZScnVsTkplWG1sYnBqTUFEY0d1WXM4QWNMZjR5UjQ1ZVcyeUxjMC9lST0iLCJtYWMiOiJlYTk1M2QzYTcxMDY5ZTIxZmJmOTdmMWViYWQwMGNkZTU0Mjg5MGEyNGM5N2FiNjNmMmJiODNlYzc0ZDg5MWQ3IiwidGFnIjoiIn0=")];
     }
 
     /**
@@ -53,7 +64,8 @@ class SupportTicketController extends Controller
      */
     public function edit($id)
     {
-        return view('ticketing::edit');
+        $complainTypes = (new BbtsGlobalService())->getComplainTypes();
+        return view('ticketing::support-tickets.create-edit', compact('complainTypes'));
     }
 
     /**

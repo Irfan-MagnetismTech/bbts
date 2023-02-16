@@ -8,6 +8,7 @@ use App\Models\Dataencoding\Designation;
 use Illuminate\Http\Request;
 use Modules\Admin\Entities\Pop;
 use Modules\Ticketing\Entities\SupportComplainType;
+use Modules\Ticketing\Entities\SupportQuickSolution;
 
 class BbtsGlobalService extends Controller
 {
@@ -25,5 +26,9 @@ class BbtsGlobalService extends Controller
 
     public function getComplainTypes() {
         return SupportComplainType::all();
+    }
+
+    public function getSupportSolutions() {
+        return SupportQuickSolution::all();
     }
 }

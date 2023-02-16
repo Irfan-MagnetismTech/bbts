@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Support Team')
+@section('title', 'Support Ticket')
 
 @section('style')
     
@@ -7,9 +7,9 @@
 
 @section('breadcrumb-title')
     @if (!empty($supportTicket))
-    Edit Support Team
+    Edit Support Ticket
     @else
-    Create New Support Team
+    Create New Support Ticket
     @endif
 @endsection
 
@@ -18,7 +18,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('support-teams.index')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('support-tickets.index')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', 'col-12 my-3')
@@ -28,7 +28,7 @@
         <div class="row">
             <div class="col-md-12">
                 <form
-                action="{{ (!empty($supportTicket)) ? route('support-teams.update', ['support_team' => $supportTicket->id]) : route('support-teams.store') }}"
+                action="{{ (!empty($supportTicket)) ? route('support-tickets.update', ['support_team' => $supportTicket->id]) : route('support-tickets.store') }}"
                 method="post" class="custom-form">
                 @if (!empty($supportTicket))
                     @method('PUT')
@@ -40,14 +40,28 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="form-group">
+                                <label for="departments_id">Opening Time:</label>
+                                <input type="text" class="form-control" id="opening_time" name="opening_time" aria-describedby="clients_id"
+                                    value="{{ old('opening_time') ?? (!empty($supportTicket) ? $supportTicket?->opening_date : \Carbon\Carbon::now()->format('d/m/Y H:i:s a')) }}" disabled>
+                            </div>
+                            <div class="form-group">
                                 <label for="departments_id">Client Link ID:</label>
                                 <input type="text" class="form-control" id="clients_id" name="clients_id" aria-describedby="clients_id"
                                     value="{{ old('clients_id') ?? (!empty($supportTicket) ? $supportTicket?->clients_id : '') }}" placeholder="Client Link ID">
                             </div>
                             <div class="form-group">
-                                <label for="departments_id">Complain Type:</label>
-                                <input type="text" class="form-control" id="complain_types_id" name="complain_types_id" aria-describedby="complain_types_id"
-                                    value="{{ old('complain_types_id') ?? (!empty($supportTicket) ? $supportTicket?->complain_types_id : '') }}" placeholder="Complain Type">
+                                <label for="complain_types_id">Complain Type:</label>
+
+                                <select class="form-control select2" id="complain_types_id" name="complain_types_id">
+                                    <option value="20" selected>Select Complain Type</option>
+                                    @foreach ($complainTypes as $complainType)
+                                        <option value="{{ $complainType->id }}"
+                                            {{ old('complain_types_id', (!empty($supportTicket) ? $supportTicket->complain_types_id : null)) == $complainType->id ? 'selected' : '' }}>
+                                            {{ $complainType->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                
                             </div>
                             <div class="form-group">
                                 <label for="departments_id">Description:</label>
@@ -116,48 +130,48 @@
                                 <div class="col-6 pt-4 px-0">
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="name">Client Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control col-8" id="name" name="name" placeholder="Enter branch name" value="" required="">
+                                        <input type="text" class="form-control col-8" id="name" name="name" placeholder="Enter branch name" disabled>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="contact_person"> Contact Person</label>
-                                        <input type="text" class="form-control col-8" id="contact_person" name="contact_person" placeholder="Contact Person" value="">
+                                        <input type="text" class="form-control col-8" id="contact_person" name="contact_person" placeholder="Contact Person" disabled>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="email_address"> E-mail Address</label>
-                                        <input type="text" class="form-control col-8" id="email_address" name="email_address" placeholder="E-mail Address" value="">
+                                        <input type="text" class="form-control col-8" id="email_address" name="email_address" placeholder="E-mail Address" disabled>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="switch_port"> Switch Port</label>
-                                        <input type="text" class="form-control col-8" id="switch_port" name="switch_port" placeholder="Switch Port" value="">
+                                        <input type="text" class="form-control col-8" id="switch_port" name="switch_port" placeholder="Switch Port" disabled>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="vlan"> VLAN</label>
-                                        <input type="text" class="form-control col-8" id="vlan" name="vlan" placeholder="VLAN" value="">
+                                        <input type="text" class="form-control col-8" id="vlan" name="vlan" placeholder="VLAN" disabled>
                                     </div>
 
                                 </div>
                                 <div class="col-6 pt-4 px-0">
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="address"> Address</label>
-                                        <input type="text" class="form-control col-8" id="address" name="address" placeholder="Address" value="">
+                                        <input type="text" class="form-control col-8" id="address" name="address" placeholder="Address" disabled>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="contact_no"> Contact Number</label>
-                                        <input type="text" class="form-control col-8" id="contact_no" name="contact_no" placeholder="Contact Number" value="">
+                                        <input type="text" class="form-control col-8" id="contact_no" name="contact_no" placeholder="Contact Number" disabled>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="switch_ip"> Switch IP</label>
-                                        <input type="text" class="form-control col-8" id="switch_ip" name="switch_ip" placeholder="Switch IP" value="">
+                                        <input type="text" class="form-control col-8" id="switch_ip" name="switch_ip" placeholder="Switch IP" disabled>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="pop"> POP</label>
-                                        <input type="text" class="form-control col-8" id="pop" name="pop" placeholder="POP" value="">
+                                        <input type="text" class="form-control col-8" id="pop" name="pop" placeholder="POP" disabled>
                                     </div>
                                 </div>
 
                                 <div class="col-12">
-                                    <div class="dt-responsive table-responsive">
-                                        <table id="dataTable" class="table table-striped table-bordered">
+                                    <div class="table-responsive">
+                                        <table id="" class="table table-striped table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>Ticket No.</th>
@@ -183,6 +197,7 @@
                                     
                                 </div>
 
+                                    <input type="hidden" name="opening_date" value="{{ encrypt(\Carbon\Carbon::now()->format('d/m/Y H:i:s a')) }}">
                                     <div class="mx-auto col-md-4 mt-2">
                                         <div class="input-group input-group-sm ">
                                             <button class="btn btn-success btn-round btn-block py-2">Submit</button>
