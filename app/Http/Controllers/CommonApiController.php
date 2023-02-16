@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dataencoding\Department;
-use App\Models\Dataencoding\Employee;
 use Modules\Admin\Entities\Pop;
+use Modules\Admin\Entities\User;
 use Modules\Admin\Entities\Brand;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\Material;
+use App\Models\Dataencoding\Employee;
+use App\Models\Dataencoding\Department;
 
 class CommonApiController extends Controller
 {
@@ -103,6 +104,18 @@ class CommonApiController extends Controller
             'value' => $item->id,
             'label' => $item->name,
             'designation' => $item->designation->name
+        ]);
+
+        return response()->json($results);
+    }
+
+    public function searchUser() {
+        $results = User::select('id', 'employees_id', 'name')->with('employee')->where('name', 'LIKE', '%'.request('search') . '%')
+        ->get()
+        ->map(fn ($item) => [
+            'value' => $item->id,
+            'label' => $item->name,
+            'designation' => $item->employee->designation->name
         ]);
 
         return response()->json($results);
