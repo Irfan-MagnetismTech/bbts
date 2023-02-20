@@ -3,9 +3,9 @@
 
 @php
     $is_old = old('effective_date') ? true : false;
-    $form_heading = !empty($comparative_statement->id) ? 'Update' : 'Add';
-    $form_url = !empty($comparative_statement->id) ? route('cs.update', $comparative_statement->id) : route('cs.store');
-    $form_method = !empty($comparative_statement->id) ? 'PUT' : 'POST';
+    $form_heading = !empty($cs->id) ? 'Update' : 'Add';
+    $form_url = !empty($cs->id) ? route('cs.update', $cs->id) : route('cs.store');
+    $form_method = !empty($cs->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
@@ -41,10 +41,10 @@
                 <div class="card-body">
                     <div class="row">
                         @php
-                            $cs_no = $is_old ? old('cs_no') : $comparative_statement->cs_no ?? null;
-                            $effective_date = $is_old ? old('effective_date') : $comparative_statement->effective_date ?? null;
-                            $expiry_date = $is_old ? old('expiry_date') : $comparative_statement->expiry_date ?? null;
-                            $remarks = $is_old ? old('remarks') : $comparative_statement->remarks ?? null;
+                            $cs_no = $is_old ? old('cs_no') : $cs->cs_no ?? null;
+                            $effective_date = $is_old ? old('effective_date') : $cs->effective_date ?? null;
+                            $expiry_date = $is_old ? old('expiry_date') : $cs->expiry_date ?? null;
+                            $remarks = $is_old ? old('remarks') : $cs->remarks ?? null;
                         @endphp
                         <div class="col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
@@ -98,7 +98,7 @@
                         </thead>
                         <tbody>
                             @php
-                                $materials = $is_old ? old('material_id') ?? [] : $comparative_statement->csMaterials ?? [];
+                                $materials = $is_old ? old('material_id') ?? [] : $cs->csMaterials ?? [];
                             @endphp
                             @forelse ($materials as $material_key => $material_value)
                                 @php
@@ -166,7 +166,7 @@
                         </thead>
                         <tbody>
                             @php
-                                $suppliers = $is_old ? old('supplier_id') ?? [] : $comparative_statement->csSuppliers ?? [];
+                                $suppliers = $is_old ? old('supplier_id') ?? [] : $cs->csSuppliers ?? [];
                             @endphp
                             @forelse ($suppliers as $supplier_key => $supplier_value)
                                 @php
@@ -245,6 +245,7 @@
                         <thead>
                             <tr>
                                 <th>Materials</th>
+                                <th>Brand</th>
                                 @forelse ($suppliers as $supplier_key => $supplier_value)
                                     <th>
                                         {{ $is_old ? old('supplier_name')[$supplier_key] : $supplier_value->supplier->name }}
@@ -267,7 +268,7 @@
                                         <input type="text" name="price[]"
                                             value="{{ $is_old
                                                 ? old('price')[$price_index++]
-                                                : $comparative_statement->csMaterialsSuppliers->where('cs_material_id', $material_value->id)->where('cs_supplier_id', $supplier_value->id)->first()->price }}"
+                                                : $cs->csMaterialsSuppliers->where('cs_material_id', $material_value->id)->where('cs_supplier_id', $supplier_value->id)->first()->price }}"
                                             class="form-control" placeholder="Pricez" required />
                                     </td>
                                     @if ($loop->last)
@@ -298,10 +299,10 @@
     <script>
         let is_confirmed = false;
 
-        @if (empty($purchaseRequisition) && empty(old('supplier_name')))
-            addMaterial();
-            addSupplier();
-        @endif
+        // @if (empty($purchaseRequisition) && empty(old('supplier_name')))
+        //     addMaterial();
+        //     addSupplier();
+        // @endif
 
         function addMaterial() {
             $('#materialTable tbody').append(
@@ -328,32 +329,7 @@
             );
         }
 
-        //Search Material
-        $(document).on('keyup focus', '.material_name', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-material') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $(this).closest('tr').find('.material_name').val(ui.item.label);
-                    $(this).closest('tr').find('.material_id').val(ui.item.value);
-                    $(this).closest('tr').find('.item_code').val(ui.item.item_code);
-                    $(this).closest('tr').find('.unit').val(ui.item.unit);
-                    return false;
-                }
-            });
 
-        });
 
         function addProject() {
             $('#projectTable tbody').append(
@@ -422,15 +398,26 @@
         }
 
         // Cs Details Row
-        function changeCsRow(column, material_name) {
+        function changeCsRow(column, material_name, brand) {
+
             let cs_details_table_body = $('#csDetailsTable tbody');
-            let th = cs_details_table_body.children(`tr:eq(${column.index()})`).find(".cs_material").html(material_name);
+            cs_details_table_body.children(`tr:eq(${column.index()})`).find(".cs_material").html(material_name);
+            cs_details_table_body.children(`tr:eq(${column.index()})`).find(".cs_brand").html(brand);
         }
+
+        //on change brand
+        $(document).on('change', '.brand', function() {
+            let brand = $(this).find('option:selected').text();
+            let material_name = $(this).closest('tr').find('.material_name').val();
+            let column = $(this).closest('tr');
+            changeCsRow(column, material_name, brand);
+        });
 
         function addCsRow() {
             let cs_details_table_tbody = $('#csDetailsTable tbody');
             let count_supplier = $('.supplier_name').length ? 0 : $('.supplier_name').length;
-            let table_data = `<tr><td colspan="${count_supplier}" class="cs_material">Select a Material</td>`;
+            let table_data =
+                `<tr><td colspan="${count_supplier}" class="cs_material">Select a Material</td><td colspan="${count_supplier}" class="cs_brand">Select a Brand</td>`;
 
             $('.supplier_name').each(function() {
                 table_data +=
@@ -448,12 +435,12 @@
         // Cs Details Column
         function changeCsColumn(column, supplier_name) {
             let cs_details_table_head = $('#csDetailsTable thead tr');
-            let th = cs_details_table_head.children(`th:eq(${column.index() + 1})`).html(supplier_name);
+            let th = cs_details_table_head.children(`th:eq(${column.index() + 2})`).html(supplier_name);
         }
 
         function addCsColumn() {
             let cs_details_table_head = $('#csDetailsTable thead tr');
-            cs_details_table_head.append(`<th>Select a Supplier</th>`);
+            cs_details_table_head.append(`<th>Supplier Name</th>`);
 
             let cs_details_table_body = $('#csDetailsTable tbody');
             $("#csDetailsTable tbody tr").each(function() {
@@ -465,11 +452,11 @@
 
         function removeCsColumn(index) {
             let cs_details_table_head = $('#csDetailsTable thead tr');
-            cs_details_table_head.children(`th:eq(${index})`).remove();
+            cs_details_table_head.children(`th:eq(${index + 1})`).remove();
 
             let cs_details_table_body = $('#csDetailsTable tbody');
             $("#csDetailsTable tbody tr").each(function() {
-                $(this).children(`td:eq(${index})`).remove();
+                $(this).children(`td:eq(${index + 1})`).remove();
             });
         }
 
@@ -504,6 +491,34 @@
                         return false;
                     }
                 });
+            });
+
+            //Search Material
+            $(document).on('keyup focus', '.material_name', function() {
+                $(this).autocomplete({
+                    source: function(request, response) {
+                        $.ajax({
+                            url: "{{ url('search-material') }}",
+                            type: 'get',
+                            dataType: "json",
+                            data: {
+                                search: request.term
+                            },
+                            success: function(data) {
+                                response(data);
+                            }
+                        });
+                    },
+                    select: function(event, ui) {
+                        $(this).closest('tr').find('.material_name').val(ui.item.label);
+                        $(this).closest('tr').find('.material_id').val(ui.item.value);
+                        $(this).closest('tr').find('.item_code').val(ui.item.item_code);
+                        $(this).closest('tr').find('.unit').val(ui.item.unit);
+
+                        return false;
+                    }
+                });
+
             });
             // {{--  $(document).on('keyup', ".project_name", function() {
             //     $(this).autocomplete({
@@ -554,13 +569,13 @@
             //             changeCsRow($(this).closest('tr'), ui.item.label);
             //         }
             //     });
-            // }); --}}
+            // }); 
 
-            $("#projectTable").on('click', '.addProject', function() {
-                addProject();
-            }).on('click', '.deleteItem', function() {
-                $(this).closest('tr').remove();
-            });
+            // $("#projectTable").on('click', '.addProject', function() {
+            //     addProject();
+            // }).on('click', '.deleteItem', function() {
+            //     $(this).closest('tr').remove();
+            // }); --}}
 
             $("#materialTable").on('click', '.addMaterial', function() {
                 addMaterial();

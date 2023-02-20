@@ -49,7 +49,7 @@ class CsController extends Controller
     public function create()
     {
         $Taxes = [
-            'Include','Exclude'
+            'Include', 'Exclude'
         ];
 
         $brands = Brand::latest()->get();
@@ -66,26 +66,23 @@ class CsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-        $requestData['created_by'] = auth()->id();
         try {
-            // $request     = $request->validated();
-            $all_details = $this->getAllDetails($request);
+            $all_details = $this->getAllDetails($request->toArray());
 
-            DB::transaction(function () use ($all_details, $request)
-            {
-                $cs= Cs::create($all_details['all_request']);
-                $cs_materials = $cs->csMaterials()->createMany($all_details['cs_materials']);
-                $cs_suppliers = $cs->csSuppliers()->createMany($all_details['cs_suppliers']);
-                $cs->csMaterialsSuppliers()
-                    ->createMany($this->getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request));
-            });
+            DB::beginTransaction();
 
-            return redirect()->route('comparative-statements.index')->with('message', 'Comparative Statement created');
-        }
-        catch (QueryException $e)
-        {
-            return redirect()->route('comparative-statements.create')->withErrors($e->getMessage());
+            $all_details['all_request']['created_by'] = auth()->id();
+            $cs= Cs::create($all_details['all_request']);
+            $cs_materials = $cs->csMaterials()->createMany($all_details['cs_materials']);
+            $cs_suppliers = $cs->csSuppliers()->createMany($all_details['cs_suppliers']);
+            $cs->csMaterialsSuppliers()->createMany($this->getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request));
+
+            DB::commit();
+
+            return ('message Comparative Statement created');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('cs.create')->withErrors($e->getMessage());
         }
     }
 
@@ -109,12 +106,12 @@ class CsController extends Controller
     public function edit(Cs $cs)
     {
         $form_type = 'Update';
-        $grades= [
-            'A','B','C'
+        $grades = [
+            'A', 'B', 'C'
         ];
 
         $Taxes = [
-            'Include','Exclude'
+            'Include', 'Exclude'
         ];
         $credit_Period = [
             'Advance',
@@ -133,7 +130,7 @@ class CsController extends Controller
         ];
         $all_materials = NestedMaterial::with(['unit'])->get();
 
-        return view('procurement.comparativestatements.create', compact('form_type', 'all_materials', 'cs','grades','Taxes','credit_Period','delivery_conditions'));
+        return view('procurement.comparativestatements.create', compact('form_type', 'all_materials', 'cs', 'grades', 'Taxes', 'credit_Period', 'delivery_conditions'));
     }
 
     /**
@@ -149,8 +146,7 @@ class CsController extends Controller
             $request     = $request->validated();
             $all_details = $this->getAllDetails($request);
 
-            DB::transaction(function () use ($cs, $all_details, $request)
-            {
+            DB::transaction(function () use ($cs, $all_details, $request) {
                 $cs->update($all_details['all_request']);
 
                 $cs->csMaterials()->delete();
@@ -164,12 +160,9 @@ class CsController extends Controller
                     ->createMany($this->getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request));
             });
 
-            return redirect()->route('comparative-statements.index')->with('message', 'Comparative Statement created');
-
-        }
-        catch (QueryException $e)
-        {
-            return redirect()->route('comparative-statements.create')->withErrors($e->getMessage());
+            return redirect()->route('cs.index')->with('message', 'Comparative Statement created');
+        } catch (QueryException $e) {
+            return redirect()->route('cs.create')->withErrors($e->getMessage());
         }
     }
 
@@ -181,15 +174,12 @@ class CsController extends Controller
      */
     public function destroy(Cs $cs)
     {
-        try
-        {
+        try {
             $cs->delete();
 
-            return redirect()->route('comparative-statements.index')->with('message', 'Data has been deleted successfully');
-        }
-        catch (QueryException $e)
-        {
-            return redirect()->route('comparative-statements.index')->withErrors($e->getMessage());
+            return redirect()->route('cs.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('cs.index')->withErrors($e->getMessage());
         }
     }
 
@@ -205,48 +195,31 @@ class CsController extends Controller
      * @param array $request
      * @return array
      */
-    private function getAllDetails($request)
+    private function getAllDetails(array $request): array
     {
-        // dd($request);
-        foreach (array_keys($request['material_id']) as $material_key)
-        {
+        foreach (array_keys($request['material_id']) as $material_key) {
             $cs_materials[] = [
                 'material_id' => $request['material_id'][$material_key],
                 'brand_id'    => $request['brand_id'][$material_key],
             ];
         }
 
-        foreach (array_keys($request['supplier_id']) as $supplier_key)
-        {
+        foreach (array_keys($request['supplier_id']) as $supplier_key) {
             $cs_suppliers[] = [
                 'supplier_id'           => $request['supplier_id'][$supplier_key],
+                'quotation_no'         => $request['quotation_no'][$supplier_key],
                 'vat_tax'               => $request['vat_tax'][$supplier_key],
                 'credit_period'         => $request['credit_period'][$supplier_key],
                 'is_checked'            => in_array($request['supplier_id'][$supplier_key], $request['checked_supplier']) ? true : false,
             ];
         }
 
-        $price_index = 0;
-        foreach (array_keys($request['material_id']) as $material_key)
-        {
-            foreach (array_keys($request['supplier_id']) as $supplier_key)
-            {
-                $cs_materials_suppliers[] = [
-                    'material_id' => $request['material_id'][$material_key],
-                    'brand_id'    => $request['brand_id'][$material_key],
-                    'supplier_id' => $request['supplier_id'][$supplier_key],
-                    'price'       => $request['price'][$price_index++],
-                ];
-            }
-        }
-
         return
             [
-            'all_request'            => $request,
-            'cs_materials'           => $cs_materials,
-            'cs_suppliers'           => $cs_suppliers,
-            'cs_materials_suppliers' => $cs_materials_suppliers,
-        ];
+                'all_request'            => $request,
+                'cs_materials'           => $cs_materials,
+                'cs_suppliers'           => $cs_suppliers
+            ];
     }
 
     /**
@@ -255,14 +228,12 @@ class CsController extends Controller
      * @param array $request
      * @return array
      */
-    private function getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request): array
+    private function getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request)
     {
         $price_index = 0;
 
-        foreach ($cs_materials as $cs_material)
-        {
-            foreach ($cs_suppliers as $cs_supplier)
-            {
+        foreach ($cs_materials as $cs_material) {
+            foreach ($cs_suppliers as $cs_supplier) {
                 $cs_materials_suppliers[] = [
                     'cs_material_id' => $cs_material->id,
                     'brand_id'       => $cs_material->brand_id,
@@ -291,7 +262,7 @@ class CsController extends Controller
     //         ];
     //         $cs->approval()->create($data);
 
-    //         return redirect()->route('comparative-statements.index')->with('message', "Cs No $cs->reference_no approved.");
+    //         return redirect()->route('cs.index')->with('message', "Cs No $cs->reference_no approved.");
     //     }catch(QueryException $e){
     //         return redirect()->back()->withInput()->withErrors($e->getMessage());
     //     }

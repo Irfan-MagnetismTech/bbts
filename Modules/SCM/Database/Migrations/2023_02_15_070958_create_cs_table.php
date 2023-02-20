@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('cs', function (Blueprint $table) {
             $table->id();
             $table->string('cs_no', 255);
-            $table->date('effective_date')->nullable();
-            $table->date('expiry_date')->nullable();
+            $table->string('effective_date')->nullable();
+            $table->string('expiry_date')->nullable();
             $table->text('remarks')->nullable();
             $table->unsignedBigInteger('created_by');
             $table->timestamps();

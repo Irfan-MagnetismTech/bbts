@@ -38,6 +38,7 @@ class CommonApiController extends Controller
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
+                'material_id' => $item->id,
                 'label' => $item->name . ' - ' . $item->code,
                 'unit' => $item->unit,
                 'item_code' => $item->code,
