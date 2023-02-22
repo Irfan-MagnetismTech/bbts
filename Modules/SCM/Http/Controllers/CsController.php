@@ -64,7 +64,7 @@ class CsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CsRequest $request)
     {
         try {
             $all_details = $this->getAllDetails($request->toArray());
