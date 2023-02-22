@@ -14,7 +14,8 @@ class SupportTeamRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'employee_id' => 'required|exists:users,id',
+            'departments_id' => 'required|exists:departments,id'
         ];
     }
 
@@ -26,7 +27,8 @@ class SupportTeamRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'employee_id.required' => 'You must choose a valid department head.',
+            'departments_id.required' => 'You must choose a valid department.',
         ];
     }
 

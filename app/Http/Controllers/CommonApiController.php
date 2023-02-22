@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Modules\Admin\Entities\Pop;
+use Modules\Admin\Entities\User;
 use Modules\Admin\Entities\Brand;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
@@ -108,6 +109,18 @@ class CommonApiController extends Controller
                 'label' => $item->name,
                 'designation' => $item->designation->name
             ]);
+
+        return response()->json($results);
+    }
+
+    public function searchUser() {
+        $results = User::select('id', 'employees_id', 'name')->with('employee')->where('name', 'LIKE', '%'.request('search') . '%')
+        ->get()
+        ->map(fn ($item) => [
+            'value' => $item->id,
+            'label' => $item->name,
+            'designation' => $item->employee->designation->name
+        ]);
 
         return response()->json($results);
     }

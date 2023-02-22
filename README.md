@@ -18,6 +18,16 @@ php artisan db:seed
 -   **_Modules_** should be named in **PascalCase**.
 -   **_Modules_** short formed name should be in **UPPERCASE**. Ex: `HRM` for `Human Resource Management`
 
+### Global Development Services, APIs, Components
+-  Use `ActionButton` component for action buttons and `ReportButton` component accordingly.
+
+    ```
+    <x:action-button :show="route('support-teams.show', ['support_team' => $team->id])" :edit="route('support-teams.edit', ['support_team' => $team->id])" :delete="route('support-teams.show', ['support_team' => $team->id])" />
+    ```
+
+- Use `CommonApiController` for Common APIs.
+- Use `BbtsGlobalService` for global data retrieval.
+
 ### Business Info
 
 Business information like `name`, `logo path`, `shortname` etc. should be added in `config/businessinfo.php` and this config should be used everywhere in the **ERP** inlcuding `pages`, `printables`, and `mails.`
