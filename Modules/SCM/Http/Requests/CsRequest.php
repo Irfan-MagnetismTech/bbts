@@ -15,7 +15,7 @@ class CsRequest extends FormRequest
     public function rules()
     {
         return [
-            'reference_no'            => ['required', 'string', 'max:255', Rule::unique('cs')->ignore($this->cs, 'reference_no')],
+            'cs_no'            => ['required', 'string', 'max:255', Rule::unique('cs')->ignore($this->cs, 'cs_no')],
             'effective_date'          => ['required', 'date', 'date_format:d-m-Y'],
             'expiry_date'             => ['required', 'date', 'date_format:d-m-Y', 'after:effective_date'],
             'remarks'                 => ['present', 'nullable', 'string'],
@@ -30,6 +30,7 @@ class CsRequest extends FormRequest
             'supplier_name'           => ['required', 'array'],
             'supplier_name.*'         => ['required', 'string'],
             'checked_supplier'        => ['required', 'array'],
+            'quotation_no'            => ['required', 'array'],
             'vat_tax'                 => ['required', 'array'],
             'vat_tax.*'               => ['required', 'string'],
             'credit_period'           => ['required', 'array'],
@@ -48,10 +49,10 @@ class CsRequest extends FormRequest
     public function messages()
     {
         return [
-            'reference_no.required'             => 'Reference No. is required',
-            'reference_no.string'               => 'Reference No. must be a string',
-            'reference_no.max'                  => 'Reference No. may not be greater than 255 characters',
-            'reference_no.unique'               => 'Reference No. has already been taken',
+            'cs_no.required'                    => 'Reference No. is required',
+            'cs_no.string'                      => 'Reference No. must be a string',
+            'cs_no.max'                         => 'Reference No. may not be greater than 255 characters',
+            'cs_no.unique'                      => 'Reference No. has already been taken',
 
             'effective_date.required'           => 'Effective Date is required',
             'effective_date.date'               => 'Effective Date must be a date',
@@ -95,6 +96,11 @@ class CsRequest extends FormRequest
             'vat_tax.array'                     => 'VAT/Tax must be an array',
             'vat_tax.*.required'                => 'VAT/Tax is required',
             'vat_tax.*.string'                  => 'VAT/Tax must be a string',
+
+            'quotation_no.required'             => 'Quotation No. is required',
+            'quotation_no.array'                => 'Quotation No. must be an array',
+            'quotation_no.*.required'           => 'Quotation No. is required',
+            'quotation_no.*.string'             => 'Quotation No. must be a string',
 
             'credit_period.required'            => 'Credit Period is required',
             'credit_period.array'               => 'Credit Period must be an array',
