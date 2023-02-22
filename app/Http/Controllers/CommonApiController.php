@@ -11,6 +11,8 @@ use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\Supplier;
 use App\Models\Dataencoding\Employee;
 use App\Models\Dataencoding\Department;
+use App\Models\Dataencoding\District;
+use App\Models\Dataencoding\Thana;
 
 class CommonApiController extends Controller
 {
@@ -113,14 +115,15 @@ class CommonApiController extends Controller
         return response()->json($results);
     }
 
-    public function searchUser() {
-        $results = User::select('id', 'employees_id', 'name')->with('employee')->where('name', 'LIKE', '%'.request('search') . '%')
-        ->get()
-        ->map(fn ($item) => [
-            'value' => $item->id,
-            'label' => $item->name,
-            'designation' => $item->employee->designation->name
-        ]);
+    public function searchUser()
+    {
+        $results = User::select('id', 'employees_id', 'name')->with('employee')->where('name', 'LIKE', '%' . request('search') . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->id,
+                'label' => $item->name,
+                'designation' => $item->employee->designation->name
+            ]);
 
         return response()->json($results);
     }
@@ -152,5 +155,27 @@ class CommonApiController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    public function getDistricts()
+    {
+        $division_id = request('division_id');
+        $districts = District::where('division_id', $division_id)->get();
+        $data = '<option value="">Select District</option>';
+        foreach ($districts as $district) {
+            $data .= '<option value="' . $district->id . '">' . $district->name . '</option>';
+        }
+        return response()->json($data);
+    }
+
+    public function getThanas()
+    {
+        $district_id = request('district_id');
+        $thanas = Thana::where('district_id', $district_id)->get();
+        $data = '<option value="">Select Thana</option>';
+        foreach ($thanas as $thana) {
+            $data .= '<option value="' . $thana->id . '">' . $thana->name . '</option>';
+        }
+        return response()->json($data);
     }
 }

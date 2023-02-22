@@ -178,19 +178,21 @@ input[type=number] {
 
 
 .pcoded .pcoded-header[header-theme="themelight5"] {
-    background: linear-gradient(0.1deg, #f9f9f9 0.7%, #356600 88.4%);
-    border-bottom: 1px solid #66be08;
-    box-shadow: 0px 0px 2px 1px #56a700;
+    background: linear-gradient(0.1deg, #f9f9f9 0.7%, #007af5 88.4%);
+    border-bottom: 1px solid #000d99;
+    box-shadow: 0px 0px 2px 1px #001ca7;
 }
 .bg-primary {
-    background-color: #13007d !important;
+    background-color: #007af5 !important;
 }
 .custom-form .input-group-addon {
     min-width: 110px !important;
     max-width: 110px !important;
-    background-color: #13007d !important;
+    background-color: #007af5 !important;
     padding-left: 4px !important;
     padding-right: 4px !important;
+    color: white;
+    font-weight: 500;
 }
 .table th {
     background: #13007d;
@@ -258,7 +260,7 @@ a {
 }
 
 .tableHeading{
-    background-color: #0C4A77;
+    background-color: #007af5;;
     color: #fff;
     text-align: center;
     text-transform: uppercase;
