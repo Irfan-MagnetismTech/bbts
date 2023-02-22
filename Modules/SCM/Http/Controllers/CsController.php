@@ -51,7 +51,6 @@ class CsController extends Controller
         $Taxes = [
             'Include', 'Exclude'
         ];
-
         $brands = Brand::latest()->get();
         $all_materials = Material::with(['unit'])->get();
 
@@ -72,7 +71,7 @@ class CsController extends Controller
             DB::beginTransaction();
 
             $all_details['all_request']['created_by'] = auth()->id();
-            $cs= Cs::create($all_details['all_request']);
+            $cs = Cs::create($all_details['all_request']);
             $cs_materials = $cs->csMaterials()->createMany($all_details['cs_materials']);
             $cs_suppliers = $cs->csSuppliers()->createMany($all_details['cs_suppliers']);
             $cs->csMaterialsSuppliers()->createMany($this->getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request));
@@ -94,7 +93,7 @@ class CsController extends Controller
      */
     public function show(Cs $cs)
     {
-        //
+        dd($cs);
     }
 
     /**
@@ -103,34 +102,18 @@ class CsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cs $cs)
+    public function edit(Cs $comparative_statement)
     {
+        dd($comparative_statement);
         $form_type = 'Update';
-        $grades = [
-            'A', 'B', 'C'
-        ];
-
         $Taxes = [
             'Include', 'Exclude'
         ];
-        $credit_Period = [
-            'Advance',
-            '10 days',
-            '15 days',
-            '20 days',
-            '25 days',
-            '30 days',
-            '45 days',
-            '60 days'
-        ];
+        $brands = Brand::latest()->get();
+        $all_materials = Material::with(['unit'])->get();
 
-        $delivery_conditions = [
-            'with carrying',
-            'without carrying'
-        ];
-        $all_materials = NestedMaterial::with(['unit'])->get();
 
-        return view('procurement.comparativestatements.create', compact('form_type', 'all_materials', 'cs', 'grades', 'Taxes', 'credit_Period', 'delivery_conditions'));
+        return view('scm::cs.create', compact('form_type', 'all_materials', 'cs', 'Taxes', 'brands'));
     }
 
     /**

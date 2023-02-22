@@ -22,12 +22,12 @@ use Modules\SCM\Http\Controllers\ScmRequisitionController;
 
 Route::prefix('scm')->middleware(['auth'])->group(function() {
     Route::resources([
-        'suppliers'     => SupplierController::class,
-        'units'         => UnitController::class,
-        'materials'     => MaterialController::class,
-        'couriers'      => CourierController::class,
-        'requisitions'  => ScmRequisitionController::class,
-        'purchase-requisitions'  => ScmPurchaseRequisitionController::class,
-        'cs'  => CsController::class,
+        'suppliers'                 => SupplierController::class,
+        'units'                     => UnitController::class,
+        'materials'                 => MaterialController::class,
+        'couriers'                  => CourierController::class,
+        'requisitions'              => ScmRequisitionController::class,
+        'purchase-requisitions'     => ScmPurchaseRequisitionController::class,
+        'comparative-statements'    => CsController::class,
     ]);
 });

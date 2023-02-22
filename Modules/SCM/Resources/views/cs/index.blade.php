@@ -30,7 +30,7 @@
                 <th>Expiry Date</th>
                 <th>Remarks</th>
                 <th>Selected Supplier</th>
-                <th>Status</th>
+                {{-- <th>Status</th> --}}
                 <th>Action</th>
             </tr>
             </thead>
@@ -42,15 +42,16 @@
                     <th>Expiry Date</th>
                     <th>Remarks</th>
                     <th>Selected Supplier</th>
-                    <th>Status</th>
+                    {{-- <th>Status</th> --}}
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
+                {{-- @dd($all_cs) --}}
             @foreach($all_cs as $key => $cs)
                     <tr>
                         <td>{{$loop->iteration}}</td>
-                        <td><strong>#{{$cs->reference_no}}</strong></td>
+                        <td><strong>#{{$cs->cs_no}}</strong></td>
                         <td>{{$cs->effective_date}}</td>
                         <td>{{$cs->expiry_date}}</td>
                         <td>{{$cs->remarks}}</td>
@@ -67,7 +68,7 @@
                                 <p style="font-size: 11px">No Supplier Selected</p>
                             @endif
                         </td>
-                        <td>
+                        {{-- <td>
                             @if($cs->approval()->exists())
                                 @foreach($cs->approval as $approval)
                                     <span class="badge @if($approval->status == 'Approved') bg-primary @else bg-warning @endif bg-warning badge-md">
@@ -77,11 +78,11 @@
                             @else
                                 <span class="badge bg-warning badge-lg">{{ 'Pending' }}</span>
                             @endif
-                        </td>
+                        </td> --}}
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    @php
+                                    {{-- @php
                                         $approval = \App\Approval\ApprovalLayerDetails::whereHas('approvalLayer', function ($q) use ($cs){
                                             $q->where([['name','CS'],['department_id',$cs->appliedBy->department_id]]);
                                         })->whereDoesntHave('approvals',function ($q) use($cs){
@@ -98,12 +99,17 @@
                                         {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
                                         {!! Form::close() !!}
                                         @endif
-                                    @endif()
+                                    @endif() --}}
 
-                                    <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
+                                    {{-- <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
 
-                                    <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a>
+                                    <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
+                                    <a href="{{ route("cs.edit", $cs->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
+                                    
+                                    {!! Form::open(array('url' => route("cs.destroy", $cs->id),'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
+                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
+                                    {!! Form::close() !!}
                                 </nobr>
                             </div>
                         </td>
