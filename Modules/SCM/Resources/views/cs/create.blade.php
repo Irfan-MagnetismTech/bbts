@@ -105,6 +105,7 @@
                                     $material_id = $is_old ? old('material_id')[$material_key] : $material_value->nestedMaterial->id;
                                     $material_name = $is_old ? old('material_name')[$material_key] : $material_value->nestedMaterial->name;
                                     $unit = $is_old ? old('unit')[$material_key] : $material_value->nestedMaterial->unit->name ?? '---';
+                                    $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value->brand_id;
                                 @endphp
                                 <tr>
                                     <td>
@@ -121,7 +122,7 @@
                                         <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
                                             <option value="">Select Brand</option>
                                             @foreach ($brands as $brand)
-                                                <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
+                                                <option value="{{ $brand->id }}" @selected($brand->id == $brand_id)>
                                                     {{ $brand->name }}
                                                 </option>
                                             @endforeach
@@ -168,13 +169,13 @@
                             @php
                                 $suppliers = $is_old ? old('supplier_id') ?? [] : $cs->csSuppliers ?? [];
                             @endphp
-                            @forelse ($suppliers as $supplier_key => $supplier_value)
+                            @forelse (@$suppliers as $supplier_key => $supplier_value)
+
                                 @php
                                     $supplier_id = $is_old ? old('supplier_id')[$supplier_key] : $supplier_value->supplier->id;
                                     $supplier_name = $is_old ? old('supplier_name')[$supplier_key] : $supplier_value->supplier->name;
                                     $checked_supplier = $is_old ? isset(old('checked_supplier')[$supplier_key]) ?? false : $supplier_value->is_checked ?? false;
                                     $address = $is_old ? old('address')[$supplier_key] : $supplier_value->supplier->address ?? '---';
-                                    $contact = $is_old ? old('contact')[$supplier_key] : $supplier_value->supplier->contact ?? '---';
                                     $quotation_no = $is_old ? old('quotation_no')[$supplier_key] : $supplier_value->quotation_no;
                                     $vat_tax = $is_old ? old('vat_tax')[$supplier_key] : $supplier_value->vat_tax;
                                     $credit_period = $is_old ? old('credit_period')[$supplier_key] : $supplier_value->credit_period;
@@ -192,7 +193,7 @@
                                                 Mark as selected
                                             </label>
                                         </div>
-                                        <input type="text" value="{{ $supplier_name }}"
+                                        <input type="text" value="{{ $supplier_name }}" name="supplier_name[]"
                                             class="form-control supplier_name" autocomplete="off" required>
                                     </td>
                                     <td>
@@ -205,18 +206,23 @@
                                     </td>
                                     <td>
                                         <input type="text" name="quotation_no[]" value="{{ $quotation_no }}"
-                                            class="form-control quotation_no" placeholder="Quotation No"
+                                            class="form-control quotation_no text-center" placeholder="Quotation No"
                                             autocomplete="off" required>
                                     </td>
                                     <td>
-                                        <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax" required
-                                            style="width: 160px">
+                                        <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax text-center"
+                                            required>
                                             @foreach ($Taxes as $data)
                                                 <option value="{{ $data }}"
                                                     @if ($vat_tax == $data) Selected @endif>{{ $data }}
                                                 </option>
                                             @endforeach
                                         </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="credit_period[]" value="{{ $credit_period }}"
+                                            class="form-control credit_period text-center" placeholder="Credit Period"
+                                            autocomplete="off" required>
                                     </td>
                                     <td>
                                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
@@ -260,16 +266,21 @@
                                 @forelse ($suppliers as $supplier_key => $supplier_value)
                                     @if ($loop->first)
                                         <tr>
-                                            <td>
-                                                {{ $is_old ? old('material_name')[$supplier_key] : $material_value->nestedMaterial->name }}
+                                            <td class="cs_material text-center">
+                                                {{ $is_old ? old('material_name')[$material_key] : $material_value->nestedMaterial->name }}
                                             </td>
+                                            <td class="cs_brand text-center">
+                                                {{ $is_old ? old('cs_brand_name')[$material_key] : '' }}
+                                            </td>
+                                            <input type="hidden" name="cs_brand_name[]" class="cs_brand_name"
+                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : '' }}">
                                     @endif
                                     <td>
                                         <input type="text" name="price[]"
                                             value="{{ $is_old
                                                 ? old('price')[$price_index++]
                                                 : $cs->csMaterialsSuppliers->where('cs_material_id', $material_value->id)->where('cs_supplier_id', $supplier_value->id)->first()->price }}"
-                                            class="form-control" placeholder="Pricez" required />
+                                            class="form-control text-center" placeholder="Pricez" required />
                                     </td>
                                     @if ($loop->last)
                                         </tr>
@@ -318,26 +329,10 @@
                         <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
                             <option value="">Select Brand</option>
                             @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                <option value="{{ $brand->id }}" @selected($brand->id == @$brand_id[$key])>{{ $brand->name }}</option>
                             @endforeach
-                        </select>    
+                        </select>
                     </td>                  
-                    <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
-                    </td>
-                </tr>`
-            );
-        }
-
-
-
-        function addProject() {
-            $('#projectTable tbody').append(
-                `<tr>
-                    <td>
-                        <input type="hidden" name="project_id[]" value="" class="project_id">
-                        <input type="text" name="project_name[]" class="form-control project_name" autocomplete="off" required>
-                    </td>
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
                     </td>
@@ -356,7 +351,7 @@
                                 Mark as selected
                             </label>
                         </div>
-                        <input type="text" class="form-control supplier_name" autocomplete="off" required>
+                        <input type="text" class="form-control supplier_name" name="supplier_name[]" autocomplete="off" required>
                     </td>
                     <td>
                         <input type="text" name="address[]" class="form-control address" hidden tabindex="-1">
@@ -402,6 +397,7 @@
 
             let cs_details_table_body = $('#csDetailsTable tbody');
             cs_details_table_body.children(`tr:eq(${column.index()})`).find(".cs_material").html(material_name);
+            cs_details_table_body.children(`tr:eq(${column.index()})`).find(".cs_brand_name").val(brand);
             cs_details_table_body.children(`tr:eq(${column.index()})`).find(".cs_brand").html(brand);
         }
 
@@ -417,7 +413,8 @@
             let cs_details_table_tbody = $('#csDetailsTable tbody');
             let count_supplier = $('.supplier_name').length ? 0 : $('.supplier_name').length;
             let table_data =
-                `<tr><td colspan="${count_supplier}" class="cs_material">Select a Material</td><td colspan="${count_supplier}" class="cs_brand">Select a Brand</td>`;
+                `<tr><td colspan="${count_supplier}" class="cs_material">Select a Material</td><td colspan="${count_supplier}" class="cs_brand">Select a Brand</td>
+                <input type="hidden" name="cs_brand_name[]" class="cs_brand_name">`;
 
             $('.supplier_name').each(function() {
                 table_data +=
@@ -484,7 +481,6 @@
                         $(this).closest('tr').find('.checked_supplier_id').val(ui.item.value);
                         $(this).closest('tr').find('.address').val(ui.item.address);
                         $(this).closest('tr').find('.address_div').html(ui.item.address);
-                        $(this).closest('tr').find('.contact').val(ui.item.contact);
                         $(this).closest('tr').find('.contact_div').html(ui.item.contact);
 
                         changeCsColumn($(this).closest('tr'), ui.item.label);

@@ -11,7 +11,7 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('comparative-statements.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
+    <a href="{{ route('cs.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
 @endsection
 
 @section('sub-title')
@@ -92,15 +92,15 @@
                                         <a href="{{ url("cs/approved/$cs->id/1") }}" data-toggle="tooltip" title="Approve CS" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></a>
                                     @endif
                                     @if($cs->approval()->doesntExist() || auth()->user()->hasAnyRole(['admin','super-admin']))
-                                        <a href="{{ route("comparative-statements.edit", $cs->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                        <a href="{{ route("cs.edit", $cs->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                         @if($cs->approval()->doesntExist())
-                                        {!! Form::open(array('url' => route("comparative-statements.destroy", $cs->id),'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
+                                        {!! Form::open(array('url' => route("cs.destroy", $cs->id),'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
                                         {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
                                         {!! Form::close() !!}
                                         @endif
                                     @endif()
 
-                                    <a href="{{ route("comparative-statements-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
+                                    <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
 
                                     <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a>
 

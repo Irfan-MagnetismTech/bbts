@@ -38,7 +38,7 @@ class CsController extends Controller
     {
         $all_cs = Cs::latest()->get();
 
-        return view('procurement.comparativestatements.index', compact('all_cs'));
+        return view('scm::cs.index', compact('all_cs'));
     }
 
     /**
@@ -79,7 +79,7 @@ class CsController extends Controller
 
             DB::commit();
 
-            return ('message Comparative Statement created');
+            return redirect()->route('cs.index')->with('success', 'CS created successfully');
         } catch (QueryException $e) {
             DB::rollBack();
             return redirect()->route('cs.create')->withErrors($e->getMessage());
