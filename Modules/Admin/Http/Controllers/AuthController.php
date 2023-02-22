@@ -27,7 +27,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         $data = ['token' => $user->createToken('web')->plainTextToken];
 
-        return redirect()->route('dashboard');
+        return redirect()->intended();
     }
 
     public function logout()
