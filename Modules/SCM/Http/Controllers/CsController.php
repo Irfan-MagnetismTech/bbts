@@ -91,9 +91,9 @@ class CsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Cs $cs)
+    public function show(Cs $c)
     {
-        dd($cs);
+        // dd($c);
     }
 
     /**
@@ -110,7 +110,6 @@ class CsController extends Controller
         ];
         $brands = Brand::latest()->get();
         $all_materials = Material::with(['unit'])->get();
-
 
         return view('scm::cs.create', compact('all_materials', 'cs', 'Taxes', 'brands'));
     }
@@ -162,12 +161,12 @@ class CsController extends Controller
         $cs = $c;
         try {
             DB::beginTransaction();
-            
+
             $cs->delete();
             $cs->csMaterials()->delete();
             $cs->csSuppliers()->delete();
             $cs->csMaterialsSuppliers()->delete();
-            
+
             DB::commit();
 
             return redirect()->route('cs.index')->with('message', 'Data has been deleted successfully');
