@@ -2,7 +2,7 @@
 @section('title', 'Comparative Statement')
 
 @section('style')
-    <link rel="stylesheet" type="text/css" href="{{asset('css/Datatables/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
@@ -16,23 +16,23 @@
 
 @section('sub-title')
     Total: {{ count($all_cs) }}
-    @endsection
+@endsection
 
-    @section('content')
-            <!-- put search form here.. -->
+@section('content')
+    <!-- put search form here.. -->
     <div class="table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
-            <tr>
-                <th>SL</th>
-                <th>#Cs Ref</th>
-                <th>Effective Date</th>
-                <th>Expiry Date</th>
-                <th>Remarks</th>
-                <th>Selected Supplier</th>
-                {{-- <th>Status</th> --}}
-                <th>Action</th>
-            </tr>
+                <tr>
+                    <th>SL</th>
+                    <th>#Cs Ref</th>
+                    <th>Effective Date</th>
+                    <th>Expiry Date</th>
+                    <th>Remarks</th>
+                    <th>Selected Supplier</th>
+                    {{-- <th>Status</th> --}}
+                    <th>Action</th>
+                </tr>
             </thead>
             <tfoot>
                 <tr>
@@ -48,30 +48,25 @@
             </tfoot>
             <tbody>
                 {{-- @dd($all_cs) --}}
-            @foreach($all_cs as $key => $cs)
+                @foreach ($all_cs as $key => $cs)
                     <tr>
-                        <td>{{$loop->iteration}}</td>
-                        <td><strong>#{{$cs->cs_no}}</strong></td>
-                        <td>{{$cs->effective_date}}</td>
-                        <td>{{$cs->expiry_date}}</td>
-                        <td>{{$cs->remarks}}</td>
+                        <td>{{ $loop->iteration }}</td>
+                        <td><strong>#{{ $cs->cs_no }}</strong></td>
+                        <td>{{ $cs->effective_date }}</td>
+                        <td>{{ $cs->expiry_date }}</td>
+                        <td>{{ $cs->remarks }}</td>
                         <td>
-                            @php $any_selected = false; @endphp
-                            @forelse ($cs->csSuppliers as $cs_supplier)
-                                @if($cs_supplier->is_checked)
-                                    @php $any_selected = true; @endphp
-                                    <p style="font-size: 11px">{{ $cs_supplier->supplier->name }}</p>
-                                @endif
-                            @empty
-                            @endforelse
-                            @if(!$any_selected)
-                                <p style="font-size: 11px">No Supplier Selected</p>
+                            @foreach ($cs->selectedSuppliers as $csSupplier)
+                                <p style="font-size: 11px">{{ $csSupplier->supplier->name }}</p>
+                            @endforeach
+                            @if ($cs->selectedSuppliers->isEmpty())
+                                No Supplier Selected
                             @endif
                         </td>
                         {{-- <td>
-                            @if($cs->approval()->exists())
-                                @foreach($cs->approval as $approval)
-                                    <span class="badge @if($approval->status == 'Approved') bg-primary @else bg-warning @endif bg-warning badge-md">
+                            @if ($cs->approval()->exists())
+                                @foreach ($cs->approval as $approval)
+                                    <span class="badge @if ($approval->status == 'Approved') bg-primary @else bg-warning @endif bg-warning badge-md">
                                         {{ $approval->status }} - {{$approval->user->employee->department->name ?? ''}} - {{$approval->user->employee->designation->name ?? ''}}
                                     </span><br><br>
                                 @endforeach
@@ -89,12 +84,15 @@
                                             $q->where('approvable_id',$cs->id)->where('approvable_type',\App\Procurement\Cs::class);
                                         })->orderBy('order_by','asc')->first();
                                     @endphp
-                                    @if((!empty($approval) && $approval->designation_id == auth()->user()->designation?->id && $approval->department_id == auth()->user()->department_id) || (!empty($approval) && auth()->user()->hasAnyRole(['admin','super-admin'])))
+                                    @if ((!empty($approval) && $approval->designation_id == auth()->user()->designation?->id && $approval->department_id == auth()->user()->department_id) ||
+    (!empty($approval) &&
+        auth()->user()->hasAnyRole(['admin', 'super-admin'])))
                                         <a href="{{ url("cs/approved/$cs->id/1") }}" data-toggle="tooltip" title="Approve CS" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></a>
                                     @endif
-                                    @if($cs->approval()->doesntExist() || auth()->user()->hasAnyRole(['admin','super-admin']))
+                                    @if ($cs->approval()->doesntExist() ||
+    auth()->user()->hasAnyRole(['admin', 'super-admin']))
                                         <a href="{{ route("cs.edit", $cs->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                        @if($cs->approval()->doesntExist())
+                                        @if ($cs->approval()->doesntExist())
                                         {!! Form::open(array('url' => route("cs.destroy", $cs->id),'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
                                         {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
                                         {!! Form::close() !!}
@@ -104,11 +102,18 @@
                                     {{-- <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
 
                                     <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
-                                    <a href="{{ route("cs.edit", $cs->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <a href="{{ route('cs.edit', $cs->id) }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    
-                                    {!! Form::open(array('url' => route("cs.destroy", $cs->id),'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
-                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
+
+                                    {!! Form::open([
+                                        'url' => route('cs.destroy', $cs->id),
+                                        'method' => 'delete',
+                                        'class' => 'd-inline',
+                                        'data-toggle' => 'tooltip',
+                                        'title' => 'Delete',
+                                    ]) !!}
+                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
                                     {!! Form::close() !!}
                                 </nobr>
                             </div>
@@ -121,20 +126,20 @@
 @endsection
 
 @section('script')
-    <script src="{{asset('js/Datatables/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('js/Datatables/dataTables.bootstrap4.min.js')}}"></script>
+    <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
-        $(window).scroll(function () {
+        $(window).scroll(function() {
             //set scroll position in session storage
             sessionStorage.scrollPos = $(window).scrollTop();
         });
-        var init = function () {
+        var init = function() {
             //get scroll position in session storage
             $(window).scrollTop(sessionStorage.scrollPos || 0)
         };
         window.onload = init;
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#dataTable').DataTable({
                 stateSave: true
             });

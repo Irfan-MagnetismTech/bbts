@@ -15,7 +15,7 @@ class CsRequest extends FormRequest
     public function rules()
     {
         return [
-            'cs_no'            => ['required', 'string', 'max:255', Rule::unique('cs')->ignore($this->cs, 'cs_no')],
+            'cs_no'                   => ['required', 'string', 'max:255', Rule::unique('cs')->ignore($this->c, 'cs_no')], //$this->c is the id of the cs
             'effective_date'          => ['required', 'date', 'date_format:d-m-Y'],
             'expiry_date'             => ['required', 'date', 'date_format:d-m-Y', 'after:effective_date'],
             'remarks'                 => ['present', 'nullable', 'string'],

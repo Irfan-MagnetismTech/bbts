@@ -38,4 +38,9 @@ class Cs extends Model
     {
         return $this->hasMany(CsMaterialSupplier::class, 'cs_id');
     }
+
+    public function selectedSuppliers()
+    {
+        return $this->hasMany(CsSupplier::class, 'cs_id', 'id')->where('is_checked', 1);
+    }
 }
