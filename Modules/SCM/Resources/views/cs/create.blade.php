@@ -102,9 +102,9 @@
                             @endphp
                             @forelse ($materials as $material_key => $material_value)
                                 @php
-                                    $material_id = $is_old ? old('material_id')[$material_key] : $material_value->nestedMaterial->id;
-                                    $material_name = $is_old ? old('material_name')[$material_key] : $material_value->nestedMaterial->name;
-                                    $unit = $is_old ? old('unit')[$material_key] : $material_value->nestedMaterial->unit->name ?? '---';
+                                    $material_id = $is_old ? old('material_id')[$material_key] : $material_value->material->id;
+                                    $material_name = $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode ?? '---';
+                                    $unit = $is_old ? old('unit')[$material_key] : $material_value->material->unit ?? '---';
                                     $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value->brand_id;
                                 @endphp
                                 <tr>
@@ -267,13 +267,13 @@
                                     @if ($loop->first)
                                         <tr>
                                             <td class="cs_material text-center">
-                                                {{ $is_old ? old('material_name')[$material_key] : $material_value->nestedMaterial->name }}
+                                                {{ $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode }}
                                             </td>
                                             <td class="cs_brand text-center">
-                                                {{ $is_old ? old('cs_brand_name')[$material_key] : '' }}
+                                                {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value->brand->name }}
                                             </td>
                                             <input type="hidden" name="cs_brand_name[]" class="cs_brand_name"
-                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : '' }}">
+                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value->brand->name }}">
                                     @endif
                                     <td>
                                         <input type="text" name="price[]"

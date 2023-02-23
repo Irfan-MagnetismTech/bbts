@@ -28,6 +28,6 @@ Route::prefix('scm')->middleware(['auth'])->group(function() {
         'couriers'                  => CourierController::class,
         'requisitions'              => ScmRequisitionController::class,
         'purchase-requisitions'     => ScmPurchaseRequisitionController::class,
-        'comparative-statements'    => CsController::class,
+        'cs'                        => CsController::class,
     ]);
 });

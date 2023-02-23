@@ -102,10 +102,9 @@ class CsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Cs $comparative_statement)
+    public function edit(Cs $c)
     {
-        dd($comparative_statement);
-        $form_type = 'Update';
+        $cs = $c;
         $Taxes = [
             'Include', 'Exclude'
         ];
@@ -113,7 +112,7 @@ class CsController extends Controller
         $all_materials = Material::with(['unit'])->get();
 
 
-        return view('scm::cs.create', compact('form_type', 'all_materials', 'cs', 'Taxes', 'brands'));
+        return view('scm::cs.create', compact('all_materials', 'cs', 'Taxes', 'brands'));
     }
 
     /**
