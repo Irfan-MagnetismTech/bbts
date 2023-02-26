@@ -2,9 +2,12 @@
 
 namespace Modules\SCM\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Modules\SCM\Entities\Indent;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Http\Requests\IndentRequest;
 
 class IndentController extends Controller
 {
@@ -23,7 +26,7 @@ class IndentController extends Controller
      */
     public function create()
     {
-        return view('scm::create');
+        return view('scm::indents.create');
     }
 
     /**
@@ -31,9 +34,25 @@ class IndentController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(IndentRequest $request)
     {
-        //
+        $requestedData = $request->only(['indent_no', 'date']);
+        $requestedData['indent_by'] = auth()->user()->id;
+        $requestedData['branch_id'] = auth()->user()->branch_id;
+        try {
+            DB::beginTransaction();
+            $indent = Indent::create($requestedData);
+            foreach ($request->prs_id as $key => $value) {
+                $indent->indentLines()->create(['scm_purchase_requisition_id' => $value]);
+            }
+            // $indent->prs()->createMany($request->prs_id);
+            DB::commit();
+
+            return redirect()->route('indents.index')->with('message', 'Indents created successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors($e->getMessage());;
+        }
     }
 
     /**

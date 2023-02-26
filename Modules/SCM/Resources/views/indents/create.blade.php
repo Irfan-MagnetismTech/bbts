@@ -1,117 +1,125 @@
 @extends('layouts.backend-layout')
-@section('title', 'Materials')
+@section('title', 'Indents')
+
+@php
+    $is_old = old('effective_date') ? true : false;
+    $form_heading = !empty($indents->id) ? 'Update' : 'Add';
+    $form_url = !empty($indents->id) ? route('indents.update', $indents->id) : route('indents.store');
+    $form_method = !empty($indents->id) ? 'PUT' : 'POST';
+@endphp
 
 @section('breadcrumb-title')
-    @if($formType == 'edit')  Edit  @else  Create  @endif
-    Materials Info
+    {{ ucfirst($form_heading) }} Indents
 @endsection
 
-@section('style')
-    <style>
-        .input-group-addon{
-            min-width: 120px;
-        }
-        .input-group-info .input-group-addon{
-            /*background-color: #04748a!important;*/
-        }
-    </style>
-@endsection
 @section('breadcrumb-button')
-    <a href="{{ route('materials.index')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('cs.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
     <span class="text-danger">*</span> Marked are required.
 @endsection
 
-@section('content-grid', 'offset-md-1 col-md-10 offset-lg-2 col-lg-8 my-3')
+@section('content-grid', null)
 
 @section('content')
     <div class="container">
-        <form action="{{ $formType == 'edit' ? route('materials.update', $material->id) : route('materials.store') }}"
-            method="post" class="custom-form">
-            @if ($formType == 'edit')
-                @method('PUT')
-            @endif
-            @csrf
-            <div class="row">
+        {!! Form::open([
+            'url' => $form_url,
+            'method' => $form_method,
+            'encType' => 'multipart/form-data',
+            'class' => 'custom-form',
+        ]) !!}
 
-                <div class="col-12">
-                    <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="name">Material Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="name" name="name"
-                            placeholder="Enter material name" value="{{ old('name') ?? ($material->name ?? '') }}" required>
-                    </div>
-                </div>
+        <div class="row">
 
-                <div class="col-12">
-                    <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="unit">Unit <span class="text-danger">*</span></label>
-                        <select class="form-control" id="unit" name="unit" required>
-                            <option value="">Select Unit</option>
-                            @foreach ($units as $unit)
-                                <option value="{{ $unit->name }}"
-                                    {{ (old('unit') ?? ($material->unit ?? '')) == $unit->name ? 'selected' : '' }}>
-                                    {{ $unit->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="type">Type <span class="text-danger">*</span></label>
-                        <select class="form-control" id="type" name="type" required>
-                            <option value="">Select Type</option>
-                            @foreach ($types as $type)
-                                <option value="{{ $type }}"
-                                    {{ (old('type') ?? ($material->type ?? '')) == $type ? 'selected' : '' }}>
-                                    {{ $type }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="code">Code <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="code" name="code"
-                            placeholder="Enter material code" value="{{ old('code') ?? ($material->code ?? '') }}"
-                            required>
-                    </div>
+            <div class="col-12">
+                <div class="input-group input-group-sm input-group-primary">
+                    <label class="input-group-addon" for="indent_no">Ident No: <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="indent_no" name="indent_no"
+                        placeholder="Enter indent number" value="{{ old('indent_no') ?? ($branch->name ?? '') }}" required>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="offset-md-4 col-md-4 mt-2">
-                    <div class="input-group input-group-sm ">
-                        <button class="btn btn-success btn-round btn-block py-2">Submit</button>
-                    </div>
+            <div class="col-12">
+                <div class="input-group input-group-sm input-group-primary">
+                    <label class="input-group-addon" for="name">Date <span class="text-danger">*</span></label>
+                    <input class="form-control" id="date" name="date" aria-describedby="date"
+                        value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly
+                        placeholder="Select a Date">
                 </div>
             </div>
-        </form>
+
+            <div class="col-12" id="prs_no">
+                <div class="input-group input-group-sm input-group-primary" id="">
+                    <label class="input-group-addon" for="prs_no">Prs Np <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
+                        value="{{ old('prs_no') ?? ($branch->name ?? '') }}" required>
+                        <input type="hidden" name="prs_id[]" class="prs_id" value="{{ old('prs_id') ?? ($branch->name ?? '') }}">
+                    <i class="btn btn-primary btn-sm fa fa-plus addMaterial" onclick="addMaterial()"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="offset-md-4 col-md-4 mt-2">
+                <div class="input-group input-group-sm ">
+                    <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+                </div>
+            </div>
+        </div>
+        {!! Form::close() !!}
+
     </div>
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
-        $(window).scroll(function() {
-            //set scroll position in session storage
-            sessionStorage.scrollPos = $(window).scrollTop();
-        });
-        var init = function() {
-            //get scroll position in session storage
-            $(window).scrollTop(sessionStorage.scrollPos || 0)
-        };
-        window.onload = init;
+        function addMaterial() {
+            $('#prs_no').append(
+                `<div class="input-group input-group-sm input-group-primary">
+                    <label class="input-group-addon invisible" for="name">Branch Name <span
+                                class="text-danger">*</span></label>
+                    <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
+                        value="{{ old('prs_no') ?? ($branch->name ?? '') }}" required>
+                    <input type="hidden" name="prs_id[]" class="prs_id" value="{{ old('prs_id') ?? ($branch->name ?? '') }}">
+                        <i class="btn btn-danger btn-sm fa fa-minus deleteItem" onclick="deleteRow(this)"></i>    
+                </div>`
+            );
+        }
 
-        $(document).ready(function() {
-            $('#dataTable').DataTable({
-                stateSave: true
+        function deleteRow(e) {
+            $(e).parent().remove();
+        }
+
+        $('#date').datepicker({
+            format: "dd-mm-yyyy",
+            autoclose: true,
+            todayHighlight: true,
+            showOtherMonths: true
+        }).datepicker("setDate", new Date());
+
+        $(document).on('keyup focus', '.prs_no', function() {
+            $(this).autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ url('search-prs-no') }}",
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $(this).val(ui.item.label);
+                    $(this).parent().find('.prs_id').val(ui.item.value);
+
+                    return false;
+                }
             });
         });
     </script>

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('indent_lines', function (Blueprint $table) {
             $table->id();
             $table->integer('indent_id');
-            $table->integer('purchase_requisition_id')->nullable();
+            $table->integer('scm_purchase_requisition_id')->nullable();
             $table->timestamps();
         });
     }

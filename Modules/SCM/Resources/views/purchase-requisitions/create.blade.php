@@ -228,7 +228,7 @@
             autoclose: true,
             todayHighlight: true,
             showOtherMonths: true
-        }).datepicker("setDate", new Date());;
+        }).datepicker("setDate", new Date());
         /* Append row */
         @if (empty($purchaseRequisition) && empty(old('material_name')))
             appendCalculationRow();

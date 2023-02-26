@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\User;
 use Modules\Admin\Entities\Brand;
+use App\Models\Dataencoding\Thana;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\Supplier;
+use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Employee;
 use App\Models\Dataencoding\Department;
-use App\Models\Dataencoding\District;
-use App\Models\Dataencoding\Thana;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 
 class CommonApiController extends Controller
 {
@@ -177,5 +178,18 @@ class CommonApiController extends Controller
             $data .= '<option value="' . $thana->id . '">' . $thana->name . '</option>';
         }
         return response()->json($data);
+    }
+
+    public function searchPrsNo()
+    {
+        $results = ScmPurchaseRequisition::query()
+            ->where('prs_no', 'LIKE', '%' . request('search') . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->id,
+                'label' => $item->prs_no,
+            ]);
+
+        return response()->json($results);
     }
 }
