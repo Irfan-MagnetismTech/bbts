@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "5bdb66a5-9e4d-49ee-a0c0-b681b7973199",
+    "name": "user_name",
+    "default": true,
+    "sortNum": 10000,
+    "created": "2023-02-27T07:59:36.879Z",
+    "modified": "2023-02-27T07:59:36.879Z",
+    "data": [
+      {
+        "name": "user_name",
+        "value": "sadmin@gmail.com"
+      },
+      {
+        "name": "password",
+        "value": "sadmin@gmail.com"
+      }
+    ]
+  }
+]

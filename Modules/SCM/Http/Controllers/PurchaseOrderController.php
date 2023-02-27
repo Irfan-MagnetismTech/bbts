@@ -3,8 +3,10 @@
 namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\SCM\Entities\PurchaseOrder;
 
 class PurchaseOrderController extends Controller
 {
@@ -14,7 +16,7 @@ class PurchaseOrderController extends Controller
      */
     public function index()
     {
-        return view('scm::index');
+        return $purchaseOrders = PurchaseOrder::with('purchaseOrderLines')->get();
     }
 
     /**
@@ -33,7 +35,38 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $purchaseOrderData = $request->only('po_no', 'date', 'comparative_statement_id', 'indent_id', 'remarks', 'trams_of_Supply', 'trams_of_payment', 'trams_of_condition', 'delivery_location', 'created_by', 'branch_id');
+
+            $purchaseOrderLinesData = [];
+            foreach ($request->purchase_requisition_id as $key => $data)
+            {
+                $purchaseOrderLinesData[] = [
+                    'purchase_requisition_id' => $request->purchase_requisition_id[$key],
+                    'purchase_order_id'       => $request->purchase_order_id[$key],
+                    'material_id'             => $request->material_id[$key],
+                    'po_composit_key'         => $request->po_composit_key[$key],
+                    'quantity'                => $request->quantity[$key],
+                    'warranty_period'         => $request->warranty_period[$key],
+                    'installation_cost'       => $request->installation_cost[$key],
+                    'transport_cost'          => $request->transport_cost[$key],
+                    'unit_price'              => $request->unit_price[$key],
+                    'vat'                     => $request->vat[$key],
+                    'tax'                     => $request->tax[$key],
+                    'total_amount'            => $request->total_amount[$key],
+                    'required_date'           => $request->required_date[$key],
+                ];
+            }
+
+            $purchaseOrder = PurchaseOrder::create($purchaseOrderData);
+            $purchaseOrder->purchaseOrderLines()->createMany($purchaseOrderLinesData);
+            //
+        }
+        catch (QueryException $e)
+        {
+
+            // return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -41,8 +74,10 @@ class PurchaseOrderController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(PurchaseOrder $purchaseOrder)
     {
+        return $purchaseOrder->load('purchaseOrderLines');
+
         return view('scm::show');
     }
 
@@ -51,8 +86,10 @@ class PurchaseOrderController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(PurchaseOrder $purchaseOrder)
     {
+        return $purchaseOrder->load('purchaseOrderLines');
+
         return view('scm::edit');
     }
 
@@ -62,9 +99,41 @@ class PurchaseOrderController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, PurchaseOrder $purchaseOrder)
     {
-        //
+        try {
+            $purchaseOrderData = $request->only('po_no', 'date', 'comparative_statement_id', 'indent_id', 'remarks', 'trams_of_Supply', 'trams_of_payment', 'trams_of_condition', 'delivery_location', 'created_by', 'branch_id');
+
+            $purchaseOrderLinesData = [];
+            foreach ($request->purchase_requisition_id as $key => $data)
+            {
+                $purchaseOrderLinesData[] = [
+                    'purchase_requisition_id' => $request->purchase_requisition_id[$key],
+                    'purchase_order_id'       => $request->purchase_order_id[$key],
+                    'material_id'             => $request->material_id[$key],
+                    'po_composit_key'         => $request->po_composit_key[$key],
+                    'quantity'                => $request->quantity[$key],
+                    'warranty_period'         => $request->warranty_period[$key],
+                    'installation_cost'       => $request->installation_cost[$key],
+                    'transport_cost'          => $request->transport_cost[$key],
+                    'unit_price'              => $request->unit_price[$key],
+                    'vat'                     => $request->vat[$key],
+                    'tax'                     => $request->tax[$key],
+                    'total_amount'            => $request->total_amount[$key],
+                    'required_date'           => $request->required_date[$key],
+                ];
+            }
+
+            $purchaseOrder->update($purchaseOrderData);
+            $purchaseOrder->purchaseOrderLines()->delete();
+            $purchaseOrder->purchaseOrderLines()->createMany($purchaseOrderLinesData);
+            //
+        }
+        catch (QueryException $e)
+        {
+
+            return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -72,8 +141,8 @@ class PurchaseOrderController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(PurchaseOrder $purchaseOrder)
     {
-        //
+        $purchaseOrder->delete();
     }
 }
