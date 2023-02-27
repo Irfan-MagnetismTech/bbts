@@ -58,9 +58,9 @@ class ScmRequisitionController extends Controller
     {
         try {
             DB::beginTransaction();
-            if (request()->has('client')) {
+            if (request()->type == 'client') {
                 $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'fr_composite_key');
-            } elseif (request()->has('warehouse')) {
+            } elseif (request()->type == 'warehouse') {
                 $requestData = $request->only('type', 'date', 'branch_id');
             } else {
                 $requestData = $request->only('type', 'date', 'branch_id', 'pop_id');
@@ -68,9 +68,9 @@ class ScmRequisitionController extends Controller
 
             $lastMRSId = ScmRequisition::latest()->first();
             if ($lastMRSId) {
-                $requestData['mrs_no'] = now()->format('Y') . '-' . $lastMRSId->id + 1;
+                $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . $lastMRSId->id + 1;
             } else {
-                $requestData['mrs_no'] = now()->format('Y') . '-' . 1;
+                $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . 1;
             }
             $requestData['requisition_by'] = auth()->id();
             $requisition = ScmRequisition::create($requestData);
@@ -144,9 +144,9 @@ class ScmRequisitionController extends Controller
         // dd($request->all());
         try {
             DB::beginTransaction();
-            if (request()->has('client')) {
+            if (request()->type == 'client') {
                 $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'fr_composite_key');
-            } elseif (request()->has('warehouse')) {
+            } elseif (request()->type == 'warehouse') {
                 $requestData = $request->only('type', 'date', 'branch_id');
             } else {
                 $requestData = $request->only('type', 'date', 'branch_id', 'pop_id');

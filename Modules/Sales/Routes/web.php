@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Modules\Sales\Http\Controllers\LeadGenerationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +13,8 @@
 |
 */
 
-Route::prefix('sales')->group(function() {
-    Route::get('/', 'SalesController@index');
+Route::prefix('sales')->group(function () {
+    Route::resources([
+        'lead-generation' => LeadGenerationController::class,
+    ]);
 });

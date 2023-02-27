@@ -1,8 +1,8 @@
 @extends('layouts.backend-layout')
-@section('title', 'Purchase Requisitions')
+@section('title', 'Purchase Requisitions Slip')
 
 @section('breadcrumb-title')
-    @if ($formType == 'edit')
+    @if (!empty($purchaseRequisition))
         Edit
     @else
         Create
@@ -35,9 +35,9 @@
 @section('content')
     <div class="container">
         <form
-            action="{{ $formType == 'edit' ? route('purchase-requisitions.update', @$requisition->id) : route('purchase-requisitions.store') }}"
+            action="{{ !empty($purchaseRequisition) ? route('purchase-requisitions.update', @$purchaseRequisition->id) : route('purchase-requisitions.store') }}"
             method="post" class="custom-form">
-            @if ($formType == 'edit')
+            @if (!empty($purchaseRequisition))
                 @method('PUT')
             @endif
             @csrf
@@ -47,14 +47,14 @@
                         <div class="form-check-inline">
                             <label class="form-check-label" for="client">
                                 <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                    value="client" @checked(@$requisition->type == 'client' || old('type') == 'client')> Client Purpose
+                                    value="client" @checked(@$purchaseRequisition->type == 'client' || old('type') == 'client')> Client Purpose
                             </label>
                         </div>
-    
+
                         <div class="form-check-inline">
                             <label class="form-check-label" for="internal">
                                 <input type="radio" class="form-check-input radioButton" id="internal" name="type"
-                                    @checked(@$requisition->type == 'internal' || old('type') == 'internal') value="internal">
+                                    @checked(@$purchaseRequisition->type == 'internal' || old('type') == 'internal') value="internal">
                                 Internal Purpose
                             </label>
                         </div>
@@ -66,23 +66,22 @@
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? (@$requisition->client->name ?? '') }}"
+                        name="client_name" value="{{ old('client_name') ?? (@$purchaseRequisition->client->name ?? '') }}"
                         placeholder="Search...">
                     <input type="hidden" name="client_id" id="client_id"
-                        value="{{ old('client_id') ?? @$requisition?->client->id }}">
+                        value="{{ old('client_id') ?? @$purchaseRequisition?->client->id }}">
                 </div>
                 <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>
                     <select class="form-control select2" id="client_links" name="client_links">
                         <option value="" readonly selected>Select Client Link</option>
-                        @if ($formType == 'create')
-                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
-                        @endif
-                        @if ($formType == 'edit')
+                        @if (!empty($purchaseRequisition))
                             @foreach ($clientInfos as $clientInfo)
-                                <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$requisition->fr_composite_key)>
+                                <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$purchaseRequisition->fr_composite_key)>
                                     {{ $clientInfo->link_name }}</option>
                             @endforeach
+                        @else
+                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
                         @endif
                     </select>
                 </div>
@@ -90,31 +89,32 @@
                 <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                        readonly value="{{ old('client_no') ?? (@$requisition->client->client_no ?? '') }}">
+                        readonly value="{{ old('client_no') ?? (@$purchaseRequisition->client->client_no ?? '') }}">
 
                 </div>
 
                 <div class="form-group col-3 fr_id">
                     <label for="fr_id">FR ID:</label>
                     <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                        value="{{ old('fr_id') ?? @$requisition->clientDetailsWithCompositeKey->fr_id }}" readonly>
+                        value="{{ old('fr_id') ?? @$purchaseRequisition->clientDetailsWithCompositeKey->fr_id }}" readonly>
                     <input type="hidden" name="fr_composite_key" id="fr_composite_key"
-                        value="{{ old('fr_composite_key') ?? @$requisition->fr_composite_key }}">
+                        value="{{ old('fr_composite_key') ?? @$purchaseRequisition->clientDetailsWithCompositeKey->fr_composite_key }}">
                 </div>
 
                 <div class="form-group col-3">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
+                        value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly
+                        placeholder="Select a Date">
                 </div>
 
                 <div class="form-group col-3 assesment_no">
                     <label for="select2">Assesment No</label>
                     <select class="form-control select2" id="assesment_no" name="assesment_no">
                         <option value="" readonly selected>Select Assesment No</option>
-                        {{-- @if ($formType == 'edit')
+                        {{-- @if (!empty($purchaseRequisition))
                             @foreach ($branchwisePops as $branchwisePop)
-                                <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$requisition->assesment_no)>
+                                <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$purchaseRequisition->assesment_no)>
                                     {{ $branchwisePop->name }}
                                 </option>
                             @endforeach
@@ -140,16 +140,16 @@
                 <tbody></tbody>
                 <tfoot>
                     @php
-                        $material_name_with_code = old('material_name', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.materialNameWithCode') : []);
-                        $material_id = old('material_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material_id') : []);
-                        $item_code = old('item_code', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.code') : []);
-                        $unit = old('unit', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.unit') : []);
-                        $description = old('description', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('description') : []);
-                        $current_stock = old('current_stock', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.current_stock') : []);
-                        $quantity = old('quantity', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('quantity') : []);
-                        $brand_id = old('brand_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('brand_id') : []);
-                        $model = old('model', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('model') : []);
-                        $purpose = old('purpose', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('purpose') : []);
+                        $material_name_with_code = old('material_name', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
+                        $material_id = old('material_id', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material_id') : []);
+                        $item_code = old('item_code', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.code') : []);
+                        $unit = old('unit', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.unit') : []);
+                        $brand_id = old('brand_id', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('brand_id') : []);
+                        $quantity = old('quantity', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('quantity') : []);
+                        $unit_price = old('unit_price', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('unit_price') : []);
+                        $total_amount = old('total_amount', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('total_amount') : []);
+                        $model = old('model', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('model') : []);
+                        $purpose = old('purpose', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('purpose') : []);
                     @endphp
                     @foreach ($material_name_with_code as $key => $requisitionDetail)
                         <tr>
@@ -163,7 +163,7 @@
                             </td>
                             <td>
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                    readonly value="{{ $unit[$key] }}">
+                                    readonly value="{{ $unit[$key] }}" id="unit">
                             </td>
                             <td>
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
@@ -180,16 +180,16 @@
                                     value="{{ $model[$key] }}">
                             </td>
                             <td>
-                                <input type="text" name="unit_price[]" class="form-control unit_price"
+                                <input type="number" name="unit_price[]" class="form-control unit_price"
                                     autocomplete="off" value="{{ $unit_price[$key] }}">
                             </td>
                             <td>
-                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
+                                <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off"
                                     value="{{ $quantity[$key] }}">
                             </td>
                             <td>
-                                <input type="text" name="total_amount[]" class="form-control total_amount"
-                                    autocomplete="off" value="{{ $total_amount[$key] }}">
+                                <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
+                                    value="{{ $total_amount[$key] }}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
@@ -216,6 +216,13 @@
 
 @section('script')
     <script>
+        $(document).on('keyup', '.unit_price, .quantity', function() {
+            var unit_price = $(this).closest('tr').find('.unit_price').val();
+            var quantity = $(this).closest('tr').find('.quantity').val();
+            var total_amount = unit_price * quantity;
+            $(this).closest('tr').find('.total_amount').val(total_amount);
+        });
+
         $('#date').datepicker({
             format: "dd-mm-yyyy",
             autoclose: true,
@@ -223,7 +230,7 @@
             showOtherMonths: true
         }).datepicker("setDate", new Date());;
         /* Append row */
-        @if (empty($requisition) && empty(old('material_name')))
+        @if (empty($purchaseRequisition) && empty(old('material_name')))
             appendCalculationRow();
         @endif
         function appendCalculationRow() {
@@ -233,6 +240,9 @@
                                 <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
                                 <input type="hidden" name="material_id[]" class="form-control material_id">
                                 <input type="hidden" name="item_code[]" class="form-control item_code">
+                            </td>                            
+                            <td>
+                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                             <td> 
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
@@ -246,16 +256,13 @@
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off">
                             </td>
                             <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off">
                             </td>
                             <td>
-                                <input type="text" name="unit_price[]" class="form-control unit_price" autocomplete="off">
+                                <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off">
                             </td>
                             <td>
-                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="text" name="total_amount[]" class="form-control total_amount" autocomplete="off">
+                                <input name="total_amount[]" class="form-control total_amount" autocomplete="off" readonly>
                             </td>
                             <td>
                                 <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
@@ -279,7 +286,7 @@
 
         //Search Client
         var client_details = [];
-        @if ($formType === 'edit')
+        @if (!empty($purchaseRequisition))
             client_details = {!! collect($clientInfos) !!}
         @endif
         $(document).on('keyup focus', '#client_name', function() {
@@ -375,19 +382,17 @@
             if (radioValue == 'client') {
                 $('.pop_id').hide('slow');
                 $('.fr_id').show('slow');
-                $('.address').show('slow');
                 $('.client_name').show('slow');
                 $('.client_no').show('slow');
-                $('.current_stock').hide('slow');
                 $('.client_links').show('slow');
+                $('.assesment_no').show('slow');
             } else if (radioValue == 'internal') {
                 $('.pop_id').hide('slow');
                 $('.fr_id').hide('slow');
-                $('.address').hide('slow');
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
-                $('.current_stock').show('slow');
                 $('.client_links').hide('slow');
+                $('.assesment_no').hide('slow');
             }
         }
     </script>

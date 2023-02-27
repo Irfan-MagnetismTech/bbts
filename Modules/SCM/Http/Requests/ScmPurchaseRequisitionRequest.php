@@ -14,7 +14,12 @@ class ScmPurchaseRequisitionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'type' => 'required',
+            'date' => 'required|date',
+            'client_id' => 'required_if:type,client',
+            'fr_id' => 'required_if:type,client',
+            'material_id.*' => 'required',
+            'brand_id.*' => 'required',
         ];
     }
 
@@ -26,7 +31,14 @@ class ScmPurchaseRequisitionRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'type.required' => 'Requisition Type is required',
+            'date.required' => 'Requisition Date is required',
+            'date.date' => 'Requisition Date is invalid',
+            'fr_id.required_if' => 'Client FR ID is required',
+            'fr_id.exists' => 'Client is invalid',
+            'client_id.required_if' => 'Client is required',
+            'material_id.*.required' => 'Material is required',
+            'brand_id.*.required' => 'Brand is required',
         ];
     }
 

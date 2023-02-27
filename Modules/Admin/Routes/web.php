@@ -23,7 +23,6 @@ use Modules\Admin\Http\Controllers\PermissionController;
 Route::prefix('admin')->group(function () {
 
     Route::middleware(['auth'])->group(function () {
-        Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/password-change-config', [AuthController::class, 'passwordResetForm'])->name('password-change-form');
         Route::post('/password-change', [AuthController::class, 'resetPassword'])->name('password-change');

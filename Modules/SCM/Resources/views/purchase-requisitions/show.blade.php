@@ -20,31 +20,25 @@
                     <tbody class="text-left">
                         <tr style="background-color: #0C4A77;color: white">
                             <td> <strong>MRS No.</strong> </td>
-                            <td> <strong>{{ 'MRS-' . $requisition->mrs_no }}</strong></td>
+                            <td> <strong>{{ $purchaseRequisition->prs_no }}</strong></td>
                         </tr>
                         <tr>
                             <td> <strong>Type</strong> </td>
-                            <td> {{ ucfirst($requisition->type) }}</td>
+                            <td> {{ ucfirst($purchaseRequisition->type) }}</td>
                         </tr>
-                        @if ($requisition?->client)
+                        @if ($purchaseRequisition?->typre == 'client')
                             <tr>
                                 <td> <strong>Client Name</strong> </td>
-                                <td> {{ ucfirst($requisition->client->name) }}</td>
+                                <td> {{ ucfirst($purchaseRequisition->client->name) }}</td>
                             </tr>
                         @endif
-                        @if($requisition?->pop)
-                            <tr>
-                                <td> <strong>Pop Name</strong> </td>
-                                <td> {{ ucfirst($requisition->pop->name) }}</td>
-                            </tr>
-                        @endif  
                         <tr>
                             <td> <strong>Date</strong> </td>
-                            <td> {{ $requisition->date }}</td>
+                            <td> {{ $purchaseRequisition->date }}</td>
                         </tr>
                         <tr>
                             <td> <strong>Requisition By</strong> </td>
-                            <td> {{ ucfirst($requisition->requisitionBy->name) }}</td>
+                            <td> {{ ucfirst($purchaseRequisition->requisitionBy->name) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -57,7 +51,6 @@
             <thead>
                 <tr>
                     <th>Material Name</th>
-                    <th>Description</th>
                     <th>Unit</th>
                     <th>Quantity</th>
                     <th>Brand</th>
@@ -66,15 +59,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($requisition->scmRequisitiondetailsWithMaterial as $key => $requisitiondetail)
+                @foreach ($purchaseRequisition->scmPurchaseRequisitionDetails as $key => $requisitionDetail)
                     <tr>
-                        <td> {{ $requisitiondetail->material->name }} </td>
-                        <td> {{ $requisitiondetail->description }} </td>
-                        <td> {{ $requisitiondetail->material->unit }} </td>
-                        <td> {{ $requisitiondetail->quantity }} </td>
-                        <td> {{ $requisitiondetail->brand->name }} </td>
-                        <td> {{ $requisitiondetail->model }} </td>
-                        <td> {{ $requisitiondetail->purpose }} </td>
+                        <td> {{ $requisitionDetail->material->name }} </td>
+                        <td> {{ $requisitionDetail->material->unit }} </td>
+                        <td> {{ $requisitionDetail->quantity }} </td>
+                        <td> {{ $requisitionDetail->brand->name }} </td>
+                        <td> {{ $requisitionDetail->model }} </td>
+                        <td> {{ $requisitionDetail->purpose }} </td>
                     </tr>
                 @endforeach
             </tbody>

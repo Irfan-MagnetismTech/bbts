@@ -43,7 +43,7 @@
             @csrf
             <div class="row">
                 <div class="col-md-12">
-                    <div class="typeSection mt-2 mb-2">
+                    <div class="typeSection mt-2 mb-4">
                         <div class="form-check-inline">
                             <label class="form-check-label" for="client">
                                 <input type="radio" class="form-check-input radioButton" id="client" name="type"

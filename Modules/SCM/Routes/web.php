@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\SCM\Http\Controllers\UnitController;
 use Modules\SCM\Http\Controllers\CourierController;
+use Modules\SCM\Http\Controllers\CsController;
 use Modules\SCM\Http\Controllers\MaterialController;
 use Modules\SCM\Http\Controllers\ScmPurchaseRequisitionController;
 use Modules\SCM\Http\Controllers\SupplierController;
@@ -21,11 +22,12 @@ use Modules\SCM\Http\Controllers\ScmRequisitionController;
 
 Route::prefix('scm')->middleware(['auth'])->group(function() {
     Route::resources([
-        'suppliers'     => SupplierController::class,
-        'units'         => UnitController::class,
-        'materials'     => MaterialController::class,
-        'couriers'      => CourierController::class,
-        'requisitions'  => ScmRequisitionController::class,
-        'purchase-requisitions'  => ScmPurchaseRequisitionController::class,
+        'suppliers'                 => SupplierController::class,
+        'units'                     => UnitController::class,
+        'materials'                 => MaterialController::class,
+        'couriers'                  => CourierController::class,
+        'requisitions'              => ScmRequisitionController::class,
+        'purchase-requisitions'     => ScmPurchaseRequisitionController::class,
+        'cs'                        => CsController::class,
     ]);
 });
