@@ -2,11 +2,11 @@
 
 namespace Modules\SCM\Http\Controllers;
 
-use App\Http\Controllers\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
 use Modules\SCM\Entities\Indent;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Http\Requests\IndentRequest;
 
@@ -50,7 +50,6 @@ class IndentController extends Controller
     {
         $requestedData = $request->only(['date']);
         $requestedData['indent_no'] = $this->indentNo;
-        dd($requestedData['indent_no']);
         $requestedData['indent_by'] = auth()->user()->id;
         $requestedData['branch_id'] = auth()->user()->branch_id;
 
@@ -95,9 +94,26 @@ class IndentController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Indent $indent)
     {
-        //
+        $requestedData = $request->only(['date']);
+        $requestedData['indent_by'] = auth()->user()->id;
+        $requestedData['branch_id'] = auth()->user()->branch_id;
+
+        try {
+            DB::beginTransaction();
+            $indent->update($requestedData);
+            $indent->indentLines()->delete();
+            foreach ($request->prs_id as $key => $value) {
+                $indent->indentLines()->create(['scm_purchase_requisition_id' => $value]);
+            }
+            DB::commit();
+
+            return redirect()->route('indents.index')->with('message', 'Indents updated successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors($e->getMessage());;
+        }
     }
 
     /**

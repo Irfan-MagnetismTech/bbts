@@ -2,7 +2,6 @@
 @section('title', 'Pops')
  
 @section('style')
-    <link rel="stylesheet" type="text/css" href="{{asset('css/Datatables/dataTables.bootstrap4.min.css')}}">
 @endsection
 
 @section('breadcrumb-title', "Pops")
@@ -98,8 +97,6 @@
 
 
 @section('script')
-    <script src="{{asset('js/Datatables/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('js/Datatables/dataTables.bootstrap4.min.js')}}"></script>
     <script>
         $(window).scroll(function () {
             //set scroll position in session storage
@@ -111,11 +108,6 @@
         };
         window.onload = init;
 
-        $(document).ready(function () {
-            $('#dataTable').DataTable({
-                stateSave: true
-            });
-        });
     </script>
 @endsection
 

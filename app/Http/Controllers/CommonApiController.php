@@ -14,6 +14,7 @@ use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Employee;
 use App\Models\Dataencoding\Department;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\Sales\Entities\ClientDetail;
 
 class CommonApiController extends Controller
 {
@@ -29,6 +30,20 @@ class CommonApiController extends Controller
                 'client_no' => $item->client_no,
                 'address' => $item->address,
                 'details' => $item->clientDetails,
+            ]);
+
+        return response()->json($results);
+    }
+
+    public function getClientsByLinkId() {
+        $results = ClientDetail::query()
+            ->with('client')
+            ->where('link_name', 'LIKE', '%' . request('search') . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->id,
+                'label' => $item->link_name,
+                'client' => $item->client
             ]);
 
         return response()->json($results);
