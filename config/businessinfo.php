@@ -8,4 +8,6 @@ return [
     'footer' => 'All Rights Reserved',
     'developer' => 'Developed by <a href="https://magnetismtech.com" target="_blank">Magnetism Tech Limited</a>',
     
+    'ticketStatuses' => ['Pending', 'Approved', 'Accepted', 'Processing', 'Closed', 'Reopen'],
+    'ticketPriority' => ['Low', 'Medium', 'High', 'Urgent'],
 ];

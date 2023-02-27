@@ -18,7 +18,8 @@ class TicketingDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call(SupportQuickSolutionSeeder::class);
+        // $this->call(TicketSourceSeederTableSeeder::class);
+        // $this->call(SupportQuickSolutionSeeder::class);
         // $this->call(ComplainTypeSeeder::class);
     }
 }

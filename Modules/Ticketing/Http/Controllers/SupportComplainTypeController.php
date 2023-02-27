@@ -39,7 +39,9 @@ class SupportComplainTypeController extends Controller
     public function store(Request $request)
     {
         try {
-            
+            $request->validate([
+                'name' => 'required|unique:support_complain_types,name'
+            ]);
             DB::transaction(function () use ($request)
             {
                     SupportComplainType::create([
@@ -86,6 +88,9 @@ class SupportComplainTypeController extends Controller
     public function update(Request $request, SupportComplainType $supportComplainType)
     {
         try {
+            $request->validate([
+                'name' => 'required|unique:support_complain_types,name,' . $supportComplainType->id
+            ]);
             
             DB::transaction(function () use ($request, $supportComplainType)
             {
@@ -100,7 +105,7 @@ class SupportComplainTypeController extends Controller
         }
         catch (QueryException $e)
         {
-            return redirect()->route('support-complain-types.edit')->withInput()->withErrors($e->getMessage());
+            return back()->withInput()->withErrors($e->getMessage());
         }
     }
 

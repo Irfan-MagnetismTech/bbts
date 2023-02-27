@@ -1,9 +1,11 @@
 <?php
 use Illuminate\Support\Facades\Route;
+use Modules\Ticketing\Entities\TicketSource;
+use Modules\Ticketing\Http\Controllers\SupportTeamController;
+use Modules\Ticketing\Http\Controllers\TicketSourceController;
+use Modules\Ticketing\Http\Controllers\SupportTicketController;
 use Modules\Ticketing\Http\Controllers\SupportComplainTypeController;
 use Modules\Ticketing\Http\Controllers\SupportQuickSolutionController;
-use Modules\Ticketing\Http\Controllers\SupportTeamController;
-use Modules\Ticketing\Http\Controllers\SupportTicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +24,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         'support-teams'       => SupportTeamController::class,
         'support-complain-types' => SupportComplainTypeController::class,
         'support-solutions' => SupportQuickSolutionController::class,
+        'complain-sources' => TicketSourceController::class
     ]);
 
 });

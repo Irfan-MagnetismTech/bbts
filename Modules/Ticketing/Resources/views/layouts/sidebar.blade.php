@@ -37,4 +37,10 @@
             <span class="pcoded-mtext">Support Solutions</span>
         </a>
     </li>
+    <li class="">
+        <a href="{{ route('complain-sources.index') }}">
+            <span class="pr-2 w-25px d-inline-block"><i class="fas fa-tty"></i></span>
+            <span class="pcoded-mtext">Complain Source</span>
+        </a>
+    </li>
 </ul>

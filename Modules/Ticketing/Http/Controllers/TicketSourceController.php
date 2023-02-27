@@ -7,11 +7,9 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
-use App\Http\Controllers\Services\BbtsGlobalService;
-use Illuminate\Support\Facades\Redis;
-use Modules\Ticketing\Entities\SupportQuickSolution;
+use Modules\Ticketing\Entities\TicketSource;
 
-class SupportQuickSolutionController extends Controller
+class TicketSourceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,8 +17,8 @@ class SupportQuickSolutionController extends Controller
      */
     public function index()
     {
-        $supportSolutions = (new BbtsGlobalService())->getSupportSolutions();
-        return view('ticketing::quick-sloutions.index', compact('supportSolutions'));
+        $complainSources = (new TicketSource())->all();
+        return view('ticketing::complain-source.index', compact('complainSources'));
     }
 
     /**
@@ -29,7 +27,7 @@ class SupportQuickSolutionController extends Controller
      */
     public function create()
     {
-        return view('ticketing::quick-sloutions.create-edit');
+        return view('ticketing::complain-source.create-edit');
     }
 
     /**
@@ -40,19 +38,21 @@ class SupportQuickSolutionController extends Controller
     public function store(Request $request)
     {
         try {
+
             $request->validate([
-                'name' => 'required|unique:support_quick_solutions,name'
+                'name' => 'required|unique:ticket_sources,name'
             ]);
+            
             DB::transaction(function () use ($request)
             {
-                    SupportQuickSolution::create([
+                    TicketSource::create([
                         'name' => $request->name,
                         'created_by'       => auth()->user()->id
                     ]);
                 
             });
 
-            return redirect()->route('support-solutions.index')->with('message', 'Solution Created Successfully');
+            return redirect()->route('complain-sources.index')->with('message', 'Complain Source Created Successfully');
         }
         catch (QueryException $e)
         {
@@ -65,9 +65,9 @@ class SupportQuickSolutionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show(SupportQuickSolution $supportSolution)
+    public function show($id)
     {
-        // return view('ticketing::quick-sloutions.show');
+        // return view('ticketing::show');
     }
 
     /**
@@ -75,9 +75,9 @@ class SupportQuickSolutionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit(SupportQuickSolution $supportSolution)
+    public function edit(TicketSource $complainSource)
     {
-        return view('ticketing::quick-sloutions.create-edit', compact('supportSolution'));
+        return view('ticketing::complain-source.create-edit', compact('complainSource'));
     }
 
     /**
@@ -86,23 +86,23 @@ class SupportQuickSolutionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(SupportQuickSolution $supportSolution, Request $request)
+    public function update(TicketSource $complainSource, Request $request)
     {
         try {
             $request->validate([
-                'name' => 'required|unique:support_quick_solutions,name,' . $supportSolution->id
+                'name' => 'required|unique:ticket_sources,name,' . $complainSource->id
             ]);
             
-            DB::transaction(function () use ($request, $supportSolution)
+            DB::transaction(function () use ($request, $complainSource)
             {
-                $supportSolution->update([
+                $complainSource->update([
                         'name' => $request->name,
                         'updated_by'       => auth()->user()->id
                 ]);
                 
             });
 
-            return redirect()->route('support-solutions.index')->with('message', 'Support Solution Updated Successfully');
+            return redirect()->route('complain-sources.index')->with('message', 'Complain Source Updated Successfully');
         }
         catch (QueryException $e)
         {
@@ -118,10 +118,10 @@ class SupportQuickSolutionController extends Controller
     public function destroy($id)
     {
         try {
-            SupportQuickSolution::where('id', $id)->delete();
-            return redirect()->route('support-solutions.index')->with('message', 'Support Solution Deleted Successfully');
+            TicketSource::where('id', $id)->delete();
+            return redirect()->route('complain-sources.index')->with('message', 'Complain Source Deleted Successfully');
         } catch (\Throwable $th) {
-            return redirect()->route('support-solutions.index')->withInput()->withErrors($th->getMessage());
+            return redirect()->route('complain-sources.index')->withInput()->withErrors($th->getMessage());
         }
     }
 }
