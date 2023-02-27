@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use App\Http\Controllers\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
 use Modules\SCM\Entities\Indent;
 use Illuminate\Routing\Controller;
@@ -11,6 +12,12 @@ use Modules\SCM\Http\Requests\IndentRequest;
 
 class IndentController extends Controller
 {
+    private $indentNo;
+
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->indentNo = $globalService->generateUniqueId(Indent::class, 'IND');
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -21,7 +28,7 @@ class IndentController extends Controller
             ->with(['indentLines', 'indentLines.scmPurchaseRequisition'])
             ->latest()
             ->get();
-            
+
         return view('scm::indents.index', compact('indents'));
     }
 
@@ -41,10 +48,12 @@ class IndentController extends Controller
      */
     public function store(IndentRequest $request)
     {
-        // dd($request->all());
-        $requestedData = $request->only(['indent_no', 'date']);
+        $requestedData = $request->only(['date']);
+        $requestedData['indent_no'] = $this->indentNo;
+        dd($requestedData['indent_no']);
         $requestedData['indent_by'] = auth()->user()->id;
         $requestedData['branch_id'] = auth()->user()->branch_id;
+
         try {
             DB::beginTransaction();
             $indent = Indent::create($requestedData);
@@ -75,9 +84,9 @@ class IndentController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Indent $indent)
     {
-        return view('scm::indents.create');
+        return view('scm::indents.create', compact('indent'));
     }
 
     /**

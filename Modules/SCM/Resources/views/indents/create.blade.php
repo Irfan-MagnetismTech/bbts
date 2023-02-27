@@ -3,9 +3,9 @@
 
 @php
     $is_old = old('prs_no') ? true : false;
-    $form_heading = !empty($indents->id) ? 'Update' : 'Add';
-    $form_url = !empty($indents->id) ? route('indents.update', $indents->id) : route('indents.store');
-    $form_method = !empty($indents->id) ? 'PUT' : 'POST';
+    $form_heading = !empty($indent->id) ? 'Update' : 'Add';
+    $form_url = !empty($indent->id) ? route('indents.update', $indent->id) : route('indents.store');
+    $form_method = !empty($indent->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
@@ -34,24 +34,15 @@
         <div class="row">
             <div class="col-12">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="indent_no">Ident No: <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="indent_no" name="indent_no"
-                        placeholder="Enter indent number" value="{{ old('indent_no') ?? ($branch->name ?? '') }}" required>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="name">Date <span class="text-danger">*</span></label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly
+                        value="{{ old('date') ?? ($indent->date ?? '') }}" readonly
                         placeholder="Select a Date">
                 </div>
             </div>
-            {{-- @dd(old()) --}}
-
             @php
-                $prs_nos = $is_old ? old('prs_no') ?? [] : $indents->prs_no ?? [];
+                $prs_nos = $is_old ? old('prs_no') ?? [] : (isset($indent) ? $indent->indentLines->pluck('scmPurchaseRequisition.prs_no') : []);
+                $prs_ids = $is_old ? old('prs_id') ?? [] : (isset($indent) ? $indent->indentLines->pluck('scm_purchase_requisition_id') : []);
             @endphp
 
             <div class="col-12" id="prs_no">
@@ -72,8 +63,8 @@
                         <label class="input-group-addon {{ $visivilty }}" for="name">Branch Name <span
                                 class="text-danger">*</span></label>
                         <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
-                            value="{{ $prs_no }}" required>
-                        <input type="hidden" name="prs_id[]" class="prs_id" value="{{ old('prs_id')[$key] ?? '' }}">
+                            value="{{ $prs_nos[$key] }}" required>
+                        <input type="hidden" name="prs_id[]" class="prs_id" value="{{ $prs_ids[$key] }}">
                         {!! $button !!}
                     </div>
                 @empty

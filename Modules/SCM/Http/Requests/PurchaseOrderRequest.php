@@ -2,10 +2,9 @@
 
 namespace Modules\SCM\Http\Requests;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndentRequest extends FormRequest
+class PurchaseOrderRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,8 +14,7 @@ class IndentRequest extends FormRequest
     public function rules()
     {
         return [
-            'date' => 'required',
-            'prs_no.*' => 'required',
+            //
         ];
     }
 
@@ -28,8 +26,7 @@ class IndentRequest extends FormRequest
     public function messages()
     {
         return [
-            'date.required' => 'Date is required',
-            'prs_no.*.required' => 'Purchase Requisition No. is required',
+            //
         ];
     }
 
