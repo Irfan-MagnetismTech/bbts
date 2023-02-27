@@ -41,7 +41,7 @@
                         <div class="form-group col-12">
                             <div class="form-group">
                                 <label for="complain_type">Support Solutions:</label>
-                                <input type="text" class="form-control" id="complain_type" name="name" aria-describedby="name"
+                                <input type="text" required class="form-control" id="complain_type" name="name" aria-describedby="name"
                                     value="{{ old('name') ?? (!empty($supportSolution) ? $supportSolution?->name : '') }}" placeholder="Support Solutions">
                             </div>
 
