@@ -178,7 +178,7 @@
 
                                 <div class="col-12">
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered">
+                                        <table class="table table-striped table-bordered" id="previousTickets">
                                             <thead>
                                                 <tr>
                                                     <th>Ticket No.</th>
@@ -331,21 +331,37 @@
                     console.log(ui.item)
                     $("#clients_id").val(ui.item.label)
                     $("#fr_composit_key").val(ui.item.value)
+
+                    getClientsPreviousTickets(ui.item.client.id, 5)
                     return false;
                 }
             });
         });
 
-        function getClientsPreviousTickets(linkId) {
+        function getClientsPreviousTickets(clientId, limit = 5) {
+            console.log(clientId, limit)
             $.ajax({
-                url: "{{ url('get-clients-previous-tickets') }}",
+                url: "{{ url('get-clients-previous-tickets') }}"+"/"+clientId+"/"+limit,
                 type: 'get',
-                dataType: "json",
-                data: {
-                    linkId: linkId
-                }
+                dataType: "json"
             }).done(function(data) {
-                $("#clients_id").val(data.clients_id)
+                // $("#clients_id").val(data.clients_id)
+                console.log("output", data)
+                var tickets = data;
+
+                // run foreach data 
+                var tableData = '';
+                $.each(tickets, function(key, value) {
+                    tableData += '<tr>';
+                    tableData += '<td>' + value.ticket_no + '</td>';
+                    tableData += '<td>' + value.opening_date + '</td>';
+                    tableData += '<td>' + value.departments_id + '</td>';
+                    tableData += '</tr>';
+                })
+
+                $("#previousTickets").find("tbody").html("");
+                $("#previousTickets").find("tbody").html(tableData);
+
             })
         }
 

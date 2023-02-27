@@ -48,6 +48,19 @@ class CommonApiController extends Controller
         return response()->json($results);
     }
 
+    public function getClientsPreviousTickets($clientId, $limit) {
+        $clientId = abs($clientId);
+        $limit = (abs($limit) > 5) ? 5 : abs($limit);
+
+        $client = Client::find($clientId);
+        $previousTickets = $client->previousTickets()
+                            ->with(['complainType', 'ticketSource'])
+                            ->limit($limit)
+                            ->get(['complain_types_id', 'sources_id', 'opening_date', 'remarks', 'id', 'ticket_no']);
+
+        return response()->json($previousTickets);
+    }
+
     public function searchMaterial()
     {
         $results = Material::query()
