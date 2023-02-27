@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('type')->nullable()->comment('1=Client, 2=Warehouse, 3=POP');
             $table->integer('client_id')->nullable();
             $table->string('fr_composite_key')->nullable();
-            $table->string('date')->nullable();
+            $table->date('date')->nullable();
             $table->string('remarks')->nullable();
             $table->integer('branch_id')->nullable();
             $table->integer('pop_id')->nullable();

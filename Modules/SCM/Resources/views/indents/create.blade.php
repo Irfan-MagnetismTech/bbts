@@ -2,7 +2,7 @@
 @section('title', 'Indents')
 
 @php
-    $is_old = old('effective_date') ? true : false;
+    $is_old = old('prs_no') ? true : false;
     $form_heading = !empty($indents->id) ? 'Update' : 'Add';
     $form_url = !empty($indents->id) ? route('indents.update', $indents->id) : route('indents.store');
     $form_method = !empty($indents->id) ? 'PUT' : 'POST';
@@ -32,7 +32,6 @@
         ]) !!}
 
         <div class="row">
-
             <div class="col-12">
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="indent_no">Ident No: <span class="text-danger">*</span></label>
@@ -49,15 +48,43 @@
                         placeholder="Select a Date">
                 </div>
             </div>
+            {{-- @dd(old()) --}}
+
+            @php
+                $prs_nos = $is_old ? old('prs_no') ?? [] : $indents->prs_no ?? [];
+            @endphp
 
             <div class="col-12" id="prs_no">
-                <div class="input-group input-group-sm input-group-primary" id="">
-                    <label class="input-group-addon" for="prs_no">Prs Np <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
-                        value="{{ old('prs_no') ?? ($branch->name ?? '') }}" required>
-                        <input type="hidden" name="prs_id[]" class="prs_id" value="{{ old('prs_id') ?? ($branch->name ?? '') }}">
-                    <i class="btn btn-primary btn-sm fa fa-plus addMaterial" onclick="addMaterial()"></i>
-                </div>
+                @forelse ($prs_nos as $key => $prs_no)
+                    @if ($loop->first)
+                        @php
+                            $visivilty = 'visible';
+                            $button = "<i class='btn btn-primary btn-sm fa fa-plus addMaterial' onclick='addMaterial()'></i>";
+                        @endphp
+                    @else
+                        @php
+                            $visivilty = 'invisible';
+                            $button = "<i class='btn btn-danger btn-sm fa fa-minus deleteItem' onclick='deleteRow(this)'></i>";
+
+                        @endphp
+                    @endif
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon {{ $visivilty }}" for="name">Branch Name <span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
+                            value="{{ $prs_no }}" required>
+                        <input type="hidden" name="prs_id[]" class="prs_id" value="{{ old('prs_id')[$key] ?? '' }}">
+                        {!! $button !!}
+                    </div>
+                @empty
+                    <div class="input-group input-group-sm input-group-primary" id="">
+                        <label class="input-group-addon" for="prs_no">Prs Np <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
+                            value="" required>
+                        <input type="hidden" name="prs_id[]" class="prs_id" value="">
+                        <i class="btn btn-primary btn-sm fa fa-plus addMaterial" onclick="addMaterial()"></i>
+                    </div>
+                @endforelse
             </div>
         </div>
 
@@ -80,9 +107,8 @@
                 `<div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon invisible" for="name">Branch Name <span
                                 class="text-danger">*</span></label>
-                    <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
-                        value="{{ old('prs_no') ?? ($branch->name ?? '') }}" required>
-                    <input type="hidden" name="prs_id[]" class="prs_id" value="{{ old('prs_id') ?? ($branch->name ?? '') }}">
+                    <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No" required>
+                    <input type="hidden" name="prs_id[]" class="prs_id">
                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem" onclick="deleteRow(this)"></i>    
                 </div>`
             );

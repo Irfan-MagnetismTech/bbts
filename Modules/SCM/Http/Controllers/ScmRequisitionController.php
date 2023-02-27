@@ -68,7 +68,11 @@ class ScmRequisitionController extends Controller
 
             $lastMRSId = ScmRequisition::latest()->first();
             if ($lastMRSId) {
-                $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . $lastMRSId->id + 1;
+                if (now()->format('Y') != date('Y', strtotime($lastMRSId->created_at))) {
+                    $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . 1;
+                } else {
+                    $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . ($lastMRSId->id + 1);
+                }
             } else {
                 $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . 1;
             }

@@ -17,7 +17,7 @@ class IndentRequest extends FormRequest
         return [
             'indent_no' => ['required', 'string', 'max:255', Rule::unique('indents')->ignore($this->indent, 'indent_no')],
             'date' => 'required',
-            'prs_no' => 'required',
+            'prs_no.*' => 'required',
         ];
     }
 
@@ -29,10 +29,12 @@ class IndentRequest extends FormRequest
     public function messages()
     {
         return [
-            'indent_no.required' => 'Indent No is required',
-            'indent_no.unique' => 'Indent No already exists',
+            'indent_no.required' => 'Indent No. is required',
+            'indent_no.string' => 'Indent No. must be a string',
+            'indent_no.max' => 'Indent No. may not be greater than 255 characters',
+            'indent_no.unique' => 'Indent No. has already been taken',
             'date.required' => 'Date is required',
-            'prs_no.required' => 'Purchase Requisition No is required',
+            'prs_no.*.required' => 'Purchase Requisition No. is required',
         ];
     }
 

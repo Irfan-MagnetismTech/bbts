@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('indents', function (Blueprint $table) {
             $table->id();
             $table->string('indent_no')->unique()->nullable();
-            $table->string('date')->nullable();
+            $table->date('date')->nullable();
             $table->integer('indent_by');
             $table->integer('branch_id')->nullable();
             $table->timestamps();

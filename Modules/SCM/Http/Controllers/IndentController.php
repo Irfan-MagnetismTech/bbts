@@ -17,7 +17,12 @@ class IndentController extends Controller
      */
     public function index()
     {
-        return view('scm::index');
+        $indents = Indent::query()
+            ->with(['indentLines', 'indentLines.scmPurchaseRequisition'])
+            ->latest()
+            ->get();
+            
+        return view('scm::indents.index', compact('indents'));
     }
 
     /**
@@ -36,6 +41,7 @@ class IndentController extends Controller
      */
     public function store(IndentRequest $request)
     {
+        // dd($request->all());
         $requestedData = $request->only(['indent_no', 'date']);
         $requestedData['indent_by'] = auth()->user()->id;
         $requestedData['branch_id'] = auth()->user()->branch_id;
@@ -45,7 +51,6 @@ class IndentController extends Controller
             foreach ($request->prs_id as $key => $value) {
                 $indent->indentLines()->create(['scm_purchase_requisition_id' => $value]);
             }
-            // $indent->prs()->createMany($request->prs_id);
             DB::commit();
 
             return redirect()->route('indents.index')->with('message', 'Indents created successfully');
@@ -62,7 +67,7 @@ class IndentController extends Controller
      */
     public function show($id)
     {
-        return view('scm::show');
+        // return view('scm::show');
     }
 
     /**
@@ -72,7 +77,7 @@ class IndentController extends Controller
      */
     public function edit($id)
     {
-        return view('scm::edit');
+        return view('scm::indents.create');
     }
 
     /**
