@@ -6,20 +6,16 @@ use Illuminate\Http\Request;
 use Modules\Admin\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\BbtsGlobalService;
 use App\Models\Dataencoding\Employee;
 use Illuminate\Database\QueryException;
 use Modules\Ticketing\Entities\SupportTeam;
 use Illuminate\Contracts\Support\Renderable;
-use App\Http\Controllers\Services\BbtsGlobalService;
 use Modules\Ticketing\Http\Requests\SupportTeamRequest;
 
 class SupportTeamController extends Controller
 {
-    const EMPLOYEELEVELS = [
-        '1' => '1st Layer',
-        '2' => '2nd Layer',
-        '3' => '3rd Layer',
-    ];
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -43,7 +39,7 @@ class SupportTeamController extends Controller
      */
     public function create()
     {
-        $levels   = self::EMPLOYEELEVELS;
+        $levels   = config('businessinfo.supportEmployeeLevels');
         $departments = (new BbtsGlobalService())->getDepartments();
 
         return view('ticketing::teams.create-edit', compact('levels', 'departments'));
@@ -100,7 +96,7 @@ class SupportTeamController extends Controller
      */
     public function show(SupportTeam $supportTeam)
     {
-        $levels   = self::EMPLOYEELEVELS;
+        $levels   = config('businessinfo.supportEmployeeLevels');
         return view('ticketing::teams.details', compact('supportTeam', 'levels'));
     }
 
@@ -111,7 +107,7 @@ class SupportTeamController extends Controller
      */
     public function edit(SupportTeam $supportTeam)
     {
-        $levels   = self::EMPLOYEELEVELS;
+        $levels   = config('businessinfo.supportEmployeeLevels');
         $departments = (new BbtsGlobalService())->getDepartments();
 
         return view('ticketing::teams.create-edit', compact('supportTeam', 'levels', 'departments'));

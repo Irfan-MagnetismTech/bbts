@@ -5,10 +5,10 @@ namespace Modules\Ticketing\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\BbtsGlobalService;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
-use App\Http\Controllers\Services\BbtsGlobalService;
-use Illuminate\Support\Facades\Redis;
 use Modules\Ticketing\Entities\SupportQuickSolution;
 
 class SupportQuickSolutionController extends Controller

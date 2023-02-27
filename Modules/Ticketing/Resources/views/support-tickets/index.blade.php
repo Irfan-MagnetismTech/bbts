@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Support Teams')
+@section('title', 'Support Tickets')
 
 @section('style')
     
 @endsection
 
 @section('breadcrumb-title')
-   List of Support Teams
+   List of Support Tickets
 @endsection
 
 @section('style')
@@ -14,10 +14,12 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('support-teams.create')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('support-tickets.create')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    Total Team: 
+    Total Tickets: {{ $supportTickets->count() }} <br>
+    <small>(Last 30 Days)</small>
+
 @endsection
 
 
@@ -27,22 +29,29 @@
             <thead>
             <tr>
                 <th>#SL</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Designation</th>
+                <th>Ticket No</th>
+                <th>Complain</th>
+                <th>Source</th>
+                <th>Description</th>
+                <th>Opened By</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
             </thead>
             
             <tbody>
-                @foreach ($teams as $team)
+                @foreach ($supportTickets as $ticket)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
-                        <td>{{ $team->teamLead->name }}</td>
-                        <td>{{ $team->department->name }}</td>
-                        <td>{{ $team->teamLead->employee->designation->name }}</td>
+                        <td>{{ $ticket->ticket_no }}</td>
+                        <td>{{ $ticket->complainType->name}}</td>
+                        <td>{{ $ticket->ticketSource->name}}</td>
+                        <td>{{ $ticket->description }}</td>
+                        <td>{{ $ticket->createdBy->name }}</td>
+                        <td>{{ $ticket->status }}</td>
+
                         <td>
-                            <x:action-button :show="route('support-teams.show', ['support_team' => $team->id])" :edit="route('support-teams.edit', ['support_team' => $team->id])" :delete="route('support-teams.show', ['support_team' => $team->id])" />
+                            <x:action-button :show="route('support-tickets.show', ['support_ticket' => $ticket->id])" :edit="false" :delete="false" />
                         </td>
                     </tr>
                 @endforeach

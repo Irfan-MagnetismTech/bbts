@@ -15,25 +15,34 @@ return new class extends Migration
     {
         Schema::create('support_tickets', function (Blueprint $table) {
             $table->id();
-            
-            $table->string('ticket_no');
+            $table->foreignId('branches_id');
+            $table->foreignId('pops_id');
+            $table->foreignId('divisions_id');
+            $table->foreignId('districts_id');
+            $table->foreignId('thanas_id');
+            $table->foreignId('clients_id');
+            $table->string('ticket_no')->comment('format: YYMMDD-000001');
             $table->foreignId('fr_composit_key')->comment('Clients Link ID');
-            $table->dateTime('occurance_time');
-            $table->text('description');
+            $table->dateTime('complain_time');
+            $table->text('description')->nullable();
             $table->foreignId('complain_types_id');
-            $table->string('source');
-            $table->text('remarks');
-            $table->tinyInteger('status');
+            $table->foreignId('sources_id');
+            $table->string('priority');
+            $table->text('remarks')->nullable();
+            $table->string('status')->default('Pending');
             $table->foreignId('created_by');
-            $table->foreignId('updated_by');
-            $table->foreignId('reopened_by');
+            $table->foreignId('updated_by')->nullable();
+            $table->foreignId('reopened_by')->nullable();
             $table->dateTime('opening_date');
-            $table->dateTime('closing_date');
-            $table->dateTime('closed_by');
-            $table->bigInteger('feedback_to_bbts');
-            $table->bigInteger('feedback_to_client');
-            $table->bigInteger('clients_feedback');
-            $table->bigInteger('current_authorized_person');
+            $table->dateTime('closing_date')->nullable();
+            $table->dateTime('closed_by')->nullable();
+            $table->bigInteger('feedback_to_bbts')->nullable();
+            $table->bigInteger('feedback_to_client')->nullable();
+            $table->bigInteger('clients_feedback')->nullable();
+            $table->bigInteger('current_authorized_person')->nullable();
+            $table->tinyInteger('mailNotification')->nullable();
+            $table->tinyInteger('smsNotification')->nullable();
+
             $table->timestamps();
         });
     }

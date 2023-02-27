@@ -5,9 +5,9 @@ namespace Modules\Ticketing\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\BbtsGlobalService;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
-use App\Http\Controllers\Services\BbtsGlobalService;
 use Modules\Ticketing\Entities\SupportComplainType;
 
 class SupportComplainTypeController extends Controller

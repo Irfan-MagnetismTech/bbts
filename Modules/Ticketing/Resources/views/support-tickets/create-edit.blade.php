@@ -38,40 +38,69 @@
                 @csrf
                 
                     <div class="row">
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label for="departments_id">Opening Time:</label>
-                                <input type="text" class="form-control" id="opening_time" name="opening_time" aria-describedby="clients_id"
-                                    value="{{ old('opening_time') ?? (!empty($supportTicket) ? $supportTicket?->opening_date : \Carbon\Carbon::now()->format('d/m/Y H:i:s a')) }}" disabled>
+                        <div class="col-5">
+                            <div class="row">
+                                <div class="col-7">
+                                    <label for="departments_id">Opening Time:</label>
+                                    <input type="text" class="form-control" id="opening_time" name="opening_time"
+                                        value="{{ old('opening_time') ?? (!empty($supportTicket) ? $supportTicket?->opening_date : \Carbon\Carbon::now()->format('d/m/Y H:i A')) }}" disabled>
+                                </div>
+                                <div class="col-5">
+                                    <label for="departments_id">Client Link ID:</label>
+                                    <input type="text" class="form-control" id="clients_id" name="clients_id" aria-describedby="clients_id"
+                                        value="{{ old('clients_id') ?? (!empty($supportTicket) ? $supportTicket?->clients_id : '') }}" placeholder="Client Link ID">
+                                    
+                                    <input type="hidden" name="fr_composit_key" id="fr_composit_key">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="departments_id">Client Link ID:</label>
-                                <input type="text" class="form-control" id="clients_id" name="clients_id" aria-describedby="clients_id"
-                                    value="{{ old('clients_id') ?? (!empty($supportTicket) ? $supportTicket?->clients_id : '') }}" placeholder="Client Link ID">
-                            </div>
-                            <div class="form-group">
-                                <label for="complain_types_id">Complain Type:</label>
-
-                                <select class="form-control select2" id="complain_types_id" name="complain_types_id">
-                                    <option value="20" selected>Select Complain Type</option>
-                                    @foreach ($complainTypes as $complainType)
-                                        <option value="{{ $complainType->id }}"
-                                            {{ old('complain_types_id', (!empty($supportTicket) ? $supportTicket->complain_types_id : null)) == $complainType->id ? 'selected' : '' }}>
-                                            {{ $complainType->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <div class="row mt-2">
+                                <div class="col-7">
+                                    <label for="departments_id">Complain Time:</label>
+                                    <input type="datetime-local" class="form-control" id="complain_time" name="complain_time" 
+                                        value="{{ old('complain_time') ?? (!empty($supportTicket) ? $supportTicket?->complain_time : \Carbon\Carbon::now()->format('Y-m-d\TH:i:s')) }}">
+                                </div>
+                                <div class="col-5">
+                                    <label for="complain_types_id">Complain Type:</label>
+                                    <select class="form-control select2" id="complain_types_id" name="complain_types_id">
+                                        <option value="20" selected>Select Complain Type</option>
+                                        @foreach ($complainTypes as $complainType)
+                                            <option value="{{ $complainType->id }}"
+                                                {{ old('complain_types_id', (!empty($supportTicket) ? $supportTicket->complain_types_id : null)) == $complainType->id ? 'selected' : '' }}>
+                                                {{ $complainType->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mt-2">
                                 <label for="departments_id">Description:</label>
                                 <input type="text" class="form-control" id="description" name="description" aria-describedby="description"
                                     value="{{ old('description') ?? (!empty($supportTicket) ? $supportTicket?->description : '') }}" placeholder="Description">
                             </div>
                             <div class="form-group">
-                                <label for="departments_id">Source:</label>
-                                <input type="text" class="form-control" id="source" name="source" aria-describedby="source"
-                                    value="{{ old('source') ?? (!empty($supportTicket) ? $supportTicket?->source : '') }}" placeholder="Source">
+                                <label for="sources_id">Source:</label>
+                                <select class="form-control select2" id="sources_id" name="sources_id">
+                                    <option value="20" selected>Select Source</option>
+                                    @foreach ($ticketSources as $complainSource)
+                                        <option value="{{ $complainSource->id }}"
+                                            {{ old('sources_id', (!empty($supportTicket) ? $supportTicket->source : null)) == $complainSource->id ? 'selected' : '' }}>
+                                            {{ $complainSource->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="priority">Priority:</label>
+                                <select class="form-control select2" id="priority" name="priority">
+                                    <option value="20" selected>Select Priority</option>
+                                    @foreach ($priorities as $priority)
+                                        <option value="{{ $priority }}"
+                                            {{ old('priority', (!empty($supportTicket) ? $supportTicket->priority : null)) == $priority ? 'selected' : '' }}>
+                                            {{ $priority }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="departments_id">Remarks:</label>
@@ -99,33 +128,11 @@
                                 <input type="text" class="form-control" id="body" name="body" aria-describedby="body"
                                     value="{{ old('body') ?? (!empty($supportTicket) ? $supportTicket?->body : '') }}" placeholder="Mail Description">
                             </div>
-                            <div class="form-group">
-                                <label for="departments_id" class="d-block">Ticket Close:</label>
-                                
-                                <div class="form-check-inline">
-                                    <label class="form-check-label" for="opened">
-                                        <input type="radio" class="form-check-input radioButton" id="opened" name="status" value="opened" @checked((@$supportTicket->status == "opened") || (old('status') == 'opened')) 
-                                        >
-                                        <span style="position: relative; top: 3px">
-                                            Yes
-                                        </span>
-                                    </label>
-                                </div>
-        
-                                <div class="form-check-inline">
-                                    <label class="form-check-label" for="closed">
-                                        <input type="radio" class="form-check-input radioButton" id="closed" name="status" @checked((@$supportTicket->status == "closed") || (old('status') == 'closed'))
-                                            value="closed">
-                                        <span style="position: relative; top: 3px">
-                                            No
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
+                            
 
                         </div>
 
-                        <div class="col-8">
+                        <div class="col-7">
                             <div class="row">
                                 <div class="col-6 pt-4 px-0">
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
@@ -171,7 +178,7 @@
 
                                 <div class="col-12">
                                     <div class="table-responsive">
-                                        <table id="" class="table table-striped table-bordered">
+                                        <table class="table table-striped table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>Ticket No.</th>
@@ -190,22 +197,107 @@
                                                     <td></td>
                                                 </tr>
                                             </tbody>
-                                        <table>
+                                        </table>
                                     </div>
 
                                     
                                     
                                 </div>
 
-                                    <input type="hidden" name="opening_date" value="{{ encrypt(\Carbon\Carbon::now()->format('d/m/Y H:i:s a')) }}">
-                                    <div class="mx-auto col-md-4 mt-2">
-                                        <div class="input-group input-group-sm ">
-                                            <button class="btn btn-success btn-round btn-block py-2">Submit</button>
-                                        </div>
-                                </div>
+                                <input type="hidden" name="opening_date" value="{{ encrypt(\Carbon\Carbon::now()->format('Y-m-d H:i:s')) }}" />
+                                    
                             </div>
                         </div>
                         
+                    </div>
+
+                    <div class="clear-both"></div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="" class="d-block">Ticket Close:</label>
+                                
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="opened">
+                                        <input type="radio" class="form-check-input radioButton" id="opened" name="status" value="Pending" @checked((@$supportTicket->status == "opened") || (old('status') == 'opened')) 
+                                        >
+                                        <span style="position: relative; top: 3px">
+                                            Yes
+                                        </span>
+                                    </label>
+                                </div>
+        
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="closed">
+                                        <input type="radio" class="form-check-input radioButton" id="closed" name="status" @checked((@$supportTicket->status == "closed") || (old('status') == 'closed'))
+                                            value="Closed">
+                                        <span style="position: relative; top: 3px">
+                                            No
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="departments_id" class="d-block">Mail Notification:</label>
+                                
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="sendMail">
+                                        <input type="radio" class="form-check-input radioButton" id="sendMail" name="mailNotification" value="1" @checked((@$supportTicket->mailNotification == "1") || (old('mailNotification') == '1')) 
+                                        >
+                                        <span style="position: relative; top: 3px">
+                                            Yes
+                                        </span>
+                                    </label>
+                                </div>
+        
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="noMailNotification">
+                                        <input type="radio" class="form-check-input radioButton" id="noMailNotification" name="mailNotification" @checked((@$supportTicket->mailNotification == "0") || (old('mailNotification') == '0'))
+                                            value="0">
+                                        <span style="position: relative; top: 3px">
+                                            No
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="departments_id" class="d-block">SMS Notification:</label>
+                                
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="smsNotification">
+                                        <input type="radio" class="form-check-input radioButton" id="smsNotification" name="smsNotification" value="1" @checked((@$supportTicket->smsNotification == "1") || (old('smsNotification') == '1')) 
+                                        >
+                                        <span style="position: relative; top: 3px">
+                                            Yes
+                                        </span>
+                                    </label>
+                                </div>
+        
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="noSmsNotification">
+                                        <input type="radio" class="form-check-input radioButton" id="noSmsNotification" name="smsNotification" @checked((@$supportTicket->smsNotification == "0") || (old('smsNotification') == '0'))
+                                            value="0">
+                                        <span style="position: relative; top: 3px">
+                                            No
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-5 mx-auto">
+                            <div class="mx-auto mt-2">
+                                <div class="input-group input-group-sm ">
+                                    <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     
@@ -217,34 +309,13 @@
 
 @section('script')
 <script>
-        $(document).on('keyup focus', '#department_name', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-department') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $("#department_name").val(ui.item.label)
-                    $("#departments_id").val(ui.item.value)
-                    return false;
-                }
-            });
-        });
+        
 
-        $(document).on('keyup focus', '#user_name', function() {
+        $(document).on('keyup focus', '#clients_id', function() {
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url: "{{ url('search-user') }}",
+                        url: "{{ url('get-clients-by-links') }}",
                         type: 'get',
                         dataType: "json",
                         data: {
@@ -256,37 +327,33 @@
                     });
                 },
                 select: function(event, ui) {
-                    $("#user_name").val(ui.item.label)
-                    $("#employee_id").val(ui.item.value)
-                    return false;
-                }
-            });
-        });
-
-        $(document).on('keyup focus', '.user-search', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-user') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    let currentRow = $(this).closest("tr")
-                    $(currentRow).find("td:nth-child(3)").html(ui.item.designation);
-                    $(currentRow).find("td:nth-child(2)").find('.user-search').val(ui.item.label);
-                    $(currentRow).find("td:nth-child(2)").find('.member_id').val(ui.item.value);
                     
+                    console.log(ui.item)
+                    $("#clients_id").val(ui.item.label)
+                    $("#fr_composit_key").val(ui.item.value)
                     return false;
                 }
             });
         });
+
+        function getClientsPreviousTickets(linkId) {
+            $.ajax({
+                url: "{{ url('get-clients-previous-tickets') }}",
+                type: 'get',
+                dataType: "json",
+                data: {
+                    linkId: linkId
+                }
+            }).done(function(data) {
+                $("#clients_id").val(data.clients_id)
+            })
+        }
+
+        // $('#complain_time').datepicker({
+        //     format: "dd-mm-yyyy hh:mm",
+        //     autoclose: true,
+        //     todayHighlight: true,
+        //     showOtherMonths: true,
+        // }).datepicker("setDate", new Date());
 </script>
 @endsection
