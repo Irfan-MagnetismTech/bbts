@@ -146,7 +146,7 @@ class CommonApiController extends Controller
 
     public function searchUser()
     {
-        $results = User::select('id', 'employees_id', 'name')->with('employee')->where('name', 'LIKE', '%' . request('search') . '%')
+        $results = User::select('id', 'employee_id', 'name')->with('employee')->where('name', 'LIKE', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,

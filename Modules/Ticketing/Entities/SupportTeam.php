@@ -11,15 +11,15 @@ class SupportTeam extends Model
 {
     protected $guarded = [];
 
-    public function teamMembers() {
-        return $this->hasMany(SupportTeamMember::class, 'support_teams_id', 'id');
+    public function supportTeamMember() {
+        return $this->hasMany(SupportTeamMember::class);
     }
 
     public function department() {
-        return $this->belongsTo(Department::class, 'departments_id', 'id');
+        return $this->belongsTo(Department::class);
     }
 
-    public function teamLead() {
-        return $this->belongsTo(User::class, 'users_id', 'id')->withDefault();
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 }

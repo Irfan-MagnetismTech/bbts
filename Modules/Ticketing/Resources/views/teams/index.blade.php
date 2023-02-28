@@ -38,9 +38,9 @@
                 @foreach ($teams as $team)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
-                        <td>{{ $team->teamLead->name }}</td>
+                        <td>{{ $team->user->name }}</td>
                         <td>{{ $team->department->name }}</td>
-                        <td>{{ $team->teamLead->employee->designation->name }}</td>
+                        <td>{{ $team->user->employee->designation->name }}</td>
                         <td>
                             <x:action-button :show="route('support-teams.show', ['support_team' => $team->id])" :edit="route('support-teams.edit', ['support_team' => $team->id])" :delete="route('support-teams.show', ['support_team' => $team->id])" />
                         </td>

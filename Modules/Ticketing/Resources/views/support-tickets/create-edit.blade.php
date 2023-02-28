@@ -41,12 +41,12 @@
                         <div class="col-5">
                             <div class="row">
                                 <div class="col-7">
-                                    <label for="departments_id">Opening Time:</label>
+                                    <label for="opening_time">Opening Time:</label>
                                     <input type="text" class="form-control" id="opening_time" name="opening_time"
                                         value="{{ old('opening_time') ?? (!empty($supportTicket) ? $supportTicket?->opening_date : \Carbon\Carbon::now()->format('d/m/Y H:i A')) }}" disabled>
                                 </div>
                                 <div class="col-5">
-                                    <label for="departments_id">Client Link ID:</label>
+                                    <label for="clients_id">Client Link ID:</label>
                                     <input type="text" class="form-control" id="clients_id" name="clients_id" aria-describedby="clients_id"
                                         value="{{ old('clients_id') ?? (!empty($supportTicket) ? $supportTicket?->clients_id : '') }}" placeholder="Client Link ID">
                                     

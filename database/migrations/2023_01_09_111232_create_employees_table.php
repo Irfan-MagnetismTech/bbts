@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\Dataencoding\Department;
+use App\Models\Dataencoding\Designation;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Modules\Admin\Entities\Branch;
 
 return new class extends Migration
 {
@@ -15,8 +18,9 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->integer('designation_id')->nullable();
-            $table->foreignId('departments_id')->nullable();
+            $table->foreignIdFor(Designation::class)->nullable();
+            $table->foreignIdFor(Department::class)->nullable();
+            $table->foreignIdFor(Branch::class)->nullable();
             $table->integer('pre_thana_id')->nullable();
             $table->integer('per_thana_id')->nullable();
             $table->string('name')->nullable();
