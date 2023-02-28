@@ -182,6 +182,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Ticket No.</th>
+                                                    <th>Status</th>
                                                     <th>Date &amp; Time</th>
                                                     <th>Problem</th>
                                                     <th>Reason</th>
@@ -290,8 +291,8 @@
                         </div>
 
                     </div>
-                    <div class="row">
-                        <div class="col-5 mx-auto">
+                    <div class="row" id="formSubmit">
+                        <div class="col-3 mx-auto">
                             <div class="mx-auto mt-2">
                                 <div class="input-group input-group-sm ">
                                     <button class="btn btn-success btn-round btn-block py-2">Submit</button>
@@ -345,17 +346,30 @@
                 type: 'get',
                 dataType: "json"
             }).done(function(data) {
-                // $("#clients_id").val(data.clients_id)
-                console.log("output", data)
                 var tickets = data;
+
+                // find if any tickets status is Pending
+                var pendingTickets = tickets.filter(function(ticket) {
+                    return ticket.status == "Pending";
+                });
+
+                if (pendingTickets.length > 0) {
+                    alert('This client already have pending tickets. Please see the ticket list.');
+                    $("#formSubmit").find("button").css("display", "none");
+                } else {
+                    $("#formSubmit").find("button").removeAttr("style");
+                }
 
                 // run foreach data 
                 var tableData = '';
                 $.each(tickets, function(key, value) {
                     tableData += '<tr>';
                     tableData += '<td>' + value.ticket_no + '</td>';
+                    tableData += '<td>' + value.status + '</td>';
                     tableData += '<td>' + value.opening_date + '</td>';
-                    tableData += '<td>' + value.departments_id + '</td>';
+                    tableData += '<td>' + value.complain_type.name + '</td>';
+                    tableData += '<td>' + value.remarks + '</td>';
+                    tableData += '<td><div class="icon-btn"><a href="{{ route('support-tickets.index') }}/'+value.id+'" data-toggle="tooltip" title="Details" class="btn btn-outline-primary" data-original-title="Details"><i class="fas fa-eye"></i></a></div></td>';
                     tableData += '</tr>';
                 })
 

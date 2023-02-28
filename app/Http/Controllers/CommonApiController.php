@@ -56,7 +56,8 @@ class CommonApiController extends Controller
         $previousTickets = $client->previousTickets()
                             ->with(['complainType', 'ticketSource'])
                             ->limit($limit)
-                            ->get(['complain_types_id', 'sources_id', 'opening_date', 'remarks', 'id', 'ticket_no']);
+                            ->orderBy('id', 'desc')
+                            ->get(['complain_types_id', 'sources_id', 'status', 'opening_date', 'remarks', 'id', 'ticket_no']);
 
         return response()->json($previousTickets);
     }
