@@ -44,6 +44,7 @@
             </tfoot>
             <tbody>
                 @foreach ($indents as $key => $indent)
+                
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $indent->indent_no }}</td>
@@ -76,13 +77,8 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#dataTable').DataTable({
-                stateSave: true
-            });
         });
     </script>
 @endsection

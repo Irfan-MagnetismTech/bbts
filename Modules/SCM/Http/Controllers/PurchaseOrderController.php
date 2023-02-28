@@ -2,11 +2,12 @@
 
 namespace Modules\SCM\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use Illuminate\Database\QueryException;
 use Modules\SCM\Entities\PurchaseOrder;
+use Illuminate\Contracts\Support\Renderable;
 
 class PurchaseOrderController extends Controller
 {
@@ -25,7 +26,9 @@ class PurchaseOrderController extends Controller
      */
     public function create()
     {
-        return view('scm::create');
+        $brands = Brand::latest()->get();
+
+        return view('scm::purchase-orders.create', compact('brands'));
     }
 
     /**

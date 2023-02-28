@@ -8,6 +8,24 @@ use Illuminate\Foundation\Http\FormRequest;
 class CsRequest extends FormRequest
 {
     /**
+     * Manupulate the request data before validation
+     * @return void
+     * 
+     */
+    public function prepareForValidation()
+    {
+        $material_id = $this->material_id;
+        $brand_id = $this->brand_id;
+        $material_brand = [];
+        foreach ($material_id as $key => $value) {
+            $material_brand[] = $value . '-' . $brand_id[$key];
+        }
+        $this->merge([
+            'material_brand' => $material_brand,
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -21,9 +39,10 @@ class CsRequest extends FormRequest
             'remarks'                 => ['present', 'nullable', 'string'],
 
             'material_id'             => ['required', 'array'],
-            'material_id.*'           => ['required', 'exists:materials,id', 'distinct'],
+            'material_id.*'           => ['required', 'exists:materials,id'],
             'material_name'           => ['required', 'array'],
             'material_name.*'         => ['required', 'string'],
+            'material_brand.*'          => ['required', 'distinct'],
 
             'supplier_id'             => ['required', 'array'],
             'supplier_id.*'           => ['required', 'exists:suppliers,id', 'distinct'],
@@ -49,6 +68,7 @@ class CsRequest extends FormRequest
     public function messages()
     {
         return [
+            'material_brand.*.distinct'           => 'The material and brand combination must be unique.',
             'cs_no.required'                    => 'Reference No. is required',
             'cs_no.string'                      => 'Reference No. must be a string',
             'cs_no.max'                         => 'Reference No. may not be greater than 255 characters',

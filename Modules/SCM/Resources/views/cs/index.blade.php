@@ -126,13 +126,8 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#dataTable').DataTable({
-                stateSave: true
-            });
         });
     </script>
 @endsection

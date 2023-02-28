@@ -13,7 +13,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('cs.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('indents.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -32,6 +32,16 @@
         ]) !!}
 
         <div class="row">
+            @if (!empty($indent->id))
+                <div class="col-12">
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="name">Indent No <span class="text-danger">*</span></label>
+                        <input class="form-control" id="indent_no" name="indent_no" aria-describedby="indent_no"
+                            value="{{ old('indent_no') ?? ($indent->indent_no ?? '') }}" readonly
+                            placeholder="Indent No">
+                    </div>
+                </div>                
+            @endif
             <div class="col-12">
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="name">Date <span class="text-danger">*</span></label>

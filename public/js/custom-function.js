@@ -54,3 +54,24 @@ function associativeDropdown(
             });
     });
 }
+
+function autocomplete(routeLink, idSelector, idSelectorChange) {
+    $(idSelector).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: routeLink,
+                data: {
+                    term: request.term,
+                },
+                dataType: "json",
+                success: function (data) {
+                    response(data);
+                },
+            });
+        },
+        minLength: 2,
+        select: function (event, ui) {
+            $(idSelectorChange).val(ui.item.id);
+        },
+    });
+}
