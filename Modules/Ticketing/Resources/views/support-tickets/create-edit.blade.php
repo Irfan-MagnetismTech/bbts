@@ -50,7 +50,8 @@
                                     <input type="text" class="form-control" id="clients_id" name="clients_id" aria-describedby="clients_id"
                                         value="{{ old('clients_id') ?? (!empty($supportTicket) ? $supportTicket?->clients_id : '') }}" placeholder="Client Link ID">
                                     
-                                    <input type="hidden" name="fr_composit_key" id="fr_composit_key">
+                                    <input type="hidden" name="fr_composit_key" id="fr_composit_key"
+                                            value="{{ old('fr_composit_key') ?? (!empty($supportTicket) ? $supportTicket?->fr_composit_key : '') }}">
                                 </div>
                             </div>
                             <div class="row mt-2">

@@ -60,6 +60,13 @@ class SupportTicketController extends Controller
         ]);
 
         $clientInfo = ClientDetail::where('id', $request->fr_composit_key)->first();
+
+        if($clientInfo->client->previousTickets->where('status', '!=', 'Closed')->count() > 0) {
+            return back()->withInput()->withErrors([
+                'message' => 'This client already has previous tickets.'
+            ]);
+        } 
+
         $ticketInfo['ticket_no'] = $ticketIno;
         $ticketInfo['created_by'] = auth()->user()->id;
         $ticketInfo['opening_date'] = Carbon::parse(decrypt($request->opening_date) ?? null)->format('Y-m-d H:i:s');
