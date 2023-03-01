@@ -53,7 +53,7 @@ class CommonApiController extends Controller
         $limit = (abs($limit) > 5) ? 5 : abs($limit);
 
         $client = Client::find($clientId);
-        $previousTickets = $client->previousTickets()
+        $previousTickets = $client->supportTickets()
                             ->with(['complainType', 'ticketSource'])
                             ->limit($limit)
                             ->orderBy('id', 'desc')

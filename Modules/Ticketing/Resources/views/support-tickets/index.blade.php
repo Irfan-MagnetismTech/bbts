@@ -30,6 +30,7 @@
             <tr>
                 <th>#SL</th>
                 <th>Ticket No</th>
+                <th>Priority</th>
                 <th>Complain</th>
                 <th>Source</th>
                 <th>Description</th>
@@ -44,14 +45,15 @@
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
                         <td>{{ $ticket->ticket_no }}</td>
-                        <td>{{ $ticket->complainType->name}}</td>
+                        <td>{{ $ticket->priority }}</td>
+                        <td>{{ $ticket->supportComplainType->name}}</td>
                         <td>{{ $ticket->ticketSource->name}}</td>
                         <td>{{ $ticket->description }}</td>
                         <td>{{ $ticket->createdBy->name }}</td>
                         <td>{{ $ticket->status }}</td>
 
                         <td>
-                            <x:action-button :show="route('support-tickets.show', ['support_ticket' => $ticket->id])" :edit="false" :delete="false" />
+                            <x:action-button :show="route('support-tickets.show', ['support_ticket' => $ticket->id])" :edit="route('support-tickets.edit', ['support_ticket' => $ticket->id])" :delete="false" />
                         </td>
                     </tr>
                 @endforeach

@@ -39,8 +39,8 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->string('status')->default('Pending');
             $table->foreignId('created_by')->constrained('users', 'id');
-            $table->foreignId('updated_by')->constrained('users', 'id')->nullable();
-            $table->foreignId('reopened_by')->constrained('users', 'id')->nullable();
+            $table->foreignId('updated_by')->nullable()->constrained('users', 'id');
+            $table->foreignId('reopened_by')->nullable()->constrained('users', 'id');
             $table->dateTime('opening_date');
             $table->dateTime('closing_date')->nullable();
             $table->dateTime('closed_by')->nullable();

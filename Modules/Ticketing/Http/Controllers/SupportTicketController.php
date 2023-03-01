@@ -55,13 +55,13 @@ class SupportTicketController extends Controller
         }
 
         $ticketInfo = $request->only([
-            'fr_composit_key', 'complain_time', 'description', 'priority', 'remarks', 'sources_id', 'complain_types_id', 'status',
+            'fr_composit_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
             'mailNotification', 'smsNotification'
         ]);
 
         $clientInfo = ClientDetail::where('id', $request->fr_composit_key)->first();
 
-        if($clientInfo->client->previousTickets->where('status', '!=', 'Closed')->count() > 0) {
+        if($clientInfo->client->supportTickets->where('status', '!=', 'Closed')->count() > 0) {
             return back()->withInput()->withErrors([
                 'message' => 'This client already has previous tickets.'
             ]);
@@ -70,14 +70,14 @@ class SupportTicketController extends Controller
         $ticketInfo['ticket_no'] = $ticketIno;
         $ticketInfo['created_by'] = auth()->user()->id;
         $ticketInfo['opening_date'] = Carbon::parse(decrypt($request->opening_date) ?? null)->format('Y-m-d H:i:s');
-        $ticketInfo['clients_id'] = $clientInfo->client_id;
+        $ticketInfo['client_id'] = $clientInfo->client_id;
 
         // Below will be derived from $clientInfo object.
-        $ticketInfo['branches_id'] = 2;
-        $ticketInfo['pops_id'] = 2;
-        $ticketInfo['divisions_id'] = 2;
-        $ticketInfo['districts_id'] = 2;
-        $ticketInfo['thanas_id'] = 2;
+        $ticketInfo['branch_id'] = 2;
+        $ticketInfo['pop_id'] = 2;
+        $ticketInfo['division_id'] = 2;
+        $ticketInfo['district_id'] = 2;
+        $ticketInfo['thana_id'] = 2;
 
 
         $mailingInfo = $request->only([
@@ -101,9 +101,12 @@ class SupportTicketController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(SupportTicket $supportTicket)
     {
-        return view('ticketing::show');
+        $complainTypes = (new BbtsGlobalService())->getComplainTypes();
+        $ticketSources = (new BbtsGlobalService())->getTicketSources();
+        $priorities = config('businessinfo.ticketPriorities');
+        return view('ticketing::support-tickets.show', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities'));
     }
 
     /**
@@ -111,10 +114,12 @@ class SupportTicketController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(SupportTicket $supportTicket)
     {
         $complainTypes = (new BbtsGlobalService())->getComplainTypes();
-        return view('ticketing::support-tickets.create-edit', compact('complainTypes'));
+        $ticketSources = (new BbtsGlobalService())->getTicketSources();
+        $priorities = config('businessinfo.ticketPriorities');
+        return view('ticketing::support-tickets.create-edit', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities'));
     }
 
     /**
@@ -123,9 +128,39 @@ class SupportTicketController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(SupportTicket $supportTicket, Request $request)
     {
-        //
+        $ticketInfo = $request->only([
+                        'fr_composit_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
+                        'mailNotification', 'smsNotification'
+                    ]);
+
+        $clientInfo = ClientDetail::where('id', $request->fr_composit_key)->first();
+
+        $ticketInfo['updated_by'] = auth()->user()->id;
+        $ticketInfo['client_id'] = $clientInfo->client_id;
+
+        // Below will be derived from $clientInfo object.
+        $ticketInfo['branch_id'] = 2;
+        $ticketInfo['pop_id'] = 2;
+        $ticketInfo['division_id'] = 2;
+        $ticketInfo['district_id'] = 2;
+        $ticketInfo['thana_id'] = 2;
+
+
+        $mailingInfo = $request->only([
+        'cc', 'subject', 'body', 'mailNotification', 'smsNotification'
+        ]);
+
+        try {
+        DB::transaction(function() use($supportTicket, $ticketInfo) {
+            $supportTicket->update($ticketInfo);
+        });
+
+        return back()->with('message', 'Ticket Updated Successfully');
+        } catch (QueryException $e) {
+        return back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**

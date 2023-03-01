@@ -14,7 +14,7 @@ class Client extends Model
         return $this->hasMany(ClientDetail::class);
     }
 
-    public function previousTickets() {
-        return $this->hasMany(SupportTicket::class, 'clients_id', 'id');
+    public function supportTickets() {
+        return $this->hasMany(SupportTicket::class);
     }
 }
