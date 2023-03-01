@@ -1,13 +1,15 @@
 @extends('layouts.backend-layout')
-@section('title', 'Purchase Requisitions Slip')
+@section('title', 'Purchase Order')
+
+@php
+    $is_old = old('effective_date') ? true : false;
+    $form_heading = !empty($cs->id) ? 'Update' : 'Add';
+    $form_url = !empty($cs->id) ? route('cs.update', $cs->id) : route('cs.store');
+    $form_method = !empty($cs->id) ? 'PUT' : 'POST';
+@endphp
 
 @section('breadcrumb-title')
-    @if (!empty($purchaseRequisition))
-        Edit
-    @else
-        Create
-    @endif
-    PRS (Purchaase Requisition Slip)
+    {{ $form_heading }} PO (Purchaase Order)
 @endsection
 
 @section('style')
@@ -32,12 +34,7 @@
 
 @section('content-grid', null)
 
-@php
-    $is_old = old('effective_date') ? true : false;
-    $form_heading = !empty($cs->id) ? 'Update' : 'Add';
-    $form_url = !empty($cs->id) ? route('cs.update', $cs->id) : route('cs.store');
-    $form_method = !empty($cs->id) ? 'PUT' : 'POST';
-@endphp
+
 
 @section('content')
     {!! Form::open([
@@ -49,7 +46,7 @@
     <div class="row">
         <div class="form-group col-4">
             <label for="date">Purchase Date:</label>
-            <input class="form-control" id="date" name="date" aria-describedby="date"
+            <input class="form-control date" name="date" aria-describedby="date"
                 value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly placeholder="Select a Date">
         </div>
 
@@ -87,14 +84,19 @@
     <table class="table table-bordered" id="material_requisition">
         <thead>
             <tr>
+                <th>Requisiiton No.</th>
+                <th>CS No.</th>
+                <th>Quotation No</th>
                 <th> Material Name</th>
-                <th> Unit</th>
-                <th> Brand</th>
-                <th> Model </th>
-                <th> Unit Price </th>
+                <th>Description</th>
+                <th>Unit</th>
                 <th> Quantity </th>
-                <th> Total Amount </th>
-                <th> Purpose </th>
+                <th>Warranty Period</th>
+                <th>Price </th>
+                <th>Vat</th>
+                <th>Tax</th>
+                <th> Sub Total Amount </th>
+                <th> Required Date </th>
                 <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
             </tr>
         </thead>
@@ -114,6 +116,20 @@
             @endphp
             @foreach ($material_name_with_code as $key => $requisitionDetail)
                 <tr>
+                    <td class="client_links">
+                        <label for="select2">Client Links</label>
+                        <select class="form-control select2" id="client_links" name="client_links">
+                            <option value="" readonly selected>Select Client Link</option>
+                            @if (!empty($purchaseRequisition))
+                                @foreach ($clientInfos as $clientInfo)
+                                    <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$purchaseRequisition->fr_composite_key)>
+                                        {{ $clientInfo->link_name }}</option>
+                                @endforeach
+                            @else
+                                <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
+                            @endif
+                        </select>
+                    </td>
                     <td>
                         <input type="text" name="material_name[]" class="form-control material_name" required
                             autocomplete="off" value="{{ $material_name_with_code[$key] }}">
@@ -231,7 +247,7 @@
             });
         });
 
-        $('#date').datepicker({
+        $('.date').datepicker({
             format: "dd-mm-yyyy",
             autoclose: true,
             todayHighlight: true,
@@ -244,36 +260,78 @@
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
+                            <td class="form-group requisition_no">
+                                <select class="form-control select2" name="requisition_no">
+                                    <option value="" readonly selected>Select Requisiiton</option>
+                                    @if (!empty($purchaseRequisition))
+                                        @foreach ($clientInfos as $clientInfo)
+                                            <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$purchaseRequisition->fr_composite_key)>
+                                                {{ $clientInfo->link_name }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="{{ old('requisition_no') }}" selected>{{ old('requisition_no') }}</option>
+                                    @endif
+                                </select>
+                            </td>
+
+                            <td>
+                                <input type="text" name="cs_no[]" class="form-control cs_no" required autocomplete="off">
+                                <input type="hidden" name="quotation_id[]" class="form-control quotation_id">
+                            </td>
+
+                            <td>
+                                <input type="text" name="quatation_no[]" class="form-control quatation_no" autocomplete="off">  
+                            </td>
+
                             <td>
                                 <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
                                 <input type="hidden" name="material_id[]" class="form-control material_id">
                                 <input type="hidden" name="item_code[]" class="form-control item_code">
-                            </td>                            
+                            </td>
+
+                            <td>
+                                <input type="text" name="description[]" class="form-control description" autocomplete="off">  
+                            </td>
+
                             <td>
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
-                            <td> 
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                    <option value="">Select Brand</option>
-                                    @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                    @endforeach
-                                </select>    
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off">
-                            </td>
+
                             <td>
                                 <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off">
                             </td>
+
+                            <td>
+                                <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off"> 
+                            </td>
+
+                            <td>
+                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off">
+                            </td>
+
+                            <td>
+                                <select class="form-control" name="vat_or_tax[]">
+                                    @foreach ($vatOrTax as $key => $value)
+                                        <option value="{{ $value }}" @selected($key == @$purchaseRequisition->vat_or_tax)>
+                                            {{ $value }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+
+                            <td>
+                                <select class="form-control" name="vat_or_tax[]">
+                                    @foreach ($vatOrTax as $key => $value)
+                                        <option value="{{ $value }}" @selected($key == @$purchaseRequisition->vat_or_tax)>
+                                            {{ $value }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            
                             <td>
                                 <input name="total_amount[]" class="form-control total_amount" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
+                                <input class="form-control date" name="required_date[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseRequisition->required_date ?? '') }}" readonly placeholder="Select a required date">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
@@ -281,12 +339,19 @@
                         </tr>
                     `;
             $('#material_requisition tbody').append(row);
+            $('.date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
         }
 
         /* Adds and removes quantity row on click */
         $("#material_requisition")
             .on('click', '.add-requisition-row', () => {
                 appendCalculationRow();
+                $('.select2').select2();
             })
             .on('click', '.remove-calculation-row', function() {
                 $(this).closest('tr').remove();

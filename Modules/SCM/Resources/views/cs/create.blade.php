@@ -105,7 +105,7 @@
                                     $material_id = $is_old ? old('material_id')[$material_key] : $material_value->material->id;
                                     $material_name = $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode ?? '---';
                                     $unit = $is_old ? old('unit')[$material_key] : $material_value->material->unit ?? '---';
-                                    $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value->brand_id;
+                                    $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value?->brand_id;
                                 @endphp
                                 <tr>
                                     <td>
@@ -270,10 +270,10 @@
                                                 {{ $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode }}
                                             </td>
                                             <td class="cs_brand text-center">
-                                                {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value->brand->name }}
+                                                {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? "Null" }}
                                             </td>
                                             <input type="hidden" name="cs_brand_name[]" class="cs_brand_name"
-                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value->brand->name }}">
+                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? "Null"}}">
                                     @endif
                                     <td>
                                         <input type="text" name="price[]"
