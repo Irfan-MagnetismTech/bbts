@@ -2,11 +2,15 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Modules\Sales\Http\Requests\LeadGenerationRequest;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\LeadGeneration;
+use Modules\Sales\Services\CommonService;
+use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Division;
+use Illuminate\Routing\Controller;
+use App\Models\Dataencoding\Thana;
+use Illuminate\Http\Request;
 
 class LeadGenerationController extends Controller
 {
@@ -16,7 +20,8 @@ class LeadGenerationController extends Controller
      */
     public function index()
     {
-        return view('sales::lead_generation.index');
+        $lead_generations = LeadGeneration::with('division', 'district', 'thana')->get();
+        return view('sales::lead_generation.index', compact('lead_generations'));
     }
 
     /**
@@ -26,7 +31,16 @@ class LeadGenerationController extends Controller
     public function create()
     {
         $divisons = Division::all();
-        return view('sales::lead_generation.create', compact('divisons'));
+        $organizations = [
+            '1' => 'School',
+            '2' => 'Hospital',
+            '3' => 'Hotel',
+            '4' => 'Restaurant',
+            '5' => 'Office',
+            '6' => 'Others',
+        ];
+
+        return view('sales::lead_generation.create', compact('divisons', 'organizations'));
     }
 
     /**
@@ -36,7 +50,14 @@ class LeadGenerationController extends Controller
      */
     public function store(LeadGenerationRequest $request)
     {
-        dd($request->all());
+        $data = $request->only('client_name', 'address', 'division_id', 'district_id', 'thana_id', 'landmark', 'lat_long', 'contact_person', 'designation', 'contact_no',  'email', 'business_type', 'client_type', 'website');
+        if ($request->hasFile('upload_file')) {
+            $file_name = CommonService::fileUpload($request->file('upload_file'), 'uploads/lead_generation');
+            $data['document'] = $file_name;
+        }
+        $data['client_id'] = date('Y') . '-' . LeadGeneration::count() + 1;
+        LeadGeneration::create($data);
+        return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Created Successfully');
     }
 
     /**
@@ -46,7 +67,8 @@ class LeadGenerationController extends Controller
      */
     public function show($id)
     {
-        return view('sales::show');
+        $lead_generation = LeadGeneration::with('division', 'district', 'thana')->find($id);
+        return view('sales::lead_generation.show', compact('lead_generation'));
     }
 
     /**
@@ -56,7 +78,19 @@ class LeadGenerationController extends Controller
      */
     public function edit($id)
     {
-        return view('sales::edit');
+        $lead_generation = LeadGeneration::with('division', 'district', 'thana')->find($id);
+        $divisons = Division::all();
+        $districts = District::where('division_id', $lead_generation->division_id)->get();
+        $thanas = Thana::where('district_id', $lead_generation->district_id)->get();
+        $organizations = [
+            '1' => 'School',
+            '2' => 'Hospital',
+            '3' => 'Hotel',
+            '4' => 'Restaurant',
+            '5' => 'Office',
+            '6' => 'Others',
+        ];
+        return view('sales::lead_generation.create', compact('lead_generation', 'divisons', 'districts', 'thanas', 'organizations'));
     }
 
     /**
@@ -65,9 +99,15 @@ class LeadGenerationController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(LeadGenerationRequest $request, LeadGeneration $lead_generation)
     {
-        //
+        $data = $request->only('client_name', 'address', 'division_id', 'district_id', 'thana_id', 'landmark', 'lat_long', 'contact_person', 'designation', 'contact_no',  'email', 'business_type', 'client_type', 'website');
+        if ($request->hasFile('upload_file')) {
+            $file_name = CommonService::UpdatefileUpload($request->file('upload_file'), 'uploads/lead_generation', $lead_generation->document);
+            $data['document'] = $file_name;
+        }
+        $lead_generation->update($data);
+        return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Updated Successfully');
     }
 
     /**
@@ -75,8 +115,9 @@ class LeadGenerationController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(LeadGeneration $lead_generation)
     {
-        //
+        $lead_generation->delete();
+        return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Deleted Successfully');
     }
 }

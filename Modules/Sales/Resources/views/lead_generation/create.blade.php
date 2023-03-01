@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Lead Generation')
+@section('title', 'Pre Sale Client')
 
 @php
 $is_old = old('client_name') ? true : false;
@@ -9,7 +9,7 @@ $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
-{{ ucfirst($form_heading) }} Lead Generation
+{{ ucfirst($form_heading) }} Pre Sale Client
 @endsection
 
 @section('breadcrumb-button')
@@ -36,16 +36,16 @@ $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
     <div class="col-md-12">
         <div class="card">
             <div class="tableHeading">
-                <h5> <span> &#10070; </span> Lead Generation <span>&#10070;</span> </h5>
+                <h5> <span> &#10070; </span> Pre Sale Client <span>&#10070;</span> </h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     @php
-                    $client_name = $is_old ? old('client_name') : $lead_geneation->cs_no ?? null;
+                    $client_name = $is_old ? old('client_name') : $lead_generation->client_name ?? null;
                     $address = $is_old ? old('address') : $lead_generation->address ?? null;
-                    $single_division = $is_old ? old('division') : $lead_generation->division ?? null;
-                    $district = $is_old ? old('district') : $lead_generation->district ?? null;
-                    $thana = $is_old ? old('thana') : $lead_generation->thana ?? null;
+                    $single_division = $is_old ? old('division') : $lead_generation->division_id ?? null;
+                    $single_district = $is_old ? old('district') : $lead_generation->district_id ?? null;
+                    $single_thana = $is_old ? old('thana') : $lead_generation->thana_id ?? null;
                     $landmark = $is_old ? old('landmark') : $lead_generation->landmark ?? null;
                     $lat_long = $is_old ? old('lat_long') : $lead_generation->lat_long ?? null;
                     $contact_person = $is_old ? old('contact_person') : $lead_generation->contact_person ?? null;
@@ -56,6 +56,8 @@ $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
                     $business_type = $is_old ? old('business_type') : $lead_generation->business_type ?? null;
                     $website = $is_old ? old('website') : $lead_generation->website ?? null;
                     $docuemnt = $is_old ? old('docuemnt') : $lead_generation->docuemnt ?? null;
+                    $thanas = $thanas ?? null;
+                    $districts = $districts ?? null;
                     @endphp
                     <div class="col-xl-4 col-md-4">
                         <div class="input-group input-group-sm input-group-primary">
@@ -72,7 +74,7 @@ $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
                     <div class="mt-1 col-xl-4 col-md-4">
                         <div class="input-group input-group-sm input-group-primary">
                             <label class="input-group-addon" for="remarks">Division</label>
-                            <select name="division" id="division" class="form-control">
+                            <select name="division_id" id="division" class="form-control">
                                 <option value="">Select</option>
                                 @foreach ($divisons as $division)
                                 <option value="{{ $division->id }}" {{ $division->id == $single_division ? 'selected' : '' }}>{{ $division->name }}</option>
@@ -83,22 +85,27 @@ $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
                     <div class="mt-1 col-xl-4 col-md-4">
                         <div class="input-group input-group-sm input-group-primary">
                             <label class="input-group-addon" for="remarks">District</label>
-                            <select name="district" id="district" class="form-control">
+                            <select name="district_id" id="district" class="form-control">
                                 <option value="">Select</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
+                                @if($districts)
+                                @foreach ($districts as $district)
+                                <option value="{{ $district->id }}" {{ $district->id == $single_district ? 'selected' : '' }}>{{ $district->name }}</option>
+                                @endforeach
+                                @endif
                             </select>
                         </div>
                     </div>
                     <div class="mt-1 col-xl-4 col-md-4">
                         <div class="input-group input-group-sm input-group-primary">
                             <label class="input-group-addon" for="remarks">Thana</label>
-                            <select name="thana" id="thana" class="form-control">
+                            <select name="thana_id" id="thana" class="form-control">
                                 <option value="">Select</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
+                                @if($thanas)
+                                @foreach ($thanas as $thana)
+                                <option value="{{ $thana->id }}" {{ $thana->id == $single_thana ? 'selected' : '' }}>{{ $thana->name }}</option>
+                                @endforeach
+                                @endif
+
                             </select>
                         </div>
                     </div>
@@ -143,9 +150,8 @@ $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
                             <label class="input-group-addon" for="remarks">Client Type</label>
                             <select name="client_type" id="client_type" class="form-control">
                                 <option value="">Select</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
+                                <option value="1" {{ $client_type == 1 ? 'selected' : '' }}>Corporate</option>
+                                <option value="2" {{ $client_type == 2 ? 'selected' : '' }}>Individual</option>
                             </select>
                         </div>
                     </div>
@@ -154,9 +160,9 @@ $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
                             <label class="input-group-addon" for="remarks">Business Type</label>
                             <select name="business_type" id="business_type" class="form-control">
                                 <option value="">Select</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
+                                @foreach($organizations as $organization)
+                                <option value="{{ $organization }}" {{ $organization == $business_type ? 'selected' : '' }}>{{ $organization }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -169,8 +175,8 @@ $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
                     <!-- doucment upload -->
                     <div class="mt-1 col-xl-4 col-md-4">
                         <div class="input-group input-group-sm input-group-primary">
-                            <label class="input-group-addon" for="survey_report"> Upload Document</label>
-                            <input class="form-control" accept=".png, .jpg, .jpeg, .pdf" id="" name="survey_report" type="file">
+                            <label class="input-group-addon" for="upload_file"> Upload Document</label>
+                            <input class="form-control" accept=".png, .jpg, .jpeg, .pdf" id="" name="upload_file" type="file">
                         </div>
                     </div>
                 </div>
@@ -182,7 +188,7 @@ $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
     <div class="row">
         <div class="mt-2 offset-md-4 col-md-4">
             <div class="input-group input-group-sm ">
-                <button class="py-2 btn btn-success ">Save</button>
+                <button class="py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save'; }}</button>
             </div>
         </div>
     </div>
