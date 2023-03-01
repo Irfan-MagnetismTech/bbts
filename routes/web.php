@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('get-thanas', [CommonApiController::class, 'getThanas'])->name('get-thanas');
     Route::get('get-clients-by-links', [CommonApiController::class, 'getClientsByLinkId'])->name('get-clients-by-links');
     Route::get('get-clients-previous-tickets/{clientId}/{limit}', [CommonApiController::class, 'getClientsPreviousTickets'])->name('get-clients-previous-tickets');
+    Route::get('get-support-team-members', [CommonApiController::class, 'getSupportTeamMembers'])->name('get-support-team-members');
 });
 
 require base_path('routes/dataencoding.php');

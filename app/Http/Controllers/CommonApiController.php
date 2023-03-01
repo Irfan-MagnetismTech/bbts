@@ -5,15 +5,16 @@ namespace App\Http\Controllers;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\User;
 use Modules\Admin\Entities\Brand;
+use App\Models\Dataencoding\Thana;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\Supplier;
+use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Employee;
 use App\Models\Dataencoding\Department;
-use App\Models\Dataencoding\District;
-use App\Models\Dataencoding\Thana;
 use Modules\Sales\Entities\ClientDetail;
+use Modules\Ticketing\Entities\SupportTeam;
 
 class CommonApiController extends Controller
 {
@@ -206,5 +207,16 @@ class CommonApiController extends Controller
             $data .= '<option value="' . $thana->id . '">' . $thana->name . '</option>';
         }
         return response()->json($data);
+    }
+
+    public function getSupportTeamMembers() {
+        $teamId = request('search');  
+        $team = SupportTeam::with('supportTeamMember.user')->where('id', $teamId)->first();  
+
+        if(auth()->user()->employee->branch_id != $team->branch_id) {
+            abort(404);
+        } 
+        
+        return response()->json($team);
     }
 }

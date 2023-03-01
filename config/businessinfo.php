@@ -15,4 +15,9 @@ return [
         '2' => '2nd Layer',
         '3' => '3rd Layer',
     ],
+    'ticketMovements' => [
+        'Forward',
+        'Backward',
+        'Handover'
+    ],
 ];
