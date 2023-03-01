@@ -192,6 +192,7 @@
 
 @section('script')
     <script>
+        var req_options = null;
         $(document).on('keyup', '.unit_price, .quantity', function() {
             var unit_price = $(this).closest('tr').find('.unit_price').val();
             var quantity = $(this).closest('tr').find('.quantity').val();
@@ -241,6 +242,18 @@
                 select: function(event, ui) {
                     $('#indent_no').val(ui.item.label);
                     $('#indent_id').val(ui.item.value);
+                    console.log(ui.item.requisition_nos);
+                    $('.requisition_no').html('');
+                    $('#client_links').html('');
+                    var options = '<option value="">Select PRS No</option>';
+
+
+                    ui.item.requisition_nos.forEach(function(element) {
+                        options +=
+                            `<option value="${element.requisition_id}">${element.requisition_no}</option>`;
+                    });
+                    req_options = options;
+                    $('.requisition_no').html(options);
 
                     return false;
                 }
@@ -260,23 +273,18 @@
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
-                            <td class="form-group requisition_no">
-                                <select class="form-control select2" name="requisition_no">
+                            <td class="form-group">
+                                <select class="form-control requisition_no" name="requisition_no">
                                     <option value="" readonly selected>Select Requisiiton</option>
-                                    @if (!empty($purchaseRequisition))
-                                        @foreach ($clientInfos as $clientInfo)
-                                            <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$purchaseRequisition->fr_composite_key)>
-                                                {{ $clientInfo->link_name }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="{{ old('requisition_no') }}" selected>{{ old('requisition_no') }}</option>
-                                    @endif
+                                   
                                 </select>
                             </td>
 
                             <td>
-                                <input type="text" name="cs_no[]" class="form-control cs_no" required autocomplete="off">
-                                <input type="hidden" name="quotation_id[]" class="form-control quotation_id">
+                                <input type="text" class="form-control cs_no" aria-describedby="cs_no" name="cs_no[]"
+                                    value="{{ old('cs_no') ?? (@$purchaseRequisition->client->name ?? '') }}" placeholder="Search...">
+                                <input type="hidden" name="cs_id[]" class="form-control cs_id"
+                                    value="{{ old('cs_id') ?? @$purchaseRequisition?->client->id }}">
                             </td>
 
                             <td>
@@ -345,13 +353,41 @@
                 todayHighlight: true,
                 showOtherMonths: true
             }).datepicker("setDate", new Date());
+
+            //get cs no on keyup get 5 value evey time
+            $(document).on('keyup focus', '.cs_no', function() {
+                $(this).autocomplete({
+                    source: function(request, response) {
+                        $.ajax({
+                            url: "{{ url('search-cs-no') }}",
+                            type: 'get',
+                            dataType: "json",
+                            data: {
+                                search: request.term
+                            },
+                            success: function(data) {
+                                response(data);
+                            }
+                        });
+                    },
+                    select: function(event, ui) {
+                        $(this).closest('tr').find('.cs_no').val(ui.item.label);
+                        $(this).closest('tr').find('.cs_id').val(ui.item.value);
+
+                        getMaterial(this)
+                        return false;
+                    }
+                });
+            });
+            
         }
 
         /* Adds and removes quantity row on click */
         $("#material_requisition")
             .on('click', '.add-requisition-row', () => {
                 appendCalculationRow();
-                $('.select2').select2();
+                $('.requisition_no').last().html(req_options);
+
             })
             .on('click', '.remove-calculation-row', function() {
                 $(this).closest('tr').remove();
@@ -409,7 +445,38 @@
             $('#fr_composite_key').val(client.fr_composite_key);
         });
 
+
         //Search Material
+        function getMaterial(e) {
+
+            let requisition_no = $(e).closest('tr').find('.requisition_no').val();
+            console.log(requisition_no);
+            return false;
+            let cs_id = $("#cs_id").val();
+
+            if (mpr_id != '' && cs_id != '') {
+                const url = '{{ url('scj/loadMprMaterial') }}/' + mpr_id + '/' + cs_id;
+                let dropdown;
+
+                $('.material_name').each(function() {
+                    dropdown = $(this).closest('tr').find('.material_name');
+                });
+                    dropdown.empty();
+                    dropdown.append('<option selected disabled>Select Material</option>');
+                    dropdown.prop('selectedIndex', 0);
+
+                    $.getJSON(url, function(items) {
+                        $.each(items, function(key, mpr_material) {
+
+                            dropdown.append($('<option></option>')
+                                .attr('value', mpr_material.material_id)
+                                .text(mpr_material.nested_material.name))
+                        })
+                    });
+            }
+        }
+
+        
         $(document).on('keyup focus', '.material_name', function() {
             $(this).autocomplete({
                 source: function(request, response) {
@@ -436,19 +503,7 @@
 
         });
 
-        $(function() {
-            onChangeRadioButton();
-
-            $('.select2').select2();
-
-            //using form custom function js file
-            fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
-
-            $(".radioButton").click(function() {
-                onChangeRadioButton()
-            });
-        });
+        // associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
 
         function onChangeRadioButton() {
             var radioValue = $("input[name='type']:checked").val();

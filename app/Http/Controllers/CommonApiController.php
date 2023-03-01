@@ -15,6 +15,7 @@ use App\Models\Dataencoding\Employee;
 use App\Models\Dataencoding\Department;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\Sales\Entities\ClientDetail;
+use Modules\SCM\Entities\Cs;
 use Modules\SCM\Entities\Indent;
 
 class CommonApiController extends Controller
@@ -215,5 +216,19 @@ class CommonApiController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    public function searchCsNo()
+    {
+        $results = Cs::query()
+            ->where('cs_no', 'LIKE', '%' . request('search') . '%')
+            ->take(10)
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->id,
+                'label' => $item->cs_no,
+            ]);
+
+        return response()->json($results);
     }
 }
