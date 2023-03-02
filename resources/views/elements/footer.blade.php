@@ -10,13 +10,14 @@
 <script src="{{ asset('js/SmoothScroll.js') }}"></script>
 <script src="{{ asset('js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
 <script src="{{ asset('js/custom-function.js') }}"></script>
-@yield('script')
 <script src="{{ asset('js/pcoded.min.js') }}"></script>
 <script src="{{ asset('js/vertical-layout.min.js') }}"></script>
 <script src="{{ asset('js/script.js') }}"></script>
 <script src="{{ asset('js/select2.min.js') }}"></script>
-<script src="{{asset('js/Datatables/jquery.dataTables.min.js')}}"></script>
-<script src="{{asset('js/Datatables/dataTables.bootstrap4.min.js')}}"></script>
+<script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
+@yield('script')
+
 <script>
     $(document).ready(function() {
         $(".delete").click(function() {
@@ -26,9 +27,9 @@
         });
     });
 
-    $(document).ready(function () {
-            $('#dataTable').DataTable({
-                stateSave: true
-            });
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            stateSave: true
         });
+    });
 </script>

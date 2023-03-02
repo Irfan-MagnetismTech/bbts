@@ -42,7 +42,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-prs-no', [CommonApiController::class, 'searchPrsNo'])->name('searchPrsNo');
     Route::get('get-clients-by-links', [CommonApiController::class, 'getClientsByLinkId'])->name('get-clients-by-links');
     Route::get('search-indent-no', [CommonApiController::class, 'searchIndentNo'])->name('searchIndentNo');
-    Route::get('search-cs-no', [CommonApiController::class, 'searchCsNo'])->name('searchCsNo');
+    Route::get('search-cs-no/{supplierId}', [CommonApiController::class, 'searchCsNo'])->name('searchCsNo');
 });
 
 require base_path('routes/dataencoding.php');

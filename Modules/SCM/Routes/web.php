@@ -22,7 +22,7 @@ use Modules\SCM\Http\Controllers\ScmRequisitionController;
 |
 */
 
-Route::prefix('scm')->middleware(['auth'])->group(function() {
+Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::resources([
         'suppliers'                 => SupplierController::class,
         'units'                     => UnitController::class,
@@ -34,4 +34,6 @@ Route::prefix('scm')->middleware(['auth'])->group(function() {
         'indents'                   => IndentController::class,
         'purchase-orders'           => PurchaseOrderController::class,
     ]);
+    Route::get('search-material-by-cs-requisition/{csId}/{rqId}', [PurchaseOrderController::class, 'searchMaterialByCsAndRequsiition'])->name('search-material-by-cs-requisition');
+    Route::get('search-material-price-by-cs-requisition/{csId}/{supplierId}/{materialId}', [PurchaseOrderController::class, 'searchMaterialPriceByCsAndRequsiition'])->name('search-material-price-by-cs-requisition');
 });

@@ -59,11 +59,11 @@
 
         <div class="form-group col-4 supplier_name">
             <label for="supplier_name">Supplier Name:</label>
-            <input type="text" class="form-control supplier_name" id="supplier_name" aria-describedby="supplier_name"
+            <input type="text" class="form-control supplier_name" aria-describedby="supplier_name" id="supplier_name"
                 name="supplier_name" value="{{ old('supplier_name') ?? (@$purchaseRequisition->client->name ?? '') }}"
                 placeholder="Search...">
-            <input type="hidden" name="suppler_id" id="suppler_id"
-                value="{{ old('suppler_id') ?? @$purchaseRequisition?->client->id }}">
+            <input type="hidden" name="supplier_id" id="supplier_id"
+                value="{{ old('supplier_id') ?? @$purchaseRequisition?->client->id }}">
         </div>
 
         <div class="form-group col-4 indent_no">
@@ -200,7 +200,15 @@
             $(this).closest('tr').find('.total_amount').val(total_amount);
         });
 
-        $(document).on('keyup', ".supplier_name", function() {
+        $(document).on('keyup', "#supplier_name", function() {
+            $('.supplier_id').val('');
+            $('.cs_id').val('');
+            $('cs_no').val('');
+            $('.material_name').text('');
+            $('.unit').val('');
+            $('.price').val('');
+            $('.unit_price').val('');
+
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -216,15 +224,15 @@
                     });
                 },
                 select: function(event, ui) {
-                    $(this).closest('tr').find('.supplier_name').val(ui.item.label);
-                    $(this).closest('tr').find('.supplier_id').val(ui.item.value);
+                    $('#supplier_name').val(ui.item.label);
+                    $('#supplier_id').val(ui.item.value);
 
                     return false;
                 }
             });
         });
 
-        $(document).on('keyup focus', '#indent_no', function() {
+        $(document).on('keyup', '#indent_no', function() {
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -274,7 +282,7 @@
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
                             <td class="form-group">
-                                <select class="form-control requisition_no" name="requisition_no">
+                                <select class="form-control requisition_no" name="requisition_no[]">
                                     <option value="" readonly selected>Select Requisiiton</option>
                                    
                                 </select>
@@ -292,9 +300,10 @@
                             </td>
 
                             <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
-                                <input type="hidden" name="material_id[]" class="form-control material_id">
-                                <input type="hidden" name="item_code[]" class="form-control item_code">
+                                <select class="form-control material_name select2" name="material_name[]">
+                                    <option value="" readonly selected>Select Material</option>
+                                   
+                                </select>
                             </td>
 
                             <td>
@@ -314,7 +323,7 @@
                             </td>
 
                             <td>
-                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off">
+                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly>
                             </td>
 
                             <td>
@@ -347,6 +356,9 @@
                         </tr>
                     `;
             $('#material_requisition tbody').append(row);
+
+            $('.select2').select2();
+
             $('.date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
@@ -355,22 +367,36 @@
             }).datepicker("setDate", new Date());
 
             //get cs no on keyup get 5 value evey time
-            $(document).on('keyup focus', '.cs_no', function() {
+            $(document).on('keyup', '.cs_no', function() {
+                let supplier_id = $('#supplier_id').val();
+
                 $(this).autocomplete({
                     source: function(request, response) {
                         $.ajax({
-                            url: "{{ url('search-cs-no') }}",
+                            url: "{{ url('search-cs-no') }}/" + supplier_id,
                             type: 'get',
                             dataType: "json",
                             data: {
                                 search: request.term
                             },
                             success: function(data) {
-                                response(data);
+                                if (data.length > 0) {
+                                    response(data);
+                                } else {
+                                    response([{
+                                        label: 'No Result Found',
+                                        value: -1,
+                                    }]);
+                                }
                             }
                         });
                     },
                     select: function(event, ui) {
+                        if (ui.item.value == -1) {
+                            $(this).val('');
+                            return false;
+                        }
+
                         $(this).closest('tr').find('.cs_no').val(ui.item.label);
                         $(this).closest('tr').find('.cs_id').val(ui.item.value);
 
@@ -379,8 +405,11 @@
                     }
                 });
             });
-            
         }
+
+        $(document).on('change', '.requisition_no', function() {
+            getMaterial(this)
+        })
 
         /* Adds and removes quantity row on click */
         $("#material_requisition")
@@ -398,7 +427,7 @@
         @if (!empty($purchaseRequisition))
             client_details = {!! collect($clientInfos) !!}
         @endif
-        $(document).on('keyup focus', '#client_name', function() {
+        $(document).on('keyup', '#client_name', function() {
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -445,63 +474,85 @@
             $('#fr_composite_key').val(client.fr_composite_key);
         });
 
-
         //Search Material
         function getMaterial(e) {
 
+            let cs_id = $(e).closest('tr').find('.cs_id').val();
             let requisition_no = $(e).closest('tr').find('.requisition_no').val();
-            console.log(requisition_no);
-            return false;
-            let cs_id = $("#cs_id").val();
 
-            if (mpr_id != '' && cs_id != '') {
-                const url = '{{ url('scj/loadMprMaterial') }}/' + mpr_id + '/' + cs_id;
+            if (requisition_no != '' && cs_id != '') {
+                const url = '{{ url('/scm/search-material-by-cs-requisition') }}/' + cs_id + '/' + requisition_no;
                 let dropdown;
 
                 $('.material_name').each(function() {
                     dropdown = $(this).closest('tr').find('.material_name');
                 });
-                    dropdown.empty();
-                    dropdown.append('<option selected disabled>Select Material</option>');
-                    dropdown.prop('selectedIndex', 0);
+                dropdown.empty();
+                dropdown.append('<option selected disabled>Select Material</option>');
+                dropdown.prop('selectedIndex', 0);
 
-                    $.getJSON(url, function(items) {
-                        $.each(items, function(key, mpr_material) {
-
-                            dropdown.append($('<option></option>')
-                                .attr('value', mpr_material.material_id)
-                                .text(mpr_material.nested_material.name))
-                        })
-                    });
+                $.getJSON(url, function(items) {
+                    $.each(items, function(key, material) {
+                        dropdown.append($('<option></option>')
+                            .attr('value', material.material.id)
+                            .text(material.material.name))
+                    })
+                });
             }
         }
 
-        
-        $(document).on('keyup focus', '.material_name', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-material') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $(this).closest('tr').find('.material_name').val(ui.item.label);
-                    $(this).closest('tr').find('.material_id').val(ui.item.value);
-                    $(this).closest('tr').find('.item_code').val(ui.item.item_code);
-                    $(this).closest('tr').find('.unit').val(ui.item.unit);
+        $(document).on('change', '.material_name', function() {
+            let material_id = $(this).val();
+            let cs_id = $(this).closest('tr').find('.cs_id').val();
+            let supplier_id = $('#supplier_id').val();
+            var selectedIndex = this;
+
+            if (supplier_id == '') {
+                alert('Please select a supplier first');
+                return false;
+            }
+
+            const url = '{{ url('/scm/search-material-price-by-cs-requisition') }}/' + cs_id + '/' + supplier_id +
+                '/' + material_id;
+
+            $.getJSON(url, function(item) {
+                console.log(item);
+                //check if item is empty or not
+                if (item === null) {
+                    alert('No price found for this material');
                     return false;
                 }
+                $(selectedIndex).closest('tr').find('.unit').val(item.cs_material.material.unit);
+                $(selectedIndex).closest('tr').find('.unit_price').val(item.price);
             });
+        })
 
-        });
+        // $(document).on('keyup', '.material_name', function() {
+        //     $(this).autocomplete({
+        //         source: function(request, response) {
+        //             $.ajax({
+        //                 url: "{{ url('search-material') }}",
+        //                 type: 'get',
+        //                 dataType: "json",
+        //                 data: {
+        //                     search: request.term
+        //                 },
+        //                 success: function(data) {
+        //                     response(data);
+        //                 }
+        //             });
+        //         },
+        //         select: function(event, ui) {
+        //             $(this).closest('tr').find('.material_name').val(ui.item.label);
+        //             $(this).closest('tr').find('.material_id').val(ui.item.value);
+        //             $(this).closest('tr').find('.item_code').val(ui.item.item_code);
+        //             $(this).closest('tr').find('.unit').val(ui.item.unit);
+        //             return false;
+        //         }
+        //     });
+
+        // });
+
 
         // associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
 
