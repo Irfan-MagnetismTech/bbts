@@ -2,10 +2,10 @@
 @section('title', 'Purchase Order')
 
 @php
-    $is_old = old('effective_date') ? true : false;
-    $form_heading = !empty($cs->id) ? 'Update' : 'Add';
-    $form_url = !empty($cs->id) ? route('cs.update', $cs->id) : route('cs.store');
-    $form_method = !empty($cs->id) ? 'PUT' : 'POST';
+    $is_old = old('supplier_name') ? true : false;
+    $form_heading = !empty($purchase_order->id) ? 'Update' : 'Add';
+    $form_url = !empty($purchase_order->id) ? route('purchase-orders.update', $purchase_order->id) : route('purchase-orders.store');
+    $form_method = !empty($purchase_order->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
@@ -24,7 +24,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('purchase-requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('purchase-orders.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -34,8 +34,6 @@
 
 @section('content-grid', null)
 
-
-
 @section('content')
     {!! Form::open([
         'url' => $form_url,
@@ -44,40 +42,49 @@
         'class' => 'custom-form',
     ]) !!}
     <div class="row">
+        @if (!empty($purchaseOrder->id))
+            <div class="form-group col-4">
+                <div class="input-group input-group-sm input-group-primary">
+                    <label class="input-group-addon" for="po_no">PO No <span class="text-danger">*</span></label>
+                    <input class="form-control" id="po_no" name="po_no" aria-describedby="po_no"
+                        value="{{ old('po_no') ?? ($purchaseOrder->po_no ?? '') }}" readonly>
+                </div>
+            </div>
+        @endif
         <div class="form-group col-4">
             <label for="date">Purchase Date:</label>
             <input class="form-control date" name="date" aria-describedby="date"
-                value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly placeholder="Select a Date">
+                value="{{ old('date') ?? (@$purchaseOrder->date ?? '') }}" readonly placeholder="Select a Date">
         </div>
 
         <div class="form-group col-4 delivery_location">
             <label for="delivery_location">Delivery Location:</label>
             <input type="text" class="form-control" id="delivery_location" aria-describedby="delivery_location"
                 name="delivery_location"
-                value="{{ old('delivery_location') ?? (@$purchaseRequisition->client->delivery_location ?? '') }}">
+                value="{{ old('delivery_location') ?? (@$purchaseOrder->delivery_location ?? '') }}">
         </div>
 
         <div class="form-group col-4 supplier_name">
             <label for="supplier_name">Supplier Name:</label>
             <input type="text" class="form-control supplier_name" aria-describedby="supplier_name" id="supplier_name"
-                name="supplier_name" value="{{ old('supplier_name') ?? (@$purchaseRequisition->client->name ?? '') }}"
+                name="supplier_name" value="{{ old('supplier_name') ?? (@$purchaseOrder->supplier->name ?? '') }}"
                 placeholder="Search...">
             <input type="hidden" name="supplier_id" id="supplier_id"
-                value="{{ old('supplier_id') ?? @$purchaseRequisition?->client->id }}">
+                value="{{ old('supplier_id') ?? @$purchaseOrder?->supplier_id }}">
         </div>
 
         <div class="form-group col-4 indent_no">
             <label for="indent_no">Indent No:</label>
             <input type="text" class="form-control" id="indent_no" aria-describedby="indent_no" name="indent_no"
-                value="{{ old('indent_no') ?? (@$purchaseRequisition->client->name ?? '') }}" placeholder="Search...">
+                value="{{ old('indent_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}" placeholder="Search...">
             <input type="hidden" name="indent_id" id="indent_id"
-                value="{{ old('indent_id') ?? @$purchaseRequisition?->client->id }}">
+                value="{{ old('indent_id') ?? @$purchaseOrder?->indent_id }}">
         </div>
 
         <div class="form-group col-4 remarks">
             <label for="remarks">Remarks</label>
             <input type="text" class="form-control" id="remarks" aria-describedby="remarks" name="remarks"
-                value="{{ old('remarks') ?? (@$purchaseRequisition->client->remarks ?? '') }}">
+                value="{{ old('remarks') ?? (@$purchaseOrder->remarks ?? '') }}">
         </div>
     </div>
 
@@ -103,82 +110,118 @@
         <tbody></tbody>
         <tfoot>
             @php
-                $material_name_with_code = old('material_name', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
-                $material_id = old('material_id', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material_id') : []);
-                $item_code = old('item_code', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.code') : []);
-                $unit = old('unit', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.unit') : []);
-                $brand_id = old('brand_id', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('brand_id') : []);
-                $quantity = old('quantity', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('quantity') : []);
-                $unit_price = old('unit_price', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('unit_price') : []);
-                $total_amount = old('total_amount', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('total_amount') : []);
-                $model = old('model', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('model') : []);
-                $purpose = old('purpose', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('purpose') : []);
+                $requisition_no = old('requisition_no', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisition->pluck('prs_no') : []);
+                $material_name_with_code = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
+                $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material_id') : []);
+                $item_code = old('item_code', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material.code') : []);
+                $unit = old('unit', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material.unit') : []);
+                $brand_id = old('brand_id', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('brand_id') : []);
+                $quantity = old('quantity', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('quantity') : []);
+                $unit_price = old('unit_price', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('unit_price') : []);
+                $total_amount = old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('total_amount') : []);
+                $model = old('model', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('model') : []);
+                $purpose = old('purpose', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('purpose') : []);
             @endphp
             @foreach ($material_name_with_code as $key => $requisitionDetail)
                 <tr>
-                    <td class="client_links">
-                        <label for="select2">Client Links</label>
-                        <select class="form-control select2" id="client_links" name="client_links">
-                            <option value="" readonly selected>Select Client Link</option>
-                            @if (!empty($purchaseRequisition))
-                                @foreach ($clientInfos as $clientInfo)
-                                    <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$purchaseRequisition->fr_composite_key)>
-                                        {{ $clientInfo->link_name }}</option>
-                                @endforeach
-                            @else
-                                <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
-                            @endif
+                    <td class="form-group">
+                        <select class="form-control requisition_no" name="requisition_no[]">
+                            <option value="" readonly selected>Select Requisiiton</option>
+                            
                         </select>
                     </td>
+
                     <td>
-                        <input type="text" name="material_name[]" class="form-control material_name" required
-                            autocomplete="off" value="{{ $material_name_with_code[$key] }}">
-                        <input type="hidden" name="material_id[]" class="form-control material_id"
-                            value="{{ $material_id[$key] }}">
-                        <input type="hidden" name="item_code[]" class="form-control item_code"
-                            value="{{ $item_code[$key] }}">
+                        <input type="text" class="form-control cs_no" aria-describedby="cs_no" name="cs_no[]"
+                            value="{{ old('cs_no') ?? (@$purchaseOrder->client->name ?? '') }}" placeholder="Search...">
+                        <input type="hidden" name="cs_id[]" class="form-control cs_id"
+                            value="{{ old('cs_id') ?? @$purchaseOrder?->client->id }}">
                     </td>
+
                     <td>
-                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
-                            value="{{ $unit[$key] }}" id="unit">
+                        <input type="text" name="quatation_no[]" class="form-control quatation_no" autocomplete="off">
                     </td>
+
                     <td>
-                        <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                            <option value="">Select Brand</option>
-                            @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                    {{ $brand->name }}
-                                </option>
+                        <select class="form-control material_name select2" name="material_name[]">
+                            <option value="" readonly selected>Select Material</option>
+
+                        </select>
+                    </td>
+
+                    <td>
+                        <input type="text" name="description[]" class="form-control description" autocomplete="off">
+                    </td>
+
+                    <td>
+                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                    </td>
+
+                    <td>
+                        <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off">
+                    </td>
+
+                    <td>
+                        <input type="text" name="warranty_period[]" class="form-control warranty_period"
+                            autocomplete="off">
+                    </td>
+
+                    <td>
+                        <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off"
+                            readonly>
+                    </td>
+
+                    <td>
+                        <select class="form-control" name="vat_or_tax[]">
+                            @foreach ($vatOrTax as $key => $value)
+                                <option value="{{ $value }}" @selected($key == @$purchaseOrder->vat_or_tax)>
+                                    {{ $value }}</option>
                             @endforeach
                         </select>
                     </td>
+
                     <td>
-                        <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                            value="{{ $model[$key] }}">
+                        <select class="form-control" name="vat_or_tax[]">
+                            @foreach ($vatOrTax as $key => $value)
+                                <option value="{{ $value }}" @selected($key == @$purchaseOrder->vat_or_tax)>
+                                    {{ $value }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+
+                    <td>
+                        <input name="sub_total_amount[]" class="form-control sub_total_amount" autocomplete="off"
+                            readonly>
                     </td>
                     <td>
-                        <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off"
-                            value="{{ $unit_price[$key] }}">
-                    </td>
-                    <td>
-                        <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off"
-                            value="{{ $quantity[$key] }}">
-                    </td>
-                    <td>
-                        <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
-                            value="{{ $total_amount[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
-                            value="{{ $purpose[$key] }}">
+                        <input class="form-control date" name="required_date[]" aria-describedby="date"
+                            value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" readonly
+                            placeholder="Select a required date">
                     </td>
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
                     </td>
                 </tr>
             @endforeach
+            <tr>
+                <td colspan="11" class="text-right">Total Amount</td>
+                <td>
+                    <input type="text" name="total_amount" class="form-control total_amount" autocomplete="off"
+                        value="{{ old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->total_amount : 0) }}"
+                        readonly>
+                </td>
+            </tr>
         </tfoot>
     </table>
+
+    <div class="form-group col-4">
+        <label for="terms_and_conditions">Terms and Conditions</label>
+        <div class="input-group">
+            <input type="text" name="terms_and_conditions[]" class="form-control terms_and_conditions"
+                autocomplete="off">
+            <i class="btn btn-primary btn-sm fa fa-plus add-terms-row"></i>
+        </div>
+    </div>
 
     <div class="row">
         <div class="offset-md-4 col-md-4 mt-2">
@@ -192,12 +235,48 @@
 
 @section('script')
     <script>
+        $(document).on('click', '.add-terms-row', function() {
+            var terms_and_conditions = $(this).closest('div').find('.terms_and_conditions').val();
+            if (terms_and_conditions == '') {
+                alert('Please enter terms and conditions');
+                return false;
+            }
+            $(this).closest('div').find('.terms_and_conditions').val('');
+
+            $(this).closest('div').after(
+                '<div class="input-group mt-2">' +
+                '<input type="text" name="terms_and_conditions[]" class="form-control terms_and_conditions" autocomplete="off" value="' +
+                terms_and_conditions + '">' +
+                '<i class="btn btn-danger btn-sm fa fa-minus remove-terms-row"></i>' +
+                '</div>'
+            );
+
+        });
+
+
+        $(document).on('click', '.remove-terms-row', function() {
+            $(this).closest('div').remove();
+        });
+
         var req_options = null;
         $(document).on('keyup', '.unit_price, .quantity', function() {
             var unit_price = $(this).closest('tr').find('.unit_price').val();
             var quantity = $(this).closest('tr').find('.quantity').val();
-            var total_amount = unit_price * quantity;
-            $(this).closest('tr').find('.total_amount').val(total_amount);
+            var sub_total_amount = unit_price * quantity;
+            $(this).closest('tr').find('.sub_total_amount').val(sub_total_amount);
+            calculateTotalAmount()
+
+            //function for calculate total amount from all sub total amount
+            function calculateTotalAmount() {
+                var total_amount = 0;
+                $('.sub_total_amount').each(function() {
+                    total_amount += parseFloat($(this).val());
+                });
+                $('.total_amount').val(total_amount.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+            }
         });
 
         $(document).on('keyup', "#supplier_name", function() {
@@ -210,6 +289,7 @@
             $('.unit_price').val('');
 
             $(this).autocomplete({
+                minlenght: 1,
                 source: function(request, response) {
                     $.ajax({
                         url: "{{ route('searchSupplier') }}",
@@ -233,6 +313,11 @@
         });
 
         $(document).on('keyup', '#indent_no', function() {
+            if ($('#supplier_name').val() == '') {
+                alert('Please select supplier name first!');
+                $('#indent_no').val('');
+                return false;
+            }
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -275,7 +360,7 @@
             showOtherMonths: true
         }).datepicker("setDate", new Date());
         /* Append row */
-        @if (empty($purchaseRequisition) && empty(old('material_name')))
+        @if (empty($purchaseOrder) && empty(old('material_name')))
             appendCalculationRow();
         @endif
         function appendCalculationRow() {
@@ -290,9 +375,9 @@
 
                             <td>
                                 <input type="text" class="form-control cs_no" aria-describedby="cs_no" name="cs_no[]"
-                                    value="{{ old('cs_no') ?? (@$purchaseRequisition->client->name ?? '') }}" placeholder="Search...">
+                                    value="{{ old('cs_no') ?? (@$purchaseOrder->client->name ?? '') }}" placeholder="Search...">
                                 <input type="hidden" name="cs_id[]" class="form-control cs_id"
-                                    value="{{ old('cs_id') ?? @$purchaseRequisition?->client->id }}">
+                                    value="{{ old('cs_id') ?? @$purchaseOrder?->client->id }}">
                             </td>
 
                             <td>
@@ -329,7 +414,7 @@
                             <td>
                                 <select class="form-control" name="vat_or_tax[]">
                                     @foreach ($vatOrTax as $key => $value)
-                                        <option value="{{ $value }}" @selected($key == @$purchaseRequisition->vat_or_tax)>
+                                        <option value="{{ $value }}" @selected($key == @$purchaseOrder->vat_or_tax)>
                                             {{ $value }}</option>
                                     @endforeach
                                 </select>
@@ -338,17 +423,17 @@
                             <td>
                                 <select class="form-control" name="vat_or_tax[]">
                                     @foreach ($vatOrTax as $key => $value)
-                                        <option value="{{ $value }}" @selected($key == @$purchaseRequisition->vat_or_tax)>
+                                        <option value="{{ $value }}" @selected($key == @$purchaseOrder->vat_or_tax)>
                                             {{ $value }}</option>
                                     @endforeach
                                 </select>
                             </td>
                             
                             <td>
-                                <input name="total_amount[]" class="form-control total_amount" autocomplete="off" readonly>
+                                <input name="sub_total_amount[]" class="form-control sub_total_amount" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input class="form-control date" name="required_date[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseRequisition->required_date ?? '') }}" readonly placeholder="Select a required date">
+                                <input class="form-control date" name="required_date[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" readonly placeholder="Select a required date">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
@@ -424,7 +509,7 @@
 
         //Search Client
         var client_details = [];
-        @if (!empty($purchaseRequisition))
+        @if (!empty($purchaseOrder))
             client_details = {!! collect($clientInfos) !!}
         @endif
         $(document).on('keyup', '#client_name', function() {
@@ -526,35 +611,6 @@
                 $(selectedIndex).closest('tr').find('.unit_price').val(item.price);
             });
         })
-
-        // $(document).on('keyup', '.material_name', function() {
-        //     $(this).autocomplete({
-        //         source: function(request, response) {
-        //             $.ajax({
-        //                 url: "{{ url('search-material') }}",
-        //                 type: 'get',
-        //                 dataType: "json",
-        //                 data: {
-        //                     search: request.term
-        //                 },
-        //                 success: function(data) {
-        //                     response(data);
-        //                 }
-        //             });
-        //         },
-        //         select: function(event, ui) {
-        //             $(this).closest('tr').find('.material_name').val(ui.item.label);
-        //             $(this).closest('tr').find('.material_id').val(ui.item.value);
-        //             $(this).closest('tr').find('.item_code').val(ui.item.item_code);
-        //             $(this).closest('tr').find('.unit').val(ui.item.unit);
-        //             return false;
-        //         }
-        //     });
-
-        // });
-
-
-        // associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
 
         function onChangeRadioButton() {
             var radioValue = $("input[name='type']:checked").val();

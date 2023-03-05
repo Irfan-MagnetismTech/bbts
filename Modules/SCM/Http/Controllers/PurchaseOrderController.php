@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
@@ -15,6 +16,12 @@ use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
 
 class PurchaseOrderController extends Controller
 {
+    private $purchaseOrderNo;
+
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->purchaseOrderNo = $globalService->generateUniqueId(PurchaseOrder::class, 'PO');
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -46,6 +53,7 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         try {
             $purchaseOrderData = $request->only('po_no', 'date', 'comparative_statement_id', 'indent_id', 'remarks', 'trams_of_Supply', 'trams_of_payment', 'trams_of_condition', 'delivery_location', 'created_by', 'branch_id');
 
