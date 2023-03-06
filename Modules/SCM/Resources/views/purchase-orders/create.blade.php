@@ -110,7 +110,7 @@
         <tbody></tbody>
         <tfoot>
             @php
-                $requisition_no = old('requisition_no', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisition->pluck('prs_no') : []);
+                $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisition->pluck('prs_no') : []);
                 $material_name_with_code = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
                 $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material_id') : []);
                 $item_code = old('item_code', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material.code') : []);
@@ -125,7 +125,7 @@
             @foreach ($material_name_with_code as $key => $requisitionDetail)
                 <tr>
                     <td class="form-group">
-                        <select class="form-control requisition_no" name="requisition_no[]">
+                        <select class="form-control purchase_requisition_id" name="purchase_requisition_id[]">
                             <option value="" readonly selected>Select Requisiiton</option>
                             
                         </select>
@@ -336,14 +336,14 @@
                     $('#indent_no').val(ui.item.label);
                     $('#indent_id').val(ui.item.value);
                     console.log(ui.item.requisition_nos);
-                    $('.requisition_no').html('');
+                    $('.purchase_requisition_id').html('');
                     $('#client_links').html('');
                     var options = '<option value="">Select PRS No</option>';
 
 
                     ui.item.requisition_nos.forEach(function(element) {
                         options +=
-                            `<option value="${element.requisition_id}">${element.requisition_no}</option>`;
+                            `<option value="${element.requisition_id}">${element.purchase_requisition_id}</option>`;
                     });
                     req_options = options;
                     $('.requisition_no').html(options);
@@ -367,7 +367,7 @@
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
                             <td class="form-group">
-                                <select class="form-control requisition_no" name="requisition_no[]">
+                                <select class="form-control purchase_requisition_id" name="purchase_requisition_id[]">
                                     <option value="" readonly selected>Select Requisiiton</option>
                                    
                                 </select>
@@ -492,7 +492,7 @@
             });
         }
 
-        $(document).on('change', '.requisition_no', function() {
+        $(document).on('change', '.purchase_requisition_id', function() {
             getMaterial(this)
         })
 
@@ -500,7 +500,7 @@
         $("#material_requisition")
             .on('click', '.add-requisition-row', () => {
                 appendCalculationRow();
-                $('.requisition_no').last().html(req_options);
+                $('.purchase_requisition_id').last().html(req_options);
 
             })
             .on('click', '.remove-calculation-row', function() {
@@ -563,10 +563,10 @@
         function getMaterial(e) {
 
             let cs_id = $(e).closest('tr').find('.cs_id').val();
-            let requisition_no = $(e).closest('tr').find('.requisition_no').val();
+            let purchase_requisition_id = $(e).closest('tr').find('.purchase_requisition_id').val();
 
-            if (requisition_no != '' && cs_id != '') {
-                const url = '{{ url('/scm/search-material-by-cs-requisition') }}/' + cs_id + '/' + requisition_no;
+            if (purchase_requisition_id != '' && cs_id != '') {
+                const url = '{{ url('/scm/search-material-by-cs-requisition') }}/' + cs_id + '/' + purchase_requisition_id;
                 let dropdown;
 
                 $('.material_name').each(function() {
