@@ -343,10 +343,10 @@
 
                     ui.item.requisition_nos.forEach(function(element) {
                         options +=
-                            `<option value="${element.requisition_id}">${element.purchase_requisition_id}</option>`;
+                            `<option value="${element.purchase_requisition_id}">${element.requisition_no}</option>`;
                     });
                     req_options = options;
-                    $('.requisition_no').html(options);
+                    $('.purchase_requisition_id').html(options);
 
                     return false;
                 }

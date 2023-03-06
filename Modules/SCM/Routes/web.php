@@ -35,5 +35,6 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
         'purchase-orders'           => PurchaseOrderController::class,
     ]);
     Route::get('search-material-by-cs-requisition/{csId}/{rqId}', [PurchaseOrderController::class, 'searchMaterialByCsAndRequsiition'])->name('search-material-by-cs-requisition');
-    Route::get('search-material-price-by-cs-requisition/{csId}/{supplierId}/{materialId}', [PurchaseOrderController::class, 'searchMaterialPriceByCsAndRequsiition'])->name('search-material-price-by-cs-requisition');
+    require __DIR__ . '/jaber.php';
+    require __DIR__ . '/irfan.php';
 });

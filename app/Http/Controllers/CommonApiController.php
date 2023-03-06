@@ -211,7 +211,7 @@ class CommonApiController extends Controller
                 'indent_no' => $item->indent_no,
                 'requisition_nos' => $item->indentLines->map(fn ($item) => [
                     'requisition_no' => $item->scmPurchaseRequisition->prs_no ?? '',
-                    'requisition_id' => $item->scmPurchaseRequisition->id ?? '',
+                    'purchase_requisition_id' => $item->scmPurchaseRequisition->id ?? '',
                 ]),
             ];
         }
