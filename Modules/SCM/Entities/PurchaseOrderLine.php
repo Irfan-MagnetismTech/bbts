@@ -4,6 +4,7 @@ namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SCM\Entities\PurchaseOrder;
 
 class PurchaseOrderLine extends Model
 {
@@ -20,4 +21,8 @@ class PurchaseOrderLine extends Model
         return $required_date;
     }
 
+    public function purchaseOrder()
+    {
+        return $this->belongsTo(PurchaseOrder::class);
+    }
 }
