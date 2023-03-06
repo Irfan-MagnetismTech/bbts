@@ -15,6 +15,10 @@ use App\Models\Dataencoding\Employee;
 use App\Models\Dataencoding\Department;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\Ticketing\Entities\SupportTeam;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\SCM\Entities\Cs;
+use Modules\SCM\Entities\CsSupplier;
+use Modules\SCM\Entities\Indent;
 
 class CommonApiController extends Controller
 {
@@ -35,7 +39,8 @@ class CommonApiController extends Controller
         return response()->json($results);
     }
 
-    public function getClientsByLinkId() {
+    public function getClientsByLinkId()
+    {
         $results = ClientDetail::query()
             ->with('client')
             ->where('link_name', 'LIKE', '%' . request('search') . '%')
@@ -160,18 +165,6 @@ class CommonApiController extends Controller
 
     public function searchSupplier()
     {
-        // $results = Supplier::query()
-        //     ->where('name', 'LIKE', '%' . request('search') . '%')
-        //     ->orWhere('code', 'LIKE', '%' . request('search') . '%')
-        //     ->get()
-        //     ->map(fn ($item) => [
-        //         'value' => $item->id,
-        //         'label' => $item->name . ' - ' . $item->code,
-        //         'unit' => $item->unit,
-        //         'item_code' => $item->code,
-        //     ]);
-
-
         $items = Supplier::where('name', 'like', '%' . request('search') . '%')->limit(10)->get();
         $response = [];
         foreach ($items as $item) {
@@ -218,5 +211,53 @@ class CommonApiController extends Controller
         } 
         
         return response()->json($team);
+    }
+    public function searchPrsNo()
+    {
+        $results = ScmPurchaseRequisition::query()
+            ->where('prs_no', 'LIKE', '%' . request('search') . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->id,
+                'label' => $item->prs_no,
+            ]);
+
+        return response()->json($results);
+    }
+
+    public function searchIndentNo()
+    {
+        $items = Indent::with('indentLines.scmPurchaseRequisition')->where('indent_no', 'like', '%' . request('search') . '%')->limit(10)->get();
+        $response = [];
+        foreach ($items as $item) {
+            $response[] = [
+                'label' => $item->indent_no,
+                'value' => $item->id,
+                'indent_no' => $item->indent_no,
+                'requisition_nos' => $item->indentLines->map(fn ($item) => [
+                    'requisition_no' => $item->scmPurchaseRequisition->prs_no ?? '',
+                    'purchase_requisition_id' => $item->scmPurchaseRequisition->id ?? '',
+                ]),
+            ];
+        }
+
+        return response()->json($response);
+    }
+
+    public function searchCsNo($supplierId)
+    {
+        $results = Cs::query()
+            ->where('cs_no', 'LIKE', '%' . request('search') . '%')
+            ->whereHas('selectedSuppliers', function ($query) use ($supplierId) {
+                $query->where('supplier_id', $supplierId);
+            })
+            ->take(10)
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->id,
+                'label' => $item->cs_no,
+            ]);
+
+        return response()->json($results);
     }
 }

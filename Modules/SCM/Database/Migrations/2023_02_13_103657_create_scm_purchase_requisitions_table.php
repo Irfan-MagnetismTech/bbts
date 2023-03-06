@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('prs_no');
             $table->string('type')->nullable();
-            $table->string('date')->nullable();
+            $table->date('date')->nullable();
             $table->integer('client_id')->nullable();
             $table->string('fr_composite_key')->nullable();
             $table->string('assessment_no')->nullable();

@@ -36,4 +36,25 @@ class BbtsGlobalService extends Controller
     public function getTicketSources() {
         return TicketSource::all();
     }
+
+    /**
+     * @param model $model
+     * @param string $prefix
+     * @return string - unique id
+     * 
+     * this function is used to generate unique id for any model
+     */
+    public function generateUniqueId($model, $prefix): string
+    {
+        $lastIndentId = $model::latest()->first();
+        if ($lastIndentId) {
+            if (now()->format('Y') != date('Y', strtotime($lastIndentId->created_at))) {
+                return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;
+            } else {
+                return strtoupper($prefix) . '-' . now()->format('Y') . '-' . ($lastIndentId->id + 1);
+            }
+        } else {
+            return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;
+        }
+    }
 }

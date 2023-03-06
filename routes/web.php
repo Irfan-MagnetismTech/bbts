@@ -35,13 +35,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-brand', [CommonApiController::class, 'searchBrand'])->name('searchBrand');
     Route::get('search-department', [CommonApiController::class, 'searchDepartment'])->name('searchDepartment');
     Route::get('search-employee', [CommonApiController::class, 'searchEmployee'])->name('searchEmployee');
-    Route::post('search-supplier', [CommonApiController::class, 'searchSupplier'])->name('searchSupplier');
+    Route::get('search-supplier', [CommonApiController::class, 'searchSupplier'])->name('searchSupplier');
     Route::get('search-user', [CommonApiController::class, 'searchUser'])->name('searchUser');
     Route::get('get-districts', [CommonApiController::class, 'getDistricts'])->name('get-districts');
     Route::get('get-thanas', [CommonApiController::class, 'getThanas'])->name('get-thanas');
+    Route::get('search-prs-no', [CommonApiController::class, 'searchPrsNo'])->name('searchPrsNo');
     Route::get('get-clients-by-links', [CommonApiController::class, 'getClientsByLinkId'])->name('get-clients-by-links');
     Route::get('get-clients-previous-tickets/{clientId}/{limit}', [CommonApiController::class, 'getClientsPreviousTickets'])->name('get-clients-previous-tickets');
     Route::get('get-support-team-members', [CommonApiController::class, 'getSupportTeamMembers'])->name('get-support-team-members');
+    Route::get('search-indent-no', [CommonApiController::class, 'searchIndentNo'])->name('searchIndentNo');
+    Route::get('search-cs-no/{supplierId}', [CommonApiController::class, 'searchCsNo'])->name('searchCsNo');
 });
 
 require base_path('routes/dataencoding.php');

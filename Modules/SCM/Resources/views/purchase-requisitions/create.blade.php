@@ -30,10 +30,10 @@
     <span class="text-danger">*</span> Marked are required.
 @endsection
 
-@section('content-grid', 'offset-md-1 col-md-10 offset-lg-2 col-lg-8 my-3')
+@section('content-grid', null)
 
 @section('content')
-    <div class="container">
+    <div class="">
         <form
             action="{{ !empty($purchaseRequisition) ? route('purchase-requisitions.update', @$purchaseRequisition->id) : route('purchase-requisitions.store') }}"
             method="post" class="custom-form">
@@ -228,7 +228,7 @@
             autoclose: true,
             todayHighlight: true,
             showOtherMonths: true
-        }).datepicker("setDate", new Date());;
+        }).datepicker("setDate", new Date());
         /* Append row */
         @if (empty($purchaseRequisition) && empty(old('material_name')))
             appendCalculationRow();

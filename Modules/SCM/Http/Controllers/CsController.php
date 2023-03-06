@@ -91,9 +91,9 @@ class CsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Cs $cs)
+    public function show(Cs $c)
     {
-        dd($cs);
+        // dd($c);
     }
 
     /**
@@ -111,7 +111,6 @@ class CsController extends Controller
         $brands = Brand::latest()->get();
         $all_materials = Material::with(['unit'])->get();
 
-
         return view('scm::cs.create', compact('all_materials', 'cs', 'Taxes', 'brands'));
     }
 
@@ -122,28 +121,31 @@ class CsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cs $cs)
+    public function update(CsRequest $request, Cs $c)
     {
+        $cs = $c;
         try {
-            $request     = $request->validated();
-            $all_details = $this->getAllDetails($request);
+            $all_details = $this->getAllDetails($request->toArray());
 
-            DB::transaction(function () use ($cs, $all_details, $request) {
-                $cs->update($all_details['all_request']);
+            DB::beginTransaction();
 
-                $cs->csMaterials()->delete();
-                $cs_materials = $cs->csMaterials()->createMany($all_details['cs_materials']);
+            $all_details['all_request']['created_by'] = auth()->id();
+            $cs->update($all_details['all_request']);
 
-                $cs->csSuppliers()->delete();
-                $cs_suppliers = $cs->csSuppliers()->createMany($all_details['cs_suppliers']);
+            $cs->csMaterials()->delete();
+            $cs_materials = $cs->csMaterials()->createMany($all_details['cs_materials']);
 
-                $cs->csMaterialsSuppliers()->delete();
-                $cs->csMaterialsSuppliers()
-                    ->createMany($this->getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request));
-            });
+            $cs->csSuppliers()->delete();
+            $cs_suppliers = $cs->csSuppliers()->createMany($all_details['cs_suppliers']);
+
+            $cs->csMaterialsSuppliers()->delete();
+            $cs->csMaterialsSuppliers()->createMany($this->getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request));
+
+            DB::commit();
 
             return redirect()->route('cs.index')->with('message', 'Comparative Statement created');
         } catch (QueryException $e) {
+            DB::rollBack();
             return redirect()->route('cs.create')->withErrors($e->getMessage());
         }
     }
@@ -154,13 +156,22 @@ class CsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cs $cs)
+    public function destroy(Cs $c)
     {
+        $cs = $c;
         try {
+            DB::beginTransaction();
+
             $cs->delete();
+            $cs->csMaterials()->delete();
+            $cs->csSuppliers()->delete();
+            $cs->csMaterialsSuppliers()->delete();
+
+            DB::commit();
 
             return redirect()->route('cs.index')->with('message', 'Data has been deleted successfully');
         } catch (QueryException $e) {
+            DB::rollBack();
             return redirect()->route('cs.index')->withErrors($e->getMessage());
         }
     }

@@ -105,7 +105,7 @@
                                     $material_id = $is_old ? old('material_id')[$material_key] : $material_value->material->id;
                                     $material_name = $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode ?? '---';
                                     $unit = $is_old ? old('unit')[$material_key] : $material_value->material->unit ?? '---';
-                                    $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value->brand_id;
+                                    $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value?->brand_id;
                                 @endphp
                                 <tr>
                                     <td>
@@ -270,10 +270,10 @@
                                                 {{ $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode }}
                                             </td>
                                             <td class="cs_brand text-center">
-                                                {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value->brand->name }}
+                                                {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? "Null" }}
                                             </td>
                                             <input type="hidden" name="cs_brand_name[]" class="cs_brand_name"
-                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value->brand->name }}">
+                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? "Null"}}">
                                     @endif
                                     <td>
                                         <input type="text" name="price[]"
@@ -309,11 +309,6 @@
 @section('script')
     <script>
         let is_confirmed = false;
-
-        // @if (empty($purchaseRequisition) && empty(old('supplier_name')))
-        //     addMaterial();
-        //     addSupplier();
-        // @endif
 
         function addMaterial() {
             $('#materialTable tbody').append(
@@ -456,18 +451,16 @@
                 $(this).children(`td:eq(${index + 1})`).remove();
             });
         }
-
-        var CSRF_TOKEN = "{{ csrf_token() }}";
+        
         $(function() {
             $(document).on('keyup', ".supplier_name", function() {
                 $(this).autocomplete({
                     source: function(request, response) {
                         $.ajax({
                             url: "{{ route('searchSupplier') }}",
-                            type: 'post',
+                            type: 'get',
                             dataType: "json",
                             data: {
-                                _token: CSRF_TOKEN,
                                 search: request.term
                             },
                             success: function(data) {
@@ -516,62 +509,6 @@
                 });
 
             });
-            // {{--  $(document).on('keyup', ".project_name", function() {
-            //     $(this).autocomplete({
-            //         source: function(request, response) {
-            //             $.ajax({
-            //                 url: "{{ route('projectAutoSuggest') }}",
-            //                 type: 'post',
-            //                 dataType: "json",
-            //                 data: {
-            //                     _token: CSRF_TOKEN,
-            //                     search: request.term
-            //                 },
-            //                 success: function(data) {
-            //                     response(data);
-            //                 }
-            //             });
-            //         },
-            //         select: function(event, ui) {
-            //             $(this).closest('tr').find('.project_name').val(ui.item.label);
-            //             $(this).closest('tr').find('.project_id').val(ui.item.value);
-            //             return false;
-            //         }
-            //     });
-            // });
-    
-            // $(document).on('keyup', ".material_name", function() {
-            //     $(this).autocomplete({
-            //         source: function(request, response) {
-            //             $.ajax({
-            //                 url: "{{ route('scj.requisitionWiseMaterialAutoSuggest') }}",
-            //                 type: 'post',
-            //                 dataType: "json",
-            //                 data: {
-            //                     _token: CSRF_TOKEN,
-            //                     search: request.term
-            //                 },
-            //                 success: function(data) {
-            //                     response(data);
-            //                 }
-            //             });
-            //         },
-            //         select: function(event, ui) {
-            //             $(this).val(ui.item.label);
-            //             $(this).closest('tr').find('.material_name').val(ui.item.label);
-            //             $(this).closest('tr').find('.material_id').val(ui.item.material_id);
-            //             $(this).closest('tr').find('.unit').val(ui.item.unit.name);
-            //             $(this).closest('tr').find('.unit_div').html(ui.item.unit.name);
-            //             changeCsRow($(this).closest('tr'), ui.item.label);
-            //         }
-            //     });
-            // }); 
-
-            // $("#projectTable").on('click', '.addProject', function() {
-            //     addProject();
-            // }).on('click', '.deleteItem', function() {
-            //     $(this).closest('tr').remove();
-            // }); --}}
 
             $("#materialTable").on('click', '.addMaterial', function() {
                 addMaterial();

@@ -16,10 +16,11 @@ return new class extends Migration
         Schema::create('lead_generations', function (Blueprint $table) {
             $table->id();
             $table->string('client_name')->nullable();
+            $table->integer('client_id')->nullable();
             $table->text('address')->nullable();
-            $table->integer('division')->nullable();
-            $table->integer('district')->nullable();
-            $table->integer('thana')->nullable();
+            $table->integer('division_id')->nullable();
+            $table->integer('district_id')->nullable();
+            $table->integer('thana_id')->nullable();
             $table->string('landmark')->nullable();
             $table->string('lat_long')->nullable();
             $table->string('contact_person')->nullable();
@@ -29,7 +30,7 @@ return new class extends Migration
             $table->string('client_type')->nullable();
             $table->string('business_type')->nullable();
             $table->string('website')->nullable();
-            $table->string('docuemnt')->nullable();
+            $table->string('document')->nullable();
             $table->timestamps();
         });
     }
