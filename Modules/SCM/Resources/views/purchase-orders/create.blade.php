@@ -127,7 +127,7 @@
                     <td class="form-group">
                         <select class="form-control purchase_requisition_id" name="purchase_requisition_id[]">
                             <option value="" readonly selected>Select Requisiiton</option>
-                            
+
                         </select>
                     </td>
 
@@ -139,7 +139,7 @@
                     </td>
 
                     <td>
-                        <input type="text" name="quatation_no[]" class="form-control quatation_no" autocomplete="off">
+                        <input type="text" name="quotation_no[]" class="form-control quotation_no" autocomplete="off">
                     </td>
 
                     <td>
@@ -226,7 +226,7 @@
     <div class="row">
         <div class="offset-md-4 col-md-4 mt-2">
             <div class="input-group input-group-sm ">
-                <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+                <button class="btn btn-success btn-round btn-block py-2" type="submit">Submit</button>
             </div>
         </div>
     </div>
@@ -235,6 +235,40 @@
 
 @section('script')
     <script>
+        //submit form with ajax and validation response 
+        document.querySelector('.custom-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // prevent default form submit
+            var form_data = new FormData(this); // get form data
+            fetch(this.action, {
+                    method: this.method,
+                    body: form_data
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        // throw new Error('Network response was not ok');
+                        console.log("not okay",response.responseJSON);
+
+                    }
+                    return response.json();
+                })
+                .then(function(response) {
+                    // handle success response
+                    if (response.status == 'success') {
+                        window.location.href = "{{ route('purchase-orders.index') }}?message=Purchase Order Created Successfully";
+                    } else {
+                        console.log("done", response)
+                    }
+                })
+                .catch(function(error) {
+                    // handle errors
+                    // console.error('Error:', error);
+                    console.log("not okay",error);
+
+                });
+        });
+
+
+
         $(document).on('click', '.add-terms-row', function() {
             var terms_and_conditions = $(this).closest('div').find('.terms_and_conditions').val();
             if (terms_and_conditions == '') {
@@ -381,11 +415,11 @@
                             </td>
 
                             <td>
-                                <input type="text" name="quatation_no[]" class="form-control quatation_no" autocomplete="off">  
+                                <input type="text" name="quotation_no[]" class="form-control quotation_no" autocomplete="off">  
                             </td>
 
                             <td>
-                                <select class="form-control material_name select2" name="material_name[]">
+                                <select class="form-control material_name select2" name="material_id[]">
                                     <option value="" readonly selected>Select Material</option>
                                    
                                 </select>
@@ -412,18 +446,18 @@
                             </td>
 
                             <td>
-                                <select class="form-control" name="vat_or_tax[]">
+                                <select class="form-control" name="vat[]">
                                     @foreach ($vatOrTax as $key => $value)
-                                        <option value="{{ $value }}" @selected($key == @$purchaseOrder->vat_or_tax)>
+                                        <option value="{{ $value }}" @selected($key == @$purchaseOrder->vat)>
                                             {{ $value }}</option>
                                     @endforeach
                                 </select>
                             </td>
 
                             <td>
-                                <select class="form-control" name="vat_or_tax[]">
+                                <select class="form-control" name="tax[]">
                                     @foreach ($vatOrTax as $key => $value)
-                                        <option value="{{ $value }}" @selected($key == @$purchaseOrder->vat_or_tax)>
+                                        <option value="{{ $value }}" @selected($key == @$purchaseOrder->tax)>
                                             {{ $value }}</option>
                                     @endforeach
                                 </select>

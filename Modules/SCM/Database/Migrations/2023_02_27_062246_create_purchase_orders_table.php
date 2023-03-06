@@ -15,17 +15,14 @@ return new class extends Migration
     {
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
-			$table->string('po_no')->nullable();
-			$table->date('date')->nullable();
-			$table->bigInteger('comparative_statement_id')->nullable();
-			$table->bigInteger('indent_id')->nullable();
-			$table->text('remarks')->nullable();
-			$table->string('terms_of_supply')->nullable();
-			$table->string('terms_of_payment')->nullable();
-			$table->string('terms_of_condition')->nullable();
-			$table->string('delivery_location')->nullable();
-			$table->bigInteger('created_by')->nullable();
-			$table->bigInteger('branch_id')->nullable();
+            $table->string('po_no');
+            $table->date('date')->nullable();
+            $table->bigInteger('supplier_id')->nullable();
+            $table->bigInteger('indent_id')->nullable();
+            $table->text('remarks')->nullable();
+            $table->string('delivery_location')->nullable();
+            $table->bigInteger('created_by')->nullable();
+            $table->bigInteger('branch_id')->nullable();
             $table->timestamps();
         });
     }
