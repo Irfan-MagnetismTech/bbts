@@ -11,7 +11,8 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('purchase-orders.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
+    <a href="{{ route('purchase-orders.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
+            class="fa fa-plus"></i></a>
 @endsection
 
 @section('sub-title')
@@ -47,13 +48,12 @@
                 </tr>
             </tfoot>
             <tbody>
-                {{-- @dd($all_pos[0]) --}}
                 @foreach ($all_pos as $key => $po)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><strong>#{{ $po->po_no }}</strong></td>
+                         <td><strong>#{{ $po->po_no }}</strong></td>
                         <td>{{ $po->supplier->name }}</td>
-                        <td>{{ $po->purchaseOrderLines[0]->cs->cs_no }}</td>
+                        <td>{{ $po?->purchaseOrderLines->first()?->cs?->cs_no }}</td>
                         <td>{{ $po->date }}</td>
                         <td>{{ $po->createdBy->name }}</td>
                         {{-- <td>
@@ -95,12 +95,12 @@
                                     {{-- <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
 
                                     <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
-                                    <a href="{{ route('purchase-orders.edit', $purchase_order->id) }}" data-toggle="tooltip" title="Edit"
-                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <a href="{{ route('purchase-orders.edit', $po->id) }}" data-toggle="tooltip"
+                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
 
                                     {!! Form::open([
-                                        'url' => route('purchase-orders.destroy', $purchase_order->id),
+                                        'url' => route('purchase-orders.destroy', $po->id),
                                         'method' => 'delete',
                                         'class' => 'd-inline',
                                         'data-toggle' => 'tooltip',
@@ -120,7 +120,6 @@
 
 @section('script')
     <script>
-        $(document).ready(function() {
-        });
+        $(document).ready(function() {});
     </script>
 @endsection

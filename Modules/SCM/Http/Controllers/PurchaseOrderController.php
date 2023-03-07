@@ -33,7 +33,7 @@ class PurchaseOrderController extends Controller
     {
                 
         $all_pos = PurchaseOrder::query()
-            ->with('purchaseOrderLines', 'supplier', 'indent', 'scmPurchaseRequisition', 'purchaseOrderLines.cs', 'createdBy')
+            ->with('purchaseOrderLines', 'supplier', 'indent', 'purchaseOrderLines.cs', 'createdBy')
             ->latest()->get();
         if (!empty(request()->message)) {
             // $message = 'request()->message';
