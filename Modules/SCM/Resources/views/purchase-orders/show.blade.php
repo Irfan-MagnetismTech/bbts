@@ -10,10 +10,6 @@
             class="fas fa-database"></i></a>
 @endsection
 
-@section('sub-title')
-    {{-- <span class="text-danger">*</span> Marked are required. --}}
-@endsection
-
 @section('content-grid', null)
 
 @section('content')
@@ -74,8 +70,8 @@
                     <th>Material Unit</th>
                     <th>Description</th>
                     <th>Warranty period</th>
-                    <th>Installation Cost</th>
-                    <th>Transport Cost</th>
+                    {{-- <th>Installation Cost</th> --}}
+                    {{-- <th>Transport Cost</th> --}}
                     <th>Vat</th>
                     <th>Tax</th>
                     <th>Required Date </th>
@@ -95,8 +91,8 @@
                         <td>{{ $purchaseOrderLine->material->unit ?? null }}</td>
                         <td> {{ $purchaseOrderLine->description }}</td>
                         <td> {{ $purchaseOrderLine->warranty_period }}</td>
-                        <td> {{ $purchaseOrderLine->installation_cost }}</td>
-                        <td> {{ $purchaseOrderLine->transport_cost }}</td>
+                        {{-- <td> {{ $purchaseOrderLine->installation_cost }}</td> --}}
+                        {{-- <td> {{ $purchaseOrderLine->transport_cost }}</td> --}}
                         <td> {{ $purchaseOrderLine->vat }}</td>
                         <td> {{ $purchaseOrderLine->tax }}</td>
                         <td> {{ $purchaseOrderLine->required_date }}</td>
@@ -108,7 +104,7 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="15" class="text-right"> Total Amount </td>
+                    <td colspan="13" class="text-right"> Total Amount </td>
                     <td class="text-right">{{ $purchaseOrder->purchaseOrderLines->sum('total_amount') }}</td>
                 </tr>
             </tfoot>

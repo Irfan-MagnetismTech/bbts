@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\CsMaterialSupplier;
 use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
+use Modules\SCM\Http\Requests\PurchaseOrderRequest;
+
+use function Termwind\render;
 
 class PurchaseOrderController extends Controller
 {
@@ -67,63 +70,21 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        $customValidations = Validator::make($request->all(), [
-            'remarks' => 'required|:Please enter a value for the remarks field',
-            'purchase_requisition_id' => 'required|:Please enter a value for the purchase requisition id field',
-            'cs_id' => 'required',
-            'quotation_no.*' => 'required|:Please enter a value for the quotation no field',
-            'material_id.*' => 'required',
-            'description' => 'required',
-            'quantity' => 'required',
-            'warranty_period' => 'required',
-            'unit_price' => 'required',
-            'vat' => 'required',
-            'tax' => 'required',
-            'total_amount' => 'required',
-            'required_date' => 'required',
-            'terms_and_conditions' => 'required',
-        ]);
-
-        if ($customValidations->fails()) {
-            return response()->json($customValidations->errors());
+        $validatedRequest = $this->checkValidation($request);
+        if (!empty($validatedRequest->original)) {
+            return response()->json($validatedRequest->original);
         }
 
         try {
-            $purchaseOrderData = $request->all();
-
-            $purchaseOrderLinesData = [];
-            foreach ($purchaseOrderData['purchase_requisition_id'] as $key => $data) {
-                $purchaseOrderLinesData[] = [
-                    'scm_purchase_requisition_id' => $request->purchase_requisition_id[$key],
-                    'po_composit_key'         => 452,
-                    'cs_id'                      => $request->cs_id[$key],
-                    'quotation_no'               => $request->quotation_no[$key],
-                    'material_id'             => $request->material_id[$key],
-                    'description'             => $request->description[$key],
-                    'quantity'                => $request->quantity[$key],
-                    'warranty_period'         => $request->warranty_period[$key],
-                    'unit_price'              => $request->unit_price[$key],
-                    'vat'                     => $request->vat[$key],
-                    'tax'                     => $request->tax[$key],
-                    'total_amount'            => $request->quantity[$key] * $request->unit_price[$key],
-                    'required_date'           => $request->required_date[$key],
-                ];
-            }
-
-            $poTermsAndConditions = [];
-            foreach ($purchaseOrderData['terms_and_conditions'] as $key => $data) {
-                $poTermsAndConditions[] = [
-                    'particular' => $data
-                ];
-            }
+            $finalData = $this->preparePurchaseOrderData($request);
 
             DB::beginTransaction();
-            $purchaseOrderData['po_no'] = $this->purchaseOrderNo;
-            $purchaseOrderData['created_by'] = auth()->user()->id;
+            $finalData['purchaseOrderData']['po_no'] = $this->purchaseOrderNo;
+            $finalData['purchaseOrderData']['created_by'] = auth()->user()->id;
 
-            $purchaseOrder = PurchaseOrder::create($purchaseOrderData);
-            $purchaseOrder->purchaseOrderLines()->createMany($purchaseOrderLinesData);
-            $purchaseOrder->poTermsAndConditions()->createMany($poTermsAndConditions);
+            $purchaseOrder = PurchaseOrder::create($finalData['purchaseOrderData']);
+            $purchaseOrder->purchaseOrderLines()->createMany($finalData['purchaseOrderLinesData']);
+            $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
 
             DB::commit();
             return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Created Successfully'], 200);
@@ -251,5 +212,65 @@ class PurchaseOrderController extends Controller
                     ->where('supplier_id', $supplierId);
             })
             ->first();
+    }
+
+    private function checkValidation($request)
+    {
+        $customValidations = Validator::make($request->all(), [
+            'date' => 'required',
+            'supplier_id' => 'required',
+            'indent_id' => 'required',
+            'cs_id.*' => 'required',
+            'quotaion_id.*' => 'required',
+            'material_id.*' => 'required',
+        ], [
+            'date.required' => 'Date is required',
+            'supplier_id.required' => 'Supplier is required',
+            'indent_id.required' => 'Indent is required',
+            'cs_id.*.required' => 'CS is required',
+            'quotaion_id.*.required' => 'Quotation is required',
+            'material_id.*.required' => 'Material is required',
+        ]);
+
+        if ($customValidations->fails()) {
+            return response()->json($customValidations->errors());
+        }
+    }
+
+    private function preparePurchaseOrderData($request)
+    {
+        $purchaseOrderData = $request->all();
+
+        $purchaseOrderLinesData = [];
+        foreach ($purchaseOrderData['purchase_requisition_id'] as $key => $data) {
+            $purchaseOrderLinesData[] = [
+                'scm_purchase_requisition_id' => $request->purchase_requisition_id[$key],
+                'po_composit_key'         => 452,
+                'cs_id'                      => $request->cs_id[$key],
+                'quotation_no'               => $request->quotation_no[$key],
+                'material_id'             => $request->material_id[$key],
+                'description'             => $request->description[$key],
+                'quantity'                => $request->quantity[$key],
+                'warranty_period'         => $request->warranty_period[$key],
+                'unit_price'              => $request->unit_price[$key],
+                'vat'                     => $request->vat[$key],
+                'tax'                     => $request->tax[$key],
+                'total_amount'            => $request->quantity[$key] * $request->unit_price[$key],
+                'required_date'           => $request->required_date[$key],
+            ];
+        }
+
+        $poTermsAndConditions = [];
+        foreach ($purchaseOrderData['terms_and_conditions'] as $key => $data) {
+            $poTermsAndConditions[] = [
+                'particular' => $data
+            ];
+        }
+
+        return [
+            'purchaseOrderData' => $purchaseOrderData,
+            'purchaseOrderLinesData' => $purchaseOrderLinesData,
+            'poTermsAndConditions' => $poTermsAndConditions,
+        ];
     }
 }

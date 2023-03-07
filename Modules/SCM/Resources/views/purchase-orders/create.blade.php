@@ -30,6 +30,12 @@
 
 @section('sub-title')
     <span class="text-danger">*</span> Marked are required.
+    <div class="alert alert-danger icons-alert mt-2 mb-2 p-2 d-none" id="errorlist">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="icofont icofont-close-line-circled"></i>
+        </button>
+    </div>
+
 @endsection
 
 @section('content-grid', null)
@@ -65,16 +71,16 @@
         </div>
 
         <div class="form-group col-4 supplier_name">
-            <label for="supplier_name">Supplier Name:</label>
+            <label for="supplier_name">Supplier Name: <span class="text-danger">*</span></label>
             <input type="text" class="form-control supplier_name" aria-describedby="supplier_name" id="supplier_name"
                 name="supplier_name" value="{{ old('supplier_name') ?? (@$purchaseOrder->supplier->name ?? '') }}"
-                placeholder="Search...">
-            <input type="hidden" name="supplier_id" id="supplier_id"
+                placeholder="Search..." required>
+            <input type="hidden" class="supplier_id" name="supplier_id" id="supplier_id"
                 value="{{ old('supplier_id') ?? @$purchaseOrder?->supplier_id }}">
         </div>
 
         <div class="form-group col-4 indent_no">
-            <label for="indent_no">Indent No:</label>
+            <label for="indent_no">Indent No: <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="indent_no" aria-describedby="indent_no" name="indent_no"
                 value="{{ old('indent_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}" placeholder="Search...">
             <input type="hidden" name="indent_id" id="indent_id"
@@ -246,7 +252,7 @@
                 .then(function(response) {
                     if (!response.ok) {
                         // throw new Error('Network response was not ok');
-                        console.log("not okay",response.responseJSON);
+                        console.log("not okay", response.responseJSON);
 
                     }
                     return response.json();
@@ -254,16 +260,19 @@
                 .then(function(response) {
                     // handle success response
                     if (response.status == 'success') {
-                        window.location.href = "{{ route('purchase-orders.index') }}?message=Purchase Order Created Successfully";
+                        window.location.href =
+                            "{{ route('purchase-orders.index') }}?message=Purchase Order Created Successfully";
                     } else {
-                        console.log("done", response)
+                        $('#errorlist').empty();
+                        $('#errorlist').removeClass('d-none');
+
+                        $.each(response, function(key, value) {
+                            $('#errorlist').append('<p>' + value + '</p>');
+                        });
                     }
                 })
                 .catch(function(error) {
-                    // handle errors
-                    // console.error('Error:', error);
-                    console.log("not okay",error);
-
+                    console.log("not okay", error);
                 });
         });
 
