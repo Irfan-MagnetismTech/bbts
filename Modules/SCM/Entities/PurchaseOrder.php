@@ -8,6 +8,7 @@ use Modules\Admin\Entities\User;
 use Modules\SCM\Entities\Indent;
 use Modules\SCM\Entities\Supplier;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\PurchaseOrderLine;
 use Modules\SCM\Entities\PoTermsAndCondition;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
@@ -55,5 +56,10 @@ class PurchaseOrder extends Model
 	public function createdBy()
 	{
 		return $this->belongsTo(User::class, 'created_by');
+	}
+
+	public function branch()
+	{
+		return $this->belongsTo(Branch::class, 'branch_id');
 	}
 }

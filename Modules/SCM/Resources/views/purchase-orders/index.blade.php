@@ -28,7 +28,6 @@
                     <th>SL</th>
                     <th>#Po No.</th>
                     <th>Supplier Name</th>
-                    <th>CS No.</th>
                     <th>Purchaased Date</th>
                     <th>Submitted By</th>
                     {{-- <th>Status</th> --}}
@@ -40,7 +39,6 @@
                     <th>SL</th>
                     <th>#Po No.</th>
                     <th>Supplier Name</th>
-                    <th>CS No.</th>
                     <th>Purchaased Date</th>
                     <th>Submitted By</th>
                     {{-- <th>Status</th> --}}
@@ -53,7 +51,6 @@
                         <td>{{ $loop->iteration }}</td>
                          <td><strong>#{{ $po->po_no }}</strong></td>
                         <td>{{ $po->supplier->name }}</td>
-                        <td>{{ $po?->purchaseOrderLines->first()?->cs?->cs_no }}</td>
                         <td>{{ $po->date }}</td>
                         <td>{{ $po->createdBy->name }}</td>
                         {{-- <td>
@@ -95,6 +92,8 @@
                                     {{-- <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
 
                                     <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
+                                    <a href="{{ route('purchase-orders.show', $po->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+
                                     <a href="{{ route('purchase-orders.edit', $po->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 

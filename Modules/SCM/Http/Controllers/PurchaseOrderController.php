@@ -31,7 +31,7 @@ class PurchaseOrderController extends Controller
      */
     public function index()
     {
-                
+
         $all_pos = PurchaseOrder::query()
             ->with('purchaseOrderLines', 'supplier', 'indent', 'purchaseOrderLines.cs', 'createdBy')
             ->latest()->get();
@@ -69,9 +69,9 @@ class PurchaseOrderController extends Controller
     {
         $customValidations = Validator::make($request->all(), [
             'remarks' => 'required|:Please enter a value for the remarks field',
-            'purchase_requisition_id' => 'required',
+            'purchase_requisition_id' => 'required|:Please enter a value for the purchase requisition id field',
             'cs_id' => 'required',
-            'quotation_no.*' => 'required',
+            'quotation_no.*' => 'required|:Please enter a value for the quotation no field',
             'material_id.*' => 'required',
             'description' => 'required',
             'quantity' => 'required',
@@ -105,7 +105,7 @@ class PurchaseOrderController extends Controller
                     'unit_price'              => $request->unit_price[$key],
                     'vat'                     => $request->vat[$key],
                     'tax'                     => $request->tax[$key],
-                    'total_amount'            => $request->total_amount[$key],
+                    'total_amount'            => $request->quantity[$key] * $request->unit_price[$key],
                     'required_date'           => $request->required_date[$key],
                 ];
             }
@@ -143,9 +143,9 @@ class PurchaseOrderController extends Controller
      */
     public function show(PurchaseOrder $purchaseOrder)
     {
-        return $purchaseOrder->load('purchaseOrderLines');
+        // return $purchaseOrder->load('purchaseOrderLines');
 
-        return view('scm::show');
+        return view('scm::purchase-orders.show', compact('purchaseOrder'));
     }
 
     /**
@@ -193,7 +193,6 @@ class PurchaseOrderController extends Controller
             $purchaseOrder->update($purchaseOrderData);
             $purchaseOrder->purchaseOrderLines()->delete();
             $purchaseOrder->purchaseOrderLines()->createMany($purchaseOrderLinesData);
-            //
         } catch (QueryException $e) {
 
             return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
@@ -207,7 +206,20 @@ class PurchaseOrderController extends Controller
      */
     public function destroy(PurchaseOrder $purchaseOrder)
     {
-        $purchaseOrder->delete();
+        try {
+            DB::beginTransaction();
+
+            $purchaseOrder->purchaseOrderLines()->delete();
+            $purchaseOrder->poTermsAndConditions()->delete();
+            $purchaseOrder->delete();
+
+            DB::commit();
+
+            return redirect()->route('purchase-orders.index')->with('message', 'Purchase Order Deleted Successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('purchase-orders.index')->with('error', $e->getMessage());
+        }
     }
 
     public function searchMaterialByCsAndRequsiition($csId, $reqId)
