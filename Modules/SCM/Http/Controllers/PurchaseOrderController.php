@@ -222,6 +222,7 @@ class PurchaseOrderController extends Controller
             'indent_id' => 'required',
             'cs_id.*' => 'required',
             'quotaion_id.*' => 'required',
+            'matterial_name.*' => 'required',
             'material_id.*' => 'required',
         ], [
             'date.required' => 'Date is required',
@@ -229,6 +230,7 @@ class PurchaseOrderController extends Controller
             'indent_id.required' => 'Indent is required',
             'cs_id.*.required' => 'CS is required',
             'quotaion_id.*.required' => 'Quotation is required',
+            'matterial_name.*.required' => 'Material Name is required',
             'material_id.*.required' => 'Material is required',
         ]);
 
@@ -244,19 +246,19 @@ class PurchaseOrderController extends Controller
         $purchaseOrderLinesData = [];
         foreach ($purchaseOrderData['purchase_requisition_id'] as $key => $data) {
             $purchaseOrderLinesData[] = [
-                'scm_purchase_requisition_id' => $request->purchase_requisition_id[$key],
-                'po_composit_key'         => 452,
-                'cs_id'                      => $request->cs_id[$key],
-                'quotation_no'               => $request->quotation_no[$key],
-                'material_id'             => $request->material_id[$key],
-                'description'             => $request->description[$key],
-                'quantity'                => $request->quantity[$key],
-                'warranty_period'         => $request->warranty_period[$key],
-                'unit_price'              => $request->unit_price[$key],
-                'vat'                     => $request->vat[$key],
-                'tax'                     => $request->tax[$key],
-                'total_amount'            => $request->quantity[$key] * $request->unit_price[$key],
-                'required_date'           => $request->required_date[$key],
+                'scm_purchase_requisition_id' => $request->purchase_requisition_id[$key] ?? null,
+                'po_composit_key'         => 452 ?? null,
+                'cs_id'                      => $request->cs_id[$key] ?? null,
+                'quotation_no'               => $request->quotation_no[$key] ?? null,
+                'material_id'             => $request->material_id[$key] ?? null,
+                'description'             => $request->description[$key] ?? null,
+                'quantity'                => $request->quantity[$key] ?? null,
+                'warranty_period'         => $request->warranty_period[$key] ?? null,
+                'unit_price'              => $request->unit_price[$key] ?? null,
+                'vat'                     => $request->vat[$key] ?? null,
+                'tax'                     => $request->tax[$key] ?? null,
+                'total_amount'            => $request->quantity[$key] * $request->unit_price[$key] ?? null,
+                'required_date'           => $request->required_date[$key] ?? null,
             ];
         }
 
