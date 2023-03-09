@@ -3,11 +3,13 @@
 namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Entities\PurchaseOrderLine;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\Material;
 
 class ScmMrrController extends Controller
 {
@@ -26,8 +28,8 @@ class ScmMrrController extends Controller
      */
     public function create()
     {
-        $vatOrTax = [];
-        return view('scm::mrr.create', compact('vatOrTax'));
+        $brands = Brand::latest()->get();
+        return view('scm::mrr.create', compact('brands'));
     }
 
     /**
@@ -103,9 +105,18 @@ class ScmMrrController extends Controller
     public function getMaterialForPo($po_id)
     {
         $items = PurchaseOrderLine::query()
+            ->with('material')
             ->whereHas('purchaseOrder', function ($item) use ($po_id) {
                 return $item->where('id', $po_id);
-            })->get();
+            })->get()->unique('material_id');
+
+
+        return response()->json($items);
+    }
+
+    public function getUnit($material_id)
+    {
+        $items = Material::find($material_id);
 
 
         return response()->json($items);

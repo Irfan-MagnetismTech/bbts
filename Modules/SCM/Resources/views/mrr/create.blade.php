@@ -21,7 +21,9 @@
         .input-group-info .input-group-addon {
             /*background-color: #04748a!important;*/
         }
+        
     </style>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}"/>
 @endsection
 @section('breadcrumb-button')
     <a href="{{ route('material-receiving-reports.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
@@ -163,7 +165,14 @@
                     </td>
 
                     <td>
-                        <input type="text" name="quatation_no[]" class="form-control quatation_no" autocomplete="off">
+                        <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                            <option value="">Select Brand</option>
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
+                                    {{ $brand->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </td>
 
                     <td>
@@ -225,8 +234,9 @@
 @endsection
 
 @section('script')
+<script src="{{ asset('js/bootstrap-tagsinput.js') }}"></script>
     <script>
-
+        
         /*****/
         const CSRF_TOKEN = "{{ csrf_token() }}";
           
@@ -289,7 +299,14 @@
                             </td>
 
                             <td>
-                                <input type="text" name="brand[]" class="form-control brand" autocomplete="off">  
+                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                    <option value="">Select Brand</option>
+                                    @foreach ($brands as $brand)
+                                        <option value="{{ $brand->id }}">
+                                            {{ $brand->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </td>
 
                             <td>
@@ -297,15 +314,17 @@
                             </td>
 
                             <td>
-                                <input type="text" name="sl_code[]" class="form-control sl_code" autocomplete="off">  
+                                <div class="tags_add_multiple">
+                                    <input class="" type="text" value="Amsterdam,Washington,Sydney" data-role="tagsinput">
+                                </div>
                             </td>
 
                             <td>
-                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off">
+                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
                             </td>
 
                             <td>
-                                <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off">
+                                <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
                             </td>
 
                             <td>
@@ -354,11 +373,32 @@
                         $.each(items, function(key, data) {
                             dropdown.append($(`<option>Select Material</option>`)
                                 .attr('value', data.material_id)//need to be changed later
-                                .text(data.material_id));
+                                .text(data.material.name));
                         })
                     });
                 }
             };
+        $(document).on('change','.material_name',function(){
+            let material_id = $(this).closest('tr').find('.material_name').val();
+            const url = '{{ url('scm/get_unit') }}/' + material_id;
+            var elemmtn = $(this);
+            (elemmtn).closest('tr').find('.final_mark').attr('readonly',true);
+            (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true);
+            $.getJSON(url, function(items) {
+                (elemmtn).closest('tr').find('.unit').val(items.unit)
+                if(items.type == 'Drum'){
+                    (elemmtn).closest('tr').find('.final_mark').attr('readonly',false);
+                    (elemmtn).closest('tr').find('.initial_mark').attr('readonly',false);
+                }
+                console.log(items);
+                        // $.each(items, function(key, data) {
+                        //     dropdown.append($(`<option>Select Material</option>`)
+                        //         .attr('value', data.material_id)//need to be changed later
+                        //         .text(data.material.name));
+                        // })
+                    });
+        })
+           
         })
         
         /*****/
