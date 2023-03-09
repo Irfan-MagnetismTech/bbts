@@ -3,12 +3,19 @@
 namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
+use Modules\SCM\Entities\Cs;
+use Modules\SCM\Entities\Indent;
+use Modules\SCM\Entities\Material;
+use Modules\SCM\Entities\Supplier;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\PurchaseOrder;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 
 class PurchaseOrderLine extends Model
 {
-    protected $fillable = ['purchase_requisition_id', 'material_id', 'po_composit_key', 'quantity', 'warranty_period', 'installation_cost', 'transport_cost', 'unit_price', 'vat', 'tax', 'total_amount', 'required_date'];
+    protected $fillable = [
+        'purchase_order_id', 'scm_purchase_requisition_id', 'po_composit_key', 'cs_id', 'quotation_no', 'material_id', 'description', 'quantity', 'warranty_period', 'installation_cost', 'transport_cost', 'unit_price', 'vat', 'tax', 'total_amount', 'required_date'
+    ];
 
     public function setRequiredDateAttribute($input)
     {
@@ -24,5 +31,30 @@ class PurchaseOrderLine extends Model
     public function purchaseOrder()
     {
         return $this->belongsTo(PurchaseOrder::class);
+    }
+
+    public function scmPurchaseRequisition()
+    {
+        return $this->belongsTo(ScmPurchaseRequisition::class);
+    }
+
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
+    }
+
+    public function cs()
+    {
+        return $this->belongsTo(Cs::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function indent()
+    {
+        return $this->belongsTo(Indent::class);
     }
 }
