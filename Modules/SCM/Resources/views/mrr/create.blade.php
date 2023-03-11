@@ -23,7 +23,7 @@
         }
         
     </style>
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
 @endsection
 @section('breadcrumb-button')
     <a href="{{ route('material-receiving-reports.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
@@ -206,7 +206,7 @@
                             placeholder="Select a required date">
                     </td>
                     <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                        <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                     </td>
                 </tr>
             @endforeach
@@ -235,6 +235,8 @@
 
 @section('script')
 <script src="{{ asset('js/bootstrap-tagsinput.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
+
     <script>
         
         /*****/
@@ -315,7 +317,7 @@
 
                             <td>
                                 <div class="tags_add_multiple">
-                                    <input class="" type="text" value="Amsterdam,Washington,Sydney" data-role="tagsinput">
+                                    <input class="" type="text" name="sl_code[]" value="Amsterdam,Washington,Sydney" data-role="tagsinput">
                                 </div>
                             </td>
 
@@ -338,12 +340,13 @@
                                 <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" >
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                             </td>
                         </tr>
                     `;
             $('#material_requisition tbody').append(row);
-
+            $('input[data-role="tagsinput"]').tagsinput({
+            });
         }
         /* Adds and removes quantity row on click */
         $("#material_requisition")
@@ -352,7 +355,7 @@
                 loadMateaials();
 
             })
-            .on('click', '.remove-calculation-row', function() {
+            .on('click', '.remove-requisition-row', function() {
                 $(this).closest('tr').remove();
             });
 
@@ -372,7 +375,7 @@
                     $.getJSON(url, function(items) {
                         $.each(items, function(key, data) {
                             dropdown.append($(`<option>Select Material</option>`)
-                                .attr('value', data.material_id)//need to be changed later
+                                .attr('value', data.material_id)
                                 .text(data.material.name));
                         })
                     });
@@ -384,21 +387,15 @@
             var elemmtn = $(this);
             (elemmtn).closest('tr').find('.final_mark').attr('readonly',true);
             (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true);
-            $.getJSON(url, function(items) {
-                (elemmtn).closest('tr').find('.unit').val(items.unit)
-                if(items.type == 'Drum'){
+            $.getJSON(url, function(item) {
+                (elemmtn).closest('tr').find('.unit').val(item.unit)
+                if(item.type == 'Drum'){
                     (elemmtn).closest('tr').find('.final_mark').attr('readonly',false);
                     (elemmtn).closest('tr').find('.initial_mark').attr('readonly',false);
-                }
-                console.log(items);
-                        // $.each(items, function(key, data) {
-                        //     dropdown.append($(`<option>Select Material</option>`)
-                        //         .attr('value', data.material_id)//need to be changed later
-                        //         .text(data.material.name));
-                        // })
-                    });
-        })
-           
+                    }
+                });
+            })
+            
         })
         
         /*****/

@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
+use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\PurchaseOrder;
+use Modules\SCM\Http\Requests\MrrRequest;
 use Modules\SCM\Entities\PurchaseOrderLine;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SCM\Entities\Material;
 
 class ScmMrrController extends Controller
 {
@@ -37,9 +38,9 @@ class ScmMrrController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(MrrRequest $request)
     {
-        //
+        dd($request->all());
     }
 
     /**
