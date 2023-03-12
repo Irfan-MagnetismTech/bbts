@@ -17,6 +17,11 @@ class MrrRequest extends FormRequest
     {
         $values = $this->input('sl_code', []);
         $uniqueValues = array_unique(array_map('trim', $values));
+        $combined = array_merge($values);
+        if (array_diff_key($combined, array_unique($combined))) {
+            throw ValidationException::withMessages(['sl_code' => 'The input contains duplicate values.'])
+                ->redirectTo($this->getRedirectUrl());
+        }
         $cities = [];
 
         foreach ($uniqueValues as $item) {
@@ -25,10 +30,9 @@ class MrrRequest extends FormRequest
         $uniqueValues = array_unique($cities);
         if (array_diff_assoc($cities, $uniqueValues)) {
             throw ValidationException::withMessages(['sl_code' => 'The input contains duplicate values.'])
-        ->redirectTo($this->getRedirectUrl());
-
+                ->redirectTo($this->getRedirectUrl());
         }
-    
+        
     }
     /**
      * Get the validation rules that apply to the request.
