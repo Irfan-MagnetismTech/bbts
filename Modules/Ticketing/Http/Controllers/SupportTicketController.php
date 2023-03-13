@@ -2,14 +2,16 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
+use App\Services\SmsService;
 use Illuminate\Http\Request;
+use App\Services\EmailService;
 use Illuminate\Support\Carbon;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\BbtsGlobalService;
 use Illuminate\Database\QueryException;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\ClientDetail;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
 
@@ -85,10 +87,30 @@ class SupportTicketController extends Controller
         ]);
 
        try {
-        DB::transaction(function() use($ticketInfo) {
-            SupportTicket::create($ticketInfo);
+        $supportTicket = DB::transaction(function() use($ticketInfo) {
+            return SupportTicket::create($ticketInfo);
         });
-       
+
+        // Email and SMS Thing
+        
+        $cc = explode(";", str_replace(" ", "", $request->cc));
+        $subject = "[$supportTicket->ticket_no] ".$request->subject;
+        $message = $request->description;
+        $model = 'Modules\Ticketing\Entities\SupportTicket';
+        $receiver = $supportTicket?->clientDetail?->client?->name;
+        
+
+        if($request->mailNotification == 1) {
+            $to = $supportTicket?->clientDetail?->client?->email;
+            $notificationError = (new EmailService())->sendEmail($to, $cc, $receiver, $subject, $message);
+        }
+        if($request->smsNotification == 1) {
+            $to = $supportTicket?->clientDetail?->client?->mobile;
+            $notificationError = (new SmsService())->sendSms($to, $message);
+        }
+
+        //
+
         return redirect()->route('support-tickets.index')->with('message', 'Ticket Opened Successfully');
        } catch (QueryException $e) {
         return back()->withInput()->withErrors($e->getMessage());

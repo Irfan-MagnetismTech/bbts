@@ -59,6 +59,10 @@ Project Repository
     └──username*/task-or-feature
 ```
 
+### Fine Tuning
+`Ticketing.md`
+`ScmIrfan.md`
+
 ### Instruction from GM Mr. Hasan Md Shahriare
 
 -   Complete a task and then merge to main with assistance of Project Leader.
