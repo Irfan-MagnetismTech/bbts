@@ -5,6 +5,7 @@ namespace Modules\SCM\Http\Requests;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\SCM\Entities\PurchaseOrderLine;
 use Illuminate\Validation\ValidationException;
 use Modules\SCM\Entities\ScmMrrSerialCodeLine;
 
@@ -17,24 +18,22 @@ class MrrRequest extends FormRequest
      */
     public function prepareForValidation()
     {
-        // $old = session()->getOldInput();
-        // $data = app('request')->old();
-        // $oldMaterialBrand = $this->getOldInput('material_brand');
-        // dd($oldMaterialBrand);
-        // dump($data);
-        // dump($old);
-        // dump(old());
-        $materialBrand = old('material_brand', 'default_value_if_not_found');
-
-        // Set the old value for material_brand input
-        Session::flashInput(['material_brand' => 'dfsdf']);
-        // Session::flashInput(['material_brand' => 'xcvxcvxcv']);
+        $materials = PurchaseOrderLine::join('materials', 'purchase_order_lines.material_id', '=', 'materials.id')
+        ->where('purchase_order_id', $this->purchase_order_id)
+        ->pluck('materials.name', 'materials.id');
+        $oldInput = ['select_array' => $materials];
+        request()->merge($oldInput);
+        // dd(old());
+        // $oldInput = array_merge(parent::old(), ['irfans_try' => 'asi re vai asi']);
+        // Session::put('_old_input', $oldInput);
+        
         $values = $this->input('sl_code', []);
         $uniqueValues = array_unique(array_map('trim', $values));
         $combined = array_merge($values);
         if (array_diff_key($combined, array_unique($combined))) {
             throw ValidationException::withMessages(['sl_code' => 'The input contains duplicate values.'])
                 ->redirectTo($this->getRedirectUrl());
+                
         }
         $cities = [];
 
@@ -45,11 +44,13 @@ class MrrRequest extends FormRequest
         if (array_diff_assoc($cities, $uniqueValues)) {
             throw ValidationException::withMessages(['sl_code' => 'The input contains duplicate values.'])
                 ->redirectTo($this->getRedirectUrl());
+     
         }
         $data = ScmMrrSerialCodeLine::whereIn('serial_or_drum_code', $cities)->pluck('serial_or_drum_code');
         if (count($data)) {
             throw ValidationException::withMessages(['sl_code' => 'The serial codes' . $data . 'already been taken .'])
                 ->redirectTo($this->getRedirectUrl());
+                
         }
     }
     /**
@@ -85,8 +86,13 @@ class MrrRequest extends FormRequest
     {
         return true;
     }
-    public function getResponse()
+   
+    public function old($key = null, $default = null)
     {
-        dd($this->response);
+        $oldInput = array_merge(parent::old(),['irfans_try' => 'asi re vai asi']);
+
+        Session::flashInput($oldInput);
+        return array_merge(parent::old(),['irfans_try' => 'asi re vai asi']);
     }
+   
 }
