@@ -43,11 +43,11 @@ class CommonApiController extends Controller
     {
         $results = ClientDetail::query()
             ->with('client')
-            ->where('link_name', 'LIKE', '%' . request('search') . '%')
+            ->where('link_id', 'LIKE', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
-                'label' => $item->link_name,
+                'label' => $item->link_id,
                 'client' => $item->client
             ]);
 
@@ -60,10 +60,10 @@ class CommonApiController extends Controller
 
         $client = Client::find($clientId);
         $previousTickets = $client->supportTickets()
-                            ->with(['complainType', 'ticketSource'])
+                            ->with(['supportComplainType', 'ticketSource'])
                             ->limit($limit)
                             ->orderBy('id', 'desc')
-                            ->get(['complain_types_id', 'sources_id', 'status', 'opening_date', 'remarks', 'id', 'ticket_no']);
+                            ->get(['support_complain_type_id', 'ticket_source_id', 'status', 'opening_date', 'remarks', 'id', 'ticket_no']);
 
         return response()->json($previousTickets);
     }

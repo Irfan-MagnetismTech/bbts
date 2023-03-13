@@ -140,7 +140,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket->clientDetails?->client?->name }}" disabled>
+                                value="{{ $supportTicket->clientDetail?->client?->name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="" disabled>
+                            value="{{ $supportTicket->clientDetail?->client?->email }}"disabled>
                         </div>
                     </div>
                 </div>
@@ -285,11 +285,11 @@
                     Handover
                     <i class="fas fa-handshake"></i>
                 </a>
-                <a href="" class="btn btn-success btn-round btn-inline-block py-2">
+                <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->clientDetail->client_id, 'type' => 'email']) }}" class="btn btn-success btn-round btn-inline-block py-2">
                     Send Mail
                     <i class="fas fa-envelope"></i>
                 </a>
-                <a href="" class="btn btn-success btn-round btn-inline-block py-2">
+                <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->clientDetail->client_id, 'type' => 'sms']) }}" class="btn btn-success btn-round btn-inline-block py-2">
                     Send SMS
                     <i class="fas fa-inbox"></i>
                 </a>

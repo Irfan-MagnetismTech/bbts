@@ -105,6 +105,11 @@ class SupportTicketController extends Controller
     {
         $complainTypes = (new BbtsGlobalService())->getComplainTypes();
         $ticketSources = (new BbtsGlobalService())->getTicketSources();
+        $supportTicket->load(['clientDetail' => function($query) {
+            $query->select('id', 'client_id')->with(['client' => function($client) {
+                $client->select('id', 'name', 'email');
+            }]);
+        }]);
         $priorities = config('businessinfo.ticketPriorities');
         return view('ticketing::support-tickets.show', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities'));
     }

@@ -368,7 +368,7 @@
                     tableData += '<td>' + value.ticket_no + '</td>';
                     tableData += '<td>' + value.status + '</td>';
                     tableData += '<td>' + value.opening_date + '</td>';
-                    tableData += '<td>' + value.complain_type.name + '</td>';
+                    tableData += '<td>' + value.support_complain_type.name + '</td>';
                     tableData += '<td>' + value.remarks + '</td>';
                     tableData += '<td><div class="icon-btn"><a href="{{ route('support-tickets.index') }}/'+value.id+'" data-toggle="tooltip" title="Details" class="btn btn-outline-primary" data-original-title="Details"><i class="fas fa-eye"></i></a></div></td>';
                     tableData += '</tr>';
