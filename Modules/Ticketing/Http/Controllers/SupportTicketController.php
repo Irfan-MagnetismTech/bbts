@@ -23,7 +23,9 @@ class SupportTicketController extends Controller
      */
     public function index()
     {
-        $supportTickets = SupportTicket::orderBy('created_at', 'desc')->get();
+        $supportTickets = SupportTicket::query()->orderBy('created_at', 'desc');
+
+        $supportTickets = $supportTickets->get();
         return view('ticketing::support-tickets.index', compact('supportTickets'));
     }
 
