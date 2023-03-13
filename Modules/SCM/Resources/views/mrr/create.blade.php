@@ -37,6 +37,7 @@
 @section('content-grid', null)
 
 @section('content')
+        
     {!! Form::open([
         'url' => $form_url,
         'method' => $form_method,
@@ -47,7 +48,7 @@
        
         <div class="form-group col-3 warehouse_name">
             <label for="select2">Warehouse Name</label>
-                    <select class="form-control select2" id="warehouse_id" name="warehouse_id">
+                    <select class="form-control select2" id="branch_id" name="branch_id">
                         <option value="0" selected>Select Branch</option>
                        
                     </select>
@@ -71,13 +72,13 @@
         <div class="form-group col-3 mrr_no">
             <label for="mrr_no">MRR No:</label>
             <input type="text" class="form-control" id="mrr_no" aria-describedby="mrr_no"
-                name="warehouse_id"
-                value="{{ old('warehouse_id') ?? (@$purchaseOrder->delivery_location ?? '') }}">
+                name="branch_id"
+                value="{{ old('branch_id') ?? (@$purchaseOrder->delivery_location ?? '') }}">
         </div>
         <div class="form-group col-3">
             <label for="applied_date">Applied Date:</label>
-            <input class="form-control applied_date" name="applied_date" aria-describedby="applied_date"
-                value="{{ old('applied_date') ?? (@$purchaseOrder->applied_date ?? '') }}" readonly placeholder="Select a Date">
+            <input class="form-control applied_date" name="date" aria-describedby="applied_date"
+                value="{{ old('applied_date') ?? (@$purchaseOrder->applied_date ?? '') }}" readonly placeholder="Select a Date" id="applied_date">
         </div>
 
         <div class="form-group col-3">
@@ -85,8 +86,8 @@
             <input type="text" class="form-control" id="po_no" aria-describedby="po_no"
                 name="po_no"
                 value="{{ old('delivery_location') ?? (@$purchaseOrder->delivery_location ?? '') }}">
-                <input type="hidden" class="form-control" id="po_id" name="po_id" aria-describedby="po_id"
-                value="{{ old('po_id') ?? ($purchaseOrder->po_id ?? '') }}">
+                <input type="hidden" class="form-control" id="purchase_order_id" name="purchase_order_id" aria-describedby="purchase_order_id"
+                value="{{ old('purchase_order_id') ?? ($purchaseOrder->purchase_order_id ?? '') }}">
         </div>
         <div class="form-group col-3">
             <label for="date">PO Date:</label>
@@ -102,18 +103,16 @@
                 value="{{ old('supplier_id') ?? @$purchaseOrder?->supplier_id }}">
         </div>
 
-        <div class="form-group col-3 chalan_no">
-            <label for="chalan_no">Chalan No:</label>
-            <input type="text" class="form-control" id="chalan_no" aria-describedby="chalan_no" name="chalan_no"
-                value="{{ old('chalan_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}" placeholder="Search...">
-            <input type="hidden" name="chalan_no" id="chalan_no"
-                value="{{ old('chalan_no') ?? @$purchaseOrder?->chalan_no }}">
+        <div class="form-group col-3 challan_no">
+            <label for="challan_no">Chalan No:</label>
+            <input type="text" class="form-control" id="challan_no" aria-describedby="challan_no" name="challan_no"
+                value="{{ old('challan_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}" placeholder="Type Chalan No">
         </div>
 
         <div class="form-group col-3">
             <label for="date">Chalan Date:</label>
-            <input class="form-control chalan_date" name="chalan_date" aria-describedby="chalan_date" id="chalan_date"
-                value="{{ old('chalan_date') ?? (@$purchaseOrder->chalan_date ?? '') }}" placeholder="Select a Date" readonly>
+            <input class="form-control challan_date" name="challan_date" aria-describedby="challan_date" id="challan_date"
+                value="{{ old('challan_date') ?? (@$purchaseOrder->challan_date ?? '') }}" placeholder="Select a Date" readonly>
         </div>
     </div>
 
@@ -259,7 +258,7 @@
                     });
                 },
                 select: function(event, ui) {
-                    $('#po_id').val(ui.item.value);
+                    $('#purchase_order_id').val(ui.item.value);
                     $('#po_no').val(ui.item.label);
                     $('#po_date').val(ui.item.date);
                     $('#supplier_id').val(ui.item.supplier_id);
@@ -274,9 +273,15 @@
                 });
 
             //using form custom function js file
-            fillSelect2Options("{{ route('searchBranch') }}", '#warehouse_id');
+            fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
             //using form custom function js file
-            $('#chalan_date').datepicker({
+            $('#challan_date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
+            $('#applied_date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
                 todayHighlight: true,
@@ -360,9 +365,9 @@
             });
 
             function loadMateaials() {
-                let po_id = $("#po_id").val();
-                if (po_id) {
-                    const url = '{{ url('scm/get_materials_for_po') }}/' + po_id;
+                let purchase_order_id = $("#purchase_order_id").val();
+                if (purchase_order_id) {
+                    const url = '{{ url('scm/get_materials_for_po') }}/' + purchase_order_id;
                     let dropdown;+
 
                     $('.material_name').each(function() {
