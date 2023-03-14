@@ -15,6 +15,8 @@ use Modules\SCM\Entities\PurchaseOrder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\CsMaterialSupplier;
+use Modules\SCM\Entities\Indent;
+use Modules\SCM\Entities\IndentLine;
 use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
 use Modules\SCM\Http\Requests\PurchaseOrderRequest;
 
@@ -84,7 +86,9 @@ class PurchaseOrderController extends Controller
 
             $purchaseOrder = PurchaseOrder::create($finalData['purchaseOrderData']);
             $purchaseOrder->purchaseOrderLines()->createMany($finalData['purchaseOrderLinesData']);
-            $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
+            if (!empty($finalData['poTermsAndConditions'])) {
+                $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
+            }
 
             DB::commit();
             return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Created Successfully'], 200);
@@ -114,7 +118,19 @@ class PurchaseOrderController extends Controller
         $vatOrTax = [
             'Include', 'Exclude'
         ];
-        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax'));
+
+        $indentWiseRequisitions = IndentLine::query()
+            ->with('scmPurchaseRequisition')
+            ->where('indent_id', $purchaseOrder->indent_id)
+            ->get()
+            ->map(
+                fn ($item) =>
+                [
+                    $item->scmPurchaseRequisition->id => $item->scmPurchaseRequisition->prs_no
+                ]
+            );
+
+        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions'));
     }
 
     /**

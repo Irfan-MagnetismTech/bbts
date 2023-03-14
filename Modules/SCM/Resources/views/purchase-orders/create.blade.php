@@ -155,8 +155,13 @@
                     <td class="form-group">
                         <select class="form-control text-center purchase_requisition_id" name="purchase_requisition_id[]">
                             <option value="" readonly selected>Select Requisiiton</option>
-                            <option value="{{ $purchase_requisition_id[$key] }}" selected>
-                                {{ $purchase_requisition[$key] }}</option>
+                            @foreach ($indentWiseRequisitions as $data)
+                                @foreach ($data as $id => $prs_no)
+                                    <option value="{{ $id }}"
+                                        {{ $id == $purchase_requisition_id[$key] ? 'selected' : '' }}>
+                                        {{ $prs_no }}</option>
+                                @endforeach
+                            @endforeach
                         </select>
                     </td>
 
@@ -279,6 +284,7 @@
 
 @section('script')
     <script>
+        $('.select2').select2();
         $('.purchase_date').datepicker({
             format: "dd-mm-yyyy",
             autoclose: true,
@@ -576,9 +582,9 @@
         /* Adds and removes quantity row on click */
         $("#material_requisition")
             .on('click', '.add-requisition-row', () => {
+                // $('.purchase_requisition_id').last().html(req_options);
                 appendCalculationRow();
-                $('.purchase_requisition_id').last().html(req_options);
-
+                $('.select2').select2();
             })
             .on('click', '.remove-calculation-row', function() {
                 $(this).closest('tr').remove();
