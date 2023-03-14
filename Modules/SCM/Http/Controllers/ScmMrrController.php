@@ -46,10 +46,7 @@ class ScmMrrController extends Controller
     public function store(MrrRequest $request)
     {
         $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
-        $data = PurchaseOrder::with('purchaseOrderLines')->findOrFail($request->purchase_order_id);
-        dd($data);
         try {
-
             $lastMRSId = ScmMrr::latest()->first();
             if ($lastMRSId) {
                 $requestData['mrr_no'] = 'mrr-' . now()->format('Y') . '-' . $lastMRSId->id + 1;
@@ -74,19 +71,17 @@ class ScmMrrController extends Controller
                 ];
                 $serialCode[] = explode(',', $request->sl_code[$key]);
             }
-            $sdas = $purchaseRequisition->scmMrrLines()->createMany($requisitionDetails);
+            $MrrDetail = $purchaseRequisition->scmMrrLines()->createMany($requisitionDetails);
 
-            foreach ($sdas as $key => $value) {
+            foreach ($MrrDetail as $key => $value) {
                 $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) {
                     return ['serial_or_drum_code' => $serial];
                 }, $serialCode[$key]));
             }
-            // dd($sdas);
-            return redirect()->route('purchase-requisitions.index')->with('message', 'Data has been inserted successfully');
-        } catch (QueryException $e) {
-            dd($e->getMessage());
 
-            return redirect()->route('purchase-requisitions.create')->withInput()->withErrors($e->getMessage());
+            return redirect()->route('material-receiving-reports.index')->with('message', 'Data has been inserted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('material-receiving-reports.create')->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -165,8 +160,6 @@ class ScmMrrController extends Controller
     public function getUnit($material_id)
     {
         $items = Material::find($material_id);
-
-
         return response()->json($items);
     }
 }

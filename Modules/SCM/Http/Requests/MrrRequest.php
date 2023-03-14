@@ -23,10 +23,7 @@ class MrrRequest extends FormRequest
         ->pluck('materials.name', 'materials.id');
         $oldInput = ['select_array' => $materials];
         request()->merge($oldInput);
-        // dd(old());
-        // $oldInput = array_merge(parent::old(), ['irfans_try' => 'asi re vai asi']);
-        // Session::put('_old_input', $oldInput);
-        
+                
         $values = $this->input('sl_code', []);
         $uniqueValues = array_unique(array_map('trim', $values));
         $combined = array_merge($values);

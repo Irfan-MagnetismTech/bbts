@@ -69,12 +69,6 @@
         <div class="form-group col-8">
         </div>
         @endif
-        <div class="form-group col-3 mrr_no">
-            <label for="mrr_no">MRR No:</label>
-            <input type="text" class="form-control" id="mrr_no" aria-describedby="mrr_no"
-                name="branch_id"
-                value="{{ old('branch_id') ?? (@$purchaseOrder->delivery_location ?? '') }}">
-        </div>
         <div class="form-group col-3">
             <label for="applied_date">Applied Date:</label>
             <input class="form-control applied_date" name="date" aria-describedby="applied_date"
@@ -299,12 +293,8 @@
                                     <option value="" readonly selected>Select Material</option>
                                    
                                 </select>
+                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
                             </td>
-
-                            <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off">  
-                            </td>
-
                             <td>
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
                                     <option value="">Select Brand</option>
@@ -333,13 +323,11 @@
                             <td>
                                 <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
                             </td>
-
-                            <td>
-                                <input type="text" name="item_code[]" class="form-control item_code" autocomplete="off"> 
-                            </td>
-                            
                             <td>
                                 <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="description[]" class="form-control description" autocomplete="off">  
                             </td>
                             <td>
                                 <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" >
@@ -394,6 +382,8 @@
             (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true);
             $.getJSON(url, function(item) {
                 (elemmtn).closest('tr').find('.unit').val(item.unit)
+                (elemmtn).closest('tr').find('.item_code').val(item.code)
+                console.log(item);
                 if(item.type == 'Drum'){
                     (elemmtn).closest('tr').find('.final_mark').attr('readonly',false);
                     (elemmtn).closest('tr').find('.initial_mark').attr('readonly',false);
