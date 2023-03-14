@@ -88,12 +88,9 @@ class PurchaseOrderController extends Controller
 
             DB::commit();
             return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Created Successfully'], 200);
-
-            // return redirect()->route('purchase-orders.index')->with('success', 'Purchase Order Created Successfully');
         } catch (QueryException $e) {
             DB::rollBack();
             return response()->json($e->getMessage(), 500);
-            // return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -104,8 +101,6 @@ class PurchaseOrderController extends Controller
      */
     public function show(PurchaseOrder $purchaseOrder)
     {
-        // return $purchaseOrder->load('purchaseOrderLines');
-
         return view('scm::purchase-orders.show', compact('purchaseOrder'));
     }
 
@@ -116,9 +111,10 @@ class PurchaseOrderController extends Controller
      */
     public function edit(PurchaseOrder $purchaseOrder)
     {
-        return $purchaseOrder->load('purchaseOrderLines');
-
-        return view('scm::edit');
+        $vatOrTax = [
+            'Include', 'Exclude'
+        ];
+        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax'));
     }
 
     /**
@@ -244,10 +240,10 @@ class PurchaseOrderController extends Controller
         $purchaseOrderData = $request->all();
 
         $purchaseOrderLinesData = [];
-        foreach ($purchaseOrderData['purchase_requisition_id'] as $key => $data) {
+        foreach ($purchaseOrderData['purchase_requisition_id'] as $key => $value) {
             $purchaseOrderLinesData[] = [
                 'scm_purchase_requisition_id' => $request->purchase_requisition_id[$key] ?? null,
-                'po_composit_key'         => 452 ?? null,
+                'po_composit_key'         => $this->purchaseOrderNo . '-' . $key ?? null,
                 'cs_id'                      => $request->cs_id[$key] ?? null,
                 'quotation_no'               => $request->quotation_no[$key] ?? null,
                 'material_id'             => $request->material_id[$key] ?? null,
@@ -263,9 +259,9 @@ class PurchaseOrderController extends Controller
         }
 
         $poTermsAndConditions = [];
-        foreach ($purchaseOrderData['terms_and_conditions'] as $key => $data) {
+        foreach ($purchaseOrderData['terms_and_conditions'] as $key => $value) {
             $poTermsAndConditions[] = [
-                'particular' => $data
+                'particular' => $value
             ];
         }
 
