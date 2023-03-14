@@ -123,32 +123,32 @@
             @php
                 $purchase_requisition = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
                 $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scm_purchase_requisition_id') : []);
-                
+
                 $cs_no = old('cs_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('cs.cs_no') : []);
                 $cs_id = old('cs_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('cs.id') : []);
-                
+
                 $quotation_no = old('quotation_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quotation_no') : []);
-                
+
                 $material_name = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.name') : []);
                 $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.id') : []);
-                
+
                 $description = old('description', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('description') : []);
-                
+
                 $unit = old('unit', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.unit') : []);
-                
+
                 $quantity = old('quantity', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quantity') : []);
-                
+
                 $warranty_period = old('warranty_period', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('warranty_period') : []);
-                
+
                 $unit_price = old('unit_price', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('unit_price') : []);
                 $vat = old('vat', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('vat') : []);
-                
+
                 $tax = old('tax', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('tax') : []);
-                
+
                 $total_amount = old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('total_amount') : []);
-                
+
                 $required_date = old('required_date', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('required_date') : []);
-                
+
             @endphp
             @foreach ($purchase_requisition as $key => $value)
                 <tr>
@@ -287,7 +287,7 @@
             showOtherMonths: true
         }).datepicker("setDate", new Date());
 
-        //submit form with ajax and validation response 
+        //submit form with ajax and validation response
         document.querySelector('.custom-form').addEventListener('submit', function(e) {
             e.preventDefault(); // prevent default form submit
             var form_data = new FormData(this); // get form data
@@ -450,12 +450,11 @@
             appendCalculationRow();
         @endif
         function appendCalculationRow() {
-            var type = $("input[name=type]:checked").val()
             let row = `<tr>
                             <td class="form-group">
                                 <select class="form-control purchase_requisition_id" name="purchase_requisition_id[]">
                                     <option value="" readonly selected>Select Requisiiton</option>
-                                   
+
                                 </select>
                             </td>
 
@@ -467,18 +466,18 @@
                             </td>
 
                             <td>
-                                <input type="text" name="quotation_no[]" class="form-control quotation_no" autocomplete="off">  
+                                <input type="text" name="quotation_no[]" class="form-control quotation_no" autocomplete="off">
                             </td>
 
                             <td>
                                 <select class="form-control material_name select2" name="material_id[]">
                                     <option value="" readonly selected>Select Material</option>
-                                   
+
                                 </select>
                             </td>
 
                             <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off">  
+                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
                             </td>
 
                             <td>
@@ -490,7 +489,7 @@
                             </td>
 
                             <td>
-                                <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off"> 
+                                <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off">
                             </td>
 
                             <td>
@@ -514,7 +513,7 @@
                                     @endforeach
                                 </select>
                             </td>
-                            
+
                             <td>
                                 <input name="total_amount[]" class="form-control total_amount" autocomplete="off" readonly>
                             </td>
@@ -527,7 +526,7 @@
                         </tr>
                     `;
             $('#material_requisition tbody').append(row);
-
+            getMaterial(this)
             $('.select2').select2();
         }
 
@@ -595,9 +594,9 @@
                 const url = '{{ url('/scm/search-material-by-cs-requisition') }}/' + cs_id + '/' + purchase_requisition_id;
                 let dropdown;
 
-                $('.material_name').each(function() {
-                    dropdown = $(this).closest('tr').find('.material_name');
-                });
+                dropdown = $(e).closest('tr').find('.material_name');
+                // $('.material_name').each(function() {
+                // });
                 dropdown.empty();
                 dropdown.append('<option selected disabled>Select Material</option>');
                 dropdown.prop('selectedIndex', 0);
