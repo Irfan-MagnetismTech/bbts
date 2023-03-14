@@ -123,32 +123,32 @@
             @php
                 $purchase_requisition = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
                 $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scm_purchase_requisition_id') : []);
-
+                
                 $cs_no = old('cs_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('cs.cs_no') : []);
                 $cs_id = old('cs_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('cs.id') : []);
-
+                
                 $quotation_no = old('quotation_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quotation_no') : []);
-
+                
                 $material_name = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.name') : []);
                 $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.id') : []);
-
+                
                 $description = old('description', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('description') : []);
-
+                
                 $unit = old('unit', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.unit') : []);
-
+                
                 $quantity = old('quantity', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quantity') : []);
-
+                
                 $warranty_period = old('warranty_period', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('warranty_period') : []);
-
+                
                 $unit_price = old('unit_price', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('unit_price') : []);
                 $vat = old('vat', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('vat') : []);
-
+                
                 $tax = old('tax', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('tax') : []);
-
+                
                 $total_amount = old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('total_amount') : []);
-
+                
                 $required_date = old('required_date', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('required_date') : []);
-
+                
             @endphp
             @foreach ($purchase_requisition as $key => $value)
                 <tr>
@@ -263,7 +263,6 @@
             <div class="input-group">
                 <input type="text" name="terms_and_conditions[]" class="form-control terms_and_conditions"
                     autocomplete="off">
-                <i class="btn btn-primary btn-sm fa fa-plus add-terms-row"></i>
             </div>
         @endif
     </div>
