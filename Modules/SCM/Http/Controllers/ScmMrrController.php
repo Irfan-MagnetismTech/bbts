@@ -79,9 +79,9 @@ class ScmMrrController extends Controller
                 }, $serialCode[$key]));
             }
 
-            return redirect()->route('material-receiving-reports.index')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('material-receive.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
-            return redirect()->route('material-receiving-reports.create')->withInput()->withErrors($e->getMessage());
+            return redirect()->route('material-receive.create')->withInput()->withErrors($e->getMessage());
         }
     }
 

@@ -4,7 +4,7 @@
 @php
     $is_old = old('supplier_name') ? true : false;
     $form_heading = !empty($purchase_order->id) ? 'Update' : 'Add';
-    $form_url = !empty($purchase_order->id) ? route('material-receiving-reports.update', $purchase_order->id) : route('material-receiving-reports.store');
+    $form_url = !empty($purchase_order->id) ? route('material-receive.update', $purchase_order->id) : route('material-receive.store');
     $form_method = !empty($purchase_order->id) ? 'PUT' : 'POST';
 @endphp
 
@@ -26,7 +26,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('material-receiving-reports.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('material-receive.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -114,15 +114,17 @@
         <thead>
             <tr>
                 <th>Material Name</th>
-                <th>Description</th>
                 <th>Brand</th>
                 <th>Model</th>
+                <th>Description</th>
                 <th>Serial/Drum Code <br/> No</th>
                 <th>Initial Mark</th>
                 <th>Final Mark</th>
-                <th>Item Code</th>
+                <th>Warranty Period</th>
                 <th>Unit</th>
                 <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Amount</th>
                 <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
             </tr>
         </thead>
@@ -204,7 +206,7 @@
                 </tr>
             @endforeach
             <tr>
-                <td colspan="9" class="text-right">Total Amount</td>
+                <td colspan="11" class="text-right">Total Amount</td>
                 <td>
                     <input type="text" name="total_amount" class="form-control total_amount" autocomplete="off"
                         value="{{ old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->total_amount : 0) }}"
@@ -283,8 +285,8 @@
             }).datepicker("setDate", new Date());
 
             @if (empty($purchaseOrder) && empty(old('material_name')))
-            appendCalculationRow();
-        @endif
+                appendCalculationRow();
+            @endif
         function appendCalculationRow() {
             
             let row = `<tr>
@@ -309,10 +311,12 @@
                             <td>
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off"> 
                             </td>
-
+                            <td>
+                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
+                            </td>
                             <td>
                                 <div class="tags_add_multiple">
-                                    <input class="" type="text" name="sl_code[]" value="Amsterdam,Washington,Sydney" data-role="tagsinput">
+                                    <input class="" type="text" name="sl_code[]" value="111,112,113" data-role="tagsinput">
                                 </div>
                             </td>
 
@@ -323,14 +327,22 @@
                             <td>
                                 <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
                             </td>
+                            
+                            <td>
+                                <input type="number" name="warranty_period[]" class="form-control warranty_period" autocomplete="off">
+                            </td>
+                            
                             <td>
                                 <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off">  
+                                <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" >
                             </td>
                             <td>
-                                <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" >
+                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly>
+                            </td>
+                            <td>
+                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
@@ -346,7 +358,6 @@
             .on('click', '.add-requisition-row', () => {
                 appendCalculationRow();
                 loadMateaials();
-
             })
             .on('click', '.remove-requisition-row', function() {
                 $(this).closest('tr').remove();
@@ -356,7 +367,7 @@
                 let purchase_order_id = $("#purchase_order_id").val();
                 if (purchase_order_id) {
                     const url = '{{ url('scm/get_materials_for_po') }}/' + purchase_order_id;
-                    let dropdown;+
+                    let dropdown;
 
                     $('.material_name').each(function() {
                         dropdown = $(this).closest('tr').find('.material_name');
@@ -369,7 +380,7 @@
                         $.each(items, function(key, data) {
                             dropdown.append($(`<option>Select Material</option>`)
                                 .attr('value', data.material_id)
-                                .text(data.material.name));
+                                .text(data.material.name + " - " + data.material.code));
                         })
                     });
                 }
