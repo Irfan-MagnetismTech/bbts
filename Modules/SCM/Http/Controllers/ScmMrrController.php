@@ -58,16 +58,18 @@ class ScmMrrController extends Controller
 
             $requisitionDetails = [];
             $serialCode = [];
-            foreach ($request->material_name as $key => $data) {
+            foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
-                    'material_id' => $request->material_name[$key],
-                    'item_code' => $request->description[$key],
+                    'material_id' => $request->material_id[$key],
+                    'description' => $request->description[$key],
                     'brand_id' => $request->brand_id[$key],
                     'model' => $request->model[$key],
                     'quantity' => $request->quantity[$key],
                     'initial_mark' => $request->initial_mark[$key],
                     'final_mark' => $request->final_mark[$key],
                     'item_code' => $request->item_code[$key],
+                    'warranty_period' => $request->warranty_period[$key],
+                    'unit_price' => $request->unit_price[$key],
                 ];
                 $serialCode[] = explode(',', $request->sl_code[$key]);
             }
@@ -100,9 +102,15 @@ class ScmMrrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ScmMrr $materialReceive)
     {
-        return view('scm::edit');
+        $material_list = PurchaseOrderLine::query()
+            ->with('material')
+            ->where('purchase_order_id', $materialReceive->purchase_order_id)
+            ->get()
+            ->pluck('material_id', 'material.materialNameWithCode');
+        $brands = Brand::latest()->get();
+        return view('scm::mrr.create', compact('brands', 'material_list', 'materialReceive'));
     }
 
     /**

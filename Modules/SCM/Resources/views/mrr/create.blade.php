@@ -54,12 +54,12 @@
                     </select>
         </div>
       
-        @if (!empty($purchaseOrder->id))
+        @if (!empty($materialReceive->id))
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <label class="input-group-addon" for="po_no">PO No <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="po_no" name="po_no" aria-describedby="po_no"
-                    value="{{ old('po_no') ?? ($purchaseOrder->po_no ?? '') }}">
+                    value="{{ old('po_no') ?? ($materialReceive->po_no ?? '') }}">
                
             </div>
         </div>
@@ -72,41 +72,41 @@
         <div class="form-group col-3">
             <label for="applied_date">Applied Date:</label>
             <input class="form-control applied_date" name="date" aria-describedby="applied_date"
-                value="{{ old('applied_date') ?? (@$purchaseOrder->applied_date ?? '') }}" readonly placeholder="Select a Date" id="applied_date">
+                value="{{ old('applied_date') ?? (@$materialReceive->applied_date ?? '') }}" readonly placeholder="Select a Date" id="applied_date">
         </div>
 
         <div class="form-group col-3">
             <label for="po_no">PO No:</label>
             <input type="text" class="form-control" id="po_no" aria-describedby="po_no"
                 name="po_no"
-                value="{{ old('delivery_location') ?? (@$purchaseOrder->delivery_location ?? '') }}">
+                value="{{ old('delivery_location') ?? (@$materialReceive->purchaseOrder->po_no ?? '') }}">
                 <input type="hidden" class="form-control" id="purchase_order_id" name="purchase_order_id" aria-describedby="purchase_order_id"
-                value="{{ old('purchase_order_id') ?? ($purchaseOrder->purchase_order_id ?? '') }}">
+                value="{{ old('purchase_order_id') ?? ($materialReceive->purchase_order_id ?? '') }}">
         </div>
         <div class="form-group col-3">
             <label for="date">PO Date:</label>
             <input class="form-control po_date" name="po_date" aria-describedby="po_date" id="po_date"
-                value="{{ old('po_date') ?? (@$purchaseOrder->po_date ?? '') }}" readonly placeholder="PO Date">
+                value="{{ old('po_date') ?? (@$materialReceive->po_date ?? '') }}" readonly placeholder="PO Date">
         </div>
         <div class="form-group col-3 supplier_name">
             <label for="supplier_name">Supplier Name:</label>
             <input type="text" class="form-control supplier_name" aria-describedby="supplier_name" id="supplier_name"
-                name="supplier_name" value="{{ old('supplier_name') ?? (@$purchaseOrder->supplier->name ?? '') }}"
+                name="supplier_name" value="{{ old('supplier_name') ?? (@$materialReceive->supplier->name ?? '') }}"
                 placeholder="Supplier Name" readonly>
             <input type="hidden" name="supplier_id" id="supplier_id"
-                value="{{ old('supplier_id') ?? @$purchaseOrder?->supplier_id }}">
+                value="{{ old('supplier_id') ?? @$materialReceive?->supplier_id }}">
         </div>
 
         <div class="form-group col-3 challan_no">
             <label for="challan_no">Chalan No:</label>
             <input type="text" class="form-control" id="challan_no" aria-describedby="challan_no" name="challan_no"
-                value="{{ old('challan_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}" placeholder="Type Chalan No">
+                value="{{ old('challan_no') ?? (@$materialReceive->indent->indent_no ?? '') }}" placeholder="Type Chalan No">
         </div>
 
         <div class="form-group col-3">
             <label for="date">Chalan Date:</label>
             <input class="form-control challan_date" name="challan_date" aria-describedby="challan_date" id="challan_date"
-                value="{{ old('challan_date') ?? (@$purchaseOrder->challan_date ?? '') }}" placeholder="Select a Date" readonly>
+                value="{{ old('challan_date') ?? (@$materialReceive->challan_date ?? '') }}" placeholder="Select a Date" readonly>
         </div>
     </div>
 
@@ -131,17 +131,17 @@
         <tbody></tbody>
         <tfoot>
             @php
-                $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisition->pluck('prs_no') : []);
-                $material_name_with_code = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
-                $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material_id') : []);
-                $item_code = old('item_code', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material.code') : []);
-                $unit = old('unit', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('material.unit') : []);
-                $brand_id = old('brand_id', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('brand_id') : []);
-                $quantity = old('quantity', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('quantity') : []);
-                $unit_price = old('unit_price', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('unit_price') : []);
-                $total_amount = old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('total_amount') : []);
-                $model = old('model', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('model') : []);
-                $purpose = old('purpose', !empty($purchaseOrder) ? $purchaseOrder->scmPurchaseRequisitionDetails->pluck('purpose') : []);
+                $purchase_requisition_id = old('purchase_requisition_id', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisition->pluck('prs_no') : []);
+                $material_name_with_code = old('material_name', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
+                $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('material_id') : []);
+                $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('material.code') : []);
+                $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('material.unit') : []);
+                $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('brand_id') : []);
+                $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('quantity') : []);
+                $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('unit_price') : []);
+                $total_amount = old('total_amount', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('total_amount') : []);
+                $model = old('model', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('model') : []);
+                $purpose = old('purpose', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('purpose') : []);
             @endphp
             @foreach ($material_name_with_code as $key => $requisitionDetail)
                 <tr>
@@ -154,9 +154,9 @@
 
                     <td>
                         <input type="text" class="form-control cs_no" aria-describedby="cs_no" name="cs_no[]"
-                            value="{{ old('cs_no') ?? (@$purchaseOrder->client->name ?? '') }}" placeholder="Search...">
+                            value="{{ old('cs_no') ?? (@$materialReceive->client->name ?? '') }}" placeholder="Search...">
                         <input type="hidden" name="cs_id[]" class="form-control cs_id"
-                            value="{{ old('cs_id') ?? @$purchaseOrder?->client->id }}">
+                            value="{{ old('cs_id') ?? @$materialReceive?->client->id }}">
                     </td>
 
                     <td>
@@ -197,7 +197,7 @@
                     </td>
                     <td>
                         <input class="form-control quantity" name="quantity[]" aria-describedby="date"
-                            value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}"
+                            value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}"
                             placeholder="Select a required date">
                     </td>
                     <td>
@@ -209,7 +209,7 @@
                 <td colspan="11" class="text-right">Total Amount</td>
                 <td>
                     <input type="text" name="total_amount" class="form-control total_amount" autocomplete="off"
-                        value="{{ old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->total_amount : 0) }}"
+                        value="{{ old('total_amount', !empty($materialReceive) ? $materialReceive->total_amount : 0) }}"
                         readonly>
                 </td>
             </tr>
@@ -284,14 +284,14 @@
                 showOtherMonths: true
             }).datepicker("setDate", new Date());
 
-            @if (empty($purchaseOrder) && empty(old('material_name')))
+            @if (empty($materialReceive) && empty(old('material_name')))
                 appendCalculationRow();
             @endif
         function appendCalculationRow() {
             
             let row = `<tr>
                             <td class="form-group">
-                                <select class="form-control material_name" name="material_name[]">
+                                <select class="form-control material_name" name="material_id[]">
                                     <option value="" readonly selected>Select Material</option>
                                    
                                 </select>
@@ -336,10 +336,10 @@
                                 <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" >
+                                <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
                             </td>
                             <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly>
+                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10">
                             </td>
                             <td>
                                 <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
@@ -392,8 +392,8 @@
             (elemmtn).closest('tr').find('.final_mark').attr('readonly',true);
             (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true);
             $.getJSON(url, function(item) {
-                (elemmtn).closest('tr').find('.unit').val(item.unit)
-                (elemmtn).closest('tr').find('.item_code').val(item.code)
+                (elemmtn).closest('tr').find('.unit').val(item.unit);
+                (elemmtn).closest('tr').find('.item_code').val(item.code);
                 console.log(item);
                 if(item.type == 'Drum'){
                     (elemmtn).closest('tr').find('.final_mark').attr('readonly',false);
@@ -401,6 +401,26 @@
                     }
                 });
             })
+
+            $(document).on('keyup', '.unit_price, .quantity', function() {
+            var unit_price = $(this).closest('tr').find('.unit_price').val();
+            var quantity = $(this).closest('tr').find('.quantity').val();
+            var amount = unit_price * quantity;
+            $(this).closest('tr').find('.amount').val(amount);
+            calculateTotalAmount()
+
+            //function for calculate total amount from all sub total amount
+            function calculateTotalAmount() {
+                var final_total_amount = 0;
+                $('.amount').each(function() {
+                    final_total_amount += parseFloat($(this).val());
+                });
+                $('.total_amount').val(final_total_amount.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+            }
+        });
             
         })
         
