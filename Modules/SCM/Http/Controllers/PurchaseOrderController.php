@@ -130,7 +130,11 @@ class PurchaseOrderController extends Controller
                 ]
             );
 
-        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions'));
+            foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
+                $materials[] = $this->searchMaterialByCsAndRequsiition($value->cs_id, $value->scm_purchase_requisition_id);
+            }
+
+        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions', 'materials'));
     }
 
     /**
@@ -197,7 +201,7 @@ class PurchaseOrderController extends Controller
 
     public function searchMaterialByCsAndRequsiition($csId, $reqId)
     {
-        return CsMaterial::with('material')
+        return CsMaterial::with('material', 'brand')
             ->orderBy('id')
             ->where('cs_id', $csId)
             ->whereIn('material_id', function ($query) use ($reqId) {
@@ -212,6 +216,9 @@ class PurchaseOrderController extends Controller
     public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
     {
         return CsMaterialSupplier::query()
+            ->with('csMaterial.brand', function ($query) {
+                $query->select('id', 'name');
+            })
             ->with('csMaterial.material', function ($query) {
                 $query->select('id', 'name', 'unit');
             })
@@ -223,7 +230,7 @@ class PurchaseOrderController extends Controller
                 $query->where('cs_id', $csId)
                     ->where('supplier_id', $supplierId);
             })
-            ->first();
+            ->get();
     }
 
     private function checkValidation($request)

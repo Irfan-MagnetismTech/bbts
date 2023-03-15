@@ -106,6 +106,7 @@
                 <th>CS No.</th>
                 <th>Quotation No</th>
                 <th> Material Name</th>
+                <th>Brand</th>
                 <th>Description</th>
                 <th>Unit</th>
                 <th> Quantity </th>
@@ -131,6 +132,9 @@
                 
                 $material_name = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.name') : []);
                 $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.id') : []);
+                
+                $brand = old('brand', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand') : []);
+                $brand_id = old('brand_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand_id') : []);
                 
                 $description = old('description', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('description') : []);
                 
@@ -180,7 +184,18 @@
                     <td>
                         <select class="form-control text-center material_name select2" name="material_name[]">
                             <option value="" readonly selected>Select Material</option>
-                            <option value="{{ $material_id[$key] }}" selected>{{ $material_name[$key] }}</option>
+                            @foreach ($materials[$key] as $material)
+                                <option value="{{ $material->material_id }}"
+                                    {{ $material->material_id == $material_id[$key] ? 'selected' : '' }}>
+                                    {{ $material->material->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+
+                    <td>
+                        <select class="form-control text-center brand_name select2" name="brand[]">
+                            <option value="" readonly selected>Select Brand</option>
+                            <option value="{{ $brand_id[$key] }}" selected>{{ $brand[$key] }}</option>
                         </select>
                     </td>
 
@@ -482,6 +497,13 @@
                             </td>
 
                             <td>
+                                <select class="form-control brand_name select2" name="brand_id[]">
+                                    <option value="" readonly selected>Select Material</option>
+
+                                </select>
+                            </td>
+
+                            <td>
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off">
                             </td>
 
@@ -579,6 +601,19 @@
             getMaterial(this)
         })
 
+        $(document).on('select2:open', '.material_name', function() {
+            // Attach mouseover event to options inside Select2 dropdown
+            $('.select2-results__options').on('mouseover', '.select2-results__option', function() {
+                //call getMaterial function
+                getMaterial(this)
+            });
+        });
+
+        $(document).on('select2:close', '.material_name', function() {
+            // Remove mouseover event from options inside Select2 dropdown
+            $('.select2-results__options').off('mouseover', '.select2-results__option');
+        });
+
         /* Adds and removes quantity row on click */
         $("#material_requisition")
             .on('click', '.add-requisition-row', () => {
@@ -630,16 +665,42 @@
             const url = '{{ url('/scm/search-material-price-by-cs-requisition') }}/' + cs_id + '/' + supplier_id +
                 '/' + material_id;
 
-            $.getJSON(url, function(item) {
-                console.log(item);
+            let dropdown;
+
+            dropdown = $(this).closest('tr').find('.brand_name');
+            // $('.material_name').each(function() {
+            // });
+            dropdown.empty();
+            dropdown.append('<option selected disabled>Select Material</option>');
+            dropdown.prop('selectedIndex', 0);
+
+            $.getJSON(url, function(items) {
+
+                $.each(items, function(key, material) {
+                    dropdown.append($('<option></option>')
+                        .attr('value', material.cs_material.brand.id)
+                        .attr('data-price', material.price)
+                        .attr('data-unit', material.cs_material.material.unit)
+                        .text(material.cs_material.brand.name))
+                })
+
+                console.log(items);
                 //check if item is empty or not
-                if (item === null) {
+                if (items === null) {
                     alert('No price found for this material');
                     return false;
                 }
-                $(selectedIndex).closest('tr').find('.unit').val(item.cs_material.material.unit);
-                $(selectedIndex).closest('tr').find('.unit_price').val(item.price);
+                // $(selectedIndex).closest('tr').find('.unit').val(item.cs_material.material.unit);
+                // $(selectedIndex).closest('tr').find('.unit_price').val(item.price);
             });
+        })
+
+        $(document).on('change', '.brand_name', function() {
+            let price = $(this).find(':selected').data('price');
+            let unit = $(this).find(':selected').data('unit');
+
+            $(this).closest('tr').find('.unit').val(unit);
+            $(this).closest('tr').find('.unit_price').val(price);
         })
     </script>
 @endsection
