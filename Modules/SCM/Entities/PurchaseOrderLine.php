@@ -7,6 +7,7 @@ use Modules\SCM\Entities\Cs;
 use Modules\SCM\Entities\Indent;
 use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\Supplier;
+use Modules\SCM\Entities\PoMaterial;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
@@ -56,5 +57,10 @@ class PurchaseOrderLine extends Model
     public function indent()
     {
         return $this->belongsTo(Indent::class);
+    }
+
+    public function poMaterial()
+    {
+        return $this->belongsTo(PoMaterial::class, 'po_composit_key', 'po_composit_key');
     }
 }

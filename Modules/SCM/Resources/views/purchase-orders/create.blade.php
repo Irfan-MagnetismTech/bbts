@@ -195,7 +195,11 @@
                     <td>
                         <select class="form-control text-center brand_name select2" name="brand[]">
                             <option value="" readonly selected>Select Brand</option>
-                            <option value="{{ $brand_id[$key] }}" selected>{{ $brand[$key] }}</option>
+                            @foreach ($materials[$key] as $brand)
+                                <option value="{{ $brand->brand_id }}"
+                                    {{ $brand->brand_id == $brand_id[$key] ? 'selected' : '' }}>
+                                    {{ $brand->brand->name }}</option>
+                            @endforeach
                         </select>
                     </td>
 
@@ -299,6 +303,24 @@
 
 @section('script')
     <script>
+        var req_options = null;
+
+        @if (!empty($purchaseOrder->id))
+            var indentWiseRequisitions = @json($indentWiseRequisitions);
+            var options = '<option value="">Select PRS No</option>';
+
+            indentWiseRequisitions.forEach(function(value, element) {
+                // let output = JSON.parse(key);
+                const keys = Object.keys(value);
+                console.log("keys", keys)
+                
+                console.log("value", value[keys])
+                // options +=
+                //     `<option value="${key}">${element}</option>`;
+            });
+            req_options = options;
+        @endif
+
         $('.select2').select2();
         $('.purchase_date').datepicker({
             format: "dd-mm-yyyy",
@@ -362,7 +384,6 @@
             $(this).closest('div').remove();
         });
 
-        var req_options = null;
         $(document).on('keyup', '.unit_price, .quantity', function() {
             var unit_price = $(this).closest('tr').find('.unit_price').val();
             var quantity = $(this).closest('tr').find('.quantity').val();
@@ -601,24 +622,24 @@
             getMaterial(this)
         })
 
-        $(document).on('select2:open', '.material_name', function() {
-            // Attach mouseover event to options inside Select2 dropdown
-            $('.select2-results__options').on('mouseover', '.select2-results__option', function() {
-                //call getMaterial function
-                getMaterial(this)
-            });
-        });
+        // $(document).on('select2:open', '.material_name', function() {
+        //     // Attach mouseover event to options inside Select2 dropdown
+        //     $('.select2-results__options').on('mouseover', '.select2-results__option', function() {
+        //         //call getMaterial function
+        //         getMaterial(this)
+        //     });
+        // });
 
-        $(document).on('select2:close', '.material_name', function() {
-            // Remove mouseover event from options inside Select2 dropdown
-            $('.select2-results__options').off('mouseover', '.select2-results__option');
-        });
+        // $(document).on('select2:close', '.material_name', function() {
+        //     // Remove mouseover event from options inside Select2 dropdown
+        //     $('.select2-results__options').off('mouseover', '.select2-results__option');
+        // });
 
         /* Adds and removes quantity row on click */
         $("#material_requisition")
             .on('click', '.add-requisition-row', () => {
-                // $('.purchase_requisition_id').last().html(req_options);
                 appendCalculationRow();
+                $('.purchase_requisition_id').last().html(req_options);
                 $('.select2').select2();
             })
             .on('click', '.remove-calculation-row', function() {
