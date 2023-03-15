@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\Material;
+use App\Services\BbtsGlobalService;
 use Illuminate\Database\QueryException;
 use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Http\Requests\MrrRequest;
@@ -17,6 +18,13 @@ use Illuminate\Contracts\Support\Renderable;
 
 class ScmMrrController extends Controller
 {
+
+    private $materialReceiveNo;
+
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->materialReceiveNo = $globalService->generateUniqueId(ScmMrr::class, 'MRR');
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -35,7 +43,8 @@ class ScmMrrController extends Controller
     public function create()
     {
         $brands = Brand::latest()->get();
-        return view('scm::mrr.create', compact('brands'));
+        $branches = Branch::latest()->get();
+        return view('scm::mrr.create', compact('brands','branches'));
     }
 
     /**
@@ -48,11 +57,7 @@ class ScmMrrController extends Controller
         $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
         try {
             $lastMRSId = ScmMrr::latest()->first();
-            if ($lastMRSId) {
-                $requestData['mrr_no'] = 'mrr-' . now()->format('Y') . '-' . $lastMRSId->id + 1;
-            } else {
-                $requestData['mrr_no'] = 'mrr-' . now()->format('Y') . '-' . 1;
-            }
+            $requestData['mrr_no'] =  $this->materialReceiveNo;
             $requestData['created_by'] = auth()->id();
             $purchaseRequisition = ScmMrr::create($requestData);
 
@@ -109,8 +114,10 @@ class ScmMrrController extends Controller
             ->where('purchase_order_id', $materialReceive->purchase_order_id)
             ->get()
             ->pluck('material_id', 'material.materialNameWithCode');
+            
         $brands = Brand::latest()->get();
-        return view('scm::mrr.create', compact('brands', 'material_list', 'materialReceive'));
+        $branches = Branch::latest()->get();
+        return view('scm::mrr.create', compact('branches','brands', 'material_list', 'materialReceive'));
     }
 
     /**
@@ -119,9 +126,41 @@ class ScmMrrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MrrRequest $request, ScmMrr $materialReceive)
     {
-        //
+        $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
+        try {
+            $requisitionDetails = [];
+            $serialCode = [];
+            foreach ($request->material_id as $key => $data) {
+                $requisitionDetails[] = [
+                    'material_id' => $request->material_id[$key],
+                    'description' => $request->description[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                    'quantity' => $request->quantity[$key],
+                    'initial_mark' => $request->initial_mark[$key],
+                    'final_mark' => $request->final_mark[$key],
+                    'item_code' => $request->item_code[$key],
+                    'warranty_period' => $request->warranty_period[$key],
+                    'unit_price' => $request->unit_price[$key],
+                ];
+                $serialCode[] = explode(',', $request->sl_code[$key]);
+            }
+            $materialReceive->update($requestData);
+            $materialReceive->scmMrrLines()->delete();
+            $MrrDetail = $materialReceive->scmMrrLines()->createMany($requisitionDetails);
+
+            foreach ($MrrDetail as $key => $value) {
+                $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) {
+                    return ['serial_or_drum_code' => $serial];
+                }, $serialCode[$key]));
+            }
+
+            return redirect()->route('material-receive.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('material-receive.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**

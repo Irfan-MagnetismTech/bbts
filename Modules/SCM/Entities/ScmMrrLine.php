@@ -13,4 +13,8 @@ class ScmMrrLine extends Model
     {
         return $this->hasMany(ScmMrrSerialCodeLine::class);
     }
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
+    }
 }

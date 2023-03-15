@@ -3,9 +3,23 @@
 
 @php
     $is_old = old('supplier_name') ? true : false;
-    $form_heading = !empty($purchase_order->id) ? 'Update' : 'Add';
-    $form_url = !empty($purchase_order->id) ? route('material-receive.update', $purchase_order->id) : route('material-receive.store');
-    $form_method = !empty($purchase_order->id) ? 'PUT' : 'POST';
+    $form_heading = !empty($materialReceive) ? 'Update' : 'Add';
+    $form_url = !empty($materialReceive) ? route('material-receive.update', $materialReceive->id) : route('material-receive.store');
+    $form_method = !empty($materialReceive) ? 'PUT' : 'POST';
+
+    $branch_id = old('branch_id', !empty($materialReceive) ? $materialReceive->branch_id : null);
+    $material_list = old('branch_id') ? old('select_array') : $material_list;
+    $applied_date = old('applied_date', !empty($materialReceive) ? $materialReceive->date : null);
+    $po_no = old('po_no', !empty($materialReceive) ? $materialReceive->purchaseOrder->po_no : null);
+    $po_id = old('po_id', !empty($materialReceive) ? $materialReceive->purchase_order_id : null);
+    $po_date = old('po_date', !empty($materialReceive) ? $materialReceive->purchaseOrder->date : null);
+    $supplier_name = old('supplier_name', !empty($materialReceive) ? $materialReceive->supplier->name : null);
+    $supplier_id = old('supplier_id', !empty($materialReceive) ? $materialReceive->supplier_id : null);
+    $challan_no = old('challan_no', !empty($materialReceive) ? $materialReceive->challan_no : null);
+    $challan_date = old('challan_date', !empty($materialReceive) ? $materialReceive->challan_date : null);
+
+
+
 @endphp
 
 @section('breadcrumb-title')
@@ -19,8 +33,8 @@
         }
 
         .input-group-info .input-group-addon {
-            /*background-color: #04748a!important;*/
-        }
+            background-color: #04748a!important;
+                }
         
     </style>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
@@ -50,18 +64,20 @@
             <label for="select2">Warehouse Name</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
                         <option value="0" selected>Select Branch</option>
-                       
+                        @foreach ($branches as $option)
+                            <option value="{{ $option->id }}"
+                                {{ $branch_id == $option->id ? 'selected' : '' }}>
+                                {{ $option->name }}
+                            </option>
+                        @endforeach
                     </select>
         </div>
-      
+       
         @if (!empty($materialReceive->id))
         <div class="form-group col-3">
-            <div class="input-group input-group-sm input-group-primary">
-                <label class="input-group-addon" for="po_no">PO No <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="po_no" name="po_no" aria-describedby="po_no"
-                    value="{{ old('po_no') ?? ($materialReceive->po_no ?? '') }}">
-               
-            </div>
+             <label for="mrr_no">MRR No</label>
+            <input type="text" class="form-control" id="mrr_no" name="mrr_no" aria-describedby="mrr_no"
+                    value="{{ old('mrr_no') ?? ($materialReceive->mrr_no ?? '') }}" readonly>
         </div>
         <div class="form-group col-6">
         </div>
@@ -69,47 +85,50 @@
         <div class="form-group col-8">
         </div>
         @endif
+       
         <div class="form-group col-3">
             <label for="applied_date">Applied Date:</label>
             <input class="form-control applied_date" name="date" aria-describedby="applied_date"
-                value="{{ old('applied_date') ?? (@$materialReceive->applied_date ?? '') }}" readonly placeholder="Select a Date" id="applied_date">
+                value="{{ $applied_date }}" readonly placeholder="Select a Date" id="applied_date">
         </div>
-
+       
         <div class="form-group col-3">
             <label for="po_no">PO No:</label>
             <input type="text" class="form-control" id="po_no" aria-describedby="po_no"
                 name="po_no"
-                value="{{ old('delivery_location') ?? (@$materialReceive->purchaseOrder->po_no ?? '') }}">
+                value="{{ $po_no }}">
                 <input type="hidden" class="form-control" id="purchase_order_id" name="purchase_order_id" aria-describedby="purchase_order_id"
-                value="{{ old('purchase_order_id') ?? ($materialReceive->purchase_order_id ?? '') }}">
+                value="{{ $po_id }}">
         </div>
+       
         <div class="form-group col-3">
             <label for="date">PO Date:</label>
             <input class="form-control po_date" name="po_date" aria-describedby="po_date" id="po_date"
-                value="{{ old('po_date') ?? (@$materialReceive->po_date ?? '') }}" readonly placeholder="PO Date">
+                value="{{ $po_date }}" readonly placeholder="PO Date">
         </div>
+       
         <div class="form-group col-3 supplier_name">
             <label for="supplier_name">Supplier Name:</label>
             <input type="text" class="form-control supplier_name" aria-describedby="supplier_name" id="supplier_name"
-                name="supplier_name" value="{{ old('supplier_name') ?? (@$materialReceive->supplier->name ?? '') }}"
+                name="supplier_name" value="{{ $supplier_name }}"
                 placeholder="Supplier Name" readonly>
             <input type="hidden" name="supplier_id" id="supplier_id"
-                value="{{ old('supplier_id') ?? @$materialReceive?->supplier_id }}">
+                value="{{ $supplier_id }}">
         </div>
-
+        
         <div class="form-group col-3 challan_no">
             <label for="challan_no">Chalan No:</label>
             <input type="text" class="form-control" id="challan_no" aria-describedby="challan_no" name="challan_no"
-                value="{{ old('challan_no') ?? (@$materialReceive->indent->indent_no ?? '') }}" placeholder="Type Chalan No">
+                value="{{ $challan_no }}" placeholder="Type Chalan No">
         </div>
 
         <div class="form-group col-3">
             <label for="date">Chalan Date:</label>
             <input class="form-control challan_date" name="challan_date" aria-describedby="challan_date" id="challan_date"
-                value="{{ old('challan_date') ?? (@$materialReceive->challan_date ?? '') }}" placeholder="Select a Date" readonly>
+                value="{{ $challan_date }}" placeholder="Select a Date" readonly>
         </div>
     </div>
-
+   
     <table class="table table-bordered" id="material_requisition">
         <thead>
             <tr>
@@ -128,35 +147,39 @@
                 <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
             </tr>
         </thead>
-        <tbody></tbody>
-        <tfoot>
-            @php
-                $purchase_requisition_id = old('purchase_requisition_id', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisition->pluck('prs_no') : []);
-                $material_name_with_code = old('material_name', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
-                $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('material_id') : []);
-                $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('material.code') : []);
-                $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('material.unit') : []);
-                $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('brand_id') : []);
-                $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('quantity') : []);
-                $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('unit_price') : []);
-                $total_amount = old('total_amount', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('total_amount') : []);
-                $model = old('model', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('model') : []);
-                $purpose = old('purpose', !empty($materialReceive) ? $materialReceive->scmPurchaseRequisitionDetails->pluck('purpose') : []);
-            @endphp
-            @foreach ($material_name_with_code as $key => $requisitionDetail)
+        <tbody>
+        @php
+            $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
+            $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
+            $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
+            $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
+            $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
+            $description = old('description', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('description') : []);
+            $sl_code = old('sl_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->map(function ($item) {
+                return implode(',', $item->scmMrrSerialCodeLines->pluck('serial_or_drum_code')->toArray());
+            }) : '');
+          
+            $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
+            $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
+            $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
+            $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
+           
+            $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
+            $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('unit_price') : []);
+            $amount = old('amount', !empty($materialReceive) ? collect($quantity)->map(function ($value, $key) use ($unit_price) {
+                    return $value * $unit_price[$key];
+                })->toArray() : []);
+        @endphp 
+            @foreach ($mrr_lines as $key => $requisitionDetail)
                 <tr>
                     <td class="form-group">
-                        <select class="form-control purchase_requisition_id" name="purchase_requisition_id[]">
-                            <option value="" readonly selected>Select Requisiiton</option>
-                            
+                        <select class="form-control material_name" name="material_id[]">
+                            <option value="" readonly selected>Select Material</option>
+                            @foreach ($material_list as $key1 => $value )
+                            <option value="{{$value}}" readonly @selected($material_id[$key] == $value)>{{$key1}}</option>
+                            @endforeach
                         </select>
-                    </td>
-
-                    <td>
-                        <input type="text" class="form-control cs_no" aria-describedby="cs_no" name="cs_no[]"
-                            value="{{ old('cs_no') ?? (@$materialReceive->client->name ?? '') }}" placeholder="Search...">
-                        <input type="hidden" name="cs_id[]" class="form-control cs_id"
-                            value="{{ old('cs_id') ?? @$materialReceive?->client->id }}">
+                        <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="{{ $item_code[$key]  }}"> 
                     </td>
 
                     <td>
@@ -171,41 +194,47 @@
                     </td>
 
                     <td>
-                        <input type="text" name="quatation_no[]" class="form-control quatation_no" autocomplete="off">
+                        <input type="text" name="model[]" class="form-control model" autocomplete="off" value="{{ $model[$key]  }}">
+                    </td>
+                    <td>
+                        <input type="text" name="description[]" class="form-control description" autocomplete="off" value="{{ $description[$key]  }}">
+                    </td>
+                    <td>
+                        <div class="tags_add_multiple">
+                            <input class="" type="text" name="sl_code[]" value="{{$sl_code[$key]}}" data-role="tagsinput">
+                        </div>
                     </td>
 
                     <td>
-                        <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                    </td>
-
-                    <td>
-                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
-                    </td>
-
-                    <td>
-                        <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off">
-                    </td>
-
-                    <td>
-                        <input type="text" name="warranty_period[]" class="form-control warranty_period"
-                            autocomplete="off">
-                    </td>
-
-                    <td>
-                        <input type="number" name="brand[]" class="form-control unit_price" autocomplete="off"
-                            readonly>
+                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" value="{{ $initial_mark[$key]  }}">
                     </td>
                     <td>
-                        <input class="form-control quantity" name="quantity[]" aria-describedby="date"
-                            value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}"
-                            placeholder="Select a required date">
+                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" value="{{ $final_mark[$key]  }}">
+                    </td>
+                    <td>
+                        <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="{{ $warranty_period[$key]  }}">
+                    </td>
+                    <td>
+                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off" value="{{ $unit[$key]  }}">
+                    </td>
+                    <td>
+                        <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ $quantity[$key] }}" >
+                    </td>
+                    <td>
+                        <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10" value="{{ $unit_price[$key] }}">
+                    </td>
+                    <td>
+                        <input name="amount[]" class="form-control amount" autocomplete="off" readonly value="{{ $amount[$key] }}">
                     </td>
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                     </td>
                 </tr>
             @endforeach
-            <tr>
+           
+            </tbody>
+        <tfoot>
+        <tr>
                 <td colspan="11" class="text-right">Total Amount</td>
                 <td>
                     <input type="text" name="total_amount" class="form-control total_amount" autocomplete="off"
@@ -284,7 +313,7 @@
                 showOtherMonths: true
             }).datepicker("setDate", new Date());
 
-            @if (empty($materialReceive) && empty(old('material_name')))
+            @if (empty($materialReceive) && empty(old('material_id')))
                 appendCalculationRow();
             @endif
         function appendCalculationRow() {
@@ -389,8 +418,8 @@
             let material_id = $(this).closest('tr').find('.material_name').val();
             const url = '{{ url('scm/get_unit') }}/' + material_id;
             var elemmtn = $(this);
-            (elemmtn).closest('tr').find('.final_mark').attr('readonly',true);
-            (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true);
+            (elemmtn).closest('tr').find('.final_mark').attr('readonly',true).val(null);
+            (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true).val(null);
             $.getJSON(url, function(item) {
                 (elemmtn).closest('tr').find('.unit').val(item.unit);
                 (elemmtn).closest('tr').find('.item_code').val(item.code);
