@@ -15,6 +15,8 @@ use Modules\SCM\Entities\PurchaseOrder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\CsMaterialSupplier;
+use Modules\SCM\Entities\Indent;
+use Modules\SCM\Entities\IndentLine;
 use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
 use Modules\SCM\Http\Requests\PurchaseOrderRequest;
 
@@ -84,16 +86,15 @@ class PurchaseOrderController extends Controller
 
             $purchaseOrder = PurchaseOrder::create($finalData['purchaseOrderData']);
             $purchaseOrder->purchaseOrderLines()->createMany($finalData['purchaseOrderLinesData']);
-            $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
+            if (!empty($finalData['poTermsAndConditions'])) {
+                $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
+            }
 
             DB::commit();
             return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Created Successfully'], 200);
-
-            // return redirect()->route('purchase-orders.index')->with('success', 'Purchase Order Created Successfully');
         } catch (QueryException $e) {
             DB::rollBack();
             return response()->json($e->getMessage(), 500);
-            // return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -104,8 +105,6 @@ class PurchaseOrderController extends Controller
      */
     public function show(PurchaseOrder $purchaseOrder)
     {
-        // return $purchaseOrder->load('purchaseOrderLines');
-
         return view('scm::purchase-orders.show', compact('purchaseOrder'));
     }
 
@@ -116,9 +115,26 @@ class PurchaseOrderController extends Controller
      */
     public function edit(PurchaseOrder $purchaseOrder)
     {
-        return $purchaseOrder->load('purchaseOrderLines');
+        $vatOrTax = [
+            'Include', 'Exclude'
+        ];
 
-        return view('scm::edit');
+        $indentWiseRequisitions = IndentLine::query()
+            ->with('scmPurchaseRequisition')
+            ->where('indent_id', $purchaseOrder->indent_id)
+            ->get()
+            ->map(
+                fn ($item) =>
+                [
+                    $item->scmPurchaseRequisition->id => $item->scmPurchaseRequisition->prs_no
+                ]
+            );
+
+            foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
+                $materials[] = $this->searchMaterialByCsAndRequsiition($value->cs_id, $value->scm_purchase_requisition_id);
+            }
+
+        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions', 'materials'));
     }
 
     /**
@@ -185,7 +201,7 @@ class PurchaseOrderController extends Controller
 
     public function searchMaterialByCsAndRequsiition($csId, $reqId)
     {
-        return CsMaterial::with('material')
+        return CsMaterial::with('material', 'brand')
             ->orderBy('id')
             ->where('cs_id', $csId)
             ->whereIn('material_id', function ($query) use ($reqId) {
@@ -200,6 +216,9 @@ class PurchaseOrderController extends Controller
     public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
     {
         return CsMaterialSupplier::query()
+            ->with('csMaterial.brand', function ($query) {
+                $query->select('id', 'name');
+            })
             ->with('csMaterial.material', function ($query) {
                 $query->select('id', 'name', 'unit');
             })
@@ -211,7 +230,7 @@ class PurchaseOrderController extends Controller
                 $query->where('cs_id', $csId)
                     ->where('supplier_id', $supplierId);
             })
-            ->first();
+            ->get();
     }
 
     private function checkValidation($request)
@@ -244,10 +263,10 @@ class PurchaseOrderController extends Controller
         $purchaseOrderData = $request->all();
 
         $purchaseOrderLinesData = [];
-        foreach ($purchaseOrderData['purchase_requisition_id'] as $key => $data) {
+        foreach ($purchaseOrderData['purchase_requisition_id'] as $key => $value) {
             $purchaseOrderLinesData[] = [
                 'scm_purchase_requisition_id' => $request->purchase_requisition_id[$key] ?? null,
-                'po_composit_key'         => 452 ?? null,
+                'po_composit_key'         => $this->purchaseOrderNo . '-' . $key ?? null,
                 'cs_id'                      => $request->cs_id[$key] ?? null,
                 'quotation_no'               => $request->quotation_no[$key] ?? null,
                 'material_id'             => $request->material_id[$key] ?? null,
@@ -263,9 +282,9 @@ class PurchaseOrderController extends Controller
         }
 
         $poTermsAndConditions = [];
-        foreach ($purchaseOrderData['terms_and_conditions'] as $key => $data) {
+        foreach ($purchaseOrderData['terms_and_conditions'] as $key => $value) {
             $poTermsAndConditions[] = [
-                'particular' => $data
+                'particular' => $value
             ];
         }
 
