@@ -7,6 +7,7 @@ use Modules\SCM\Entities\Cs;
 use Modules\SCM\Entities\Indent;
 use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\Supplier;
+use Modules\SCM\Entities\PoMaterial;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
@@ -14,7 +15,7 @@ use Modules\SCM\Entities\ScmPurchaseRequisition;
 class PurchaseOrderLine extends Model
 {
     protected $fillable = [
-        'purchase_order_id', 'scm_purchase_requisition_id', 'po_composit_key', 'cs_id', 'quotation_no', 'material_id', 'description', 'quantity', 'warranty_period', 'installation_cost', 'transport_cost', 'unit_price', 'vat', 'tax', 'total_amount', 'required_date'
+        'purchase_order_id', 'scm_purchase_requisition_id', 'po_composit_key', 'cs_id', 'quotation_no', 'material_id', 'brand_id', 'description', 'quantity', 'warranty_period', 'installation_cost', 'transport_cost', 'unit_price', 'vat', 'tax', 'total_amount', 'required_date'
     ];
 
     public function setRequiredDateAttribute($input)
@@ -56,5 +57,10 @@ class PurchaseOrderLine extends Model
     public function indent()
     {
         return $this->belongsTo(Indent::class);
+    }
+
+    public function poMaterial()
+    {
+        return $this->belongsTo(PoMaterial::class, 'po_composit_key', 'po_composit_key');
     }
 }

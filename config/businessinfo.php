@@ -5,6 +5,7 @@ return [
     'shortname' => 'BBTS',
     'slogan'    =>  '',
     'logo' => '/images/bbts_logo.png',
+    'url'   => 'https://bbts.net',
     'footer' => 'All Rights Reserved',
     'developer' => 'Developed by <a href="https://magnetismtech.com" target="_blank">Magnetism Tech Limited</a>',
     
@@ -14,5 +15,10 @@ return [
         '1' => '1st Layer',
         '2' => '2nd Layer',
         '3' => '3rd Layer',
+    ],
+    'ticketMovements' => [
+        'Forward',
+        'Backward',
+        'Handover'
     ],
 ];

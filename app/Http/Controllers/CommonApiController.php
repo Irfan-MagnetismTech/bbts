@@ -13,8 +13,9 @@ use Modules\SCM\Entities\Supplier;
 use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Employee;
 use App\Models\Dataencoding\Department;
-use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\Sales\Entities\ClientDetail;
+use Modules\Ticketing\Entities\SupportTeam;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\SCM\Entities\Cs;
 use Modules\SCM\Entities\CsSupplier;
 use Modules\SCM\Entities\Indent;
@@ -42,15 +43,29 @@ class CommonApiController extends Controller
     {
         $results = ClientDetail::query()
             ->with('client')
-            ->where('link_name', 'LIKE', '%' . request('search') . '%')
+            ->where('link_id', 'LIKE', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
-                'label' => $item->link_name,
+                'label' => $item->link_id,
                 'client' => $item->client
             ]);
 
         return response()->json($results);
+    }
+
+    public function getClientsPreviousTickets($clientId, $limit) {
+        $clientId = abs($clientId);
+        $limit = (abs($limit) > 5) ? 5 : abs($limit);
+
+        $client = Client::find($clientId);
+        $previousTickets = $client->supportTickets()
+                            ->with(['supportComplainType', 'ticketSource'])
+                            ->limit($limit)
+                            ->orderBy('id', 'desc')
+                            ->get(['support_complain_type_id', 'ticket_source_id', 'status', 'opening_date', 'remarks', 'id', 'ticket_no']);
+
+        return response()->json($previousTickets);
     }
 
     public function searchMaterial()
@@ -137,7 +152,7 @@ class CommonApiController extends Controller
 
     public function searchUser()
     {
-        $results = User::select('id', 'employees_id', 'name')->with('employee')->where('name', 'LIKE', '%' . request('search') . '%')
+        $results = User::select('id', 'employee_id', 'name')->with('employee')->where('name', 'LIKE', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -187,6 +202,16 @@ class CommonApiController extends Controller
         return response()->json($data);
     }
 
+    public function getSupportTeamMembers() {
+        $teamId = request('search');  
+        $team = SupportTeam::with('supportTeamMember.user')->where('id', $teamId)->first();  
+
+        if(auth()->user()->employee->branch_id != $team->branch_id) {
+            abort(404);
+        } 
+        
+        return response()->json($team);
+    }
     public function searchPrsNo()
     {
         $results = ScmPurchaseRequisition::query()

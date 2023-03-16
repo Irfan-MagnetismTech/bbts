@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\Dataencoding\Department;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Modules\Admin\Entities\Branch;
+use Modules\Admin\Entities\User;
 
 return new class extends Migration
 {
@@ -15,9 +18,9 @@ return new class extends Migration
     {
         Schema::create('support_teams', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('branches_id');
-            $table->foreignId('users_id');
-            $table->foreignId('departments_id');
+            $table->foreignIdFor(Branch::class);
+            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(Department::class);
             $table->timestamps();
         });
     }

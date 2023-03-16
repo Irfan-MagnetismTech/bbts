@@ -9,11 +9,11 @@ class SupportTeamMember extends Model
 {
     protected $guarded = [];
 
-    public function team() {
-        return $this->belongsTo(SupportTeam::class, 'id', 'support_teams_id');
+    public function supportTeam() {
+        return $this->belongsTo(SupportTeam::class);
     }
 
     public function user() {
-        return $this->belongsTo(User::class, 'users_id', 'id');
+        return $this->belongsTo(User::class);
     }
 }

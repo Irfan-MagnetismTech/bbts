@@ -39,13 +39,13 @@
                 
                     <div class="row">
                         <div class="form-group col-6">
-                            <label for="departments_id">Department Name:</label>
+                            <label for="department_id">Department Name:</label>
 
-                            <select name="departments_id" id="departments_id" class="form-control">
+                            <select name="department_id" id="department_id" class="form-control">
                                 <option value="">Select Department</option>
                                 @foreach($departments as $department)
                                 <option value="{{ $department->id }}" 
-                                    {{ old('departments_id', (!empty($supportTeam) ? $supportTeam?->departments_id : '')) == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
+                                    {{ old('department_id', (!empty($supportTeam) ? $supportTeam?->department_id : '')) == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
                                 @endforeach
                             </select>
 
@@ -54,10 +54,10 @@
                             <label for="user_name">Department Head:</label>
 
                             <input type="text" class="form-control" id="user_name" name="user_name" aria-describedby="user_name"
-                                value="{{ old('user_name') ?? (!empty($supportTeam) ? $supportTeam?->teamLead?->name : '') }}" placeholder="Department Head" required>
+                                value="{{ old('user_name') ?? (!empty($supportTeam) ? $supportTeam?->user?->name : '') }}" placeholder="Department Head" required>
 
-                            <input type="hidden" class="form-control" id="employee_id" name="employee_id" aria-describedby="employee_id"
-                                value="{{ old('employee_id') ?? (!empty($supportTeam) ? $supportTeam->users_id : '') }}">
+                            <input type="hidden" class="form-control" id="user_id" name="user_id" aria-describedby="user_id"
+                                value="{{ old('user_id') ?? (!empty($supportTeam) ? $supportTeam->user_id : '') }}">
                         </div>
                     </div>
 
@@ -74,7 +74,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                @if(empty($supportTeam) || empty($supportTeam?->teamMembers))
+                                @if(empty($supportTeam) || empty($supportTeam?->supportTeamMember))
                                 <tr>
                                     <td>1</td>
                                     <td>
@@ -92,13 +92,13 @@
                                     <td><i class="btn btn-danger btn-sm fa fa-minus remove-row"></i></td>
                                 </tr>
                                 @else
-                                    @foreach($supportTeam->teamMembers as $teamMember)
+                                    @foreach($supportTeam->supportTeamMember as $teamMember)
                                         <tr>
                                             <td>{{ $loop->index+1 }}</td>
                                             <td>
                                                 
                                                 <input type="text" value="{{ $teamMember->user->name }}" placeholder="Search Employee" class="user-search form-control" />
-                                                <input type="hidden" name="users_id[]" value="{{ $teamMember->users_id }}" placeholder="Search Employee" class="member_id form-control" />
+                                                <input type="hidden" name="users_id[]" value="{{ $teamMember->user_id }}" placeholder="Search Employee" class="member_id form-control" />
                                             </td>
                                             <td>{{ $teamMember?->user?->employee?->designation?->name }}</td>
                                             <td>
@@ -148,7 +148,7 @@
                 },
                 select: function(event, ui) {
                     $("#department_name").val(ui.item.label)
-                    $("#departments_id").val(ui.item.value)
+                    $("#department_id").val(ui.item.value)
                     return false;
                 }
             });
@@ -171,7 +171,7 @@
                 },
                 select: function(event, ui) {
                     $("#user_name").val(ui.item.label)
-                    $("#employee_id").val(ui.item.value)
+                    $("#user_id").val(ui.item.value)
                     return false;
                 }
             });

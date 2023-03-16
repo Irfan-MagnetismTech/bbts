@@ -28,7 +28,7 @@
         <div class="row">
             <div class="col-md-12">
                 <form
-                action="{{ (!empty($supportTicket)) ? route('support-tickets.update', ['support_team' => $supportTicket->id]) : route('support-tickets.store') }}"
+                action="{{ (!empty($supportTicket)) ? route('support-tickets.update', ['support_ticket' => $supportTicket->id]) : route('support-tickets.store') }}"
                 method="post" class="custom-form">
                 @if (!empty($supportTicket))
                     @method('PUT')
@@ -41,31 +41,32 @@
                         <div class="col-5">
                             <div class="row">
                                 <div class="col-7">
-                                    <label for="departments_id">Opening Time:</label>
+                                    <label for="opening_time">Opening Time:</label>
                                     <input type="text" class="form-control" id="opening_time" name="opening_time"
                                         value="{{ old('opening_time') ?? (!empty($supportTicket) ? $supportTicket?->opening_date : \Carbon\Carbon::now()->format('d/m/Y H:i A')) }}" disabled>
                                 </div>
                                 <div class="col-5">
-                                    <label for="departments_id">Client Link ID:</label>
-                                    <input type="text" class="form-control" id="clients_id" name="clients_id" aria-describedby="clients_id"
-                                        value="{{ old('clients_id') ?? (!empty($supportTicket) ? $supportTicket?->clients_id : '') }}" placeholder="Client Link ID">
+                                    <label for="client_id">Client Link ID:</label>
+                                    <input type="text" class="form-control" id="client_id" name="client_id" aria-describedby="client_id"
+                                        value="{{ old('client_id') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}" placeholder="Client Link ID">
                                     
-                                    <input type="hidden" name="fr_composit_key" id="fr_composit_key">
+                                    <input type="hidden" name="fr_composit_key" id="fr_composit_key"
+                                            value="{{ old('fr_composit_key') ?? (!empty($supportTicket) ? $supportTicket?->fr_composit_key : '') }}">
                                 </div>
                             </div>
                             <div class="row mt-2">
                                 <div class="col-7">
-                                    <label for="departments_id">Complain Time:</label>
+                                    <label for="complain_time">Complain Time:</label>
                                     <input type="datetime-local" class="form-control" id="complain_time" name="complain_time" 
                                         value="{{ old('complain_time') ?? (!empty($supportTicket) ? $supportTicket?->complain_time : \Carbon\Carbon::now()->format('Y-m-d\TH:i:s')) }}">
                                 </div>
                                 <div class="col-5">
-                                    <label for="complain_types_id">Complain Type:</label>
-                                    <select class="form-control select2" id="complain_types_id" name="complain_types_id">
+                                    <label for="support_complain_type_id">Complain Type:</label>
+                                    <select class="form-control select2" id="support_complain_type_id" name="support_complain_type_id">
                                         <option value="20" selected>Select Complain Type</option>
                                         @foreach ($complainTypes as $complainType)
                                             <option value="{{ $complainType->id }}"
-                                                {{ old('complain_types_id', (!empty($supportTicket) ? $supportTicket->complain_types_id : null)) == $complainType->id ? 'selected' : '' }}>
+                                                {{ old('support_complain_type_id', (!empty($supportTicket) ? $supportTicket->support_complain_type_id : null)) == $complainType->id ? 'selected' : '' }}>
                                                 {{ $complainType->name }}
                                             </option>
                                         @endforeach
@@ -74,17 +75,17 @@
                                 
                             </div>
                             <div class="form-group mt-2">
-                                <label for="departments_id">Description:</label>
+                                <label for="description">Description:</label>
                                 <input type="text" class="form-control" id="description" name="description" aria-describedby="description"
                                     value="{{ old('description') ?? (!empty($supportTicket) ? $supportTicket?->description : '') }}" placeholder="Description">
                             </div>
                             <div class="form-group">
-                                <label for="sources_id">Source:</label>
-                                <select class="form-control select2" id="sources_id" name="sources_id">
+                                <label for="ticket_source_id">Source:</label>
+                                <select class="form-control select2" id="ticket_source_id" name="ticket_source_id">
                                     <option value="20" selected>Select Source</option>
                                     @foreach ($ticketSources as $complainSource)
                                         <option value="{{ $complainSource->id }}"
-                                            {{ old('sources_id', (!empty($supportTicket) ? $supportTicket->source : null)) == $complainSource->id ? 'selected' : '' }}>
+                                            {{ old('ticket_source_id', (!empty($supportTicket) ? $supportTicket->ticket_source_id : null)) == $complainSource->id ? 'selected' : '' }}>
                                             {{ $complainSource->name }}
                                         </option>
                                     @endforeach
@@ -103,28 +104,28 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="departments_id">Remarks:</label>
+                                <label for="remarks">Remarks:</label>
                                 <input type="text" class="form-control" id="remarks" name="remarks" aria-describedby="remarks"
                                     value="{{ old('remarks') ?? (!empty($supportTicket) ? $supportTicket?->remarks : '') }}" placeholder="Remarks">
                             </div>
                             <p class="py-1 font-weight-bold">Mail</p>
                             <div class="form-group">
-                                <label for="departments_id">To:</label>
+                                <label for="receiver_address">To:</label>
                                 <input type="text" class="form-control" id="receiver_address" name="receiver_address" aria-describedby="receiver_address"
                                     value="{{ old('receiver_address') ?? (!empty($supportTicket) ? $supportTicket?->mail_to : '') }}" placeholder="To">
                             </div>
                             <div class="form-group">
-                                <label for="departments_id">CC:</label>
+                                <label for="cc">CC:</label>
                                 <input type="text" class="form-control" id="cc" name="cc" aria-describedby="cc"
                                     value="{{ old('cc') ?? (!empty($supportTicket) ? $supportTicket?->cc : '') }}" placeholder="CC">
                             </div>
                             <div class="form-group">
-                                <label for="departments_id">Subject:</label>
+                                <label for="subject">Subject:</label>
                                 <input type="text" class="form-control" id="subject" name="subject" aria-describedby="subject"
                                     value="{{ old('subject') ?? (!empty($supportTicket) ? $supportTicket?->subject : '') }}" placeholder="Subject">
                             </div>
                             <div class="form-group">
-                                <label for="departments_id">Mail Description:</label>
+                                <label for="body">Mail Description:</label>
                                 <input type="text" class="form-control" id="body" name="body" aria-describedby="body"
                                     value="{{ old('body') ?? (!empty($supportTicket) ? $supportTicket?->body : '') }}" placeholder="Mail Description">
                             </div>
@@ -178,10 +179,11 @@
 
                                 <div class="col-12">
                                     <div class="table-responsive">
-                                        <table class="table table-striped table-bordered">
+                                        <table class="table table-striped table-bordered" id="previousTickets">
                                             <thead>
                                                 <tr>
                                                     <th>Ticket No.</th>
+                                                    <th>Status</th>
                                                     <th>Date &amp; Time</th>
                                                     <th>Problem</th>
                                                     <th>Reason</th>
@@ -218,8 +220,8 @@
                                 <label for="" class="d-block">Ticket Close:</label>
                                 
                                 <div class="form-check-inline">
-                                    <label class="form-check-label" for="opened">
-                                        <input type="radio" class="form-check-input radioButton" id="opened" name="status" value="Pending" @checked((@$supportTicket->status == "opened") || (old('status') == 'opened')) 
+                                    <label class="form-check-label" for="closed">
+                                        <input type="radio" class="form-check-input radioButton" id="closed" name="status" value="Closed" @checked((@$supportTicket->status == "Closed") || (old('status') == 'Closed')) 
                                         >
                                         <span style="position: relative; top: 3px">
                                             Yes
@@ -228,9 +230,9 @@
                                 </div>
         
                                 <div class="form-check-inline">
-                                    <label class="form-check-label" for="closed">
-                                        <input type="radio" class="form-check-input radioButton" id="closed" name="status" @checked((@$supportTicket->status == "closed") || (old('status') == 'closed'))
-                                            value="Closed">
+                                    <label class="form-check-label" for="opened">
+                                        <input type="radio" class="form-check-input radioButton" id="opened" name="status" @checked((@$supportTicket->status != "Closed") || (!empty(old('status')) ? (old('status') != 'Closed') : ''))
+                                            value="Pending">
                                         <span style="position: relative; top: 3px">
                                             No
                                         </span>
@@ -240,7 +242,7 @@
                         </div>
                         <div class="col-4">
                             <div class="form-group">
-                                <label for="departments_id" class="d-block">Mail Notification:</label>
+                                <label for="" class="d-block">Mail Notification:</label>
                                 
                                 <div class="form-check-inline">
                                     <label class="form-check-label" for="sendMail">
@@ -265,7 +267,7 @@
                         </div>
                         <div class="col-4">
                             <div class="form-group">
-                                <label for="departments_id" class="d-block">SMS Notification:</label>
+                                <label for="" class="d-block">SMS Notification:</label>
                                 
                                 <div class="form-check-inline">
                                     <label class="form-check-label" for="smsNotification">
@@ -290,8 +292,8 @@
                         </div>
 
                     </div>
-                    <div class="row">
-                        <div class="col-5 mx-auto">
+                    <div class="row" id="formSubmit">
+                        <div class="col-3 mx-auto">
                             <div class="mx-auto mt-2">
                                 <div class="input-group input-group-sm ">
                                     <button class="btn btn-success btn-round btn-block py-2">Submit</button>
@@ -311,7 +313,7 @@
 <script>
         
 
-        $(document).on('keyup focus', '#clients_id', function() {
+        $(document).on('keyup focus', '#client_id', function() {
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -329,23 +331,52 @@
                 select: function(event, ui) {
                     
                     console.log(ui.item)
-                    $("#clients_id").val(ui.item.label)
+                    $("#client_id").val(ui.item.label)
                     $("#fr_composit_key").val(ui.item.value)
+
+                    getClientsPreviousTickets(ui.item.client.id, 5)
                     return false;
                 }
             });
         });
 
-        function getClientsPreviousTickets(linkId) {
+        function getClientsPreviousTickets(clientId, limit = 5) {
+            console.log(clientId, limit)
             $.ajax({
-                url: "{{ url('get-clients-previous-tickets') }}",
+                url: "{{ url('get-clients-previous-tickets') }}"+"/"+clientId+"/"+limit,
                 type: 'get',
-                dataType: "json",
-                data: {
-                    linkId: linkId
-                }
+                dataType: "json"
             }).done(function(data) {
-                $("#clients_id").val(data.clients_id)
+                var tickets = data;
+
+                // find if any tickets status is Pending
+                var pendingTickets = tickets.filter(function(ticket) {
+                    return ticket.status == "Pending";
+                });
+
+                if (pendingTickets.length > 0) {
+                    alert('This client already have pending tickets. Please see the ticket list.');
+                    $("#formSubmit").find("button").css("display", "none");
+                } else {
+                    $("#formSubmit").find("button").removeAttr("style");
+                }
+
+                // run foreach data 
+                var tableData = '';
+                $.each(tickets, function(key, value) {
+                    tableData += '<tr>';
+                    tableData += '<td>' + value.ticket_no + '</td>';
+                    tableData += '<td>' + value.status + '</td>';
+                    tableData += '<td>' + value.opening_date + '</td>';
+                    tableData += '<td>' + value.support_complain_type.name + '</td>';
+                    tableData += '<td>' + value.remarks + '</td>';
+                    tableData += '<td><div class="icon-btn"><a href="{{ route('support-tickets.index') }}/'+value.id+'" data-toggle="tooltip" title="Details" class="btn btn-outline-primary" data-original-title="Details"><i class="fas fa-eye"></i></a></div></td>';
+                    tableData += '</tr>';
+                })
+
+                $("#previousTickets").find("tbody").html("");
+                $("#previousTickets").find("tbody").html(tableData);
+
             })
         }
 

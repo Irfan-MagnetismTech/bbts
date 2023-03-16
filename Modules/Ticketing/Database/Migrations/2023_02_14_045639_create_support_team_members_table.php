@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Modules\Admin\Entities\Branch;
+use Modules\Admin\Entities\User;
+use Modules\Ticketing\Entities\SupportTeam;
 
 return new class extends Migration
 {
@@ -15,9 +18,9 @@ return new class extends Migration
     {
         Schema::create('support_team_members', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('users_id');
-            $table->foreignId('branches_id');
-            $table->foreignId('support_teams_id')->constrained('support_teams', 'id')->cascadeOnDelete();
+            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(Branch::class);
+            $table->foreignIdFor(SupportTeam::class)->constrained('support_teams', 'id')->cascadeOnDelete();
             $table->integer('type')->comment('User Level');
             $table->timestamps();
         });
