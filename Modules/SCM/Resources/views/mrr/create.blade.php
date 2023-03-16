@@ -4,11 +4,11 @@
 @php
     $is_old = old('supplier_name') ? true : false;
     $form_heading = !empty($materialReceive) ? 'Update' : 'Add';
-    $form_url = !empty($materialReceive) ? route('material-receive.update', $materialReceive->id) : route('material-receive.store');
+    $form_url = !empty($materialReceive) ? route('material-receives.update', $materialReceive->id) : route('material-receives.store');
     $form_method = !empty($materialReceive) ? 'PUT' : 'POST';
 
     $branch_id = old('branch_id', !empty($materialReceive) ? $materialReceive->branch_id : null);
-    $material_list = old('branch_id') ? old('select_array') : $material_list;
+    $material_list = old('branch_id') ? old('select_array') : (!empty($materialReceive) ? $material_list : []);
     $applied_date = old('applied_date', !empty($materialReceive) ? $materialReceive->date : null);
     $po_no = old('po_no', !empty($materialReceive) ? $materialReceive->purchaseOrder->po_no : null);
     $po_id = old('po_id', !empty($materialReceive) ? $materialReceive->purchase_order_id : null);
@@ -40,7 +40,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('material-receive.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('material-receives.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -152,11 +152,12 @@
             $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
             $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
             $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
+            $material_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
             $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
             $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
             $description = old('description', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('description') : []);
             $sl_code = old('sl_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->map(function ($item) {
-                return implode(',', $item->scmMrrSerialCodeLines->pluck('serial_or_drum_code')->toArray());
+                return implode(',', $item->scmMrrSerialCodeLines->pluck('serial_or_drum_key')->toArray());
             }) : '');
           
             $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
@@ -180,6 +181,7 @@
                             @endforeach
                         </select>
                         <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="{{ $item_code[$key]  }}"> 
+                        <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off" value="{{ $material_type[$key]  }}"> 
                     </td>
 
                     <td>
@@ -325,6 +327,7 @@
                                    
                                 </select>
                                 <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
+                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
                             </td>
                             <td>
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
@@ -416,6 +419,7 @@
             };
         $(document).on('change','.material_name',function(){
             let material_id = $(this).closest('tr').find('.material_name').val();
+            console.log();
             const url = '{{ url('scm/get_unit') }}/' + material_id;
             var elemmtn = $(this);
             (elemmtn).closest('tr').find('.final_mark').attr('readonly',true).val(null);
@@ -423,7 +427,7 @@
             $.getJSON(url, function(item) {
                 (elemmtn).closest('tr').find('.unit').val(item.unit);
                 (elemmtn).closest('tr').find('.item_code').val(item.code);
-                console.log(item);
+                (elemmtn).closest('tr').find('.material_type').val(item.type);
                 if(item.type == 'Drum'){
                     (elemmtn).closest('tr').find('.final_mark').attr('readonly',false);
                     (elemmtn).closest('tr').find('.initial_mark').attr('readonly',false);

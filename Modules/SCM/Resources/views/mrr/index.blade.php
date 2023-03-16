@@ -11,7 +11,7 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('material-receive.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
+    <a href="{{ route('material-receives.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
             class="fa fa-plus"></i></a>
 @endsection
 
@@ -60,12 +60,12 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('material-receive.show', $mrr->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('material-receives.show', $mrr->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('material-receive.edit', $mrr->id) }}" data-toggle="tooltip"
+                                    <a href="{{ route('material-receives.edit', $mrr->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     {!! Form::open([
-                                        'url' => route('material-receive.destroy', $mrr->id),
+                                        'url' => route('material-receives.destroy', $mrr->id),
                                         'method' => 'delete',
                                         'class' => 'd-inline',
                                         'data-toggle' => 'tooltip',
