@@ -72,6 +72,7 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $validatedRequest = $this->checkValidation($request);
         if (!empty($validatedRequest->original)) {
             return response()->json($validatedRequest->original);
@@ -287,6 +288,8 @@ class PurchaseOrderController extends Controller
                 'particular' => $value
             ];
         }
+
+        
 
         return [
             'purchaseOrderData' => $purchaseOrderData,

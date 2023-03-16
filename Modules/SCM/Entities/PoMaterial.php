@@ -5,6 +5,7 @@ namespace Modules\SCM\Entities;
 use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\Material;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SCM\Entities\PurchaseOrderLine;
 
 class PoMaterial extends Model
 {
@@ -26,4 +27,8 @@ class PoMaterial extends Model
         return $this->belongsTo(Brand::class);
     }
     
+    public function purchaseOrderLines()
+    {
+        return $this->hasMany(PurchaseOrderLine::class, 'po_composite_key', 'po_composite_key');
+    }
 }
