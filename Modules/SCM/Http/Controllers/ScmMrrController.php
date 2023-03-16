@@ -44,7 +44,7 @@ class ScmMrrController extends Controller
     {
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
-        return view('scm::mrr.create', compact('brands','branches'));
+        return view('scm::mrr.create', compact('brands', 'branches'));
     }
 
     /**
@@ -61,10 +61,10 @@ class ScmMrrController extends Controller
             $requestData['created_by'] = auth()->id();
             $purchaseRequisition = ScmMrr::create($requestData);
 
-            $requisitionDetails = [];
+            $mrrDetails = [];
             $serialCode = [];
             foreach ($request->material_id as $key => $data) {
-                $requisitionDetails[] = [
+                $mrrDetails[] = [
                     'material_id' => $request->material_id[$key],
                     'description' => $request->description[$key],
                     'brand_id' => $request->brand_id[$key],
@@ -78,7 +78,7 @@ class ScmMrrController extends Controller
                 ];
                 $serialCode[] = explode(',', $request->sl_code[$key]);
             }
-            $MrrDetail = $purchaseRequisition->scmMrrLines()->createMany($requisitionDetails);
+            $MrrDetail = $purchaseRequisition->scmMrrLines()->createMany($mrrDetails);
 
             foreach ($MrrDetail as $key => $value) {
                 $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) {
@@ -114,10 +114,10 @@ class ScmMrrController extends Controller
             ->where('purchase_order_id', $materialReceive->purchase_order_id)
             ->get()
             ->pluck('material_id', 'material.materialNameWithCode');
-            
+
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
-        return view('scm::mrr.create', compact('branches','brands', 'material_list', 'materialReceive'));
+        return view('scm::mrr.create', compact('branches', 'brands', 'material_list', 'materialReceive'));
     }
 
     /**
@@ -130,10 +130,10 @@ class ScmMrrController extends Controller
     {
         $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
         try {
-            $requisitionDetails = [];
+            $mrrDetails = [];
             $serialCode = [];
             foreach ($request->material_id as $key => $data) {
-                $requisitionDetails[] = [
+                $mrrDetails[] = [
                     'material_id' => $request->material_id[$key],
                     'description' => $request->description[$key],
                     'brand_id' => $request->brand_id[$key],
@@ -147,9 +147,11 @@ class ScmMrrController extends Controller
                 ];
                 $serialCode[] = explode(',', $request->sl_code[$key]);
             }
+
+            dd($serialCode);
             $materialReceive->update($requestData);
             $materialReceive->scmMrrLines()->delete();
-            $MrrDetail = $materialReceive->scmMrrLines()->createMany($requisitionDetails);
+            $MrrDetail = $materialReceive->scmMrrLines()->createMany($mrrDetails);
 
             foreach ($MrrDetail as $key => $value) {
                 $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) {

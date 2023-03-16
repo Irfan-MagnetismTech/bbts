@@ -215,7 +215,7 @@
                         <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="{{ $warranty_period[$key]  }}">
                     </td>
                     <td>
-                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off" value="{{ $unit[$key]  }}">
+                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off" value="{{ $unit[$key]  }}" readonly>
                     </td>
                     <td>
                         <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ $quantity[$key] }}" >
