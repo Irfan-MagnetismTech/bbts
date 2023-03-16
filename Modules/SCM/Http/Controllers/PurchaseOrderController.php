@@ -17,6 +17,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\CsMaterialSupplier;
 use Modules\SCM\Entities\Indent;
 use Modules\SCM\Entities\IndentLine;
+use Modules\SCM\Entities\PoMaterial;
 use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
 use Modules\SCM\Http\Requests\PurchaseOrderRequest;
 
@@ -72,7 +73,6 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $validatedRequest = $this->checkValidation($request);
         if (!empty($validatedRequest->original)) {
             return response()->json($validatedRequest->original);
@@ -90,6 +90,8 @@ class PurchaseOrderController extends Controller
             if (!empty($finalData['poTermsAndConditions'])) {
                 $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
             }
+
+            PoMaterial::insert($finalData['poMaterials']);
 
             DB::commit();
             return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Created Successfully'], 200);
@@ -131,11 +133,12 @@ class PurchaseOrderController extends Controller
                 ]
             );
 
-            foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
-                $materials[] = $this->searchMaterialByCsAndRequsiition($value->cs_id, $value->scm_purchase_requisition_id);
-            }
+        foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
+            $materials[] = $this->searchMaterialByCsAndRequsiition($value->cs_id, $value->scm_purchase_requisition_id);
+            $brands[] = $this->searchMaterialPriceByCsAndRequsiition($value->cs_id, $purchaseOrder->supplier_id, $value->material_id);
+        }
 
-        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions', 'materials'));
+        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions', 'materials', 'brands'));
     }
 
     /**
@@ -146,34 +149,37 @@ class PurchaseOrderController extends Controller
      */
     public function update(Request $request, PurchaseOrder $purchaseOrder)
     {
+        $validatedRequest = $this->checkValidation($request);
+        if (!empty($validatedRequest->original)) {
+            return response()->json($validatedRequest->original);
+        }
+
         try {
-            $purchaseOrderData = $request->only('po_no', 'date', 'comparative_statement_id', 'indent_id', 'remarks', 'trams_of_Supply', 'trams_of_payment', 'trams_of_condition', 'delivery_location', 'created_by', 'branch_id');
+            $finalData = $this->preparePurchaseOrderData($request, $purchaseOrder);
 
-            $purchaseOrderLinesData = [];
-            foreach ($request->purchase_requisition_id as $key => $data) {
-                $purchaseOrderLinesData[] = [
-                    'purchase_requisition_id' => $request->purchase_requisition_id[$key],
-                    'purchase_order_id'       => $request->purchase_order_id[$key],
-                    'material_id'             => $request->material_id[$key],
-                    'po_composit_key'         => $request->po_composit_key[$key],
-                    'quantity'                => $request->quantity[$key],
-                    'warranty_period'         => $request->warranty_period[$key],
-                    'installation_cost'       => $request->installation_cost[$key],
-                    'transport_cost'          => $request->transport_cost[$key],
-                    'unit_price'              => $request->unit_price[$key],
-                    'vat'                     => $request->vat[$key],
-                    'tax'                     => $request->tax[$key],
-                    'total_amount'            => $request->total_amount[$key],
-                    'required_date'           => $request->required_date[$key],
-                ];
-            }
+            DB::beginTransaction();
+            $finalData['purchaseOrderData']['created_by'] = auth()->user()->id;
 
-            $purchaseOrder->update($purchaseOrderData);
+            $purchaseOrder->update($finalData['purchaseOrderData']);
+
+            $oldPoCompositeKeys = $purchaseOrder->purchaseOrderLines()->pluck('po_composit_key')->unique();
+            $oldpoMaterials = PoMaterial::whereIn('po_composit_key', $oldPoCompositeKeys)->get();
+            $oldpoMaterials->each->forceDelete();
+
             $purchaseOrder->purchaseOrderLines()->delete();
-            $purchaseOrder->purchaseOrderLines()->createMany($purchaseOrderLinesData);
-        } catch (QueryException $e) {
+            $purchaseOrder->purchaseOrderLines()->createMany($finalData['purchaseOrderLinesData']);
 
-            return redirect()->route('requisitions.create')->withInput()->withErrors($e->getMessage());
+            $purchaseOrder->poTermsAndConditions()->delete();
+            if ($finalData['poTermsAndConditions'] != null) {
+                $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
+            }
+            PoMaterial::insert($finalData['poMaterials']);
+
+            DB::commit();
+            return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Updated Successfully'], 200);
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('requisitions.index')->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -192,7 +198,6 @@ class PurchaseOrderController extends Controller
             $purchaseOrder->delete();
 
             DB::commit();
-
             return redirect()->route('purchase-orders.index')->with('message', 'Purchase Order Deleted Successfully');
         } catch (QueryException $e) {
             DB::rollBack();
@@ -211,7 +216,7 @@ class PurchaseOrderController extends Controller
                     ->where('scm_purchase_requisition_id', $reqId);
             })
             ->get()
-            ->unique('material_id');
+            ->unique('material_id', 'brand_id');
     }
 
     public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
@@ -259,18 +264,20 @@ class PurchaseOrderController extends Controller
         }
     }
 
-    private function preparePurchaseOrderData($request)
+    private function preparePurchaseOrderData($request, $purchaseOrder = null)
     {
+        $requestMethod = request()->method();
         $purchaseOrderData = $request->all();
 
         $purchaseOrderLinesData = [];
         foreach ($purchaseOrderData['purchase_requisition_id'] as $key => $value) {
             $purchaseOrderLinesData[] = [
                 'scm_purchase_requisition_id' => $request->purchase_requisition_id[$key] ?? null,
-                'po_composit_key'         => $this->purchaseOrderNo . '-' . $key ?? null,
+                'po_composit_key'         => ($requestMethod === "PUT" ? $purchaseOrder->po_no :  $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key] ?? null,
                 'cs_id'                      => $request->cs_id[$key] ?? null,
                 'quotation_no'               => $request->quotation_no[$key] ?? null,
                 'material_id'             => $request->material_id[$key] ?? null,
+                'brand_id'                => $request->brand_id[$key] ?? null,
                 'description'             => $request->description[$key] ?? null,
                 'quantity'                => $request->quantity[$key] ?? null,
                 'warranty_period'         => $request->warranty_period[$key] ?? null,
@@ -289,12 +296,61 @@ class PurchaseOrderController extends Controller
             ];
         }
 
-        
+        $materials = [];
+        $allMaterialsAreSame = true;
+        $firstMaterialId = $purchaseOrderLinesData[0]['material_id'];
+        foreach ($purchaseOrderLinesData as $key => $value) {
+            if ($firstMaterialId != $value['material_id']) {
+                $allMaterialsAreSame = false;
+                break;
+            }
+        }
+
+        if ($allMaterialsAreSame) {
+            $materials[] = [
+                'po_composit_key' => ($requestMethod === "PUT" ? $purchaseOrder->po_no :  $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key],
+                'material_id' => $firstMaterialId,
+                'quantity' => array_sum(array_column($purchaseOrderLinesData, 'quantity')),
+                'brand_id' => $request->brand_id[$key] ?? null,
+                'unit_price' => $request->unit_price[$key] ?? null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        } else {
+            foreach ($purchaseOrderLinesData as $key => $value) {
+                $materials[] = [
+                    'po_composit_key' => ($requestMethod === "PUT" ? $purchaseOrder->po_no :  $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key],
+                    'material_id' => $value['material_id'],
+                    'quantity' => $value['quantity'],
+                    'brand_id' => $request->brand_id[$key] ?? null,
+                    'unit_price' => $request->unit_price[$key] ?? null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+
+        $poMaterials = [];
+        // Iterate through each element of the given array
+        foreach ($materials as $item) {
+            // Create a unique key based on material_id and brand_id
+            $key = $item['material_id'] . '-' . $item['brand_id'];
+            // If the key already exists in the merged array, add the quantity
+            if (isset($poMaterials[$key])) {
+                $poMaterials[$key]['quantity'] += (int) $item['quantity'];
+            } else {
+                // If the key doesn't exist, add a new item to the merged array
+                $poMaterials[$key] = $item;
+            }
+        }
+        // Convert the merged array back to a sequential array
+        $poMaterials = array_values($poMaterials);
 
         return [
             'purchaseOrderData' => $purchaseOrderData,
             'purchaseOrderLinesData' => $purchaseOrderLinesData,
             'poTermsAndConditions' => $poTermsAndConditions,
+            'poMaterials' => $poMaterials,
         ];
     }
 }

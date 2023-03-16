@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('cs_id')->nullable();
             $table->string('quotation_no')->nullable();
 			$table->bigInteger('material_id')->nullable();
+            $table->bigInteger('brand_id')->nullable();
             $table->text('description')->nullable();
 			$table->float('quantity')->nullable();
 			$table->float('warranty_period')->nullable();
