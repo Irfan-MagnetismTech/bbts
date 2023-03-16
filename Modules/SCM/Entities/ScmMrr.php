@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Modules\Admin\Entities\User;
 use Modules\SCM\Entities\Supplier;
 use Modules\SCM\Entities\ScmMrrLine;
+use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\PurchaseOrder;
 
@@ -55,5 +56,14 @@ class ScmMrr extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'branch_id');
+    }
+    public function stockLedger()
+    {
+        return $this->morphMany(StockLedger::class, 'stockable');
+    }
+
+    public function stockLedgerReceivable()
+    {
+        return $this->morphMany(StockLedger::class, 'receivable');
     }
 }

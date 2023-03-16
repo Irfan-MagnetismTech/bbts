@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\SCM\Http\Controllers\ScmMrrController;
 
 Route::resources([
-    'material-receiving-reports' => ScmMrrController::class,
+    'material-receives' => ScmMrrController::class,
 ]);
 
 Route::get('search_po_with_date', [ScmMrrController::class, 'searchPoWithDate'])->name('search_po_with_date');

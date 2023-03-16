@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\Material;
+use App\Services\BbtsGlobalService;
 use Illuminate\Database\QueryException;
 use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Http\Requests\MrrRequest;
@@ -17,6 +18,13 @@ use Illuminate\Contracts\Support\Renderable;
 
 class ScmMrrController extends Controller
 {
+
+    private $materialReceiveNo;
+
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->materialReceiveNo = $globalService->generateUniqueId(ScmMrr::class, 'MRR');
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -35,7 +43,8 @@ class ScmMrrController extends Controller
     public function create()
     {
         $brands = Brand::latest()->get();
-        return view('scm::mrr.create', compact('brands'));
+        $branches = Branch::latest()->get();
+        return view('scm::mrr.create', compact('brands', 'branches'));
     }
 
     /**
@@ -47,41 +56,63 @@ class ScmMrrController extends Controller
     {
         $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
         try {
-            $lastMRSId = ScmMrr::latest()->first();
-            if ($lastMRSId) {
-                $requestData['mrr_no'] = 'mrr-' . now()->format('Y') . '-' . $lastMRSId->id + 1;
-            } else {
-                $requestData['mrr_no'] = 'mrr-' . now()->format('Y') . '-' . 1;
-            }
+            $requestData['mrr_no'] =  $this->materialReceiveNo;
             $requestData['created_by'] = auth()->id();
-            $purchaseRequisition = ScmMrr::create($requestData);
+            $materialReceive = ScmMrr::create($requestData);
 
-            $requisitionDetails = [];
+            $mrrDetails = [];
             $serialCode = [];
-            foreach ($request->material_name as $key => $data) {
-                $requisitionDetails[] = [
-                    'material_id' => $request->material_name[$key],
-                    'item_code' => $request->description[$key],
+            foreach ($request->material_id as $key => $data) {
+                $mrrDetails[] = [
+                    'material_id' => $request->material_id[$key],
+                    'description' => $request->description[$key],
                     'brand_id' => $request->brand_id[$key],
                     'model' => $request->model[$key],
                     'quantity' => $request->quantity[$key],
                     'initial_mark' => $request->initial_mark[$key],
                     'final_mark' => $request->final_mark[$key],
                     'item_code' => $request->item_code[$key],
+                    'warranty_period' => $request->warranty_period[$key],
+                    'unit_price' => $request->unit_price[$key],
                 ];
                 $serialCode[] = explode(',', $request->sl_code[$key]);
             }
-            $MrrDetail = $purchaseRequisition->scmMrrLines()->createMany($requisitionDetails);
-
+            $MrrDetail = $materialReceive->scmMrrLines()->createMany($mrrDetails);
+            $stock = [];
             foreach ($MrrDetail as $key => $value) {
-                $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) {
-                    return ['serial_or_drum_code' => $serial];
+                $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) use ($request, $key, $value, $materialReceive, &$stock) {
+                    if ($request->material_type[$key] == 'Drum') {
+                        $serial_code = 'F-' . $serial;
+                    } else {
+                        $serial_code = 'SL-' . $serial;
+                    }
+                    $stock[] = [
+                        'material_id' => $value->material_id,
+                        'stockable_type' => ScmMrr::class,
+                        'stockable_id' => $materialReceive->id,
+                        'brand_id' => $value->brand_id,
+                        'branch_id' => $request->branch_id,
+                        'model' => $value->model,
+                        'quantity' => 1,
+                        'initial_mark' => $value->initial_mark,
+                        'final_mark' => $value->final_mark,
+                        'item_code' => $value->item_code,
+                        'warranty_period' => $value->warranty_period,
+                        'unit_price' => $value->unit_price,
+                        'serial_code' =>  $serial_code,
+                        'unit' => $request->unit[$key],
+                    ];
+                    return [
+                        'serial_or_drum_key' => $serial,
+                        'serial_or_drum_code' =>  $serial_code,
+
+                    ];
                 }, $serialCode[$key]));
             }
-
-            return redirect()->route('material-receiving-reports.index')->with('message', 'Data has been inserted successfully');
+            $materialReceive->stockLedgerReceivable()->createMany($stock);
+            return redirect()->route('material-receives.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
-            return redirect()->route('material-receiving-reports.create')->withInput()->withErrors($e->getMessage());
+            return redirect()->route('material-receives.create')->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -100,9 +131,17 @@ class ScmMrrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ScmMrr $materialReceive)
     {
-        return view('scm::edit');
+        $material_list = PurchaseOrderLine::query()
+            ->with('material')
+            ->where('purchase_order_id', $materialReceive->purchase_order_id)
+            ->get()
+            ->pluck('material_id', 'material.materialNameWithCode');
+
+        $brands = Brand::latest()->get();
+        $branches = Branch::latest()->get();
+        return view('scm::mrr.create', compact('branches', 'brands', 'material_list', 'materialReceive'));
     }
 
     /**
@@ -111,9 +150,69 @@ class ScmMrrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(MrrRequest $request, ScmMrr $materialReceive)
     {
-        //
+        $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
+        try {
+
+            $mrrDetails = [];
+            $serialCode = [];
+
+            foreach ($request->material_id as $key => $data) {
+                $mrrDetails[] = [
+                    'material_id' => $request->material_id[$key],
+                    'description' => $request->description[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                    'quantity' => $request->quantity[$key],
+                    'initial_mark' => $request->initial_mark[$key],
+                    'final_mark' => $request->final_mark[$key],
+                    'item_code' => $request->item_code[$key],
+                    'warranty_period' => $request->warranty_period[$key],
+                    'unit_price' => $request->unit_price[$key],
+                ];
+                $serialCode[] = explode(',', $request->sl_code[$key]);
+            }
+            $materialReceive->update($requestData);
+            $materialReceive->scmMrrLines()->delete();
+            $materialReceive->stockLedgerReceivable()->delete();
+            $MrrDetail = $materialReceive->scmMrrLines()->createMany($mrrDetails);
+            $stock = [];
+            foreach ($MrrDetail as $key => $value) {
+                $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) use ($request, $key, $value, $materialReceive, &$stock) {
+                    if ($request->material_type[$key] == 'Drum') {
+                        $serial_code = 'F-' . $serial;
+                    } else {
+                        $serial_code = 'SL-' . $serial;
+                    }
+                    $stock[] = [
+                        'material_id' => $value->material_id,
+                        'stockable_type' => ScmMrr::class,
+                        'stockable_id' => $materialReceive->id,
+                        'brand_id' => $value->brand_id,
+                        'branch_id' => $request->branch_id,
+                        'model' => $value->model,
+                        'quantity' => 1,
+                        'initial_mark' => $value->initial_mark,
+                        'final_mark' => $value->final_mark,
+                        'item_code' => $value->item_code,
+                        'warranty_period' => $value->warranty_period,
+                        'unit_price' => $value->unit_price,
+                        'serial_code' =>  $serial_code,
+                        'unit' => $request->unit[$key],
+                    ];
+                    return [
+                        'serial_or_drum_key' => $serial,
+                        'serial_or_drum_code' =>  $serial_code,
+
+                    ];
+                }, $serialCode[$key]));
+            }
+            $materialReceive->stockLedgerReceivable()->createMany($stock);
+            return redirect()->route('material-receives.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('material-receives.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
