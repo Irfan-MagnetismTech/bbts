@@ -1,4 +1,4 @@
-<div class="pcoded-navigation-label text-uppercase bg-primary">Sales</div>
+<div class="pcoded-navigation-label text-uppercase bg-primary">Supply Chain</div>
 <ul class="pcoded-item pcoded-left-item">
     {{-- @hasanyrole('super-admin|admin') --}}
     <li class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'couriers.*']) ? 'active pcoded-trigger' : null }}">

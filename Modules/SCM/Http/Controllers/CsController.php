@@ -71,7 +71,7 @@ class CsController extends Controller
             DB::beginTransaction();
 
             $all_details['all_request']['created_by'] = auth()->id();
-            $cs = Cs::create($all_details['all_request']);
+            $cs = Cs    ::create($all_details['all_request']);
             $cs_materials = $cs->csMaterials()->createMany($all_details['cs_materials']);
             $cs_suppliers = $cs->csSuppliers()->createMany($all_details['cs_suppliers']);
             $cs->csMaterialsSuppliers()->createMany($this->getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request));
