@@ -119,8 +119,7 @@
                 <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
             </tr>
         </thead>
-        <tbody></tbody>
-        <tfoot>
+        <tbody>
             @php
                 $purchase_requisition = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
                 $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scm_purchase_requisition_id') : []);
@@ -193,12 +192,18 @@
                     </td>
 
                     <td>
+                        {{-- @dd($materials[$key]);
+                        @foreach ($materials[$key] as $brand)
+                            @dd($brand);
+                        @endforeach --}}
                         <select class="form-control text-center brand_name select2" name="brand[]">
                             <option value="" readonly selected>Select Brand</option>
                             @foreach ($materials[$key] as $brand)
-                                <option value="{{ $brand->brand_id }}"
-                                    {{ $brand->brand_id == $brand_id[$key] ? 'selected' : '' }}>
-                                    {{ $brand->brand->name }}</option>
+                                @if($brand->material_id == $material_id[$key])
+                                    <option value="{{ $brand->brand_id }}"
+                                        {{ $brand->brand_id == $brand_id[$key] ? 'selected' : '' }}>
+                                        {{ $brand->brand->name }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </td>
@@ -259,6 +264,8 @@
                     </td>
                 </tr>
             @endforeach
+        </tbody>
+        <tfoot>
             <tr>
                 <td colspan="11" class="text-right">Total Amount</td>
                 <td>
@@ -312,11 +319,11 @@
             indentWiseRequisitions.forEach(function(value, element) {
                 // let output = JSON.parse(key);
                 const keys = Object.keys(value);
-                console.log("keys", keys)
-                
+                console.log("keys", keys[0])
+
                 console.log("value", value[keys])
-                // options +=
-                //     `<option value="${key}">${element}</option>`;
+                options +=
+                    `<option value="${keys[0]}">${value[keys]}</option>`;
             });
             req_options = options;
         @endif
