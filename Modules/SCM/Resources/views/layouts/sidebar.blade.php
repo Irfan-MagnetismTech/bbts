@@ -117,5 +117,20 @@
             </li>
         </ul>
     </li>
+    <li class="pcoded-hasmenu {{ request()->routeIs(['material-issues.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+            <span class="pcoded-mtext">Material Issue</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('material-issues.create') ? 'active' : null }}">
+                <a href="{{ route('material-issues.create') }}"> <span class="pcoded-micon"><i class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span class="pcoded-mcaret"></span></a>
+            </li>
+            <li class="{{ request()->routeIs('material-issues.index') ? 'active' : null }}">
+                <a href="{{ route('material-issues.index') }}"> <span class="pcoded-micon"><i class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
     {{-- @endhasanyrole --}}
 </ul>
