@@ -12,6 +12,7 @@ use App\Services\BbtsGlobalService;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Ticketing\Entities\SupportQuickSolution;
 use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
 
@@ -142,8 +143,9 @@ class SupportTicketController extends Controller
                 $client->select('id', 'name', 'email');
             }]);
         }]);
+        $quickSolutions = SupportQuickSolution::get();
         $priorities = config('businessinfo.ticketPriorities');
-        return view('ticketing::support-tickets.show', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities'));
+        return view('ticketing::support-tickets.show', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities', 'quickSolutions'));
     }
 
     /**
@@ -256,6 +258,55 @@ class SupportTicketController extends Controller
                     'message' => 'You cannot accept this ticket. As it is currently '.$ticket->status.'.'
                 ]);
             }
+        } else {
+            return back()->withErrors([
+                'message' => 'Invalid Request. Your IP is logged in the system.'
+            ]);
+        }
+    }
+
+    public function addSolution(Request $request) {
+
+        if(!empty($request->ticket_id)) {
+            
+                $ticket = SupportTicket::findOrFail($request->ticket_id);
+
+                if($ticket->status == 'Pending' || $ticket->status == 'Closed') {
+                    return back()->withErrors([
+                        'message' => 'You cannot add solution to this ticket.'
+                    ]);
+                }
+
+                $permissibleUsers = $ticket->supportTicketLifeCycles
+                              ->where('status', '!=', 'Pending')
+                              ->where('status', '!=', 'Closed')
+                              ->where('status', '!=', 'Approved')
+                              ->pluck('user_id')
+                              ->toArray();
+
+                if(!in_array(auth()->user()->id, $permissibleUsers)) {
+                    return back()->withErrors([
+                        'message' => 'You cannot add solution to this ticket.'
+                    ]);
+                } else {
+                    try {
+                        DB::transaction(function() use($request, $ticket) {
+                            $ticket->supportTicketLifeCycles()->create([
+                                'status' => collect($ticket->supportTicketLifeCycles)->last()->status,
+                                'user_id' => auth()->user()->id,
+                                'support_ticket_id' => $ticket->id,
+                                'remarks' => ($request->quick_solution != 'other') ? $request->quick_solution : $request->custom_solution
+                            ]);
+                        });
+
+                        return back()->with('message', 'Solution Added Successfully');
+                    } catch (QueryException $e) {
+                        dd($e);   
+                    }
+                }
+
+                // Incase of Handover or Forward USER_ID will be blank and it will be available after someone approve it.
+
         } else {
             return back()->withErrors([
                 'message' => 'Invalid Request. Your IP is logged in the system.'

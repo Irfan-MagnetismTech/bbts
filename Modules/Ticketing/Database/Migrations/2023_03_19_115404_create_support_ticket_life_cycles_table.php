@@ -17,7 +17,7 @@ return new class extends Migration
     {
         Schema::create('support_ticket_life_cycles', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->nullable();
             $table->foreignIdFor(SupportTicket::class);
             $table->string('status', 20);
             $table->string('remarks', 255)->nullable();

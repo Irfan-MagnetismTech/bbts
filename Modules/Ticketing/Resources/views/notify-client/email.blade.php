@@ -14,7 +14,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ url()->previous() }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-chevron-left"></i></a>
+    <a href="{{ route('support-tickets.show', ['support_ticket' => $supportTicket->id]) }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-chevron-left"></i></a>
 @endsection
 
 @section('content-grid', 'offset-md-1 col-md-10 offset-lg-2 col-lg-8 my-3')

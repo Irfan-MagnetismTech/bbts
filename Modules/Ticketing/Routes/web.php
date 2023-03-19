@@ -30,6 +30,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     ]);
 
     Route::post('/accept-ticket', [SupportTicketController::class, 'acceptTicket'])->name('accept-ticket');
+    Route::post('/add-solution', [SupportTicketController::class, 'addSolution'])->name('add-solution');
 
     Route::get('ticket-movements/{type}/{id}', [TicketMovementController::class, 'moveTicket'])->name('ticket-movements');
     Route::get('notify-client/{ticketId}/{type}', [NotifyClientController::class, 'notifyClient'])->name('notify-client');

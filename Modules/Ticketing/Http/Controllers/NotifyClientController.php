@@ -39,15 +39,17 @@ class NotifyClientController extends Controller
         }
 
 
+        $smsStatus = true;
         if($type == 'email') {
             $to = $supportTicket?->clientDetail?->client?->email;
             $notificationError = (new EmailService())->sendEmail($to, $cc, $receiver, $subject, $message);
         } else if($type == 'sms') {
             $to = $supportTicket?->clientDetail?->client?->mobile;
             $notificationError = (new SmsService())->sendSms($to, $message);
+            $smsStatus = $notificationError->ok();
         }
 
-        if ($notificationError == false || $notificationError->ok() == true) {
+        if ($notificationError == false || $smsStatus == true) {
             return back()->with('message', ucfirst($type)." has been sent successfully.");
         } else {
             return back()->with('error', 'Something went wrong. Please try again.');
