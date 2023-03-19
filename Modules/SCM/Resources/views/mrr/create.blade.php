@@ -317,6 +317,7 @@
 
             @if (empty($materialReceive) && empty(old('material_id')))
                 appendCalculationRow();
+                
             @endif
         function appendCalculationRow() {
             
@@ -382,8 +383,7 @@
                         </tr>
                     `;
             $('#material_requisition tbody').append(row);
-            $('input[data-role="tagsinput"]').tagsinput({
-            });
+            $('input[data-role="tagsinput"]').tagsinput({});
         }
         /* Adds and removes quantity row on click */
         $("#material_requisition")
