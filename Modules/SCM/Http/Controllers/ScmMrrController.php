@@ -90,6 +90,7 @@ class ScmMrrController extends Controller
                         $serial_code = 'SL-' . $serial;
                     }
                     $stock[] = [
+                        'received_type'     => 'MRR',
                         'material_id'       => $value->material_id,
                         'stockable_type'    => ScmMrr::class,
                         'stockable_id'      => $materialReceive->id,
@@ -190,6 +191,7 @@ class ScmMrrController extends Controller
                         $serial_code = 'SL-' . $serial;
                     }
                     $stock[] = [
+                        'received_type'     => 'MRR',
                         'material_id'       => $value->material_id,
                         'stockable_type'    => ScmMrr::class,
                         'stockable_id'      => $materialReceive->id,
