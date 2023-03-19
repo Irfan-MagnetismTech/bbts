@@ -222,9 +222,9 @@ class ScmMrrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmMrr $materialReceive)
     {
-        //
+       
     }
 
     public function searchPoWithDate(Request $request)
