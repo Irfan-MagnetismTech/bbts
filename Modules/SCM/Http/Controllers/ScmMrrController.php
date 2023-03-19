@@ -15,6 +15,7 @@ use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Http\Requests\MrrRequest;
 use Modules\SCM\Entities\PurchaseOrderLine;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\PoMaterial;
 
 class ScmMrrController extends Controller
 {
@@ -74,6 +75,7 @@ class ScmMrrController extends Controller
                     'item_code' => $request->item_code[$key],
                     'warranty_period' => $request->warranty_period[$key],
                     'unit_price' => $request->unit_price[$key],
+                    'po_composit_key' => $request->po_composit_key[$key],
                 ];
                 $serialCode[] = explode(',', $request->sl_code[$key]);
             }
@@ -110,7 +112,7 @@ class ScmMrrController extends Controller
                 }, $serialCode[$key]));
             }
             $materialReceive->stockLedgerReceivable()->createMany($stock);
-            DB::beginTransaction();
+            DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
             DB::rollBack();
@@ -171,6 +173,7 @@ class ScmMrrController extends Controller
                     'item_code'         => $request->item_code[$key],
                     'warranty_period'   => $request->warranty_period[$key],
                     'unit_price'        => $request->unit_price[$key],
+                    'po_composit_key'   => $request->po_composit_key[$key],
                 ];
                 $serialCode[] = explode(',', $request->sl_code[$key]);
             }
@@ -224,7 +227,16 @@ class ScmMrrController extends Controller
      */
     public function destroy(ScmMrr $materialReceive)
     {
-       
+        try {
+            DB::beginTransaction();
+            $materialReceive->stockLedgerReceivable()->delete();
+            $materialReceive->delete();
+            DB::commit();
+            return redirect()->route('material-receives.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->route('material-receives.index')->withInput()->withErrors($err->getMessage());
+        }
     }
 
     public function searchPoWithDate(Request $request)
@@ -262,5 +274,18 @@ class ScmMrrController extends Controller
     {
         $items = Material::find($material_id);
         return response()->json($items);
+    }
+
+    public function getPocompositeWithPrice($po_id, $material_id, $brand_id)
+    {
+        $item = PoMaterial::query()
+            ->where([
+                'material_id' => $material_id,
+                'brand_id' => $brand_id
+            ])->whereHas('purchaseOrderLines', function ($item) use ($po_id) {
+                return $item->where('purchase_order_id', $po_id);
+            })
+            ->get();
+        return response()->json($item);
     }
 }
