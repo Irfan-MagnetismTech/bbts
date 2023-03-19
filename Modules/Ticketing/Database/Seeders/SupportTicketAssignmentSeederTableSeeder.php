@@ -5,7 +5,7 @@ namespace Modules\Ticketing\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
-class SupportTickerAssignmentSeederTableSeeder extends Seeder
+class SupportTicketAssignmentSeederTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.

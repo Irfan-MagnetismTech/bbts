@@ -29,6 +29,8 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         'ticket-movements' => TicketMovementController::class,
     ]);
 
+    Route::post('/accept-ticket', [SupportTicketController::class, 'acceptTicket'])->name('accept-ticket');
+
     Route::get('ticket-movements/{type}/{id}', [TicketMovementController::class, 'moveTicket'])->name('ticket-movements');
     Route::get('notify-client/{ticketId}/{type}', [NotifyClientController::class, 'notifyClient'])->name('notify-client');
     Route::post('send-notification', [NotifyClientController::class, 'sendNotification'])->name('send-notification');

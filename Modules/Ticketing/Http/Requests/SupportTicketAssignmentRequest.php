@@ -4,7 +4,7 @@ namespace Modules\Ticketing\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SupportTickerAssignmentRequest extends FormRequest
+class SupportTicketAssignmentRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
