@@ -38,6 +38,11 @@ Default `storage` => `storage/app/public`
 
 When using **`storeAs`** or similar method where we need to explicitly give storage path, please use the above convention
 
+### Email
+
+Default `mail` views are published and updated to work with markdown and removed default logos and links. 
+**Keep other updated if you work on these or create your own view file**
+
 ### Branching
 
 ```
