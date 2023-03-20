@@ -15,6 +15,7 @@ use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Http\Requests\MrrRequest;
 use Modules\SCM\Entities\PurchaseOrderLine;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\PoMaterial;
 
 class ScmMrrController extends Controller
 {
@@ -56,9 +57,9 @@ class ScmMrrController extends Controller
     {
         $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
         try {
+            DB::beginTransaction();
             $requestData['mrr_no'] =  $this->materialReceiveNo;
             $requestData['created_by'] = auth()->id();
-            $materialReceive = ScmMrr::create($requestData);
 
             $mrrDetails = [];
             $serialCode = [];
@@ -74,9 +75,11 @@ class ScmMrrController extends Controller
                     'item_code' => $request->item_code[$key],
                     'warranty_period' => $request->warranty_period[$key],
                     'unit_price' => $request->unit_price[$key],
+                    'po_composit_key' => $request->po_composit_key[$key],
                 ];
                 $serialCode[] = explode(',', $request->sl_code[$key]);
             }
+            $materialReceive = ScmMrr::create($requestData);
             $MrrDetail = $materialReceive->scmMrrLines()->createMany($mrrDetails);
             $stock = [];
             foreach ($MrrDetail as $key => $value) {
@@ -87,31 +90,33 @@ class ScmMrrController extends Controller
                         $serial_code = 'SL-' . $serial;
                     }
                     $stock[] = [
-                        'material_id' => $value->material_id,
-                        'stockable_type' => ScmMrr::class,
-                        'stockable_id' => $materialReceive->id,
-                        'brand_id' => $value->brand_id,
-                        'branch_id' => $request->branch_id,
-                        'model' => $value->model,
-                        'quantity' => 1,
-                        'initial_mark' => $value->initial_mark,
-                        'final_mark' => $value->final_mark,
-                        'item_code' => $value->item_code,
-                        'warranty_period' => $value->warranty_period,
-                        'unit_price' => $value->unit_price,
-                        'serial_code' =>  $serial_code,
-                        'unit' => $request->unit[$key],
+                        'received_type'     => 'MRR',
+                        'material_id'       => $value->material_id,
+                        'stockable_type'    => ScmMrr::class,
+                        'stockable_id'      => $materialReceive->id,
+                        'brand_id'          => $value->brand_id,
+                        'branch_id'         => $request->branch_id,
+                        'model'             => $value->model,
+                        'quantity'          => 1,
+                        'initial_mark'      => $value->initial_mark,
+                        'final_mark'        => $value->final_mark,
+                        'item_code'         => $value->item_code,
+                        'warranty_period'   => $value->warranty_period,
+                        'unit_price'        => $value->unit_price,
+                        'serial_code'       => $serial_code,
+                        'unit'              => $request->unit[$key],
                     ];
                     return [
-                        'serial_or_drum_key' => $serial,
-                        'serial_or_drum_code' =>  $serial_code,
-
+                        'serial_or_drum_key'    => $serial,
+                        'serial_or_drum_code'   =>  $serial_code,
                     ];
                 }, $serialCode[$key]));
             }
             $materialReceive->stockLedgerReceivable()->createMany($stock);
+            DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
+            DB::rollBack();
             return redirect()->route('material-receives.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -154,22 +159,22 @@ class ScmMrrController extends Controller
     {
         $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
         try {
-
+            DB::beginTransaction();
             $mrrDetails = [];
             $serialCode = [];
-
             foreach ($request->material_id as $key => $data) {
                 $mrrDetails[] = [
-                    'material_id' => $request->material_id[$key],
-                    'description' => $request->description[$key],
-                    'brand_id' => $request->brand_id[$key],
-                    'model' => $request->model[$key],
-                    'quantity' => $request->quantity[$key],
-                    'initial_mark' => $request->initial_mark[$key],
-                    'final_mark' => $request->final_mark[$key],
-                    'item_code' => $request->item_code[$key],
-                    'warranty_period' => $request->warranty_period[$key],
-                    'unit_price' => $request->unit_price[$key],
+                    'material_id'       => $request->material_id[$key],
+                    'description'       => $request->description[$key],
+                    'brand_id'          => $request->brand_id[$key],
+                    'model'             => $request->model[$key],
+                    'quantity'          => $request->quantity[$key],
+                    'initial_mark'      => $request->initial_mark[$key],
+                    'final_mark'        => $request->final_mark[$key],
+                    'item_code'         => $request->item_code[$key],
+                    'warranty_period'   => $request->warranty_period[$key],
+                    'unit_price'        => $request->unit_price[$key],
+                    'po_composit_key'   => $request->po_composit_key[$key],
                 ];
                 $serialCode[] = explode(',', $request->sl_code[$key]);
             }
@@ -186,31 +191,33 @@ class ScmMrrController extends Controller
                         $serial_code = 'SL-' . $serial;
                     }
                     $stock[] = [
-                        'material_id' => $value->material_id,
-                        'stockable_type' => ScmMrr::class,
-                        'stockable_id' => $materialReceive->id,
-                        'brand_id' => $value->brand_id,
-                        'branch_id' => $request->branch_id,
-                        'model' => $value->model,
-                        'quantity' => 1,
-                        'initial_mark' => $value->initial_mark,
-                        'final_mark' => $value->final_mark,
-                        'item_code' => $value->item_code,
-                        'warranty_period' => $value->warranty_period,
-                        'unit_price' => $value->unit_price,
-                        'serial_code' =>  $serial_code,
-                        'unit' => $request->unit[$key],
+                        'received_type'     => 'MRR',
+                        'material_id'       => $value->material_id,
+                        'stockable_type'    => ScmMrr::class,
+                        'stockable_id'      => $materialReceive->id,
+                        'brand_id'          => $value->brand_id,
+                        'branch_id'         => $request->branch_id,
+                        'model'             => $value->model,
+                        'quantity'          => 1,
+                        'initial_mark'      => $value->initial_mark,
+                        'final_mark'        => $value->final_mark,
+                        'item_code'         => $value->item_code,
+                        'warranty_period'   => $value->warranty_period,
+                        'unit_price'        => $value->unit_price,
+                        'serial_code'       =>  $serial_code,
+                        'unit'              => $request->unit[$key],
                     ];
                     return [
-                        'serial_or_drum_key' => $serial,
-                        'serial_or_drum_code' =>  $serial_code,
-
+                        'serial_or_drum_key'    => $serial,
+                        'serial_or_drum_code'   =>  $serial_code,
                     ];
                 }, $serialCode[$key]));
             }
             $materialReceive->stockLedgerReceivable()->createMany($stock);
+            DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
+            DB::rollBack();
             return redirect()->route('material-receives.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -220,9 +227,18 @@ class ScmMrrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmMrr $materialReceive)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $materialReceive->stockLedgerReceivable()->delete();
+            $materialReceive->delete();
+            DB::commit();
+            return redirect()->route('material-receives.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->route('material-receives.index')->withInput()->withErrors($err->getMessage());
+        }
     }
 
     public function searchPoWithDate(Request $request)
@@ -233,11 +249,11 @@ class ScmMrrController extends Controller
             ->where("po_no", "like", "%$search%")
             ->get()
             ->map(fn ($item) => [
-                'value' => $item->id,
-                'label' => $item->po_no,
-                'date' => $item->date,
-                'supplier_id' => $item?->supplier_id ?? 0,
-                'supplier_name' => $item?->supplier?->name ?? 0
+                'value'          => $item->id,
+                'label'          => $item->po_no,
+                'date'           => $item->date,
+                'supplier_id'    => $item?->supplier_id ?? 0,
+                'supplier_name'  => $item?->supplier?->name ?? 0
             ]);
 
 
@@ -260,5 +276,18 @@ class ScmMrrController extends Controller
     {
         $items = Material::find($material_id);
         return response()->json($items);
+    }
+
+    public function getPocompositeWithPrice($po_id, $material_id, $brand_id)
+    {
+        $item = PoMaterial::query()
+            ->where([
+                'material_id' => $material_id,
+                'brand_id' => $brand_id
+            ])->whereHas('purchaseOrderLines', function ($item) use ($po_id) {
+                return $item->where('purchase_order_id', $po_id);
+            })
+            ->get();
+        return response()->json($item);
     }
 }

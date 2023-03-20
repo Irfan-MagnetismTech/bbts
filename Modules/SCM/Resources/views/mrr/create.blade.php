@@ -96,7 +96,7 @@
             <label for="po_no">PO No:</label>
             <input type="text" class="form-control" id="po_no" aria-describedby="po_no"
                 name="po_no"
-                value="{{ $po_no }}">
+                value="{{ $po_no }}" autocomplete="off">
                 <input type="hidden" class="form-control" id="purchase_order_id" name="purchase_order_id" aria-describedby="purchase_order_id"
                 value="{{ $po_id }}">
         </div>
@@ -164,6 +164,7 @@
             $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
             $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
             $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
+            $po_composit_key = old('po_composit_key', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('po_composit_key') : []);
            
             $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
             $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('unit_price') : []);
@@ -182,6 +183,7 @@
                         </select>
                         <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="{{ $item_code[$key]  }}"> 
                         <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off" value="{{ $material_type[$key]  }}"> 
+                        <input type="hidden" name="po_composit_key[]" class="form-control po_composit_key" autocomplete="off" value="{{ $po_composit_key[$key]  }}"> 
                     </td>
 
                     <td>
@@ -317,6 +319,7 @@
 
             @if (empty($materialReceive) && empty(old('material_id')))
                 appendCalculationRow();
+                
             @endif
         function appendCalculationRow() {
             
@@ -328,6 +331,7 @@
                                 </select>
                                 <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
                                 <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
+                                <input type="hidden" name="po_composit_key[]" class="form-control po_composit_key" autocomplete="off"> 
                             </td>
                             <td>
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
@@ -371,7 +375,7 @@
                                 <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
                             </td>
                             <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10">
+                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly>
                             </td>
                             <td>
                                 <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
@@ -382,8 +386,7 @@
                         </tr>
                     `;
             $('#material_requisition tbody').append(row);
-            $('input[data-role="tagsinput"]').tagsinput({
-            });
+            $('input[data-role="tagsinput"]').tagsinput({});
         }
         /* Adds and removes quantity row on click */
         $("#material_requisition")
@@ -434,6 +437,28 @@
                     }
                 });
             })
+
+
+            $(document).on('change','.brand',function(){
+            let material_id = $(this).closest('tr').find('.material_name').val();
+            let brand_id = $(this).closest('tr').find('.brand').val();
+            let purchase_order_id = $("#purchase_order_id").val();
+
+            const url = '{{ url('scm/get_pocomposite_with_price') }}/' + purchase_order_id + '/' + material_id + '/' + brand_id;
+            var elemmtn = $(this);
+            (elemmtn).closest('tr').find('.unit_price').val(null);
+            (elemmtn).closest('tr').find('.po_composit_key').val(null);
+            $.getJSON(url, function(item) {
+                if(item.length){
+                    (elemmtn).closest('tr').find('.unit_price').val(item[0].unit_price);
+                    (elemmtn).closest('tr').find('.po_composit_key').val(item[0].po_composit_key);
+                }else{
+                    alert('No po is given for this Brand of that material');
+                }
+                });
+            })
+
+
 
             $(document).on('keyup', '.unit_price, .quantity', function() {
             var unit_price = $(this).closest('tr').find('.unit_price').val();

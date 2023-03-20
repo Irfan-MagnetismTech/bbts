@@ -26,9 +26,9 @@ class PoMaterial extends Model
     {
         return $this->belongsTo(Brand::class);
     }
-    
+
     public function purchaseOrderLines()
     {
-        return $this->hasMany(PurchaseOrderLine::class, 'po_composite_key', 'po_composite_key');
+        return $this->hasMany(PurchaseOrderLine::class, 'po_composit_key', 'po_composit_key');
     }
 }
