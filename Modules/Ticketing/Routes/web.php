@@ -38,4 +38,5 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::post('send-notification', [NotifyClientController::class, 'sendNotification'])->name('send-notification');
 
     Route::get('bulk-email', [PopWiseIssueController::class, 'index'])->name('bulk-email');
+    Route::post('send-bulk-email', [PopWiseIssueController::class, 'send'])->name('send-bulk-email');
 });
