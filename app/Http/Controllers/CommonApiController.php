@@ -89,10 +89,11 @@ class CommonApiController extends Controller
     {
         $results = Branch::query()
             ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->with('thana', 'district')
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,
-                'text' => $item->name,
+                'text' => $item->name." (".$item->location.") - ".$item->thana->name." - ".$item->district->name,
             ]);
 
         return response()->json($results);

@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use Modules\Ticketing\Http\Controllers\NotifyClientController;
+use Modules\Ticketing\Http\Controllers\PopWiseIssueController;
 use Modules\Ticketing\Http\Controllers\SupportTeamController;
 use Modules\Ticketing\Http\Controllers\TicketSourceController;
 use Modules\Ticketing\Http\Controllers\SupportTicketController;
@@ -36,4 +37,5 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::get('notify-client/{ticketId}/{type}', [NotifyClientController::class, 'notifyClient'])->name('notify-client');
     Route::post('send-notification', [NotifyClientController::class, 'sendNotification'])->name('send-notification');
 
+    Route::get('bulk-email', [PopWiseIssueController::class, 'index'])->name('bulk-email');
 });

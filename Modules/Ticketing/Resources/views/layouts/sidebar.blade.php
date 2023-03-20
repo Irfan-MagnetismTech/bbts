@@ -14,7 +14,7 @@
         </a>
     </li>
     <li class="">
-        <a href="{{ route('support-tickets.index') }}">
+        <a href="{{ route('bulk-email') }}">
             <span class="pr-2 w-25px d-inline-block"><i class="fas fa-mail-bulk"></i></span>
             <span class="pcoded-mtext">Bulk Email</span>
         </a>
