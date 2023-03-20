@@ -114,6 +114,20 @@ class CommonApiController extends Controller
         return response()->json($results);
     }
 
+    public function searchPopByBranch() {
+        $results = Pop::query()
+            ->where('branch_id', request('branch_id'))
+            ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'text' => $item->name,
+                'address' => $item->address,
+            ]);
+            
+        return response()->json($results);
+    }
+
     public function searchBrand()
     {
         $results = Brand::query()

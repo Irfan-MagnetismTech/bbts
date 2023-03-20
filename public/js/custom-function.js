@@ -80,17 +80,23 @@ function autocomplete(routeLink, idSelector, idSelectorChange) {
 /* 
     Example Usage from Blade: 
     
-    select2Ajax("{{ route('searchBranch') }}", '#branch_id')
+    select2Ajax("{{ route('searchPopByBranch') }}", '#search_pop', '#branch_id')
 
 */
-function select2Ajax(route, element) {
+function select2Ajax(route, element, ...customQueryFields) {
+    
     $(element).select2({
         ajax: {
             url: route,
             data: function (params) {
                 var query = {
-                    search: params.term
+                    search: params.term,
                 }
+                customQueryFields.forEach(function(field) {
+                    var fieldName = field.replace(/^#|^\.+/, '');
+                    query[fieldName] = $(field).val();
+                });
+                
                 return query;
             },
             processResults: function (data) {

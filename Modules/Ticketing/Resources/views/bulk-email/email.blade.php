@@ -11,6 +11,9 @@
 
 @section('style')
     <style>
+        label {
+            font-weight: 600;
+        }
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -36,6 +39,13 @@
                             
                             </select>
                         </div>
+                        <div class="form-group col-10 mx-auto">
+                            <label for="pop_id">POP Name:</label>
+                            <select name="pop_id" id="pop_id" class="form-control select2">
+                                <option value="">Select POP</option>
+                            
+                            </select>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -56,6 +66,7 @@
 
     $(document).ready(function() {
         select2Ajax("{{ route('searchBranch') }}", '#branch_id')
+        select2Ajax("{{ route('searchPopByBranch') }}", '#pop_id', '#branch_id')
     });
 
 </script>
