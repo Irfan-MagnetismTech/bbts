@@ -90,6 +90,7 @@ class CommonApiController extends Controller
         $results = Branch::query()
             ->where('name', 'LIKE', '%' . request('search') . '%')
             ->with('thana', 'district')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,

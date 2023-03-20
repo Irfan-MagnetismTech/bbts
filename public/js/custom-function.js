@@ -75,3 +75,33 @@ function autocomplete(routeLink, idSelector, idSelectorChange) {
         },
     });
 }
+
+
+/* 
+    Example Usage from Blade: 
+    
+    select2Ajax("{{ route('searchBranch') }}", '#branch_id')
+
+*/
+function select2Ajax(route, element) {
+    $(element).select2({
+        ajax: {
+            url: route,
+            data: function (params) {
+                var query = {
+                    search: params.term
+                }
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function(obj) {
+                        return { id: obj.id, text: obj.text};
+                    })
+                };
+            },
+        },
+        minimumInputLength: 1,
+        placeholder: 'Search',
+    });
+}

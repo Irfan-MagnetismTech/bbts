@@ -30,7 +30,11 @@
                 
                     <div class="row">
                         <div class="form-group col-10 mx-auto">
+                            <label for="branch_id">Branch Name:</label>
+                            <select name="branch_id" id="branch_id" class="form-control select2">
+                                <option value="">Select Branch</option>
                             
+                            </select>
                         </div>
                     </div>
 
@@ -49,6 +53,10 @@
 
 @section('script')
 <script>
-        
+
+    $(document).ready(function() {
+        select2Ajax("{{ route('searchBranch') }}", '#branch_id')
+    });
+
 </script>
 @endsection
