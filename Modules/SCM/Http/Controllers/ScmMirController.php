@@ -7,6 +7,7 @@ use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 
 class ScmMirController extends Controller
 {
@@ -28,7 +29,7 @@ class ScmMirController extends Controller
         $out_from = ['mrr', 'err', 'wcr'];
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
-        return view('scm::mir.create', compact('brands', 'branches','out_from'));
+        return view('scm::mir.create', compact('brands', 'branches', 'out_from'));
     }
 
     /**
@@ -80,5 +81,19 @@ class ScmMirController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function searchMrs()
+    {
+        $items = ScmPurchaseRequisition::query()
+            ->where("prs_no", "like", "%" . request()->search . "%")
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->prs_no,
+                'label' => $item->prs_no,
+                'scm_purchase_requisition_id' => $item->id,
+            ]);
+
+        return response()->json($items);
     }
 }

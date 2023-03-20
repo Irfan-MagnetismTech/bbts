@@ -65,11 +65,11 @@
         @endif
 
         <div class="form-group col-3">
-            <label for="mrs_no">MRS No:</label>
+            <label for="mrs_no">PRS No:</label>
             <input type="text" class="form-control" id="mrs_no" aria-describedby="mrs_no" name="mrs_no"
-                value="{{ $mrs_no }}">
-            <input type="hidden" class="form-control" id="purchase_order_id" name="purchase_order_id"
-                aria-describedby="purchase_order_id" value="{{ $po_id }}">
+                value="{{ $mrs_no }}" placeholder="Ex: PRS-####-##-##">
+            <input type="hidden" class="form-control" id="scm_purchase_requisition_id" name="scm_purchase_requisition_id"
+                aria-describedby="scm_purchase_requisition_id" value="{{ $po_id }}">
         </div>
 
         <div class="form-group col-3">
@@ -90,36 +90,36 @@
             <label for="to_branch">To Branch:</label>
             <input type="text" class="form-control" id="to_branch" aria-describedby="to_branch" name="to_branch"
                 value="{{ $mrs_no }}">
-            <input type="hidden" class="form-control" id="to_branch_id" name="to_branch_id"
-                aria-describedby="to_branch_id" value="{{ $po_id }}">
+            <input type="hidden" class="form-control" id="to_branch_id" name="to_branch_id" aria-describedby="to_branch_id"
+                value="{{ $po_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="pop_name">POP Name:</label>
             <input type="text" class="form-control" id="pop_name" aria-describedby="pop_name" name="pop_name"
                 value="{{ $mrs_no }}">
-            <input type="hidden" class="form-control" id="pop_id" name="pop_id"
-                aria-describedby="pop_id" value="{{ $po_id }}">
+            <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
+                value="{{ $po_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="courier_nmae">Courier Name:</label>
             <input type="text" class="form-control" id="courier_nmae" aria-describedby="courier_nmae" name="courier_nmae"
                 value="{{ $mrs_no }}">
-            <input type="hidden" class="form-control" id="courier_id" name="courier_id"
-                aria-describedby="courier_id" value="{{ $po_id }}">
+            <input type="hidden" class="form-control" id="courier_id" name="courier_id" aria-describedby="courier_id"
+                value="{{ $po_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="courier_serial_no">Courier Seriel No:</label>
-            <input type="text" class="form-control" id="courier_serial_no" aria-describedby="courier_serial_no" name="courier_serial_no"
-                value="{{ $mrs_no }}">
+            <input type="text" class="form-control" id="courier_serial_no" aria-describedby="courier_serial_no"
+                name="courier_serial_no" value="{{ $mrs_no }}">
         </div>
 
         <div class="form-group col-3">
             <label for="pop_address">POP Address:</label>
-            <input type="text" class="form-control" id="pop_address" aria-describedby="pop_address" name="pop_address"
-                value="{{ $mrs_no }}">
+            <input type="text" class="form-control" id="pop_address" aria-describedby="pop_address"
+                name="pop_address" value="{{ $mrs_no }}">
         </div>
     </div>
 
@@ -294,7 +294,43 @@
             $("#mrs_no").autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url: "{{ route('search_po_with_date') }}",
+                        url: "{{ route('search_mrs_no') }}",
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            _token: CSRF_TOKEN,
+                            search: request.term
+                        },
+                        success: function(data) {
+                            if (data.length > 0) {
+                                response(data);
+                            } else {
+                                response([{
+                                    label: 'No Result Found',
+                                    value: -1,
+                                }]);
+                            }
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    if (ui.item.value == -1) {
+                        $(this).val('');
+                        return false;
+                    }
+
+                    $('#scm_purchase_requisition_id').val(ui.item.scm_purchase_requisition_id);
+                    $('#mrs_no').val(ui.item.label);
+
+                    return false;
+                }
+            })
+
+            //search branch
+            $("#branch_id").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ route('searchBranch') }}",
                         type: 'get',
                         dataType: "json",
                         data: {
@@ -307,12 +343,7 @@
                     });
                 },
                 select: function(event, ui) {
-                    $('#purchase_order_id').val(ui.item.value);
-                    $('#mrs_no').val(ui.item.label);
-                    $('#po_date').val(ui.item.date);
-                    $('#supplier_id').val(ui.item.supplier_id);
-                    $('#supplier_name').val(ui.item.supplier_name);
-                    loadMateaials();
+                    $('#branch_id').val(ui.item.label);
                     return false;
                 }
             })

@@ -455,7 +455,7 @@
                         type: 'get',
                         dataType: "json",
                         data: {
-                        search: request.term
+                            search: request.term
                         },
                         success: function(data) {
                             response(data);
