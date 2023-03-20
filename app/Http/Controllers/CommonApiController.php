@@ -89,10 +89,12 @@ class CommonApiController extends Controller
     {
         $results = Branch::query()
             ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->with('thana', 'district')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,
-                'text' => $item->name,
+                'text' => $item->name." (".$item->location.") - ".$item->thana->name." - ".$item->district->name,
             ]);
 
         return response()->json($results);
@@ -109,6 +111,20 @@ class CommonApiController extends Controller
                 'address' => $item->address,
             ]);
 
+        return response()->json($results);
+    }
+
+    public function searchPopByBranch() {
+        $results = Pop::query()
+            ->where('branch_id', request('branch_id'))
+            ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'text' => $item->name,
+                'address' => $item->address,
+            ]);
+            
         return response()->json($results);
     }
 
