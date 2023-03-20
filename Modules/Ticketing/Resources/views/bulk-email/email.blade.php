@@ -2,20 +2,20 @@
 @section('title', "Bulk Notification")
 
 @section('style')
-    
+<style>
+    label {
+        font-weight: 600 !important;
+    }
+    textarea {
+        min-height: 60px;
+    }
+</style>
 @endsection
 
 @section('breadcrumb-title')
     Bulk Notification
 @endsection
 
-@section('style')
-    <style>
-        label {
-            font-weight: 600;
-        }
-    </style>
-@endsection
 @section('breadcrumb-button')
 @endsection
 
@@ -45,6 +45,21 @@
                                 <option value="">Select POP</option>
                             
                             </select>
+                        </div>
+                        <div class="form-group col-10 mx-auto">
+                            <label for="cc">CC: <small><strong>[Multiple email should be separated by ";" mark]</strong></small></label>
+                            <textarea type="text" class="form-control" id="cc" name="cc" aria-describedby="cc"
+                                value="{{ old('cc') ?? null }}" placeholder="CC"></textarea>
+                        </div>
+                        <div class="form-group col-10 mx-auto">
+                            <label for="subject">Subject:</label>
+                            <input type="text" class="form-control" id="subject" name="subject" aria-describedby="subject"
+                                value="{{ old('subject') ?? null }}" placeholder="Subject">
+                        </div>
+                        <div class="form-group col-10 mx-auto">
+                            <label for="description">Description:</label>
+                            <textarea type="text" class="form-control" id="description" name="description" aria-describedby="description"
+                                value="{{ old('description') ?? null }}" placeholder="Description"></textarea>
                         </div>
                     </div>
 

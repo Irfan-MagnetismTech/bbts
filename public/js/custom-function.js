@@ -80,7 +80,7 @@ function autocomplete(routeLink, idSelector, idSelectorChange) {
 /* 
     Example Usage from Blade: 
     
-    select2Ajax("{{ route('searchPopByBranch') }}", '#search_pop', '#branch_id')
+    select2Ajax("{{ route('searchPopByBranch') }}", '#search_pop', '#branch_id', '#thana_id')
 
 */
 function select2Ajax(route, element, ...customQueryFields) {
@@ -96,7 +96,7 @@ function select2Ajax(route, element, ...customQueryFields) {
                     var fieldName = field.replace(/^#|^\.+/, '');
                     query[fieldName] = $(field).val();
                 });
-                
+
                 return query;
             },
             processResults: function (data) {

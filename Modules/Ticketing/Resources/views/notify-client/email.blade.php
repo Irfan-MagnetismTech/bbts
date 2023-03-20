@@ -9,10 +9,6 @@
     Customize {{ ucfirst($notificationType) }}
 @endsection
 
-@section('style')
-    <style>
-    </style>
-@endsection
 @section('breadcrumb-button')
     <a href="{{ route('support-tickets.show', ['support_ticket' => $supportTicket->id]) }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-chevron-left"></i></a>
 @endsection

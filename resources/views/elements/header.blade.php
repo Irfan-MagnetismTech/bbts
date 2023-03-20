@@ -45,6 +45,7 @@
             text-align: center;
         }
     </style>
+    @yield('style')
 </head>
 
 <body>
