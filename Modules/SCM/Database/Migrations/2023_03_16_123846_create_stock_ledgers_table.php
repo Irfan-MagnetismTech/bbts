@@ -32,6 +32,8 @@ return new class extends Migration
             $table->double('quantity', 8, 2)->nullable();
             $table->double('unit_price', 22, 2)->nullable();
             $table->integer('warranty_period')->nullable();
+            $table->bigInteger('left_initial_mark')->nullable();
+            $table->bigInteger('left_final_mark')->nullable();
             $table->timestamps();
         });
     }

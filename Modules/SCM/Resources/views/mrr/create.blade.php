@@ -152,6 +152,7 @@
             $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
             $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
             $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
+            $item_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
             $material_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
             $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
             $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
@@ -173,6 +174,13 @@
                 })->toArray() : []);
         @endphp 
             @foreach ($mrr_lines as $key => $requisitionDetail)
+                @php
+                    if($item_type[$key] == "Drum"){
+                        $max_tag = 1;
+                    }else{
+                        $max_tag = null;
+                    }
+                @endphp
                 <tr>
                     <td class="form-group">
                         <select class="form-control material_name" name="material_id[]">
@@ -205,7 +213,7 @@
                     </td>
                     <td>
                         <div class="tags_add_multiple">
-                            <input class="" type="text" name="sl_code[]" value="{{$sl_code[$key]}}" data-role="tagsinput">
+                            <input class="" type="text" name="sl_code[]" value="{{$sl_code[$key]}}" data-role="tagsinput" data-max-tags="{{ $max_tag }}">
                         </div>
                     </td>
 
@@ -352,7 +360,7 @@
                             </td>
                             <td>
                                 <div class="tags_add_multiple">
-                                    <input class="" type="text" name="sl_code[]" value="111,112,113" data-role="tagsinput">
+                                    <input class="" type="text" name="sl_code[]" value="111" data-role="tagsinput">
                                 </div>
                             </td>
 
@@ -386,7 +394,9 @@
                         </tr>
                     `;
             $('#material_requisition tbody').append(row);
-            $('input[data-role="tagsinput"]').tagsinput({});
+            $('input[data-role="tagsinput"]').tagsinput({
+                        });
+           
         }
         /* Adds and removes quantity row on click */
         $("#material_requisition")
@@ -427,13 +437,29 @@
             var elemmtn = $(this);
             (elemmtn).closest('tr').find('.final_mark').attr('readonly',true).val(null);
             (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true).val(null);
+            
             $.getJSON(url, function(item) {
                 (elemmtn).closest('tr').find('.unit').val(item.unit);
                 (elemmtn).closest('tr').find('.item_code').val(item.code);
                 (elemmtn).closest('tr').find('.material_type').val(item.type);
+
                 if(item.type == 'Drum'){
+                    console.log('yes drum');
+
                     (elemmtn).closest('tr').find('.final_mark').attr('readonly',false);
                     (elemmtn).closest('tr').find('.initial_mark').attr('readonly',false);
+                (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
+
+                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
+                            maxTags: 1
+                        });
+                   
+                    }else{
+                        console.log('not drum');
+                (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
+                        // 
+                        (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
+                        });
                     }
                 });
             })
@@ -448,10 +474,13 @@
             var elemmtn = $(this);
             (elemmtn).closest('tr').find('.unit_price').val(null);
             (elemmtn).closest('tr').find('.po_composit_key').val(null);
+           
             $.getJSON(url, function(item) {
                 if(item.length){
                     (elemmtn).closest('tr').find('.unit_price').val(item[0].unit_price);
                     (elemmtn).closest('tr').find('.po_composit_key').val(item[0].po_composit_key);
+                    var maxTags = 1; // maximum number of tags allowed
+                   
                 }else{
                     alert('No po is given for this Brand of that material');
                 }
