@@ -65,11 +65,11 @@
         @endif
 
         <div class="form-group col-3">
-            <label for="mrs_no">PRS No:</label>
+            <label for="mrs_no">MRS No:</label>
             <input type="text" class="form-control" id="mrs_no" aria-describedby="mrs_no" name="mrs_no"
-                value="{{ $mrs_no }}" placeholder="Ex: PRS-####-##-##">
-            <input type="hidden" class="form-control" id="scm_purchase_requisition_id" name="scm_purchase_requisition_id"
-                aria-describedby="scm_purchase_requisition_id" value="{{ $po_id }}">
+                value="{{ $mrs_no }}" placeholder="Ex: MRS-####-##">
+            <input type="hidden" class="form-control" id="scm_requisition_id" name="scm_requisition_id"
+                aria-describedby="scm_requisition_id" value="{{ $po_id }}">
         </div>
 
         <div class="form-group col-3">
@@ -80,8 +80,8 @@
 
         <div class="form-group col-3">
             <label for="from_branch">From Branch:</label>
-            <input type="text" class="form-control branch" id="from_branch" aria-describedby="from_branch" name="from_branch"
-                value="{{ $mrs_no }}">
+            <input type="text" class="form-control branch" id="from_branch" aria-describedby="from_branch"
+                name="from_branch" value="{{ $mrs_no }}" placeholder="Search Branch....">
             <input type="hidden" class="form-control branch_id" id="from_branch_id" name="from_branch_id"
                 aria-describedby="from_branch_id" value="{{ $po_id }}">
         </div>
@@ -89,29 +89,29 @@
         <div class="form-group col-3">
             <label for="to_branch">To Branch:</label>
             <input type="text" class="form-control branch" id="to_branch" aria-describedby="to_branch" name="to_branch"
-                value="{{ $mrs_no }}">
-            <input type="hidden" class="form-control branch_id" id="to_branch_id" name="to_branch_id" aria-describedby="to_branch_id"
-                value="{{ $po_id }}">
+                value="{{ $mrs_no }}" placeholder="Search Branch....">
+            <input type="hidden" class="form-control branch_id" id="to_branch_id" name="to_branch_id"
+                aria-describedby="to_branch_id" value="{{ $po_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="pop_name">POP Name:</label>
-            <input type="text" class="form-control pop_name" name="pop_name"
-                value="{{ $mrs_no }}">
+            <input type="text" class="form-control pop_name" name="pop_name" value="{{ $mrs_no }}"
+                placeholder="Search POP....">
             <input type="hidden" class="form-control pop_id" id="pop_id" name="pop_id" aria-describedby="pop_id"
                 value="{{ $po_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="pop_address">POP Address:</label>
-            <input type="text" class="form-control" id="pop_address" aria-describedby="pop_address"
-                name="pop_address" value="{{ $mrs_no }}" readonly>
+            <input type="text" class="form-control" id="pop_address" aria-describedby="pop_address" name="pop_address"
+                value="{{ $mrs_no }}" readonly>
         </div>
 
         <div class="form-group col-3">
             <label for="courier_nmae">Courier Name:</label>
             <input type="text" class="form-control" id="courier_nmae" aria-describedby="courier_nmae" name="courier_nmae"
-                value="{{ $mrs_no }}">
+                value="{{ $mrs_no }}" placeholder="Search Courier....">
             <input type="hidden" class="form-control" id="courier_id" name="courier_id" aria-describedby="courier_id"
                 value="{{ $po_id }}">
         </div>
@@ -119,25 +119,25 @@
         <div class="form-group col-3">
             <label for="courier_serial_no">Courier Seriel No:</label>
             <input type="text" class="form-control" id="courier_serial_no" aria-describedby="courier_serial_no"
-                name="courier_serial_no" value="{{ $mrs_no }}">
-        </div>        
+                name="courier_serial_no" value="{{ $mrs_no }}" placeholder="Search Courier No....">
+        </div>
     </div>
 
     <table class="table table-bordered" id="material_requisition">
         <thead>
             <tr>
-                <th>Out From</th>
-                <th>Description</th>
+                <th>Received Type</th>
+                <th>Type No</th>
+                <th>Serial/Drum Code <br /> No</th>
                 <th>Material Name</th>
                 <th>Opening Balance</th>
                 <th>Brand</th>
                 <th>Model</th>
-                <th>Serial/Drum Code <br /> No</th>
                 <th>Initial Mark</th>
                 <th>Final Mark</th>
                 <th>Unit</th>
-                <th>Issued Quantity</th>
-                <th>Total Quantity</th>
+                <th>Avaliable Qty</th>
+                <th>Issued Qty</th>
                 <th>Remarks</th>
                 <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
             </tr>
@@ -265,14 +265,6 @@
 
         </tbody>
         <tfoot>
-            <tr>
-                <td colspan="11" class="text-right">Total Amount</td>
-                <td>
-                    <input type="text" name="total_amount" class="form-control total_amount" autocomplete="off"
-                        value="{{ old('total_amount', !empty($materialReceive) ? $materialReceive->total_amount : 0) }}"
-                        readonly>
-                </td>
-            </tr>
         </tfoot>
     </table>
     <div class="row">
@@ -319,7 +311,7 @@
                         return false;
                     }
 
-                    $('#scm_purchase_requisition_id').val(ui.item.scm_purchase_requisition_id);
+                    $('#scm_requisition_id').val(ui.item.scm_requisition_id);
                     $('#mrs_no').val(ui.item.label);
 
                     return false;
@@ -374,15 +366,6 @@
                 maximumSelectionLength: 1
             });
 
-            //using form custom function js file
-            fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            //using form custom function js file
-            $('#challan_date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            }).datepicker("setDate", new Date());
             $('#applied_date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
@@ -405,7 +388,7 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
+                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
                             </td>
                             <td class="form-group">
                                 <select class="form-control material_name" name="material_id[]">
@@ -459,6 +442,18 @@
                     `;
                 $('#material_requisition tbody').append(row);
             }
+
+            $(document).on('change', '.out_from', function() {
+                let myObject = {
+                    type: $(this).closest('tr').find('.out_from').val().toUpperCase(),
+                }
+                jquaryUiAjax('.type_no', "{{ route('searchTypeNo') }}", uiList, myObject);
+
+                function uiList(item){
+                    $(this).closest('tr').find('.type_no').val(item.label);
+                }
+            })
+            
             /* Adds and removes quantity row on click */
             $("#material_requisition")
                 .on('click', '.add-requisition-row', () => {

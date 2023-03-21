@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
+use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\SCM\Entities\StockLedger;
 
 class ScmMirController extends Controller
 {
@@ -85,15 +88,46 @@ class ScmMirController extends Controller
 
     public function searchMrs()
     {
-        $items = ScmPurchaseRequisition::query()
-            ->where("prs_no", "like", "%" . request()->search . "%")
+        $items = ScmRequisition::query()
+            ->where("mrs_no", "like", "%" . request()->search . "%")
+            ->take(10)
             ->get()
             ->map(fn ($item) => [
-                'value' => $item->prs_no,
-                'label' => $item->prs_no,
-                'scm_purchase_requisition_id' => $item->id,
+                'value' => $item->mrs_no,
+                'label' => $item->mrs_no,
+                'scm_requisition_id' => $item->id,
             ]);
 
         return response()->json($items);
+    }
+
+    public function searchTypeNo()
+    {
+        $data = StockLedger::query()
+            ->where('received_type', request()->customQueryFields['type'])
+            ->when(request()->customQueryFields['type'] == 'MRR', function ($query) {
+                $query->whereHasMorph('receivable', ScmMrr::class, function ($query) {
+                    $query->where('mrr_no', 'like', '%' . request()->search . '%');
+                });
+            })
+            // ->when(request()->type == 'ERR', function ($query) {
+            //     $query->whereHasMorph('receivable', ScmPurchaseRequisition::class, function ($query) {
+            //         $query->where('err_no', 'like', '%' . request()->search . '%');
+            //     });
+            // })
+            // ->when(request()->type == 'WCR', function ($query) {
+            //     $query->whereHasMorph('receivable', ScmPurchaseRequisition::class, function ($query) {
+            //         $query->where('wcr_no', 'like', '%' . request()->search . '%');
+            //     });
+            // })
+            ->take(10)
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no,
+                'label' => $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no,
+                'id' => $item->receivable->id,
+            ]);
+
+        return response()->json($data);
     }
 }
