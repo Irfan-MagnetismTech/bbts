@@ -393,7 +393,7 @@
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
+            associativeDropdown("{{ route('searchPopByBranchId') }}", 'search', '#branch_id', '#pop_id', 'get', null)
 
             $(".radioButton").click(function() {
                 onChangeRadioButton()

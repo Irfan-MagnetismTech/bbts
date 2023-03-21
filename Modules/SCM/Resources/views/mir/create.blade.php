@@ -80,26 +80,32 @@
 
         <div class="form-group col-3">
             <label for="from_branch">From Branch:</label>
-            <input type="text" class="form-control" id="from_branch" aria-describedby="from_branch" name="from_branch"
+            <input type="text" class="form-control branch" id="from_branch" aria-describedby="from_branch" name="from_branch"
                 value="{{ $mrs_no }}">
-            <input type="hidden" class="form-control" id="from_branch_id" name="from_branch_id"
+            <input type="hidden" class="form-control branch_id" id="from_branch_id" name="from_branch_id"
                 aria-describedby="from_branch_id" value="{{ $po_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="to_branch">To Branch:</label>
-            <input type="text" class="form-control" id="to_branch" aria-describedby="to_branch" name="to_branch"
+            <input type="text" class="form-control branch" id="to_branch" aria-describedby="to_branch" name="to_branch"
                 value="{{ $mrs_no }}">
-            <input type="hidden" class="form-control" id="to_branch_id" name="to_branch_id" aria-describedby="to_branch_id"
+            <input type="hidden" class="form-control branch_id" id="to_branch_id" name="to_branch_id" aria-describedby="to_branch_id"
                 value="{{ $po_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="pop_name">POP Name:</label>
-            <input type="text" class="form-control" id="pop_name" aria-describedby="pop_name" name="pop_name"
+            <input type="text" class="form-control pop_name" name="pop_name"
                 value="{{ $mrs_no }}">
-            <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
+            <input type="hidden" class="form-control pop_id" id="pop_id" name="pop_id" aria-describedby="pop_id"
                 value="{{ $po_id }}">
+        </div>
+
+        <div class="form-group col-3">
+            <label for="pop_address">POP Address:</label>
+            <input type="text" class="form-control" id="pop_address" aria-describedby="pop_address"
+                name="pop_address" value="{{ $mrs_no }}" readonly>
         </div>
 
         <div class="form-group col-3">
@@ -114,13 +120,7 @@
             <label for="courier_serial_no">Courier Seriel No:</label>
             <input type="text" class="form-control" id="courier_serial_no" aria-describedby="courier_serial_no"
                 name="courier_serial_no" value="{{ $mrs_no }}">
-        </div>
-
-        <div class="form-group col-3">
-            <label for="pop_address">POP Address:</label>
-            <input type="text" class="form-control" id="pop_address" aria-describedby="pop_address"
-                name="pop_address" value="{{ $mrs_no }}">
-        </div>
+        </div>        
     </div>
 
     <table class="table table-bordered" id="material_requisition">
@@ -326,8 +326,7 @@
                 }
             })
 
-            //search branch
-            $("#branch_id").autocomplete({
+            $(".branch").autocomplete({
                 source: function(request, response) {
                     $.ajax({
                         url: "{{ route('searchBranch') }}",
@@ -343,7 +342,30 @@
                     });
                 },
                 select: function(event, ui) {
-                    $('#branch_id').val(ui.item.label);
+                    $(this).val(ui.item.label);
+                    $(this).closest('div').find('.branch_id').val(ui.item.id);
+                    return false;
+                }
+            })
+
+            $(".pop_name").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ route('searchPop') }}",
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $(this).val(ui.item.label);
+                    $(this).closest('div').find('.pop_id').val(ui.item.id);
+                    $('#pop_address').val(ui.item.address);
                     return false;
                 }
             })
