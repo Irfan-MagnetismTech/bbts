@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Modules\Ticketing\Entities\SupportTickerAssignment;
 use Modules\Ticketing\Entities\SupportTicket;
 
 return new class extends Migration
@@ -20,11 +19,12 @@ return new class extends Migration
             $table->foreignIdFor(SupportTicket::class)->constrained()->cascadeOnDelete();
             $table->foreignId('movement_by');
             $table->foreignId('movement_to');
-            $table->string('movement_type');
+            $table->string('type');
+            $table->string('movement_model');
             $table->string('status');
-            $table->text('remarks');
+            $table->text('remarks')->nullable();
             $table->dateTime('movement_date');
-            // $table->foreignIdFor(SupportTickerAssignment::class)->constrained()->cascadeOnDelete()->nullable();
+            // $table->foreignIdFor(SupportTicketAssignment::class)->constrained()->cascadeOnDelete()->nullable();
             $table->timestamps();
         });
     }

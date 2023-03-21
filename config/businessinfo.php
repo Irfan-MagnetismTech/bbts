@@ -21,4 +21,9 @@ return [
         'Backward',
         'Handover'
     ],
+    'pastForms' => [
+        'Forward' => 'Forwarded',
+        'Backward' => 'Backwarded',
+        'Handover' => 'Handovered'
+    ]
 ];

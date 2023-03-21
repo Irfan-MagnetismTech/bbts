@@ -7,7 +7,9 @@ use Modules\Admin\Entities\Pop;
 use App\Http\Controllers\Controller;
 use App\Models\Dataencoding\Department;
 use App\Models\Dataencoding\Designation;
+use Modules\Ticketing\Entities\SupportTeam;
 use Modules\Ticketing\Entities\TicketSource;
+use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Entities\SupportComplainType;
 use Modules\Ticketing\Entities\SupportQuickSolution;
 
@@ -56,5 +58,26 @@ class BbtsGlobalService extends Controller
         } else {
             return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;
         }
+    }
+
+    public function isEligibleForTicketMovement($ticketId, $movementType) {
+
+        $supportTicket = SupportTicket::findOrFail($ticketId);
+
+        if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending') {
+            return false;
+        }
+
+        $acceptedUserId = $supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id;
+
+        if($acceptedUserId == auth()->user()->id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function supportTeambyBranch($branchId) {
+        return SupportTeam::where('branch_id', $branchId)->get();
     }
 }

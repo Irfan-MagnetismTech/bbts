@@ -24,7 +24,7 @@
         <div class="row">
             <div class="col-md-12">
                 <form
-                action="{{ (!empty($supportTeam)) ? route('support-teams.update', ['support_team' => $supportTeam->id]) : route('support-teams.store') }}"
+                action="{{ route('process-ticket-movements', ['type' => $movementType, 'id' => $ticketId]) }}"
                 method="post" class="custom-form">
                 
                 @csrf
@@ -40,7 +40,9 @@
                                 <input type="text" class="form-control" id="status" name="status" aria-describedby="status"
                                     value="{{ old('status') ?? (!empty($supportTicket) ? $supportTicket?->status : '') }}" placeholder="Status" disabled>
                             </div>
-                            @if($movementType != 'Backward')
+                            @if($movementType != 'Backward' || $movementType == 'Handover')
+
+                            @if($movementType != 'Handover')
                             <div class="form-group">
                                 <label for="movement_to">Assign to Department Name:</label>
                                 <select name="movement_to" id="movement_to" class="form-control team">
@@ -50,15 +52,16 @@
                                     >{{ $team->department->name }}</option>
                                     @endforeach
                                 </select>
-                                {{-- {{ old('movement_to', (!empty($Model) ? $Model?->movement_to : '')) == $team->id ? 'selected' : '' }} --}}
                             </div>
                             @endif
+                            
                             <div class="form-group" style="display: block">
                                 <label for="movement_to">Select Team Member</label>
                                 <select name="teamMemberId" id="teamMemberList" class="form-control">
                                     <option value="">Select Team Member</option>
                                 </select>
                             </div>
+                            @endif
                             <div class="form-group">
                                 <label for="remarks">Remarks:</label>
                                 <textarea class="form-control" id="remarks" name="remarks" aria-describedby="remarks"
@@ -67,7 +70,7 @@
                         </div>
                     </div>
                     
-
+                    <input type="hidden" name="ticket_id" value="{{ $ticketId }}">
                     <div class="row">
                         <div class="offset-md-4 col-md-4 mt-2">
                             <div class="input-group input-group-sm ">
@@ -93,8 +96,8 @@
             },
             success: function(data) {
                 console.log(data)
-                var teamMembers = data.support_team_member
-                var memberInfo = '<option>Select a Team Member</option>';
+                var teamMembers = data.support_team_members
+                var memberInfo = '<option value=''>Select a Team Member</option>';
                 $.each(teamMembers, function(key, value) {
                     memberInfo += '<option value="' + value.id + '">' + value.user.name + '</option>';
                 });
