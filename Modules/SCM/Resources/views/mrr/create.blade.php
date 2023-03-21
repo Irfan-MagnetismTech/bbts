@@ -59,18 +59,17 @@
         'class' => 'custom-form',
     ]) !!}
     <div class="row">
-       
         <div class="form-group col-3 warehouse_name">
             <label for="select2">Warehouse Name</label>
-                    <select class="form-control select2" id="branch_id" name="branch_id">
-                        <option value="0" selected>Select Branch</option>
-                        @foreach ($branches as $option)
-                            <option value="{{ $option->id }}"
-                                {{ $branch_id == $option->id ? 'selected' : '' }}>
-                                {{ $option->name }}
-                            </option>
-                        @endforeach
-                    </select>
+            <select class="form-control select2" id="branch_id" name="branch_id">
+                <option value="0" selected>Select Branch</option>
+                @foreach ($branches as $option)
+                    <option value="{{ $option->id }}"
+                        {{ $branch_id == $option->id ? 'selected' : '' }}>
+                        {{ $option->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
        
         @if (!empty($materialReceive->id))
@@ -256,9 +255,6 @@
             </tr>
         </tfoot>
     </table>
-
-   
-
     <div class="row">
         <div class="offset-md-4 col-md-4 mt-2">
             <div class="input-group input-group-sm ">
