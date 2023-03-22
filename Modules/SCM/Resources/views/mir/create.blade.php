@@ -181,10 +181,10 @@
             @foreach ($mrr_lines as $key => $requisitionDetail)
                 <tr>
                     <td>
-                        <select name="out_from[]" class="form-control out_from" autocomplete="off">
+                        <select name="received_type[]" class="form-control received_type" autocomplete="off">
                             <option value="">Select Out From</option>
-                            @foreach ($out_from as $key1 => $value)
-                                <option value="{{ $value }}" @selected($out_from[$key] == $value)>{{ $key1 }}
+                            @foreach ($received_type as $key1 => $value)
+                                <option value="{{ $value }}" @selected($received_type[$key] == $value)>{{ $key1 }}
                                 </option>
                             @endforeach
                         </select>
@@ -380,15 +380,16 @@
 
                 let row = `<tr>
                             <td>
-                                <select name="out_from[]" class="form-control out_from" autocomplete="off">
+                                <select name="received_type[]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
-                                    @foreach ($out_from as $value)
+                                    @foreach ($received_type as $value)
                                         <option value="{{ $value }}">{{ strToUpper($value) }}</option>
                                     @endforeach
                                 </select>
                             </td>
                             <td>
                                 <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
+                                <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
                             </td>
                             <td class="form-group">
                                 <select class="form-control material_name" name="material_id[]">
@@ -443,17 +444,46 @@
                 $('#material_requisition tbody').append(row);
             }
 
-            $(document).on('change', '.out_from', function() {
+            $(document).on('change', '.received_type', function() {
+                var event_this = $(this).closest('tr');
                 let myObject = {
-                    type: $(this).closest('tr').find('.out_from').val().toUpperCase(),
+                    type: event_this.find('.received_type').val().toUpperCase(),
                 }
                 jquaryUiAjax('.type_no', "{{ route('searchTypeNo') }}", uiList, myObject);
 
-                function uiList(item){
-                    $(this).closest('tr').find('.type_no').val(item.label);
+                function uiList(item) {
+                    console.log(item)
+                    event_this.val(item.label);
+                    event_this.find('.type_no').val(item.label);
+                    event_this.find('.type_id').val(item.id);
+                    getMaterials()
+                    return false;
                 }
             })
-            
+
+            function getMaterials() {
+                let scm_requisition_id = $('#scm_requisition_id').val();
+                let received_type = $('.received_type').val().toUpperCase();
+                let receivable_id = $('.type_id').val();
+                console.log('sri', scm_requisition_id, 'rt', received_type, 'ri', receivable_id)
+                //ajax call with scm_requisition_id in request
+                $.ajax({
+                    url: "{{ route('mrsAndTypeWiseMaterials') }}",
+                    type: 'get',
+                    dataType: "json",
+                    data: {
+                        scm_requisition_id: scm_requisition_id,
+                        received_type: received_type,
+                        receivable_id: receivable_id
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        // response(data);
+                    }
+                });
+            }
+
+
             /* Adds and removes quantity row on click */
             $("#material_requisition")
                 .on('click', '.add-requisition-row', () => {
@@ -461,10 +491,8 @@
                     loadMateaials();
                 })
                 .on('click', '.remove-requisition-row', function() {
-                    $(this).closest('tr').remove();
-                });
-
-            function loadMateaials() {
+                    $(this).remove();
+                }); {
                 let purchase_order_id = $("#purchase_order_id").val();
                 if (purchase_order_id) {
                     const url = '{{ url('scm/get_materials_for_po') }}/' + purchase_order_id;
