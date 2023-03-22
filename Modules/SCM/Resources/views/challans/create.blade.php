@@ -46,7 +46,7 @@
                         <div class="form-check-inline">
                             <label class="form-check-label" for="client">
                                 <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                    value="client" @checked(@$requisition->type == 'client' || old('type') == 'client')> Client
+                                    value="client" @checked(@$requisition->type == 'client' || old('type') == 'client' || ($formType == 'create' && !old()))> Client
                             </label>
                         </div>
 
@@ -63,6 +63,13 @@
                                 <input type="radio" class="form-check-input radioButton" id="pop" name="type"
                                     value="pop" @checked(@$requisition->type == 'pop' || old('type') == 'pop')>
                                 POP
+                            </label>
+                        </div>
+                        <div class="form-check-inline">
+                            <label class="form-check-label" for="general">
+                                <input type="radio" class="form-check-input radioButton" id="general" name="type"
+                                    value="general" @checked(@$requisition->type == 'general' || old('type') == 'general')>
+                                General
                             </label>
                         </div>
                         
@@ -85,7 +92,9 @@
                 <div class="form-group col-3 mrs_no">
                     <label for="select2">MRS No</label>
                     <input class="form-control" id="mrs_no" name="mrs_no" aria-describedby="mrs_no"
-                        value="{{ old('mrs_no') ?? (@$requisition->mrs_no ?? '') }}" readonly placeholder="Select a MRS No">
+                        value="{{ old('mrs_no') ?? (@$requisition->mrs_no ?? '') }}" placeholder="Search a MRS No">
+                        <input class="form-control" id="scm_requisition_id" name="scm_requisition_id" aria-describedby="scm_requisition_id"
+                        value="{{ old('scm_requisition_id') ?? (@$requisition->scm_requisition_id ?? '')}}" type="hidden">
                 </div>
                 <div class="form-group col-3">
                     <label for="select2">Purpose</label>
@@ -139,7 +148,7 @@
                     <input type="text" class="form-control" id="client_address" name="client_address" aria-describedby="client_address"
                         readonly value="{{ old('client_address') ?? (@$requisition->client_address ?? '') }}">
                 </div>
-                <div class="form-group col-3 branch_name">
+                <div class="form-group col-3 branch_name" style="display: none">
                     <label for="select2">Branch Name</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
                         <option value="20" selected>Select Branch</option>
@@ -153,12 +162,12 @@
                 </div>
                 <div class="form-group col-3 pop_name" style="display: none">
                     <label for="select2">Pop Name</label>
-                    <input class="form-control" id="date" name="pop_name" aria-describedby="pop_name"
-                    value="{{ old('pop_name') ?? (@$requisition->pop_name ?? '') }}" readonly placeholder="Select a POP Name">
+                    <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
+                    value="{{ old('pop_name') ?? (@$requisition->pop_name ?? '') }}" placeholder="Select a POP Name">
                 </div>
                 <div class="form-group col-3 pop_address" style="display: none">
                     <label for="select2">Pop Address</label>
-                    <input class="form-control" id="date" name="pop_address" aria-describedby="pop_address"
+                    <input class="form-control" id="pop_address" name="pop_address" aria-describedby="pop_address"
                     value="{{ old('pop_address') ?? (@$requisition->pop_address ?? '') }}" readonly placeholder="Select a POP Address">
                 </div>
             </div>
@@ -166,80 +175,145 @@
             <table class="table table-bordered" id="material_requisition">
                 <thead>
                     <tr>
-                        <th> Material Name</th>
-                        <th> Unit</th>
-                        <th> Description</th>
-                        <th class="current_stock" style="display: none"> Current Stock</th>
-                        <th> Requisition Qty.</th>
-                        <th> Brand</th>
-                        <th> Model </th>
-                        <th> Purpose </th>
+                        <th>Received Type</th>
+                        <th>Type No</th>
+                        <th>Serial/Drum Code <br /> No</th>
+                        <th>Material Name</th>
+                        <th>Opening Balance</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Initial Mark</th>
+                        <th>Final Mark</th>
+                        <th>Unit</th>
+                        <th>Avaliable Qty</th>
+                        <th>Issued Qty</th>
+                        <th>Remarks</th>
                         <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
                     </tr>
                 </thead>
-                <tbody></tbody>
-                <tfoot>
+                <tbody>
                     @php
-                        $material_name_with_code = old('material_name', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.materialNameWithCode') : []);
-                        $material_id = old('material_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material_id') : []);
-                        $item_code = old('item_code', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.code') : []);
-                        $unit = old('unit', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.unit') : []);
-                        $description = old('description', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('description') : []);
-                        $current_stock = old('current_stock', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.current_stock') : []);
-                        $quantity = old('quantity', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('quantity') : []);
-                        $brand_id = old('brand_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('brand_id') : []);
-                        $model = old('model', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('model') : []);
-                        $purpose = old('purpose', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('purpose') : []);
+                        $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
+                        $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
+                        $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
+                        $material_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
+                        $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
+                        $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
+                        $description = old('description', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('description') : []);
+                        $sl_code = old(
+                            'sl_code',
+                            !empty($materialReceive)
+                                ? $materialReceive->scmMrrLines->map(function ($item) {
+                                    return implode(',', $item->scmMrrSerialCodeLines->pluck('serial_or_drum_key')->toArray());
+                                })
+                                : '',
+                        );
+                        
+                        $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
+                        $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
+                        $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
+                        $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
+                        
+                        $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
+                        $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('unit_price') : []);
+                        $amount = old(
+                            'amount',
+                            !empty($materialReceive)
+                                ? collect($quantity)
+                                    ->map(function ($value, $key) use ($unit_price) {
+                                        return $value * $unit_price[$key];
+                                    })
+                                    ->toArray()
+                                : [],
+                        );
                     @endphp
-                    @foreach ($material_name_with_code as $key => $requisitionDetail)
+                    @foreach ($mrr_lines as $key => $requisitionDetail)
                         <tr>
                             <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" required
-                                    autocomplete="off" value="{{ $material_name_with_code[$key] }}">
-                                <input type="hidden" name="material_id[]" class="form-control material_id"
-                                    value="{{ $material_id[$key] }}">
-                                <input type="hidden" name="item_code[]" class="form-control item_code"
+                                <select name="out_from[]" class="form-control out_from" autocomplete="off">
+                                    <option value="">Select Out From</option>
+                                    @foreach ($out_from as $key1 => $value)
+                                        <option value="{{ $value }}" @selected($out_from[$key] == $value)>{{ $key1 }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td class="form-group">
+                                <select class="form-control material_name" name="material_id[]">
+                                    <option value="" readonly selected>Select Material</option>
+                                    @foreach ($material_list as $key1 => $value)
+                                        <option value="{{ $value }}" readonly @selected($material_id[$key] == $value)>
+                                            {{ $key1 }}</option>
+                                    @endforeach
+                                </select>
+                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"
                                     value="{{ $item_code[$key] }}">
+                                <input type="hidden" name="material_type[]" class="form-control material_type"
+                                    autocomplete="off" value="{{ $material_type[$key] }}">
                             </td>
-                            <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                    readonly value="{{ $unit[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="description[]" class="form-control description"
-                                    autocomplete="off" value="{{ $description[$key] }}">
-                            </td>
-                            <td class="current_stock" style="display: none">
-                                <input type="text" class="form-control current_stock" autocomplete="off" readonly
-                                    value="{{ @$current_stock[$key] }}">
-                            </td>
-
-                            <td>
-                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
-                                    value="{{ $quantity[$key] }}">
-                            </td>
+        
                             <td>
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
                                         <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                            {{ $brand->name }}</option>
+                                            {{ $brand->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </td>
+        
                             <td>
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off"
                                     value="{{ $model[$key] }}">
                             </td>
                             <td>
-                                <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
-                                    value="{{ $purpose[$key] }}">
+                                <input type="text" name="description[]" class="form-control description" autocomplete="off"
+                                    value="{{ $description[$key] }}">
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                                <div class="tags_add_multiple">
+                                    <input class="" type="text" name="sl_code[]" value="{{ $sl_code[$key] }}"
+                                        data-role="tagsinput">
+                                </div>
+                            </td>
+        
+                            <td>
+                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off"
+                                    value="{{ $initial_mark[$key] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off"
+                                    value="{{ $final_mark[$key] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="warranty_period[]" class="form-control warranty_period"
+                                    autocomplete="off" value="{{ $warranty_period[$key] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
+                                    value="{{ $unit[$key] }}" readonly>
+                            </td>
+                            <td>
+                                <input class="form-control quantity" name="quantity[]" aria-describedby="date"
+                                    value="{{ $quantity[$key] }}">
+                            </td>
+                            <td>
+                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly
+                                    value="10" value="{{ $unit_price[$key] }}">
+                            </td>
+                            <td>
+                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly
+                                    value="{{ $amount[$key] }}">
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                             </td>
                         </tr>
                     @endforeach
+        
+                </tbody>
+                <tfoot>
                 </tfoot>
             </table>
 
@@ -256,6 +330,7 @@
 
 @section('script')
     <script>
+        const CSRF_TOKEN = "{{ csrf_token() }}";
         $('#date').datepicker({
             format: "dd-mm-yyyy",
             autoclose: true,
@@ -270,46 +345,65 @@
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
                             <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
-                                <input type="hidden" name="material_id[]" class="form-control material_id">
-                                <input type="hidden" name="item_code[]" class="form-control item_code">
+                                <select name="out_from[]" class="form-control out_from" autocomplete="off">
+                                    <option value="">Select Out From</option>
+                                    @foreach ($out_from as $value)
+                                        <option value="{{ $value }}">{{ strToUpper($value) }}</option>
+                                    @endforeach
+                                </select>
                             </td>
                             <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
+                            </td>
+                            <td class="form-group">
+                                <select class="form-control material_name" name="material_id[]">
+                                    <option value="" readonly selected>Select Material</option>
+                                   
+                                </select>
+                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
+                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
                             </td>
                             <td>
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off">
                             </td>
-                            ${ type === 'warehouse' || type === 'pop' ? 
-                            `<td class="current_stock" style="display: block">
-                                <input type="text" class="form-control current_stock" autocomplete="off" readonly>
-                            </td>` 
-                            : 
-                            `<td class="current_stock" style="display: none">
-                                <input type="text" class="form-control current_stock" autocomplete="off" readonly>
-                            </td>` 
-                            }                          
                             <td>
-                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
-                            </td>
-                            <td> 
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                <option value="">Select Brand</option>
+                                    <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                        <option value="{{ $brand->id }}">
+                                            {{ $brand->name }}
+                                        </option>
                                     @endforeach
-                                </select>    
+                                </select>
                             </td>
                             <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
+                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
                             </td>
                             <td>
-                                <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
+                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                                <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
+                            </td>                        
+                            <td>
+                                <input type="number" name="warranty_period[]" class="form-control warranty_period" autocomplete="off">
+                            </td>                        
+                            <td>
+                                <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
-                    </tr>
+                            <td>
+                                <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
+                            </td>
+                            <td>
+                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10">
+                            </td>
+                            <td>
+                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                            </td>
+                        </tr>
                     `;
             $('#material_requisition tbody').append(row);
         }
@@ -363,17 +457,7 @@
             });
         });
 
-        //Select FR key based on link name
-        $('#client_links').on('change', function() {
-            var link_name = $("input[name='gender']:checked").val();
-            var link_name = $(this).val();
-            var client_id = $('#client_id').val();
-            var client = client_details.find(function(element) {
-                return element.link_name == link_name;
-            });
-            $('#fr_id').val(client.fr_id);
-            $('#fr_composite_key').val(client.fr_composite_key);
-        });
+       
 
         //Search Material
         $(document).on('keyup focus', '.material_name', function() {
@@ -409,11 +493,49 @@
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
+            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_name', 'get', null)
 
             $(".radioButton").click(function() {
                 onChangeRadioButton()
             });
+
+
+            $("#mrs_no").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ route('search_mrs_no') }}",
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            _token: CSRF_TOKEN,
+                            search: request.term
+                        },
+                        success: function(data) {
+                            if (data.length > 0) {
+                                response(data);
+                            } else {
+                                response([{
+                                    label: 'No Result Found',
+                                    value: -1,
+                                }]);
+                            }
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    if (ui.item.value == -1) {
+                        $(this).val('');
+                        return false;
+                    }
+
+                    $('#scm_requisition_id').val(ui.item.scm_requisition_id);
+                    $('#mrs_no').val(ui.item.label);
+
+                    return false;
+                }
+            })
+
+
         });
 
         function onChangeRadioButton() {
@@ -428,7 +550,6 @@
                 $('.client_address').show('slow');
                 $('.branch_name').hide('slow');
                 $('.client_links').show('slow');
-                $('.current_stock').hide('slow');
             } else if (radioValue == 'warehouse') {
                 $('.pop_id').hide('slow');
                 $('.pop_name').hide('slow');
@@ -437,7 +558,6 @@
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
-                $('.current_stock').show('slow');
                 $('.branch_name').show('slow');
                 $('.client_links').hide('slow');
             } else if (radioValue == 'pop') {
@@ -446,10 +566,19 @@
                 $('.pop_address').show('slow');
                 $('.address').hide('slow');
                 $('.client_name').hide('slow');
+                $('.branch_name').show('slow');
+                $('.client_no').hide('slow');
+                $('.client_address').hide('slow');
+                $('.client_links').hide('slow');
+            }else if (radioValue == 'general') {
+                $('.pop_id').hide('slow');
+                $('.pop_name').hide('slow');
+                $('.pop_address').hide('slow');
+                $('.address').hide('slow');
+                $('.client_name').hide('slow');
                 $('.branch_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
-                $('.current_stock').show('slow');
                 $('.client_links').hide('slow');
             }
         }

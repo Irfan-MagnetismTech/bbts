@@ -8,7 +8,9 @@ use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
-
+use Modules\SCM\Entities\ScmMrrLine;
+use Modules\SCM\Entities\ScmRequisitionDetail;
+use Modules\SCM\Entities\StockLedger;
 
 class ScmChallanController extends Controller
 {
@@ -38,8 +40,8 @@ class ScmChallanController extends Controller
             'own_use' => 'Own Use',
             'stolen' => 'Stolen',
         ];
-
-        return view('scm::challans.create', compact('requisitions', 'formType', 'brands', 'branchs', 'purposes'));
+        $out_from = ['mrr', 'err', 'wcr'];
+        return view('scm::challans.create', compact('requisitions', 'formType', 'brands', 'branchs', 'purposes', 'out_from'));
     }
 
     /**
@@ -90,6 +92,5 @@ class ScmChallanController extends Controller
      */
     public function destroy($id)
     {
-        //
     }
 }
