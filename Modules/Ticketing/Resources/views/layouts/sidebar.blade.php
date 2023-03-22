@@ -14,6 +14,18 @@
         </a>
     </li>
     <li class="">
+        <a href="{{ route('forwarded-tickets') }}">
+            <span class="pr-2 w-25px d-inline-block"><i class="fas fa-fast-forward"></i></span>
+            <span class="pcoded-mtext">Forwarded Ticket List</span>
+        </a>
+    </li>
+    <li class="">
+        <a href="{{ route('backwarded-tickets') }}">
+            <span class="pr-2 w-25px d-inline-block"><i class="far fa-share-square"></i></span>
+            <span class="pcoded-mtext">Backwarded Ticket List</span>
+        </a>
+    </li>
+    <li class="">
         <a href="{{ route('bulk-email') }}">
             <span class="pr-2 w-25px d-inline-block"><i class="fas fa-mail-bulk"></i></span>
             <span class="pcoded-mtext">Bulk Email</span>

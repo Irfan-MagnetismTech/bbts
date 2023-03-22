@@ -13,7 +13,9 @@ use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Ticketing\Entities\SupportQuickSolution;
+use Modules\Ticketing\Entities\SupportTeamMember;
 use Modules\Ticketing\Entities\SupportTicket;
+use Modules\Ticketing\Entities\TicketMovement;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
 
 class SupportTicketController extends Controller
@@ -312,5 +314,36 @@ class SupportTicketController extends Controller
                 'message' => 'Invalid Request. Your IP is logged in the system.'
             ]);
         }
+    }
+
+    public function forwardedTickets() {
+        $userSupportTeam = SupportTeamMember::where('user_id', auth()->user()->id)->get();
+        /* 
+            The line is eloquent get() method but not first(), 
+            because each member might belong to multiple team as Mr. Humayun said.
+        */
+
+        $teamIds = $userSupportTeam->map(function($teamMember) {
+            return $teamMember->support_team_id;
+        })->toArray();
+
+        array_push($teamIds, auth()->user()->id);
+
+        array_unique($teamIds);
+
+        $supportTicketMovements = TicketMovement::whereIn('movement_to', $teamIds)
+                        ->where([
+                            'status' => 'Pending',
+                            'type' => 'Forward',
+                        ])->get();
+
+        // todo: check based on department and user movement_model id perfectly 
+
+        $type = 'Forwarded';
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type'));
+    }
+
+    public function backwardedTickets() {
+        $userDept = auth()->user()->employee->department_id;
     }
 }

@@ -16,6 +16,7 @@ use Modules\Ticketing\Entities\SupportTeam;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Entities\TicketMovement;
+use Modules\Ticketing\Entities\SupportTeamMember;
 
 class TicketMovementController extends Controller
 {
@@ -138,7 +139,7 @@ class TicketMovementController extends Controller
             $remarks = 'Ticket '.$pastForms[$movementType].' to '.$teamMember->user->name.' of '.$supportTeam->first()->department->name.'.';
 
         } else {
-            $movementModel = 'App\Models\Dataencoding\Department';
+            $movementModel = '\Modules\Ticketing\Entities\SupportTeam';
             $remarks = 'Ticket '.$pastForms[$movementType].' to '.$supportTeams->where('id', $request->movement_to)->first()->department->name.'.';
         }
 
@@ -183,6 +184,47 @@ class TicketMovementController extends Controller
 
         } catch (QueryException $e) {
             return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
+
+    }
+
+    public function acceptForwardedTickets(Request $request) {
+        $userSupportTeam = SupportTeamMember::where('user_id', auth()->user()->id)->get();
+        // The line is get method, because each member might belong to multiple team as Mr. Humayun said.
+
+        $teamIds = $userSupportTeam->map(function($teamMember) {
+            return $teamMember->support_team_id;
+        })->toArray();
+
+        $movement = TicketMovement::findOrFail($request->movement_id);
+        
+        if($movement->movement_model == '\Modules\Ticketing\Entities\SupportTeam') {
+            if(!in_array($movement->movement_to, $teamIds)) {
+                return redirect()->back()->withErrors('You are not eligible to accept this ticket.');
+            }
+        } else {
+            if(!in_array($movement->movement_to, [auth()->user()->id])) {
+                return redirect()->back()->withErrors('You are not eligible to accept this ticket.');
+            }
+        }
+
+        try {
+            DB::transaction(function() use($movement) {
+                $movement->supportTicket->supportTicketLifeCycles()->create([
+                    'status' => collect($movement->supportTicket->supportTicketLifeCycles)->last()->status,
+                    'user_id' => auth()->user()->id,
+                    'support_ticket_id' => $movement->support_ticket_id,
+                    'remarks' => 'Forwarded Ticket Accepted by '.auth()->user()->name.' of '.auth()->user()->employee->department->name.'.'
+                ]);
+        
+                $movement->update([
+                    'status' => 'Accepted',
+                ]);
+            });
+        
+            return redirect()->back()->with('message', 'Support Ticket Accepted Successfully.');
+        } catch (QueryException $e) {
+            return redirect()->back()->withErrors($e->getMessage());
         }
 
     }

@@ -30,6 +30,11 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         'ticket-movements' => TicketMovementController::class,
     ]);
 
+    Route::get('forwarded-tickets', [SupportTicketController::class, 'forwardedTickets'])->name('forwarded-tickets');
+    Route::post('accept-forwarded-tickets', [TicketMovementController::class, 'acceptForwardedTickets'])->name('accept-forwarded-tickets');
+    
+    Route::get('backwarded-tickets', [SupportTicketController::class, 'backwardedTickets'])->name('backwarded-tickets');
+
     Route::post('/accept-ticket', [SupportTicketController::class, 'acceptTicket'])->name('accept-ticket');
     Route::post('/add-solution', [SupportTicketController::class, 'addSolution'])->name('add-solution');
 
