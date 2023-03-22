@@ -16,6 +16,20 @@
 <script src="{{ asset('js/select2.min.js') }}"></script>
 <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('js/sweetalert2.min.js') }} "></script>
+<script>
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+</script>
 @yield('script')
 
 <script>

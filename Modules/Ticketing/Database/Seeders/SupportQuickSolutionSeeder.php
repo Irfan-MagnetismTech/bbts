@@ -22,8 +22,7 @@ class SupportQuickSolutionSeeder extends Seeder
             'Device Restarted',
             'Switch Port Restarted',
             'Loose Connectivity',
-            'Wrong Port Connection',
-            'Others'
+            'Wrong Port Connection'
         ];
 
         foreach($solutions as $solution) {

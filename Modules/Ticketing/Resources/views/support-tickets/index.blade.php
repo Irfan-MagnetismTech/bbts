@@ -52,7 +52,17 @@
                         <td>{{ $ticket->createdBy->name }}</td>
                         <td>{{ $ticket->status }}</td>
 
-                        <td>
+                        <td class="d-flex align-items-center justify-content-center">
+
+                            @if($ticket->status == 'Pending' || $ticket->status == 'Approved')
+                            <div class="icon-btn mr-1">
+                                <form action="{{ route('accept-ticket') }}" method="POST" data-toggle="tooltip" title="Accept" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+                                    <button type="submit" class="btn btn-outline-success btn-sm"><i class="fas fa-check"></i></button>
+                                </form>
+                            </div>
+                            @endif
                             <x:action-button :show="route('support-tickets.show', ['support_ticket' => $ticket->id])" :edit="route('support-tickets.edit', ['support_ticket' => $ticket->id])" :delete="false" />
                         </td>
                     </tr>

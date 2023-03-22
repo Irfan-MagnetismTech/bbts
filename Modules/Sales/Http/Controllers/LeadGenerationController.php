@@ -120,4 +120,19 @@ class LeadGenerationController extends Controller
         $lead_generation->delete();
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Deleted Successfully');
     }
+
+    public function getClient(Request $request)
+    {
+        $main_leads = [];
+        //get client where match the request data
+        $lead_generations = LeadGeneration::where('client_id', 'like', '%' . $request->client_id . '%')->get();
+        foreach ($lead_generations as $lead_generation) {
+            $main_leads[] = [
+                'label' => $lead_generation->client_id,
+                'value' => $lead_generation->client_name,
+                'lead_generation_id' => $lead_generation->id,
+            ];
+        }
+        return response()->json($main_leads);
+    }
 }

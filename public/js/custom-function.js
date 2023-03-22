@@ -75,3 +75,86 @@ function autocomplete(routeLink, idSelector, idSelectorChange) {
         },
     });
 }
+
+/**
+ * Ajax select2 with custom query fields
+ * Example Usage from Blade:
+ * select2Ajax("{{ route('searchPopByBranch') }}", '#search_pop', '#branch_id', '#thana_id')
+ *
+ * @param {*} route
+ * @param {*} element
+ * @param  {...any} customQueryFields
+ */
+function select2Ajax(route, element, ...customQueryFields) {
+    $(element).select2({
+        ajax: {
+            url: route,
+            data: function (params) {
+                var query = {
+                    search: params.term,
+                };
+                customQueryFields.forEach(function (field) {
+                    var fieldName = field.replace(/^#|^\.+/, "");
+                    query[fieldName] = $(field).val();
+                });
+
+                return query;
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (obj) {
+                        return { id: obj.id, text: obj.text };
+                    }),
+                };
+            },
+        },
+        minimumInputLength: 1,
+        placeholder: "Search",
+    });
+}
+
+/**
+ * Ajax autocomplete with jquery ui
+ *
+ * @param {*} triggerElement
+ * @param {*} route
+ * @param {*} callback
+ * @param  {...any} customQueryFields
+ */
+function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
+    $(triggerElement).on("keyup", function () {
+        $(this).autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: route,
+                    type: "get",
+                    dataType: "json",
+                    data: {
+                        search: request.term,
+                        customQueryFields: customQueryFields[0],
+                    },
+                    success: function (data) {
+                        if (data.length > 0) {
+                            response(data);
+                        } else {
+                            response([
+                                {
+                                    label: "No Result Found",
+                                    value: -1,
+                                },
+                            ]);
+                        }
+                    },
+                });
+            },
+            select: function (event, ui) {
+                if (ui.item.value == -1) {
+                    $(this).val("");
+                    return false;
+                }
+                callback(ui.item);
+                return false;
+            },
+        });
+    });
+}

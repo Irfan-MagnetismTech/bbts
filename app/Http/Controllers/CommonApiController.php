@@ -27,6 +27,7 @@ class CommonApiController extends Controller
         $results = Client::query()
             ->with('clientDetails')
             ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -44,6 +45,7 @@ class CommonApiController extends Controller
         $results = ClientDetail::query()
             ->with('client')
             ->where('link_id', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -54,16 +56,17 @@ class CommonApiController extends Controller
         return response()->json($results);
     }
 
-    public function getClientsPreviousTickets($clientId, $limit) {
+    public function getClientsPreviousTickets($clientId, $limit)
+    {
         $clientId = abs($clientId);
         $limit = (abs($limit) > 5) ? 5 : abs($limit);
 
         $client = Client::find($clientId);
         $previousTickets = $client->supportTickets()
-                            ->with(['supportComplainType', 'ticketSource'])
-                            ->limit($limit)
-                            ->orderBy('id', 'desc')
-                            ->get(['support_complain_type_id', 'ticket_source_id', 'status', 'opening_date', 'remarks', 'id', 'ticket_no']);
+            ->with(['supportComplainType', 'ticketSource'])
+            ->limit($limit)
+            ->orderBy('id', 'desc')
+            ->get(['support_complain_type_id', 'ticket_source_id', 'status', 'opening_date', 'remarks', 'id', 'ticket_no']);
 
         return response()->json($previousTickets);
     }
@@ -73,6 +76,7 @@ class CommonApiController extends Controller
         $results = Material::query()
             ->where('name', 'LIKE', '%' . request('search') . '%')
             ->orWhere('code', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -89,10 +93,31 @@ class CommonApiController extends Controller
     {
         $results = Branch::query()
             ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->with('thana', 'district')
+            ->limit(15)
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'text' => $item->name . " (" . $item->location . ") - " . $item->thana->name . " - " . $item->district->name,
+                'value' => $item->name . " (" . $item->location . ") - " . $item->thana->name . " - " . $item->district->name,
+                'label' => $item->name . " (" . $item->location . ") - " . $item->thana->name . " - " . $item->district->name,
+            ]);
+
+        return response()->json($results);
+    }
+
+    public function searchPopByBranchId()
+    {
+        $results = Pop::query()
+            ->where('branch_id', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,
                 'text' => $item->name,
+                'address' => $item->address,
+                'value' => $item->name,
+                'label' => $item->name,
             ]);
 
         return response()->json($results);
@@ -101,7 +126,26 @@ class CommonApiController extends Controller
     public function searchPop()
     {
         $results = Pop::query()
-            ->where('branch_id', 'LIKE', '%' . request('search') . '%')
+            ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'text' => $item->name,
+                'address' => $item->address,
+                'value' => $item->name,
+                'label' => $item->name,
+            ]);
+
+        return response()->json($results);
+    }
+
+    public function searchPopByBranch()
+    {
+        $results = Pop::query()
+            ->where('branch_id', request('branch_id'))
+            ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,
@@ -116,6 +160,7 @@ class CommonApiController extends Controller
     {
         $results = Brand::query()
             ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,
@@ -128,6 +173,7 @@ class CommonApiController extends Controller
     public function searchDepartment()
     {
         $results = Department::where('name', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -140,6 +186,7 @@ class CommonApiController extends Controller
     public function searchEmployee()
     {
         $results = Employee::select('id', 'designation_id', 'name')->with('designation')->where('name', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -153,6 +200,7 @@ class CommonApiController extends Controller
     public function searchUser()
     {
         $results = User::select('id', 'employee_id', 'name')->with('employee')->where('name', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -165,7 +213,8 @@ class CommonApiController extends Controller
 
     public function searchSupplier()
     {
-        $items = Supplier::where('name', 'like', '%' . request('search') . '%')->limit(10)->get();
+        $items = Supplier::where('name', 'like', '%' . request('search') . '%')->limit(10)
+            ->get();
         $response = [];
         foreach ($items as $item) {
             $response[] = [
@@ -183,7 +232,8 @@ class CommonApiController extends Controller
     public function getDistricts()
     {
         $division_id = request('division_id');
-        $districts = District::where('division_id', $division_id)->get();
+        $districts = District::where('division_id', $division_id)->limit(15)
+            ->get();
         $data = '<option value="">Select District</option>';
         foreach ($districts as $district) {
             $data .= '<option value="' . $district->id . '">' . $district->name . '</option>';
@@ -194,7 +244,8 @@ class CommonApiController extends Controller
     public function getThanas()
     {
         $district_id = request('district_id');
-        $thanas = Thana::where('district_id', $district_id)->get();
+        $thanas = Thana::where('district_id', $district_id)->limit(15)
+            ->get();
         $data = '<option value="">Select Thana</option>';
         foreach ($thanas as $thana) {
             $data .= '<option value="' . $thana->id . '">' . $thana->name . '</option>';
@@ -202,20 +253,22 @@ class CommonApiController extends Controller
         return response()->json($data);
     }
 
-    public function getSupportTeamMembers() {
-        $teamId = request('search');  
-        $team = SupportTeam::with('supportTeamMember.user')->where('id', $teamId)->first();  
+    public function getSupportTeamMembers()
+    {
+        $teamId = request('search');
+        $team = SupportTeam::with('supportTeamMember.user')->where('id', $teamId)->first();
 
-        if(auth()->user()->employee->branch_id != $team->branch_id) {
+        if (auth()->user()->employee->branch_id != $team->branch_id) {
             abort(404);
-        } 
-        
+        }
+
         return response()->json($team);
     }
     public function searchPrsNo()
     {
         $results = ScmPurchaseRequisition::query()
             ->where('prs_no', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
@@ -227,7 +280,8 @@ class CommonApiController extends Controller
 
     public function searchIndentNo()
     {
-        $items = Indent::with('indentLines.scmPurchaseRequisition')->where('indent_no', 'like', '%' . request('search') . '%')->limit(10)->get();
+        $items = Indent::with('indentLines.scmPurchaseRequisition')->where('indent_no', 'like', '%' . request('search') . '%')->limit(10)
+            ->get();
         $response = [];
         foreach ($items as $item) {
             $response[] = [
@@ -251,7 +305,7 @@ class CommonApiController extends Controller
             ->whereHas('selectedSuppliers', function ($query) use ($supplierId) {
                 $query->where('supplier_id', $supplierId);
             })
-            ->take(10)
+            ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,

@@ -12,6 +12,7 @@ use App\Services\BbtsGlobalService;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Ticketing\Entities\SupportQuickSolution;
 use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
 
@@ -48,6 +49,14 @@ class SupportTicketController extends Controller
      */
     public function store(SupportTicketRequest $request)
     {
+        $clientInfo = ClientDetail::where('id', $request->fr_composit_key)->first();
+
+        if($clientInfo->client->supportTickets->where('status', '!=', 'Closed')->count() > 0) {
+            return back()->withInput()->withErrors([
+                'message' => 'This client already has previous tickets.'
+            ]);
+        } 
+        
         $lastTicketOfThisMonth = SupportTicket::where('created_at', '>=', Carbon::now()->startOfMonth())
                                 ->orderBy('created_at', 'desc')
                                 ->first();
@@ -63,14 +72,7 @@ class SupportTicketController extends Controller
             'mailNotification', 'smsNotification'
         ]);
 
-        $clientInfo = ClientDetail::where('id', $request->fr_composit_key)->first();
-
-        if($clientInfo->client->supportTickets->where('status', '!=', 'Closed')->count() > 0) {
-            return back()->withInput()->withErrors([
-                'message' => 'This client already has previous tickets.'
-            ]);
-        } 
-
+        
         $ticketInfo['ticket_no'] = $ticketIno;
         $ticketInfo['created_by'] = auth()->user()->id;
         $ticketInfo['opening_date'] = Carbon::parse(decrypt($request->opening_date) ?? null)->format('Y-m-d H:i:s');
@@ -90,7 +92,14 @@ class SupportTicketController extends Controller
 
        try {
         $supportTicket = DB::transaction(function() use($ticketInfo) {
-            return SupportTicket::create($ticketInfo);
+            $ticket = SupportTicket::create($ticketInfo);
+            $ticket->supportTicketLifeCycles()->create([
+                'status' => $ticketInfo['status'],
+                'user_id' => auth()->user()->id,
+                'support_ticket_id' => $ticket->id,
+                'remarks' => 'Ticket Created.'
+            ]);
+            return $ticket;
         });
 
         // Email and SMS Thing
@@ -134,8 +143,9 @@ class SupportTicketController extends Controller
                 $client->select('id', 'name', 'email');
             }]);
         }]);
+        $quickSolutions = SupportQuickSolution::get();
         $priorities = config('businessinfo.ticketPriorities');
-        return view('ticketing::support-tickets.show', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities'));
+        return view('ticketing::support-tickets.show', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities', 'quickSolutions'));
     }
 
     /**
@@ -184,6 +194,13 @@ class SupportTicketController extends Controller
         try {
         DB::transaction(function() use($supportTicket, $ticketInfo) {
             $supportTicket->update($ticketInfo);
+
+            $supportTicket->supportTicketLifeCycles()->create([
+                'status' => $ticketInfo['status'],
+                'user_id' => auth()->user()->id,
+                'support_ticket_id' => $supportTicket->id,
+                'remarks' => 'Ticket Updated.'
+            ]);
         });
 
         return back()->with('message', 'Ticket Updated Successfully');
@@ -200,5 +217,100 @@ class SupportTicketController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function acceptTicket(Request $request) {
+
+        if(!empty($request->ticket_id)) {
+            try {
+                $ticket = SupportTicket::findOrFail($request->ticket_id);
+            } catch (\Throwable $th) {
+                return back()->withErrors([
+                    'message' => 'Invalid Ticket. Your IP is logged in the system.'
+                ]);
+            }
+
+            if($ticket->status == 'Pending' || $ticket->status == 'Approved') {
+                $ticket->status = 'Accepted';
+
+                try {
+                    DB::transaction(function() use($ticket) {
+                        $ticket->save();
+
+                        $ticket->supportTicketLifeCycles()->create([
+                            'status' => 'Accepted',
+                            'user_id' => auth()->user()->id,
+                            'support_ticket_id' => $ticket->id,
+                            'remarks' => 'Ticket Accepted.'
+                        ]);
+                    });
+                
+                    return back()->with('message', 'Ticket Accepted Successfully');
+
+                } catch (QueryException $e) {
+                    return back()->withErrors([
+                        'message' => 'Something went wrong. Check if your internet connection is stable or not.'
+                    ]);
+                }
+                
+            } else {
+                return back()->withErrors([
+                    'message' => 'You cannot accept this ticket. As it is currently '.$ticket->status.'.'
+                ]);
+            }
+        } else {
+            return back()->withErrors([
+                'message' => 'Invalid Request. Your IP is logged in the system.'
+            ]);
+        }
+    }
+
+    public function addSolution(Request $request) {
+
+        if(!empty($request->ticket_id)) {
+            
+                $ticket = SupportTicket::findOrFail($request->ticket_id);
+
+                if($ticket->status == 'Pending' || $ticket->status == 'Closed') {
+                    return back()->withErrors([
+                        'message' => 'You cannot add solution to this ticket.'
+                    ]);
+                }
+
+                $permissibleUsers = $ticket->supportTicketLifeCycles
+                              ->where('status', '!=', 'Pending')
+                              ->where('status', '!=', 'Closed')
+                              ->where('status', '!=', 'Approved')
+                              ->pluck('user_id')
+                              ->toArray();
+
+                if(!in_array(auth()->user()->id, $permissibleUsers)) {
+                    return back()->withErrors([
+                        'message' => 'You cannot add solution to this ticket.'
+                    ]);
+                } else {
+                    try {
+                        DB::transaction(function() use($request, $ticket) {
+                            $ticket->supportTicketLifeCycles()->create([
+                                'status' => collect($ticket->supportTicketLifeCycles)->last()->status,
+                                'user_id' => auth()->user()->id,
+                                'support_ticket_id' => $ticket->id,
+                                'remarks' => ($request->quick_solution != 'other') ? $request->quick_solution : $request->custom_solution
+                            ]);
+                        });
+
+                        return back()->with('message', 'Solution Added Successfully');
+                    } catch (QueryException $e) {
+                        dd($e);   
+                    }
+                }
+
+                // Incase of Handover or Forward USER_ID will be blank and it will be available after someone approve it.
+
+        } else {
+            return back()->withErrors([
+                'message' => 'Invalid Request. Your IP is logged in the system.'
+            ]);
+        }
     }
 }
