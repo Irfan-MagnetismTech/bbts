@@ -3,10 +3,15 @@
 namespace Modules\Ticketing\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\EmailService;
+use Modules\Admin\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use App\Services\BbtsGlobalService;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use Spatie\Permission\Models\Permission;
 use Modules\Ticketing\Entities\SupportTeam;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Ticketing\Entities\SupportTicket;
@@ -14,6 +19,7 @@ use Modules\Ticketing\Entities\TicketMovement;
 
 class TicketMovementController extends Controller
 {
+    use HasRoles;
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -124,18 +130,28 @@ class TicketMovementController extends Controller
             return back()->withErrors('You are not eligible to move this ticket.');
         }
 
-        $teamMembers = $supportTeams->where('id', $request->movement_to)->first();
+        $supportTeam = $supportTeams->where('id', $request->movement_to)->first();
 
         if(!empty($request->teamMemberId)) {
             $movementModel = '\Modules\Admin\Entities\User';
-            $teamMember = $teamMembers->supportTeamMembers->where('id', $request->teamMemberId)->first();
-            $remarks = 'Ticket '.$pastForms[$movementType].' to '.$teamMember->user->name.' of '.$teamMembers->first()->department->name.'.';
+            $teamMember = $supportTeam->supportTeamMembers->where('id', $request->teamMemberId)->first();
+            $remarks = 'Ticket '.$pastForms[$movementType].' to '.$teamMember->user->name.' of '.$supportTeam->first()->department->name.'.';
 
         } else {
             $movementModel = 'App\Models\Dataencoding\Department';
             $remarks = 'Ticket '.$pastForms[$movementType].' to '.$supportTeams->where('id', $request->movement_to)->first()->department->name.'.';
         }
-        
+
+        $allTeamMembersId = $supportTeam->supportTeamMembers->pluck('user_id')->toArray();
+
+        $permissionNames = ['receive-email-when-ticket-forwarded', 'receive-email-when-ticket-backwarded', 'receive-email-when-ticket-handovered'];
+
+        $mailReceivers = User::whereIn('id', $allTeamMembersId)->whereHas('roles', function($q) use($permissionNames){
+            $q->whereHas('permissions', function($q1) use($permissionNames) {
+              $q1->whereIn('name', $permissionNames);
+            });
+          })->get();
+
         try {
             DB::transaction(function() use($supportTicket, $remarks, $movementModel, $movementType, $request) {
                 $supportTicket->supportTicketLifeCycles()->create([
@@ -156,8 +172,15 @@ class TicketMovementController extends Controller
                     'movement_date' => now(),
                 ]);
             });
-        
+
+            foreach($mailReceivers as $mailReceiver) {
+                $subject = 'New Ticket '. ucfirst($movementType);
+                $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$supportTeam->first()->department->name.'.';
+                (new EmailService())->sendEmail($mailReceiver->email, null, $mailReceiver->name, $subject, $message);
+            }
+
             return redirect()->back()->with('message', $remarks);
+
         } catch (QueryException $e) {
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
