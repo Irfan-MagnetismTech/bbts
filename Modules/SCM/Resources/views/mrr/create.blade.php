@@ -185,7 +185,7 @@
                         <select class="form-control material_name" name="material_id[]">
                             <option value="" readonly selected>Select Material</option>
                             @foreach ($material_list as $key1 => $value )
-                            <option value="{{$value}}" readonly @selected($material_id[$key] == $value)>{{$key1}}</option>
+                            <option value="{{$value->material->id}}" data-unit="{{$value->material->unit}}" data-type="{{$value->material->type}}" data-code="{{$value->material->code}}" readonly @selected($material_id[$key] == $value->material->id)>{{$value->material->materialNameWithCode}}</option>
                             @endforeach
                         </select>
                         <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="{{ $item_code[$key]  }}"> 
@@ -421,43 +421,40 @@
                         $.each(items, function(key, data) {
                             dropdown.append($(`<option>Select Material</option>`)
                                 .attr('value', data.material_id)
+                                .attr('data-code', data.material.code)
+                                .attr('data-type', data.material.type)
+                                .attr('data-unit', data.material.unit)
                                 .text(data.material.name + " - " + data.material.code));
                         })
                     });
+
+                    
                 }
             };
         $(document).on('change','.material_name',function(){
             let material_id = $(this).closest('tr').find('.material_name').val();
-            console.log();
-            const url = '{{ url('scm/get_unit') }}/' + material_id;
+            let code = $(this).find(':selected').data('code');
+            let type = $(this).find(':selected').data('type');
+            let unit = $(this).find(':selected').data('unit');
             var elemmtn = $(this);
             (elemmtn).closest('tr').find('.final_mark').attr('readonly',true).val(null);
             (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true).val(null);
-            
-            $.getJSON(url, function(item) {
-                (elemmtn).closest('tr').find('.unit').val(item.unit);
-                (elemmtn).closest('tr').find('.item_code').val(item.code);
-                (elemmtn).closest('tr').find('.material_type').val(item.type);
+                (elemmtn).closest('tr').find('.unit').val(unit);
+                (elemmtn).closest('tr').find('.item_code').val(code);
+                (elemmtn).closest('tr').find('.material_type').val(type);
 
-                if(item.type == 'Drum'){
-                    console.log('yes drum');
-
+                if(type == 'Drum'){
                     (elemmtn).closest('tr').find('.final_mark').attr('readonly',false);
                     (elemmtn).closest('tr').find('.initial_mark').attr('readonly',false);
-                (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
-
+                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
                     (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
                             maxTags: 1
                         });
-                   
                     }else{
-                        console.log('not drum');
-                (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
-                        // 
-                        (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
+                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
+                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
                         });
                     }
-                });
             })
 
 

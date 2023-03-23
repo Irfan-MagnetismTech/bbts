@@ -146,7 +146,7 @@ class ScmMrrController extends Controller
             ->with('material')
             ->where('purchase_order_id', $materialReceive->purchase_order_id)
             ->get()
-            ->pluck('material_id', 'material.materialNameWithCode');
+            ->unique('material_id');
 
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
