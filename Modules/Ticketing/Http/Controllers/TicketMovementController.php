@@ -231,6 +231,7 @@ class TicketMovementController extends Controller
         
                 $movement->update([
                     'status' => 'Accepted',
+                    'accepted_by' => auth()->user()->id
                 ]);
             });
         

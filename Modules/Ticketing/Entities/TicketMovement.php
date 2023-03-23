@@ -16,4 +16,8 @@ class TicketMovement extends Model
     public function user() {
         return $this->belongsTo(User::class, 'movement_by');
     }
+
+    public function acceptedBy() {
+        return $this->belongsTo(User::class, 'accepted_by');
+    }
 }

@@ -48,7 +48,15 @@
                         <td>{{ $movement->supportTicket->supportComplainType->name}}</td>
                         <td>{{ $movement->supportTicket->ticketSource->name}}</td>
                         <td>{{ $movement->remarks }}</td>
-                        <td>{{ $movement->status }}</td>
+                        <td>
+                            
+                            {{ $movement->status }}
+                            @if($movement->status == 'Accepted')
+                            <br/>
+                            <small>by {{ $movement->acceptedBy->name }} on {{ \Carbon\Carbon::parse($movement->updated_at)->format('d/m/Y h:i a') }}</small>
+                            @endif
+                        
+                        </td>
 
                         <td class="d-flex align-items-center justify-content-center">
 
