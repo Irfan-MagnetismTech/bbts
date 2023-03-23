@@ -165,6 +165,10 @@ class PermissionSeeder extends Seeder
                 'guard_name'=>'web',
             ],
             [
+                'name'=>'support-ticket-backward',
+                'guard_name'=>'web',
+            ],
+            [
                 'name'=>'support-ticket-team-search',
                 'guard_name'=>'web',
             ],

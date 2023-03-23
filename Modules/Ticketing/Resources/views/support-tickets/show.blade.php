@@ -304,30 +304,47 @@
             </div>
             <hr>
             <div class="col-12 d-flex justify-content-between mt-3">
+                @can('support-ticket-backward')
                 <a href="{{ route('ticket-movements', ['type' => 'Backward', 'id' => $supportTicket->id]) }}" class="btn btn-success btn-round btn-inline-block py-2">
                     <i class="fas fa-chevron-circle-left"></i>
                     Backward
                 </a>
+                @endcan
+
+                @can('support-ticket-forward')
                 <a href="{{ route('ticket-movements', ['type' => 'Forward', 'id' => $supportTicket->id]) }}" class="btn btn-success btn-round btn-inline-block py-2">
                     Forward
                     <i class="fas fa-chevron-circle-right"></i>
                 </a>
+                @endcan
+
+                @can('support-ticket-handover')
                 <a href="{{ route('ticket-movements', ['type' => 'Handover', 'id' => $supportTicket->id]) }}" class="btn btn-success btn-round btn-inline-block py-2">
                     Handover
                     <i class="fas fa-handshake"></i>
                 </a>
+                @endcan
+
+                @can('support-client-send-email')
                 <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'email']) }}" class="btn btn-success btn-round btn-inline-block py-2">
                     Send Mail
                     <i class="fas fa-envelope"></i>
                 </a>
+                @endcan
+
+                @can('support-client-send-sms')
                 <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'sms']) }}" class="btn btn-success btn-round btn-inline-block py-2">
                     Send SMS
                     <i class="fas fa-inbox"></i>
                 </a>
+                @endcan
+                
+                @can('support-ticket-close')
                 <a href="" class="btn btn-danger btn-round btn-inline-block py-2">
                     Close
                     <i class="far fa-check-circle"></i>
                 </a>
+                @endcan
             </div>
         </div>
     </div>

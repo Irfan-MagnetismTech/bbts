@@ -9,6 +9,6 @@ Ticket accpetance is kind of a movement actually. **Why?** Because it change the
 
 - Ticket Movement Loop Holes
     1. Forward => Team / Department IDOR
-    2. Accept => Team / Department IDOR
+    2. 
     3. Forward List => Team / Department IDOR
     
