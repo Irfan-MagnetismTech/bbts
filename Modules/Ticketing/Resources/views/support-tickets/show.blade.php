@@ -273,6 +273,21 @@
                     </table>
                 </div>
             </div>
+
+            @if($supportTicket->status == 'Pending' || $supportTicket->status == 'Approved')
+            <div class="col-12 my-5">
+                <div class="col-2 mx-auto">
+                    <form action="{{ route('accept-ticket') }}" method="POST" data-toggle="tooltip" title="Accept" class="d-inline">
+                        @csrf
+                        <input type="hidden" name="ticket_id" value="{{ $supportTicket->id }}">
+                        <button type="submit" class="btn btn-success btn-out btn-md btn-round">
+                            <i class="fas fa-check"></i>
+                            Accept Ticket
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @else
             <div class="col-12 my-5">
                 <div class="row">
                     <div class="col-6 mx-auto rounded shadow-sm" style="background-color: #A0B9FF; box-shadow: 2px 2px 6px 0px #70708d">
@@ -346,6 +361,7 @@
                 </a>
                 @endcan
             </div>
+            @endif
         </div>
     </div>
 @endsection

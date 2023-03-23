@@ -134,12 +134,12 @@ class TicketMovementController extends Controller
             }
     
             $supportTeam = $supportTeams->where('id', $request->movement_to)->first();
-    
+
             // $existingMovement = TicketMovement::where('support_ticket_id', $ticketId)->get();
     
             if(!empty($request->teamMemberId)) {
                 $movementModel = '\Modules\Admin\Entities\User';
-                $teamMember = $supportTeam->supportTeamMembers->where('id', $request->teamMemberId)->first();
+                $teamMember = $supportTeam->supportTeamMembers->where('user_id', $request->teamMemberId)->first();
     
                 if(empty($teamMember)) {
                     return back()->withErrors('You cannot forward ticket to this user. Because Team and Employee mismatch.');
@@ -174,7 +174,7 @@ class TicketMovementController extends Controller
                     TicketMovement::create([
                         'support_ticket_id' => $supportTicket->id,
                         'type' => $movementType,
-                        'movement_to' => $request->movement_to,
+                        'movement_to' => (!empty($request->teamMemberId)) ? $request->teamMemberId : $request->movement_to,
                         'movement_by' => auth()->user()->id,
                         'status' => 'Pending',
                         'remarks' => $request->remarks,

@@ -99,7 +99,7 @@
                 var teamMembers = data.support_team_members
                 var memberInfo = '<option value="">Select a Team Member</option>';
                 $.each(teamMembers, function(key, value) {
-                    memberInfo += '<option value="' + value.id + '">' + value.user.name + '</option>';
+                    memberInfo += '<option value="' + value.user_id + '">' + value.user.name + '</option>';
                 });
 
                 $('#teamMemberList').html(null);

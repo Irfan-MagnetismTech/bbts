@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('ticket_movements', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(SupportTicket::class)->constrained()->cascadeOnDelete();
+            $table->foreignId('accepted_by')->nullable();
             $table->foreignId('movement_by');
             $table->foreignId('movement_to');
             $table->string('type');
