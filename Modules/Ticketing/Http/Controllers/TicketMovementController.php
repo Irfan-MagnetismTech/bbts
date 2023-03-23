@@ -113,77 +113,89 @@ class TicketMovementController extends Controller
         $movementTypes = config('businessinfo.ticketMovements');
         $pastForms = collect(config('businessinfo.pastForms'));
 
-        if(!in_array($movementType, $movementTypes)) {
-            abort(404);
-        }
-        
-        $supportTicket = SupportTicket::findOrFail($ticketId);
-
-        $isEligible = (new BbtsGlobalService())->isEligibleForTicketMovement($ticketId, $movementType);
-
-        if(!$isEligible) {
-            return back()->withErrors('Ticket is Pending or already closed. Or you are not eligible to move this ticket.');
-        }
-
-        $supportTeams = (new BbtsGlobalService())->supportTeambyBranch(auth()->user()->employee->branch_id);
-
-        if(!in_array($request->movement_to, $supportTeams->pluck('id')->toArray())) {
-            return back()->withErrors('You are not eligible to move this ticket.');
-        }
-
-        $supportTeam = $supportTeams->where('id', $request->movement_to)->first();
-
-        if(!empty($request->teamMemberId)) {
-            $movementModel = '\Modules\Admin\Entities\User';
-            $teamMember = $supportTeam->supportTeamMembers->where('id', $request->teamMemberId)->first();
-            $remarks = 'Ticket '.$pastForms[$movementType].' to '.$teamMember->user->name.' of '.$supportTeam->first()->department->name.'.';
-
-        } else {
-            $movementModel = '\Modules\Ticketing\Entities\SupportTeam';
-            $remarks = 'Ticket '.$pastForms[$movementType].' to '.$supportTeams->where('id', $request->movement_to)->first()->department->name.'.';
-        }
-
-        $allTeamMembersId = $supportTeam->supportTeamMembers->pluck('user_id')->toArray();
-
-        $permissionNames = ['receive-email-when-ticket-forwarded', 'receive-email-when-ticket-backwarded', 'receive-email-when-ticket-handovered'];
-
-        $mailReceivers = User::whereIn('id', $allTeamMembersId)->whereHas('roles', function($q) use($permissionNames){
-            $q->whereHas('permissions', function($q1) use($permissionNames) {
-              $q1->whereIn('name', $permissionNames);
-            });
-          })->get();
-
         try {
-            DB::transaction(function() use($supportTicket, $remarks, $movementModel, $movementType, $request) {
-                $supportTicket->supportTicketLifeCycles()->create([
-                    'status' => collect($supportTicket->supportTicketLifeCycles)->last()->status,
-                    'user_id' => auth()->user()->id,
-                    'support_ticket_id' => $supportTicket->id,
-                    'remarks' => $remarks
-                ]);
-        
-                TicketMovement::create([
-                    'support_ticket_id' => $supportTicket->id,
-                    'type' => $movementType,
-                    'movement_to' => $request->movement_to,
-                    'movement_by' => auth()->user()->id,
-                    'status' => 'Pending',
-                    'remarks' => $request->remarks,
-                    'movement_model' => $movementModel,
-                    'movement_date' => now(),
-                ]);
-            });
-
-            foreach($mailReceivers as $mailReceiver) {
-                $subject = 'New Ticket '. ucfirst($movementType);
-                $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$supportTeam->first()->department->name.'.';
-                (new EmailService())->sendEmail($mailReceiver->email, null, $mailReceiver->name, $subject, $message);
+            if(!in_array($movementType, $movementTypes)) {
+                abort(404);
             }
-
-            return redirect()->back()->with('message', $remarks);
-
-        } catch (QueryException $e) {
-            return redirect()->back()->withInput()->withErrors($e->getMessage());
+            
+            $supportTicket = SupportTicket::findOrFail($ticketId);
+    
+            $isEligible = (new BbtsGlobalService())->isEligibleForTicketMovement($ticketId, $movementType);
+    
+            if(!$isEligible) {
+                return back()->withErrors('Ticket is Pending or already closed. Or you are not eligible to move this ticket.');
+            }
+    
+            // Branch or Companywise 
+            $supportTeams = (new BbtsGlobalService())->supportTeambyBranch(auth()->user()->employee->branch_id);
+    
+            if(!in_array($request->movement_to, $supportTeams->pluck('id')->toArray())) {
+                return back()->withErrors('You are not eligible to move this ticket.');
+            }
+    
+            $supportTeam = $supportTeams->where('id', $request->movement_to)->first();
+    
+            // $existingMovement = TicketMovement::where('support_ticket_id', $ticketId)->get();
+    
+            if(!empty($request->teamMemberId)) {
+                $movementModel = '\Modules\Admin\Entities\User';
+                $teamMember = $supportTeam->supportTeamMembers->where('id', $request->teamMemberId)->first();
+    
+                if(empty($teamMember)) {
+                    return back()->withErrors('You cannot forward ticket to this user. Because Team and Employee mismatch.');
+                }
+    
+                $remarks = 'Ticket '.$pastForms[$movementType].' to '.$teamMember->user->name.' of '.$supportTeam->first()->department->name.'.';
+    
+            } else {
+                $movementModel = '\Modules\Ticketing\Entities\SupportTeam';
+                $remarks = 'Ticket '.$pastForms[$movementType].' to '.$supportTeams->where('id', $request->movement_to)->first()->department->name.'.';
+            }
+    
+            $allTeamMembersId = $supportTeam->supportTeamMembers->pluck('user_id')->toArray();
+    
+            $permissionNames = ['receive-email-when-ticket-forwarded', 'receive-email-when-ticket-backwarded', 'receive-email-when-ticket-handovered'];
+    
+            $mailReceivers = User::whereIn('id', $allTeamMembersId)->whereHas('roles', function($q) use($permissionNames){
+                $q->whereHas('permissions', function($q1) use($permissionNames) {
+                  $q1->whereIn('name', $permissionNames);
+                });
+              })->get();
+    
+            try {
+                DB::transaction(function() use($supportTicket, $remarks, $movementModel, $movementType, $request) {
+                    $supportTicket->supportTicketLifeCycles()->create([
+                        'status' => collect($supportTicket->supportTicketLifeCycles)->last()->status,
+                        'user_id' => auth()->user()->id,
+                        'support_ticket_id' => $supportTicket->id,
+                        'remarks' => $remarks
+                    ]);
+            
+                    TicketMovement::create([
+                        'support_ticket_id' => $supportTicket->id,
+                        'type' => $movementType,
+                        'movement_to' => $request->movement_to,
+                        'movement_by' => auth()->user()->id,
+                        'status' => 'Pending',
+                        'remarks' => $request->remarks,
+                        'movement_model' => $movementModel,
+                        'movement_date' => now(),
+                    ]);
+                });
+    
+                foreach($mailReceivers as $mailReceiver) {
+                    $subject = 'New Ticket '. ucfirst($movementType);
+                    $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$supportTeam->first()->department->name.'.';
+                    (new EmailService())->sendEmail($mailReceiver->email, null, $mailReceiver->name, $subject, $message);
+                }
+    
+                return redirect()->back()->with('message', $remarks);
+    
+            } catch (QueryException $e) {
+                return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
+            }
+        } catch (\Throwable $th) {
+            return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
         }
 
     }

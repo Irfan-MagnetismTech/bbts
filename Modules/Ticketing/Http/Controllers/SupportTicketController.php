@@ -326,44 +326,17 @@ class SupportTicketController extends Controller
         $teamIds = $userSupportTeam->map(function($teamMember) {
             return $teamMember->support_team_id;
         })->toArray();
-
-
-        // $supportTicketMovements = TicketMovement::where(function($query) use($teamIds) {
-        //                                             $query->when(($query->movement_model == '\Modules\Ticketing\Entities\SupportTeam'), function($query2) use($teamIds) {
-        //                                                 $query2->whereIn('movement_to', $teamIds);
-        //                                             })
-        //                                             ->when(($query->movement_model == '\Modules\Admin\Entities\User'), function($query3) {
-        //                                                   $query3->orWhere('movement_to', auth()->user()->id);
-        //                                             });
-        //                                         })
-        //                                         ->where([
-        //                                             // 'status' => 'Pending',
-        //                                             'type' => 'Forward',
-        //                                         ])->get();
-
     
         $supportTicketMovements = TicketMovement::where(function($query) use($teamIds) {
             $query->where('movement_model', '\Modules\Ticketing\Entities\SupportTeam')
-                ->whereIn('movement_to', $teamIds)
-                ->orWhere(function($subquery) {
-                    $subquery->where('movement_model', '\Modules\Admin\Entities\User')
-                        ->where('movement_to', auth()->user()->id);
+                  ->whereIn('movement_to', $teamIds)
+                  ->orWhere(function($subquery) {
+                            $subquery->where('movement_model', '\Modules\Admin\Entities\User')
+                                     ->where('movement_to', auth()->user()->id);
                 });
         })
         ->where('type', 'Forward')
         ->get();
-        
-
-                        dd($supportTicketMovements);
-        $supportTicketMovements = $supportTicketMovements->filter(function($supportTicketMovement) use($teamIds){
-            if($supportTicketMovement->movement_model == '\Modules\Ticketing\Entities\SupportTeam') {
-                return (in_array($supportTicketMovement->movement_to, $teamIds));
-            } else if($supportTicketMovement->movement_model == '\Modules\Admin\Entities\User') {
-                return ($supportTicketMovement->movement_to == auth()->user()->id);
-            }
-        });
-
-        // todo: check based on department and user movement_model id perfectly 
 
         $type = 'Forwarded';
         return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type'));
