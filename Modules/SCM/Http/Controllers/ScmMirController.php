@@ -150,8 +150,9 @@ class ScmMirController extends Controller
         // $scm_requisition_ids = ScmRequisitionDetail::query()
         //     ->where('scm_requisition_id', request()->scm_requisition_id)
         //     ->pluck('scm_requisition_id')
-            // ->unique();
+        // ->unique();
         $materials = StockLedger::query()
+            ->with('material', 'brand')
             ->whereIn('material_id', function ($q) {
                 return $q->select('material_id')
                     ->from('scm_requisition_details')

@@ -632,19 +632,6 @@
             getMaterial(this)
         })
 
-        // $(document).on('select2:open', '.material_name', function() {
-        //     // Attach mouseover event to options inside Select2 dropdown
-        //     $('.select2-results__options').on('mouseover', '.select2-results__option', function() {
-        //         //call getMaterial function
-        //         getMaterial(this)
-        //     });
-        // });
-
-        // $(document).on('select2:close', '.material_name', function() {
-        //     // Remove mouseover event from options inside Select2 dropdown
-        //     $('.select2-results__options').off('mouseover', '.select2-results__option');
-        // });
-
         /* Adds and removes quantity row on click */
         $("#material_requisition")
             .on('click', '.add-requisition-row', () => {
@@ -699,8 +686,6 @@
             let dropdown;
 
             dropdown = $(this).closest('tr').find('.brand_name');
-            // $('.material_name').each(function() {
-            // });
             dropdown.empty();
             dropdown.append('<option selected disabled>Select Brand</option>');
             dropdown.prop('selectedIndex', 0);
