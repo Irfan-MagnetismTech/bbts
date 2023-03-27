@@ -60,7 +60,7 @@
 
                         <td class="d-flex align-items-center justify-content-center">
 
-                            @if($movement->status == 'Pending')
+                            @if($movement->status == 'Pending' && $supportTicketMovements->first()->type ==  $movementTypes[0])
                             <div class="icon-btn mr-1">
                                 <form action="{{ route('accept-forwarded-tickets') }}" method="POST" data-toggle="tooltip" title="Accept" class="d-inline">
                                     @csrf

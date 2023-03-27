@@ -323,6 +323,7 @@ class SupportTicketController extends Controller
             The line is eloquent get() method but not first(), 
             because each member might belong to multiple team as Mr. Humayun said.
         */
+        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
 
         $teamIds = $userSupportTeam->map(function($teamMember) {
             return $teamMember->support_team_id;
@@ -336,14 +337,39 @@ class SupportTicketController extends Controller
                                      ->where('movement_to', auth()->user()->id);
                 });
         })
-        ->where('type', 'Forward')
+        ->where('type', $movementTypes[0])
         ->get();
 
         $type = 'Forwarded';
-        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type'));
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
     }
 
     public function backwardedTickets() {
-        $userDept = auth()->user()->employee->department_id;
+        
+        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
+    
+        $supportTicketMovements = TicketMovement::where(function($query){
+            $query->where('movement_model', '\Modules\Admin\Entities\User')
+                  ->where('movement_to', auth()->user()->id);
+        })
+        ->where('type', $movementTypes[1])
+        ->get();
+
+        $type = 'Backwarded';
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
+    }
+
+    public function handoveredTickets() {
+        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
+    
+        $supportTicketMovements = TicketMovement::where(function($query){
+            $query->where('movement_model', '\Modules\Admin\Entities\User')
+                  ->where('movement_to', auth()->user()->id);
+        })
+        ->where('type', $movementTypes[2])
+        ->get();
+
+        $type = 'Handovered';
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
     }
 }

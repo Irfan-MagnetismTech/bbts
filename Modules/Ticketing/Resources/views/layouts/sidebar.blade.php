@@ -25,6 +25,12 @@
             <span class="pcoded-mtext">Backwarded Ticket List</span>
         </a>
     </li>
+    <li class="{{ request()->routeIs('handovered-tickets') ? 'active' : null }}">
+        <a href="{{ route('handovered-tickets') }}">
+            <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-hands-helping"></i></span>
+            <span class="pcoded-mtext">Handovered Ticket List</span>
+        </a>
+    </li>
     <li class="{{ request()->routeIs('bulk-email') ? 'active' : null }}">
         <a href="{{ route('bulk-email') }}">
             <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-mail-bulk"></i></span>

@@ -106,7 +106,25 @@ class TicketMovementController extends Controller
         }
 
         $supportTeams = (new BbtsGlobalService())->getSupportTeam();
-        return view('ticketing::ticket-movements.create-edit', compact('movementType', 'movementTypes', 'ticketId', 'supportTicket', 'supportTeams'));
+
+        $sameTeamUsers = [];
+
+        // Handover is 2 in array
+        if($movementType == $movementTypes[2]) {
+            $userTeam = SupportTeamMember::with('supportTeam.supportTeamMembers')
+                        ->where('user_id', auth()->user()->id)
+                        ->get();
+
+            $sameTeamUserIds = $userTeam->flatMap(function($teamMember) {
+                                        return $teamMember->supportTeam->supportTeamMembers->reject(function($user) {
+                                        return $user->user_id == auth()->user()->id;
+                                    });
+                                })->pluck('user_id')->unique()->values()->toArray();
+
+            $sameTeamUsers = User::whereIn('id', $sameTeamUserIds)->get();
+        }
+
+        return view('ticketing::ticket-movements.create-edit', compact('movementType', 'movementTypes', 'ticketId', 'supportTicket', 'supportTeams', 'sameTeamUsers'));
     }
 
     public function processTicketMovement(Request $request, $movementType, $ticketId) {
@@ -119,7 +137,7 @@ class TicketMovementController extends Controller
             }
             
             $supportTicket = SupportTicket::findOrFail($ticketId);
-    
+
             $isEligible = (new BbtsGlobalService())->isEligibleForTicketMovement($ticketId, $movementType);
     
             if(!$isEligible) {
@@ -164,8 +182,13 @@ class TicketMovementController extends Controller
     
             try {
                 DB::transaction(function() use($supportTicket, $remarks, $movementModel, $movementType, $request) {
+
+                    $supportTicket->update([
+                        'status' => 'Processing'
+                    ]);
+
                     $supportTicket->supportTicketLifeCycles()->create([
-                        'status' => collect($supportTicket->supportTicketLifeCycles)->last()->status,
+                        'status' => 'Processing',
                         'user_id' => auth()->user()->id,
                         'support_ticket_id' => $supportTicket->id,
                         'remarks' => $remarks,
@@ -186,8 +209,9 @@ class TicketMovementController extends Controller
                 });
     
                 foreach($mailReceivers as $mailReceiver) {
-                    $subject = 'New Ticket '. ucfirst($movementType);
+                    $subject = 'Ticket '.$supportTicket->ticket_no.' '. ucfirst($movementType);
                     $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$supportTeam->first()->department->name.'.';
+                    $message .= "\n\n".$request->remarks;
                     (new EmailService())->sendEmail($mailReceiver->email, null, $mailReceiver->name, $subject, $message);
                 }
     
@@ -236,7 +260,7 @@ class TicketMovementController extends Controller
             try {
                 DB::transaction(function() use($supportTicket, $remarks, $movementModel, $movementType, $request, $authorizedMember) {
                     $supportTicket->supportTicketLifeCycles()->create([
-                        'status' => collect($supportTicket->supportTicketLifeCycles)->last()->status,
+                        'status' => 'Processing',
                         'user_id' => auth()->user()->id,
                         'support_ticket_id' => $supportTicket->id,
                         'remarks' => $remarks,
@@ -248,7 +272,7 @@ class TicketMovementController extends Controller
                         'type' => $movementType,
                         'movement_to' =>$authorizedMember->user_id,
                         'movement_by' => auth()->user()->id,
-                        'status' => 'Pending',
+                        'status' => 'Processing',
                         'remarks' => $request->remarks,
                         'movement_model' => $movementModel,
                         'movement_date' => now(),
@@ -256,7 +280,7 @@ class TicketMovementController extends Controller
                 });
     
                 foreach($mailReceivers as $mailReceiver) {
-                    $subject = 'New Ticket '. ucfirst($movementType);
+                    $subject = 'Ticket '.$supportTicket->ticket_no.' '. ucfirst($movementType);
                     $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].'.';
                     $message .= "\n\n".$request->remarks;
                     (new EmailService())->sendEmail($mailReceiver->email, null, $mailReceiver->name, $subject, $message);
@@ -313,5 +337,76 @@ class TicketMovementController extends Controller
             return redirect()->back()->withErrors($e->getMessage());
         }
 
+    }
+
+    public function processTicketMovementHandover(Request $request, $movementType, $ticketId) {
+        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
+        $pastForms = collect(config('businessinfo.pastForms'));
+
+        try {
+            if(!in_array($movementType, $movementTypes) || $movementType != $movementTypes[2]) {
+                abort(404);
+            }
+            
+            $supportTicket = SupportTicket::findOrFail($ticketId);
+    
+            $isEligible = (new BbtsGlobalService())->isEligibleForTicketMovement($ticketId, $movementType);
+    
+            if(!$isEligible) {
+                return back()->withErrors('Ticket is Pending or already closed. Or you are not eligible to move this ticket.');
+            }
+
+            $movementModel = '\Modules\Admin\Entities\User';
+
+            $authorizedMember = User::findOrFail($request->teamMemberId);
+
+            $remarks = 'Ticket '.$pastForms[$movementType].' to '.$authorizedMember->name.' of '.$authorizedMember->employee->department->name.'.';
+
+            $permissionNames = ['receive-email-when-ticket-forwarded', 'receive-email-when-ticket-backwarded', 'receive-email-when-ticket-handovered'];
+    
+            $mailReceivers = User::whereIn('id', [$request->teamMemberId])->whereHas('roles', function($q) use($permissionNames){
+                $q->whereHas('permissions', function($q1) use($permissionNames) {
+                  $q1->whereIn('name', $permissionNames);
+                });
+              })->get();
+    
+            try {
+                DB::transaction(function() use($supportTicket, $remarks, $movementModel, $movementType, $request, $authorizedMember) {
+                    $supportTicket->supportTicketLifeCycles()->create([
+                        'status' => 'Processing',
+                        'user_id' => auth()->user()->id,
+                        'support_ticket_id' => $supportTicket->id,
+                        'remarks' => $remarks,
+                        'description' => $request->remarks
+                    ]);
+            
+                    TicketMovement::create([
+                        'support_ticket_id' => $supportTicket->id,
+                        'type' => $movementType,
+                        'movement_to' =>$authorizedMember->id,
+                        'movement_by' => auth()->user()->id,
+                        'status' => 'Processing',
+                        'remarks' => $request->remarks,
+                        'movement_model' => $movementModel,
+                        'movement_date' => now(),
+                    ]);
+                });
+    
+                foreach($mailReceivers as $mailReceiver) {
+                    $subject = 'Ticket '.$supportTicket->ticket_no.' '. ucfirst($movementType);
+                    $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].'.';
+                    $message .= "\n\n".$request->remarks;
+                    (new EmailService())->sendEmail($mailReceiver->email, null, $mailReceiver->name, $subject, $message);
+                }
+    
+                return redirect()->back()->with('message', $remarks);
+    
+            } catch (QueryException $e) {
+                return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
+            }
+
+        } catch (\Throwable $th) {
+            return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
+        }
     }
 }

@@ -94,6 +94,14 @@ class BbtsGlobalService extends Controller
             } else {
                 return false;
             }
+        } else if($movementTypes[2] == $movementType) {
+            $approved = $supportTicket->supportTicketLifeCycles->where('user_id', auth()->user()->id)->first();
+            if($approved) {
+                return true;
+            } else {
+                return false;
+            }
+
         }
 
 

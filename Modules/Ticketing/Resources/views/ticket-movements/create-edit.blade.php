@@ -24,9 +24,14 @@
         <div class="row">
             <div class="col-md-12">
                 <form
-                action="{{ ($movementType == $movementTypes[0]) ? route('process-ticket-movements', ['type' => $movementType, 'id' => $ticketId]) : (($movementType == $movementTypes[1] ? route('process-backward-ticket-movements', ['type' => $movementType, 'id' => $ticketId]) : null)) }}"
+                action="{{ 
+                            $movementType == $movementTypes[0] ? route('process-ticket-movements', ['type' => $movementType, 'id' => $ticketId]) : 
+                                ($movementType == $movementTypes[1] ? route('process-backward-ticket-movements', ['type' => $movementType, 'id' => $ticketId]) : 
+                                    ($movementType == $movementTypes[2] ? route('process-handover-ticket-movements', ['type' => $movementType, 'id' => $ticketId]) : 
+                                        null ))  
+                        }}"
                 method="post" class="custom-form">
-                
+
                 @csrf
                     <div class="row">
                         <div class="col-8 mx-auto">
@@ -59,6 +64,11 @@
                                 <label for="movement_to">Select Team Member</label>
                                 <select name="teamMemberId" id="teamMemberList" class="form-control">
                                     <option value="">Select Team Member</option>
+                                    @forelse ($sameTeamUsers as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @empty
+                                        
+                                    @endforelse
                                 </select>
                             </div>
                             @endif
