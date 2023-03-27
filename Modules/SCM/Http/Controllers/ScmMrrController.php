@@ -97,6 +97,7 @@ class ScmMrrController extends Controller
                             'final_mark'        => $value->final_mark,
                             'quantity'          => $quantity,
                             'created_at'        => now(),
+                            'updated_at'        => now()
                         ];
                     } else {
                         $serial_code = 'SL-' . $serial;
@@ -210,7 +211,7 @@ class ScmMrrController extends Controller
                             'initial_mark'      => $value->initial_mark,
                             'final_mark'        => $value->final_mark,
                             'quantity'          => $quantity,
-                            'created_at'        => now(),
+                            'updated_at'        => now(),
                         ];
                         FiberTracking::where('serial_code', $serial_code)->delete();
                     } else {
