@@ -254,7 +254,8 @@
                             <tr>
                                 <th>#SL</th>
                                 <th>Activity Time</th>
-                                <th>Solutions/Remarks</th>
+                                <th>Remarks</th>
+                                <th>Solutions</th>
                                 <th>Department</th>
                                 <th>Updated By</th>
                             </tr>
@@ -265,6 +266,7 @@
                                 <td>{{ $loop->index + 1 }}</td>
                                 <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('H:i a \o\n d/m/Y') }}</td>
                                 <td>{{ $activity->remarks }}</td>
+                                <td>{{ $activity->description }}</td>
                                 <td>{{ $activity->user->employee->department->name }}</td>
                                 <td>{{ $activity->user->name }}</td>
                             </tr>

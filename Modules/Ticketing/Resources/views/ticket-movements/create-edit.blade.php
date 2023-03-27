@@ -24,7 +24,7 @@
         <div class="row">
             <div class="col-md-12">
                 <form
-                action="{{ route('process-ticket-movements', ['type' => $movementType, 'id' => $ticketId]) }}"
+                action="{{ ($movementType == $movementTypes[0]) ? route('process-ticket-movements', ['type' => $movementType, 'id' => $ticketId]) : (($movementType == $movementTypes[1] ? route('process-backward-ticket-movements', ['type' => $movementType, 'id' => $ticketId]) : null)) }}"
                 method="post" class="custom-form">
                 
                 @csrf
@@ -40,9 +40,9 @@
                                 <input type="text" class="form-control" id="status" name="status" aria-describedby="status"
                                     value="{{ old('status') ?? (!empty($supportTicket) ? $supportTicket?->status : '') }}" placeholder="Status" disabled>
                             </div>
-                            @if($movementType != 'Backward' || $movementType == 'Handover')
+                            @if($movementType != $movementTypes[1] || $movementType == $movementTypes[2])
 
-                            @if($movementType != 'Handover')
+                            @if($movementType != $movementTypes[2])
                             <div class="form-group">
                                 <label for="movement_to">Assign to Department Name:</label>
                                 <select name="movement_to" id="movement_to" class="form-control team">

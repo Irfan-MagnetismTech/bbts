@@ -7,8 +7,7 @@
 Ticket accpetance is kind of a movement actually. **Why?** Because it change the responsible person for a specific ticket.
 ```
 
-- Ticket Movement Loop Holes
-    1. 
-    2. 
-    3. 
+- Support Team Creation Layer will come from user Roles or user has roles but this level is just show case?
+
+- 
     

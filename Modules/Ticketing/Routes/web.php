@@ -40,6 +40,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::get('ticket-movements/{type}/{id}', [TicketMovementController::class, 'moveTicket'])->name('ticket-movements');
     Route::post('process-ticket-movements/{type}/{id}', [TicketMovementController::class, 'processTicketMovement'])->name('process-ticket-movements');
+    Route::post('process-backward-ticket-movements/{type}/{id}', [TicketMovementController::class, 'processTicketMovementBackward'])->name('process-backward-ticket-movements');
 
     Route::get('notify-client/{ticketId}/{type}', [NotifyClientController::class, 'notifyClient'])->name('notify-client');
     Route::post('send-notification', [NotifyClientController::class, 'sendNotification'])->name('send-notification');

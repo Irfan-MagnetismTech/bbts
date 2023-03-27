@@ -297,7 +297,8 @@ class SupportTicketController extends Controller
                                 'status' => collect($ticket->supportTicketLifeCycles)->last()->status,
                                 'user_id' => auth()->user()->id,
                                 'support_ticket_id' => $ticket->id,
-                                'remarks' => ($request->quick_solution != 'other') ? $request->quick_solution : $request->custom_solution
+                                'remarks'   => 'Solution Added.',
+                                'description' => ($request->quick_solution != 'other') ? $request->quick_solution : $request->custom_solution
                             ]);
                         });
 
