@@ -5,6 +5,7 @@ namespace Modules\SCM\Entities;
 use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\Material;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SCM\Entities\FiberTracking;
 
 class StockLedger extends Model
 {
@@ -18,6 +19,11 @@ class StockLedger extends Model
     public function receivable()
     {
         return $this->morphTo();
+    }
+
+    public function fiberTracking()
+    {
+        return $this->hasMany(FiberTracking::class, 'serial_code', 'serial_code');
     }
 
     public function material()

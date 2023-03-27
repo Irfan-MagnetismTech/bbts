@@ -59,18 +59,17 @@
         'class' => 'custom-form',
     ]) !!}
     <div class="row">
-       
         <div class="form-group col-3 warehouse_name">
             <label for="select2">Warehouse Name</label>
-                    <select class="form-control select2" id="branch_id" name="branch_id">
-                        <option value="0" selected>Select Branch</option>
-                        @foreach ($branches as $option)
-                            <option value="{{ $option->id }}"
-                                {{ $branch_id == $option->id ? 'selected' : '' }}>
-                                {{ $option->name }}
-                            </option>
-                        @endforeach
-                    </select>
+            <select class="form-control select2" id="branch_id" name="branch_id">
+                <option value="0" selected>Select Branch</option>
+                @foreach ($branches as $option)
+                    <option value="{{ $option->id }}"
+                        {{ $branch_id == $option->id ? 'selected' : '' }}>
+                        {{ $option->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
        
         @if (!empty($materialReceive->id))
@@ -152,6 +151,7 @@
             $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
             $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
             $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
+            $item_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
             $material_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
             $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
             $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
@@ -173,12 +173,19 @@
                 })->toArray() : []);
         @endphp 
             @foreach ($mrr_lines as $key => $requisitionDetail)
+                @php
+                    if($item_type[$key] == "Drum"){
+                        $max_tag = 1;
+                    }else{
+                        $max_tag = null;
+                    }
+                @endphp
                 <tr>
                     <td class="form-group">
                         <select class="form-control material_name" name="material_id[]">
                             <option value="" readonly selected>Select Material</option>
                             @foreach ($material_list as $key1 => $value )
-                            <option value="{{$value}}" readonly @selected($material_id[$key] == $value)>{{$key1}}</option>
+                            <option value="{{$value->material->id}}" data-unit="{{$value->material->unit}}" data-type="{{$value->material->type}}" data-code="{{$value->material->code}}" readonly @selected($material_id[$key] == $value->material->id)>{{$value->material->materialNameWithCode}}</option>
                             @endforeach
                         </select>
                         <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="{{ $item_code[$key]  }}"> 
@@ -205,7 +212,7 @@
                     </td>
                     <td>
                         <div class="tags_add_multiple">
-                            <input class="" type="text" name="sl_code[]" value="{{$sl_code[$key]}}" data-role="tagsinput">
+                            <input class="" type="text" name="sl_code[]" value="{{$sl_code[$key]}}" data-role="tagsinput" data-max-tags="{{ $max_tag }}">
                         </div>
                     </td>
 
@@ -248,9 +255,6 @@
             </tr>
         </tfoot>
     </table>
-
-   
-
     <div class="row">
         <div class="offset-md-4 col-md-4 mt-2">
             <div class="input-group input-group-sm ">
@@ -352,7 +356,7 @@
                             </td>
                             <td>
                                 <div class="tags_add_multiple">
-                                    <input class="" type="text" name="sl_code[]" value="111,112,113" data-role="tagsinput">
+                                    <input class="" type="text" name="sl_code[]" value="111" data-role="tagsinput">
                                 </div>
                             </td>
 
@@ -386,7 +390,9 @@
                         </tr>
                     `;
             $('#material_requisition tbody').append(row);
-            $('input[data-role="tagsinput"]').tagsinput({});
+            $('input[data-role="tagsinput"]').tagsinput({
+                        });
+           
         }
         /* Adds and removes quantity row on click */
         $("#material_requisition")
@@ -415,27 +421,40 @@
                         $.each(items, function(key, data) {
                             dropdown.append($(`<option>Select Material</option>`)
                                 .attr('value', data.material_id)
+                                .attr('data-code', data.material.code)
+                                .attr('data-type', data.material.type)
+                                .attr('data-unit', data.material.unit)
                                 .text(data.material.name + " - " + data.material.code));
                         })
                     });
+
+                    
                 }
             };
         $(document).on('change','.material_name',function(){
             let material_id = $(this).closest('tr').find('.material_name').val();
-            console.log();
-            const url = '{{ url('scm/get_unit') }}/' + material_id;
+            let code = $(this).find(':selected').data('code');
+            let type = $(this).find(':selected').data('type');
+            let unit = $(this).find(':selected').data('unit');
             var elemmtn = $(this);
             (elemmtn).closest('tr').find('.final_mark').attr('readonly',true).val(null);
             (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true).val(null);
-            $.getJSON(url, function(item) {
-                (elemmtn).closest('tr').find('.unit').val(item.unit);
-                (elemmtn).closest('tr').find('.item_code').val(item.code);
-                (elemmtn).closest('tr').find('.material_type').val(item.type);
-                if(item.type == 'Drum'){
+                (elemmtn).closest('tr').find('.unit').val(unit);
+                (elemmtn).closest('tr').find('.item_code').val(code);
+                (elemmtn).closest('tr').find('.material_type').val(type);
+
+                if(type == 'Drum'){
                     (elemmtn).closest('tr').find('.final_mark').attr('readonly',false);
                     (elemmtn).closest('tr').find('.initial_mark').attr('readonly',false);
+                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
+                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
+                            maxTags: 1
+                        });
+                    }else{
+                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
+                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
+                        });
                     }
-                });
             })
 
 
@@ -448,10 +467,13 @@
             var elemmtn = $(this);
             (elemmtn).closest('tr').find('.unit_price').val(null);
             (elemmtn).closest('tr').find('.po_composit_key').val(null);
+           
             $.getJSON(url, function(item) {
                 if(item.length){
                     (elemmtn).closest('tr').find('.unit_price').val(item[0].unit_price);
                     (elemmtn).closest('tr').find('.po_composit_key').val(item[0].po_composit_key);
+                    var maxTags = 1; // maximum number of tags allowed
+                   
                 }else{
                     alert('No po is given for this Brand of that material');
                 }

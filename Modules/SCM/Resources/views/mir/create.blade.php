@@ -419,7 +419,7 @@
                                 <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
                             </td>                                                  
                             <td>
-                                <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
+                                <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
                             </td>
                             <td>
                                 <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10">
@@ -438,7 +438,7 @@
                 });
             }
 
-            $(document).on('change', '.received_type', function() {
+            $(document).on('change keyup', '.type_no', function() {
                 var event_this = $(this).closest('tr');
                 let myObject = {
                     type: event_this.find('.received_type').val().toUpperCase(),
@@ -447,7 +447,6 @@
 
                 function uiList(item) {
                     console.log(item)
-                    event_this.val(item.label);
                     event_this.find('.type_no').val(item.label);
                     event_this.find('.type_id').val(item.id);
                     getMaterials(event_this)
@@ -457,8 +456,8 @@
 
             function getMaterials(event_this) {
                 let scm_requisition_id = $('#scm_requisition_id').val();
-                let received_type = $('.received_type').val().toUpperCase();
-                let receivable_id = $('.type_id').val();
+                let received_type = event_this.find('.received_type').val().toUpperCase();
+                let receivable_id = event_this.find('.type_id').val();
                 $.ajax({
                     url: "{{ route('mrsAndTypeWiseMaterials') }}",
                     type: 'get',
@@ -466,7 +465,9 @@
                     data: {
                         scm_requisition_id: scm_requisition_id,
                         received_type: received_type,
-                        receivable_id: receivable_id
+                        receivable_id: receivable_id,
+                        from_branch: $('#from_branch_id').val(),
+                        to_branch: $('#to_branch_id').val(),
                     },
                     success: function(data) {
                         let dropdown;
@@ -475,7 +476,7 @@
                         dropdown.empty();
                         dropdown.append('<option selected disabled>Select Material</option>');
                         dropdown.prop('selectedIndex', 0);
-                        data.map(function(item) {
+                        data.materials.map(function(item) {
                             console.log(item)
                             dropdown.append($('<option></option>')
                                 .attr('value', item.material.id)
@@ -530,17 +531,36 @@
                 } else {
                     (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
                     (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
-                }
+                };
+
+                $.ajax({
+                    url: "{{ route('getMaterialStock') }}",
+                    type: 'get',
+                    dataType: "json",
+                    data: {
+                        material_id: $(this).val(),
+                        from_branch_id: $('#from_branch_id').val(),
+                        to_branch_id: $('#to_branch_id').val(),
+                        type: type
+                    },
+                    success: function(data) {
+                        // (elemmtn).closest('tr').find('.stock').val(data.stock);
+                        console.log(data);
+                        (elemmtn).closest('tr').find('.opening_balance').val(data
+                            .to_branch_balance);
+                        (elemmtn).closest('tr').find('.avaiable_quantity').val(data
+                            .from_branch_balance);
+                    }
+                })
             })
 
             /* Adds and removes quantity row on click */
             $("#material_requisition")
                 .on('click', '.add-requisition-row', () => {
                     appendCalculationRow();
-                    loadMateaials();
                 })
                 .on('click', '.remove-requisition-row', function() {
-                    $(this).remove();
+                    $(this).closest('tr').remove();
                 }); {
                 let purchase_order_id = $("#purchase_order_id").val();
                 if (purchase_order_id) {

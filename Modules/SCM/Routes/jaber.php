@@ -8,6 +8,7 @@ Route::get('search-material-price-by-cs-requisition/{csId}/{supplierId}/{materia
 Route::get('search_mrs_no', [ScmMirController::class, 'searchMrs'])->name('search_mrs_no');
 Route::get('search-type-no', [ScmMirController::class, 'searchTypeNo'])->name('searchTypeNo');
 Route::get('search-mrs--type-wise-aterials', [ScmMirController::class, 'mrsAndTypeWiseMaterials'])->name('mrsAndTypeWiseMaterials');
+Route::get('getMaterialStock', [ScmMirController::class, 'getMaterialStock'])->name('getMaterialStock');
 
 
 Route::resources([

@@ -19,9 +19,12 @@ class MrrRequest extends FormRequest
      */
     public function prepareForValidation()
     {
-        $materials = PurchaseOrderLine::join('materials', 'purchase_order_lines.material_id', '=', 'materials.id')
+        $materials = PurchaseOrderLine::query()
+            ->with('material')
+            ->join('materials', 'purchase_order_lines.material_id', '=', 'materials.id')
             ->where('purchase_order_id', $this->purchase_order_id)
-            ->pluck('materials.id', 'materials.name');
+            ->get()
+            ->unique('material_id');
         $oldInput = ['select_array' => $materials];
         request()->merge($oldInput);
 

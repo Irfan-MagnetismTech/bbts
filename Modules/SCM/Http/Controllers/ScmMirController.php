@@ -3,15 +3,17 @@
 namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\SCM\Entities\ScmMrr;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
+use Modules\SCM\Entities\StockLedger;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SCM\Entities\ScmMrr;
-use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\ScmRequisitionDetail;
-use Modules\SCM\Entities\StockLedger;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 
 class ScmMirController extends Controller
 {
@@ -139,19 +141,7 @@ class ScmMirController extends Controller
 
     public function mrsAndTypeWiseMaterials()
     {
-        // $scm_requisition_ids = ScmRequisitionDetail::query()
-        //     ->where('scm_requisition_id', request()->scm_requisition_id)
-        //     ->pluck('scm_requisition_id')
-        //     ->unique();
-
-        // $materials = StockLedger::query()
-        //     ->whereIn('material_id', $scm_requisition_ids)
-        //     ->get();
-        // $scm_requisition_ids = ScmRequisitionDetail::query()
-        //     ->where('scm_requisition_id', request()->scm_requisition_id)
-        //     ->pluck('scm_requisition_id')
-        // ->unique();
-        $materials = StockLedger::query()
+        $data['materials'] = StockLedger::query()
             ->with('material', 'brand')
             ->whereIn('material_id', function ($q) {
                 return $q->select('material_id')
@@ -161,6 +151,32 @@ class ScmMirController extends Controller
             ->where(['receivable_id' => request()->receivable_id, 'received_type' => request()->received_type])
             ->get();
 
-        return response()->json($materials);
+        return response()->json($data);
+    }
+
+    public function getMaterialStock()
+    {
+        if (request()->type == 'Drum') {
+            $from_branch_balance = FiberTracking::query()
+                ->where('branch_id', request()->from_branch_id)
+                ->sum('quantity');
+            $to_branch_balance = FiberTracking::query()
+                ->where('branch_id', request()->to_branch_id)
+                ->sum('quantity');
+        } else {
+            $from_branch_balance = StockLedger::query()
+                ->where('branch_id', request()->from_branch_id)
+                ->where('material_id', request()->material_id)
+                ->sum('quantity');
+            $to_branch_balance = StockLedger::query()
+                ->where('branch_id', request()->to_branch_id)
+                ->where('material_id', request()->material_id)
+                ->sum('quantity');
+        }
+        $data = [
+            'from_branch_balance' => $from_branch_balance,
+            'to_branch_balance' => $to_branch_balance,
+        ];
+        return response()->json($data);
     }
 }
