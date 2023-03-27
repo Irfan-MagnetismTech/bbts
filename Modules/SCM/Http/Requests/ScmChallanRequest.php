@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Ticketing\Http\Requests;
+namespace Modules\SCM\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SupportTickerAssignmentRequest extends FormRequest
+class ScmChallanRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

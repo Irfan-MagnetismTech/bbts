@@ -78,8 +78,9 @@
         <div class="form-group col-4 supplier_name">
             <label for="supplier_name">Supplier Name: <span class="text-danger">*</span></label>
             <input type="text" class="form-control supplier_name" aria-describedby="supplier_name" id="supplier_name"
-                name="supplier_name" value="{{ old('supplier_name') ?? (@$purchaseOrder->supplier->name ?? '') }}"
-                placeholder="Search..." required>
+                autocomplete="off" name="supplier_name"
+                value="{{ old('supplier_name') ?? (@$purchaseOrder->supplier->name ?? '') }}" placeholder="Search..."
+                required>
             <input type="hidden" class="supplier_id" name="supplier_id" id="supplier_id"
                 value="{{ old('supplier_id') ?? @$purchaseOrder?->supplier_id }}">
         </div>
@@ -87,7 +88,8 @@
         <div class="form-group col-4 indent_no">
             <label for="indent_no">Indent No: <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="indent_no" aria-describedby="indent_no" name="indent_no"
-                value="{{ old('indent_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}" placeholder="Search...">
+                autocomplete="off" value="{{ old('indent_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}"
+                placeholder="Search...">
             <input type="hidden" name="indent_id" id="indent_id"
                 value="{{ old('indent_id') ?? @$purchaseOrder?->indent_id }}">
         </div>
@@ -181,7 +183,7 @@
                     </td>
 
                     <td>
-                        <select class="form-control text-center material_name select2" name="material_name[]">
+                        <select class="form-control text-center material_name select2" name="material_id[]">
                             <option value="" readonly selected>Select Material</option>
                             @foreach ($materials[$key] as $material)
                                 <option value="{{ $material->material_id }}"
@@ -192,18 +194,13 @@
                     </td>
 
                     <td>
-                        {{-- @dd($materials[$key]);
-                        @foreach ($materials[$key] as $brand)
-                            @dd($brand);
-                        @endforeach --}}
-                        <select class="form-control text-center brand_name select2" name="brand[]">
+                        <select class="form-control text-center brand_name select2" name="brand_id[]">
                             <option value="" readonly selected>Select Brand</option>
-                            @foreach ($materials[$key] as $brand)
-                                @if($brand->material_id == $material_id[$key])
-                                    <option value="{{ $brand->brand_id }}"
-                                        {{ $brand->brand_id == $brand_id[$key] ? 'selected' : '' }}>
-                                        {{ $brand->brand->name }}</option>
-                                @endif
+                            @foreach ($brands[$key] as $id => $brand)
+                                <option value="{{ $brand->csMaterial->brand->id }}" data-price="{{ $brand->price }}"
+                                    data-unit="{{ $brand->csMaterial->material->unit }}"
+                                    {{ $brand->csMaterial->brand->id == $brand_id[$key] ? 'selected' : '' }}>
+                                    {{ $brand->csMaterial->brand->name }}</option>
                             @endforeach
                         </select>
                     </td>
@@ -398,18 +395,19 @@
             $(this).closest('tr').find('.total_amount').val(total_amount);
             calculateTotalAmount()
 
-            //function for calculate total amount from all sub total amount
-            function calculateTotalAmount() {
-                var final_total_amount = 0;
-                $('.total_amount').each(function() {
-                    final_total_amount += parseFloat($(this).val());
-                });
-                $('.final_total_amount').val(final_total_amount.toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }));
-            }
         });
+
+        //function for calculate total amount from all sub total amount            
+        function calculateTotalAmount() {
+            var final_total_amount = 0;
+            $('.total_amount').each(function() {
+                final_total_amount += parseFloat($(this).val());
+            });
+            $('.final_total_amount').val(final_total_amount.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }));
+        }
 
         $(document).on('keyup', "#supplier_name", function() {
             $('.supplier_id').val('');
@@ -573,7 +571,7 @@
                                 <input name="total_amount[]" class="form-control total_amount" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input class="form-control date" name="required_date[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" readonly placeholder="Select a required date">
+                                <input class="form-control date" name="required_date[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" readonly>
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
@@ -583,6 +581,11 @@
             $('#material_requisition tbody').append(row);
             getMaterial(this)
             $('.select2').select2();
+            $('.date').datepicker({
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                todayHighlight: true,
+            }).datepicker("setDate", new Date());
         }
 
         //get cs no on keyup get 5 value evey time
@@ -699,7 +702,7 @@
             // $('.material_name').each(function() {
             // });
             dropdown.empty();
-            dropdown.append('<option selected disabled>Select Material</option>');
+            dropdown.append('<option selected disabled>Select Brand</option>');
             dropdown.prop('selectedIndex', 0);
 
             $.getJSON(url, function(items) {
@@ -726,9 +729,13 @@
         $(document).on('change', '.brand_name', function() {
             let price = $(this).find(':selected').data('price');
             let unit = $(this).find(':selected').data('unit');
+            let quantity = $(this).closest('tr').find('.quantity').val() || 0;
+            let total = price * quantity;
 
+            $(this).closest('tr').find('.total_amount').val(total);
             $(this).closest('tr').find('.unit').val(unit);
             $(this).closest('tr').find('.unit_price').val(price);
+            calculateTotalAmount()
         })
     </script>
 @endsection

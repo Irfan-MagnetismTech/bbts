@@ -253,22 +253,53 @@
                         <thead>
                             <tr>
                                 <th>#SL</th>
-                                <th>Opening Time</th>
-                                <th>Solutions</th>
+                                <th>Activity Time</th>
+                                <th>Solutions/Remarks</th>
                                 <th>Department</th>
                                 <th>Updated By</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($supportTicket->supportTicketLifeCycles as $activity)
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ $loop->index + 1 }}</td>
+                                <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('H:i a \o\n d/m/Y') }}</td>
+                                <td>{{ $activity->remarks }}</td>
+                                <td>{{ $activity->user->employee->department->name }}</td>
+                                <td>{{ $activity->user->name }}</td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
+                </div>
+            </div>
+            <div class="col-12 my-5">
+                <div class="row">
+                    <div class="col-6 mx-auto rounded shadow-sm" style="background-color: #A0B9FF; box-shadow: 2px 2px 6px 0px #70708d">
+                        <form action="{{ route('add-solution') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="ticket_id" value="{{ $supportTicket->id }}">
+                            <h4 class="text-center mt-5">Add New Solution</h4>
+                            <label for="quick_solution"><b>Solution Name:</b></label>
+                            <select name="quick_solution" id="quick_solution" class="form-control mb-2">
+                                <option value="">Select Solution</option>
+                                @foreach($quickSolutions as $solution)
+                                <option value="{{ $solution->name }}"
+                                {{ old('quick_solution', '') == $solution->id ? 'selected' : '' }}>{{ $solution->name }}</option>
+                                @endforeach
+                                <option value="other">Others</option>
+        
+                            </select>
+                            <div class="form-group d-none" id="custom-solution">
+                                <label for="solution"><b>Solution / Remarks:</b></label>
+                                <textarea class="form-control mb-2" id="solution" name="custom_solution" aria-describedby="solution"
+                                    value="{{ old('solution') ?? null }}" placeholder="Solution / Remarks"></textarea>
+                            </div>
+                            <div class="mx-auto text-center">
+                                <input type="submit" value="Submit" class="btn btn-info btn-round my-2">
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <hr>
@@ -285,11 +316,11 @@
                     Handover
                     <i class="fas fa-handshake"></i>
                 </a>
-                <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->clientDetail->client_id, 'type' => 'email']) }}" class="btn btn-success btn-round btn-inline-block py-2">
+                <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'email']) }}" class="btn btn-success btn-round btn-inline-block py-2">
                     Send Mail
                     <i class="fas fa-envelope"></i>
                 </a>
-                <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->clientDetail->client_id, 'type' => 'sms']) }}" class="btn btn-success btn-round btn-inline-block py-2">
+                <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'sms']) }}" class="btn btn-success btn-round btn-inline-block py-2">
                     Send SMS
                     <i class="fas fa-inbox"></i>
                 </a>
@@ -372,6 +403,14 @@
 
             })
         }
+
+        $("#quick_solution").on("change", function() {
+            if($(this).val() == "other") {
+                $("#custom-solution").addClass("d-block");
+            } else {
+                $("#custom-solution").removeClass("d-block");
+            }
+        });
 
         // $('#complain_time').datepicker({
         //     format: "dd-mm-yyyy hh:mm",

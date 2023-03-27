@@ -10,7 +10,7 @@ class Employee extends Model
     protected $guarded = [];
 
     public function department() {
-        return $this->belongsTo(Department::class, 'departments_id', 'id');
+        return $this->belongsTo(Department::class, 'department_id', 'id');
     }
 
     public function designation() {

@@ -30,212 +30,209 @@
     <span class="text-danger">*</span> Marked are required.
 @endsection
 
-@section('content-grid', 'offset-md-1 col-md-10 offset-lg-2 col-lg-8 my-3')
+@section('content-grid', 'col-12')
 
 @section('content')
-    <div class="container">
-        <form
-            action="{{ $formType == 'edit' ? route('requisitions.update', @$requisition->id) : route('requisitions.store') }}"
-            method="post" class="custom-form">
-            @if ($formType == 'edit')
-                @method('PUT')
-            @endif
-            @csrf
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="typeSection mt-2 mb-4">
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="client">
-                                <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                    value="client" @checked(@$requisition->type == 'client' || old('type') == 'client')> Client
-                            </label>
-                        </div>
+    <form action="{{ $formType == 'edit' ? route('requisitions.update', @$requisition->id) : route('requisitions.store') }}"
+        method="post" class="custom-form">
+        @if ($formType == 'edit')
+            @method('PUT')
+        @endif
+        @csrf
+        <div class="row">
+            <div class="col-md-12">
+                <div class="typeSection mt-2 mb-4">
+                    <div class="form-check-inline">
+                        <label class="form-check-label" for="client">
+                            <input type="radio" class="form-check-input radioButton" id="client" name="type"
+                                value="client" @checked(@$requisition->type == 'client' || old('type') == 'client')> Client
+                        </label>
+                    </div>
 
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="warehouse">
-                                <input type="radio" class="form-check-input radioButton" id="warehouse" name="type"
-                                    @checked(@$requisition->type == 'warehouse' || old('type') == 'warehouse') value="warehouse">
-                                Warehouse
-                            </label>
-                        </div>
+                    <div class="form-check-inline">
+                        <label class="form-check-label" for="warehouse">
+                            <input type="radio" class="form-check-input radioButton" id="warehouse" name="type"
+                                @checked(@$requisition->type == 'warehouse' || old('type') == 'warehouse') value="warehouse">
+                            Warehouse
+                        </label>
+                    </div>
 
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="pop">
-                                <input type="radio" class="form-check-input radioButton" id="pop" name="type"
-                                    value="pop" @checked(@$requisition->type == 'pop' || old('type') == 'pop')>
-                                POP
-                            </label>
-                        </div>
+                    <div class="form-check-inline">
+                        <label class="form-check-label" for="pop">
+                            <input type="radio" class="form-check-input radioButton" id="pop" name="type"
+                                value="pop" @checked(@$requisition->type == 'pop' || old('type') == 'pop')>
+                            POP
+                        </label>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="form-group col-3">
-                    <label for="select2">Branch Name</label>
-                    <select class="form-control select2" id="branch_id" name="branch_id">
-                        <option value="20" selected>Select Branch</option>
-                        @foreach ($branchs as $option)
-                            <option value="{{ $option->id }}"
-                                {{ old('branch_id', @$requisition->branch_id) == $option->id ? 'selected' : '' }}>
-                                {{ $option->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group col-3 client_name">
-                    <label for="client_name">Client Name:</label>
-                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? (@$requisition->client->name ?? '') }}"
-                        placeholder="Search...">
-                    <input type="hidden" name="client_id" id="client_id"
-                        value="{{ old('client_id') ?? @$requisition?->client->id }}">
-                </div>
-                <div class="form-group col-3 client_links">
-                    <label for="select2">Client Links</label>
-                    <select class="form-control select2" id="client_links" name="client_links">
-                        <option value="" readonly selected>Select Client Link</option>
-                        @if ($formType == 'create')
-                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
-                        @endif
-                        @if ($formType == 'edit')
-                            @foreach ($clientInfos as $clientInfo)
-                                <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$requisition->fr_composite_key)>
-                                    {{ $clientInfo->link_name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-
-                <div class="form-group col-3 client_no">
-                    <label for="client_no">Client No:</label>
-                    <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                        readonly value="{{ old('client_no') ?? (@$requisition->client->client_no ?? '') }}">
-
-                </div>
-
-                <div class="form-group col-3 address">
-                    <label for="address">Address:</label>
-                    <input type="text" class="form-control" id="address" name="address" aria-describedby="address"
-                        readonly value="{{ old('address') ?? (@$requisition->address ?? '') }}">
-                </div>
-                <div class="form-group col-3 fr_id">
-                    <label for="fr_id">FR ID:</label>
-                    <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                        value="{{ old('fr_id') ?? @$requisition->clientDetailsWithCompositeKey->fr_id }}" readonly>
-                    <input type="hidden" name="fr_composite_key" id="fr_composite_key"
-                        value="{{ old('fr_composite_key') ?? @$requisition->fr_composite_key }}">
-                </div>
-
-                <div class="form-group col-3">
-                    <label for="date">Applied Date:</label>
-                    <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
-                </div>
-
-                <div class="form-group col-3 pop_id" style="display: none">
-                    <label for="select2">Pop Name</label>
-                    <select class="form-control select2" id="pop_id" name="pop_id">
-                        <option value="" readonly selected>Select Pop</option>
-                        @if ($formType == 'edit')
-                            @foreach ($branchwisePops as $branchwisePop)
-                                <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$requisition->pop_id)>
-                                    {{ $branchwisePop->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-
-            <table class="table table-bordered" id="material_requisition">
-                <thead>
-                    <tr>
-                        <th> Material Name</th>
-                        <th> Unit</th>
-                        <th> Description</th>
-                        <th class="current_stock" style="display: none"> Current Stock</th>
-                        <th> Requisition Qty.</th>
-                        <th> Brand</th>
-                        <th> Model </th>
-                        <th> Purpose </th>
-                        <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-                <tfoot>
-                    @php
-                        $material_name_with_code = old('material_name', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.materialNameWithCode') : []);
-                        $material_id = old('material_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material_id') : []);
-                        $item_code = old('item_code', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.code') : []);
-                        $unit = old('unit', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.unit') : []);
-                        $description = old('description', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('description') : []);
-                        $current_stock = old('current_stock', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.current_stock') : []);
-                        $quantity = old('quantity', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('quantity') : []);
-                        $brand_id = old('brand_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('brand_id') : []);
-                        $model = old('model', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('model') : []);
-                        $purpose = old('purpose', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('purpose') : []);
-                    @endphp
-                    @foreach ($material_name_with_code as $key => $requisitionDetail)
-                        <tr>
-                            <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" required
-                                    autocomplete="off" value="{{ $material_name_with_code[$key] }}">
-                                <input type="hidden" name="material_id[]" class="form-control material_id"
-                                    value="{{ $material_id[$key] }}">
-                                <input type="hidden" name="item_code[]" class="form-control item_code"
-                                    value="{{ $item_code[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                    readonly value="{{ $unit[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="description[]" class="form-control description"
-                                    autocomplete="off" value="{{ $description[$key] }}">
-                            </td>
-                            <td class="current_stock" style="display: none">
-                                <input type="text" class="form-control current_stock" autocomplete="off" readonly
-                                    value="{{ @$current_stock[$key] }}">
-                            </td>
-
-                            <td>
-                                <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
-                                    value="{{ $quantity[$key] }}">
-                            </td>
-                            <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                    <option value="">Select Brand</option>
-                                    @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                            {{ $brand->name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                                    value="{{ $model[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
-                                    value="{{ $purpose[$key] }}">
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
-                            </td>
-                        </tr>
+        </div>
+        <div class="row">
+            <div class="form-group col-3">
+                <label for="select2">Branch Name</label>
+                <select class="form-control select2" id="branch_id" name="branch_id">
+                    <option value="20" selected>Select Branch</option>
+                    @foreach ($branchs as $option)
+                        <option value="{{ $option->id }}"
+                            {{ old('branch_id', @$requisition->branch_id) == $option->id ? 'selected' : '' }}>
+                            {{ $option->name }}
+                        </option>
                     @endforeach
-                </tfoot>
-            </table>
+                </select>
+            </div>
 
-            <div class="row">
-                <div class="offset-md-4 col-md-4 mt-2">
-                    <div class="input-group input-group-sm ">
-                        <button class="btn btn-success btn-round btn-block py-2">Submit</button>
-                    </div>
+            <div class="form-group col-3 client_name">
+                <label for="client_name">Client Name:</label>
+                <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                    name="client_name" value="{{ old('client_name') ?? (@$requisition->client->name ?? '') }}"
+                    placeholder="Search...">
+                <input type="hidden" name="client_id" id="client_id"
+                    value="{{ old('client_id') ?? @$requisition?->client->id }}">
+            </div>
+            <div class="form-group col-3 client_links">
+                <label for="select2">Client Links</label>
+                <select class="form-control select2" id="client_links" name="client_links">
+                    <option value="" readonly selected>Select Client Link</option>
+                    @if ($formType == 'create')
+                        <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
+                    @endif
+                    @if ($formType == 'edit')
+                        @foreach ($clientInfos as $clientInfo)
+                            <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$requisition->fr_composite_key)>
+                                {{ $clientInfo->link_name }}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+
+            <div class="form-group col-3 client_no">
+                <label for="client_no">Client No:</label>
+                <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
+                    readonly value="{{ old('client_no') ?? (@$requisition->client->client_no ?? '') }}">
+
+            </div>
+
+            <div class="form-group col-3 address">
+                <label for="address">Address:</label>
+                <input type="text" class="form-control" id="address" name="address" aria-describedby="address" readonly
+                    value="{{ old('address') ?? (@$requisition->address ?? '') }}">
+            </div>
+            <div class="form-group col-3 fr_id">
+                <label for="fr_id">FR ID:</label>
+                <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
+                    value="{{ old('fr_id') ?? @$requisition->clientDetailsWithCompositeKey->fr_id }}" readonly>
+                <input type="hidden" name="fr_composite_key" id="fr_composite_key"
+                    value="{{ old('fr_composite_key') ?? @$requisition->fr_composite_key }}">
+            </div>
+
+            <div class="form-group col-3">
+                <label for="date">Applied Date:</label>
+                <input class="form-control" id="date" name="date" aria-describedby="date"
+                    value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
+            </div>
+
+            <div class="form-group col-3 pop_id" style="display: none">
+                <label for="select2">Pop Name</label>
+                <select class="form-control select2" id="pop_id" name="pop_id">
+                    <option value="" readonly selected>Select Pop</option>
+                    @if ($formType == 'edit')
+                        @foreach ($branchwisePops as $branchwisePop)
+                            <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$requisition->pop_id)>
+                                {{ $branchwisePop->name }}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+        </div>
+
+        <table class="table table-bordered" id="material_requisition">
+            <thead>
+                <tr>
+                    <th> Material Name</th>
+                    <th> Unit</th>
+                    <th> Description</th>
+                    <th class="current_stock" style="display: none"> Current Stock</th>
+                    <th> Requisition Qty.</th>
+                    <th> Brand</th>
+                    <th> Model </th>
+                    <th> Purpose </th>
+                    <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                @php
+                    $material_name_with_code = old('material_name', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.materialNameWithCode') : []);
+                    $material_id = old('material_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material_id') : []);
+                    $item_code = old('item_code', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.code') : []);
+                    $unit = old('unit', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.unit') : []);
+                    $description = old('description', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('description') : []);
+                    $current_stock = old('current_stock', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.current_stock') : []);
+                    $quantity = old('quantity', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('quantity') : []);
+                    $brand_id = old('brand_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('brand_id') : []);
+                    $model = old('model', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('model') : []);
+                    $purpose = old('purpose', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('purpose') : []);
+                @endphp
+                @foreach ($material_name_with_code as $key => $requisitionDetail)
+                    <tr>
+                        <td>
+                            <input type="text" name="material_name[]" class="form-control material_name" required
+                                autocomplete="off" value="{{ $material_name_with_code[$key] }}">
+                            <input type="hidden" name="material_id[]" class="form-control material_id"
+                                value="{{ $material_id[$key] }}">
+                            <input type="hidden" name="item_code[]" class="form-control item_code"
+                                value="{{ $item_code[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
+                                value="{{ $unit[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="description[]" class="form-control description"
+                                autocomplete="off" value="{{ $description[$key] }}">
+                        </td>
+                        <td class="current_stock" style="display: none">
+                            <input type="text" class="form-control current_stock" autocomplete="off" readonly
+                                value="{{ @$current_stock[$key] }}">
+                        </td>
+
+                        <td>
+                            <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
+                                value="{{ $quantity[$key] }}">
+                        </td>
+                        <td>
+                            <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <option value="">Select Brand</option>
+                                @foreach ($brands as $brand)
+                                    <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
+                                        {{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="model[]" class="form-control model" autocomplete="off"
+                                value="{{ $model[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
+                                value="{{ $purpose[$key] }}">
+                        </td>
+                        <td>
+                            <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                        </td>
+                    </tr>
+                @endforeach
+            </tfoot>
+        </table>
+
+        <div class="row">
+            <div class="offset-md-4 col-md-4 mt-2">
+                <div class="input-group input-group-sm ">
+                    <button class="btn btn-success btn-round btn-block py-2">Submit</button>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 @endsection
 
 @section('script')
@@ -266,12 +263,12 @@
                             </td>
                             ${ type === 'warehouse' || type === 'pop' ? 
                             `<td class="current_stock" style="display: block">
-                                <input type="text" class="form-control current_stock" autocomplete="off" readonly>
-                            </td>` 
+                                    <input type="text" class="form-control current_stock" autocomplete="off" readonly>
+                                </td>` 
                             : 
                             `<td class="current_stock" style="display: none">
-                                <input type="text" class="form-control current_stock" autocomplete="off" readonly>
-                            </td>` 
+                                    <input type="text" class="form-control current_stock" autocomplete="off" readonly>
+                                </td>` 
                             }                          
                             <td>
                                 <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
@@ -393,7 +390,8 @@
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_id', 'get', null)
+            associativeDropdown("{{ route('searchPopByBranchId') }}", 'search', '#branch_id', '#pop_id', 'get',
+                null)
 
             $(".radioButton").click(function() {
                 onChangeRadioButton()

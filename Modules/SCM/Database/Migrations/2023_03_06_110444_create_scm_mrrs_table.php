@@ -20,7 +20,7 @@ return new class extends Migration
             $table->bigInteger('purchase_order_id')->nullable();
             $table->bigInteger('supplier_id')->nullable();
             $table->bigInteger('branch_id')->nullable();
-            $table->string('challan_no');
+            $table->string('challan_no')->nullable();
             $table->date('challan_date')->nullable();
             $table->bigInteger('created_by')->nullable();
             $table->timestamps();

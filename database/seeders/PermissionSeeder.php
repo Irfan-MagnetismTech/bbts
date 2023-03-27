@@ -49,6 +49,10 @@ class PermissionSeeder extends Seeder
                 'guard_name'=>'web',
             ],
             [
+                'name'=>'ticket-index',
+                'guard_name'=>'web',
+            ],
+            [
                 'name'=>'ticket-delete',
                 'guard_name'=>'web',
             ],
@@ -168,7 +172,7 @@ class PermissionSeeder extends Seeder
         ];
 
         foreach($permissions as $permission){
-            Permission::create($permission);
+            Permission::findOrCreate($permission['name']);
          }
     }
 }
