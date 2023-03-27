@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Feasibility Requirement List')
+@section('title', 'Survey List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Feasibility Requirement List
+    Survey List
 @endsection
 
 @section('style')
@@ -14,11 +14,11 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('feasibility-requirement.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-plus"></i></a>
+    {{-- <a href="{{ route('connectivity-requirement.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-plus"></i></a> --}}
 @endsection
 @section('sub-title')
-    Total: {{ count($feasibility_requirements) }}
+    Total: {{ count($surveys) }}
 @endsection
 
 
@@ -31,7 +31,7 @@
                     <th>Client Name</th>
                     <th>Client id</th>
                     <th>MQ No</th>
-                    <th>Status</th>
+                    <th>FR No</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -41,25 +41,25 @@
                     <th>Client Name</th>
                     <th>Client id</th>
                     <th>MQ No</th>
-                    <th>Status </th>
+                    <th>FR No</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($feasibility_requirements as $key => $feasibility_requirement)
+                @foreach ($surveys as $key => $survey)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $feasibility_requirement->lead_generation->client_name }}</td>
-                        <td>{{ $feasibility_requirement->client_id }}</td>
-                        <td>{{ $feasibility_requirement->mq_no }}</td>
-                        <td>{{ $feasibility_requirement->is_existing }}</td>
+                        <td>{{ $survey->lead_generation->client_name }}</td>
+                        <td>{{ $survey->client_id }}</td>
+                        <td>{{ $survey->mq_no }}</td>
+                        <td>{{ $survey->fr_no }}</td>
                         <td>
-                            <a href="{{ route('feasibility-requirement.edit', $feasibility_requirement->id) }}"
-                                class="btn btn-sm btn-primary" style="padding: 6px 7px;"><i class="fas fa-edit"></i></a>
-                            <a href="{{ route('feasibility-requirement.show', $feasibility_requirement->id) }}"
-                                class="btn btn-sm btn-success" style="padding: 6px 7px;"><i class="fas fa-eye"></i></a>
-                            <form action="{{ route('feasibility-requirement.destroy', $feasibility_requirement->id) }}"
-                                method="POST" class="d-inline-block" id="deleteFeasibility">
+                            <a href="{{ route('survey.edit', $survey->id) }}" class="btn btn-sm btn-primary"
+                                style="padding: 6px 7px;"><i class="fas fa-edit"></i></a>
+                            <a href="{{ route('survey.show', $survey->id) }}" class="btn btn-sm btn-success"
+                                style="padding: 6px 7px;"><i class="fas fa-eye"></i></a>
+                            <form action="{{ route('survey.destroy', $survey->id) }}" method="POST" class="d-inline-block"
+                                id="deleteFeasibility">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>

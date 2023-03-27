@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Feasibility Requirement List')
+@section('title', 'Connectivity Requirement List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Feasibility Requirement List
+    Connectivity Requirement List
 @endsection
 
 @section('style')
@@ -14,11 +14,11 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('feasibility-requirement.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-plus"></i></a>
+    {{-- <a href="{{ route('connectivity-requirement.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-plus"></i></a> --}}
 @endsection
 @section('sub-title')
-    Total: {{ count($feasibility_requirements) }}
+    Total: {{ count($connectivity_requirements) }}
 @endsection
 
 
@@ -31,7 +31,8 @@
                     <th>Client Name</th>
                     <th>Client id</th>
                     <th>MQ No</th>
-                    <th>Status</th>
+                    <th>FR No</th>
+                    <th>Location</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -41,24 +42,26 @@
                     <th>Client Name</th>
                     <th>Client id</th>
                     <th>MQ No</th>
-                    <th>Status </th>
+                    <th>FR No</th>
+                    <th>Location</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($feasibility_requirements as $key => $feasibility_requirement)
+                @foreach ($connectivity_requirements as $key => $connectivity_requirement)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $feasibility_requirement->lead_generation->client_name }}</td>
-                        <td>{{ $feasibility_requirement->client_id }}</td>
-                        <td>{{ $feasibility_requirement->mq_no }}</td>
-                        <td>{{ $feasibility_requirement->is_existing }}</td>
+                        <td>{{ $connectivity_requirement->lead_generation->client_name }}</td>
+                        <td>{{ $connectivity_requirement->client_id }}</td>
+                        <td>{{ $connectivity_requirement->mq_no }}</td>
+                        <td>{{ $connectivity_requirement->fr_no }}</td>
+                        <td>{{ $connectivity_requirement->fromLocation->location }}</td>
                         <td>
-                            <a href="{{ route('feasibility-requirement.edit', $feasibility_requirement->id) }}"
+                            <a href="{{ route('connectivity-requirement.edit', $connectivity_requirement->id) }}"
                                 class="btn btn-sm btn-primary" style="padding: 6px 7px;"><i class="fas fa-edit"></i></a>
-                            <a href="{{ route('feasibility-requirement.show', $feasibility_requirement->id) }}"
+                            <a href="{{ route('connectivity-requirement.show', $connectivity_requirement->id) }}"
                                 class="btn btn-sm btn-success" style="padding: 6px 7px;"><i class="fas fa-eye"></i></a>
-                            <form action="{{ route('feasibility-requirement.destroy', $feasibility_requirement->id) }}"
+                            <form action="{{ route('connectivity-requirement.destroy', $connectivity_requirement->id) }}"
                                 method="POST" class="d-inline-block" id="deleteFeasibility">
                                 @csrf
                                 @method('DELETE')

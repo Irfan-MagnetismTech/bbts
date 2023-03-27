@@ -4,12 +4,12 @@ namespace Modules\Sales\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class SurveyDetail extends Model
 {
     protected $guarded = [];
 
-    public function products()
+    public function survey()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Survey::class);
     }
 }

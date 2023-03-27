@@ -157,10 +157,17 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <a href="{{ route('connectivity-requirement-add', $item->id) }}"
-                                                        class="btn btn-sm btn-primary"><i class="fas fa plus"></i> </a>
-                                                </div>
+                                                @if (!empty($item->connectivityRequirement))
+                                                    <div class="input-group input-group-sm input-group-success">
+                                                        <a href="{{ route('add-survey', $item->id) }}"
+                                                            class="btn btn-sm btn-success">Add Survey</a>
+                                                    </div>
+                                                @else
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <a href="{{ route('connectivity-requirement-add', $item->id) }}"
+                                                            class="btn btn-sm btn-success">Add Req</a>
+                                                    </div>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('connectivity_requirements', function (Blueprint $table) {
+        Schema::create('plannings', function (Blueprint $table) {
             $table->id();
-            $table->string('fr_no');
             $table->string('client_id');
-            $table->string('mq_no');
-            $table->string('from_location')->nullable();
-            $table->string('aggregation_type')->nullable();
-            $table->date('date')->nullable();
+            $table->string('fr_no');
+            $table->string('link_type')->nullable()->comment('Option 1, Option 2, Option 3');
+            $table->string('option')->nullable()->comment('Option 1, Option 2, Option 3');
             $table->integer('user_id')->nullable();
             $table->integer('branch_id')->nullable();
             $table->timestamps();
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('connectivity_requirement');
+        Schema::dropIfExists('plannings');
     }
 };

@@ -95,7 +95,7 @@ class FeasibilityRequirementController extends Controller
      */
     public function show($id)
     {
-        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails',)->find($id);
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.connectivityRequirement',)->find($id);
         return view('sales::feasibility_requirement.show', compact('feasibility_requirement'));
     }
 

@@ -13,16 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('connectivity_requirements', function (Blueprint $table) {
+        Schema::create('surveys', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('feasibility_requirement_details_id')->nullable();
             $table->string('fr_no');
             $table->string('client_id');
-            $table->string('mq_no');
-            $table->string('from_location')->nullable();
-            $table->string('aggregation_type')->nullable();
-            $table->date('date')->nullable();
+            $table->string('lead_generation_id'); 
+            $table->string('mq_no')->nullable();
             $table->integer('user_id')->nullable();
             $table->integer('branch_id')->nullable();
+            $table->date('date')->nullable();
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('connectivity_requirement');
+        Schema::dropIfExists('serveys');
     }
 };

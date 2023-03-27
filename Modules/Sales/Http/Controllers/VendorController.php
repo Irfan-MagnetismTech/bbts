@@ -5,10 +5,9 @@ namespace Modules\Sales\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Sales\Entities\Category;
-use Modules\Sales\Entities\Product;
+use Modules\Sales\Entities\Vendor;
 
-class ProductController extends Controller
+class VendorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,15 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
-        $units = [
-            'mbps' => 'mbps',
-            'user' => 'User',
-            'pcs' => 'PCS',
-            'tb' => 'TB',
-        ];
-        $products = Product::all();
-        return view('sales::settings.product.create', compact('categories', 'units', 'products'));
+        $vendors = Vendor::all();
+        return view('sales::settings.vendor.create', compact('vendors'));
     }
 
     /**
@@ -43,12 +35,11 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::create($request->all());
-        $product = Product::with('category')->find($product->id);
+        $data = $request->all();
+        Vendor::create($data);
         return response()->json([
             'success' => true,
-            'message' => 'Product created successfully',
-            'product' => $product
+            'message' => 'Vendor Created Successfully'
         ]);
     }
 
@@ -78,14 +69,14 @@ class ProductController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        $product->update($request->all());
-        $product = Product::with('category')->find($product->id);
+        $data = $request->all();
+        $vendor = Vendor::find($id);
+        $vendor->update($data);
         return response()->json([
             'success' => true,
-            'message' => 'Product updated successfully',
-            'product' => $product
+            'message' => 'Vendor Updated Successfully'
         ]);
     }
 
@@ -94,18 +85,13 @@ class ProductController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        $product->delete();
+        $vendor = Vendor::find($id);
+        $vendor->delete();
         return response()->json([
             'success' => true,
-            'message' => 'Product deleted successfully',
-        ]);
-    }
-
-    public function getProducts(Request $request)
-    {
-        $products = Product::with('category')->where('category_id', $request->category_id)->get();
-        return response()->json($products);
+            'message' => 'Vendor Deleted Successfully'
+        ]); 
     }
 }
