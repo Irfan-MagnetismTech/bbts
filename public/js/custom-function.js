@@ -134,9 +134,11 @@ function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
                         customQueryFields: customQueryFields[0],
                     },
                     success: function (data) {
+                        console.log(data);
                         if (data.length > 0) {
                             response(data);
                         } else {
+                            console.log("No Result Found");
                             response([
                                 {
                                     label: "No Result Found",
@@ -153,7 +155,6 @@ function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
                     return false;
                 }
                 callback(ui.item);
-                return false;
             },
         });
     });
