@@ -20,7 +20,7 @@ class MrrRequest extends FormRequest
     public function prepareForValidation()
     {
         $materials = PurchaseOrderLine::query()
-            ->with('material.materialNameWithCode')
+            ->with('material')
             ->join('materials', 'purchase_order_lines.material_id', '=', 'materials.id')
             ->where('purchase_order_id', $this->purchase_order_id)
             ->get()

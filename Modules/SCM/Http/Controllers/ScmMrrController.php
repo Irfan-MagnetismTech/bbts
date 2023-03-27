@@ -15,6 +15,7 @@ use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Http\Requests\MrrRequest;
 use Modules\SCM\Entities\PurchaseOrderLine;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\PoMaterial;
 
 class ScmMrrController extends Controller
@@ -82,11 +83,21 @@ class ScmMrrController extends Controller
             $materialReceive = ScmMrr::create($requestData);
             $MrrDetail = $materialReceive->scmMrrLines()->createMany($mrrDetails);
             $stock = [];
+            $CablePeace = [];
             foreach ($MrrDetail as $key => $value) {
-                $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) use ($request, $key, $value, $materialReceive, &$stock) {
+                $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) use ($request, $key, $value, $materialReceive, &$stock, &$CablePeace) {
                     if ($request->material_type[$key] == 'Drum') {
                         $serial_code = 'F-' . $serial;
                         $quantity = ($value->final_mark - $value->initial_mark) + 1;
+                        $CablePeace[] = [
+                            'serial_code' => $serial_code,
+                            'cp_serial_code' => 1,
+                            'branch_id'         => $request->branch_id,
+                            'initial_mark'      => $value->initial_mark,
+                            'final_mark'        => $value->final_mark,
+                            'quantity'          => $quantity,
+                            'created_at'        => now(),
+                        ];
                     } else {
                         $serial_code = 'SL-' . $serial;
                         $quantity = 1;
@@ -102,8 +113,6 @@ class ScmMrrController extends Controller
                         'quantity'          => $quantity,
                         'initial_mark'      => $value->initial_mark,
                         'final_mark'        => $value->final_mark,
-                        'left_initial_mark' => $value->initial_mark,
-                        'left_final_mark'   => $value->final_mark,
                         'item_code'         => $value->item_code,
                         'warranty_period'   => $value->warranty_period,
                         'unit_price'        => $value->unit_price,
@@ -117,6 +126,7 @@ class ScmMrrController extends Controller
                 }, $serialCode[$key]));
             }
             $materialReceive->stockLedgerReceivable()->createMany($stock);
+            FiberTracking::insert($CablePeace);
             DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
@@ -187,11 +197,22 @@ class ScmMrrController extends Controller
             $materialReceive->stockLedgerReceivable()->delete();
             $MrrDetail = $materialReceive->scmMrrLines()->createMany($mrrDetails);
             $stock = [];
+            $CablePeace = [];
             foreach ($MrrDetail as $key => $value) {
-                $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) use ($request, $key, $value, $materialReceive, &$stock) {
+                $value->scmMrrSerialCodeLines()->createMany(array_map(function ($serial) use ($request, $key, $value, $materialReceive, &$stock, &$CablePeace) {
                     if ($request->material_type[$key] == 'Drum') {
                         $serial_code = 'F-' . $serial;
                         $quantity = ($value->final_mark - $value->initial_mark) + 1;
+                        $CablePeace[] = [
+                            'serial_code'       => $serial_code,
+                            'cp_serial_code'    => 1,
+                            'branch_id'         => $request->branch_id,
+                            'initial_mark'      => $value->initial_mark,
+                            'final_mark'        => $value->final_mark,
+                            'quantity'          => $quantity,
+                            'created_at'        => now(),
+                        ];
+                        FiberTracking::where('serial_code', $serial_code)->delete();
                     } else {
                         $serial_code = 'SL-' . $serial;
                         $quantity = 1;
@@ -223,6 +244,7 @@ class ScmMrrController extends Controller
                 }, $serialCode[$key]));
             }
             $materialReceive->stockLedgerReceivable()->createMany($stock);
+            FiberTracking::insert($CablePeace);
             DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
