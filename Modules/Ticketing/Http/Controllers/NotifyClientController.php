@@ -41,10 +41,10 @@ class NotifyClientController extends Controller
 
         $smsStatus = true;
         if($type == 'email') {
-            $to = $supportTicket?->clientDetail?->client?->email;
+            $to = $supportTicket?->clientDetail?->email;
             $notificationError = (new EmailService())->sendEmail($to, $cc, $receiver, $subject, $message);
         } else if($type == 'sms') {
-            $to = $supportTicket?->clientDetail?->client?->mobile;
+            $to = $supportTicket?->clientDetail?->mobile;
             $notificationError = (new SmsService())->sendSms($to, $message);
             $smsStatus = $notificationError->ok();
         }

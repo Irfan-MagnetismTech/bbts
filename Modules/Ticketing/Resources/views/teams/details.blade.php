@@ -17,7 +17,7 @@
     <a href="{{ route('support-teams.index')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 @section('sub-title')
-    Total Team Member: {{ count($supportTeam->supportTeamMember) }}
+    Total Team Member: {{ count($supportTeam->supportTeamMembers) }}
 @endsection
 
 
@@ -36,7 +36,7 @@
             </thead>
             
             <tbody>
-                @foreach ($supportTeam->supportTeamMember as $team)
+                @foreach ($supportTeam->supportTeamMembers as $team)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
                         <td class="text-left">{{ $team?->user?->name }}</td>

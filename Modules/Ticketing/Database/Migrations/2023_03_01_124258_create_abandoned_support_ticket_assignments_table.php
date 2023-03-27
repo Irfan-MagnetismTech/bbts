@@ -16,7 +16,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('support_ticket_assignments', function (Blueprint $table) {
+        Schema::create('abandoned_support_ticket_assignments', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(SupportTicket::class)->constrained()->cascadeOnDelete();
