@@ -476,30 +476,61 @@
                         dropdown.append('<option selected disabled>Select Material</option>');
                         dropdown.prop('selectedIndex', 0);
                         data.map(function(item) {
+                            console.log(item)
                             dropdown.append($('<option></option>')
                                 .attr('value', item.material.id)
                                 .attr('data-material_name', item.material.name)
                                 .attr('data-brand', item.brand.name)
-                                .attr('em.material.name + '-' + item.serial_code)
+                                .attr('data-model', item.model)
+                                .attr('data-unit', item.unit)
+                                .attr('data-type', item.material.type)
+                                .attr('data-initial_mark', item.initial_mark)
+                                .attr('data-final_mark', item.final_mark)
+                                .text(item.material.name + '-' + item.serial_code)
                             )
                         });
-                        dropdown.select2(data-model', item.model)
-                                .attr('data-unit', item.unit)
-                                .text(it);
+                        dropdown.select2()
                     }
                 })
             }
 
             $(document).on('change', '.serial_code', function() {
-                let material_name = $(this).find(':selected').data('material_name');
-                let brand = $(this).find(':selected').data('brand');
-                let model = $(this).find(':selected').data('model');
-                let unit = $(this).find(':selected').data('unit');
+                var elemmtn = $(this);
+                let global_fianl_mark = $(this).find(':selected').data('final_mark');
+                let material_name = (elemmtn).find(':selected').data('material_name');
+                let brand = (elemmtn).find(':selected').data('brand');
+                let model = (elemmtn).find(':selected').data('model');
+                let unit = (elemmtn).find(':selected').data('unit');
+                let type = $(this).find(':selected').data('type');
+                let initial_mark = $(this).find(':selected').data('initial_mark');
+                let final_mark = global_fianl_mark;
 
-                $(this).closest('tr').find('.material_name').val(material_name);
-                $(this).closest('tr').find('.brand').val(brand);
-                $(this).closest('tr').find('.model').val(model);
-                $(this).closest('tr').find('.unit').val(unit);
+                (elemmtn).closest('tr').find('.material_name').val(material_name);
+                (elemmtn).closest('tr').find('.brand').val(brand);
+                (elemmtn).closest('tr').find('.model').val(model);
+                (elemmtn).closest('tr').find('.unit').val(unit);
+
+                (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
+                (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
+                if (type == 'Drum') {
+                    (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(initial_mark);
+                    (elemmtn).closest('tr').find('.final_mark').attr('readonly', false).val(final_mark);
+                    $(document).on('keyup', '.final_mark', function() {
+                        var elemmtn = $(this);
+                        let initial_mark = (elemmtn).closest('tr').find('.initial_mark').val();
+                        let final_mark = (elemmtn).closest('tr').find('.final_mark').val();
+                        if (final_mark < initial_mark) {
+                            alert('Final Mark can not be smaller than Initial Mark');
+                            (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
+                        } else if (final_mark > global_fianl_mark) {
+                            alert('Final Mark can not be bigger than ' + global_fianl_mark);
+                            (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
+                        }
+                    })
+                } else {
+                    (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
+                    (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
+                }
             })
 
             /* Adds and removes quantity row on click */
