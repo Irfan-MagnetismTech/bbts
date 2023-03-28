@@ -318,6 +318,11 @@
                 }
             })
 
+            $('#mrs_no').on('change', function() {
+                $('#material_requisition tbody').empty();
+                appendCalculationRow();
+            })
+
             $(".branch").autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -419,10 +424,10 @@
                                 <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
                             </td>                                                  
                             <td>
-                                <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
+                                <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" readonly>
                             </td>
                             <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10">
+                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" type="number">
                             </td>
                             <td>
                                 <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
@@ -450,6 +455,31 @@
                     event_this.find('.type_no').val(item.label);
                     event_this.find('.type_id').val(item.id);
                     getMaterials(event_this)
+                    return false;
+                }
+            })
+
+            $(document).on('change', '.received_type', function() {
+                var event_this = $(this).closest('tr');
+                if ($('#from_branch_id').val() == '') {
+                    $(this).val('');
+                    swal.fire({
+                        title: "Please Select From Branch",
+                        type: "warning",
+                    }).then(function() {
+                        $('#from_branch').focus();
+                    });
+                    return false;
+                }
+
+                if ($('#to_branch_id').val() == '') {
+                    $(this).val('');
+                    swal.fire({
+                        title: "Please Select To Branch",
+                        type: "warning",
+                    }).then(function() {
+                        $('#to_branch').focus();
+                    });
                     return false;
                 }
             })
