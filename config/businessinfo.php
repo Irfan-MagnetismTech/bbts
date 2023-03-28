@@ -16,9 +16,16 @@ return [
         '2' => '2nd Layer',
         '3' => '3rd Layer',
     ],
+
+    // Remember the following Linear Serial is mandatory as TicketMovementController and Create-Edit has used it by index number.
     'ticketMovements' => [
         'Forward',
         'Backward',
         'Handover'
     ],
+    'pastForms' => [
+        'Forward' => 'Forwarded',
+        'Backward' => 'Backwarded',
+        'Handover' => 'Handovered'
+    ]
 ];

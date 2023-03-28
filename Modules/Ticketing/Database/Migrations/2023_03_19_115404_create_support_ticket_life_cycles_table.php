@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignIdFor(SupportTicket::class);
             $table->string('status', 20);
             $table->string('remarks', 255)->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

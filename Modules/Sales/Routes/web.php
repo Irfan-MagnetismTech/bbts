@@ -13,6 +13,7 @@ use Modules\Sales\Http\Controllers\ServeyController;
 use Modules\Sales\Http\Controllers\VendorController;
 use Modules\Sales\Http\Controllers\PlanningController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
