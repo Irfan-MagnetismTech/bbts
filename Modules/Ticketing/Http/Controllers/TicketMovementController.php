@@ -266,7 +266,11 @@ class TicketMovementController extends Controller
                         'remarks' => $remarks,
                         'description' => $request->remarks
                     ]);
-            
+
+                    $supportTicket->update([
+                        'status' => 'Processing',
+                    ]);
+                    
                     TicketMovement::create([
                         'support_ticket_id' => $supportTicket->id,
                         'type' => $movementType,
@@ -378,6 +382,10 @@ class TicketMovementController extends Controller
                         'support_ticket_id' => $supportTicket->id,
                         'remarks' => $remarks,
                         'description' => $request->remarks
+                    ]);
+
+                    $supportTicket->update([
+                        'status' => 'Processing',
                     ]);
             
                     TicketMovement::create([

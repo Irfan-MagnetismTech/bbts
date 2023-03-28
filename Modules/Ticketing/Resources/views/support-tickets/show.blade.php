@@ -254,8 +254,8 @@
                             <tr>
                                 <th>#SL</th>
                                 <th>Activity Time</th>
-                                <th>Remarks</th>
-                                <th>Solutions</th>
+                                <th>Event</th>
+                                <th>Solutions / Remarks</th>
                                 <th>Department</th>
                                 <th>Updated By</th>
                             </tr>

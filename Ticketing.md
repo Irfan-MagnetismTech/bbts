@@ -11,3 +11,4 @@ Ticket accpetance is kind of a movement actually. **Why?** Because it change the
 
 - When ticket is forward/backward/handover the status should be "Processing".
 
+- Ticket List
