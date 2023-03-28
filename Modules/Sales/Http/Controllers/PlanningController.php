@@ -23,7 +23,7 @@ class PlanningController extends Controller
      */
     public function create()
     {
-        return view('sales::create');
+        return view('sales::planning.create');
     }
 
     /**
