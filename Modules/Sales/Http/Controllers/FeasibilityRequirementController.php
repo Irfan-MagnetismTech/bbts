@@ -184,4 +184,11 @@ class FeasibilityRequirementController extends Controller
         $feasibilityRequirementDetail->delete();
         return response()->json(['success' => 'Deleted Successfully']);
     }
+
+    public function getClientFrList(Request $request)
+    {
+        $feasibility_requirement = FeasibilityRequirement::where('client_id', $request->client_id)->first();
+        $feasibility_requirement_details = FeasibilityRequirementDetail::select('id', 'link_name', 'fr_no')->where('feasibility_requirement_id', $feasibility_requirement->id)->get();
+        return response()->json($feasibility_requirement_details);
+    }
 }
