@@ -163,18 +163,19 @@
                                             <th>Plan</th>
                                             <th>
                                                 <button type="button" class="btn btn-sm btn-success"
-                                                    id="addProductRow"><i class="fas fa-plus"></i></button>
+                                                    id="addParticularRow"><i class="fas fa-plus"></i></button>
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
+                                    <tbody id="particular_body">
+                                        <tr class="particular_row">
                                             <td>
                                                 <select name="particulars[]" id="particulars" class="form-control">
                                                     <option value="">Select Particulars</option>
-                                                    <option value="Bandwidth">Bandwidth</option>
-                                                    <option value="Bandwidth">Bandwidth</option>
-                                                    <option value="Bandwidth">Bandwidth</option>
+                                                    @foreach ($particulars as $particular)
+                                                        <option value="{{ $particular->id }}">
+                                                            {{ $particular->name }}</option>
+                                                    @endforeach
                                                 </select>
                                             </td>
                                             <td>
@@ -206,12 +207,12 @@
                                             <th>Quantity</th>
                                             <th>
                                                 <button type="button" class="btn btn-sm btn-success"
-                                                    id="addConnectivityRow"><i class="fas fa-plus"></i></button>
+                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button>
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
+                                    <tbody id="equipment_body">
+                                        <tr class="equipment_row">
                                             <td>
                                                 <select name="material[]" id="material" class="form-control">
                                                     <option value="">Select Material</option>
@@ -256,10 +257,6 @@
                                             <th>Material</th>
                                             <th>Unit</th>
                                             <th>Quantity</th>
-                                            <th>
-                                                <button type="button" class="btn btn-sm btn-success"
-                                                    id="addConnectivityRow"><i class="fas fa-plus"></i></button>
-                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -279,11 +276,6 @@
                                             <td>
                                                 <input type="text" name="quantity[]" id="quantity"
                                                     class="form-control" value="">
-                                            </td>
-                                            <td>
-                                                <button type="button"
-                                                    class="btn btn-sm btn-danger removeConnectivityRow"><i
-                                                        class="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
                                 </table>
@@ -333,24 +325,24 @@
                     });
                 })
 
-                $('#addProductRow').on('click', function() {
-                    addProductRow();
+                $('#addParticularRow').on('click', function() {
+                    addParticularRow();
                 });
 
-                $('#addConnectivityRow').on('click', function() {
-                    addConnectivityRow();
+                $('#addEquipmentRow').on('click', function() {
+                    addEquipmentRow();
                 });
 
-                function addProductRow() {
-                    $('.product_details_row').first().clone().appendTo('.productBody');
-                    $('.product_details_row').last().find('input').val('');
-                    $('.product_details_row').last().find('select').val('');
+                function addParticularRow() {
+                    $('.particular_row').first().clone().appendTo('#particular_body');
+                    $('.particular_row').last().find('input').val('');
+                    $('.particular_row').last().find('select').val('');
                 };
 
-                function addConnectivityRow() {
-                    $('.connectivity_details_row').first().clone().appendTo('.connectivityBody');
-                    $('.connectivity_details_row').last().find('input').val('');
-                    $('.connectivity_details_row').last().find('select').val('');
+                function addEquipmentRow() {
+                    $('.equipment_row').first().clone().appendTo('#equipment_body');
+                    $('.equipment_row').last().find('input').val('');
+                    $('.equipment_row').last().find('select').val('');
                 };
 
                 $(document).on('click', '.removeProductRow', function() {
@@ -416,10 +408,11 @@
                         select: function(event, ui) {
                             $('#client_id').val(ui.item.label);
                             $('#client_name').val(ui.item.value);
-                            $('#lead_generation_id').val(ui.item.lead_generation_id);
+                            getClientFrList(ui.item.label);
                             return false;
                         }
-                    });
+
+                    })
                 });
 
                 $('#date').datepicker({
@@ -428,5 +421,65 @@
                     todayHighlight: true,
                     showOtherMonths: true
                 }).datepicker("setDate", new Date());
+                var fr_link_list;
+
+                function getClientFrList(client_id) {
+                    $.ajax({
+                        url: "{{ route('get-client-fr-list') }}",
+                        data: {
+                            client_id: client_id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            fr_link_list = data;
+                            let html = '<option value="">Select FR</option>';
+                            $.each(data, function(key, value) {
+                                html += '<option value="' + value.id + '">' + value.link_name + '</option>';
+                            });
+                            $('#from_location').html(html);
+                        }
+                    });
+                }
+
+                $('#from_location').on('change', function() {
+                    var from_location = $(this).val();
+                    fr_link_list.find(function(fr) {
+                        console.log(fr.link_name)
+                        console.log(from_location)
+                        if (fr.id == from_location) {
+                            $('#fr_no').val(fr.fr_no);
+                        }
+                    });
+                });
+
+                $('#option').on('change', function() {
+                    var option = $('#option').val();
+                    var type = $('#type').val();
+                    let client_id = $('#client_id').val();
+                    let fr_no = $('#fr_no').val();
+                    $.ajax({
+                        url: "{{ route('get-survey-details') }}",
+                        data: {
+                            option: option,
+                            type: type,
+                            client_id: client_id,
+                            fr_no: fr_no,
+                        },
+                        success: function(data) {
+                            console.log(data)
+                            if (data.status == 'Existing') {
+                                $('#is_existing').prop('checked', true);
+                            } else {
+                                $('#is_new').prop('checked', true);
+                            }
+                            $('#vendor').val(data.vendor);
+                            $('#method').val(data.method);
+                            $('#distance').val(data.distance);
+                            $('#gps').val(data.gps);
+                            $('#connectivity_point').val(data.bts_pop_ldp)
+                        }
+                    });
+
+                });
             </script>
         @endsection

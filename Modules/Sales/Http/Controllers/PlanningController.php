@@ -5,6 +5,7 @@ namespace Modules\Sales\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Sales\Entities\Product;
 
 class PlanningController extends Controller
 {
@@ -23,7 +24,8 @@ class PlanningController extends Controller
      */
     public function create()
     {
-        return view('sales::planning.create');
+        $particulars = Product::get();
+        return view('sales::planning.create', compact('particulars'));
     }
 
     /**
