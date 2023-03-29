@@ -14,6 +14,7 @@ class ForwardTicketMovementEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $message;
+    public $userId;
     /**
      * Create a new event instance.
      *
@@ -22,6 +23,8 @@ class ForwardTicketMovementEvent implements ShouldBroadcast
     public function __construct($message)
     {
         $this->message = $message;
+        $this->userId = auth()->user()->id;
+        info($message);
     }
 
     /**
@@ -31,6 +34,11 @@ class ForwardTicketMovementEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('home');
+        return new PrivateChannel('App.Models.User.'.$this->userId);
+    }
+
+    public function broadcastAs()
+    {
+        return 'ticket-movement-event';
     }
 }

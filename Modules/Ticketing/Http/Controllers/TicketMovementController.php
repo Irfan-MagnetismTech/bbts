@@ -229,7 +229,7 @@ class TicketMovementController extends Controller
 
                 foreach($notificationReceivers as $notificationReceiver) {
                     $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$supportTeam->first()->department->name.'.';
-                    ForwardTicketMovementEvent::dispatch($notificationReceiver, $message);
+                    ForwardTicketMovementEvent::dispatch($message);
                 }
     
                 return redirect()->back()->with('message', $remarks);
@@ -434,4 +434,5 @@ class TicketMovementController extends Controller
             return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
         }
     }
+
 }
