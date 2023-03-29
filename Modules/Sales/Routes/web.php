@@ -1,12 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Http\Controllers\LeadGenerationController;
 use Modules\Sales\Http\Controllers\MeetingController;
 use Modules\Sales\Http\Controllers\FollowUpController;
 use Modules\Sales\Http\Controllers\CategoryController;
+use Modules\Sales\Http\Controllers\ConnectivityRequirementController;
 use Modules\Sales\Http\Controllers\ProductController;
 use Modules\Sales\Http\Controllers\FeasibilityRequirementController;
+use Modules\Sales\Http\Controllers\ServeyController;
+use Modules\Sales\Http\Controllers\VendorController;
+use Modules\Sales\Http\Controllers\PlanningController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,9 +33,19 @@ Route::prefix('sales')->group(function () {
         'category' => CategoryController::class,
         'product' => ProductController::class,
         'feasibility-requirement' => FeasibilityRequirementController::class,
+        'connectivity-requirement' => ConnectivityRequirementController::class,
+        'survey' => ServeyController::class,
+        'vendor' => VendorController::class,
+        'planning' => PlanningController::class,
     ]);
     Route::get('followup/create/{meeting_id?}', [FollowUpController::class, 'create'])->name('followup.create');
     Route::get('get-client', [LeadGenerationController::class, 'getClient'])->name('get-client');
     Route::get('delete-feasibility-requirement-detail', [FeasibilityRequirementController::class, 'deleteFeasibilityRequirementDetail'])->name('delete-feasibility-requirement-details');
-    
+    Route::get('connectivity-requirement-add/{fr_id?}', [ConnectivityRequirementController::class, 'create'])->name('connectivity-requirement-add');
+    Route::get('delete-product-requirement-details', [ConnectivityRequirementController::class, 'deleteProductRequirementDetails'])->name('delete-product-requirement-details');
+    Route::get('delete-connectivity-requirement-details', [ConnectivityRequirementController::class, 'deleteConnectivityRequirementDetails'])->name('delete-connectivity-requirement-details');
+    Route::get('get-products', [ProductController::class, 'getProducts'])->name('get-products');
+    Route::get('add-survey/{fr_id?}', [ServeyController::class, 'create'])->name('add-survey');
+    Route::get('get-client-fr-list', [FeasibilityRequirementController::class, 'getClientFrList'])->name('get-client-fr-list');
+    Route::get('get-survey-details', [ServeyController::class, 'getSurveyDetails'])->name('get-survey-details');
 });

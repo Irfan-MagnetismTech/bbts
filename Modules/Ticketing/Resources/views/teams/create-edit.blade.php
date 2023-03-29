@@ -74,7 +74,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                                @if(empty($supportTeam) || empty($supportTeam?->supportTeamMember))
+                                @if(empty($supportTeam) || empty($supportTeam?->supportTeamMembers))
                                 <tr>
                                     <td>1</td>
                                     <td>
@@ -92,7 +92,7 @@
                                     <td><i class="btn btn-danger btn-sm fa fa-minus remove-row"></i></td>
                                 </tr>
                                 @else
-                                    @foreach($supportTeam->supportTeamMember as $teamMember)
+                                    @foreach($supportTeam->supportTeamMembers as $teamMember)
                                         <tr>
                                             <td>{{ $loop->index+1 }}</td>
                                             <td>

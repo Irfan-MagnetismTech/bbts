@@ -7,9 +7,12 @@ use Modules\Admin\Entities\Pop;
 use App\Http\Controllers\Controller;
 use App\Models\Dataencoding\Department;
 use App\Models\Dataencoding\Designation;
+use Modules\Ticketing\Entities\SupportTeam;
 use Modules\Ticketing\Entities\TicketSource;
+use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Entities\SupportComplainType;
 use Modules\Ticketing\Entities\SupportQuickSolution;
+use Modules\Ticketing\Entities\TicketMovement;
 
 class BbtsGlobalService extends Controller
 {
@@ -56,5 +59,60 @@ class BbtsGlobalService extends Controller
         } else {
             return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;
         }
+    }
+
+    public function isEligibleForTicketMovement($ticketId, $movementType) {
+
+        $supportTicket = SupportTicket::findOrFail($ticketId);
+
+        if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending') {
+            return false;
+        }
+
+        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
+
+        if($movementTypes[0] == $movementType) {
+            $acceptedUserId = $supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id;
+
+            if($acceptedUserId == auth()->user()->id) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if($movementTypes[1] == $movementType) {
+            $forwardedTicketAccepter = TicketMovement::where('support_ticket_id', $ticketId)
+                                                    ->where([
+                                                        'type'=> $movementTypes[0],
+                                                        'status' => 'Accepted',
+                                                        'accepted_by' => auth()->user()->id
+                                                        ])
+                                                    ->first();
+
+
+            if($forwardedTicketAccepter) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if($movementTypes[2] == $movementType) {
+            $approved = $supportTicket->supportTicketLifeCycles->where('user_id', auth()->user()->id)->first();
+            if($approved) {
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+
+
+        
+    }
+
+    public function supportTeambyBranch($branchId) {
+        return SupportTeam::where('branch_id', $branchId)->get();
+    }
+
+    public function getSupportTeam() {
+        return SupportTeam::get();
     }
 }

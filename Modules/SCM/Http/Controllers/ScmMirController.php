@@ -8,15 +8,25 @@ use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
+use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\StockLedger;
+use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SCM\Entities\FiberTracking;
+use Modules\SCM\Entities\ScmMir;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\SCM\Http\Requests\ScmMirRequest;
 
 class ScmMirController extends Controller
 {
+    private $mirNo;
+
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->mirNo = $globalService->generateUniqueId(ScmMir::class, 'MIR');
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -43,9 +53,108 @@ class ScmMirController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(ScmMirRequest $request)
     {
-        //
+        $data['mir_no'] = $this->mirNo;
+        $data['received_date'] = date('Y-m-d', strtotime($data['received_date']));
+        $data['received_by'] = auth()->user()->id;
+        $data['received_type'] = $data['received_type'] ?? 'mrr';
+        $data['received_from'] = $data['received_from'] ?? null;
+        $data['received_to'] = $data['received_to'] ?? null;
+        $data['received_remarks'] = $data['received_remarks'] ?? null;
+        $data['received_status'] = $data['received_status'] ?? 'pending';
+
+        $mir = ScmMir::create($data);
+
+        if ($mir) {
+            $this->updateStockLedger($data, $mir);
+            $this->updateFiberTracking($data, $mir);
+            $this->updateScmRequisitionDetail($data, $mir);
+            $this->updateScmPurchaseRequisition($data, $mir);
+            $this->updateScmMrr($data, $mir);
+        }
+
+        return redirect()->route('scm.mir.index')->with('success', 'MIR Created Successfully');
+    }
+
+    private function updateStockLedger($data, $mir)
+    {
+        $stockLedger = StockLedger::where('mrr_no', $data['mrr_no'])->first();
+        $stockLedger->update([
+            'mir_no' => $mir->mir_no,
+            'mir_id' => $mir->id,
+            'received_date' => $mir->received_date,
+            'received_by' => $mir->received_by,
+            'received_type' => $mir->received_type,
+            'received_from' => $mir->received_from,
+            'received_to' => $mir->received_to,
+            'received_remarks' => $mir->received_remarks,
+            'received_status' => $mir->received_status,
+        ]);
+    }
+
+    private function updateFiberTracking($data, $mir)
+    {
+        $fiberTracking = FiberTracking::where('mrr_no', $data['mrr_no'])->first();
+        $fiberTracking->update([
+            'mir_no' => $mir->mir_no,
+            'mir_id' => $mir->id,
+            'received_date' => $mir->received_date,
+            'received_by' => $mir->received_by,
+            'received_type' => $mir->received_type,
+            'received_from' => $mir->received_from,
+            'received_to' => $mir->received_to,
+            'received_remarks' => $mir->received_remarks,
+            'received_status' => $mir->received_status,
+        ]);
+    }
+
+    private function updateScmRequisitionDetail($data, $mir)
+    {
+        $scmRequisitionDetail = ScmRequisitionDetail::where('mrr_no', $data['mrr_no'])->first();
+        $scmRequisitionDetail->update([
+            'mir_no' => $mir->mir_no,
+            'mir_id' => $mir->id,
+            'received_date' => $mir->received_date,
+            'received_by' => $mir->received_by,
+            'received_type' => $mir->received_type,
+            'received_from' => $mir->received_from,
+            'received_to' => $mir->received_to,
+            'received_remarks' => $mir->received_remarks,
+            'received_status' => $mir->received_status,
+        ]);
+    }
+
+    private function updateScmPurchaseRequisition($data, $mir)
+    {
+        $scmPurchaseRequisition = ScmPurchaseRequisition::where('mrr_no', $data['mrr_no'])->first();
+        $scmPurchaseRequisition->update([
+            'mir_no' => $mir->mir_no,
+            'mir_id' => $mir->id,
+            'received_date' => $mir->received_date,
+            'received_by' => $mir->received_by,
+            'received_type' => $mir->received_type,
+            'received_from' => $mir->received_from,
+            'received_to' => $mir->received_to,
+            'received_remarks' => $mir->received_remarks,
+            'received_status' => $mir->received_status,
+        ]);
+    }
+
+    private function updateScmMrr($data, $mir)
+    {
+        $scmMrr = ScmMrr::where('mrr_no', $data['mrr_no'])->first();
+        $scmMrr->update([
+            'mir_no' => $mir->mir_no,
+            'mir_id' => $mir->id,
+            'received_date' => $mir->received_date,
+            'received_by' => $mir->received_by,
+            'received_type' => $mir->received_type,
+            'received_from' => $mir->received_from,
+            'received_to' => $mir->received_to,
+            'received_remarks' => $mir->received_remarks,
+            'received_status' => $mir->received_status,
+        ]);
     }
 
     /**
@@ -108,21 +217,22 @@ class ScmMirController extends Controller
     {
         $data = StockLedger::query()
             ->where('received_type', request()->customQueryFields['type'])
+            ->orderBy('receivable_id')
             ->when(request()->customQueryFields['type'] == 'MRR', function ($query) {
-                $query->whereHasMorph('receivable', ScmMrr::class, function ($query) {
-                    $query->where('mrr_no', 'like', '%' . request()->search . '%');
+                $query->whereHasMorph('receivable', ScmMrr::class, function ($query2) {
+                    $query2->where('mrr_no', 'like', '%' . request()->search . '%');
                 });
             })
-            // ->when(request()->type == 'ERR', function ($query) {
-            //     $query->whereHasMorph('receivable', ScmPurchaseRequisition::class, function ($query) {
-            //         $query->where('err_no', 'like', '%' . request()->search . '%');
-            //     });
-            // })
-            // ->when(request()->type == 'WCR', function ($query) {
-            //     $query->whereHasMorph('receivable', ScmPurchaseRequisition::class, function ($query) {
-            //         $query->where('wcr_no', 'like', '%' . request()->search . '%');
-            //     });
-            // })
+            ->when(request()->type == 'ERR', function ($query) {
+                $query->whereHasMorph('receivable', ScmPurchaseRequisition::class, function ($query) {
+                    $query->where('err_no', 'like', '%' . request()->search . '%');
+                });
+            })
+            ->when(request()->type == 'WCR', function ($query) {
+                $query->whereHasMorph('receivable', ScmPurchaseRequisition::class, function ($query) {
+                    $query->where('wcr_no', 'like', '%' . request()->search . '%');
+                });
+            })
             ->take(10)
             ->get()
             ->unique(function ($item) {
@@ -131,7 +241,7 @@ class ScmMirController extends Controller
             ->map(fn ($item) => [
                 'value' => $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no,
                 'label' => $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no,
-                'id' => $item->receivable->id,
+                'id'    => $item->receivable->id,
             ])
             ->values()
             ->all();

@@ -13,7 +13,9 @@ use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Ticketing\Entities\SupportQuickSolution;
+use Modules\Ticketing\Entities\SupportTeamMember;
 use Modules\Ticketing\Entities\SupportTicket;
+use Modules\Ticketing\Entities\TicketMovement;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
 
 class SupportTicketController extends Controller
@@ -295,7 +297,8 @@ class SupportTicketController extends Controller
                                 'status' => collect($ticket->supportTicketLifeCycles)->last()->status,
                                 'user_id' => auth()->user()->id,
                                 'support_ticket_id' => $ticket->id,
-                                'remarks' => ($request->quick_solution != 'other') ? $request->quick_solution : $request->custom_solution
+                                'remarks'   => 'Solution Added.',
+                                'description' => ($request->quick_solution != 'other') ? $request->quick_solution : $request->custom_solution
                             ]);
                         });
 
@@ -312,5 +315,61 @@ class SupportTicketController extends Controller
                 'message' => 'Invalid Request. Your IP is logged in the system.'
             ]);
         }
+    }
+
+    public function forwardedTickets() {
+        $userSupportTeam = SupportTeamMember::where('user_id', auth()->user()->id)->get();
+        /* 
+            The line is eloquent get() method but not first(), 
+            because each member might belong to multiple team as Mr. Humayun said.
+        */
+        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
+
+        $teamIds = $userSupportTeam->map(function($teamMember) {
+            return $teamMember->support_team_id;
+        })->toArray();
+    
+        $supportTicketMovements = TicketMovement::where(function($query) use($teamIds) {
+            $query->where('movement_model', '\Modules\Ticketing\Entities\SupportTeam')
+                  ->whereIn('movement_to', $teamIds)
+                  ->orWhere(function($subquery) {
+                            $subquery->where('movement_model', '\Modules\Admin\Entities\User')
+                                     ->where('movement_to', auth()->user()->id);
+                });
+        })
+        ->where('type', $movementTypes[0])
+        ->get();
+
+        $type = 'Forwarded';
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
+    }
+
+    public function backwardedTickets() {
+        
+        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
+    
+        $supportTicketMovements = TicketMovement::where(function($query){
+            $query->where('movement_model', '\Modules\Admin\Entities\User')
+                  ->where('movement_to', auth()->user()->id);
+        })
+        ->where('type', $movementTypes[1])
+        ->get();
+
+        $type = 'Backwarded';
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
+    }
+
+    public function handoveredTickets() {
+        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
+    
+        $supportTicketMovements = TicketMovement::where(function($query){
+            $query->where('movement_model', '\Modules\Admin\Entities\User')
+                  ->where('movement_to', auth()->user()->id);
+        })
+        ->where('type', $movementTypes[2])
+        ->get();
+
+        $type = 'Handovered';
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
     }
 }

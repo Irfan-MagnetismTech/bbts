@@ -165,7 +165,47 @@ class PermissionSeeder extends Seeder
                 'guard_name'=>'web',
             ],
             [
+                'name'=>'support-ticket-backward',
+                'guard_name'=>'web',
+            ],
+            [
                 'name'=>'support-ticket-team-search',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-email-when-ticket-forwarded',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-email-when-ticket-handovered',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-email-when-ticket-backwarded',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-sms-when-ticket-forwarded',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-sms-when-ticket-handovered',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-sms-when-ticket-backwarded',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-in-app-notification-when-ticket-forwarded',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-in-app-notification-when-ticket-handovered',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-in-app-notification-when-ticket-backwarded',
                 'guard_name'=>'web',
             ],
 

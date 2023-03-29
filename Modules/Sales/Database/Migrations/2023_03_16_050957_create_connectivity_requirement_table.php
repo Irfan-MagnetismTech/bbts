@@ -13,9 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('connectivity_requirement', function (Blueprint $table) {
+        Schema::create('connectivity_requirements', function (Blueprint $table) {
             $table->id();
-
+            $table->string('fr_no');
+            $table->string('client_id');
+            $table->string('mq_no');
+            $table->string('from_location')->nullable();
+            $table->string('aggregation_type')->nullable();
+            $table->date('date')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('branch_id')->nullable();
             $table->timestamps();
         });
     }

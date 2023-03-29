@@ -59,7 +59,7 @@
                             <a href="{{ route('feasibility-requirement.show', $feasibility_requirement->id) }}"
                                 class="btn btn-sm btn-success" style="padding: 6px 7px;"><i class="fas fa-eye"></i></a>
                             <form action="{{ route('feasibility-requirement.destroy', $feasibility_requirement->id) }}"
-                                method="POST" class="d-inline-block">
+                                method="POST" class="d-inline-block" id="deleteFeasibility">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
@@ -92,5 +92,24 @@
             $(window).scrollTop(sessionStorage.scrollPos || 0)
         };
         window.onload = init;
+
+        // Delete Feasibility Requirement alert message
+        $(document).on('click', '#deleteFeasibility', function(e) {
+            e.preventDefault();
+            var form = this;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            })
+        });
     </script>
 @endsection

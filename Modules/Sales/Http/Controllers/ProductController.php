@@ -102,4 +102,10 @@ class ProductController extends Controller
             'message' => 'Product deleted successfully',
         ]);
     }
+
+    public function getProducts(Request $request)
+    {
+        $products = Product::with('category')->where('category_id', $request->category_id)->get();
+        return response()->json($products);
+    }
 }

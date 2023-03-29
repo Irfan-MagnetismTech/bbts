@@ -18,5 +18,4 @@ class FeasibilityRequirement extends Model
     {
         return $this->hasOne(LeadGeneration::class, 'client_id', 'client_id');
     }
-
 }

@@ -11,7 +11,7 @@ class SupportTeam extends Model
 {
     protected $guarded = [];
 
-    public function supportTeamMember() {
+    public function supportTeamMembers() {
         return $this->hasMany(SupportTeamMember::class);
     }
 

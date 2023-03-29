@@ -15,7 +15,11 @@ return new class extends Migration
     {
         Schema::create('connectivity_product_requirement_details', function (Blueprint $table) {
             $table->id();
-
+            $table->unsignedBigInteger('connectivity_requirement_id');
+            $table->integer('category_id')->nullable();
+            $table->integer('product_id')->nullable();
+            $table->string('capacity')->nullable();
+            $table->string('sla')->nullable();
             $table->timestamps();
         });
     }

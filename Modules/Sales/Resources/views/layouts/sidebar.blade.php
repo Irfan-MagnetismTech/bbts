@@ -19,6 +19,11 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Product</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
+            <li class="{{ request()->routeIs('vendor.index') ? 'active' : null }}">
+                <a href="{{ route('vendor.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Vendor</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
         </ul>
     </li>
     <li class="pcoded-hasmenu {{ request()->routeIs(['lead-generation.*']) ? 'active pcoded-trigger' : null }}">
@@ -82,7 +87,7 @@
         class="pcoded-hasmenu {{ request()->routeIs(['feasibility-requirement.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
-            <span class="pcoded-mtext">Feasibility Requirements</span>
+            <span class="pcoded-mtext">Feasibility Req</span>
             <span class="pcoded-mcaret"></span>
         </a>
         <ul class="pcoded-submenu">
@@ -98,6 +103,35 @@
             </li>
         </ul>
     </li>
-
+    {{-- connectivity requirement --}}
+    <li
+        class="pcoded-hasmenu {{ request()->routeIs(['connectivity-requirement.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-mtext">Connectivity Req</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('connectivity-requirement.index') ? 'active' : null }}">
+                <a href="{{ route('connectivity-requirement.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
+    <li class="pcoded-hasmenu {{ request()->routeIs(['survey.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-mtext">Survey</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('survey.index') ? 'active' : null }}">
+                <a href="{{ route('survey.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
     {{-- @endhasanyrole --}}
 </ul>

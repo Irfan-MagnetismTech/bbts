@@ -26,7 +26,7 @@
         <div class="row">
             <div class="col-md-12">
                 <form
-                action="{{ route('send-notification') }}"
+                action="{{ route('send-bulk-email') }}"
                 method="post" class="custom-form">
                 
                 @csrf
@@ -47,9 +47,19 @@
                             </select>
                         </div>
                         <div class="form-group col-10 mx-auto">
+                            <label for="issue_started">Occurance Time</label>
+                            <input type="datetime-local" class="form-control" id="issue_started" name="issue_started" aria-describedby="issue_started"
+                                value="{{ old('issue_started') ?? null }}">
+                        </div>
+                        <div class="form-group col-10 mx-auto">
+                            <label for="issue_resolved">Solution Time</label>
+                            <input type="datetime-local" class="form-control" id="issue_resolved" name="issue_resolved" aria-describedby="issue_resolved"
+                                value="{{ old('issue_resolved') ?? null }}">
+                        </div>
+                        <div class="form-group col-10 mx-auto">
                             <label for="cc">CC: <small><strong>[Multiple email should be separated by ";" mark]</strong></small></label>
                             <textarea type="text" class="form-control" id="cc" name="cc" aria-describedby="cc"
-                                value="{{ old('cc') ?? null }}" placeholder="CC"></textarea>
+                                placeholder="CC">{{ old('cc') ?? null }}</textarea>
                         </div>
                         <div class="form-group col-10 mx-auto">
                             <label for="subject">Subject:</label>
@@ -59,7 +69,32 @@
                         <div class="form-group col-10 mx-auto">
                             <label for="description">Description:</label>
                             <textarea type="text" class="form-control" id="description" name="description" aria-describedby="description"
-                                value="{{ old('description') ?? null }}" placeholder="Description"></textarea>
+                                placeholder="Description">{{ old('description') ?? null }}</textarea>
+                        </div>
+                        <div class="col-10 offset-1">
+                            <div class="form-group">
+                                <label for="" class="d-block">Issue Resolved:</label>
+                                
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="closed">
+                                        <input type="radio" class="form-check-input radioButton" id="closed" name="status" value="Resolved" @checked(old('status') == 'Resolved')
+                                        >
+                                        <span style="position: relative; top: 3px">
+                                            Yes
+                                        </span>
+                                    </label>
+                                </div>
+        
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="opened">
+                                        <input type="radio" class="form-check-input radioButton" id="opened" name="status" @checked(old('status') != 'Resolved')
+                                            value="Open">
+                                        <span style="position: relative; top: 3px">
+                                            No
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

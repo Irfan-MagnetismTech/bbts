@@ -30,12 +30,24 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         'ticket-movements' => TicketMovementController::class,
     ]);
 
+    Route::get('forwarded-tickets', [SupportTicketController::class, 'forwardedTickets'])->name('forwarded-tickets');
+    Route::post('accept-forwarded-tickets', [TicketMovementController::class, 'acceptForwardedTickets'])->name('accept-forwarded-tickets');
+    
+    Route::get('backwarded-tickets', [SupportTicketController::class, 'backwardedTickets'])->name('backwarded-tickets');
+
+    Route::get('handovered-tickets', [SupportTicketController::class, 'handoveredTickets'])->name('handovered-tickets');
+
     Route::post('/accept-ticket', [SupportTicketController::class, 'acceptTicket'])->name('accept-ticket');
     Route::post('/add-solution', [SupportTicketController::class, 'addSolution'])->name('add-solution');
 
     Route::get('ticket-movements/{type}/{id}', [TicketMovementController::class, 'moveTicket'])->name('ticket-movements');
+    Route::post('process-ticket-movements/{type}/{id}', [TicketMovementController::class, 'processTicketMovement'])->name('process-ticket-movements');
+    Route::post('process-backward-ticket-movements/{type}/{id}', [TicketMovementController::class, 'processTicketMovementBackward'])->name('process-backward-ticket-movements');
+    Route::post('process-handover-ticket-movements/{type}/{id}', [TicketMovementController::class, 'processTicketMovementHandover'])->name('process-handover-ticket-movements');
+
     Route::get('notify-client/{ticketId}/{type}', [NotifyClientController::class, 'notifyClient'])->name('notify-client');
     Route::post('send-notification', [NotifyClientController::class, 'sendNotification'])->name('send-notification');
 
     Route::get('bulk-email', [PopWiseIssueController::class, 'index'])->name('bulk-email');
+    Route::post('send-bulk-email', [PopWiseIssueController::class, 'send'])->name('send-bulk-email');
 });
