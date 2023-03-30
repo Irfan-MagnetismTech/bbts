@@ -43,10 +43,10 @@ return new class extends Migration
             $table->foreignId('reopened_by')->nullable()->constrained('users', 'id');
             $table->dateTime('opening_date');
             $table->dateTime('closing_date')->nullable();
-            $table->dateTime('closed_by')->nullable();
-            $table->bigInteger('feedback_to_bbts')->nullable();
-            $table->bigInteger('feedback_to_client')->nullable();
-            $table->bigInteger('clients_feedback')->nullable();
+            $table->foreignId('closed_by')->nullable();
+            $table->text('feedback_to_bbts')->nullable();
+            $table->text('feedback_to_client')->nullable();
+            $table->text('clients_feedback')->nullable();
             $table->bigInteger('current_authorized_person')->nullable();
             $table->tinyInteger('mailNotification')->nullable();
             $table->tinyInteger('smsNotification')->nullable();

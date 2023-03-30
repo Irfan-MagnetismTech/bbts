@@ -50,5 +50,8 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::get('bulk-email', [PopWiseIssueController::class, 'index'])->name('bulk-email');
     Route::post('send-bulk-email', [PopWiseIssueController::class, 'send'])->name('send-bulk-email');
+
+    Route::get('close-ticket/{supportTicketId}', [SupportTicketController::class, 'closeTicket'])->name('close-ticket');
+    Route::post('process-close-ticket/{supportTicketId}', [SupportTicketController::class, 'processCloseTicket'])->name('process-close-ticket');
     
 });

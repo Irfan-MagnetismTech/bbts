@@ -357,7 +357,7 @@
                 @endcan
                 
                 @can('support-ticket-close')
-                <a href="" class="btn btn-danger btn-round btn-inline-block py-2">
+                <a href="{{ route('close-ticket', ['supportTicketId' => $supportTicket?->id]) }}" class="btn btn-danger btn-round btn-inline-block py-2">
                     Close
                     <i class="far fa-check-circle"></i>
                 </a>

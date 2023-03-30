@@ -18,6 +18,8 @@ use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Entities\TicketMovement;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
 
+use function PHPUnit\Framework\throwException;
+
 class SupportTicketController extends Controller
 {
     /**
@@ -317,7 +319,9 @@ class SupportTicketController extends Controller
 
                         return back()->with('message', 'Solution Added Successfully');
                     } catch (QueryException $e) {
-                        dd($e);   
+                        return back()->withErrors([
+                            'message' => 'Something went wrong. Check if your internet connection is stable or not.'
+                        ]);
                     }
                 }
 
@@ -384,5 +388,43 @@ class SupportTicketController extends Controller
 
         $type = 'Handovered';
         return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
+    }
+
+    public function closeTicket($supportTicketId) {
+        $supportTicket = SupportTicket::findOrFail($supportTicketId);
+        return view('ticketing::support-tickets.close-ticket', compact('supportTicket'));
+    }
+
+    public function processCloseTicket(Request $request, $supportTicketId) {
+        $supportTicket = SupportTicket::findOrFail($supportTicketId);
+
+        $info = $request->only(['closing_date', 'feedback_to_client', 'feedback_to_bbts']);
+        $info['closed_by'] = auth()->user()->id;
+        $info['status'] = 'Closed';
+
+        // if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
+        //     return back()->withInput()->withErrors([
+        //         'message' => 'You cannot close this Ticket at this time.'
+        //     ]);
+        // }
+        
+        try {
+            
+            DB::transaction(function() use($supportTicket, $info) {
+                if(auth()->user()->hasPermissionTo('user-delete')) {
+                    $supportTicket->update($info);
+                } else {
+                    
+                    throw new QueryException('You cannot close this Ticket at this time.', [], new \RuntimeException());
+                }
+                
+            });
+            return redirect()->back()->with('message', 'Ticket is marked as closed successfully.');
+            
+        } catch (QueryException $e) {
+            return back()->withErrors([
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }
