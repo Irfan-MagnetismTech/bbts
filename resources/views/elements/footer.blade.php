@@ -41,6 +41,13 @@
                 return false;
             }
         });
+
+        $(".approve").click(function() {
+            if (!confirm("Are you sure to approve / accept?")) {
+                return false;
+            }
+        });
+        
     });
 
     $(document).ready(function() {

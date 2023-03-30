@@ -13,7 +13,5 @@ Ticket accpetance is kind of a movement actually. **Why?** Because it change the
 
 - Ticket List 
 
-- $notificationReceivers should filter when teamMember is used in forward.
-
 - SWAL Toast just destroy the current toast when new thing is arrived rather than pushing element below each other.
 

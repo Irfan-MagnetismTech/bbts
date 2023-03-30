@@ -65,7 +65,7 @@
                                 <form action="{{ route('accept-forwarded-tickets') }}" method="POST" data-toggle="tooltip" title="Accept" class="d-inline">
                                     @csrf
                                     <input type="hidden" name="movement_id" value="{{ $movement->id }}">
-                                    <button type="submit" class="btn btn-outline-success btn-sm"><i class="fas fa-check"></i></button>
+                                    <button type="submit" class="btn btn-outline-success btn-sm approve"><i class="fas fa-check"></i></button>
                                 </form>
                             </div>
                             @endif
