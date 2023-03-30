@@ -208,6 +208,10 @@ class PermissionSeeder extends Seeder
                 'name'=>'receive-in-app-notification-when-ticket-backwarded',
                 'guard_name'=>'web',
             ],
+            [
+                'name'=>'receive-in-app-notification-when-ticket-forwarded-ticket-accepted',
+                'guard_name'=>'web',
+            ],
 
         ];
 

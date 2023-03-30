@@ -4,15 +4,16 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use Modules\Admin\Entities\Pop;
+use Modules\Admin\Entities\User;
 use App\Http\Controllers\Controller;
 use App\Models\Dataencoding\Department;
 use App\Models\Dataencoding\Designation;
 use Modules\Ticketing\Entities\SupportTeam;
 use Modules\Ticketing\Entities\TicketSource;
 use Modules\Ticketing\Entities\SupportTicket;
+use Modules\Ticketing\Entities\TicketMovement;
 use Modules\Ticketing\Entities\SupportComplainType;
 use Modules\Ticketing\Entities\SupportQuickSolution;
-use Modules\Ticketing\Entities\TicketMovement;
 
 class BbtsGlobalService extends Controller
 {
@@ -114,5 +115,22 @@ class BbtsGlobalService extends Controller
 
     public function getSupportTeam() {
         return SupportTeam::get();
+    }
+
+    public function getTicketMovementNotificationReceiversList($request, $inAppNotificationPermissions, $allTeamMembersId) {
+        if(!empty($request->teamMemberId)) {
+            $notificationReceivers = User::whereIn('id', [$request->teamMemberId])->whereHas('roles', function($q) use($inAppNotificationPermissions){
+                $q->whereHas('permissions', function($q1) use($inAppNotificationPermissions) {
+                  $q1->whereIn('name', $inAppNotificationPermissions);
+                });
+              })->get();
+        } else {
+            $notificationReceivers = User::whereIn('id', $allTeamMembersId)->whereHas('roles', function($q) use($inAppNotificationPermissions){
+                $q->whereHas('permissions', function($q1) use($inAppNotificationPermissions) {
+                  $q1->whereIn('name', $inAppNotificationPermissions);
+                });
+              })->get();
+        }
+        return $notificationReceivers;
     }
 }
