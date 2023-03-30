@@ -45,7 +45,7 @@ class MrrRequest extends FormRequest
                 ->redirectTo($this->getRedirectUrl());
         }
         if (request()->method() == "POST") {
-            $data = ScmMrrSerialCodeLine::whereIn('serial_or_drum_key', $cities)->pluck('serial_or_drum_key');
+            $data = ScmMrrSerialCodeLine::whereIn('serial_or_drum_key', $cities)->whereNot('serial_or_drum_key', '')->pluck('serial_or_drum_key');
             if (count($data)) {
                 throw ValidationException::withMessages(['sl_code' => 'The serial codes' . $data . 'already been taken .'])
                     ->redirectTo($this->getRedirectUrl());
@@ -56,6 +56,7 @@ class MrrRequest extends FormRequest
                 return $item->where('scm_mrr_id', $id);
             })->pluck('id');
             $data = ScmMrrSerialCodeLine::whereIn('serial_or_drum_key', $cities)
+                ->whereNot('serial_or_drum_key', '')
                 ->whereNotIn('id', $excludedIds)
                 ->pluck('serial_or_drum_key');
             if (count($data)) {
