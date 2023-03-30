@@ -59,7 +59,7 @@ return [
     /*
      * This path will be used to register the necessary routes for the package.
      */
-    'path' => 'laravel-websockets',
+    'path' => 'D07zC3cAEe-3NyS9fPyQy-YcBG7UVJeU',
 
     /*
      * Dashboard Routes Middleware
