@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('branch_id');
             $table->string('serial_code')->nullable();
             $table->string('cp_serial_code')->nullable()->comment('Cut Peace Serial Code');
+            $table->string('received_type')->nullable();
             $table->bigInteger('initial_mark')->nullable();
             $table->bigInteger('final_mark')->nullable();
             $table->double('quantity', 8, 2)->nullable();

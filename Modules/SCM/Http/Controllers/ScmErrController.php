@@ -2,17 +2,11 @@
 
 namespace Modules\SCM\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Modules\Admin\Entities\Brand;
-use Illuminate\Routing\Controller;
-use Modules\Admin\Entities\Branch;
-use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SCM\Entities\ScmMrrLine;
-use Modules\SCM\Entities\ScmRequisitionDetail;
-use Modules\SCM\Entities\StockLedger;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
-class ScmChallanController extends Controller
+class ScmErrController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -29,18 +23,7 @@ class ScmChallanController extends Controller
      */
     public function create()
     {
-        $formType = "create";
-        $brands = Brand::latest()->get();
-        $branchs = Branch::latest()->get();
-        $purposes = [
-            'activation' => 'Activation',
-            'maintenance' => 'Maintenance',
-            'shifting' => 'Shifting',
-            'own_use' => 'Own Use',
-            'stolen' => 'Stolen',
-        ];
-        $out_from = ['mrr', 'err', 'wcr'];
-        return view('scm::challans.create', compact('formType', 'brands', 'branchs', 'purposes', 'out_from'));
+        return view('scm::create');
     }
 
     /**
@@ -91,5 +74,6 @@ class ScmChallanController extends Controller
      */
     public function destroy($id)
     {
+        //
     }
 }

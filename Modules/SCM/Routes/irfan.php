@@ -4,13 +4,15 @@
 use Illuminate\Support\Facades\Route;
 use Modules\SCM\Http\Controllers\ScmChallanController;
 use Modules\SCM\Http\Controllers\ScmMrrController;
+use Modules\SCM\Http\Controllers\ScmMurController;
 
 Route::resource('material-receives', 'ScmMrrController')->parameters([
     'material-receives' => 'material_receive',
 ]);
 
 Route::resources([
-    'challans'                 => ScmChallanController::class
+    'challans'                 => ScmChallanController::class,
+    'material-utilizations'     => ScmMurController::class,
 ]);
 
 Route::get('search_po_with_date', [ScmMrrController::class, 'searchPoWithDate'])->name('search_po_with_date');

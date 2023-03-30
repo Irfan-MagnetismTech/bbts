@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Challan')
+@section('title', 'Material Utilization')
 
 @section('breadcrumb-title')
     @if ($formType == 'edit')
@@ -7,7 +7,7 @@
     @else
         Create
     @endif
-    Challan
+    Materil Utilization Report (MUR)
 @endsection
 
 @section('style')
@@ -22,7 +22,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('challans.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('material-utilizations.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -34,54 +34,18 @@
 
 @section('content')
         <form
-            action="{{ $formType == 'edit' ? route('challans.update', @$requisition->id) : route('challans.store') }}"
+            action="{{ $formType == 'edit' ? route('material-utilizations.update', @$requisition->id) : route('material-utilizations.store') }}"
             method="post" class="custom-form">
             @if ($formType == 'edit')
                 @method('PUT')
             @endif
             @csrf
             <div class="row">
-                <div class="col-md-12">
-                    <div class="typeSection mt-2 mb-4">
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="client">
-                                <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                    value="client" @checked(@$requisition->type == 'client' || old('type') == 'client' || ($formType == 'create' && !old()))> Client
-                            </label>
-                        </div>
-
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="warehouse">
-                                <input type="radio" class="form-check-input radioButton" id="warehouse" name="type"
-                                    @checked(@$requisition->type == 'warehouse' || old('type') == 'warehouse') value="warehouse">
-                                Warehouse
-                            </label>
-                        </div>
-
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="pop">
-                                <input type="radio" class="form-check-input radioButton" id="pop" name="type"
-                                    value="pop" @checked(@$requisition->type == 'pop' || old('type') == 'pop')>
-                                POP
-                            </label>
-                        </div>
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="general">
-                                <input type="radio" class="form-check-input radioButton" id="general" name="type"
-                                    value="general" @checked(@$requisition->type == 'general' || old('type') == 'general')>
-                                General
-                            </label>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-            <div class="row">
                 <div class="form-group col-3">
-                    <label for="select2">Challan No</label>
-                    <input type="text" class="form-control" id="challan_no" aria-describedby="challan_no"
-                    name="challan_no" value="{{ old('challan_no') ?? (@$requisition->challan_no ?? '') }}"
-                    placeholder="Challan No">
+                    <label for="select2">MUR No</label>
+                    <input type="text" class="form-control" id="mur_no" aria-describedby="mur_no"
+                    name="mur_no" value="{{ old('mur_no') ?? (@$requisition->mur_no ?? '') }}"
+                    placeholder="MUR No">
                 </div>
 
                 <div class="form-group col-3 date">
@@ -148,7 +112,7 @@
                     <input type="text" class="form-control" id="client_address" name="client_address" aria-describedby="client_address"
                         readonly value="{{ old('client_address') ?? (@$requisition->client_address ?? '') }}">
                 </div>
-                <div class="form-group col-3 branch_name" style="display: none">
+                <div class="form-group col-3 branch_name" style="">
                     <label for="select2">Branch Name</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
                         <option value="20" selected>Select Branch</option>
@@ -160,17 +124,17 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="form-group col-3 pop_name" style="display: none">
-                    <label for="select2">Pop Name</label>
-                    <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
-                    value="{{ old('pop_name') ?? (@$requisition->pop_name ?? '') }}" placeholder="Search a POP Name">
-                    <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
-                    value="{{ old('pop_id') ?? (@$requisition->pop_id ?? '') }}">
+                <div class="form-group col-3 challan_no" style="">
+                    <label for="select2">Challan No</label>
+                    <input class="form-control" id="challan_no" name="challan_no" aria-describedby="challan_no"
+                    value="{{ old('challan_no') ?? (@$requisition->challan_no ?? '') }}" placeholder="Search a Challan Name">
+                    <input type="hidden" class="form-control" id="challan_id" name="challan_id" aria-describedby="challan_id"
+                    value="{{ old('challan_id') ?? (@$requisition->challan_id ?? '') }}">
                 </div>
-                <div class="form-group col-3 pop_address" style="display: none">
-                    <label for="select2">Pop Address</label>
-                    <input class="form-control" id="pop_address" name="pop_address" aria-describedby="pop_address"
-                    value="{{ old('pop_address') ?? (@$requisition->pop_address ?? '') }}" readonly placeholder="Select a POP Address">
+                <div class="form-group col-3 challan_date" style="">
+                    <label for="select2">Challan Date</label>
+                    <input class="form-control" id="challan_date" name="challan_date" aria-describedby="challan_date"
+                    value="{{ old('challan_date') ?? (@$requisition->challan_date ?? '') }}" readonly>
                 </div>
             </div>
 
@@ -481,7 +445,6 @@
         });
 
         $(function() {
-            onChangeRadioButton();
 
             $('.select2').select2();
 
@@ -489,9 +452,7 @@
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
             associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_name', 'get', null)
 
-            $(".radioButton").click(function() {
-                onChangeRadioButton()
-            });
+            
 
 
             $("#mrs_no").autocomplete({
@@ -528,74 +489,10 @@
                     return false;
                 }
             })
-            $("#pop_name").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ route('searchPop') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $(this).val(ui.item.label);
-                    $('#pop_id').val(ui.item.id);
-                    $('#pop_address').val(ui.item.address);
-                    return false;
-                }
-            })
+          
 
         });
 
-        function onChangeRadioButton() {
-            var radioValue = $("input[name='type']:checked").val();
-            if (radioValue == 'client') {
-                $('.pop_id').hide('slow');
-                $('.pop_name').hide('slow');
-                $('.pop_address').hide('slow');
-                $('.address').show('slow');
-                $('.client_name').show('slow');
-                $('.client_no').show('slow');
-                $('.client_address').show('slow');
-                $('.branch_name').hide('slow');
-                $('.client_links').show('slow');
-            } else if (radioValue == 'warehouse') {
-                $('.pop_id').hide('slow');
-                $('.pop_name').hide('slow');
-                $('.pop_address').hide('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.client_no').hide('slow');
-                $('.client_address').hide('slow');
-                $('.branch_name').show('slow');
-                $('.client_links').hide('slow');
-            } else if (radioValue == 'pop') {
-                $('.pop_id').show('slow');
-                $('.pop_name').show('slow');
-                $('.pop_address').show('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.branch_name').hide('slow');
-                $('.client_no').hide('slow');
-                $('.client_address').hide('slow');
-                $('.client_links').hide('slow');
-            }else if (radioValue == 'general') {
-                $('.pop_id').hide('slow');
-                $('.pop_name').hide('slow');
-                $('.pop_address').hide('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.branch_name').hide('slow');
-                $('.client_no').hide('slow');
-                $('.client_address').hide('slow');
-                $('.client_links').hide('slow');
-            }
-        }
 
 
 

@@ -96,11 +96,18 @@ class ScmMrrController extends Controller
                             'initial_mark'      => $value->initial_mark,
                             'final_mark'        => $value->final_mark,
                             'quantity'          => $quantity,
+                            'received_type'     => 'MRR',
                             'created_at'        => now(),
+                            'updated_at'        => now()
                         ];
                     } else {
-                        $serial_code = 'SL-' . $serial;
-                        $quantity = 1;
+                        if ($serial == '') {
+                            $serial_code = Null;
+                            $quantity = $value->quantity;
+                        } else {
+                            $serial_code = 'SL-' . $serial;
+                            $quantity = 1;
+                        }
                     }
                     $stock[] = [
                         'received_type'     => 'MRR',
@@ -210,12 +217,18 @@ class ScmMrrController extends Controller
                             'initial_mark'      => $value->initial_mark,
                             'final_mark'        => $value->final_mark,
                             'quantity'          => $quantity,
-                            'created_at'        => now(),
+                            'received_type'     => 'MRR',
+                            'updated_at'        => now(),
                         ];
                         FiberTracking::where('serial_code', $serial_code)->delete();
                     } else {
-                        $serial_code = 'SL-' . $serial;
-                        $quantity = 1;
+                        if ($serial == '') {
+                            $serial_code = Null;
+                            $quantity = $value->quantity;
+                        } else {
+                            $serial_code = 'SL-' . $serial;
+                            $quantity = 1;
+                        }
                     }
                     $stock[] = [
                         'received_type'     => 'MRR',
@@ -227,9 +240,6 @@ class ScmMrrController extends Controller
                         'model'             => $value->model,
                         'quantity'          => $quantity,
                         'initial_mark'      => $value->initial_mark,
-                        'final_mark'        => $value->final_mark,
-                        'left_initial_mark' => $value->initial_mark,
-                        'left_final_mark'   => $value->final_mark,
                         'final_mark'        => $value->final_mark,
                         'item_code'         => $value->item_code,
                         'warranty_period'   => $value->warranty_period,
