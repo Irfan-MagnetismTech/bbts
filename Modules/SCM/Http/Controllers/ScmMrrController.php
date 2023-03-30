@@ -101,8 +101,13 @@ class ScmMrrController extends Controller
                             'updated_at'        => now()
                         ];
                     } else {
-                        $serial_code = 'SL-' . $serial;
-                        $quantity = 1;
+                        if ($serial == '') {
+                            $serial_code = Null;
+                            $quantity = $value->quantity;
+                        } else {
+                            $serial_code = 'SL-' . $serial;
+                            $quantity = 1;
+                        }
                     }
                     $stock[] = [
                         'received_type'     => 'MRR',
@@ -217,8 +222,13 @@ class ScmMrrController extends Controller
                         ];
                         FiberTracking::where('serial_code', $serial_code)->delete();
                     } else {
-                        $serial_code = 'SL-' . $serial;
-                        $quantity = 1;
+                        if ($serial == '') {
+                            $serial_code = Null;
+                            $quantity = $value->quantity;
+                        } else {
+                            $serial_code = 'SL-' . $serial;
+                            $quantity = 1;
+                        }
                     }
                     $stock[] = [
                         'received_type'     => 'MRR',

@@ -11,7 +11,7 @@
     $material_list = old('branch_id') ? old('select_array') : (!empty($materialReceive) ? $material_list : []);
     $applied_date = old('applied_date', !empty($materialReceive) ? $materialReceive->date : null);
     $po_no = old('po_no', !empty($materialReceive) ? $materialReceive->purchaseOrder->po_no : null);
-    $po_id = old('po_id', !empty($materialReceive) ? $materialReceive->purchase_order_id : null);
+    $po_id = old('purchase_order_id', !empty($materialReceive) ? $materialReceive->purchase_order_id : null);
     $po_date = old('po_date', !empty($materialReceive) ? $materialReceive->purchaseOrder->date : null);
     $supplier_name = old('supplier_name', !empty($materialReceive) ? $materialReceive->supplier->name : null);
     $supplier_id = old('supplier_id', !empty($materialReceive) ? $materialReceive->supplier_id : null);
