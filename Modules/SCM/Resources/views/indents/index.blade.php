@@ -19,7 +19,6 @@
 @section('sub-title')
     Total: {{ count($indents) }}
 @endsection
-{{-- @dd($indents) --}}
 
 @section('content')
     <div class="dt-responsive table-responsive">
@@ -43,8 +42,7 @@
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($indents as $key => $indent)
-                
+                @foreach ($indents as $key => $indent)            
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $indent->indent_no }}</td>

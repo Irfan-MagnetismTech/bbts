@@ -640,6 +640,9 @@
                 $('.select2').select2();
             })
             .on('click', '.remove-calculation-row', function() {
+                if ($('#material_requisition tbody tr').length == 1) {
+                    return false;
+                }
                 $(this).closest('tr').remove();
             });
 

@@ -397,7 +397,7 @@
                                 <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
                             </td>
                             <td class="form-group">
-                                <select class="form-control serial_code select2" name="serial_code[]">                      
+                                <select class="form-control serial_code select2" name="serial_code[]" multiple="multiple">                      
                                 </select>
                                 <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
                                 <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 

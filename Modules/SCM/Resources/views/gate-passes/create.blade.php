@@ -24,99 +24,127 @@
 @section('content-grid', null)
 
 @section('content')
-    <div class="container">
-        {!! Form::open([
-            'url' => $form_url,
-            'method' => $form_method,
-            'encType' => 'multipart/form-data',
-            'class' => 'custom-form',
-        ]) !!}
+    {!! Form::open([
+        'url' => $form_url,
+        'method' => $form_method,
+        'encType' => 'multipart/form-data',
+        'class' => 'custom-form',
+    ]) !!}
 
-        <div class="row">
-            @if (!empty($indent->id))
-                <div class="col-12">
-                    <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="name">Indent No <span class="text-danger">*</span></label>
-                        <input class="form-control" id="indent_no" name="indent_no" aria-describedby="indent_no"
-                            value="{{ old('indent_no') ?? ($indent->indent_no ?? '') }}" readonly placeholder="Indent No">
-                    </div>
-                </div>
-            @endif
-            <div class="col-12">
+    <div class="row">
+        @if (!empty($indent->id))
+            <div class="form-group col-3">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="name">Date <span class="text-danger">*</span></label>
-                    <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? ($indent->date ?? '') }}" readonly placeholder="Select a Date">
+                    <label class="input-group-addon" for="name">Indent No <span class="text-danger">*</span></label>
+                    <input class="form-control" id="indent_no" name="indent_no" aria-describedby="indent_no"
+                        value="{{ old('indent_no') ?? ($indent->indent_no ?? '') }}" readonly placeholder="Indent No">
                 </div>
             </div>
-            @php
-                $prs_nos = $is_old ? old('prs_no') ?? [] : (isset($indent) ? $indent->indentLines->pluck('scmPurchaseRequisition.prs_no') : []);
-                $prs_ids = $is_old ? old('prs_id') ?? [] : (isset($indent) ? $indent->indentLines->pluck('scm_purchase_requisition_id') : []);
-            @endphp
-
-            <div class="col-12" id="prs_no">
-                @forelse ($prs_nos as $key => $prs_no)
-                    @if ($loop->first)
-                        @php
-                            $visivilty = 'visible';
-                            $button = "<i class='btn btn-primary btn-sm fa fa-plus addMaterial' onclick='addMaterial()'></i>";
-                        @endphp
-                    @else
-                        @php
-                            $visivilty = 'invisible';
-                            $button = "<i class='btn btn-danger btn-sm fa fa-minus deleteItem' onclick='deleteRow(this)'></i>";
-                            
-                        @endphp
-                    @endif
-                    <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon {{ $visivilty }}" for="name">Branch Name <span
-                                class="text-danger">*</span></label>
-                        <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
-                            value="{{ $prs_nos[$key] }}" required>
-                        <input type="hidden" name="prs_id[]" class="prs_id" value="{{ $prs_ids[$key] }}">
-                        {!! $button !!}
-                    </div>
-                @empty
-                    <div class="input-group input-group-sm input-group-primary" id="">
-                        <label class="input-group-addon" for="prs_no">Prs Np <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
-                            value="" required>
-                        <input type="hidden" name="prs_id[]" class="prs_id" value="">
-                        <i class="btn btn-primary btn-sm fa fa-plus addMaterial" onclick="addMaterial()"></i>
-                    </div>
-                @endforelse
+        @endif
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <label class="input-group-addon" for="date">Date <span class="text-danger">*</span></label>
+                <input class="form-control" id="date" name="date" aria-describedby="date"
+                    value="{{ old('date') ?? ($indent->date ?? '') }}" readonly placeholder="Select a Date">
             </div>
         </div>
-
-        <div class="row">
-            <div class="offset-md-4 col-md-4 mt-2">
-                <div class="input-group input-group-sm ">
-                    <button class="btn btn-success btn-round btn-block py-2">Submit</button>
-                </div>
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <label class="input-group-addon" for="carrier_name">Carrier Name <span class="text-danger">*</span></label>
+                <input class="form-control" id="carrier_name" name="carrier_name" aria-describedby="carrier_name"
+                    value="{{ old('date') ?? ($indent->date ?? '') }}" placeholder="Carrier Name">
             </div>
         </div>
-        {!! Form::close() !!}
-
+        <table class="table table-bordered" id="material_requisition">
+            <thead>
+                <tr>
+                    <th> Challan No.</th>
+                    <th> MIR No.</th>
+                    <th> Remarks</th>
+                    <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                @php
+                    $quantity = old('quantity', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('quantity') : []);
+                    $brand_id = old('brand_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('brand_id') : []);
+                    $model = old('model', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('model') : []);
+                    $purpose = old('purpose', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('purpose') : []);
+                @endphp
+                @foreach ($quantity as $key => $requisitionDetail)
+                    <tr>
+                        <td>
+                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
+                                value="{{ $unit[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
+                                value="{{ $unit[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
+                                value="{{ $unit[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
+                                value="{{ $unit[$key] }}">
+                        </td>
+                        <td>
+                            <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                        </td>
+                    </tr>
+                @endforeach
+            </tfoot>
+        </table>
     </div>
+
+    <div class="row">
+        <div class="offset-md-4 col-md-4 mt-2">
+            <div class="input-group input-group-sm ">
+                <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+            </div>
+        </div>
+    </div>
+    {!! Form::close() !!}
 @endsection
 
 @section('script')
     <script>
-        function addMaterial() {
-            $('#prs_no').append(
-                `<div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon invisible" for="name">Branch Name <span
-                                class="text-danger">*</span></label>
-                    <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No" required>
-                    <input type="hidden" name="prs_id[]" class="prs_id">
-                        <i class="btn btn-danger btn-sm fa fa-minus deleteItem" onclick="deleteRow(this)"></i>    
-                </div>`
-            );
+        /* Append row */
+        @if (empty($requisition) && empty(old('material_name')))
+            appendCalculationRow();
+        @endif
+        function appendCalculationRow() {
+            let row = `<tr>
+                            <td>
+                                <input type="text" name="challan_no[]" class="form-control challan_no" autocomplete="off">
+                            </td>
+                            <td>
+                                <input type="text" name="mir_no[]" class="form-control mir_no" autocomplete="off">
+                            </td>
+                            <td>
+                                <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                            </td>
+                    </tr>
+                    `;
+            $('#material_requisition tbody').append(row);
         }
 
-        function deleteRow(e) {
-            $(e).parent().remove();
-        }
+        /* Adds and removes quantity row on click */
+        $("#material_requisition")
+            .on('click', '.add-requisition-row', () => {
+                appendCalculationRow();
+            })
+            .on('click', '.remove-calculation-row', function() {
+                if ($('#material_requisition tbody tr').length == 1) {
+                    return;
+                }
+                $(this).closest('tr').remove();
+            });
 
         $('#date').datepicker({
             format: "dd-mm-yyyy",
@@ -124,29 +152,5 @@
             todayHighlight: true,
             showOtherMonths: true
         }).datepicker("setDate", new Date());
-
-        $(document).on('keyup focus', '.prs_no', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-prs-no') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $(this).val(ui.item.label);
-                    $(this).parent().find('.prs_id').val(ui.item.value);
-
-                    return false;
-                }
-            });
-        });
     </script>
 @endsection
