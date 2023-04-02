@@ -128,7 +128,7 @@
         </div>
     </div>
    
-    <table class="table table-bordered" id="material_requisition">
+    <table class="table table-bordered table-responsive" id="material_requisition">
         <thead>
             <tr>
                 <th>Material Name</th>
@@ -464,33 +464,36 @@
             let purchase_order_id = $("#purchase_order_id").val();
 
             const url = '{{ url('scm/get_pocomposite_with_price') }}/' + purchase_order_id + '/' + material_id + '/' + brand_id;
-            var elemmtn = $(this);
-            (elemmtn).closest('tr').find('.unit_price').val(null);
-            (elemmtn).closest('tr').find('.po_composit_key').val(null);
-           
+            var elemmtn = this;
+            $(elemmtn).closest('tr').find('.unit_price').val(null);
+            $(elemmtn).closest('tr').find('.po_composit_key').val(null);
             $.getJSON(url, function(item) {
-                if(item.length){
-                    (elemmtn).closest('tr').find('.unit_price').val(item[0].unit_price);
-                    (elemmtn).closest('tr').find('.po_composit_key').val(item[0].po_composit_key);
-                    var maxTags = 1; // maximum number of tags allowed
-                   
-                }else{
-                    alert('No po is given for this Brand of that material');
-                }
+                    if(item.length){
+                        $(elemmtn).closest('tr').find('.unit_price').val(item[0].unit_price);
+                        $(elemmtn).closest('tr').find('.po_composit_key').val(item[0].po_composit_key);
+                        var maxTags = 1; // maximum number of tags allowed
+                        calculateAmount(elemmtn);
+                    }else{
+                        alert('No po is given for this Brand of that material');
+                    }
                 });
+               
             })
 
 
 
-            $(document).on('keyup', '.unit_price, .quantity', function() {
-            var unit_price = $(this).closest('tr').find('.unit_price').val();
-            var quantity = $(this).closest('tr').find('.quantity').val();
+            $(document).on('keyup change', '.unit_price, .quantity', function() {
+                calculateAmount(this);
+            });
+        function calculateAmount(ref){
+            var unit_price = $(ref).closest('tr').find('.unit_price').val() != '' ? $(ref).closest('tr').find('.unit_price').val() : 0;
+            var quantity = $(ref).closest('tr').find('.quantity').val() != '' ? $(ref).closest('tr').find('.quantity').val() : 0;
             var amount = unit_price * quantity;
-            $(this).closest('tr').find('.amount').val(amount);
+            $(ref).closest('tr').find('.amount').val(amount);
             calculateTotalAmount()
-
-            //function for calculate total amount from all sub total amount
-            function calculateTotalAmount() {
+        }
+             //function for calculate total amount from all sub total amount
+             function calculateTotalAmount() {
                 var final_total_amount = 0;
                 $('.amount').each(function() {
                     final_total_amount += parseFloat($(this).val());
@@ -500,8 +503,6 @@
                     maximumFractionDigits: 2
                 }));
             }
-        });
-            
         })
         
         /*****/

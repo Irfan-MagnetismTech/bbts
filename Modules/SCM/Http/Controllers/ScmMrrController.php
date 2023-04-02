@@ -127,7 +127,7 @@ class ScmMrrController extends Controller
                         'unit'              => $request->unit[$key],
                     ];
                     return [
-                        'serial_or_drum_key'    => $serial,
+                        'serial_or_drum_key'    =>  $serial,
                         'serial_or_drum_code'   =>  $serial_code,
                     ];
                 }, $serialCode[$key]));
