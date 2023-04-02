@@ -72,7 +72,7 @@ class SupportTicketController extends Controller
      */
     public function store(SupportTicketRequest $request)
     {
-        $clientInfo = ClientDetail::where('fr_composite_key', $request->fr_composit_key)->first();
+        $clientInfo = ClientDetail::where('fr_composite_key', $request->fr_composite_key)->first();
 
         if($clientInfo->client->supportTickets->where('status', '!=', 'Closed')->count() > 0) {
             return back()->withInput()->withErrors([
@@ -91,7 +91,7 @@ class SupportTicketController extends Controller
         }
 
         $ticketInfo = $request->only([
-            'fr_composit_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
+            'fr_composite_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
             'mailNotification', 'smsNotification'
         ]);
 
@@ -166,6 +166,8 @@ class SupportTicketController extends Controller
                 $client->select('id', 'name', 'email');
             }]);
         }]);
+
+        dd($supportTicket);
         $quickSolutions = SupportQuickSolution::get();
         $priorities = config('businessinfo.ticketPriorities');
         return view('ticketing::support-tickets.show', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities', 'quickSolutions'));
@@ -193,11 +195,11 @@ class SupportTicketController extends Controller
     public function update(SupportTicket $supportTicket, Request $request)
     {
         $ticketInfo = $request->only([
-                        'fr_composit_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
+                        'fr_composite_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
                         'mailNotification', 'smsNotification'
                     ]);
 
-        $clientInfo = ClientDetail::where('fr_composite_key', $request->fr_composit_key)->first();
+        $clientInfo = ClientDetail::where('fr_composite_key', $request->fr_composite_key)->first();
 
         $ticketInfo['updated_by'] = auth()->user()->id;
         $ticketInfo['client_id'] = $clientInfo->client_id;

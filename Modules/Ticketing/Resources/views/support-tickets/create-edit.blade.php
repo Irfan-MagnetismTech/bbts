@@ -52,8 +52,8 @@
                                             {{ old('client_link_id') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}
                                         </option>
                                     </select>
-                                    <input type="hidden" name="fr_composit_key" id="fr_composit_key"
-                                            value="{{ old('fr_composit_key') ?? (!empty($supportTicket) ? $supportTicket?->fr_composit_key : '') }}">
+                                    <input type="hidden" name="fr_composite_key" id="fr_composite_key"
+                                            value="{{ old('fr_composite_key') ?? (!empty($supportTicket) ? $supportTicket?->fr_composite_key : '') }}">
                                     <input type="hidden" name="client_link_id" id="client_link_id">
                                 </div>
                             </div>
@@ -324,12 +324,12 @@
         });
 
         $('#client_id').on('change', function() {
-                $("#fr_composit_key").val($(this).val())
+                $("#fr_composite_key").val($(this).val())
         })
 
         $('#client_id').on('select2:select', function (e) {
             let clientId = e.params.data.fullObject?.client?.id
-            $("#fr_composit_key").val(e.params.data.fullObject?.fr_composite_key)
+            $("#fr_composite_key").val(e.params.data.fullObject?.fr_composite_key)
             $("#client_link_id").val(e.params.data.fullObject?.text)
             getClientsPreviousTickets(clientId, 5)
         });
