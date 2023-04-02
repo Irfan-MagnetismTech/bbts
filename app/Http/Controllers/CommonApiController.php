@@ -54,6 +54,7 @@ class CommonApiController extends Controller
                 'client' => $item->client,
                 'id' => $item->id,
                 'text' => $item->link_id,
+                'fr_composite_key' => $item->fr_composite_key
             ]);
 
         return response()->json($results);

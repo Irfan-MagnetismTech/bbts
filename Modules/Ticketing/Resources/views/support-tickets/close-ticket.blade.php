@@ -68,6 +68,56 @@
                                     placeholder="Feedback to BBTS Internal Team" style="min-height: 100px !important; ">{{ old('feedback_to_bbts') }}</textarea>
 
                         </div>
+                        <div class="form-group col-8 mx-auto">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="" class="d-block">Mail Notification:</label>
+                                        
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" for="sendMail">
+                                                <input type="radio" class="form-check-input radioButton" id="sendMail" name="mailNotification" value="1">
+                                                <span style="position: relative; top: 3px">
+                                                    Yes
+                                                </span>
+                                            </label>
+                                        </div>
+                
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" for="noMailNotification">
+                                                <input type="radio" class="form-check-input radioButton" id="noMailNotification" name="mailNotification" value="0">
+                                                <span style="position: relative; top: 3px">
+                                                    No
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="" class="d-block">SMS Notification:</label>
+                                        
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" for="smsNotification">
+                                                <input type="radio" class="form-check-input radioButton" id="smsNotification" name="smsNotification" value="1">
+                                                <span style="position: relative; top: 3px">
+                                                    Yes
+                                                </span>
+                                            </label>
+                                        </div>
+                
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" for="noSmsNotification">
+                                                <input type="radio" class="form-check-input radioButton" id="noSmsNotification" name="smsNotification" value="0">
+                                                <span style="position: relative; top: 3px">
+                                                    No
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">

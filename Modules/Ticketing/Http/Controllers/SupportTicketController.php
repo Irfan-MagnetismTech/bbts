@@ -72,7 +72,7 @@ class SupportTicketController extends Controller
      */
     public function store(SupportTicketRequest $request)
     {
-        $clientInfo = ClientDetail::where('id', $request->fr_composit_key)->first();
+        $clientInfo = ClientDetail::where('fr_composite_key', $request->fr_composit_key)->first();
 
         if($clientInfo->client->supportTickets->where('status', '!=', 'Closed')->count() > 0) {
             return back()->withInput()->withErrors([
@@ -197,7 +197,7 @@ class SupportTicketController extends Controller
                         'mailNotification', 'smsNotification'
                     ]);
 
-        $clientInfo = ClientDetail::where('id', $request->fr_composit_key)->first();
+        $clientInfo = ClientDetail::where('fr_composite_key', $request->fr_composit_key)->first();
 
         $ticketInfo['updated_by'] = auth()->user()->id;
         $ticketInfo['client_id'] = $clientInfo->client_id;
@@ -398,6 +398,16 @@ class SupportTicketController extends Controller
 
     public function closeTicket($supportTicketId) {
         $supportTicket = SupportTicket::findOrFail($supportTicketId);
+        if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
+            return back()->withInput()->withErrors([
+                'message' => 'You cannot close this Ticket at this time.'
+            ]);
+        }
+        if (!auth()->user()->hasAnyPermission(['support-ticket-close', 'support-ticket-super-close'])) {
+            return back()->withInput()->withErrors([
+                'message' => 'You do not have permission to close this ticket.'
+            ]);
+        }
         return view('ticketing::support-tickets.close-ticket', compact('supportTicket'));
     }
 

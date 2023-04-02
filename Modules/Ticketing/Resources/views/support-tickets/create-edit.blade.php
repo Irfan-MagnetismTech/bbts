@@ -48,11 +48,13 @@
                                 <div class="col-5">
                                     <label for="client_id" class="font-weight-bold">Client Link ID:</label>
                                     <select name="client_id" id="client_id" class="form-control">
-                                    <option value="{{ old('client_id') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}">{{ old('client_id') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}</option>
-                                    
-                                    
+                                        <option value="{{ old('client_id') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}">
+                                            {{ old('client_link_id') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}
+                                        </option>
+                                    </select>
                                     <input type="hidden" name="fr_composit_key" id="fr_composit_key"
                                             value="{{ old('fr_composit_key') ?? (!empty($supportTicket) ? $supportTicket?->fr_composit_key : '') }}">
+                                    <input type="hidden" name="client_link_id" id="client_link_id">
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -64,7 +66,7 @@
                                 <div class="col-5">
                                     <label for="support_complain_type_id">Complain Type:</label>
                                     <select class="form-control select2" id="support_complain_type_id" name="support_complain_type_id">
-                                        <option value="20" selected>Select Complain Type</option>
+                                        <option value="" selected>Select Complain Type</option>
                                         @foreach ($complainTypes as $complainType)
                                             <option value="{{ $complainType->id }}"
                                                 {{ old('support_complain_type_id', (!empty($supportTicket) ? $supportTicket->support_complain_type_id : null)) == $complainType->id ? 'selected' : '' }}>
@@ -314,17 +316,21 @@
 <script>
         
         $(document).ready(function() {
-            select2Ajax("{{ route('get-clients-by-links') }}", '#client_id')
+            select2Ajax("{{ route('get-clients-by-links') }}", '#client_id');
 
+            $('#support_complain_type_id').select2({
+                placeholder: "Select Complain Type",
+            })
         });
 
         $('#client_id').on('change', function() {
                 $("#fr_composit_key").val($(this).val())
-                // console.log($(this));
         })
 
         $('#client_id').on('select2:select', function (e) {
-            let clientId = e.params.data.fullObject.client.id
+            let clientId = e.params.data.fullObject?.client?.id
+            $("#fr_composit_key").val(e.params.data.fullObject?.fr_composite_key)
+            $("#client_link_id").val(e.params.data.fullObject?.text)
             getClientsPreviousTickets(clientId, 5)
         });
 
@@ -367,6 +373,8 @@
 
             })
         }
+
+        
 
         // $('#complain_time').datepicker({
         //     format: "dd-mm-yyyy hh:mm",
