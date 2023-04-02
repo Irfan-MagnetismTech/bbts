@@ -47,6 +47,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('get-support-team-members', [CommonApiController::class, 'getSupportTeamMembers'])->name('get-support-team-members');
     Route::get('search-indent-no', [CommonApiController::class, 'searchIndentNo'])->name('searchIndentNo');
     Route::get('search-cs-no/{supplierId}', [CommonApiController::class, 'searchCsNo'])->name('searchCsNo');
+    Route::get('search-support-ticket', [CommonApiController::class, 'getSupportTicket'])->name('search-support-ticket');
+
 });
 
 require base_path('routes/dataencoding.php');

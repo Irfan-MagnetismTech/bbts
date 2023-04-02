@@ -30,9 +30,12 @@ class SupportTicketController extends Controller
     {
         $from = $request->date_from;
         $to = $request->date_to;
+        $ticketNo = $request->ticket_no;
 
         $supportTickets = SupportTicket::query();
 
+        if(empty($ticketNo)) {
+            
             if (!empty($from)) {
                 $supportTickets->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
             }
@@ -40,6 +43,9 @@ class SupportTicketController extends Controller
             if (!empty($to)) {
                 $supportTickets->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
             }
+        } else if(!empty($ticketNo)) {
+            $supportTickets->where('ticket_no', $ticketNo);
+        }
 
             $supportTickets->orderBy('created_at', 'desc')->get();
 
@@ -402,22 +408,25 @@ class SupportTicketController extends Controller
         $info['closed_by'] = auth()->user()->id;
         $info['status'] = 'Closed';
 
-        // if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
-        //     return back()->withInput()->withErrors([
-        //         'message' => 'You cannot close this Ticket at this time.'
-        //     ]);
-        // }
+        if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
+            return back()->withInput()->withErrors([
+                'message' => 'You cannot close this Ticket at this time.'
+            ]);
+        }
+        if (!auth()->user()->hasAnyPermission(['support-ticket-close', 'support-ticket-super-close'])) {
+            return back()->withInput()->withErrors([
+                'message' => 'You cannot close this ticket.'
+            ]);
+        }
         
         try {
+
+            if(!auth()->user()->hasPermissionTo('support-ticket-super-close')) {
+                $info['is_temporary_close'] = 1;
+            }
             
             DB::transaction(function() use($supportTicket, $info) {
-                if(auth()->user()->hasPermissionTo('user-delete')) {
-                    $supportTicket->update($info);
-                } else {
-                    
-                    throw new QueryException('You cannot close this Ticket at this time.', [], new \RuntimeException());
-                }
-                
+                $supportTicket->update($info);
             });
             return redirect()->back()->with('message', 'Ticket is marked as closed successfully.');
             
