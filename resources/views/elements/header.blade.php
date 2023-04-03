@@ -114,23 +114,23 @@
                                     {{ count(auth()->user()->unreadNotifications) }}
                                     </span>
                                 </a>
-                                <ul class="show-notification">
-                                    <li style="background: #fdfdfd">
-                                        <h6>Notifications</h6>
-                                        <label class="label label-danger">New</label>
-                                    </li>
+                                <ul class="show-notification" id="notification-list-popup">
+                                   
 
                                     @forelse(auth()->user()->unreadNotifications as $notification)
                                     <li>
-                                        <a href="" style="font-size: 12px">
-                                            {{ $notification->data['message'] }}
+                                        <a href="" style="font-size: 12px; padding: 0" class="text-left p-0">
+                                            {{ $notification->data['message'] }} <br>
                                         </a>
+                                        <small>
+                                            at {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y \a\t h:i a') }}
+                                        </small>
                                     </li>
                                     @if($loop->index > 8)
                                         @php break; @endphp
                                     @endif
                                     @empty
-                                    <li>No notification</li>
+                                    <li id="no-notification">No notification</li>
                                     @endforelse
                                     <li>
                                         <div class="d-flex justify-content-between">

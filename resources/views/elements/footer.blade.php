@@ -65,6 +65,23 @@
 
         console.log(notification.type)
 
+        let totalNotification = $("#notificationCount").text();
+        $("#notificationCount").text(parseInt(totalNotification) + 1);
+
+        $("#notification-list-popup").prepend(`
+            <li>
+                <a href="" style="font-size: 12px; padding: 0" class="text-left p-0">
+                    ${notification.message} <br>
+                </a>
+                <small>
+                    Recent
+                </small>
+            </li>
+
+            `);
+
+        $("#no-notification").hide();
+
         Toastify({
             text: notification.message,
             className: "info",
