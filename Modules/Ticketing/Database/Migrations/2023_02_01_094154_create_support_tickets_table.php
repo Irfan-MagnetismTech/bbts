@@ -30,7 +30,7 @@ return new class extends Migration
             $table->foreignIdFor(Thana::class);
             $table->foreignIdFor(Client::class);
             $table->string('ticket_no')->comment('format: YYMMDD-000001');
-            $table->foreignId('fr_composit_key')->comment('Clients Link ID');
+            $table->foreignId('fr_composite_key')->comment('Clients Link ID');
             $table->dateTime('complain_time');
             $table->text('description')->nullable();
             $table->foreignIdFor(SupportComplainType::class);
@@ -41,6 +41,7 @@ return new class extends Migration
             $table->foreignId('created_by')->constrained('users', 'id');
             $table->foreignId('updated_by')->nullable()->constrained('users', 'id');
             $table->foreignId('reopened_by')->nullable()->constrained('users', 'id');
+            $table->dateTime('reopening_date')->nullable();
             $table->dateTime('opening_date');
             $table->dateTime('closing_date')->nullable();
             $table->foreignId('closed_by')->nullable();

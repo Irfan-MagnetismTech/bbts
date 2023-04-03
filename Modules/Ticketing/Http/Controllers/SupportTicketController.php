@@ -162,12 +162,11 @@ class SupportTicketController extends Controller
         $complainTypes = (new BbtsGlobalService())->getComplainTypes();
         $ticketSources = (new BbtsGlobalService())->getTicketSources();
         $supportTicket->load(['clientDetail' => function($query) {
-            $query->select('id', 'client_id')->with(['client' => function($client) {
+            $query->select('id', 'client_id', 'fr_composite_key')->with(['client' => function($client) {
                 $client->select('id', 'name', 'email');
             }]);
         }]);
 
-        dd($supportTicket);
         $quickSolutions = SupportQuickSolution::get();
         $priorities = config('businessinfo.ticketPriorities');
         return view('ticketing::support-tickets.show', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities', 'quickSolutions'));
@@ -401,13 +400,13 @@ class SupportTicketController extends Controller
     public function closeTicket($supportTicketId) {
         $supportTicket = SupportTicket::findOrFail($supportTicketId);
         if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
-            return back()->withInput()->withErrors([
-                'message' => 'You cannot close this Ticket at this time.'
+            return redirect()->route('support-tickets.index')->withErrors([
+                'message' => 'You cannot close this Ticket at this time. Ticket No: '.$supportTicket->ticket_no
             ]);
         }
         if (!auth()->user()->hasAnyPermission(['support-ticket-close', 'support-ticket-super-close'])) {
-            return back()->withInput()->withErrors([
-                'message' => 'You do not have permission to close this ticket.'
+            return redirect()->route('support-tickets.index')->withErrors([
+                'message' => 'You do not have permission to close this ticket. Ticket No: '.$supportTicket->ticket_no
             ]);
         }
         return view('ticketing::support-tickets.close-ticket', compact('supportTicket'));
@@ -439,8 +438,81 @@ class SupportTicketController extends Controller
             
             DB::transaction(function() use($supportTicket, $info) {
                 $supportTicket->update($info);
+                $supportTicket->supportTicketLifeCycles()->create([
+                    'status' => 'Closed',
+                    'user_id' => auth()->user()->id,
+                    'remarks' => 'Ticket Closed by '.auth()->user()->name,
+                    'description' => $info['feedback_to_bbts'],
+                ]);
             });
-            return redirect()->back()->with('message', 'Ticket is marked as closed successfully.');
+
+            return redirect()->route('support-tickets.index')->with('message', 'Ticket is marked as closed successfully.');
+            
+        } catch (QueryException $e) {
+            return back()->withErrors([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function reopenTicket($supportTicketId) {
+        $supportTicket = SupportTicket::findOrFail($supportTicketId);
+
+        $closingDate = $supportTicket->closing_date;
+        $currentTime = \Carbon\Carbon::now();
+        $minutesDiff = $currentTime->diffInMinutes($closingDate);
+
+        if($supportTicket->status == 'Pending' || $supportTicket->status == 'Approved' || $minutesDiff > (60*24)) {
+            return redirect()->route('support-tickets.index')->withErrors([
+                'message' => 'You cannot reopen this Ticket. Ticket No: '.$supportTicket->ticket_no
+            ]);
+        }
+
+        if (!auth()->user()->hasPermissionTo('support-ticket-reopen')) {
+            return redirect()->route('support-tickets.index')->withErrors([
+                'message' => 'You do not have permission to reopen this ticket. Ticket No: '.$supportTicket->ticket_no
+            ]);
+        }
+
+
+        return view('ticketing::support-tickets.reopen-ticket', compact('supportTicket'));
+    }
+
+    public function processReopenTicket(Request $request, $supportTicketId) {
+        $supportTicket = SupportTicket::findOrFail($supportTicketId);
+
+        $closingDate = $supportTicket->closing_date;
+        $currentTime = \Carbon\Carbon::now();
+        $minutesDiff = $currentTime->diffInMinutes($closingDate);
+
+        if($supportTicket->status != 'Closed' || $minutesDiff > (60*24)) {
+            return back()->withInput()->withErrors([
+                'message' => 'You cannot reopen this Ticket at this time.'
+            ]);
+        }
+        if (!auth()->user()->hasAnyPermission(['support-ticket-reopen'])) {
+            return back()->withInput()->withErrors([
+                'message' => 'You cannot reopen this ticket.'
+            ]);
+        }
+        
+        try {
+            DB::transaction(function() use($supportTicket, $request) {
+                $supportTicket->update([
+                    'status' => 'Reopen',
+                    'reopened_by' => auth()->user()->id,
+                    'reopening_date' => Carbon::now(),
+                ]);
+
+                $supportTicket->supportTicketLifeCycles()->create([
+                    'status' => 'Reopen',
+                    'user_id' => auth()->user()->id,
+                    'remarks' => 'Ticket Reopened by '.auth()->user()->name,
+                    'description' => $request->remarks,
+                ]);
+            });
+
+            return redirect()->route('support-tickets.index')->with('message', 'Ticket is reopened successfully.');
             
         } catch (QueryException $e) {
             return back()->withErrors([

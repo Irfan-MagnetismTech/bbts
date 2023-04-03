@@ -54,4 +54,8 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::get('close-ticket/{supportTicketId}', [SupportTicketController::class, 'closeTicket'])->name('close-ticket');
     Route::post('process-close-ticket/{supportTicketId}', [SupportTicketController::class, 'processCloseTicket'])->name('process-close-ticket');
     
+    Route::get('reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'reopenTicket'])->name('reopen-ticket');
+    Route::post('process-reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'processReopenTicket'])->name('process-reopen-ticket');
+
+
 });
