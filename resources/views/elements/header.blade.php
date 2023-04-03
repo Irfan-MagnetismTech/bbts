@@ -107,6 +107,39 @@
                         <ul class="nav-right">
                             {{-- header-notification --}}
                             {{-- comments --}}
+                            <li class="header-notification">
+                                <a href="#!">
+                                    <i class="ti-bell" style="font-size: 24px"></i>
+                                    <span class="badge bg-c-pink" style="top: 5px" id="notificationCount">
+                                    {{ count(auth()->user()->unreadNotifications) }}
+                                    </span>
+                                </a>
+                                <ul class="show-notification">
+                                    <li style="background: #fdfdfd">
+                                        <h6>Notifications</h6>
+                                        <label class="label label-danger">New</label>
+                                    </li>
+
+                                    @forelse(auth()->user()->unreadNotifications as $notification)
+                                    <li>
+                                        <a href="" style="font-size: 12px">
+                                            {{ $notification->data['message'] }}
+                                        </a>
+                                    </li>
+                                    @if($loop->index > 8)
+                                        @php break; @endphp
+                                    @endif
+                                    @empty
+                                    <li>No notification</li>
+                                    @endforelse
+                                    <li>
+                                        <div class="d-flex justify-content-between">
+                                            <a href="" class="btn btn-primary">Mark all as read</a>
+                                            <a href="{{ route('all-notifications') }}" class="btn btn-info">See all notification</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
                             <li class="user-profile header-notification">
                                 <a href="#">
                                     {{-- <img src="../files/assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image"> --}}

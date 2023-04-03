@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserControllerCopy;
 use App\Http\Controllers\CommonApiController;
+use App\Http\Controllers\DashboardController;
 use Modules\Admin\Http\Controllers\AuthController;
 
 /*
@@ -48,6 +49,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-indent-no', [CommonApiController::class, 'searchIndentNo'])->name('searchIndentNo');
     Route::get('search-cs-no/{supplierId}', [CommonApiController::class, 'searchCsNo'])->name('searchCsNo');
     Route::get('search-support-ticket', [CommonApiController::class, 'getSupportTicket'])->name('search-support-ticket');
+
+    Route::get('all-notifications', [DashboardController::class, 'allNotifications'])->name('all-notifications');
 
 });
 
