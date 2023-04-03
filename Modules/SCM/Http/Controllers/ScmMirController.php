@@ -233,11 +233,11 @@ class ScmMirController extends Controller
                     $query->where('wcr_no', 'like', '%' . request()->search . '%');
                 });
             })
-            ->take(10)
             ->get()
             ->unique(function ($item) {
                 return $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no;
             })
+            ->take(10)
             ->map(fn ($item) => [
                 'value' => $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no,
                 'label' => $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no,
@@ -252,14 +252,51 @@ class ScmMirController extends Controller
     public function mrsAndTypeWiseMaterials()
     {
         $data['materials'] = StockLedger::query()
-            ->with('material', 'brand')
+            ->with('material')
             ->whereIn('material_id', function ($q) {
                 return $q->select('material_id')
                     ->from('scm_requisition_details')
                     ->where('scm_requisition_id', request()->scm_requisition_id);
             })
             ->where(['receivable_id' => request()->receivable_id, 'received_type' => request()->received_type])
-            ->get();
+            ->get()
+            ->unique('material_id')
+            ->values()
+            ->all();
+
+        return response()->json($data);
+    }
+
+    public function materialWiseBrands()
+    {
+        $data['brands'] = StockLedger::query()
+            ->with('brand')
+            ->where([
+                'material_id' => request()->material_id,
+                'receivable_id' => request()->receivable_id,
+                'received_type' => request()->received_type
+            ])
+            ->get()
+            ->unique('brand_id')
+            ->values()
+            ->all();
+
+        return response()->json($data);
+    }
+
+    public function brandWiseModels()
+    {
+        $data['options'] = StockLedger::query()
+            ->where([
+                'material_id' => request()->material_id,
+                'brand_id' => request()->brand_id,
+                'receivable_id' => request()->receivable_id,
+                'received_type' => request()->received_type
+            ])
+            ->get()
+            ->unique('model')
+            ->values()
+            ->all();
 
         return response()->json($data);
     }

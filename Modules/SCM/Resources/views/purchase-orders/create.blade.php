@@ -524,7 +524,7 @@
 
                             <td>
                                 <select class="form-control brand_name select2" name="brand_id[]">
-                                    <option value="" readonly selected>Select Material</option>
+                                    <option value="" readonly selected>Select Brand</option>
 
                                 </select>
                             </td>

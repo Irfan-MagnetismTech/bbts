@@ -159,3 +159,48 @@ function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
         });
     });
 }
+
+/**
+ * Ajax dependent dropdown with select2
+ * Example Usage from Blade:
+ * populateDropdownByAjax("{{ route('searchPopByBranch') }}", {branch_id: $('#branch_id').val()}, '#thana_id', 'id', 'text')
+ * @param {*} url
+ * @param {*} data
+ * @param {*} dropdownSelector
+ * @param {*} valueColumn
+ * @param {*} labelColumn
+ *
+ */
+function populateDropdownByAjax(
+    url,
+    data,
+    dropdownSelector,
+    valueColumn,
+    labelColumn
+) {
+    $.ajax({
+        url: url,
+        type: "get",
+        dataType: "json",
+        data: data,
+        success: function (data) {
+            console.log(data);
+            let dropdown = $(dropdownSelector);
+            dropdown.empty();
+            dropdown.append("<option selected disabled>Select Option</option>");
+            dropdown.prop("selectedIndex", 0);
+            data.options.map(function (item) {
+                value = item.hasOwnProperty(valueColumn)
+                    ? item[valueColumn]
+                    : null;
+                label = item.hasOwnProperty(labelColumn)
+                    ? item[labelColumn]
+                    : null;
+                dropdown.append(
+                    $("<option></option>").attr("value", value).text(value)
+                );
+            });
+            dropdown.select2();
+        },
+    });
+}

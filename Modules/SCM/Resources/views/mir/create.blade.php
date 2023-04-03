@@ -128,14 +128,11 @@
             <tr>
                 <th>Received Type</th>
                 <th>Type No</th>
-                <th>Serial/Drum Code <br /> No</th>
                 <th>Material Name</th>
-                <th>Opening Balance</th>
+                {{-- <th>Opening Balance</th> --}}
                 <th>Brand</th>
                 <th>Model</th>
                 <th>Unit</th>
-                <th>Initial Mark</th>
-                <th>Final Mark</th>
                 <th>Avaliable Qty</th>
                 <th>Issued Qty</th>
                 <th>Remarks</th>
@@ -397,32 +394,27 @@
                                 <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
                             </td>
                             <td class="form-group">
-                                <select class="form-control serial_code select2" name="serial_code[]" multiple="multiple">                      
+                                <select class="form-control material_name select2" name="material_name[]">
+                                    <option value="" readonly selected>Select Material</option>                  
                                 </select>
                                 <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
                                 <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
+                            </td>                            
+                            <td>
+                                <select class="form-control brand select2" name="brand[]">
+                                    <option value="" readonly selected>Select Brand</option>
+
+                                </select>
                             </td>
                             <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="opening_balance[]" class="form-control opening_balance" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="brand[]" class="form-control brand" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" readonly>
+                                <select class="form-control model select2" name="model[]">
+                                    <option value="" readonly selected>Select Model</option>
+
+                                </select>
                             </td>
                             <td>
                                 <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                            </td>                                                  
+                            </td>                                            
                             <td>
                                 <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" readonly>
                             </td>
@@ -502,22 +494,16 @@
                     success: function(data) {
                         let dropdown;
 
-                        dropdown = event_this.find('.serial_code');
+                        dropdown = event_this.find('.material_name');
                         dropdown.empty();
                         dropdown.append('<option selected disabled>Select Material</option>');
                         dropdown.prop('selectedIndex', 0);
                         data.materials.map(function(item) {
-                            console.log(item)
                             dropdown.append($('<option></option>')
                                 .attr('value', item.material.id)
-                                .attr('data-material_name', item.material.name)
-                                .attr('data-brand', item.brand.name)
-                                .attr('data-model', item.model)
                                 .attr('data-unit', item.unit)
                                 .attr('data-type', item.material.type)
-                                .attr('data-initial_mark', item.initial_mark)
-                                .attr('data-final_mark', item.final_mark)
-                                .text(item.material.name + '-' + item.serial_code)
+                                .text(item.material.name)
                             )
                         });
                         dropdown.select2()
@@ -525,43 +511,64 @@
                 })
             }
 
-            $(document).on('change', '.serial_code', function() {
+            $(document).on('change', '.material_name', function() {
+                console.log('material_name')
+                var event_this = $(this).closest('tr');
+                let material_id = $(this).val();
+                let scm_requisition_id = $('#scm_requisition_id').val();
+                let received_type = event_this.find('.received_type').val().toUpperCase();
+                let receivable_id = event_this.find('.type_id').val();
+                $.ajax({
+                    url: "{{ route('materialWiseBrands') }}",
+                    type: 'get',
+                    dataType: "json",
+                    data: {
+                        material_id: material_id,
+                        received_type: received_type,
+                        receivable_id: receivable_id,
+                    },
+                    success: function(data) {
+                        let dropdown;
+
+                        dropdown = event_this.find('.brand');
+                        dropdown.empty();
+                        dropdown.append('<option selected disabled>Select Brand</option>');
+                        dropdown.prop('selectedIndex', 0);
+                        console.log(data)
+                        data.brands.map(function(item) {
+                            dropdown.append($('<option></option>')
+                                .attr('value', item.brand.id)
+                                .text(item.brand.name)
+                            )
+                        });
+                        dropdown.select2()
+                    }
+                })
+            })
+
+            $(document).on('change', '.brand', function() {
+                var event_this = $(this).closest('tr');
+                let brand_id = $(this).val();
+                let material_id = event_this.find('.material_name').val();
+                let scm_requisition_id = $('#scm_requisition_id').val();
+                let received_type = event_this.find('.received_type').val().toUpperCase();
+                let receivable_id = event_this.find('.type_id').val();
+                let model = $(this).closest('tr').find('.model');
+
+                populateDropdownByAjax("{{ route('brandWiseModels') }}", {
+                    brand_id: brand_id,
+                    material_id: material_id,
+                    received_type: received_type,
+                    receivable_id: receivable_id
+                }, model, 'model', 'model');
+            });
+
+            $(document).on('change', '.material_name', function() {
                 var elemmtn = $(this);
-                let global_fianl_mark = $(this).find(':selected').data('final_mark');
-                let material_name = (elemmtn).find(':selected').data('material_name');
-                let brand = (elemmtn).find(':selected').data('brand');
-                let model = (elemmtn).find(':selected').data('model');
                 let unit = (elemmtn).find(':selected').data('unit');
                 let type = $(this).find(':selected').data('type');
-                let initial_mark = $(this).find(':selected').data('initial_mark');
-                let final_mark = global_fianl_mark;
 
-                (elemmtn).closest('tr').find('.material_name').val(material_name);
-                (elemmtn).closest('tr').find('.brand').val(brand);
-                (elemmtn).closest('tr').find('.model').val(model);
                 (elemmtn).closest('tr').find('.unit').val(unit);
-
-                (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
-                (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
-                if (type == 'Drum') {
-                    (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(initial_mark);
-                    (elemmtn).closest('tr').find('.final_mark').attr('readonly', false).val(final_mark);
-                    $(document).on('keyup', '.final_mark', function() {
-                        var elemmtn = $(this);
-                        let initial_mark = (elemmtn).closest('tr').find('.initial_mark').val();
-                        let final_mark = (elemmtn).closest('tr').find('.final_mark').val();
-                        if (final_mark < initial_mark) {
-                            alert('Final Mark can not be smaller than Initial Mark');
-                            (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
-                        } else if (final_mark > global_fianl_mark) {
-                            alert('Final Mark can not be bigger than ' + global_fianl_mark);
-                            (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
-                        }
-                    })
-                } else {
-                    (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
-                    (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
-                };
 
                 $.ajax({
                     url: "{{ route('getMaterialStock') }}",
@@ -574,8 +581,6 @@
                         type: type
                     },
                     success: function(data) {
-                        // (elemmtn).closest('tr').find('.stock').val(data.stock);
-                        console.log(data);
                         (elemmtn).closest('tr').find('.opening_balance').val(data
                             .to_branch_balance);
                         (elemmtn).closest('tr').find('.avaiable_quantity').val(data
@@ -585,58 +590,14 @@
             })
 
             /* Adds and removes quantity row on click */
-            $("#material_requisition")
-                .on('click', '.add-requisition-row', () => {
-                    appendCalculationRow();
-                })
-                .on('click', '.remove-requisition-row', function() {
-                    $(this).closest('tr').remove();
-                }); {
-                let purchase_order_id = $("#purchase_order_id").val();
-                if (purchase_order_id) {
-                    const url = '{{ url('scm/get_materials_for_po') }}/' + purchase_order_id;
-                    let dropdown;
-
-                    $('.material_name').each(function() {
-                        dropdown = $(this).closest('tr').find('.material_name');
-                    });
-                    dropdown.empty();
-                    dropdown.append('<option selected disabled>Select Material</option>');
-                    dropdown.prop('selectedIndex', 0);
-
-                    $.getJSON(url, function(items) {
-                        $.each(items, function(key, data) {
-                            dropdown.append($(`<option>Select Material</option>`)
-                                .attr('value', data.material_id)
-                                .text(data.material.name + " - " + data.material
-                                    .code));
-                        })
-                    });
+            $("#material_requisition").on('click', '.add-requisition-row', () => {
+                appendCalculationRow();
+            }).on('click', '.remove-requisition-row', function() {
+                if ($('#material_requisition tbody tr').length == 1) {
+                    return false;
                 }
-            };
-
-            $(document).on('keyup', '.unit_price, .quantity', function() {
-                var unit_price = $(this).closest('tr').find('.unit_price').val();
-                var quantity = $(this).closest('tr').find('.quantity').val();
-                var amount = unit_price * quantity;
-                $(this).closest('tr').find('.amount').val(amount);
-                calculateTotalAmount()
-
-                //function for calculate total amount from all sub total amount
-                function calculateTotalAmount() {
-                    var final_total_amount = 0;
-                    $('.amount').each(function() {
-                        final_total_amount += parseFloat($(this).val());
-                    });
-                    $('.total_amount').val(final_total_amount.toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    }));
-                }
+                $(this).closest('tr').remove();
             });
-
         })
-
-        /*****/
     </script>
 @endsection
