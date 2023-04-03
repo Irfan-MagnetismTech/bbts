@@ -2,11 +2,13 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
-use App\Services\EmailService;
+use App\Notifications\TicketMovementNotification;
 use App\Services\SmsService;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use App\Services\EmailService;
 use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Notification;
 use Modules\Ticketing\Entities\SupportTicket;
 
 class NotifyClientController extends Controller
@@ -54,6 +56,14 @@ class NotifyClientController extends Controller
         } else {
             return back()->with('error', 'Something went wrong. Please try again.');
         }
+
+    }
+
+    public function notificationTest($supportTicketId) {
+        $supportTicket = SupportTicket::findOrFail($supportTicketId);
+        $users = auth()->user();
+        $message = "Ticket ".$supportTicket->ticket_no.' ossu';
+        Notification::send($users, new TicketMovementNotification($supportTicket, 'backward', auth()->user()->id, $message));
 
     }
 }

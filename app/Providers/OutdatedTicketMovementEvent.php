@@ -26,7 +26,6 @@ class TicketMovementEvent implements ShouldBroadcast
         $this->message = $message;
         $this->userId = $notificationReceiver->id;
         $this->type = $type;
-        info($message);
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
-use App\Providers\TicketMovementEvent;
 use Illuminate\Http\Request;
 use App\Services\EmailService;
 use Modules\Admin\Entities\User;
@@ -15,8 +14,10 @@ use Illuminate\Database\QueryException;
 use Spatie\Permission\Models\Permission;
 use Modules\Ticketing\Entities\SupportTeam;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Notification;
 use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Entities\TicketMovement;
+use App\Notifications\TicketMovementNotification;
 use Modules\Ticketing\Entities\SupportTeamMember;
 
 class TicketMovementController extends Controller
@@ -180,7 +181,6 @@ class TicketMovementController extends Controller
                   $q1->whereIn('name', $mailPermissionNames);
                 });
               })->get();
-
             
             $inAppNotificationPermissions = [
                 'receive-in-app-notification-when-ticket-forwarded'
@@ -223,10 +223,13 @@ class TicketMovementController extends Controller
                     (new EmailService())->sendEmail($mailReceiver->email, null, $mailReceiver->name, $subject, $message);
                 }
 
-                foreach($notificationReceivers as $notificationReceiver) {
-                    $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$supportTeam->first()->department->name.'.';
-                    TicketMovementEvent::dispatch($message, $notificationReceiver, 'forward');
-                }
+                $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$supportTeam->first()->department->name.'.';
+
+                $notificationReceivers = $notificationReceivers->reject(function ($user) {
+                    return $user->id === auth()->user()->id;
+                });
+                Notification::send($notificationReceivers, new TicketMovementNotification($supportTicket, 'forward', $message));
+
 
                 return redirect()->back()->with('message', $remarks);
     
@@ -236,7 +239,7 @@ class TicketMovementController extends Controller
             }
         } catch (\Throwable $th) {
             return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
-            // return redirect()->back()->withInput()->withErrors($th->getMessage());
+            return redirect()->back()->withInput()->withErrors($th->getMessage());
         }
 
     }
@@ -305,20 +308,22 @@ class TicketMovementController extends Controller
                     (new EmailService())->sendEmail($mailReceiver->email, null, $mailReceiver->name, $subject, $message);
                 }
 
+                $authorizedMember = User::findOrFail($authorizedMember->user_id);
                 if ($authorizedMember->hasPermissionTo('receive-in-app-notification-when-ticket-backwarded')) {
                     $notificationMessage = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' from '.auth()->user()->name.'.';
-                    $notificationReceiver = User::where('id', $authorizedMember->user_id)->first();
-                    TicketMovementEvent::dispatch($notificationMessage, $notificationReceiver, 'backward');
+                    Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'backward', $notificationMessage));
                 }
     
                 return redirect()->back()->with('message', $remarks);
     
             } catch (QueryException $e) {
-                return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
+                // return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
+                return redirect()->back()->withInput()->withErrors($e->getMessage());
             }
 
         } catch (\Throwable $th) {
-            return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
+            // return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
+            return redirect()->back()->withInput()->withErrors($th->getMessage());
         }
     }
 
@@ -361,7 +366,7 @@ class TicketMovementController extends Controller
 
             if ($authorizedMember->hasPermissionTo('receive-in-app-notification-when-ticket-forwarded-ticket-accepted')) {
                 $notificationMessage = 'Ticket: '.$movement->supportTicket->ticket_no.' accepted by '.$authorizedMember->name.'.';
-                TicketMovementEvent::dispatch($notificationMessage, $authorizedMember, 'forwardAccepted');
+                Notification::send($authorizedMember, new TicketMovementNotification($movement->supportTicket, 'backward', $notificationMessage));
             }
         
             return redirect()->back()->with('message', 'Support Ticket Accepted Successfully.');
@@ -437,19 +442,19 @@ class TicketMovementController extends Controller
 
                 if ($authorizedMember->hasPermissionTo('receive-in-app-notification-when-ticket-handovered')) {
                     $notificationMessage = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$authorizedMember->name.'.';
-                    TicketMovementEvent::dispatch($notificationMessage, $authorizedMember, 'handover');
+                    Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'handover', $notificationMessage));
                 }
     
                 return redirect()->back()->with('message', $remarks);
     
             } catch (QueryException $e) {
-                // return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
-                return redirect()->back()->withInput()->withErrors($e->getMessage());
+                return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
+                // return redirect()->back()->withInput()->withErrors($e->getMessage());
             }
 
         } catch (\Throwable $th) {
-            // return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
-            return redirect()->back()->withInput()->withErrors($th->getMessage());
+            return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
+            // return redirect()->back()->withInput()->withErrors($th->getMessage());
         }
     }
 

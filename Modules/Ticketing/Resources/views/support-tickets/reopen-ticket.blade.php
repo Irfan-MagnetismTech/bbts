@@ -26,9 +26,8 @@
                 <form
                 action="{{ (!empty($supportTicket)) ? route('process-reopen-ticket', ['supportTicketId' => $supportTicket->id]) : '' }}"
                 method="post" class="custom-form">
-                
                     @method('POST')
-                @csrf
+                    @csrf
                 
                     <div class="row mx-auto">
                         <div class="form-group col-8 mx-auto">

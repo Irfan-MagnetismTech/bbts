@@ -61,11 +61,12 @@
 <script>
 
     let userId = '{{ auth()->user()->id }}';
-    Echo.private(`App.Models.User.${userId}`).listen('.ticket-movement-event', (e) => {
-        // let data = JSON.parse(e.data.message);
+    Echo.private(`Modules.Admin.Entities.User.${userId}`).notification((notification) => {
+
+        console.log(notification.type)
 
         Toastify({
-            text: e.message,
+            text: notification.message,
             className: "info",
             style: {
                 background: "linear-gradient(to right, #5bffe9, #007af5)",
