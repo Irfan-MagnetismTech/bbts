@@ -22,7 +22,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse(auth()->user()->unreadNotifications as $notification)
+                                            @forelse(auth()->user()->notifications as $notification)
                                             <tr>
                                                 <td>{{ $loop->index+1 }}</td>
                                                 <td class="text-left">

@@ -51,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-support-ticket', [CommonApiController::class, 'getSupportTicket'])->name('search-support-ticket');
 
     Route::get('all-notifications', [DashboardController::class, 'allNotifications'])->name('all-notifications');
+    Route::get('read-all-notification', [DashboardController::class, 'readAllNotification'])->name('read-all-notification');
 
 });
 

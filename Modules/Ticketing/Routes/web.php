@@ -57,6 +57,4 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::get('reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'reopenTicket'])->name('reopen-ticket');
     Route::post('process-reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'processReopenTicket'])->name('process-reopen-ticket');
 
-    Route::get('notification-test/{supportTicketId}', [NotifyClientController::class, 'notificationTest'])->name('notification-test');
-
 });

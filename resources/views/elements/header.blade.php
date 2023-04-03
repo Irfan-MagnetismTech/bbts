@@ -134,7 +134,7 @@
                                     @endforelse
                                     <li>
                                         <div class="d-flex justify-content-between">
-                                            <a href="" class="btn btn-primary">Mark all as read</a>
+                                            <a href="{{ route('read-all-notification') }}" class="btn btn-primary">Mark all as read</a>
                                             <a href="{{ route('all-notifications') }}" class="btn btn-info">See all notification</a>
                                         </div>
                                     </li>

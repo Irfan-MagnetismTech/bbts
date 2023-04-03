@@ -59,11 +59,5 @@ class NotifyClientController extends Controller
 
     }
 
-    public function notificationTest($supportTicketId) {
-        $supportTicket = SupportTicket::findOrFail($supportTicketId);
-        $users = auth()->user();
-        $message = "Ticket ".$supportTicket->ticket_no.' ossu';
-        Notification::send($users, new TicketMovementNotification($supportTicket, 'backward', auth()->user()->id, $message));
-
-    }
+    
 }
