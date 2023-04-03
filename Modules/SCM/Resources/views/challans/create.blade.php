@@ -174,23 +174,21 @@
                 </div>
             </div>
 
-            <table class="table table-bordered" id="material_requisition">
+            <table class="table table-bordered" id="challan">
                 <thead>
                     <tr>
                         <th>Received Type</th>
                         <th>Type No</th>
                         <th>Serial/Drum Code <br /> No</th>
                         <th>Material Name</th>
-                        <th>Opening Balance</th>
                         <th>Brand</th>
                         <th>Model</th>
                         <th>Initial Mark</th>
                         <th>Final Mark</th>
                         <th>Unit</th>
-                        <th>Avaliable Qty</th>
                         <th>Issued Qty</th>
                         <th>Remarks</th>
-                        <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
+                        <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -309,7 +307,7 @@
                                     value="{{ $amount[$key] }}">
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
                             </td>
                         </tr>
                     @endforeach
@@ -368,9 +366,6 @@
                                 <input type="text" name="material_name[]" class="form-control material_name" readonly>
                             </td>
                             <td>
-                                <input type="text" name="opening_balance[]" class="form-control opening_balance" readonly>
-                            </td>
-                            <td>
                                 <input type="text" name="brand[]" class="form-control brand" readonly>
                             </td>
                             <td>
@@ -384,10 +379,7 @@
                             </td>
                             <td>
                                 <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                            </td>                                                  
-                            <td>
-                                <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
-                            </td>
+                            </td> 
                             <td>
                                 <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10">
                             </td>
@@ -395,19 +387,19 @@
                                 <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
                             </td>
                         </tr>
                     `;
-            $('#material_requisition tbody').append(row);
+            $('#challan tbody').append(row);
         }
 
         /* Adds and removes quantity row on click */
-        $("#material_requisition")
-            .on('click', '.add-requisition-row', () => {
+        $("#challan")
+            .on('click', '.add-challan-row', () => {
                 appendCalculationRow();
             })
-            .on('click', '.remove-calculation-row', function() {
+            .on('click', '.remove-challan-row', function() {
                 $(this).closest('tr').remove();
             });
 
@@ -453,32 +445,7 @@
 
        
 
-        //Search Material
-        $(document).on('keyup focus', '.material_name', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-material') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $(this).closest('tr').find('.material_name').val(ui.item.label);
-                    $(this).closest('tr').find('.material_id').val(ui.item.value);
-                    $(this).closest('tr').find('.item_code').val(ui.item.item_code);
-                    $(this).closest('tr').find('.unit').val(ui.item.unit);
-                    return false;
-                }
-            });
-
-        });
+       
 
         $(function() {
             onChangeRadioButton();
@@ -639,6 +606,7 @@
                         to_branch: $('#to_branch_id').val(),
                     },
                     success: function(data) {
+                        console.log(data);
                         let dropdown;
 
                         dropdown = event_this.find('.serial_code');
