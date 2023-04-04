@@ -49,6 +49,7 @@ return new class extends Migration
             $table->text('feedback_to_bbts')->nullable();
             $table->text('feedback_to_client')->nullable();
             $table->text('clients_feedback')->nullable();
+            $table->text('clients_feedback_details')->nullable();
             $table->text('clients_feedback_url')->nullable();
             $table->bigInteger('current_authorized_person')->nullable();
             $table->tinyInteger('mailNotification')->nullable();

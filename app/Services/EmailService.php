@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailService extends Controller
 {
-    public function sendEmail($to, $cc = null, $receiver = null, $subject, $message) {
+    public function sendEmail($to, $cc = null, $receiver = null, $subject, $message, $button = null) {
 
         try {
             return Mail::to($to)
             ->cc($cc)
-            ->send(new ClientEmail($subject, $message, $receiver));
+            ->send(new ClientEmail($subject, $message, $receiver, $button));
         } catch (\Throwable $th) {
             return true;
         }

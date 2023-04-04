@@ -2,6 +2,7 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
 use App\Services\EmailService;
@@ -16,9 +17,10 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Notification;
 use Modules\Ticketing\Entities\SupportTicket;
 use function PHPUnit\Framework\throwException;
-use Modules\Ticketing\Entities\TicketMovement;
 
+use Modules\Ticketing\Entities\TicketMovement;
 use App\Notifications\TicketMovementNotification;
+use Carbon\Carbon as CarbonCarbon;
 use Modules\Ticketing\Entities\SupportTeamMember;
 use Modules\Ticketing\Entities\SupportQuickSolution;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
@@ -419,6 +421,16 @@ class SupportTicketController extends Controller
     public function processCloseTicket(Request $request, $supportTicketId) {
         $supportTicket = SupportTicket::findOrFail($supportTicketId);
 
+
+        $closingDate = Carbon::parse($request->closing_date);
+        $now = Carbon::now();
+
+        if ($closingDate->diffInMinutes($now, false) < 0) {
+            return redirect()->back()->withInput()->withErrors([
+                'message' => 'You cannot just close the ticket in future time.'
+            ]);
+        }
+
         $info = $request->only(['closing_date', 'feedback_to_client', 'feedback_to_bbts']);
         $info['closed_by'] = auth()->user()->id;
         $info['status'] = 'Closed';
@@ -441,6 +453,8 @@ class SupportTicketController extends Controller
                 $info['is_temporary_close'] = 1;
             }
             
+            $info['clients_feedback_url'] = Str::random(40);
+
             DB::transaction(function() use($supportTicket, $info) {
                 $supportTicket->update($info);
                 $supportTicket->supportTicketLifeCycles()->create([
@@ -451,14 +465,21 @@ class SupportTicketController extends Controller
                 ]);
             });
 
-            $subject = "[$supportTicket->ticket_no] closed.";
+            $subject = "Your Ticket: $supportTicket->ticket_no is closed.";
             $message = "Your Ticket $supportTicket->ticket_no is now resolved.";
+            $message .= "<br /> ".$info['feedback_to_client'];
+            $message .= "<br /> You can provide feedback by clicking the following button.";
+            $button = [
+                'url' => url('/provide-feedback')."/".$info['clients_feedback_url'],
+                'text' => 'Provide Feedback',
+            ];
+
             $receiver = $supportTicket?->clientDetail?->client?->name;
         
 
             if($request->mailNotification == 1) {
                 $to = $supportTicket?->clientDetail?->client?->email;
-                $notificationError = (new EmailService())->sendEmail($to, $cc = null, $receiver, $subject, $message);
+                $notificationError = (new EmailService())->sendEmail($to, $cc = null, $receiver, $subject, $message, $button);
             }
             if($request->smsNotification == 1) {
                 $to = $supportTicket?->clientDetail?->client?->mobile;
