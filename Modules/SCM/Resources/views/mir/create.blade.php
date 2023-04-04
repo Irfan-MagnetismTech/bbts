@@ -396,21 +396,16 @@
                             </td>
                             <td class="form-group">
                                 <select class="form-control material_name select2" name="material_name[]">
-                                    <option value="" readonly selected>Select Material</option>                  
                                 </select>
                                 <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
                                 <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
                             </td>                            
                             <td>
                                 <select class="form-control brand select2" name="brand[]">
-                                    <option value="" readonly selected>Select Brand</option>
-
                                 </select>
                             </td>
                             <td>
                                 <select class="form-control model select2" name="model[]">
-                                    <option value="" readonly selected>Select Model</option>
-
                                 </select>
                             </td>
                             <td>
@@ -443,7 +438,7 @@
 
             $(document).on('keyup', '.type_no', function() {
                 var event_this = $(this).closest('tr');
-                ClearNext($(this));
+                clearNext($(this));
                 let myObject = {
                     type: event_this.find('.received_type').val().toUpperCase(),
                 }
@@ -457,17 +452,16 @@
                 }
             })
 
-            function ClearNext(selector) {
-                let sib = $(selector).parent().nextAll('td');
-                // loop siblings
-                sib.each(function() {
+            function clearNext(selector) {
+                let siblings = $(selector).parent().nextAll('td');
+                siblings.each(function() {
                     $(this).find('input').val('');
                     $(this).find('select').empty();
                 });
             }
             $(document).on('change', '.received_type', function() {
                 var event_this = $(this).closest('tr');
-                ClearNext($(this));
+                clearNext($(this));
 
                 if ($('#from_branch_id').val() == '') {
                     $(this).val('');
@@ -512,7 +506,7 @@
 
             $(document).on('change', '.material_name', function() {
                 var event_this = $(this).closest('tr');
-                ClearNext($(this));
+                clearNext($(this));
                 let material_id = $(this).val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
                 let received_type = event_this.find('.received_type').val().toUpperCase();
@@ -528,7 +522,7 @@
 
             $(document).on('change', '.brand', function() {
                 var event_this = $(this).closest('tr');
-                ClearNext($(this));
+                clearNext($(this));
                 let brand_id = $(this).val();
                 let material_id = event_this.find('.material_name').val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
@@ -546,7 +540,7 @@
 
             $(document).on('change', '.model', function() {
                 var event_this = $(this).closest('tr');
-                ClearNext($(this));
+                clearNext($(this));
                 let model = $(this).val();
                 let material_id = event_this.find('.material_name').val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
@@ -566,7 +560,7 @@
                     brand_id: brand_id,
                     received_type: received_type,
                     receivable_id: receivable_id
-                }, serial_code, 'value', 'label');
+                }, serial_code, 'value', 'label', null, false);
             });
 
 

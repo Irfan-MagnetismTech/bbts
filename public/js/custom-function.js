@@ -134,7 +134,6 @@ function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
                         customQueryFields: customQueryFields[0],
                     },
                     success: function (data) {
-                        console.log(data);
                         if (data.length > 0) {
                             response(data);
                         } else {
@@ -178,7 +177,8 @@ function populateDropdownByAjax(
     dropdownSelector,
     valueColumn,
     labelColumn,
-    dataAttributes = null
+    dataAttributes = null,
+    selected = true
 ) {
     $.ajax({
         url: url,
@@ -186,10 +186,15 @@ function populateDropdownByAjax(
         dataType: "json",
         data: data,
         success: function (data) {
-            console.log(data);
             let dropdown = $(dropdownSelector);
             dropdown.empty();
             dropdown.prop("selectedIndex", 0);
+            if (selected) {
+                dropdown.append(
+                    "<option selected disabled>Select Option</option>"
+                );
+            }
+            
             data.options.map(function (item) {
                 value = item.hasOwnProperty(valueColumn)
                     ? item[valueColumn]
@@ -203,12 +208,6 @@ function populateDropdownByAjax(
                     .text(label);
 
                 for (let dataAttribute in dataAttributes) {
-                    console.log(
-                        "attrrrrr",
-                        dataAttribute,
-                        "item",
-                        item[dataAttribute]
-                    );
                     option.attr(
                         dataAttribute,
                         item[dataAttributes[dataAttribute]]
