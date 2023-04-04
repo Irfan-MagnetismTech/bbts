@@ -132,5 +132,20 @@
             </li>
         </ul>
     </li>
+    <li class="pcoded-hasmenu {{ request()->routeIs(['gate-passes.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+            <span class="pcoded-mtext">Gate Passes</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('gate-passes.create') ? 'active' : null }}">
+                <a href="{{ route('gate-passes.create') }}"> <span class="pcoded-micon"><i class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span class="pcoded-mcaret"></span></a>
+            </li>
+            <li class="{{ request()->routeIs('gate-passes.index') ? 'active' : null }}">
+                <a href="{{ route('gate-passes.index') }}"> <span class="pcoded-micon"><i class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li> 
     {{-- @endhasanyrole --}}
 </ul>

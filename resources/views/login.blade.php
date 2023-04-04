@@ -110,11 +110,11 @@
 <section class="p-fixed d-flex text-center" >
     
     <!-- Container-fluid starts -->
-    <div class="container">
+    <div class="container d-flex align-items-center justify-content-center">
         <div class="row">
             <div class="col-sm-12">
                 <!-- Authentication card start -->
-                <div class="card-block mr-auto ml-auto loginInfo" >
+                <div class="card-block mr-auto ml-auto" >
                     <form class="md-float-material" method="POST" action="{{ route('login') }}">
                         @csrf
                         <div style="background-color: #fff; border-radius: 20px; margin: 30px 0 0 0; padding: 10px; box-shadow: 0 2px 15px -2px #000;">

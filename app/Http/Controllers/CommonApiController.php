@@ -253,10 +253,9 @@ class CommonApiController extends Controller
         return response()->json($data);
     }
 
-    public function getSupportTeamMembers()
-    {
-        $teamId = request('search');
-        $team = SupportTeam::with('supportTeamMember.user')->where('id', $teamId)->first();
+    public function getSupportTeamMembers() {
+        $teamId = request('search');  
+        $team = SupportTeam::with('supportTeamMembers.user')->where('id', $teamId)->first();  
 
         if (auth()->user()->employee->branch_id != $team->branch_id) {
             abort(404);

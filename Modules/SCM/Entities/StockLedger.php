@@ -18,7 +18,7 @@ class StockLedger extends Model
 
     public function receivable()
     {
-        return $this->morphTo();
+        return $this->morphTo('receivable', 'receivable_type', 'receivable_id');
     }
 
     public function fiberTracking()

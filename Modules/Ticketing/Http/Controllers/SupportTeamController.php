@@ -31,7 +31,7 @@ class SupportTeamController extends Controller
                     },
                 ])->paginate(15);
 
-        // dd($teams->first()->supportTeamMember->first()->user);
+        // dd($teams->first()->supportTeamMembers->first()->user);
         return view('ticketing::teams.index', compact('teams'));
     }
 
@@ -79,7 +79,7 @@ class SupportTeamController extends Controller
                     ]);
                 }
                 
-                $team->supportTeamMember()->createMany($teamMembers);
+                $team->supportTeamMembers()->createMany($teamMembers);
             });
 
             return redirect()->route('support-teams.index')->with('message', 'Support Team Created Successfully');
@@ -149,8 +149,8 @@ class SupportTeamController extends Controller
                     ]);
                 }
                 
-                $supportTeam->supportTeamMember()->delete();
-                $supportTeam->supportTeamMember()->createMany($teamMembers);
+                $supportTeam->supportTeamMembers()->delete();
+                $supportTeam->supportTeamMembers()->createMany($teamMembers);
             });
 
             return redirect()->route('support-teams.index')->with('message', 'Support Team Updated Successfully');
