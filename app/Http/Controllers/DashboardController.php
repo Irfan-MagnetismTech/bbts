@@ -18,6 +18,10 @@ class DashboardController extends Controller
             $notification->markAsRead();
         }
 
-        return redirect()->back()->with('message', 'Notifications mark as read successfully.');
+        try {
+            return redirect()->back()->with('message', 'Notifications mark as read successfully.');
+        } catch (\Throwable $th) {
+            return redirect()->route('all-notifications')->with('message', 'Notifications mark as read successfully.');
+        }
     }
 }

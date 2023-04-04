@@ -427,6 +427,7 @@ class SupportTicketController extends Controller
                 'message' => 'You cannot close this Ticket at this time.'
             ]);
         }
+
         if (!auth()->user()->hasAnyPermission(['support-ticket-close', 'support-ticket-super-close'])) {
             return back()->withInput()->withErrors([
                 'message' => 'You cannot close this ticket.'
@@ -448,6 +449,20 @@ class SupportTicketController extends Controller
                     'description' => $info['feedback_to_bbts'],
                 ]);
             });
+
+            $subject = "[$supportTicket->ticket_no] closed.";
+            $message = "Your Ticket $supportTicket->ticket_no is now resolved.";
+            $receiver = $supportTicket?->clientDetail?->client?->name;
+        
+
+            if($request->mailNotification == 1) {
+                $to = $supportTicket?->clientDetail?->client?->email;
+                $notificationError = (new EmailService())->sendEmail($to, $cc = null, $receiver, $subject, $message);
+            }
+            if($request->smsNotification == 1) {
+                $to = $supportTicket?->clientDetail?->client?->mobile;
+                $notificationError = (new SmsService())->sendSms($to, $message);
+            }
 
             return redirect()->route('support-tickets.index')->with('message', 'Ticket is marked as closed successfully.');
             
