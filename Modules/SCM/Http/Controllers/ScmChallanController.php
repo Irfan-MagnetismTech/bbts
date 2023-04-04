@@ -39,8 +39,8 @@ class ScmChallanController extends Controller
             'own_use' => 'Own Use',
             'stolen' => 'Stolen',
         ];
-        $out_from = ['mrr', 'err', 'wcr'];
-        return view('scm::challans.create', compact('formType', 'brands', 'branchs', 'purposes', 'out_from'));
+        $received_type = ['mrr', 'err', 'wcr'];
+        return view('scm::challans.create', compact('formType', 'brands', 'branchs', 'purposes', 'received_type'));
     }
 
     /**
