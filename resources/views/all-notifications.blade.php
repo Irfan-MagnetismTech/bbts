@@ -26,7 +26,7 @@
                                             <tr>
                                                 <td>{{ $loop->index+1 }}</td>
                                                 <td class="text-left">
-                                                    <a href="">
+                                                    <a href="{{ route('support-tickets.show', ['support_ticket' => (isset($notification->data['supportTicketId']) ? $notification->data['supportTicketId'] : '#')]) }}">
                                                         {{ $notification->data['message'] }}
                                                     </a>
                                                 </td>

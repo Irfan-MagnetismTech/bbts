@@ -119,12 +119,13 @@
 
                                     @forelse(auth()->user()->unreadNotifications as $notification)
                                     <li>
-                                        <a href="" style="font-size: 12px; padding: 0" class="text-left p-0">
+                                        <a href="{{ route('support-tickets.show', ['support_ticket' => $notification->data['supportTicketId']]) }}" style="font-size: 12px; padding: 0" class="text-left p-0 d-block">
                                             {{ $notification->data['message'] }} <br>
+                                        
+                                            <small>
+                                                at {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y \a\t h:i a') }}
+                                            </small>
                                         </a>
-                                        <small>
-                                            at {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y \a\t h:i a') }}
-                                        </small>
                                     </li>
                                     @if($loop->index > 8)
                                         @php break; @endphp

@@ -6,19 +6,22 @@ use App\Services\SmsService;
 use Illuminate\Http\Request;
 use App\Services\EmailService;
 use Illuminate\Support\Carbon;
+use Modules\Admin\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\BbtsGlobalService;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\Ticketing\Entities\SupportQuickSolution;
-use Modules\Ticketing\Entities\SupportTeamMember;
+use Illuminate\Support\Facades\Notification;
 use Modules\Ticketing\Entities\SupportTicket;
-use Modules\Ticketing\Entities\TicketMovement;
-use Modules\Ticketing\Http\Requests\SupportTicketRequest;
-
 use function PHPUnit\Framework\throwException;
+use Modules\Ticketing\Entities\TicketMovement;
+
+use App\Notifications\TicketMovementNotification;
+use Modules\Ticketing\Entities\SupportTeamMember;
+use Modules\Ticketing\Entities\SupportQuickSolution;
+use Modules\Ticketing\Http\Requests\SupportTicketRequest;
 
 class SupportTicketController extends Controller
 {
@@ -462,7 +465,7 @@ class SupportTicketController extends Controller
         $currentTime = \Carbon\Carbon::now();
         $minutesDiff = $currentTime->diffInMinutes($closingDate);
 
-        if($supportTicket->status == 'Pending' || $supportTicket->status == 'Approved' || $minutesDiff > (60*24)) {
+        if($supportTicket->status != 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved' || $minutesDiff > (60*24)) {
             return redirect()->route('support-tickets.index')->withErrors([
                 'message' => 'You cannot reopen this Ticket. Ticket No: '.$supportTicket->ticket_no
             ]);
@@ -490,6 +493,7 @@ class SupportTicketController extends Controller
                 'message' => 'You cannot reopen this Ticket at this time.'
             ]);
         }
+
         if (!auth()->user()->hasAnyPermission(['support-ticket-reopen'])) {
             return back()->withInput()->withErrors([
                 'message' => 'You cannot reopen this ticket.'
@@ -511,6 +515,9 @@ class SupportTicketController extends Controller
                     'description' => $request->remarks,
                 ]);
             });
+            $notificationMessage = "Ticket ".$supportTicket->ticket_no." is reopened by ".auth()->user()->name;
+            $authorizedMember = User::findOrFail($supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id);
+            Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
 
             return redirect()->route('support-tickets.index')->with('message', 'Ticket is reopened successfully.');
             

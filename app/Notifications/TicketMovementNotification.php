@@ -49,14 +49,16 @@ class TicketMovementNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => $this->message
+            'message' => $this->message,
+            'supportTicketId' => $this->supportTicket->id
         ];
     }
 
     public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
-            'message' => $this->message
+            'message' => $this->message,
+            'supportTicketId' => $this->supportTicket->id
         ]);
     }
 

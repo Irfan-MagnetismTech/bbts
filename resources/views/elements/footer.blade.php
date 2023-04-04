@@ -70,12 +70,13 @@
 
         $("#notification-list-popup").prepend(`
             <li>
-                <a href="" style="font-size: 12px; padding: 0" class="text-left p-0">
+                <a href="{{ route('support-tickets.index') }}/${notification.supportTicketId}" style="font-size: 12px; padding: 0" class="text-left p-0 d-block">
                     ${notification.message} <br>
+                
+                    <small>
+                        Recent
+                    </small>
                 </a>
-                <small>
-                    Recent
-                </small>
             </li>
 
             `);
