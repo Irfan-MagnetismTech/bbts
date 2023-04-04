@@ -86,11 +86,12 @@ class SupportTicketController extends Controller
         $lastTicketOfThisMonth = SupportTicket::where('created_at', '>=', Carbon::now()->startOfMonth())
                                 ->orderBy('created_at', 'desc')
                                 ->first();
+
         if(empty($lastTicketOfThisMonth)) {
             $ticketIno = Carbon::now()->format('ymd').'-000001';
         } else {
-            $ticketIno = (int) substr($lastTicketOfThisMonth->ticket_no, 6) + 1; // substring 6 character because ymd takes 6 character space
-            $ticketIno = Carbon::now()->format('ymd').'-'.str_pad($ticketIno, 5, '0', STR_PAD_LEFT);
+            $ticketIno = (int) substr($lastTicketOfThisMonth->ticket_no, 7) + 1; // substring 6 character because ymd takes 6 character space
+            $ticketIno = Carbon::now()->format('ymd').'-'.str_pad($ticketIno, 6, '0', STR_PAD_LEFT);
         }
 
         $ticketInfo = $request->only([
