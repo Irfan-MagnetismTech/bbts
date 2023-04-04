@@ -11,6 +11,7 @@ Route::get('search-type-no', [ScmMirController::class, 'searchTypeNo'])->name('s
 Route::get('search-mrs--type-wise-aterials', [ScmMirController::class, 'mrsAndTypeWiseMaterials'])->name('mrsAndTypeWiseMaterials');
 Route::get('search-materialwise-brand', [ScmMirController::class, 'materialWiseBrands'])->name('materialWiseBrands');
 Route::get('search-brandwise-model', [ScmMirController::class, 'brandWiseModels'])->name('brandWiseModels');
+Route::get('search-modelwise-serial-code', [ScmMirController::class, 'modelWiseSerialCodes'])->name('modelWiseSerialCodes');
 Route::get('getMaterialStock', [ScmMirController::class, 'getMaterialStock'])->name('getMaterialStock');
 
 Route::resources([

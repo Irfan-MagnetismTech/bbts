@@ -132,6 +132,7 @@
                 {{-- <th>Opening Balance</th> --}}
                 <th>Brand</th>
                 <th>Model</th>
+                <th>Serial Code</th>
                 <th>Unit</th>
                 <th>Avaliable Qty</th>
                 <th>Issued Qty</th>
@@ -413,6 +414,11 @@
                                 </select>
                             </td>
                             <td>
+                                <select class="form-control serial_code select2" name="serial_code[]" multiple="multiple">
+
+                                </select>
+                            </td>
+                            <td>
                                 <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>                                            
                             <td>
@@ -435,15 +441,15 @@
                 });
             }
 
-            $(document).on('change keyup', '.type_no', function() {
+            $(document).on('keyup', '.type_no', function() {
                 var event_this = $(this).closest('tr');
+                ClearNext($(this));
                 let myObject = {
                     type: event_this.find('.received_type').val().toUpperCase(),
                 }
                 jquaryUiAjax('.type_no', "{{ route('searchTypeNo') }}", uiList, myObject);
 
                 function uiList(item) {
-                    console.log(item)
                     event_this.find('.type_no').val(item.label);
                     event_this.find('.type_id').val(item.id);
                     getMaterials(event_this)
@@ -451,8 +457,18 @@
                 }
             })
 
+            function ClearNext(selector) {
+                let sib = $(selector).parent().nextAll('td');
+                // loop siblings
+                sib.each(function() {
+                    $(this).find('input').val('');
+                    $(this).find('select').empty();
+                });
+            }
             $(document).on('change', '.received_type', function() {
                 var event_this = $(this).closest('tr');
+                ClearNext($(this));
+
                 if ($('#from_branch_id').val() == '') {
                     $(this).val('');
                     swal.fire({
@@ -477,77 +493,42 @@
             })
 
             function getMaterials(event_this) {
+
                 let scm_requisition_id = $('#scm_requisition_id').val();
                 let received_type = event_this.find('.received_type').val().toUpperCase();
                 let receivable_id = event_this.find('.type_id').val();
-                $.ajax({
-                    url: "{{ route('mrsAndTypeWiseMaterials') }}",
-                    type: 'get',
-                    dataType: "json",
-                    data: {
-                        scm_requisition_id: scm_requisition_id,
-                        received_type: received_type,
-                        receivable_id: receivable_id,
-                        from_branch: $('#from_branch_id').val(),
-                        to_branch: $('#to_branch_id').val(),
-                    },
-                    success: function(data) {
-                        let dropdown;
+                let material_name = event_this.find('.material_name');
 
-                        dropdown = event_this.find('.material_name');
-                        dropdown.empty();
-                        dropdown.append('<option selected disabled>Select Material</option>');
-                        dropdown.prop('selectedIndex', 0);
-                        data.materials.map(function(item) {
-                            dropdown.append($('<option></option>')
-                                .attr('value', item.material.id)
-                                .attr('data-unit', item.unit)
-                                .attr('data-type', item.material.type)
-                                .text(item.material.name)
-                            )
-                        });
-                        dropdown.select2()
-                    }
+                populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
+                    scm_requisition_id: scm_requisition_id,
+                    received_type: received_type,
+                    receivable_id: receivable_id,
+                    from_branch: $('#from_branch_id').val(),
+                    to_branch: $('#to_branch_id').val(),
+                }, material_name, 'value', 'label', {
+                    'data-type': 'type',
                 })
             }
 
             $(document).on('change', '.material_name', function() {
-                console.log('material_name')
                 var event_this = $(this).closest('tr');
+                ClearNext($(this));
                 let material_id = $(this).val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
                 let received_type = event_this.find('.received_type').val().toUpperCase();
                 let receivable_id = event_this.find('.type_id').val();
-                $.ajax({
-                    url: "{{ route('materialWiseBrands') }}",
-                    type: 'get',
-                    dataType: "json",
-                    data: {
-                        material_id: material_id,
-                        received_type: received_type,
-                        receivable_id: receivable_id,
-                    },
-                    success: function(data) {
-                        let dropdown;
+                let brand = $(this).closest('tr').find('.brand');
 
-                        dropdown = event_this.find('.brand');
-                        dropdown.empty();
-                        dropdown.append('<option selected disabled>Select Brand</option>');
-                        dropdown.prop('selectedIndex', 0);
-                        console.log(data)
-                        data.brands.map(function(item) {
-                            dropdown.append($('<option></option>')
-                                .attr('value', item.brand.id)
-                                .text(item.brand.name)
-                            )
-                        });
-                        dropdown.select2()
-                    }
-                })
+                populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
+                    material_id: material_id,
+                    received_type: received_type,
+                    receivable_id: receivable_id,
+                }, brand, 'value', 'label');
             })
 
             $(document).on('change', '.brand', function() {
                 var event_this = $(this).closest('tr');
+                ClearNext($(this));
                 let brand_id = $(this).val();
                 let material_id = event_this.find('.material_name').val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
@@ -560,8 +541,34 @@
                     material_id: material_id,
                     received_type: received_type,
                     receivable_id: receivable_id
-                }, model, 'model', 'model');
+                }, model, 'value', 'label');
             });
+
+            $(document).on('change', '.model', function() {
+                var event_this = $(this).closest('tr');
+                ClearNext($(this));
+                let model = $(this).val();
+                let material_id = event_this.find('.material_name').val();
+                let scm_requisition_id = $('#scm_requisition_id').val();
+                let received_type = event_this.find('.received_type').val().toUpperCase();
+                let receivable_id = event_this.find('.type_id').val();
+                let brand_id = event_this.find('.brand').val();
+                let serial_code = $(this).closest('tr').find('.serial_code');
+                let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+                    'type');
+
+                if (material_type == 'Drum') {
+                    serial_code.attr('multiple', false);
+                }
+                populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
+                    model: model,
+                    material_id: material_id,
+                    brand_id: brand_id,
+                    received_type: received_type,
+                    receivable_id: receivable_id
+                }, serial_code, 'value', 'label');
+            });
+
 
             $(document).on('change', '.material_name', function() {
                 var elemmtn = $(this);

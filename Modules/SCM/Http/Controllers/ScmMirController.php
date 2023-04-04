@@ -251,7 +251,7 @@ class ScmMirController extends Controller
 
     public function mrsAndTypeWiseMaterials()
     {
-        $data['materials'] = StockLedger::query()
+        $data['options'] = StockLedger::query()
             ->with('material')
             ->whereIn('material_id', function ($q) {
                 return $q->select('material_id')
@@ -261,6 +261,11 @@ class ScmMirController extends Controller
             ->where(['receivable_id' => request()->receivable_id, 'received_type' => request()->received_type])
             ->get()
             ->unique('material_id')
+            ->map(fn ($item) => [
+                'value' => $item->material->id,
+                'label' => $item->material->name,
+                'type' => $item->material->type,
+            ])
             ->values()
             ->all();
 
@@ -269,7 +274,7 @@ class ScmMirController extends Controller
 
     public function materialWiseBrands()
     {
-        $data['brands'] = StockLedger::query()
+        $data['options'] = StockLedger::query()
             ->with('brand')
             ->where([
                 'material_id' => request()->material_id,
@@ -278,6 +283,10 @@ class ScmMirController extends Controller
             ])
             ->get()
             ->unique('brand_id')
+            ->map(fn ($item) => [
+                'value' => $item->brand->id,
+                'label' => $item->brand->name,
+            ])
             ->values()
             ->all();
 
@@ -295,8 +304,31 @@ class ScmMirController extends Controller
             ])
             ->get()
             ->unique('model')
+            ->map(fn ($item) => [
+                'value' => $item->model,
+                'label' => $item->model,
+            ])
             ->values()
             ->all();
+
+        return response()->json($data);
+    }
+
+    public function modelWiseSerialCodes()
+    {
+        $data['options'] = StockLedger::query()
+            ->where([
+                'material_id' => request()->material_id,
+                'brand_id' => request()->brand_id,
+                'model' => request()->model,
+                'receivable_id' => request()->receivable_id,
+                'received_type' => request()->received_type
+            ])
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->serial_code,
+                'label' => $item->serial_code,
+            ]);
 
         return response()->json($data);
     }
