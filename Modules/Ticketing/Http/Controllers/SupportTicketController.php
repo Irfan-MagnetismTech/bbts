@@ -195,6 +195,11 @@ class SupportTicketController extends Controller
      */
     public function update(SupportTicket $supportTicket, Request $request)
     {
+        if($supportTicket->status == 'Closed') {
+            return back()->withInput()->withErrors([
+                'message' => 'This ticket is already closed.'
+            ]);
+        }
         $ticketInfo = $request->only([
                         'fr_composite_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
                         'mailNotification', 'smsNotification'

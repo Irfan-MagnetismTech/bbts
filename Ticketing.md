@@ -12,3 +12,5 @@ Ticket accpetance is kind of a movement actually. **Why?** Because it change the
 - Ticket List 
 
 - FORWARD can only be to 3RD Layer Teams.
+
+- Ticket Cannot Be Updated after Ticket is Closed.
