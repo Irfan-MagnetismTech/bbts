@@ -11,3 +11,6 @@ Ticket accpetance is kind of a movement actually. **Why?** Because it change the
 
 - When ticket is forward/backward/handover the status should be "Processing".
 
+- Ticket List
+
+- $notificationReceivers should avoid current auth user and should filter when member is used in forward.

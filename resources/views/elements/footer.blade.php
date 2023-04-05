@@ -17,6 +17,8 @@
 <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('js/sweetalert2.min.js') }} "></script>
+<script src="{{ asset('js/app.js') }}"></script>
+
 <script>
     const Toast = Swal.mixin({
         toast: true,
@@ -46,4 +48,32 @@
             stateSave: true
         });
     });
+</script>
+
+<script>
+
+    let userId = '{{ auth()->user()->id }}';
+    Echo.private(`App.Models.User.${userId}`).listen('.ticket-movement-event', (e) => {
+        // let data = JSON.parse(e.data.message);
+
+        // console.log('Received myCustomEvent:', e);
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: e.message,
+            showConfirmButton: false,
+            timer: 5000,
+            toast: true,
+            timerProgressBar: true,
+            showCloseButton: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+    }).error((error) => {
+        console.error(error);
+    });
+
 </script>

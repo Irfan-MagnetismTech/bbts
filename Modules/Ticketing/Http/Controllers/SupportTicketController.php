@@ -24,9 +24,22 @@ class SupportTicketController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
-        $supportTickets = SupportTicket::query()->orderBy('created_at', 'desc');
+        $from = $request->date_from;
+        $to = $request->date_to;
+
+        $supportTickets = SupportTicket::query();
+
+            if (!empty($from)) {
+                $supportTickets->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
+            }
+
+            if (!empty($to)) {
+                $supportTickets->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
+            }
+
+            $supportTickets->orderBy('created_at', 'desc')->get();
 
         $supportTickets = $supportTickets->get();
         return view('ticketing::support-tickets.index', compact('supportTickets'));
