@@ -59,9 +59,51 @@
                         </select>
                 </div>
             </div>
-            
-        </div>
-        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                        <label for="support_complain_type_id" class="font-weight-bold">Problem Type:</label>
+                        <select name="support_complain_type_id" id="support_complain_type_id" class="form-control">
+                            <option value="">Select Problem Type</option>
+                            @foreach ($complainTypes as $type)
+                            <option value="{{ $type->id }}">{{ $type->name }}</option>
+                            @endforeach
+                        </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                        <label for="priority" class="font-weight-bold">Priority:</label>
+                        <select name="priority" id="priority" class="form-control">
+                            <option value="">Select Priority</option>
+                            @foreach (config('businessinfo.ticketPriorities') as $priority)
+                            <option>{{ $priority }}</option>
+                            @endforeach
+                        </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                        <label for="pop_id" class="font-weight-bold">POP Name:</label>
+                        <select name="pop_id" id="pop_id" class="form-control">
+                            <option value="">Select Pop</option>
+                        </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                        <label for="client_id" class="font-weight-bold">Search Client:</label>
+                        <select name="client_id" id="client_id" class="form-control">
+                            <option value="">Select Client</option>
+                        </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="duration" class="font-weight-bold">Duration:</label>
+                    <input type="text" class="form-control" id="duration" name="duration" aria-describedby="duration"
+                        value="{{ old('duration') ?? '' }}" placeholder="Duration">
+                </div>
+            </div>
             <div class="col-md-3">
                 <div class="form-group my-4 row">
                     <div class="col-md-6">
@@ -72,6 +114,24 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="form-group my-4 row">
+                    <div class="col-md-6">
+                        <button type="button" value="Reset" class="btn btn-outline-danger btn-sm col-12">
+                            PDF Download
+                            <i class="far fa-file-pdf"></i>
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" value="Reset" class="btn btn-outline-success btn-sm col-12">
+                            Excel Download
+                            <i class="far fa-file-excel"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            
         </div>
     </form>
     <div class="dt-responsive table-responsive">
@@ -115,7 +175,10 @@
                 todayHighlight: true,
             });
 
-        select2Ajax("{{ route('search-support-ticket') }}", '#ticket_no')
+        select2Ajax("{{ route('searchPop') }}", '#pop_id')
+        select2Ajax("{{ route('searchClient') }}", '#client_id')
+
+        
     })
 
     function resetForm() {

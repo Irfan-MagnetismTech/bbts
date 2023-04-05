@@ -405,7 +405,10 @@ class SupportTicketController extends Controller
 
 
         $closingDate = Carbon::parse($request->closing_date);
+        $complainTime = Carbon::parse($supportTicket->complain_time);
         $now = Carbon::now();
+
+        $minutesDiff = $closingDate->diffInMinutes($complainTime);
 
         if ($closingDate->diffInMinutes($now, false) < 0) {
             return redirect()->back()->withInput()->withErrors([
@@ -416,6 +419,8 @@ class SupportTicketController extends Controller
         $info = $request->only(['closing_date', 'feedback_to_client', 'feedback_to_bbts']);
         $info['closed_by'] = auth()->user()->id;
         $info['status'] = 'Closed';
+        $info['duration'] = $minutesDiff;
+        
 
         if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
             return back()->withInput()->withErrors([

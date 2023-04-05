@@ -45,6 +45,7 @@ return new class extends Migration
             $table->dateTime('opening_date');
             $table->dateTime('closing_date')->nullable();
             $table->foreignId('closed_by')->nullable();
+            $table->string('duration')->nullable();
             $table->boolean('is_temporary_close')->nullable();
             $table->text('feedback_to_bbts')->nullable();
             $table->text('feedback_to_client')->nullable();

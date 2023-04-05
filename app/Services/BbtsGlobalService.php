@@ -119,6 +119,10 @@ class BbtsGlobalService extends Controller
         return SupportTeam::get();
     }
 
+    public function getThirdLayerSupportTeam() {
+        return SupportTeam::get();
+    }
+
     public function getTicketMovementNotificationReceiversList($request, $inAppNotificationPermissions, $allTeamMembersId) {
         if(!empty($request->teamMemberId)) {
             $notificationReceivers = User::whereIn('id', [$request->teamMemberId])->whereHas('roles', function($q) use($inAppNotificationPermissions){
