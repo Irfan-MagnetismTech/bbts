@@ -42,7 +42,7 @@
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($indents as $key => $indent)            
+                @foreach ($indents as $key => $indent)        
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $indent->indent_no }}</td>

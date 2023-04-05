@@ -135,7 +135,6 @@ function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
                         customQueryFields: customQueryFields[0],
                     },
                     success: function (data) {
-                        console.log(data);
                         if (data.length > 0) {
                             response(data);
                         } else {
@@ -158,5 +157,66 @@ function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
                 callback(ui.item);
             },
         });
+    });
+}
+
+/**
+ * Ajax dependent dropdown with select2
+ * Example Usage from Blade:
+ * populateDropdownByAjax("{!! route('getThanaByDistrict') !!}", {district_id: $('#district_id').val()}, '#thana_id', 'value', 'label', {data-district_id: 'district_id'})
+ * @param {*} url
+ * @param {object} data
+ * @param {*} dropdownSelector
+ * @param {*} valueColumn
+ * @param {*} labelColumn
+ * @param {object} dataAttributes
+ *
+ */
+function populateDropdownByAjax(
+    url,
+    data,
+    dropdownSelector,
+    valueColumn,
+    labelColumn,
+    dataAttributes = null,
+    selected = true
+) {
+    $.ajax({
+        url: url,
+        type: "get",
+        dataType: "json",
+        data: data,
+        success: function (data) {
+            let dropdown = $(dropdownSelector);
+            dropdown.empty();
+            dropdown.prop("selectedIndex", 0);
+            if (selected) {
+                dropdown.append(
+                    "<option selected disabled>Select Option</option>"
+                );
+            }
+            
+            data.options.map(function (item) {
+                value = item.hasOwnProperty(valueColumn)
+                    ? item[valueColumn]
+                    : null;
+                label = item.hasOwnProperty(labelColumn)
+                    ? item[labelColumn]
+                    : null;
+
+                let option = $("<option></option>")
+                    .attr("value", value)
+                    .text(label);
+
+                for (let dataAttribute in dataAttributes) {
+                    option.attr(
+                        dataAttribute,
+                        item[dataAttributes[dataAttribute]]
+                    );
+                }
+                dropdown.append(option);
+            });
+            dropdown.select2();
+        },
     });
 }

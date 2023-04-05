@@ -59,22 +59,16 @@
                                 readonly>
                         </div>
                         <div class="md-col-3 col-3">
-                            <label for="link_name">Link Name <span class="text-danger">*</span></label>
-                            <input type="text" name="link_name" id="link_name" class="form-control" value=""
-                                readonly>
-                        </div>
-                        <div class="md-col-3 col-3">
                             <label for="from_location">From Location <span class="text-danger">*</span></label>
                             <select name="from_location" id="from_location" class="form-control">
                                 <option value="">Select From Location</option>
-                                @foreach ($all_fr_list as $fr)
-                                    <option value="{{ $fr->id }}" {{ $fr->id == $from_location ? 'selected' : '' }}>
-                                        {{ $fr->fr_no }}</option>
-                                @endforeach
                             </select>
                         </div>
-                        <div class="md-col-3 col-3">
-                            <label for="to_location">Type <span class="text-danger">*</span></label>
+
+                    </div>
+                    <div class="row mt-4">
+                        <div class="md-col-2 col-2">
+                            <label for="type">Type <span class="text-danger">*</span></label>
                             <select name="type" id="type" class="form-control">
                                 <option value="">Select Type</option>
                                 <option value="Primary">Primary</option>
@@ -83,31 +77,43 @@
                             </select>
                         </div>
 
-                        <div class="md-col-3 col-3">
+                        <div class="md-col-2 col-2">
                             <label for="fr_no">FR No <span class="text-danger">*</span></label>
                             <input type="text" name="fr_no" id="fr_no" class="form-control" value=""
                                 readonly>
                         </div>
 
-                        <div class="md-col-3 col-3">
-                            <label for="client_status">Client Status <span class="text-danger">*</span></label>
-                            <input type="text" name="client_status" id="client_status" class="form-control"
-                                value="" readonly>
+                        <div class="md-col-2 col-2">
+                            <label for="is_existing">Client Status <span class="text-danger">*</span></label>
+                            <div class="row" style="justify-content: space-evenly">
+                                <div>
+                                    <input type="radio" name="is_existing" id="is_new" value="New"
+                                        autocomplete="off" required>
+                                    <label style="font-size: 15px; margin-left:5px;" for="is_new">New</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="is_existing" id="is_existing" value="Existing"
+                                        autocomplete="off" required>
+                                    <label style="font-size: 15px; margin-left:5px;" for="is_existing">Existing</label>
+                                </div>
+
+                            </div>
                         </div>
 
                         <div class="md-col-3 col-3">
-                            <label for="to_location">Vendor <span class="text-danger">*</span></label>
+                            <label for="vendor">Vendor <span class="text-danger">*</span></label>
                             <input type="text" name="vendor" id="vendor" class="form-control" value=""
                                 readonly>
                         </div>
-
                         <div class="md-col-3 col-3">
-                            <label for="to_location">Method <span class="text-danger">*</span></label>
+                            <label for="method">Method <span class="text-danger">*</span></label>
                             <input type="text" name="method" id="method" class="form-control" value=""
                                 readonly>
                         </div>
-                        <div class="md-col-3 col-3">
-                            <label for="to_location">Option <span class="text-danger">*</span></label>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="md-col-2 col-2">
+                            <label for="option">Option <span class="text-danger">*</span></label>
                             <select name="option" id="option" class="form-control">
                                 <option value="">Select Option</option>
                                 <option value="Option 1">Option 1</option>
@@ -116,35 +122,126 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="md-col-3 col-3">
-                            <label for="to_location">Distance <span class="text-danger">*</span></label>
+                        <div class="md-col-2 col-2">
+                            <label for="distance">Distance <span class="text-danger">*</span></label>
                             <input type="text" name="distance" id="distance" class="form-control" value=""
                                 readonly>
                         </div>
-                        <div class="md-col-3 col-3">
+                        <div class="md-col-2 col-2">
                             <label for="to_location">Connectivity Point <span class="text-danger">*</span></label>
                             <input type="text" name="connectivity_point" id="connectivity_point" class="form-control"
                                 value="" readonly>
                         </div>
                         <div class="md-col-3 col-3">
-                            <label for="to_location">GPS <span class="text-danger">*</span></label>
+                            <label for="gps">GPS <span class="text-danger">*</span></label>
                             <input type="text" name="gps" id="gps" class="form-control" value=""
                                 readonly>
                         </div>
                         <div class="md-col-3 col-3">
-                            <label for="to_location">Connectivity Route <span class="text-danger">*</span></label>
+                            <label for="connectivity_route">Connectivity Route <span class="text-danger">*</span></label>
                             <input type="text" name="connectivity_route" id="connectivity_route" class="form-control"
                                 value="" readonly>
                         </div>
                     </div>
-                    <div class="row">
-
-
-                    </div>
-
                     <hr />
                     <div class="text-center">
                         <h5> <span> &#10070; </span> Connectivity Details <span>&#10070;</span> </h5>
+                    </div>
+                    <hr />
+                    {{-- create a responsive table --}}
+                    <div class="row ">
+                        <div class="md-col-6 col-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="4">Service Plan</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Particulars</th>
+                                            <th>Client Req.</th>
+                                            <th>Plan</th>
+                                            <th>
+                                                <button type="button" class="btn btn-sm btn-success"
+                                                    id="addParticularRow"><i class="fas fa-plus"></i></button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="particular_body">
+                                        <tr class="particular_row">
+                                            <td>
+                                                <select name="particulars[]" id="particulars" class="form-control">
+                                                    <option value="">Select Particulars</option>
+                                                    @foreach ($particulars as $particular)
+                                                        <option value="{{ $particular->id }}">
+                                                            {{ $particular->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="client_req[]" id="client_req"
+                                                    class="form-control" value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="plan[]" id="plan" class="form-control"
+                                                    value="">
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-danger removeProductRow"><i
+                                                        class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="md-col-6 col-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="4">Equipment Plan</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Material</th>
+                                            <th>Unit</th>
+                                            <th>Quantity</th>
+                                            <th>
+                                                <button type="button" class="btn btn-sm btn-success"
+                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="equipment_body">
+                                        <tr class="equipment_row">
+                                            <td>
+                                                <select name="material[]" id="material" class="form-control">
+                                                    <option value="">Select Material</option>
+                                                    <option value="Bandwidth">Bandwidth</option>
+                                                    <option value="Bandwidth">Bandwidth</option>
+                                                    <option value="Bandwidth">Bandwidth</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="unit[]" id="unit" class="form-control"
+                                                    value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="quantity[]" id="quantity"
+                                                    class="form-control" value="">
+                                            </td>
+                                            <td>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger removeConnectivityRow"><i
+                                                        class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="text-center">
+                        <h5> <span> &#10070; </span> Plan Preview <span>&#10070;</span> </h5>
                     </div>
                     <hr />
                     {{-- create a responsive table --}}
@@ -154,45 +251,38 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th colspan="5">Product Details</th>
+                                            <th colspan="4">Equipment Plan</th>
                                         </tr>
                                         <tr>
-                                            <th>Category</th>
-                                            <th>Product</th>
-                                            <th>Capacity</th>
+                                            <th>Material</th>
                                             <th>Unit</th>
-                                            <th>
-                                                <button type="button" class="btn btn-sm btn-success"
-                                                    id="addProductRow"><i class="fas fa-plus"></i></button>
-                                            </th>
+                                            <th>Quantity</th>
                                         </tr>
                                     </thead>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="md-col-6 col-6">
-                            {{-- Connectivity Details --}}
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
+                                    <tbody>
                                         <tr>
-                                            <th colspan="5">Connectivity Details</th>
+                                            <td>
+                                                <select name="material[]" id="material" class="form-control">
+                                                    <option value="">Select Material</option>
+                                                    <option value="Bandwidth">Bandwidth</option>
+                                                    <option value="Bandwidth">Bandwidth</option>
+                                                    <option value="Bandwidth">Bandwidth</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="unit[]" id="unit" class="form-control"
+                                                    value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="quantity[]" id="quantity"
+                                                    class="form-control" value="">
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <th>Link Type</th>
-                                            <th>Method</th>
-                                            <th>Capacity %</th>
-                                            <th>Uptime Reg/SLA</th>
-                                            <th>
-                                                <button type="button" class="btn btn-sm btn-success"
-                                                    id="addConnectivityRow"><i class="fas fa-plus"></i></button>
-                                            </th>
-                                        </tr>
-                                    </thead>
                                 </table>
                             </div>
                         </div>
                     </div>
+
                     <button
                         class="py-2 btn btn-success float-right">{{ !empty($connectivity_requirement->id) ? 'Update' : 'Save' }}</button>
                 </div>
@@ -235,24 +325,24 @@
                     });
                 })
 
-                $('#addProductRow').on('click', function() {
-                    addProductRow();
+                $('#addParticularRow').on('click', function() {
+                    addParticularRow();
                 });
 
-                $('#addConnectivityRow').on('click', function() {
-                    addConnectivityRow();
+                $('#addEquipmentRow').on('click', function() {
+                    addEquipmentRow();
                 });
 
-                function addProductRow() {
-                    $('.product_details_row').first().clone().appendTo('.productBody');
-                    $('.product_details_row').last().find('input').val('');
-                    $('.product_details_row').last().find('select').val('');
+                function addParticularRow() {
+                    $('.particular_row').first().clone().appendTo('#particular_body');
+                    $('.particular_row').last().find('input').val('');
+                    $('.particular_row').last().find('select').val('');
                 };
 
-                function addConnectivityRow() {
-                    $('.connectivity_details_row').first().clone().appendTo('.connectivityBody');
-                    $('.connectivity_details_row').last().find('input').val('');
-                    $('.connectivity_details_row').last().find('select').val('');
+                function addEquipmentRow() {
+                    $('.equipment_row').first().clone().appendTo('#equipment_body');
+                    $('.equipment_row').last().find('input').val('');
+                    $('.equipment_row').last().find('select').val('');
                 };
 
                 $(document).on('click', '.removeProductRow', function() {
@@ -318,10 +408,11 @@
                         select: function(event, ui) {
                             $('#client_id').val(ui.item.label);
                             $('#client_name').val(ui.item.value);
-                            $('#lead_generation_id').val(ui.item.lead_generation_id);
+                            getClientFrList(ui.item.label);
                             return false;
                         }
-                    });
+
+                    })
                 });
 
                 $('#date').datepicker({
@@ -330,5 +421,65 @@
                     todayHighlight: true,
                     showOtherMonths: true
                 }).datepicker("setDate", new Date());
+                var fr_link_list;
+
+                function getClientFrList(client_id) {
+                    $.ajax({
+                        url: "{{ route('get-client-fr-list') }}",
+                        data: {
+                            client_id: client_id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            fr_link_list = data;
+                            let html = '<option value="">Select FR</option>';
+                            $.each(data, function(key, value) {
+                                html += '<option value="' + value.id + '">' + value.link_name + '</option>';
+                            });
+                            $('#from_location').html(html);
+                        }
+                    });
+                }
+
+                $('#from_location').on('change', function() {
+                    var from_location = $(this).val();
+                    fr_link_list.find(function(fr) {
+                        console.log(fr.link_name)
+                        console.log(from_location)
+                        if (fr.id == from_location) {
+                            $('#fr_no').val(fr.fr_no);
+                        }
+                    });
+                });
+
+                $('#option').on('change', function() {
+                    var option = $('#option').val();
+                    var type = $('#type').val();
+                    let client_id = $('#client_id').val();
+                    let fr_no = $('#fr_no').val();
+                    $.ajax({
+                        url: "{{ route('get-survey-details') }}",
+                        data: {
+                            option: option,
+                            type: type,
+                            client_id: client_id,
+                            fr_no: fr_no,
+                        },
+                        success: function(data) {
+                            console.log(data)
+                            if (data.status == 'Existing') {
+                                $('#is_existing').prop('checked', true);
+                            } else {
+                                $('#is_new').prop('checked', true);
+                            }
+                            $('#vendor').val(data.vendor);
+                            $('#method').val(data.method);
+                            $('#distance').val(data.distance);
+                            $('#gps').val(data.gps);
+                            $('#connectivity_point').val(data.bts_pop_ldp)
+                        }
+                    });
+
+                });
             </script>
         @endsection

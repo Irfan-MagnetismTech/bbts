@@ -4,7 +4,7 @@ namespace Modules\SCM\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ScmMirRequest extends FormRequest
+class ScmWcrRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +14,7 @@ class ScmMirRequest extends FormRequest
     public function rules()
     {
         return [
-            'date' => 'required',
-            'branch_id' => 'required',
-            'to_branch_id' => 'required',
+            //
         ];
     }
 
@@ -28,9 +26,7 @@ class ScmMirRequest extends FormRequest
     public function messages()
     {
         return [
-            'date.required' => 'Date is required',
-            'branch_id.required' => 'From Branch is required',
-            'to_branch_id.required' => 'To Branch is required',
+            //
         ];
     }
 

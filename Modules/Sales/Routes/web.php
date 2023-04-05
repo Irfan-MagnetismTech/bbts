@@ -13,6 +13,7 @@ use Modules\Sales\Http\Controllers\ServeyController;
 use Modules\Sales\Http\Controllers\VendorController;
 use Modules\Sales\Http\Controllers\PlanningController;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,4 +46,6 @@ Route::prefix('sales')->group(function () {
     Route::get('delete-connectivity-requirement-details', [ConnectivityRequirementController::class, 'deleteConnectivityRequirementDetails'])->name('delete-connectivity-requirement-details');
     Route::get('get-products', [ProductController::class, 'getProducts'])->name('get-products');
     Route::get('add-survey/{fr_id?}', [ServeyController::class, 'create'])->name('add-survey');
+    Route::get('get-client-fr-list', [FeasibilityRequirementController::class, 'getClientFrList'])->name('get-client-fr-list');
+    Route::get('get-survey-details', [ServeyController::class, 'getSurveyDetails'])->name('get-survey-details');
 });

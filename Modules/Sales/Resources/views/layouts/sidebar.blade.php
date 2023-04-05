@@ -19,6 +19,11 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Product</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
+            <li class="{{ request()->routeIs('vendor.index') ? 'active' : null }}">
+                <a href="{{ route('vendor.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Vendor</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
         </ul>
     </li>
     <li class="pcoded-hasmenu {{ request()->routeIs(['lead-generation.*']) ? 'active pcoded-trigger' : null }}">
