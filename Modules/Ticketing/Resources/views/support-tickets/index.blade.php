@@ -33,7 +33,7 @@
                         @if(empty(request()?->ticket_no))
                         <option value="">Select Ticket</option>
                         @else
-                        <option value="{{ old('ticket_no') ?? (request()?->ticket_no ?? null) }}">{{ old('ticket_no') ?? (request()?->ticket_no ?? null) }}</option>
+                        <option value="{{ old('ticket_no') ?? (request()?->ticket_no ?? null) }}">{{ $ticketNo ?? null }}</option>
                         @endif
                         </select>
                 </div>

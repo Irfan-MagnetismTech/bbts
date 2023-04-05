@@ -16,14 +16,12 @@ use Modules\Sales\Entities\ClientDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Notification;
 use Modules\Ticketing\Entities\SupportTicket;
-use function PHPUnit\Framework\throwException;
-
 use Modules\Ticketing\Entities\TicketMovement;
 use App\Notifications\TicketMovementNotification;
-use Carbon\Carbon as CarbonCarbon;
 use Modules\Ticketing\Entities\SupportTeamMember;
 use Modules\Ticketing\Entities\SupportQuickSolution;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
+use Termwind\Components\Dd;
 
 class SupportTicketController extends Controller
 {
@@ -35,27 +33,25 @@ class SupportTicketController extends Controller
     {
         $from = $request->date_from;
         $to = $request->date_to;
-        $ticketNo = $request->ticket_no;
-
-        $supportTickets = SupportTicket::query();
-
-        if(empty($ticketNo)) {
-            
-            if (!empty($from)) {
-                $supportTickets->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
-            }
-
-            if (!empty($to)) {
-                $supportTickets->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
-            }
-        } else if(!empty($ticketNo)) {
-            $supportTickets->where('ticket_no', $ticketNo);
+        $supportTicketId = $request->ticket_no;
+        $ticketNo = '';
+        if(!empty($supportTicketId)) {
+            $ticketNo = SupportTicket::findOrFail($supportTicketId)->ticket_no;
         }
 
-            $supportTickets->orderBy('created_at', 'desc')->get();
+        $supportTickets = SupportTicket::when(!empty($from), function($fromQuery) use($from) {
+                            $fromQuery->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
+                        })
+                        ->when(!empty($to), function($toQuery) use($to) {
+                            $toQuery->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
+                        })
+                        ->when(!empty($supportTicketId), function($ticketNoQuery) use($supportTicketId) {
+                            $ticketNoQuery->where('id', $supportTicketId);
+                        })
+                        ->orderBy('created_at', 'desc')
+                        ->get();
 
-        $supportTickets = $supportTickets->get();
-        return view('ticketing::support-tickets.index', compact('supportTickets'));
+        return view('ticketing::support-tickets.index', compact('supportTickets', 'ticketNo'));
     }
 
     /**
@@ -347,60 +343,41 @@ class SupportTicketController extends Controller
         }
     }
 
-    public function forwardedTickets() {
-        $userSupportTeam = SupportTeamMember::where('user_id', auth()->user()->id)->get();
-        /* 
-            The line is eloquent get() method but not first(), 
-            because each member might belong to multiple team as Mr. Humayun said.
-        */
-        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
-
-        $teamIds = $userSupportTeam->map(function($teamMember) {
-            return $teamMember->support_team_id;
-        })->toArray();
-    
-        $supportTicketMovements = TicketMovement::where(function($query) use($teamIds) {
-            $query->where('movement_model', '\Modules\Ticketing\Entities\SupportTeam')
-                  ->whereIn('movement_to', $teamIds)
-                  ->orWhere(function($subquery) {
-                            $subquery->where('movement_model', '\Modules\Admin\Entities\User')
-                                     ->where('movement_to', auth()->user()->id);
-                });
-        })
-        ->where('type', $movementTypes[0])
-        ->get();
-
-        $type = 'Forwarded';
-        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
-    }
-
-    public function backwardedTickets() {
+    public function forwardedTickets(Request $request) {
         
         $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
-    
-        $supportTicketMovements = TicketMovement::where(function($query){
-            $query->where('movement_model', '\Modules\Admin\Entities\User')
-                  ->where('movement_to', auth()->user()->id);
-        })
-        ->where('type', $movementTypes[1])
-        ->get();
+        
+        $filteredTickets = (new BbtsGlobalService())->filterTicketsBasedOnMovement($request, $movementTypes[0]);
 
-        $type = 'Backwarded';
-        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
+        $supportTicketMovements = $filteredTickets['supportTicketMovements'];
+        $ticketInfo = $filteredTickets['ticket'];
+                                
+        $type = 'Forwarded';
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes', 'ticketInfo'));
     }
 
-    public function handoveredTickets() {
+    public function backwardedTickets(Request $request) {
+        
+        $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
+        $filteredTickets = (new BbtsGlobalService())->filterTicketsBasedOnMovement($request, $movementTypes[1]);
+
+        $supportTicketMovements = $filteredTickets['supportTicketMovements'];
+        $ticketInfo = $filteredTickets['ticket'];
+
+        $type = 'Backwarded';
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes', 'ticketInfo'));
+    }
+
+    public function handoveredTickets(Request $request) {
         $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
     
-        $supportTicketMovements = TicketMovement::where(function($query){
-            $query->where('movement_model', '\Modules\Admin\Entities\User')
-                  ->where('movement_to', auth()->user()->id);
-        })
-        ->where('type', $movementTypes[2])
-        ->get();
+        $filteredTickets = (new BbtsGlobalService())->filterTicketsBasedOnMovement($request, $movementTypes[2]);
+
+        $supportTicketMovements = $filteredTickets['supportTicketMovements'];
+        $ticketInfo = $filteredTickets['ticket'];
 
         $type = 'Handovered';
-        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes'));
+        return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes', 'ticketInfo'));
     }
 
     public function closeTicket($supportTicketId) {
