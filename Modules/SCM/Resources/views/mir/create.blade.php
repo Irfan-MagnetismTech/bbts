@@ -33,6 +33,11 @@
         .input-group-info .input-group-addon {
             background-color: #04748a !important;
         }
+
+        .select2container {
+            max-width: 350px;
+            white-space: inherit;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
 @endsection
@@ -408,7 +413,7 @@
                                 <select class="form-control model select2" name="model[]">
                                 </select>
                             </td>
-                            <td>
+                            <td class="select2container">
                                 <select class="form-control serial_code select2" name="serial_code[]" multiple="multiple">
 
                                 </select>
@@ -420,7 +425,7 @@
                                 <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" readonly>
                             </td>
                             <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" type="number">
+                                <input name="issued_qty[]" class="form-control issued_qty" autocomplete="off" type="number">
                             </td>
                             <td>
                                 <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
@@ -432,7 +437,12 @@
                     `;
                 $('#material_requisition tbody').append(row);
                 $('.select2').select2({
-                    maximumSelectionLength: 1
+                    maximumSelectionLength: 5,
+                    width: '100%'
+                }).on('select2:select', function(e) {
+                    if ($(this).val().length === 5) {
+                        $(this).next().find('.select2-selection').addClass('narrow-selection');
+                    }
                 });
             }
 
@@ -442,6 +452,7 @@
                 let myObject = {
                     type: event_this.find('.received_type').val().toUpperCase(),
                 }
+
                 jquaryUiAjax('.type_no', "{{ route('searchTypeNo') }}", uiList, myObject);
 
                 function uiList(item) {
@@ -487,7 +498,6 @@
             })
 
             function getMaterials(event_this) {
-
                 let scm_requisition_id = $('#scm_requisition_id').val();
                 let received_type = event_this.find('.received_type').val().toUpperCase();
                 let receivable_id = event_this.find('.type_id').val();
@@ -563,7 +573,6 @@
                 }, serial_code, 'value', 'label', null, false);
             });
 
-
             $(document).on('change', '.material_name', function() {
                 var elemmtn = $(this);
                 let unit = (elemmtn).find(':selected').data('unit');
@@ -589,6 +598,14 @@
                     }
                 })
             })
+
+            $(document).on('change', '.serial_code', function() {
+                let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+                    'type');
+                if (material_type == 'Item') {
+                    $(this).closest('tr').find('.issued_qty').val($(this).val().length);
+                }
+            });
 
             /* Adds and removes quantity row on click */
             $("#material_requisition").on('click', '.add-requisition-row', () => {

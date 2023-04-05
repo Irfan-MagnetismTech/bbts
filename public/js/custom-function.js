@@ -122,40 +122,38 @@ function select2Ajax(route, element, ...customQueryFields) {
  * @param  {...any} customQueryFields
  */
 function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
-    $(triggerElement).on("keyup", function () {
-        $(this).autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    url: route,
-                    type: "get",
-                    dataType: "json",
-                    data: {
-                        search: request.term,
-                        customQueryFields: customQueryFields[0],
-                    },
-                    success: function (data) {
-                        if (data.length > 0) {
-                            response(data);
-                        } else {
-                            console.log("No Result Found");
-                            response([
-                                {
-                                    label: "No Result Found",
-                                    value: -1,
-                                },
-                            ]);
-                        }
-                    },
-                });
-            },
-            select: function (event, ui) {
-                if (ui.item.value == -1) {
-                    $(this).val("");
-                    return false;
-                }
-                callback(ui.item);
-            },
-        });
+    $(triggerElement).autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: route,
+                type: "get",
+                dataType: "json",
+                data: {
+                    search: request.term,
+                    customQueryFields: customQueryFields[0],
+                },
+                success: function (data) {
+                    if (data.length > 0) {
+                        response(data);
+                    } else {
+                        console.log("No Result Found");
+                        response([
+                            {
+                                label: "No Result Found",
+                                value: -1,
+                            },
+                        ]);
+                    }
+                },
+            });
+        },
+        select: function (event, ui) {
+            if (ui.item.value == -1) {
+                $(this).val("");
+                return false;
+            }
+            callback(ui.item);
+        },
     });
 }
 
