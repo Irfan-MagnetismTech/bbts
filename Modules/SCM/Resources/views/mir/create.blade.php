@@ -466,8 +466,12 @@
             function clearNext(selector) {
                 let siblings = $(selector).parent().nextAll('td');
                 siblings.each(function() {
-                    $(this).find('input').val('');
-                    $(this).find('select').empty();
+                    let input = $(this).find('input');
+                    let select = $(this).find('select');
+                    if (!input.hasClass('unit')) {
+                        input.val('');
+                    }
+                    select.empty();
                 });
             }
             $(document).on('change', '.received_type', function() {
@@ -511,6 +515,7 @@
                     to_branch: $('#to_branch_id').val(),
                 }, material_name, 'value', 'label', {
                     'data-type': 'type',
+                    'data-unit': 'unit'
                 })
             }
 
@@ -522,6 +527,8 @@
                 let received_type = event_this.find('.received_type').val().toUpperCase();
                 let receivable_id = event_this.find('.type_id').val();
                 let brand = $(this).closest('tr').find('.brand');
+                event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected')
+                    .data('unit'));
 
                 populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
                     material_id: material_id,
