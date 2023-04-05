@@ -22,6 +22,12 @@
         .select2-container--default .select2-selection--multiple .select2-selection__choice span {
     color: #b10000;
 }
+
+        .select2_container{
+            max-width: 200px;
+            white-space: inherit;
+        }
+
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -339,9 +345,12 @@
             showOtherMonths: true
         }).datepicker("setDate", new Date());;
         /* Append row */
-        @if (empty($requisition) && empty(old('material_name')))
-            appendCalculationRow();
-        @endif
+        $(document).ready(function(){
+            @if (empty($requisition) && empty(old('material_name')))
+                appendCalculationRow();
+            @endif
+        })
+        var indsd = 0;
         function appendCalculationRow() {
             let row = `<tr>
                             <td>
@@ -375,13 +384,13 @@
 
                                 </select>
                             </td>
-                            <td>
-                                <select class="form-control serial_code select2" name="serial_code[]" multiple="multiple">
+                            <td class="select2_container">
+                                <select class="form-control serial_code select2" name='serial_code[${indsd}][]' multiple="multiple">
 
                                 </select>
                             </td>
                             <td>
-                                <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                                <input name="unit[]" class="form-control unit" readonly autocomplete="off" type="text">
                             </td> 
                             <td>
                                 <input name="quantity[]" class="form-control quantity" autocomplete="off">
@@ -394,9 +403,12 @@
                             </td>
                         </tr>
                     `;
+                    indsd++;
             $('#challan tbody').append(row);
             $('.select2').select2({
-                maximumSelectionLength: 1
+            });
+            $('.select2.serial_code').select2({
+                multiple: true,
             });
         }
 
@@ -456,7 +468,10 @@
         $(function() {
             onChangeRadioButton();
 
-            $('.select2').select2();
+            $('.select2').select2({
+                maximumSelectionLength: 5,
+                scrollAfterSelect: true
+        });
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
@@ -580,7 +595,7 @@
                 let myObject = {
                     type: event_this.find('.received_type').val().toUpperCase(),
                 }
-                jquaryUiAjax('.type_no', "{{ route('searchTypeNo') }}", uiList, myObject);
+                jquaryUiAjax(this, "{{ route('searchTypeNo') }}", uiList, myObject);
 
                 function uiList(item) {
                     event_this.find('.type_no').val(item.label);
@@ -594,8 +609,12 @@
                 let sib = $(selector).parent().nextAll('td');
                 // loop siblings
                 sib.each(function() {
-                    $(this).find('input').val('');
-                    $(this).find('select').empty();
+                    let input = $(this).find('input');
+                    let select = $(this).find('select');
+                    if (!input.hasClass('unit')) {
+                        input.val('');
+                    }
+                    select.empty();
                 });
             }
             $(document).on('change', '.received_type', function() {
@@ -618,10 +637,11 @@
                         to_branch: $('#to_branch_id').val(),
                     }, material_name, 'value', 'label', {
                         'data-type': 'type',
+                        'data-unit': 'unit'
                     })
-                    }
+                 }
 
-                    $(document).on('change', '.material_name', function() {
+                $(document).on('change', '.material_name', function() {
                     var event_this = $(this).closest('tr');
                     ClearNext($(this));
                     let material_id = $(this).val();
@@ -629,15 +649,17 @@
                     let received_type = event_this.find('.received_type').val().toUpperCase();
                     let receivable_id = event_this.find('.type_id').val();
                     let brand = $(this).closest('tr').find('.brand');
+                    
+                   event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected').data('unit'));
 
                     populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
                         material_id: material_id,
                         received_type: received_type,
                         receivable_id: receivable_id,
                     }, brand, 'value', 'label');
-                    })
+                })
 
-                    $(document).on('change', '.brand', function() {
+                $(document).on('change', '.brand', function() {
                     var event_this = $(this).closest('tr');
                     ClearNext($(this));
                     let brand_id = $(this).val();
@@ -653,9 +675,9 @@
                         received_type: received_type,
                         receivable_id: receivable_id
                     }, model, 'value', 'label');
-                    });
+                });
 
-                    $(document).on('change', '.model', function() {
+                $(document).on('change', '.model', function() {
                     var event_this = $(this).closest('tr');
                     ClearNext($(this));
                     let model = $(this).val();
@@ -668,9 +690,7 @@
                     let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
                         'type');
 
-                    if (material_type == 'Drum') {
-                        serial_code.attr('multiple', false);
-                    }
+                   
                     populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
                         model: model,
                         material_id: material_id,
@@ -678,9 +698,14 @@
                         received_type: received_type,
                         receivable_id: receivable_id
                     }, serial_code, 'value', 'label',null,false);
-                    });
+                 });
 
-
+                 $(document).on('change', '.serial_code', function() {
+                    let material_type = $(this).closest('tr').find('.material_name').find(':selected').data('type');
+                    if (material_type == 'Item') {
+                        $(this).closest('tr').find('.quantity').val($(this).val().length);
+                    }
+                 })
             // $(document).on('change', '.serial_code', function() {
             //     var elemmtn = $(this);
             //     let global_fianl_mark = $(this).find(':selected').data('final_mark');
