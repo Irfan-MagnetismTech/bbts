@@ -23,7 +23,7 @@ class SupportTicket extends Model
     }
 
     public function clientDetail() {
-        return $this->belongsTo(ClientDetail::class, 'fr_composit_key', 'id');
+        return $this->belongsTo(ClientDetail::class, 'fr_composite_key', 'fr_composite_key');
     }
 
     public function supportTicketLifeCycles() {

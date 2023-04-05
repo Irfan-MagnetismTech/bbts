@@ -254,8 +254,8 @@
                             <tr>
                                 <th>#SL</th>
                                 <th>Activity Time</th>
-                                <th>Remarks</th>
-                                <th>Solutions</th>
+                                <th>Event</th>
+                                <th>Solutions / Remarks</th>
                                 <th>Department</th>
                                 <th>Updated By</th>
                             </tr>
@@ -289,7 +289,8 @@
                     </form>
                 </div>
             </div>
-            @else
+            @endif
+            @if($supportTicket->status == 'Accepted' || $supportTicket->status == 'Processing' || $supportTicket->status == 'Reopen')
             <div class="col-12 my-5">
                 <div class="row">
                     <div class="col-6 mx-auto rounded shadow-sm" style="background-color: #A0B9FF; box-shadow: 2px 2px 6px 0px #70708d">
@@ -319,6 +320,8 @@
                     </div>
                 </div>
             </div>
+            @endif
+            @if($supportTicket->status != 'Closed')
             <hr>
             <div class="col-12 d-flex justify-content-between mt-3">
                 @can('support-ticket-backward')
@@ -357,12 +360,31 @@
                 @endcan
                 
                 @can('support-ticket-close')
-                <a href="" class="btn btn-danger btn-round btn-inline-block py-2">
-                    Close
-                    <i class="far fa-check-circle"></i>
+                    @if($supportTicket->status != 'Closed')
+                    <a href="{{ route('close-ticket', ['supportTicketId' => $supportTicket?->id]) }}" class="btn btn-danger btn-round btn-inline-block py-2">
+                        Close
+                        <i class="far fa-check-circle"></i>
+                    </a>
+                    @endif
+                @endcan
+            </div>
+            @else
+            <hr>
+            @php
+                $closingDate = $supportTicket->closing_date;
+                $currentTime = \Carbon\Carbon::now();
+                $minutesDiff = $currentTime->diffInMinutes($closingDate);
+            @endphp
+            @if($minutesDiff <= (60*24))
+            <div class="col-12 d-flex justify-content-center mt-3">
+                @can('support-ticket-reopen')
+                <a href="{{ route('reopen-ticket', ['supportTicketId' => $supportTicket->id]) }}" class="btn btn-success btn-round btn-inline-block py-2">
+                    <i class="fas fa-folder-open"></i>
+                    Reopen
                 </a>
                 @endcan
             </div>
+            @endif
             @endif
         </div>
     </div>

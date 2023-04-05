@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <link rel="icon" href="{{ asset('img/qc-favicon.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ config('businessinfo.favicon') }}" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/themify-icons.css') }}">
@@ -27,6 +27,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/select2.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{asset('css/Datatables/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/toastify.min.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -106,6 +107,40 @@
                         <ul class="nav-right">
                             {{-- header-notification --}}
                             {{-- comments --}}
+                            <li class="header-notification">
+                                <a href="#!">
+                                    <i class="ti-bell" style="font-size: 24px"></i>
+                                    <span class="badge bg-c-pink" style="top: 5px" id="notificationCount">
+                                    {{ count(auth()->user()->unreadNotifications) }}
+                                    </span>
+                                </a>
+                                <ul class="show-notification" id="notification-list-popup">
+                                   
+
+                                    @forelse(auth()->user()->unreadNotifications as $notification)
+                                    <li>
+                                        <a href="{{ route('support-tickets.show', ['support_ticket' => $notification->data['supportTicketId']]) }}" style="font-size: 12px; padding: 0" class="text-left p-0 d-block">
+                                            {{ $notification->data['message'] }} <br>
+                                        
+                                            <small>
+                                                at {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y \a\t h:i a') }}
+                                            </small>
+                                        </a>
+                                    </li>
+                                    @if($loop->index > 8)
+                                        @php break; @endphp
+                                    @endif
+                                    @empty
+                                    <li id="no-notification">No notification</li>
+                                    @endforelse
+                                    <li>
+                                        <div class="d-flex justify-content-between">
+                                            <a href="{{ route('read-all-notification') }}" class="btn btn-primary">Mark all as read</a>
+                                            <a href="{{ route('all-notifications') }}" class="btn btn-info">See all notification</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
                             <li class="user-profile header-notification">
                                 <a href="#">
                                     {{-- <img src="../files/assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image"> --}}

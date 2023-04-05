@@ -19,6 +19,7 @@ use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\SCM\Entities\Cs;
 use Modules\SCM\Entities\CsSupplier;
 use Modules\SCM\Entities\Indent;
+use Modules\Ticketing\Entities\SupportTicket;
 
 class CommonApiController extends Controller
 {
@@ -50,7 +51,10 @@ class CommonApiController extends Controller
             ->map(fn ($item) => [
                 'value' => $item->id,
                 'label' => $item->link_id,
-                'client' => $item->client
+                'client' => $item->client,
+                'id' => $item->id,
+                'text' => $item->link_id,
+                'fr_composite_key' => $item->fr_composite_key
             ]);
 
         return response()->json($results);
@@ -309,6 +313,21 @@ class CommonApiController extends Controller
             ->map(fn ($item) => [
                 'value' => $item->id,
                 'label' => $item->cs_no,
+            ]);
+
+        return response()->json($results);
+    }
+
+    public function getSupportTicket() {
+        $results = SupportTicket::query()
+            ->where('ticket_no', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'text' => $item->ticket_no,
+                'value' => $item->id,
+                'label' => $item->ticket_no,
             ]);
 
         return response()->json($results);

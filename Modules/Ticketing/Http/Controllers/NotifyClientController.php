@@ -2,11 +2,13 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
-use App\Services\EmailService;
+use App\Notifications\TicketMovementNotification;
 use App\Services\SmsService;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use App\Services\EmailService;
 use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\Notification;
 use Modules\Ticketing\Entities\SupportTicket;
 
 class NotifyClientController extends Controller
@@ -27,7 +29,7 @@ class NotifyClientController extends Controller
 
     public function sendNotification(Request $request) {
         $supportTicket = SupportTicket::findOrFail($request->ticket_id);
-        $cc = explode(";", str_replace(" ", "", $request->cc));
+        $cc = ($request->cc) ? explode(";", str_replace(" ", "", $request->cc)) : null;
         $subject = "[$supportTicket->ticket_no] ".$request->subject;
         $message = $request->description;
         $model = 'Modules\Ticketing\Entities\SupportTicket';
@@ -37,7 +39,6 @@ class NotifyClientController extends Controller
         if(!in_array($type, ['email', 'sms'])) {
             abort(404);
         }
-
 
         $smsStatus = true;
         if($type == 'email') {
@@ -56,4 +57,6 @@ class NotifyClientController extends Controller
         }
 
     }
+
+    
 }

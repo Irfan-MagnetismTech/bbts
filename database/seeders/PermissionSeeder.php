@@ -53,6 +53,14 @@ class PermissionSeeder extends Seeder
                 'guard_name'=>'web',
             ],
             [
+                'name'=>'forwarded-ticket-index',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'backwarded-ticket-index',
+                'guard_name'=>'web',
+            ],
+            [
                 'name'=>'ticket-delete',
                 'guard_name'=>'web',
             ],
@@ -66,6 +74,10 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'name'=>'support-team-view',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'support-team-index',
                 'guard_name'=>'web',
             ],
             [
@@ -85,6 +97,10 @@ class PermissionSeeder extends Seeder
                 'guard_name'=>'web',
             ],
             [
+                'name'=>'support-complain-type-index',
+                'guard_name'=>'web',
+            ],
+            [
                 'name'=>'support-complain-type-delete',
                 'guard_name'=>'web',
             ],
@@ -101,6 +117,10 @@ class PermissionSeeder extends Seeder
                 'guard_name'=>'web',
             ],
             [
+                'name'=>'support-solution-index',
+                'guard_name'=>'web',
+            ],
+            [
                 'name'=>'support-solution-delete',
                 'guard_name'=>'web',
             ],
@@ -114,6 +134,10 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'name'=>'support-complain-source-view',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'support-complain-source-index',
                 'guard_name'=>'web',
             ],
             [
@@ -206,6 +230,14 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'name'=>'receive-in-app-notification-when-ticket-backwarded',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'receive-in-app-notification-when-ticket-forwarded-ticket-accepted',
+                'guard_name'=>'web',
+            ],
+            [
+                'name'=>'bulk-email-send',
                 'guard_name'=>'web',
             ],
 

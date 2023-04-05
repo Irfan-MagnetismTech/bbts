@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of {{ $type }} Tickets
+    Reports
 @endsection
 
 @section('style')
@@ -17,7 +17,7 @@
     <a href="{{ route('support-tickets.create')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    Total Tickets: {{ !empty($supportTicketMovements) ? $supportTicketMovements->count() : 0 }} <br>
+    Total Tickets: {{ !empty($supportTickets) ? $supportTickets->count() : 0 }} <br>
 @endsection
 
 @section('content')
@@ -25,13 +25,12 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                        <label for="ticket_no" class="font-weight-bold">Ticket Name:</label>
-                        <select name="ticket_no" id="ticket_no" class="form-control">
-                        @if(empty(request()?->ticket_no))
-                        <option value="">Select Ticket</option>
-                        @else
-                        <option value="{{ old('ticket_no') ?? (request()?->ticket_no ?? null) }}">{{ $ticketInfo['ticketNo'] }}</option>
-                        @endif
+                        <label for="status" class="font-weight-bold">Ticket Status:</label>
+                        <select name="status" id="status" class="form-control">
+                            <option value="">Select Status</option>
+                            @foreach (config('businessinfo.ticketStatuses') as $ticketStatus)
+                            <option>{{ $ticketStatus }}</option>
+                            @endforeach
                         </select>
                 </div>
             </div>
@@ -49,6 +48,20 @@
                         value="{{ old('date_to') ?? (request()?->date_to ?? null) }}" readonly>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                        <label for="ticket_source_id" class="font-weight-bold">Ticket Source:</label>
+                        <select name="ticket_source_id" id="ticket_source_id" class="form-control">
+                            <option value="">Select Source</option>
+                            @foreach ($ticketSources as $source)
+                            <option value="{{ $source->id }}">{{ $source->name }}</option>
+                            @endforeach
+                        </select>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row">
             <div class="col-md-3">
                 <div class="form-group my-4 row">
                     <div class="col-md-6">
@@ -72,44 +85,20 @@
                 <th>Complain</th>
                 <th>Source</th>
                 <th>Remarks</th>
-                <th>Status</th>
-                <th>Action</th>
             </tr>
             </thead>
             
             <tbody>
-                @foreach ($supportTicketMovements as $movement)
+                @foreach ($supportTickets as $supportTicket)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
-                        <td>{{ $movement->supportTicket->ticket_no }}</td>
-                        <td>{{ $movement->user->name }}</td>
-                        <td>{{ $movement->supportTicket->priority }}</td>
-                        <td>{{ $movement->supportTicket->supportComplainType->name}}</td>
-                        <td>{{ $movement->supportTicket->ticketSource->name}}</td>
-                        <td>{{ $movement->remarks }}</td>
-                        <td>
-                            
-                            {{ $movement->status }}
-                            @if($movement->status == 'Accepted')
-                            <br/>
-                            <small>by {{ $movement->acceptedBy->name }} on {{ \Carbon\Carbon::parse($movement->updated_at)->format('d/m/Y h:i a') }}</small>
-                            @endif
+                        <td>{{ $supportTicket->ticket_no }}</td>
+                        <td>{{ $supportTicket->createdBy->name }}</td>
+                        <td>{{ $supportTicket->priority }}</td>
+                        <td>{{ $supportTicket->supportComplainType->name}}</td>
+                        <td>{{ $supportTicket->ticketSource->name}}</td>
+                        <td>{{ $supportTicket->remarks }}</td>
                         
-                        </td>
-
-                        <td class="d-flex align-items-center justify-content-center">
-
-                            @if($movement->status == 'Pending' && $supportTicketMovements->first()->type ==  $movementTypes[0])
-                            <div class="icon-btn mr-1">
-                                <form action="{{ route('accept-forwarded-tickets') }}" method="POST" data-toggle="tooltip" title="Accept" class="d-inline">
-                                    @csrf
-                                    <input type="hidden" name="movement_id" value="{{ $movement->id }}">
-                                    <button type="submit" class="btn btn-outline-success btn-sm approve"><i class="fas fa-check"></i></button>
-                                </form>
-                            </div>
-                            @endif
-                            <x:action-button :show="route('support-tickets.show', ['support_ticket' => $movement->supportTicket->id])" :edit="false" :delete="false" />
-                        </td>
                     </tr>
                 @endforeach
             </tbody>

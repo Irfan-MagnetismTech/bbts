@@ -103,13 +103,14 @@ function select2Ajax(route, element, ...customQueryFields) {
             processResults: function (data) {
                 return {
                     results: $.map(data, function (obj) {
-                        return { id: obj.id, text: obj.text };
+                        return { id: obj.id, text: obj.text, fullObject: obj };
                     }),
                 };
-            },
+            }
         },
         minimumInputLength: 1,
         placeholder: "Search",
+        cache: true
     });
 }
 
