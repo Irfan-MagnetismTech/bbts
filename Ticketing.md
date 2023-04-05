@@ -9,9 +9,6 @@ Ticket accpetance is kind of a movement actually. **Why?** Because it change the
 
 - Support Team Creation Layer will come from user Roles or user has roles but this level is just show case?
 
-- When ticket is forward/backward/handover the status should be "Processing".
-
 - Ticket List 
 
-- SWAL Toast just destroy the current toast when new thing is arrived rather than pushing element below each other.
-
+- FORWARD can only be to 3RD Layer Teams.

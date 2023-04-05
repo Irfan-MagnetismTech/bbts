@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Ticketing\Http\Controllers\NotifyClientController;
 use Modules\Ticketing\Http\Controllers\PopWiseIssueController;
+use Modules\Ticketing\Http\Controllers\ReportController;
 use Modules\Ticketing\Http\Controllers\SupportTeamController;
 use Modules\Ticketing\Http\Controllers\TicketSourceController;
 use Modules\Ticketing\Http\Controllers\SupportTicketController;
@@ -57,4 +58,9 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::get('reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'reopenTicket'])->name('reopen-ticket');
     Route::post('process-reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'processReopenTicket'])->name('process-reopen-ticket');
 
+
+    // Ticketing Reports
+    Route::prefix('reports')->group(function() {
+        Route::get('/', [ReportController::class, 'index'])->name('report-index');
+    });
 });
