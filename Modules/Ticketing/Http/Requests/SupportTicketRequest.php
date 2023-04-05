@@ -15,7 +15,7 @@ class SupportTicketRequest extends FormRequest
     public function rules()
     {
         return [
-            'fr_composit_key' => 'required', 
+            'fr_composite_key' => 'required', 
             'complain_time' => 'date', 
             'description' => 'string', 
             'priority' => [

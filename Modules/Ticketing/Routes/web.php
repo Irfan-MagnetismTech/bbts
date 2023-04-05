@@ -2,6 +2,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Ticketing\Http\Controllers\NotifyClientController;
 use Modules\Ticketing\Http\Controllers\PopWiseIssueController;
+use Modules\Ticketing\Http\Controllers\ReportController;
 use Modules\Ticketing\Http\Controllers\SupportTeamController;
 use Modules\Ticketing\Http\Controllers\TicketSourceController;
 use Modules\Ticketing\Http\Controllers\SupportTicketController;
@@ -50,5 +51,16 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::get('bulk-email', [PopWiseIssueController::class, 'index'])->name('bulk-email');
     Route::post('send-bulk-email', [PopWiseIssueController::class, 'send'])->name('send-bulk-email');
+
+    Route::get('close-ticket/{supportTicketId}', [SupportTicketController::class, 'closeTicket'])->name('close-ticket');
+    Route::post('process-close-ticket/{supportTicketId}', [SupportTicketController::class, 'processCloseTicket'])->name('process-close-ticket');
     
+    Route::get('reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'reopenTicket'])->name('reopen-ticket');
+    Route::post('process-reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'processReopenTicket'])->name('process-reopen-ticket');
+
+
+    // Ticketing Reports
+    Route::prefix('reports')->group(function() {
+        Route::get('/', [ReportController::class, 'index'])->name('report-index');
+    });
 });

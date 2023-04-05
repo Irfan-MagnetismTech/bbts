@@ -16,17 +16,19 @@ class ClientEmail extends Mailable implements ShouldQueue
     public $subject;
     public $message;
     public $receiver;
+    public $button;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($subject, $message, $receiver)
+    public function __construct($subject, $message, $receiver, $button)
     {
         $this->subject = $subject;
         $this->message = $message;
         $this->receiver = $receiver;    
+        $this->button = $button;
     }
 
     /**
@@ -52,7 +54,8 @@ class ClientEmail extends Mailable implements ShouldQueue
             markdown: 'mail.client-email',
             with: [
                 'message' => $this->message,
-                'receiver' => $this->receiver
+                'receiver' => $this->receiver,
+                'button' => $this->button
             ],
         );
     }

@@ -10,18 +10,22 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class HandoverTicketMovementEvent
+class TicketMovementEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    public $message;
+    public $userId;
+    public $type;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($message, $notificationReceiver, $type = null)
     {
-        //
+        $this->message = $message;
+        $this->userId = $notificationReceiver->id;
+        $this->type = $type;
     }
 
     /**
@@ -31,6 +35,16 @@ class HandoverTicketMovementEvent
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        // In term of Handover and Backward We don't need to think about userId
+        
+        return ($this->type == 'forward' && auth()->user()->id == $this->userId)
+        ? null
+        : new PrivateChannel('App.Models.User.'.$this->userId);
+
+    }
+
+    public function broadcastAs()
+    {
+        return 'ticket-movement-event';
     }
 }

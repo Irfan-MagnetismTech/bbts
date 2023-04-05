@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 // use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserControllerCopy;
 use App\Http\Controllers\CommonApiController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ClientFeedbackController;
 use Modules\Admin\Http\Controllers\AuthController;
 
 /*
@@ -18,9 +20,9 @@ use Modules\Admin\Http\Controllers\AuthController;
 |
 */
 
-//Route::get('/', function () {
+// Route::get('/', function () {
 //    return view('welcome');
-//});
+// });
 // Route::get('/login', [AuthController::class, 'login'])->name('login');
 
 // Route::get('/password-change-config', 'Auth\ResetOldPasswordController@PasswordResetForm')->name('password-change-form');
@@ -47,6 +49,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('get-support-team-members', [CommonApiController::class, 'getSupportTeamMembers'])->name('get-support-team-members');
     Route::get('search-indent-no', [CommonApiController::class, 'searchIndentNo'])->name('searchIndentNo');
     Route::get('search-cs-no/{supplierId}', [CommonApiController::class, 'searchCsNo'])->name('searchCsNo');
+    Route::get('search-support-ticket', [CommonApiController::class, 'getSupportTicket'])->name('search-support-ticket');
+
+    Route::get('all-notifications', [DashboardController::class, 'allNotifications'])->name('all-notifications');
+    Route::get('read-all-notification', [DashboardController::class, 'readAllNotification'])->name('read-all-notification');
+
+    Route::get('provide-feedback/{slug}', [ClientFeedbackController::class, 'provideFeedback'])->name('provide-feedback');
+    Route::post('store-client-feedback/{slug}', [ClientFeedbackController::class, 'storeClientFeedback'])->name('store-client-feedback');
 });
 
 require base_path('routes/dataencoding.php');

@@ -5,6 +5,7 @@ return [
     'shortname' => 'BBTS',
     'slogan'    =>  '',
     'logo' => '/images/bbts_logo.png',
+    'favicon' => '/favicon.png',
     'url'   => 'https://bbts.net',
     'footer' => 'All Rights Reserved',
     'developer' => 'Developed by <a href="https://magnetismtech.com" target="_blank">Magnetism Tech Limited</a>',

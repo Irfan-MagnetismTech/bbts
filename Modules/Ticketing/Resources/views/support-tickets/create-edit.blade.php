@@ -46,12 +46,15 @@
                                         value="{{ old('opening_time') ?? (!empty($supportTicket) ? $supportTicket?->opening_date : \Carbon\Carbon::now()->format('d/m/Y H:i A')) }}" disabled>
                                 </div>
                                 <div class="col-5">
-                                    <label for="client_id">Client Link ID:</label>
-                                    <input type="text" class="form-control" id="client_id" name="client_id" aria-describedby="client_id"
-                                        value="{{ old('client_id') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}" placeholder="Client Link ID">
-                                    
-                                    <input type="hidden" name="fr_composit_key" id="fr_composit_key"
-                                            value="{{ old('fr_composit_key') ?? (!empty($supportTicket) ? $supportTicket?->fr_composit_key : '') }}">
+                                    <label for="client_id" class="font-weight-bold">Client Link ID:</label>
+                                    <select name="client_id" id="client_id" class="form-control">
+                                        <option value="{{ old('client_id') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}">
+                                            {{ old('client_link_id') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}
+                                        </option>
+                                    </select>
+                                    <input type="hidden" name="fr_composite_key" id="fr_composite_key"
+                                            value="{{ old('fr_composite_key') ?? (!empty($supportTicket) ? $supportTicket?->fr_composite_key : '') }}">
+                                    <input type="hidden" name="client_link_id" id="client_link_id">
                                 </div>
                             </div>
                             <div class="row mt-2">
@@ -63,7 +66,7 @@
                                 <div class="col-5">
                                     <label for="support_complain_type_id">Complain Type:</label>
                                     <select class="form-control select2" id="support_complain_type_id" name="support_complain_type_id">
-                                        <option value="20" selected>Select Complain Type</option>
+                                        <option value="" selected>Select Complain Type</option>
                                         @foreach ($complainTypes as $complainType)
                                             <option value="{{ $complainType->id }}"
                                                 {{ old('support_complain_type_id', (!empty($supportTicket) ? $supportTicket->support_complain_type_id : null)) == $complainType->id ? 'selected' : '' }}>
@@ -312,32 +315,23 @@
 @section('script')
 <script>
         
+        $(document).ready(function() {
+            select2Ajax("{{ route('get-clients-by-links') }}", '#client_id');
 
-        $(document).on('keyup focus', '#client_id', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('get-clients-by-links') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    
-                    console.log(ui.item)
-                    $("#client_id").val(ui.item.label)
-                    $("#fr_composit_key").val(ui.item.value)
+            $('#support_complain_type_id').select2({
+                placeholder: "Select Complain Type",
+            })
+        });
 
-                    getClientsPreviousTickets(ui.item.client.id, 5)
-                    return false;
-                }
-            });
+        $('#client_id').on('change', function() {
+                $("#fr_composite_key").val($(this).val())
+        })
+
+        $('#client_id').on('select2:select', function (e) {
+            let clientId = e.params.data.fullObject?.client?.id
+            $("#fr_composite_key").val(e.params.data.fullObject?.fr_composite_key)
+            $("#client_link_id").val(e.params.data.fullObject?.text)
+            getClientsPreviousTickets(clientId, 5)
         });
 
         function getClientsPreviousTickets(clientId, limit = 5) {
@@ -379,6 +373,8 @@
 
             })
         }
+
+        
 
         // $('#complain_time').datepicker({
         //     format: "dd-mm-yyyy hh:mm",
