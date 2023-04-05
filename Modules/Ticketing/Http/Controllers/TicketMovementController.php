@@ -2,6 +2,7 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
+use App\Providers\ForwardTicketMovementEvent;
 use Illuminate\Http\Request;
 use App\Services\EmailService;
 use Modules\Admin\Entities\User;
@@ -172,11 +173,22 @@ class TicketMovementController extends Controller
     
             $allTeamMembersId = $supportTeam->supportTeamMembers->pluck('user_id')->toArray();
     
-            $permissionNames = ['receive-email-when-ticket-forwarded', 'receive-email-when-ticket-backwarded', 'receive-email-when-ticket-handovered'];
+            $mailPermissionNames = ['receive-email-when-ticket-forwarded'];
     
-            $mailReceivers = User::whereIn('id', $allTeamMembersId)->whereHas('roles', function($q) use($permissionNames){
-                $q->whereHas('permissions', function($q1) use($permissionNames) {
-                  $q1->whereIn('name', $permissionNames);
+            $inAppNotificationPermissions = [
+                'receive-in-app-notification-when-ticket-forwarded'
+            ];
+
+            $mailReceivers = User::whereIn('id', $allTeamMembersId)->whereHas('roles', function($q) use($mailPermissionNames){
+                $q->whereHas('permissions', function($q1) use($mailPermissionNames) {
+                  $q1->whereIn('name', $mailPermissionNames);
+                });
+              })->get();
+
+
+            $notificationReceivers = User::whereIn('id', $allTeamMembersId)->whereHas('roles', function($q) use($inAppNotificationPermissions){
+                $q->whereHas('permissions', function($q1) use($inAppNotificationPermissions) {
+                  $q1->whereIn('name', $inAppNotificationPermissions);
                 });
               })->get();
     
@@ -213,6 +225,11 @@ class TicketMovementController extends Controller
                     $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$supportTeam->first()->department->name.'.';
                     $message .= "\n\n".$request->remarks;
                     (new EmailService())->sendEmail($mailReceiver->email, null, $mailReceiver->name, $subject, $message);
+                }
+
+                foreach($notificationReceivers as $notificationReceiver) {
+                    $message = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$supportTeam->first()->department->name.'.';
+                    ForwardTicketMovementEvent::dispatch($message);
                 }
     
                 return redirect()->back()->with('message', $remarks);
@@ -266,7 +283,11 @@ class TicketMovementController extends Controller
                         'remarks' => $remarks,
                         'description' => $request->remarks
                     ]);
-            
+
+                    $supportTicket->update([
+                        'status' => 'Processing',
+                    ]);
+
                     TicketMovement::create([
                         'support_ticket_id' => $supportTicket->id,
                         'type' => $movementType,
@@ -379,6 +400,10 @@ class TicketMovementController extends Controller
                         'remarks' => $remarks,
                         'description' => $request->remarks
                     ]);
+
+                    $supportTicket->update([
+                        'status' => 'Processing',
+                    ]);
             
                     TicketMovement::create([
                         'support_ticket_id' => $supportTicket->id,
@@ -409,4 +434,5 @@ class TicketMovementController extends Controller
             return redirect()->back()->withInput()->withErrors("Something went wrong. Please try again.");
         }
     }
+
 }
