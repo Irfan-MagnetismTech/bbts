@@ -152,7 +152,7 @@ class BbtsGlobalService extends Controller
         })->toArray();
         
         $ticketNo = '';
-        if(!empty($ticketNo)) {
+        if(!empty($supportTicketId)) {
             $ticketNo = SupportTicket::findOrFail($supportTicketId)->ticket_no;
         }
 
