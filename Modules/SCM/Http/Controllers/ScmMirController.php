@@ -265,6 +265,7 @@ class ScmMirController extends Controller
                 'value' => $item->material->id,
                 'label' => $item->material->name,
                 'type' => $item->material->type,
+                'unit' => $item->material->unit,
             ])
             ->values()
             ->all();

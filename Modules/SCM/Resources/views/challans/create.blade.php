@@ -19,6 +19,15 @@
         .input-group-info .input-group-addon {
             /*background-color: #04748a!important;*/
         }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice span {
+    color: #b10000;
+}
+
+        .select2_container{
+            max-width: 200px;
+            white-space: inherit;
+        }
+
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -174,23 +183,19 @@
                 </div>
             </div>
 
-            <table class="table table-bordered" id="material_requisition">
+            <table class="table table-bordered" id="challan">
                 <thead>
                     <tr>
                         <th>Received Type</th>
                         <th>Type No</th>
-                        <th>Serial/Drum Code <br /> No</th>
                         <th>Material Name</th>
-                        <th>Opening Balance</th>
                         <th>Brand</th>
                         <th>Model</th>
-                        <th>Initial Mark</th>
-                        <th>Final Mark</th>
+                        <th>Serial/Drum Code <br /> No</th>
                         <th>Unit</th>
-                        <th>Avaliable Qty</th>
                         <th>Issued Qty</th>
                         <th>Remarks</th>
-                        <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
+                        <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -309,7 +314,7 @@
                                     value="{{ $amount[$key] }}">
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
                             </td>
                         </tr>
                     @endforeach
@@ -340,16 +345,18 @@
             showOtherMonths: true
         }).datepicker("setDate", new Date());;
         /* Append row */
-        @if (empty($requisition) && empty(old('material_name')))
-            appendCalculationRow();
-        @endif
+        $(document).ready(function(){
+            @if (empty($requisition) && empty(old('material_name')))
+                appendCalculationRow();
+            @endif
+        })
+        var indsd = 0;
         function appendCalculationRow() {
-            var type = $("input[name=type]:checked").val()
             let row = `<tr>
                             <td>
-                                <select name="out_from[]" class="form-control received_type" autocomplete="off">
+                                <select name="received_type[]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
-                                    @foreach ($out_from as $value)
+                                    @foreach ($received_type as $value)
                                         <option value="{{ $value }}">{{ strToUpper($value) }}</option>
                                     @endforeach
                                 </select>
@@ -357,57 +364,60 @@
                             <td>
                                 <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
                                 <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
-                                </td>
+                            </td>
                             <td class="form-group">
-                                <select class="form-control serial_code select2" name="serial_code[]">                      
+                                <select class="form-control material_name select2" name="material_name[]">
+                                    <option value="" readonly selected>Select Material</option>                  
                                 </select>
                                 <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
                                 <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
+                            </td>                            
+                            <td>
+                                <select class="form-control brand select2" name="brand[]">
+                                    <option value="" readonly selected>Select Brand</option>
+
+                                </select>
                             </td>
                             <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" readonly>
+                                <select class="form-control model select2" name="model[]">
+                                    <option value="" readonly selected>Select Model</option>
+
+                                </select>
+                            </td>
+                            <td class="select2_container">
+                                <select class="form-control serial_code select2" name='serial_code[${indsd}][]' multiple="multiple">
+
+                                </select>
                             </td>
                             <td>
-                                <input type="text" name="opening_balance[]" class="form-control opening_balance" readonly>
+                                <input name="unit[]" class="form-control unit" readonly autocomplete="off" type="text">
+                            </td> 
+                            <td>
+                                <input name="quantity[]" class="form-control quantity" autocomplete="off">
                             </td>
                             <td>
-                                <input type="text" name="brand[]" class="form-control brand" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" readonly>
-                            </td>
-                            <td>
-                                <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                            </td>                                                  
-                            <td>
-                                <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
-                            </td>
-                            <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10">
-                            </td>
-                            <td>
-                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
+                                <input name="remarks[]" class="form-control remarks" autocomplete="off">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                             </td>
                         </tr>
                     `;
-            $('#material_requisition tbody').append(row);
+                    indsd++;
+            $('#challan tbody').append(row);
+            $('.select2').select2({
+            });
+            $('.select2.serial_code').select2({
+                multiple: true,
+            });
         }
 
         /* Adds and removes quantity row on click */
-        $("#material_requisition")
-            .on('click', '.add-requisition-row', () => {
+        $("#challan")
+            .on('click', '.add-challan-row', () => {
                 appendCalculationRow();
             })
-            .on('click', '.remove-calculation-row', function() {
+            .on('click', '.remove-challan-row', function() {
                 $(this).closest('tr').remove();
             });
 
@@ -453,37 +463,15 @@
 
        
 
-        //Search Material
-        $(document).on('keyup focus', '.material_name', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-material') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $(this).closest('tr').find('.material_name').val(ui.item.label);
-                    $(this).closest('tr').find('.material_id').val(ui.item.value);
-                    $(this).closest('tr').find('.item_code').val(ui.item.item_code);
-                    $(this).closest('tr').find('.unit').val(ui.item.unit);
-                    return false;
-                }
-            });
-
-        });
+       
 
         $(function() {
             onChangeRadioButton();
 
-            $('.select2').select2();
+            $('.select2').select2({
+                maximumSelectionLength: 5,
+                scrollAfterSelect: true
+        });
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
@@ -521,10 +509,8 @@
                         $(this).val('');
                         return false;
                     }
-
                     $('#scm_requisition_id').val(ui.item.scm_requisition_id);
                     $('#mrs_no').val(ui.item.label);
-
                     return false;
                 }
             })
@@ -603,17 +589,15 @@
 
 
 
-
-
-        $(document).on('change keyup', '.type_no', function() {
+        $(document).on('keyup', '.type_no', function() {
                 var event_this = $(this).closest('tr');
+                ClearNext($(this));
                 let myObject = {
                     type: event_this.find('.received_type').val().toUpperCase(),
                 }
-                jquaryUiAjax('.type_no', "{{ route('searchTypeNo') }}", uiList, myObject);
+                jquaryUiAjax(this, "{{ route('searchTypeNo') }}", uiList, myObject);
 
                 function uiList(item) {
-                    console.log(item)
                     event_this.find('.type_no').val(item.label);
                     event_this.find('.type_id').val(item.id);
                     getMaterials(event_this)
@@ -621,106 +605,164 @@
                 }
             })
 
-            function getMaterials(event_this) {
-                let scm_requisition_id = $('#scm_requisition_id').val();
+            function ClearNext(selector) {
+                let sib = $(selector).parent().nextAll('td');
+                // loop siblings
+                sib.each(function() {
+                    let input = $(this).find('input');
+                    let select = $(this).find('select');
+                    if (!input.hasClass('unit')) {
+                        input.val('');
+                    }
+                    select.empty();
+                });
+            }
+            $(document).on('change', '.received_type', function() {
+                var event_this = $(this).closest('tr');
+                ClearNext($(this));
+            })
 
-                let received_type = event_this.find('.received_type').val().toUpperCase();
-                let receivable_id = event_this.find('.type_id').val();
-                console.log(scm_requisition_id,received_type,receivable_id);
-                $.ajax({
-                    url: "{{ route('mrsAndTypeWiseMaterials') }}",
-                    type: 'get',
-                    dataType: "json",
-                    data: {
+        function getMaterials(event_this) {
+
+                    let scm_requisition_id = $('#scm_requisition_id').val();
+                    let received_type = event_this.find('.received_type').val().toUpperCase();
+                    let receivable_id = event_this.find('.type_id').val();
+                    let material_name = event_this.find('.material_name');
+
+                    populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
                         scm_requisition_id: scm_requisition_id,
                         received_type: received_type,
                         receivable_id: receivable_id,
                         from_branch: $('#from_branch_id').val(),
                         to_branch: $('#to_branch_id').val(),
-                    },
-                    success: function(data) {
-                        let dropdown;
-
-                        dropdown = event_this.find('.serial_code');
-                        dropdown.empty();
-                        dropdown.append('<option selected disabled>Select Material</option>');
-                        dropdown.prop('selectedIndex', 0);
-                        data.materials.map(function(item) {
-                            console.log(item)
-                            dropdown.append($('<option></option>')
-                                .attr('value', item.material.id)
-                                .attr('data-material_name', item.material.name)
-                                .attr('data-brand', item.brand.name)
-                                .attr('data-model', item.model)
-                                .attr('data-unit', item.unit)
-                                .attr('data-type', item.material.type)
-                                .attr('data-initial_mark', item.initial_mark)
-                                .attr('data-final_mark', item.final_mark)
-                                .text(item.material.name + '-' + item.serial_code)
-                            )
-                        });
-                        dropdown.select2()
-                    }
-                })
-            }
-
-            $(document).on('change', '.serial_code', function() {
-                var elemmtn = $(this);
-                let global_fianl_mark = $(this).find(':selected').data('final_mark');
-                let material_name = (elemmtn).find(':selected').data('material_name');
-                let brand = (elemmtn).find(':selected').data('brand');
-                let model = (elemmtn).find(':selected').data('model');
-                let unit = (elemmtn).find(':selected').data('unit');
-                let type = $(this).find(':selected').data('type');
-                let initial_mark = $(this).find(':selected').data('initial_mark');
-                let final_mark = global_fianl_mark;
-
-                (elemmtn).closest('tr').find('.material_name').val(material_name);
-                (elemmtn).closest('tr').find('.brand').val(brand);
-                (elemmtn).closest('tr').find('.model').val(model);
-                (elemmtn).closest('tr').find('.unit').val(unit);
-
-                (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
-                (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
-                if (type == 'Drum') {
-                    (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(initial_mark);
-                    (elemmtn).closest('tr').find('.final_mark').attr('readonly', false).val(final_mark);
-                    $(document).on('keyup', '.final_mark', function() {
-                        var elemmtn = $(this);
-                        let initial_mark = (elemmtn).closest('tr').find('.initial_mark').val();
-                        let final_mark = (elemmtn).closest('tr').find('.final_mark').val();
-                        if (final_mark < initial_mark) {
-                            alert('Final Mark can not be smaller than Initial Mark');
-                            (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
-                        } else if (final_mark > global_fianl_mark) {
-                            alert('Final Mark can not be bigger than ' + global_fianl_mark);
-                            (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
-                        }
+                    }, material_name, 'value', 'label', {
+                        'data-type': 'type',
+                        'data-unit': 'unit'
                     })
-                } else {
-                    (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
-                    (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
-                };
+                 }
 
-                $.ajax({
-                    url: "{{ route('getMaterialStock') }}",
-                    type: 'get',
-                    dataType: "json",
-                    data: {
-                        material_id: $(this).val(),
-                        from_branch_id: $('#from_branch_id').val(),
-                        to_branch_id: $('#to_branch_id').val(),
-                        type: type
-                    },
-                    success: function(data) {
-                        // (elemmtn).closest('tr').find('.stock').val(data.stock);
-                        console.log(data);
-                        (elemmtn).closest('tr').find('.opening_balance').val(data
-                            .to_branch_balance);
-                        (elemmtn).closest('tr').find('.avaiable_quantity').val(data
-                            .from_branch_balance);
-                    }
+                $(document).on('change', '.material_name', function() {
+                    var event_this = $(this).closest('tr');
+                    ClearNext($(this));
+                    let material_id = $(this).val();
+                    let scm_requisition_id = $('#scm_requisition_id').val();
+                    let received_type = event_this.find('.received_type').val().toUpperCase();
+                    let receivable_id = event_this.find('.type_id').val();
+                    let brand = $(this).closest('tr').find('.brand');
+                    
+                   event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected').data('unit'));
+
+                    populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
+                        material_id: material_id,
+                        received_type: received_type,
+                        receivable_id: receivable_id,
+                    }, brand, 'value', 'label');
                 })
-            })
+
+                $(document).on('change', '.brand', function() {
+                    var event_this = $(this).closest('tr');
+                    ClearNext($(this));
+                    let brand_id = $(this).val();
+                    let material_id = event_this.find('.material_name').val();
+                    let scm_requisition_id = $('#scm_requisition_id').val();
+                    let received_type = event_this.find('.received_type').val().toUpperCase();
+                    let receivable_id = event_this.find('.type_id').val();
+                    let model = $(this).closest('tr').find('.model');
+
+                    populateDropdownByAjax("{{ route('brandWiseModels') }}", {
+                        brand_id: brand_id,
+                        material_id: material_id,
+                        received_type: received_type,
+                        receivable_id: receivable_id
+                    }, model, 'value', 'label');
+                });
+
+                $(document).on('change', '.model', function() {
+                    var event_this = $(this).closest('tr');
+                    ClearNext($(this));
+                    let model = $(this).val();
+                    let material_id = event_this.find('.material_name').val();
+                    let scm_requisition_id = $('#scm_requisition_id').val();
+                    let received_type = event_this.find('.received_type').val().toUpperCase();
+                    let receivable_id = event_this.find('.type_id').val();
+                    let brand_id = event_this.find('.brand').val();
+                    let serial_code = $(this).closest('tr').find('.serial_code');
+                    let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+                        'type');
+
+                   
+                    populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
+                        model: model,
+                        material_id: material_id,
+                        brand_id: brand_id,
+                        received_type: received_type,
+                        receivable_id: receivable_id
+                    }, serial_code, 'value', 'label',null,false);
+                 });
+
+                 $(document).on('change', '.serial_code', function() {
+                    let material_type = $(this).closest('tr').find('.material_name').find(':selected').data('type');
+                    if (material_type == 'Item') {
+                        $(this).closest('tr').find('.quantity').val($(this).val().length);
+                    }
+                 })
+            // $(document).on('change', '.serial_code', function() {
+            //     var elemmtn = $(this);
+            //     let global_fianl_mark = $(this).find(':selected').data('final_mark');
+            //     let material_name = (elemmtn).find(':selected').data('material_name');
+            //     let brand = (elemmtn).find(':selected').data('brand');
+            //     let model = (elemmtn).find(':selected').data('model');
+            //     let unit = (elemmtn).find(':selected').data('unit');
+            //     let type = $(this).find(':selected').data('type');
+            //     let initial_mark = $(this).find(':selected').data('initial_mark');
+            //     let final_mark = global_fianl_mark;
+
+            //     (elemmtn).closest('tr').find('.material_name').val(material_name);
+            //     (elemmtn).closest('tr').find('.brand').val(brand);
+            //     (elemmtn).closest('tr').find('.model').val(model);
+            //     (elemmtn).closest('tr').find('.unit').val(unit);
+
+            //     (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
+            //     (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
+            //     if (type == 'Drum') {
+            //         (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(initial_mark);
+            //         (elemmtn).closest('tr').find('.final_mark').attr('readonly', false).val(final_mark);
+            //         $(document).on('keyup', '.final_mark', function() {
+            //             var elemmtn = $(this);
+            //             let initial_mark = (elemmtn).closest('tr').find('.initial_mark').val();
+            //             let final_mark = (elemmtn).closest('tr').find('.final_mark').val();
+            //             if (final_mark < initial_mark) {
+            //                 alert('Final Mark can not be smaller than Initial Mark');
+            //                 (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
+            //             } else if (final_mark > global_fianl_mark) {
+            //                 alert('Final Mark can not be bigger than ' + global_fianl_mark);
+            //                 (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
+            //             }
+            //         })
+            //     } else {
+            //         (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
+            //         (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
+            //     };
+
+            //     $.ajax({
+            //         url: "{{ route('getMaterialStock') }}",
+            //         type: 'get',
+            //         dataType: "json",
+            //         data: {
+            //             material_id: $(this).val(),
+            //             from_branch_id: $('#from_branch_id').val(),
+            //             to_branch_id: $('#to_branch_id').val(),
+            //             type: type
+            //         },
+            //         success: function(data) {
+            //             // (elemmtn).closest('tr').find('.stock').val(data.stock);
+            //             console.log(data);
+            //             (elemmtn).closest('tr').find('.opening_balance').val(data
+            //                 .to_branch_balance);
+            //             (elemmtn).closest('tr').find('.avaiable_quantity').val(data
+            //                 .from_branch_balance);
+            //         }
+            //     })
+            // })
     </script>
 @endsection
