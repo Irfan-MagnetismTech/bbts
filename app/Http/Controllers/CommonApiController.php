@@ -233,24 +233,26 @@ class CommonApiController extends Controller
     {
         $division_id = request('division_id');
         $districts = District::where('division_id', $division_id)->limit(15)
-            ->get();
-        $data = '<option value="">Select District</option>';
-        foreach ($districts as $district) {
-            $data .= '<option value="' . $district->id . '">' . $district->name . '</option>';
-        }
-        return response()->json($data);
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'text' => $item->name,
+            ]);
+
+        return response()->json($districts);
     }
 
     public function getThanas()
     {
         $district_id = request('district_id');
         $thanas = Thana::where('district_id', $district_id)->limit(15)
-            ->get();
-        $data = '<option value="">Select Thana</option>';
-        foreach ($thanas as $thana) {
-            $data .= '<option value="' . $thana->id . '">' . $thana->name . '</option>';
-        }
-        return response()->json($data);
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'text' => $item->name,
+            ]);
+        
+        return response()->json($thanas);
     }
 
     public function getSupportTeamMembers() {

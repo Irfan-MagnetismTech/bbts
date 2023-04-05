@@ -161,8 +161,10 @@ function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
 
 /**
  * Ajax dependent dropdown with select2
+ *
  * Example Usage from Blade:
- * populateDropdownByAjax("{!! route('getThanaByDistrict') !!}", {district_id: $('#district_id').val()}, '#thana_id', 'value', 'label', {data-district_id: 'district_id'})
+ *
+ * populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {district_id: $('#district_id').val()}, '#thana_id', 'value', 'label', {data-district_id: 'district_id'})
  * @param {*} url
  * @param {object} data
  * @param {*} dropdownSelector
@@ -194,7 +196,6 @@ function populateDropdownByAjax(
                     "<option selected disabled>Select Option</option>"
                 );
             }
-            
             data.options.map(function (item) {
                 value = item.hasOwnProperty(valueColumn)
                     ? item[valueColumn]

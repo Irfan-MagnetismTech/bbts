@@ -78,23 +78,4 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script>
-        $(window).scroll(function() {
-            //set scroll position in session storage
-            sessionStorage.scrollPos = $(window).scrollTop();
-        });
-        var init = function() {
-            //get scroll position in session storage
-            $(window).scrollTop(sessionStorage.scrollPos || 0)
-        };
-        window.onload = init;
-
-        $(document).ready(function() {
-            $('#dataTable').DataTable({
-                stateSave: true
-            });
-        });
-    </script>
 @endsection
