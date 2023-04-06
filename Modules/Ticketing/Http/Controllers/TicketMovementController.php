@@ -107,7 +107,7 @@ class TicketMovementController extends Controller
             return redirect()->route('support-tickets.show',$ticketId)->withErrors('Ticket is Pending or already closed. Or you are not eligible to move this ticket.');
         }
 
-        $supportTeams = (new BbtsGlobalService())->getSupportTeam();
+        $supportTeams = (new BbtsGlobalService())->getThirdLayerSupportTeam();
 
         $sameTeamUsers = [];
 

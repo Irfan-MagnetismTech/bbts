@@ -42,7 +42,7 @@
                             <label for="closing_date" class="font-weight-bold">Closing Date & Time:</label>
 
                             <input type="datetime-local" class="form-control" id="closing_date" name="closing_date" aria-describedby="closing_date"
-                            value="{{ old('closing_date') ?? null }}">
+                            value="{{ old('closing_date') ?? \Carbon\Carbon::now() }}">
 
                         </div>
                         <div class="form-group col-8 mx-auto">

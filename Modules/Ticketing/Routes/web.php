@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\ClientFeedbackController;
 use Illuminate\Support\Facades\Route;
 use Modules\Ticketing\Http\Controllers\NotifyClientController;
 use Modules\Ticketing\Http\Controllers\PopWiseIssueController;
@@ -58,6 +60,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::get('reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'reopenTicket'])->name('reopen-ticket');
     Route::post('process-reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'processReopenTicket'])->name('process-reopen-ticket');
 
+    Route::get('feedback-list', [ClientFeedbackController::class, 'feedbackList'])->name('feedback-list');
 
     // Ticketing Reports
     Route::prefix('reports')->group(function() {

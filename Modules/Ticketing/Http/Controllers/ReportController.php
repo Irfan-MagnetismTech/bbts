@@ -19,7 +19,7 @@ class ReportController extends Controller
         $supportTickets = SupportTicket::get();
         $ticketSources = (new BbtsGlobalService())->getTicketSources();
         $complainTypes = (new BbtsGlobalService())->getComplainTypes();
-        return view('ticketing::reports.index', compact('supportTickets', 'ticketSources'));
+        return view('ticketing::reports.index', compact('supportTickets', 'ticketSources', 'complainTypes'));
     }
 
     /**

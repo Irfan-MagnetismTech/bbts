@@ -240,6 +240,10 @@ class PermissionSeeder extends Seeder
                 'name'=>'bulk-email-send',
                 'guard_name'=>'web',
             ],
+            [
+                'name'=> 'feedback-list',
+                'guard_name'=>'web',
+            ]
 
         ];
 

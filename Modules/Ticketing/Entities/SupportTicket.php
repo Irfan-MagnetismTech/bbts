@@ -5,6 +5,7 @@ namespace Modules\Ticketing\Entities;
 use Modules\Admin\Entities\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\ClientDetail;
+use Modules\Ticketing\Entities\ClientFeedback;
 
 class SupportTicket extends Model
 {
@@ -28,5 +29,9 @@ class SupportTicket extends Model
 
     public function supportTicketLifeCycles() {
         return $this->hasMany(SupportTicketLifeCycle::class);
+    }
+
+    public function clientFeedbacks() {
+        return $this->hasMany(ClientFeedback::class);
     }
 }
