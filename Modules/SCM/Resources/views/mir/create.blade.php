@@ -390,8 +390,8 @@
             @if (empty($materialReceive) && empty(old('material_id')))
                 appendCalculationRow();
             @endif
+            var indx = 0;
             function appendCalculationRow() {
-                var indx = 0;
                 let row = `<tr>
                             <td>
                                 <select name="received_type[]" class="form-control received_type" autocomplete="off">
