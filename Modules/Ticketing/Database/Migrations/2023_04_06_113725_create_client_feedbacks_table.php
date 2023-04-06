@@ -3,10 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use Modules\Admin\Entities\Branch;
-use Modules\Admin\Entities\Pop;
 use Modules\Sales\Entities\Client;
-use Modules\Sales\Entities\ClientDetail;
 use Modules\Ticketing\Entities\SupportTicket;
 
 return new class extends Migration
@@ -18,13 +15,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('clients_feedbacks', function (Blueprint $table) {
+        Schema::create('client_feedbacks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(SupportTicket::class);
+            $table->string('fr_composite_key');
+            $table->foreignIdFor(Client::class);
             $table->string('rating');
             $table->string('feedback')->nullable();
-            $table->foreignIdFor(ClientDetail::class);
-            $table->foreignIdFor(Client::class);
             $table->timestamps();
         });
     }
@@ -36,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pop_wise_issues');
+        Schema::dropIfExists('client_feedbacks');
     }
 };

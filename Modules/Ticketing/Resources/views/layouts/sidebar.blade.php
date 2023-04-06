@@ -21,7 +21,7 @@
     <li class="{{ request()->routeIs('feedback-list') ? 'active' : null }}">
         <a href="{{ route('feedback-list') }}">
             <span class="pr-2 pt-1 w-25px d-inline-block"><i class="far fa-comments"></i></span>
-            <span class="pcoded-mtext">Clients Feedback</span>
+            <span class="pcoded-mtext">Client Feedbacks</span>
         </a>
     </li>
     @endif

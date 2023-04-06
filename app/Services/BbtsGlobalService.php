@@ -9,6 +9,7 @@ use Modules\Admin\Entities\User;
 use App\Http\Controllers\Controller;
 use App\Models\Dataencoding\Department;
 use App\Models\Dataencoding\Designation;
+use Modules\Ticketing\Entities\ClientFeedback;
 use Modules\Ticketing\Entities\SupportTeam;
 use Modules\Ticketing\Entities\TicketSource;
 use Modules\Ticketing\Entities\SupportTicket;
@@ -186,5 +187,9 @@ class BbtsGlobalService extends Controller
                     'supportTicketId' => $supportTicketId
                 ], 
             'supportTicketMovements' => $supportTicketMovements];
+    }
+
+    public function getClientFeedbacks($limit = -1) {
+        return ClientFeedback::orderBy('created_at', 'desc')->take($limit)->get();
     }
 }
