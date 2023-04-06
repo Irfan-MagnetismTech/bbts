@@ -421,7 +421,6 @@
                             </td>
                             <td class="select2container">
                                 <select class="form-control serial_code select2" name="serial_code[${indx}][]" multiple="multiple">
-                                    <option value="null" selected>Select Out From</option>
 
                                 </select>
                             </td>
