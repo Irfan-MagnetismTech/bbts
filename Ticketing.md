@@ -14,4 +14,9 @@ Ticket accpetance is kind of a movement actually. **Why?** Because it change the
 - FORWARD can only be to 3RD Layer Teams.
     (new BbtsGlobalService())->getThirdLayerSupportTeam();
 
+- Ticket Close while opening
+
+- Estimated Time in Custom Email. Where should we show it.
+
+- Take Decision to whome should we send email. Specific Branches email or mail clients email.
 

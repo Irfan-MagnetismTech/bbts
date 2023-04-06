@@ -17,6 +17,14 @@
         </a>
     </li>
     @endif
+    @if(auth()->user()->hasPermissionTo('feedback-list'))
+    <li class="{{ request()->routeIs('feedback-list') ? 'active' : null }}">
+        <a href="{{ route('feedback-list') }}">
+            <span class="pr-2 pt-1 w-25px d-inline-block"><i class="far fa-comments"></i></span>
+            <span class="pcoded-mtext">Clients Feedback</span>
+        </a>
+    </li>
+    @endif
     @if(auth()->user()->hasPermissionTo('forwarded-ticket-index'))
     <li class="{{ request()->routeIs('forwarded-tickets') ? 'active' : null }}">
         <a href="{{ route('forwarded-tickets') }}">

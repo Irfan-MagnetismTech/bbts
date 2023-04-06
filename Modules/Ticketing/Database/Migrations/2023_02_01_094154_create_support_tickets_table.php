@@ -42,6 +42,7 @@ return new class extends Migration
             $table->foreignId('updated_by')->nullable()->constrained('users', 'id');
             $table->foreignId('reopened_by')->nullable()->constrained('users', 'id');
             $table->dateTime('reopening_date')->nullable();
+            $table->integer('reopen_count')->default(0);
             $table->dateTime('opening_date');
             $table->dateTime('closing_date')->nullable();
             $table->foreignId('closed_by')->nullable();

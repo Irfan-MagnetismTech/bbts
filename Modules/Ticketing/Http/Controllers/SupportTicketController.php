@@ -119,10 +119,10 @@ class SupportTicketController extends Controller
         $supportTicket = DB::transaction(function() use($ticketInfo) {
             $ticket = SupportTicket::create($ticketInfo);
             $ticket->supportTicketLifeCycles()->create([
-                'status' => $ticketInfo['status'],
+                'status' => 'Pending', // We are not taking $ticketInfo['status'] real input as it might be selected as closed.
                 'user_id' => auth()->user()->id,
                 'support_ticket_id' => $ticket->id,
-                'remarks' => 'Ticket Created.'
+                'remarks' => 'Ticket Created by '.auth()->user()->name,
             ]);
             return $ticket;
         });
@@ -137,19 +137,35 @@ class SupportTicketController extends Controller
         
 
         if($request->mailNotification == 1) {
-            $to = $supportTicket?->clientDetail?->client?->email;
+            $to = $supportTicket?->clientDetail?->email;
             $notificationError = (new EmailService())->sendEmail($to, $cc, $receiver, $subject, $message);
         }
         if($request->smsNotification == 1) {
-            $to = $supportTicket?->clientDetail?->client?->mobile;
+            $to = $supportTicket?->clientDetail?->mobile;
             $notificationError = (new SmsService())->sendSms($to, $message);
         }
 
-        //
+        if($supportTicket->status == 'Closed') {
+            $supportTicket->supportTicketLifeCycles()->create([
+                'status' => 'Accepted', 
+                'user_id' => auth()->user()->id,
+                'support_ticket_id' => $supportTicket->id,
+                'remarks' => 'Ticket Accepted by '.auth()->user()->name
+            ]);
 
-        return redirect()->route('support-tickets.index')->with('message', 'Ticket Opened Successfully');
+            $supportTicket->update([
+                'status' => 'Accepted'
+            ]);
+
+            return redirect()->route('close-ticket', ['supportTicketId' => $supportTicket->id])->with('message', 'Ticket Opened Successfully.');
+        }
+
+        return redirect()->route('support-tickets.index')->with('message', 'Ticket Opened Successfully.');
        } catch (QueryException $e) {
-        return back()->withInput()->withErrors($e->getMessage());
+        // return back()->withInput()->withErrors($e->getMessage());
+        return back()->withInput()->withErrors([
+            'message' => 'Something went wrong. Please try again.'
+        ]);
        }
         
     }
@@ -201,7 +217,7 @@ class SupportTicketController extends Controller
             ]);
         }
         $ticketInfo = $request->only([
-                        'fr_composite_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
+                        'fr_composite_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 
                         'mailNotification', 'smsNotification'
                     ]);
 
@@ -227,7 +243,7 @@ class SupportTicketController extends Controller
             $supportTicket->update($ticketInfo);
 
             $supportTicket->supportTicketLifeCycles()->create([
-                'status' => $ticketInfo['status'],
+                'status' => $supportTicket->status,
                 'user_id' => auth()->user()->id,
                 'support_ticket_id' => $supportTicket->id,
                 'remarks' => 'Ticket Updated.'
@@ -488,8 +504,9 @@ class SupportTicketController extends Controller
         $closingDate = $supportTicket->closing_date;
         $currentTime = \Carbon\Carbon::now();
         $minutesDiff = $currentTime->diffInMinutes($closingDate);
+        $reopenValidity = config('businessinfo.ticketReopenValidity');
 
-        if($supportTicket->status != 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved' || $minutesDiff > (60*24)) {
+        if($supportTicket->status != 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved' || $minutesDiff > $reopenValidity) {
             return redirect()->route('support-tickets.index')->withErrors([
                 'message' => 'You cannot reopen this Ticket. Ticket No: '.$supportTicket->ticket_no
             ]);
@@ -530,6 +547,7 @@ class SupportTicketController extends Controller
                     'status' => 'Reopen',
                     'reopened_by' => auth()->user()->id,
                     'reopening_date' => Carbon::now(),
+                    'reopen_count' => ($supportTicket->reopen_count + 1)
                 ]);
 
                 $supportTicket->supportTicketLifeCycles()->create([

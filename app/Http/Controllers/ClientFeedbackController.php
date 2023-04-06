@@ -39,4 +39,8 @@ class ClientFeedbackController extends Controller
             return redirect('https://bbts.net')->with('error', 'Something went wrong');
         }
     }
+
+    public function feedbackList() {
+        
+    }
 }
