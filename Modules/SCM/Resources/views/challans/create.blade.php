@@ -354,7 +354,7 @@
         function appendCalculationRow() {
             let row = `<tr>
                             <td>
-                                <select name="received_type[]" class="form-control received_type" autocomplete="off">
+                                <select name="received_type[${indsd}]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
                                     @foreach ($received_type as $value)
                                         <option value="{{ $value }}">{{ strToUpper($value) }}</option>
@@ -362,24 +362,24 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
-                                <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
+                                <input type="text" name="type_no[${indsd}]" class="form-control type_no" autocomplete="off">
+                                <input type="hidden" name="type_id[${indsd}]" class="form-control type_id" autocomplete="off">
                             </td>
                             <td class="form-group">
-                                <select class="form-control material_name select2" name="material_name[]">
+                                <select class="form-control material_name select2" name="material_name[${indsd}]">
                                     <option value="" readonly selected>Select Material</option>                  
                                 </select>
-                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
+                                <input type="hidden" name="item_code[${indsd}]" class="form-control item_code" autocomplete="off"> 
+                                <input type="hidden" name="material_type[${indsd}]" class="form-control material_type" autocomplete="off"> 
                             </td>                            
                             <td>
-                                <select class="form-control brand select2" name="brand[]">
+                                <select class="form-control brand select2" name="brand[${indsd}]">
                                     <option value="" readonly selected>Select Brand</option>
 
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control model select2" name="model[]">
+                                <select class="form-control model select2" name="model[${indsd}]">
                                     <option value="" readonly selected>Select Model</option>
 
                                 </select>
@@ -390,16 +390,16 @@
                                 </select>
                             </td>
                             <td>
-                                <input name="unit[]" class="form-control unit" readonly autocomplete="off" type="text">
+                                <input name="unit[${indsd}]" class="form-control unit" readonly autocomplete="off" type="text">
                             </td> 
                             <td>
-                                <input name="quantity[]" class="form-control quantity" autocomplete="off">
+                                <input name="quantity[${indsd}]" class="form-control quantity" autocomplete="off">
                             </td>
                             <td>
-                                <input name="remarks[]" class="form-control remarks" autocomplete="off">
+                                <input name="remarks[${indsd}]" class="form-control remarks" autocomplete="off">
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
                             </td>
                         </tr>
                     `;
