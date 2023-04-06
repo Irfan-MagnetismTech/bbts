@@ -4,7 +4,7 @@
 @php
     $is_old = old('supplier_name') ? true : false;
     $form_heading = !empty($materialReceive) ? 'Update' : 'Add';
-    $form_url = !empty($materialReceive) ? route('material-receives.update', $materialReceive->id) : route('material-receives.store');
+    $form_url = !empty($materialReceive) ? route('material-issues.update', $materialReceive->id) : route('material-issues.store');
     $form_method = !empty($materialReceive) ? 'PUT' : 'POST';
     
     $branch_id = old('branch_id', !empty($materialReceive) ? $materialReceive->branch_id : null);
@@ -38,11 +38,17 @@
             max-width: 350px;
             white-space: inherit;
         }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice span {
+            color: #000;
+            font-size: 11px;
+            font-weight: bold;
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('material-receives.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('material-issues.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -87,7 +93,7 @@
             <label for="from_branch">From Branch:</label>
             <input type="text" class="form-control branch" id="from_branch" aria-describedby="from_branch"
                 name="from_branch" value="{{ $mrs_no }}" placeholder="Search Branch....">
-            <input type="hidden" class="form-control branch_id" id="from_branch_id" name="from_branch_id"
+            <input type="hidden" class="form-control branch_id" id="from_branch_id" name="branch_id"
                 aria-describedby="from_branch_id" value="{{ $po_id }}">
         </div>
 
@@ -134,12 +140,12 @@
                 <th>Received Type</th>
                 <th>Type No</th>
                 <th>Material Name</th>
-                {{-- <th>Opening Balance</th> --}}
                 <th>Brand</th>
                 <th>Model</th>
                 <th>Serial Code</th>
                 <th>Unit</th>
-                <th>Avaliable Qty</th>
+                <th>Current Stock(Form)</th>
+                <th>Current Stock(To)</th>
                 <th>Issued Qty</th>
                 <th>Remarks</th>
                 <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
@@ -385,7 +391,7 @@
                 appendCalculationRow();
             @endif
             function appendCalculationRow() {
-
+                var indx = 0;
                 let row = `<tr>
                             <td>
                                 <select name="received_type[]" class="form-control received_type" autocomplete="off">
@@ -400,21 +406,22 @@
                                 <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
                             </td>
                             <td class="form-group">
-                                <select class="form-control material_name select2" name="material_name[]">
+                                <select class="form-control material_name select2" name="material_name[${indx}][]">
                                 </select>
                                 <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
                                 <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
                             </td>                            
                             <td>
-                                <select class="form-control brand select2" name="brand[]">
+                                <select class="form-control brand select2" name="brand[${indx}][]">
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control model select2" name="model[]">
+                                <select class="form-control model select2" name="model[${indx}][]">
                                 </select>
                             </td>
                             <td class="select2container">
-                                <select class="form-control serial_code select2" name="serial_code[]" multiple="multiple">
+                                <select class="form-control serial_code select2" name="serial_code[${indx}][]" multiple="multiple">
+                                    <option value="null" selected>Select Out From</option>
 
                                 </select>
                             </td>
@@ -425,16 +432,20 @@
                                 <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" readonly>
                             </td>
                             <td>
+                                <input class="form-control opening_balance" name="opening_balance[]" aria-describedby="date" readonly>
+                            </td>
+                            <td>
                                 <input name="issued_qty[]" class="form-control issued_qty" autocomplete="off" type="number">
                             </td>
                             <td>
-                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
+                                <input name="remarks[]" class="form-control remarks" autocomplete="off">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                             </td>
                         </tr>
                     `;
+                indx++;
                 $('#material_requisition tbody').append(row);
                 $('.select2').select2({
                     maximumSelectionLength: 5,
@@ -521,6 +532,7 @@
 
             $(document).on('change', '.material_name', function() {
                 var event_this = $(this).closest('tr');
+                event_this.find('.issued_qty').attr('readonly', false);
                 clearNext($(this));
                 let material_id = $(this).val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
@@ -569,7 +581,11 @@
                     'type');
 
                 if (material_type == 'Drum') {
+                    var disabledOption = true;
                     serial_code.attr('multiple', false);
+                } else {
+                    var disabledOption = false;
+                    serial_code.attr('multiple', true);
                 }
                 populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
                     model: model,
@@ -577,25 +593,24 @@
                     brand_id: brand_id,
                     received_type: received_type,
                     receivable_id: receivable_id
-                }, serial_code, 'value', 'label', null, false);
+                }, serial_code, 'value', 'label', null, disabledOption);
             });
 
-            $(document).on('change', '.material_name', function() {
+            $(document).on('change', '.model, .material_name, .brand', function() {
                 var elemmtn = $(this);
-                let unit = (elemmtn).find(':selected').data('unit');
-                let type = $(this).find(':selected').data('type');
-
-                (elemmtn).closest('tr').find('.unit').val(unit);
 
                 $.ajax({
                     url: "{{ route('getMaterialStock') }}",
                     type: 'get',
                     dataType: "json",
                     data: {
-                        material_id: $(this).val(),
+                        material_id: (elemmtn).closest('tr').find('.material_name').val(),
+                        brand_id: (elemmtn).closest('tr').find('.brand').val(),
+                        model: (elemmtn).closest('tr').find('.model').val(),
+                        received_type: (elemmtn).closest('tr').find('.received_type').val()
+                            .toUpperCase(),
                         from_branch_id: $('#from_branch_id').val(),
-                        to_branch_id: $('#to_branch_id').val(),
-                        type: type
+                        to_branch_id: $('#to_branch_id').val()
                     },
                     success: function(data) {
                         (elemmtn).closest('tr').find('.opening_balance').val(data
@@ -607,10 +622,14 @@
             })
 
             $(document).on('change', '.serial_code', function() {
-                let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+                let elemmtn = $(this).closest('tr');
+                let material_type = (elemmtn).find('.material_name').find(':selected').data(
                     'type');
                 if (material_type == 'Item') {
-                    $(this).closest('tr').find('.issued_qty').val($(this).val().length);
+                    (elemmtn).find('.issued_qty').attr('readonly', true);
+                    (elemmtn).find('.issued_qty').val($(this).val().length);
+                } else {
+                    (elemmtn).find('.issued_qty').attr('readonly', false);
                 }
             });
 

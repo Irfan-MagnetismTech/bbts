@@ -3,7 +3,9 @@
 namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\SCM\Entities\ScmMir;
 use Modules\SCM\Entities\ScmMrr;
+use Illuminate\Http\JsonResponse;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -13,10 +15,9 @@ use Modules\SCM\Entities\StockLedger;
 use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SCM\Entities\ScmMir;
+use Modules\SCM\Http\Requests\ScmMirRequest;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
-use Modules\SCM\Http\Requests\ScmMirRequest;
 
 class ScmMirController extends Controller
 {
@@ -55,6 +56,7 @@ class ScmMirController extends Controller
      */
     public function store(ScmMirRequest $request)
     {
+        dd($request->all());
         $data['mir_no'] = $this->mirNo;
         $data['received_date'] = date('Y-m-d', strtotime($data['received_date']));
         $data['received_by'] = auth()->user()->id;
@@ -68,7 +70,6 @@ class ScmMirController extends Controller
 
         if ($mir) {
             $this->updateStockLedger($data, $mir);
-            $this->updateFiberTracking($data, $mir);
             $this->updateScmRequisitionDetail($data, $mir);
             $this->updateScmPurchaseRequisition($data, $mir);
             $this->updateScmMrr($data, $mir);
@@ -81,22 +82,6 @@ class ScmMirController extends Controller
     {
         $stockLedger = StockLedger::where('mrr_no', $data['mrr_no'])->first();
         $stockLedger->update([
-            'mir_no' => $mir->mir_no,
-            'mir_id' => $mir->id,
-            'received_date' => $mir->received_date,
-            'received_by' => $mir->received_by,
-            'received_type' => $mir->received_type,
-            'received_from' => $mir->received_from,
-            'received_to' => $mir->received_to,
-            'received_remarks' => $mir->received_remarks,
-            'received_status' => $mir->received_status,
-        ]);
-    }
-
-    private function updateFiberTracking($data, $mir)
-    {
-        $fiberTracking = FiberTracking::where('mrr_no', $data['mrr_no'])->first();
-        $fiberTracking->update([
             'mir_no' => $mir->mir_no,
             'mir_id' => $mir->id,
             'received_date' => $mir->received_date,
@@ -294,6 +279,11 @@ class ScmMirController extends Controller
         return response()->json($data);
     }
 
+    /**
+     * brandWiseModels
+     *
+     * @return void
+     */
     public function brandWiseModels()
     {
         $data['options'] = StockLedger::query()
@@ -315,6 +305,11 @@ class ScmMirController extends Controller
         return response()->json($data);
     }
 
+    /**
+     * Get model wise serial codes
+     *
+     * @return void
+     */
     public function modelWiseSerialCodes()
     {
         $data['options'] = StockLedger::query()
@@ -334,28 +329,46 @@ class ScmMirController extends Controller
         return response()->json($data);
     }
 
-    public function getMaterialStock()
+    /**
+     * Common function for all branch stock
+     *
+     * @param  integer $branch branch id form request()
+     * @return integer sum of stock
+     */
+    public function branchWiseStock($branch): int
     {
-        if (request()->type == 'Drum') {
-            $from_branch_balance = FiberTracking::query()
-                ->where('branch_id', request()->from_branch_id)
-                ->sum('quantity');
-            $to_branch_balance = FiberTracking::query()
-                ->where('branch_id', request()->to_branch_id)
-                ->sum('quantity');
-        } else {
-            $from_branch_balance = StockLedger::query()
-                ->where('branch_id', request()->from_branch_id)
-                ->where('material_id', request()->material_id)
-                ->sum('quantity');
-            $to_branch_balance = StockLedger::query()
-                ->where('branch_id', request()->to_branch_id)
-                ->where('material_id', request()->material_id)
-                ->sum('quantity');
-        }
+        $branch_balance = StockLedger::query()
+            ->where([
+                'branch_id' => $branch,
+                'received_type' => request()->received_type,
+            ])
+            ->when(request()->material_id, function ($query) {
+                $query->where('material_id', request()->material_id);
+            })
+            ->when(request()->brand_id, function ($query) {
+                $query->where('brand_id', request()->brand_id);
+            })
+            ->when(request()->model, function ($query) {
+                $query->where('model', request()->model);
+            })
+            ->sum('quantity');
+
+        return $branch_balance;
+    }
+
+    /**
+     * Get branch wise stock for from and to branch
+     *
+     * @return JsonResponse
+     * @type Array
+     * @response { "from_branch_balance": 0, "to_branch_balance": 0 }
+     * 
+     */
+    public function getMaterialStock(): JsonResponse
+    {
         $data = [
-            'from_branch_balance' => $from_branch_balance,
-            'to_branch_balance' => $to_branch_balance,
+            'from_branch_balance' => $this->branchWiseStock(request()->from_branch_id),
+            'to_branch_balance' => $this->branchWiseStock(request()->to_branch_id),
         ];
         return response()->json($data);
     }
