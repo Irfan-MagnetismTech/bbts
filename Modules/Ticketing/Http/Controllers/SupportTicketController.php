@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Notification;
 use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Entities\TicketMovement;
 use App\Notifications\TicketMovementNotification;
+use Exception;
 use Modules\Ticketing\Entities\SupportTeamMember;
 use Modules\Ticketing\Entities\SupportQuickSolution;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
@@ -556,16 +557,24 @@ class SupportTicketController extends Controller
                     'remarks' => 'Ticket Reopened by '.auth()->user()->name,
                     'description' => $request->remarks,
                 ]);
+
+                $notificationMessage = "Ticket ".$supportTicket->ticket_no." is reopened by ".auth()->user()->name;
+                $authorizedMember = User::findOrFail($supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id);
+    
+                Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
+
             });
-            $notificationMessage = "Ticket ".$supportTicket->ticket_no." is reopened by ".auth()->user()->name;
-            $authorizedMember = User::findOrFail($supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id);
-            Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
+           
 
             return redirect()->route('support-tickets.index')->with('message', 'Ticket is reopened successfully.');
             
-        } catch (QueryException $e) {
-            return back()->withErrors([
-                'message' => $e->getMessage()
+        } catch (Exception $e) {
+            // return back()->withInput()->withErrors([
+            //     'message' => $e->getMessage()
+            // ]);
+
+            return back()->withInput()->withErrors([
+                'message' => 'Something went wrong. Please try again.'
             ]);
         }
     }
