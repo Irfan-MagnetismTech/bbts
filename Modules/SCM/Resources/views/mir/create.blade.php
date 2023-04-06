@@ -394,7 +394,7 @@
             function appendCalculationRow() {
                 let row = `<tr>
                             <td>
-                                <select name="received_type[]" class="form-control received_type" autocomplete="off">
+                                <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
                                     @foreach ($received_type as $value)
                                         <option value="{{ $value }}">{{ strToUpper($value) }}</option>
@@ -402,21 +402,21 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
-                                <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
+                                <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
+                                <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
                             </td>
                             <td class="form-group">
-                                <select class="form-control material_name select2" name="material_name[${indx}][]">
+                                <select class="form-control material_name select2" name="material_name[${indx}]">
                                 </select>
-                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
+                                <input type="hidden" name="item_code[${indx}]" class="form-control item_code" autocomplete="off"> 
+                                <input type="hidden" name="material_type[${indx}]" class="form-control material_type" autocomplete="off"> 
                             </td>                            
                             <td>
-                                <select class="form-control brand select2" name="brand[${indx}][]">
+                                <select class="form-control brand select2" name="brand[${indx}]">
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control model select2" name="model[${indx}][]">
+                                <select class="form-control model select2" name="model[${indx}]">
                                 </select>
                             </td>
                             <td class="select2container">
@@ -425,19 +425,19 @@
                                 </select>
                             </td>
                             <td>
-                                <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                                <input name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly>
                             </td>                                            
                             <td>
-                                <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" readonly>
+                                <input class="form-control avaiable_quantity" name="avaiable_quantity[${indx}]" aria-describedby="date" readonly>
                             </td>
                             <td>
-                                <input class="form-control opening_balance" name="opening_balance[]" aria-describedby="date" readonly>
+                                <input class="form-control opening_balance" name="opening_balance[${indx}]" aria-describedby="date" readonly>
                             </td>
                             <td>
-                                <input name="issued_qty[]" class="form-control issued_qty" autocomplete="off" type="number">
+                                <input name="issued_qty[${indx}]" class="form-control issued_qty" autocomplete="off" type="number">
                             </td>
                             <td>
-                                <input name="remarks[]" class="form-control remarks" autocomplete="off">
+                                <input name="remarks[${indx}]" class="form-control remarks" autocomplete="off">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
