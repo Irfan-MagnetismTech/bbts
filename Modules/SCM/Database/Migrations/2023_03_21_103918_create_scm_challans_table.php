@@ -15,7 +15,14 @@ return new class extends Migration
     {
         Schema::create('scm_challans', function (Blueprint $table) {
             $table->id();
-
+            $table->string('type')->nullable();
+            $table->string('challan_no')->nullable();
+            $table->date('date')->nullable();
+            $table->bigInteger('scm_requisition_id')->nullable();
+            $table->string('purpose')->nullable();
+            $table->bigInteger('client_id')->nullable();
+            $table->bigInteger('branch_id')->nullable();
+            $table->bigInteger('pop_id')->nullable();
             $table->timestamps();
         });
     }
