@@ -391,6 +391,7 @@
                 appendCalculationRow();
             @endif
             var indx = 0;
+
             function appendCalculationRow() {
                 let row = `<tr>
                             <td>
@@ -530,15 +531,63 @@
             }
 
             $(document).on('change', '.material_name', function() {
+                //check material already selected or not if selected then select the disabled option
+                var current_selector = $(this);
+                var current_material = $(this).val();
+                var current_value_brand = $(this).closest('tr').find('.brand').val();
+                var current_value_model = $(this).closest('tr').find('.model').val();
+                var current_key = `${current_material}_${current_value_brand}_${current_value_model}`;
+                console.log(current_key);
+                var count_row = $('#material_requisition tbody tr').length;
+                let material_list = $('.material_name').not($(this));
+
+                material_list.each(function() {
+                    var material_name = $(this).val();
+                    var brand = $(this).closest('tr').find('.brand').val();
+                    var model = $(this).closest('tr').find('.model').val();
+                    var key = `${material_name}_${brand}_${model}`;
+                    console.log('key', key, 'current_key', current_key);
+                    if (key === current_key && count_row > 1) {
+                        swal.fire({
+                            title: "Material Already Selected",
+                            type: "warning",
+                        }).then(function() {
+                            $(current_selector).val($(current_selector).find('option:first')
+                                    .val())
+                                .trigger(
+                                    'change.select2');
+                            return false;
+                        });
+                    }
+                });
+                return false;
+                // $('#material_requisition tbody tr').each(function() {
+                //     var material_name = $(this).find('.material_name').val();
+                //     console.log('materaial', material_name, 'current_value', current_material);
+                //     if (material_name === current_material && count_row > 1) {
+                //         swal.fire({
+                //             title: "Material Already Selected",
+                //             type: "warning",
+                //         }).then(function() {
+                //             // $(current_value).val($(this).find('option[disabled]').val()).trigger(
+                //             //     'change.select2');
+                //         });
+
+                //         return false;
+                //     }
+                // });
+
                 var event_this = $(this).closest('tr');
-                event_this.find('.issued_qty').attr('readonly', false);
+                event_this.find('.issued_qty').attr(
+                    'readonly', false);
                 clearNext($(this));
                 let material_id = $(this).val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
                 let received_type = event_this.find('.received_type').val().toUpperCase();
                 let receivable_id = event_this.find('.type_id').val();
                 let brand = $(this).closest('tr').find('.brand');
-                event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected')
+                event_this.find('.unit').val($(
+                        this).closest('tr').find('.material_name').find(':selected')
                     .data('unit'));
 
                 populateDropdownByAjax("{{ route('materialWiseBrands') }}", {

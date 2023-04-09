@@ -106,11 +106,11 @@ function select2Ajax(route, element, ...customQueryFields) {
                         return { id: obj.id, text: obj.text, fullObject: obj };
                     }),
                 };
-            }
+            },
         },
         minimumInputLength: 1,
         placeholder: "Search",
-        cache: true
+        cache: true,
     });
 }
 
@@ -192,7 +192,7 @@ function populateDropdownByAjax(
             dropdown.prop("selectedIndex", 0);
             if (selected) {
                 dropdown.append(
-                    "<option selected disabled>Select Option</option>"
+                    "<option selected value=''>Select Option</option>"
                 );
             }
             data.options.map(function (item) {
