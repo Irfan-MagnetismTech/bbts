@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Support Tickets')
+@section('title', 'Tickets Reports')
 
 @section('style')
     

@@ -65,5 +65,6 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     // Ticketing Reports
     Route::prefix('reports')->group(function() {
         Route::get('/', [ReportController::class, 'index'])->name('report-index');
+        Route::get('pdf', [ReportController::class, 'pdf'])->name('report-pdf');
     });
 });
