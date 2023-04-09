@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('scm_mirs', function (Blueprint $table) {
             $table->id();
             $table->string('mir_no')->nullable();
-            $table->integer('scm_purchase_requisition_id')->nullable();
+            $table->integer('scm_requisition_id')->nullable();
             $table->date('date')->nullable();
             $table->integer('to_branch_id')->nullable();
             $table->integer('pop_id')->nullable();

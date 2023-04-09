@@ -56,90 +56,51 @@ class ScmMirController extends Controller
      */
     public function store(ScmMirRequest $request)
     {
-        dd($request->all());
-        $data['mir_no'] = $this->mirNo;
-        $data['received_date'] = date('Y-m-d', strtotime($data['received_date']));
-        $data['received_by'] = auth()->user()->id;
-        $data['received_type'] = $data['received_type'] ?? 'mrr';
-        $data['received_from'] = $data['received_from'] ?? null;
-        $data['received_to'] = $data['received_to'] ?? null;
-        $data['received_remarks'] = $data['received_remarks'] ?? null;
-        $data['received_status'] = $data['received_status'] ?? 'pending';
+        // dd($request->all());
 
-        $mir = ScmMir::create($data);
+        $mir_details = [];
 
-        if ($mir) {
-            $this->updateStockLedger($data, $mir);
-            $this->updateScmRequisitionDetail($data, $mir);
-            $this->updateScmPurchaseRequisition($data, $mir);
-            $this->updateScmMrr($data, $mir);
-        }
+        foreach ($request->material_name as $key => $val) {
+            if (isset($request->serial_code[$key]) && count($request->serial_code[$key])) {
+                foreach ($request->serial_code[$key] as $keyValue => $value) {
+                    $stock_ledgers[] = [
+                        'branch_id' => null,
+                        'material_id' => $request->material_name[$key],
+                        'item_code' => null,
+                        'unit' => $request->unit[$key],
+                        'brand_id' => $request->brand[$key],
+                        'model' => $request->model[$key],
+                        'serial_code' => $request->serial_code[$key][$keyValue],
+                        'issued_qty' => $request->issued_qty[$key],
+                    ];
+                };
+            } elseif (isset($request->material_name[$key])) {
+                $stock_ledgers[] = [
+                    'branch_id' => null,
+                    'material_id' => $request->material_name[$key],
+                    'item_code' => null,
+                    'unit' => $request->unit[$key],
+                    'brand_id' => isset($request->brand[$key]) ? $request->brand[$key] : null,
+                    'model' => isset($request->model[$key]) ? $request->model[$key] : null,
+                    'serial_code' => null,
+                    'issued_qty' => $request->issued_qty[$key],
+                ];
+            }
+            $mir_details[] = [
+                'received_type' => $request->received_type[$key],
+                'type_id' => $request->type_id[$key],
+                'material_id'   => $request->material_name[$key],
+                'brand_id' => isset($request->brand[$key]) ? $request->brand[$key] : null,
+                'model' => isset($request->model[$key]) ? $request->model[$key] : null,
+                'serial_code' => isset($request->serial_code[$key]) ? json_encode($request->serial_code[$key]) : [],
+                'unit' => json_encode($request->unit[$key]),
+                'issued_qty' => json_encode($request->issued_qty[$key]),
+                'remarks' => json_encode($request->remarks[$key]),
+            ];
+        };
+        dd($stock_ledgers, $mir_details, $request->all());
 
         return redirect()->route('scm.mir.index')->with('success', 'MIR Created Successfully');
-    }
-
-    private function updateStockLedger($data, $mir)
-    {
-        $stockLedger = StockLedger::where('mrr_no', $data['mrr_no'])->first();
-        $stockLedger->update([
-            'mir_no' => $mir->mir_no,
-            'mir_id' => $mir->id,
-            'received_date' => $mir->received_date,
-            'received_by' => $mir->received_by,
-            'received_type' => $mir->received_type,
-            'received_from' => $mir->received_from,
-            'received_to' => $mir->received_to,
-            'received_remarks' => $mir->received_remarks,
-            'received_status' => $mir->received_status,
-        ]);
-    }
-
-    private function updateScmRequisitionDetail($data, $mir)
-    {
-        $scmRequisitionDetail = ScmRequisitionDetail::where('mrr_no', $data['mrr_no'])->first();
-        $scmRequisitionDetail->update([
-            'mir_no' => $mir->mir_no,
-            'mir_id' => $mir->id,
-            'received_date' => $mir->received_date,
-            'received_by' => $mir->received_by,
-            'received_type' => $mir->received_type,
-            'received_from' => $mir->received_from,
-            'received_to' => $mir->received_to,
-            'received_remarks' => $mir->received_remarks,
-            'received_status' => $mir->received_status,
-        ]);
-    }
-
-    private function updateScmPurchaseRequisition($data, $mir)
-    {
-        $scmPurchaseRequisition = ScmPurchaseRequisition::where('mrr_no', $data['mrr_no'])->first();
-        $scmPurchaseRequisition->update([
-            'mir_no' => $mir->mir_no,
-            'mir_id' => $mir->id,
-            'received_date' => $mir->received_date,
-            'received_by' => $mir->received_by,
-            'received_type' => $mir->received_type,
-            'received_from' => $mir->received_from,
-            'received_to' => $mir->received_to,
-            'received_remarks' => $mir->received_remarks,
-            'received_status' => $mir->received_status,
-        ]);
-    }
-
-    private function updateScmMrr($data, $mir)
-    {
-        $scmMrr = ScmMrr::where('mrr_no', $data['mrr_no'])->first();
-        $scmMrr->update([
-            'mir_no' => $mir->mir_no,
-            'mir_id' => $mir->id,
-            'received_date' => $mir->received_date,
-            'received_by' => $mir->received_by,
-            'received_type' => $mir->received_type,
-            'received_from' => $mir->received_from,
-            'received_to' => $mir->received_to,
-            'received_remarks' => $mir->received_remarks,
-            'received_status' => $mir->received_status,
-        ]);
     }
 
     /**
@@ -251,6 +212,7 @@ class ScmMirController extends Controller
                 'label' => $item->material->name,
                 'type' => $item->material->type,
                 'unit' => $item->material->unit,
+                'code' => $item->material->code,
             ])
             ->values()
             ->all();

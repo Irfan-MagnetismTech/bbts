@@ -19,7 +19,8 @@ return new class extends Migration
             $table->integer('material_id')->nullable();
             $table->string('item_code')->nullable();
             $table->string('description')->nullable();
-            $table->string('received_type')->nullable();
+            $table->integer('receiveable_id')->nullable();
+            $table->string('receiveable_type')->nullable();
             $table->integer('brand_id')->nullable();
             $table->string('model')->nullable();
             $table->bigInteger('initial_mark')->nullable();
