@@ -56,9 +56,9 @@ class ScmChallanController extends Controller
             if (isset($request->serial_code[$kk]) && count($request->serial_code[$kk])) {
                 foreach ($request->serial_code[$kk] as $key => $value) {
                     $stock_ledgers[] = [
-                        'branch_id' => null,
+                        'branch_id' => $request->branch_id,
                         'material_id' => $request->material_name[$kk],
-                        'item_code' => null,
+                        'item_code' => $request->item_code[$kk],
                         'unit' => $request->unit[$kk],
                         'brand_id' => $request->brand[$kk],
                         'model' => $request->model[$kk],
@@ -68,9 +68,9 @@ class ScmChallanController extends Controller
                 };
             } elseif (isset($request->material_name[$kk])) {
                 $stock_ledgers[] = [
-                    'branch_id' => null,
+                    'branch_id' => $request->branch_id,
                     'material_id' => $request->material_name[$kk],
-                    'item_code' => null,
+                    'item_code' => $request->item_code[$kk],
                     'unit' => $request->unit[$kk],
                     'brand_id' => isset($request->brand[$kk]) ? $request->brand[$kk] : null,
                     'model' => isset($request->model[$kk]) ? $request->model[$kk] : null,

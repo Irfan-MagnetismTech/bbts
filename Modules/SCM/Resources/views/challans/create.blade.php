@@ -58,15 +58,6 @@
                                     value="client" @checked(@$requisition->type == 'client' || old('type') == 'client' || ($formType == 'create' && !old()))> Client
                             </label>
                         </div>
-
-                        <div class="form-check-inline">
-                            <label class="form-check-label" for="warehouse">
-                                <input type="radio" class="form-check-input radioButton" id="warehouse" name="type"
-                                    @checked(@$requisition->type == 'warehouse' || old('type') == 'warehouse') value="warehouse">
-                                Warehouse
-                            </label>
-                        </div>
-
                         <div class="form-check-inline">
                             <label class="form-check-label" for="pop">
                                 <input type="radio" class="form-check-input radioButton" id="pop" name="type"
@@ -118,8 +109,20 @@
                     </select>
                 </div>
             </div>
+            
             <div class="row">
-                
+                <div class="form-group col-3 branch_name">
+                    <label for="select2">Branch Name</label>
+                    <select class="form-control select2" id="branch_id" name="branch_id">
+                        <option value="20" selected>Select Branch</option>
+                        @foreach ($branchs as $option)
+                            <option value="{{ $option->id }}"
+                                {{ old('branch_id', @$requisition->branch_id) == $option->id ? 'selected' : '' }}>
+                                {{ $option->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
@@ -157,18 +160,7 @@
                     <input type="text" class="form-control" id="client_address" name="client_address" aria-describedby="client_address"
                         readonly value="{{ old('client_address') ?? (@$requisition->client_address ?? '') }}">
                 </div>
-                <div class="form-group col-3 branch_name" style="display: none">
-                    <label for="select2">Branch Name</label>
-                    <select class="form-control select2" id="branch_id" name="branch_id">
-                        <option value="20" selected>Select Branch</option>
-                        @foreach ($branchs as $option)
-                            <option value="{{ $option->id }}"
-                                {{ old('branch_id', @$requisition->branch_id) == $option->id ? 'selected' : '' }}>
-                                {{ $option->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                
                 <div class="form-group col-3 pop_name" style="display: none">
                     <label for="select2">Pop Name</label>
                     <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
@@ -548,25 +540,13 @@
                 $('.client_name').show('slow');
                 $('.client_no').show('slow');
                 $('.client_address').show('slow');
-                $('.branch_name').hide('slow');
                 $('.client_links').show('slow');
-            } else if (radioValue == 'warehouse') {
-                $('.pop_id').hide('slow');
-                $('.pop_name').hide('slow');
-                $('.pop_address').hide('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.client_no').hide('slow');
-                $('.client_address').hide('slow');
-                $('.branch_name').show('slow');
-                $('.client_links').hide('slow');
             } else if (radioValue == 'pop') {
                 $('.pop_id').show('slow');
                 $('.pop_name').show('slow');
                 $('.pop_address').show('slow');
                 $('.address').hide('slow');
                 $('.client_name').hide('slow');
-                $('.branch_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
                 $('.client_links').hide('slow');
@@ -576,7 +556,6 @@
                 $('.pop_address').hide('slow');
                 $('.address').hide('slow');
                 $('.client_name').hide('slow');
-                $('.branch_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
                 $('.client_links').hide('slow');
@@ -637,7 +616,8 @@
                         to_branch: $('#to_branch_id').val(),
                     }, material_name, 'value', 'label', {
                         'data-type': 'type',
-                        'data-unit': 'unit'
+                        'data-unit': 'unit',
+                        'data-code': 'code',
                     })
                  }
 
@@ -651,6 +631,7 @@
                     let brand = $(this).closest('tr').find('.brand');
                     
                    event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected').data('unit'));
+                   event_this.find('.item_code').val($(this).closest('tr').find('.material_name').find(':selected').data('code'));
 
                     populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
                         material_id: material_id,
