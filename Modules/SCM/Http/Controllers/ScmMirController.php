@@ -102,7 +102,7 @@ class ScmMirController extends Controller
 
         return redirect()->route('scm.mir.index')->with('success', 'MIR Created Successfully');
     }
-    
+
     /**
      * Show the specified resource.
      * @param int $id
@@ -212,6 +212,7 @@ class ScmMirController extends Controller
                 'label' => $item->material->name,
                 'type' => $item->material->type,
                 'unit' => $item->material->unit,
+                'code' => $item->material->code,
             ])
             ->values()
             ->all();
