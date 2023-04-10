@@ -58,47 +58,24 @@ class ScmMirController extends Controller
     {
         // dd($request->all());
 
-        $mir_details = [];
+        try {
+            $challan_data = $request->only('type', 'challan_no', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id');
 
-        foreach ($request->material_name as $key => $val) {
-            if (isset($request->serial_code[$key]) && count($request->serial_code[$key])) {
-                foreach ($request->serial_code[$key] as $keyValue => $value) {
-                    $stock_ledgers[] = [
-                        'branch_id' => null,
-                        'material_id' => $request->material_name[$key],
-                        'item_code' => null,
-                        'unit' => $request->unit[$key],
-                        'brand_id' => $request->brand[$key],
-                        'model' => $request->model[$key],
-                        'serial_code' => $request->serial_code[$key][$keyValue],
-                        'issued_qty' => $request->issued_qty[$key],
-                    ];
-                };
-            } elseif (isset($request->material_name[$key])) {
-                $stock_ledgers[] = [
-                    'branch_id' => null,
-                    'material_id' => $request->material_name[$key],
-                    'item_code' => null,
-                    'unit' => $request->unit[$key],
-                    'brand_id' => isset($request->brand[$key]) ? $request->brand[$key] : null,
-                    'model' => isset($request->model[$key]) ? $request->model[$key] : null,
-                    'serial_code' => null,
-                    'issued_qty' => $request->issued_qty[$key],
-                ];
-            }
-            $mir_details[] = [
-                'received_type' => $request->received_type[$key],
-                'type_id' => $request->type_id[$key],
-                'material_id'   => $request->material_name[$key],
-                'brand_id' => isset($request->brand[$key]) ? $request->brand[$key] : null,
-                'model' => isset($request->model[$key]) ? $request->model[$key] : null,
-                'serial_code' => isset($request->serial_code[$key]) ? json_encode($request->serial_code[$key]) : [],
-                'unit' => json_encode($request->unit[$key]),
-                'issued_qty' => json_encode($request->issued_qty[$key]),
-                'remarks' => json_encode($request->remarks[$key]),
-            ];
-        };
-        dd($stock_ledgers, $mir_details, $request->all());
+            $challan_details = [];
+            foreach ($request->material_name as $kk => $val) {
+                /* if (isset($request->serial_code[$kk]) && count($request->serial_code[$kk])) {
+                    foreach ($request->serial_code[$kk] as $key => $value) {
+                        $stock_ledgers[] = $this->GetStockLedgerData($request, $kk, $key);
+                    };
+                } elseif (isset($request->material_name[$kk])) {
+                    $stock_ledgers[] = $this->GetStockLedgerData($request, $kk);
+                }*/
+                $challan_details[] = $this->GetMrrDetails($request, $kk);
+            };
+            $challan = ScmChallan::create($challan_data);
+            $challan->scmChallanLines()->createMany($challan_details);
+        } catch (Exception $err) {
+        }
 
         return redirect()->route('scm.mir.index')->with('success', 'MIR Created Successfully');
     }
@@ -142,6 +119,35 @@ class ScmMirController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function GetStockLedgerData($req, $key1, $key2 = null)
+    {
+        return [
+            'branch_id' => $req->branch_id,
+            'material_id' => $req->material_name[$key1],
+            'item_code' => $req->item_code[$key1],
+            'unit' => $req->unit[$key1],
+            'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : null,
+            'model' => isset($req->model[$key1]) ? $req->model[$key1] : null,
+            'serial_code' => (isset($req->serial_code[$key1]) && isset($req->serial_code[$key1][$key2])) ? $req->serial_code[$key1][$key2] : null,
+            'quantity' => $req->quantity[$key1],
+        ];
+    }
+
+    public function GetMrrDetails($req, $key1)
+    {
+        return  [
+            'received_type' => $req->received_type[$key1],
+            'type_id' => $req->type_id[$key1],
+            'material_id'   => $req->material_name[$key1],
+            'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : null,
+            'model' => isset($req->model[$key1]) ? $req->model[$key1] : null,
+            'serial_code' => isset($req->serial_code[$key1]) ? json_encode($req->serial_code[$key1]) : [],
+            'unit' => $req->unit[$key1],
+            'quantity' => $req->quantity[$key1],
+            'remarks' => $req->remarks[$key1],
+        ];
     }
 
     public function searchMrs()

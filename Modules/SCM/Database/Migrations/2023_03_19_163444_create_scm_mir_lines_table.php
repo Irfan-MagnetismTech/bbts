@@ -23,8 +23,6 @@ return new class extends Migration
             $table->string('receiveable_type')->nullable();
             $table->integer('brand_id')->nullable();
             $table->string('model')->nullable();
-            $table->bigInteger('initial_mark')->nullable();
-            $table->bigInteger('final_mark')->nullable();
             $table->double('quantity', 8, 2)->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
