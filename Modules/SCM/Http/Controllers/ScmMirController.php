@@ -43,7 +43,7 @@ class ScmMirController extends Controller
      */
     public function create()
     {
-        $received_type = ['mrr', 'err', 'wcr'];
+        $received_type = ['MRR', 'ERR', 'WCR'];
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
         return view('scm::mir.create', compact('brands', 'branches', 'received_type'));
@@ -58,26 +58,22 @@ class ScmMirController extends Controller
     {
         // dd($request->all());
 
-        try {
-            $challan_data = $request->only('type', 'challan_no', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id');
 
-            $challan_details = [];
-            foreach ($request->material_name as $kk => $val) {
-                /* if (isset($request->serial_code[$kk]) && count($request->serial_code[$kk])) {
-                    foreach ($request->serial_code[$kk] as $key => $value) {
-                        $stock_ledgers[] = $this->GetStockLedgerData($request, $kk, $key);
-                    };
-                } elseif (isset($request->material_name[$kk])) {
-                    $stock_ledgers[] = $this->GetStockLedgerData($request, $kk);
-                }*/
-                $challan_details[] = $this->GetMrrDetails($request, $kk);
+        try {
+            $mir_data = $request->all();
+
+            $mir_details = [];
+            foreach ($request->material_name as $key => $val) {                
+                $mir_details[] = $this->getMirDetails($request, $key);
             };
-            $challan = ScmChallan::create($challan_data);
-            $challan->scmChallanLines()->createMany($challan_details);
+            $mir_data['mir_no'] = $this->mirNo;
+            $mir_data['created_by'] = auth()->user()->id;
+            $mir = ScmMir::create($mir_data);
+            $mir->lines()->createMany($mir_details);
         } catch (Exception $err) {
         }
 
-        return redirect()->route('scm.mir.index')->with('success', 'MIR Created Successfully');
+        return redirect()->route('material-issues.create')->with('success', 'MIR Created Successfully');
     }
 
     /**
@@ -121,32 +117,26 @@ class ScmMirController extends Controller
         //
     }
 
-    public function GetStockLedgerData($req, $key1, $key2 = null)
-    {
-        return [
-            'branch_id' => $req->branch_id,
-            'material_id' => $req->material_name[$key1],
-            'item_code' => $req->item_code[$key1],
-            'unit' => $req->unit[$key1],
-            'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : null,
-            'model' => isset($req->model[$key1]) ? $req->model[$key1] : null,
-            'serial_code' => (isset($req->serial_code[$key1]) && isset($req->serial_code[$key1][$key2])) ? $req->serial_code[$key1][$key2] : null,
-            'quantity' => $req->quantity[$key1],
-        ];
-    }
+    
 
-    public function GetMrrDetails($req, $key1)
+    /**
+     * Get MIR Details From Request
+     * 
+     * @param Request $request
+     * @param int $key1
+     * @return array
+     */
+    public function getMirDetails($request, $key1): array
     {
         return  [
-            'received_type' => $req->received_type[$key1],
-            'type_id' => $req->type_id[$key1],
-            'material_id'   => $req->material_name[$key1],
-            'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : null,
-            'model' => isset($req->model[$key1]) ? $req->model[$key1] : null,
-            'serial_code' => isset($req->serial_code[$key1]) ? json_encode($req->serial_code[$key1]) : [],
-            'unit' => $req->unit[$key1],
-            'quantity' => $req->quantity[$key1],
-            'remarks' => $req->remarks[$key1],
+            'material_id'   => $request->material_name[$key1],
+            'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : null,
+            'receiveable_id' => $request->type_id[$key1],
+            'receiveable_type' => $request->received_type[$key1],
+            'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
+            'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
+            'quantity' => $request->issued_qty[$key1],
+            'remarks' => $request->remarks[$key1],
         ];
     }
 

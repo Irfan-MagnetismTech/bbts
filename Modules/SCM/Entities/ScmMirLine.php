@@ -9,7 +9,7 @@ class ScmMirLine extends Model
     protected $fillable = [
         'scm_mir_id',
         'material_id',
-        'item_code',
+        'serial_code',
         'description',
         'receiveable_id',
         'receiveable_type',
