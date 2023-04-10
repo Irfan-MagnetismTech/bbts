@@ -192,4 +192,21 @@ class BbtsGlobalService extends Controller
     public function getClientFeedbacks($limit = -1) {
         return ClientFeedback::orderBy('created_at', 'desc')->take($limit)->get();
     }
+
+    public function convertToMinutes($input) {
+        $hours = 0;
+        $minutes = 0;
+
+        preg_match('/(\d+)h/', $input, $matches);
+        if (!empty($matches)) {
+            $hours = (int) $matches[1];
+        }
+
+        preg_match('/(\d+)m/', $input, $matches);
+        if (!empty($matches)) {
+            $minutes = (int) $matches[1];
+        }
+
+        return $hours * 60 + $minutes;
+    }
 }

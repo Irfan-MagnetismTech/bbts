@@ -62,9 +62,11 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::get('feedback-list', [ClientFeedbackController::class, 'feedbackList'])->name('feedback-list');
 
+
     // Ticketing Reports
     Route::prefix('reports')->group(function() {
-        Route::get('/', [ReportController::class, 'index'])->name('report-index');
-        Route::get('pdf', [ReportController::class, 'pdf'])->name('report-pdf');
+        Route::get('/', [ReportController::class, 'index'])->name('report-index'); // 
+        Route::post('/filter-data', [ReportController::class, 'index'])->name('search-report-data'); // 
+        Route::get('pdf', [ReportController::class, 'pdf'])->name('report-pdf'); // jsPDF
     });
 });
