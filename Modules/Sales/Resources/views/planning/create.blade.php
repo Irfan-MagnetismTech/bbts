@@ -69,7 +69,7 @@
                     <div class="row mt-4">
                         <div class="md-col-2 col-2">
                             <label for="type">Type <span class="text-danger">*</span></label>
-                            <select name="type" id="type" class="form-control">
+                            <select name="link_type" id="link_type" class="form-control">
                                 <option value="">Select Type</option>
                                 <option value="Primary">Primary</option>
                                 <option value="Secondary">Secondary</option>
@@ -145,7 +145,7 @@
                     </div>
                     <hr />
                     <div class="text-center">
-                        <h5> <span> &#10070; </span> Connectivity Details <span>&#10070;</span> </h5>
+                        <h5> <span> &#10070; </span> Plan Details <span>&#10070;</span> </h5>
                     </div>
                     <hr />
                     {{-- create a responsive table --}}
@@ -187,7 +187,8 @@
                                                     value="">
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-danger removeProductRow"><i
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger removeParticularRow"><i
                                                         class="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
@@ -230,8 +231,7 @@
                                                     class="form-control" value="">
                                             </td>
                                             <td>
-                                                <button type="button"
-                                                    class="btn btn-sm btn-danger removeConnectivityRow"><i
+                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
                                                         class="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
@@ -262,20 +262,13 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <select name="material[]" id="material" class="form-control">
-                                                    <option value="">Select Material</option>
-                                                    <option value="Bandwidth">Bandwidth</option>
-                                                    <option value="Bandwidth">Bandwidth</option>
-                                                    <option value="Bandwidth">Bandwidth</option>
-                                                </select>
+                                                Demo Material
                                             </td>
                                             <td>
-                                                <input type="text" name="unit[]" id="unit" class="form-control"
-                                                    value="">
+                                                PCS
                                             </td>
                                             <td>
-                                                <input type="text" name="quantity[]" id="quantity"
-                                                    class="form-control" value="">
+                                                10
                                             </td>
                                         </tr>
                                 </table>
@@ -345,8 +338,8 @@
                     $('.equipment_row').last().find('select').val('');
                 };
 
-                $(document).on('click', '.removeProductRow', function() {
-                    let count = $('.product_details_row').length;
+                $(document).on('click', '.removeParticularRow', function() {
+                    let count = $('.particular_row').length;
                     if (count > 1) {
                         $(this).closest('tr').remove();
                         //get attr_one value 
@@ -367,8 +360,8 @@
                     }
                 });
 
-                $(document).on('click', '.removeConnectivityRow', function() {
-                    let count = $('.connectivity_details_row').length;
+                $(document).on('click', '.removeEquipmentRow', function() {
+                    let count = $('.equipment_row').length;
                     if (count > 1) {
                         $(this).closest('tr').remove();
                         //get attr_one value 
@@ -444,8 +437,6 @@
                 $('#from_location').on('change', function() {
                     var from_location = $(this).val();
                     fr_link_list.find(function(fr) {
-                        console.log(fr.link_name)
-                        console.log(from_location)
                         if (fr.id == from_location) {
                             $('#fr_no').val(fr.fr_no);
                         }
@@ -454,14 +445,14 @@
 
                 $('#option').on('change', function() {
                     var option = $('#option').val();
-                    var type = $('#type').val();
+                    var link_type = $('#link_type').val();
                     let client_id = $('#client_id').val();
                     let fr_no = $('#fr_no').val();
                     $.ajax({
                         url: "{{ route('get-survey-details') }}",
                         data: {
                             option: option,
-                            type: type,
+                            link_type: link_type,
                             client_id: client_id,
                             fr_no: fr_no,
                         },

@@ -17,6 +17,11 @@
 <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
 <script src="{{ asset('js/sweetalert2.min.js') }} "></script>
+<script src="{{ asset('js/toastr.min.js') }} "></script>
+<script src="{{ asset('js/highcharts.min.js') }}"></script>
+
+<!-- jquery slimscroll js -->
+
 <script>
     const Toast = Swal.mixin({
         toast: true,

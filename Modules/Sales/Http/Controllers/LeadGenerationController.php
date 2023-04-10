@@ -101,7 +101,7 @@ class LeadGenerationController extends Controller
      */
     public function update(LeadGenerationRequest $request, LeadGeneration $lead_generation)
     {
-        $data = $request->only('client_name', 'address', 'division_id', 'district_id', 'thana_id', 'landmark', 'lat_long', 'contact_person', 'designation', 'contact_no',  'email', 'business_type', 'client_type', 'website');
+        $data = $request->only('client_name', 'address', 'division_id', 'district_id', 'thana_id', 'landmark', 'lat_long', 'contact_person', 'designation', 'contact_no',  'email', 'business_type', 'client_type', 'website', 'current_provider', 'existing_bandwidth', 'existing_mrc', 'chance_of_business', 'potentiality', 'remarks');
         if ($request->hasFile('upload_file')) {
             $file_name = CommonService::UpdatefileUpload($request->file('upload_file'), 'uploads/lead_generation', $lead_generation->document);
             $data['document'] = $file_name;

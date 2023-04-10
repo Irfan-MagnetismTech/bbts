@@ -31,6 +31,12 @@ return new class extends Migration
             $table->string('business_type')->nullable();
             $table->string('website')->nullable();
             $table->string('document')->nullable();
+            $table->string('current_provider')->nullable();
+            $table->string('existing_bandwidth')->nullable();
+            $table->string('existing_mrc')->nullable();
+            $table->string('chance_of_business')->nullable();
+            $table->string('potentiality')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

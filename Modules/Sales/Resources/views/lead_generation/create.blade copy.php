@@ -23,14 +23,7 @@
 
 @section('style')
     <style>
-        .floating-label {
-            font-size: 11px;
-            top: -5px;
-            position: absolute;
-            left: 10px;
-            color: #999;
-            transition: all 0.2s ease-in-out;
-        }
+
     </style>
 @endsection
 
@@ -43,7 +36,6 @@
         'method' => $form_method,
         'encType' => 'multipart/form-data',
         'class' => 'custom-form',
-        'novalidate' => 'novalidate',
     ]) !!}
 
     {{-- Comparative Statement --}}
@@ -82,34 +74,25 @@
                         @endphp
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
-                                <input type="text" id="client_name" name="client_name" class="form-control"
-                                    autocomplete="off" value="{{ $client_name }}" required>
+                                <input type="text" id="client_name" autocomplete="off" value="{{ $client_name }}"
+                                    required>
                                 <label for="client_name">Client Name</label>
                             </div>
                         </div>
-                        <div class="col-xl-4 col-md-4">
+                        <div class="col-xl-8 col-md-8">
                             <div class="form-item">
-                                <input type="text" id="address" name="address" class="form-control" autocomplete="off"
-                                    value="{{ $address }}" required>
+                                <input type="text" id="address" autocomplete="off" value="{{ $address }}" required>
                                 <label for="address">Address</label>
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <select name="division_id" id="division" class="form-control form-control-primary">
-                                    <option>Select Division</option>
-                                    @foreach ($divisons as $division)
-                                        <option value="{{ $division->id }}"
-                                            {{ $division->id == $single_division ? 'selected' : '' }}>{{ $division->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="district_id" id="district" class="form-control form-control-primary">
-                                    <option value="">Select District</option>
+                                <label class="input-group-addon" for="remarks">District</label>
+                                <select name="district_id" id="district" class="form-control">
+                                    <option value="">Select</option>
                                     @if ($districts)
                                         @foreach ($districts as $district)
                                             <option value="{{ $district->id }}"
@@ -122,8 +105,9 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="thana_id" id="thana" class="form-control form-control-primary">
-                                    <option value="">Select Thana</option>
+                                <label class="input-group-addon" for="remarks">Thana</label>
+                                <select name="thana_id" id="thana" class="form-control">
+                                    <option value="">Select</option>
                                     @if ($thanas)
                                         @foreach ($thanas as $thana)
                                             <option value="{{ $thana->id }}"
@@ -136,52 +120,46 @@
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="landmark" name="landmark" class="form-control" autocomplete="off"
-                                    value="{{ $landmark }}" required>
-                                <label for="landmark">Landmark</label>
-                            </div>
-                        </div>
-                        <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="lat_long" name="lat_long" class="form-control" autocomplete="off"
-                                    value="{{ $lat_long }}" required>
-                                <label for="lat_long">Lat Long</label>
-                            </div>
-                        </div>
-                        <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="contact_person" name="contact_person" class="form-control"
-                                    autocomplete="off" value="{{ $contact_person }}" required>
-                                <label for="contact_person">Contact Person</label>
-                            </div>
-                        </div>
-                        <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="designation" name="designation" class="form-control"
-                                    autocomplete="off" value="{{ $designation }}" required>
-                                <label for="designation">Designation</label>
-                            </div>
-                        </div>
-                        <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="contact_no" name="contact_no" class="form-control"
-                                    autocomplete="off" value="{{ $contact_no }}" required>
-                                <label for="contact_no">Contact No</label>
-                            </div>
-                        </div>
-                        <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="email" name="email" class="form-control" autocomplete="off"
-                                    value="{{ $email }}" required>
-                                <label for="email">Email</label>
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Landmark</label>
+                                {{ Form::text('landmark', $landmark, ['class' => 'form-control', 'id' => 'landmark', 'autocomplete' => 'off', 'placeholder' => 'landmark', 'rows' => 2]) }}
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="client_type" id="client_type" class="form-control form-control-primary"
-                                    required>
-                                    <option>Client Type</option>
+                                <label class="input-group-addon" for="remarks">Lat Long</label>
+                                {{ Form::text('lat_long', $lat_long, ['class' => 'form-control', 'id' => 'lat_long', 'autocomplete' => 'off', 'placeholder' => 'lat_long', 'rows' => 2]) }}
+                            </div>
+                        </div>
+                        <div class="mt-1 col-xl-4 col-md-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Contact Person</label>
+                                {{ Form::text('contact_person', $contact_person, ['class' => 'form-control', 'id' => 'contact_person', 'autocomplete' => 'off', 'placeholder' => 'contact_person', 'rows' => 2]) }}
+                            </div>
+                        </div>
+                        <div class="mt-1 col-xl-4 col-md-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Designation</label>
+                                {{ Form::text('designation', $designation, ['class' => 'form-control', 'id' => 'designation', 'autocomplete' => 'off', 'placeholder' => 'designation', 'rows' => 2]) }}
+                            </div>
+                        </div>
+                        <div class="mt-1 col-xl-4 col-md-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Contact No</label>
+                                {{ Form::text('contact_no', $contact_no, ['class' => 'form-control', 'id' => 'contact_no', 'autocomplete' => 'off', 'placeholder' => 'Contact No', 'rows' => 2]) }}
+                            </div>
+                        </div>
+                        <div class="mt-1 col-xl-4 col-md-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Email</label>
+                                {{ Form::text('email', $email, ['class' => 'form-control', 'id' => 'email', 'autocomplete' => 'off', 'placeholder' => 'Email', 'rows' => 2]) }}
+                            </div>
+                        </div>
+                        <div class="mt-1 col-xl-4 col-md-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Client Type</label>
+                                <select name="client_type" id="client_type" class="form-control">
+                                    <option value="">Select</option>
                                     <option value="1" {{ $client_type == 1 ? 'selected' : '' }}>Corporate</option>
                                     <option value="2" {{ $client_type == 2 ? 'selected' : '' }}>Individual</option>
                                 </select>
@@ -189,9 +167,9 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="business_type" id="business_type"
-                                    class="form-control form-control-primary">
-                                    <option>Business Type</option>
+                                <label class="input-group-addon" for="remarks">Business Type</label>
+                                <select name="business_type" id="business_type" class="form-control">
+                                    <option value="">Select</option>
                                     @foreach ($organizations as $organization)
                                         <option value="{{ $organization }}"
                                             {{ $organization == $business_type ? 'selected' : '' }}>{{ $organization }}
@@ -202,63 +180,55 @@
                         </div>
 
                         <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="current_provider" name="current_provider" class="form-control"
-                                    autocomplete="off" value="{{ $current_provider }}" required>
-                                <label for="current_provider">Current Provider</label>
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Current Provide</label>
+                                {{ Form::text('current_provide', $current_provider, ['class' => 'form-control', 'id' => 'current_provide', 'autocomplete' => 'off', 'placeholder' => 'Current Provide', 'rows' => 2]) }}
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="existing_bandwidth" name="existing_bandwidth"
-                                    class="form-control" autocomplete="off" value="{{ $existing_bandwidth }}" required>
-                                <label for="existing_bandwidth">Existing Bandwidth</label>
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Existing Bandwidth</label>
+                                {{ Form::text('existing_bandwidth', $existing_bandwidth, ['class' => 'form-control', 'id' => 'existing_bandwidth', 'autocomplete' => 'off', 'placeholder' => 'Existing Bandwidth', 'rows' => 2]) }}
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="existing_mrc" name="existing_mrc" class="form-control"
-                                    autocomplete="off" value="{{ $existing_mrc }}" required>
-                                <label for="existing_mrc">Existing MRC</label>
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Existing MRC</label>
+                                {{ Form::text('existing_mrc', $existing_mrc, ['class' => 'form-control', 'id' => 'existing_mrc', 'autocomplete' => 'off', 'placeholder' => 'Existing MRC', 'rows' => 2]) }}
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="chance_of_business" name="chance_of_business"
-                                    class="form-control" autocomplete="off" value="{{ $chance_of_business }}" required>
-                                <label for="chance_of_business">Chance of Acquiring Business</label>
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Chance of Business</label>
+                                {{ Form::text('chance_of_business', $chance_of_business, ['class' => 'form-control', 'id' => 'chance_of_business', 'autocomplete' => 'off', 'placeholder' => 'Chance of Business', 'rows' => 2]) }}
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="potentiality" name="potentiality" class="form-control"
-                                    autocomplete="off" value="{{ $potentiality }}" required>
-                                <label for="potentiality">Potentiality</label>
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Potentiality</label>
+                                {{ Form::text('potentiality', $potentiality, ['class' => 'form-control', 'id' => 'potentiality', 'autocomplete' => 'off', 'placeholder' => 'Potentiality', 'rows' => 2]) }}
                             </div>
                         </div>
 
 
                         <div class="mt-1 col-xl-4 col-md-4">
-                            <div class="form-item">
-                                <input type="text" id="website" name="website" class="form-control"
-                                    autocomplete="off" value="{{ $website }}" required>
-                                <label for="website">Website</label>
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Website</label>
+                                {{ Form::text('website', $website, ['class' => 'form-control', 'id' => 'website', 'autocomplete' => 'off', 'placeholder' => 'Website', 'rows' => 2]) }}
                             </div>
                         </div>
                         <!-- doucment upload -->
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-
+                                <label class="input-group-addon" for="upload_file"> Upload Document</label>
                                 <input class="form-control" accept=".png, .jpg, .jpeg, .pdf" id=""
-                                    name="upload_file" type="file" placeholder="Upload File">
-
+                                    name="upload_file" type="file">
                             </div>
                         </div>
                         <div class="mt-1 col-xl-12 col-md-12">
-                            <div class="form-item">
-                                <input type="text" id="remarks" name="remarks" class="form-control"
-                                    autocomplete="off" value="{{ $remarks }}" required>
-                                <label for="remarks">Remarks</label>
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="remarks">Remarks</label>
+                                {{ Form::textarea('remarks', $remarks, ['class' => 'form-control', 'id' => 'remarks', 'autocomplete' => 'off', 'placeholder' => 'Remarks', 'rows' => 2]) }}
                             </div>
                         </div>
                     </div>
