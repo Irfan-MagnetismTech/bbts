@@ -3,6 +3,9 @@
 namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
+use Modules\Admin\Entities\Pop;
+use Modules\Admin\Entities\Branch;
+use Modules\Sales\Entities\Client;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\ScmChallanLine;
 
@@ -24,5 +27,24 @@ class ScmChallan extends Model
     public function scmChallanLines()
     {
         return $this->hasMany(ScmChallanLine::class);
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function pop()
+    {
+        return $this->belongsTo(Pop::class);
+    }
+    public function stockable()
+    {
+        return $this->morphMany(StockLedger::class, 'stockable');
     }
 }

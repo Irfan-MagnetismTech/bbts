@@ -132,7 +132,7 @@ class ScmMrrController extends Controller
                     ];
                 }, $serialCode[$key]));
             }
-            $materialReceive->stockLedgerReceivable()->createMany($stock);
+            $materialReceive->receivable()->createMany($stock);
             // FiberTracking::insert($CablePeace);
             DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been inserted successfully');
@@ -201,7 +201,7 @@ class ScmMrrController extends Controller
             }
             $materialReceive->update($requestData);
             $materialReceive->scmMrrLines()->delete();
-            $materialReceive->stockLedgerReceivable()->delete();
+            $materialReceive->receivable()->delete();
             $MrrDetail = $materialReceive->scmMrrLines()->createMany($mrrDetails);
             $stock = [];
             // $CablePeace = [];
@@ -253,7 +253,7 @@ class ScmMrrController extends Controller
                     ];
                 }, $serialCode[$key]));
             }
-            $materialReceive->stockLedgerReceivable()->createMany($stock);
+            $materialReceive->receivable()->createMany($stock);
             // FiberTracking::insert($CablePeace);
             DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been updated successfully');

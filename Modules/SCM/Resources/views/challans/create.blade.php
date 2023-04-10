@@ -632,6 +632,7 @@
                     
                    event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected').data('unit'));
                    event_this.find('.item_code').val($(this).closest('tr').find('.material_name').find(':selected').data('code'));
+                   event_this.find('.material_type').val($(this).closest('tr').find('.material_name').find(':selected').data('type'));
 
                     populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
                         material_id: material_id,
