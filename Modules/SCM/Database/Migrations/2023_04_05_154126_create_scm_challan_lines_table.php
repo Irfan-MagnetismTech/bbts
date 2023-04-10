@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('scm_challan_lines', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('scm_challan_id')->constrained('scm_challans', 'id')->cascadeOnDelete();
             $table->string('received_type')->nullable();
             $table->string('type_id')->nullable();
             $table->string('item_code')->nullable();

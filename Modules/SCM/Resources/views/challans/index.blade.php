@@ -45,12 +45,12 @@
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($requisitions as $key => $requisition)
+                @foreach ($challans as $key => $challan)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $requisition->mrs_no }}</td>
-                        <td class="text-center">{{ ucfirst($requisition->type) }}</td>
-                        <td class="text-center">{{ ucfirst($requisition->requisitionBy->name) }}</td>
+                        <td class="text-center">{{ $challan->mrs_no }}</td>
+                        <td class="text-center">{{ ucfirst($challan->type) }}</td>
+                        <td class="text-center">{{ ucfirst($challan->requisitionBy->name) }}</td>
                         <td class="text-center">{{ $requisition->date }}</td>
                         <td>
                             <div class="icon-btn">

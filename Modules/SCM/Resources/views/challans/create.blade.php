@@ -112,7 +112,7 @@
             
             <div class="row">
                 <div class="form-group col-3 branch_name">
-                    <label for="select2">Branch Name</label>
+                    <label for="select2">From Branch</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
                         <option value="20" selected>Select Branch</option>
                         @foreach ($branchs as $option)
