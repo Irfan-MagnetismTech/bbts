@@ -59,7 +59,6 @@
 @section('content-grid', null)
 
 @section('content')
-
     {!! Form::open([
         'url' => $form_url,
         'method' => $form_method,
@@ -288,7 +287,6 @@
 
 @section('script')
     <script>
-        /*****/
         const CSRF_TOKEN = "{{ csrf_token() }}";
 
         $(document).ready(function() {
@@ -446,6 +444,7 @@
                         </tr>
                     `;
                 indx++;
+
                 $('#material_requisition tbody').append(row);
                 $('.select2').select2({
                     maximumSelectionLength: 5,
@@ -530,53 +529,42 @@
                 })
             }
 
-            $(document).on('change', '.material_name', function() {
-                //check material already selected or not if selected then select the disabled option
-                var current_selector = $(this);
-                var current_material = $(this).val();
-                var current_value_brand = $(this).closest('tr').find('.brand').val();
-                var current_value_model = $(this).closest('tr').find('.model').val();
+            /**
+             * This function checks whether the selected material, brand, and model combination has already been selected or not.
+             * If the combination is already selected, then it will show a warning message.
+             * @param  {object} currentValue
+             * @return {void}
+             */
+            function checkUniqueMaterial(currentValue) {
+                var current_selector = $(currentValue);
+                var current_material = $(currentValue).closest('tr').find('.material_name').val();
+                var current_value_brand = $(currentValue).closest('tr').find('.brand').val();
+                var current_value_model = $(currentValue).closest('tr').find('.model').val();
                 var current_key = `${current_material}_${current_value_brand}_${current_value_model}`;
-                console.log(current_key);
                 var count_row = $('#material_requisition tbody tr').length;
-                let material_list = $('.material_name').not($(this));
+                var thisMaterial = $(currentValue).closest('tr').find('.material_name');
+                let material_list = $('.material_name').not($(thisMaterial));
 
                 material_list.each(function() {
                     var material_name = $(this).val();
                     var brand = $(this).closest('tr').find('.brand').val();
                     var model = $(this).closest('tr').find('.model').val();
                     var key = `${material_name}_${brand}_${model}`;
-                    console.log('key', key, 'current_key', current_key);
                     if (key === current_key && count_row > 1) {
                         swal.fire({
                             title: "Material Already Selected",
                             type: "warning",
                         }).then(function() {
-                            $(current_selector).val($(current_selector).find('option:first')
-                                    .val())
-                                .trigger(
-                                    'change.select2');
-                            return false;
+                            $(current_selector).val($(current_selector).find('option:first').val())
+                                .trigger('change.select2');
                         });
+                        return false;
                     }
                 });
-                return false;
-                // $('#material_requisition tbody tr').each(function() {
-                //     var material_name = $(this).find('.material_name').val();
-                //     console.log('materaial', material_name, 'current_value', current_material);
-                //     if (material_name === current_material && count_row > 1) {
-                //         swal.fire({
-                //             title: "Material Already Selected",
-                //             type: "warning",
-                //         }).then(function() {
-                //             // $(current_value).val($(this).find('option[disabled]').val()).trigger(
-                //             //     'change.select2');
-                //         });
+            }
 
-                //         return false;
-                //     }
-                // });
-
+            $(document).on('change', '.material_name', function() {
+                checkUniqueMaterial(this);
                 var event_this = $(this).closest('tr');
                 event_this.find('.issued_qty').attr(
                     'readonly', false);
@@ -598,6 +586,7 @@
             })
 
             $(document).on('change', '.brand', function() {
+                checkUniqueMaterial(this);
                 var event_this = $(this).closest('tr');
                 clearNext($(this));
                 let brand_id = $(this).val();
@@ -616,6 +605,7 @@
             });
 
             $(document).on('change', '.model', function() {
+                checkUniqueMaterial(this);
                 var event_this = $(this).closest('tr');
                 clearNext($(this));
                 let model = $(this).val();
@@ -627,7 +617,6 @@
                 let serial_code = $(this).closest('tr').find('.serial_code');
                 let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
                     'type');
-
                 if (material_type == 'Drum') {
                     var disabledOption = true;
                     serial_code.attr('multiple', false);
@@ -635,6 +624,7 @@
                     var disabledOption = false;
                     serial_code.attr('multiple', true);
                 }
+
                 populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
                     model: model,
                     material_id: material_id,
@@ -646,7 +636,6 @@
 
             $(document).on('change', '.model, .material_name, .brand', function() {
                 var elemmtn = $(this);
-
                 $.ajax({
                     url: "{{ route('getMaterialStock') }}",
                     type: 'get',
@@ -678,6 +667,21 @@
                     (elemmtn).find('.issued_qty').val($(this).val().length);
                 } else {
                     (elemmtn).find('.issued_qty').attr('readonly', false);
+                }
+            });
+
+            //issued quantity cannot be greater than avaiable_quantity
+            $(document).on('keyup', '.issued_qty', function() {
+                let elemmtn = $(this).closest('tr');
+                let avaiable_quantity = parseFloat((elemmtn).find('.avaiable_quantity').val());
+                let issued_qty = parseFloat((elemmtn).find('.issued_qty').val());
+                if (issued_qty > avaiable_quantity) {
+                    swal.fire({
+                        title: "Issued Quantity Cannot Be Greater Than Avaiable Quantity",
+                        type: "warning",
+                    }).then(function() {
+                        (elemmtn).find('.issued_qty').val('');
+                    });
                 }
             });
 
