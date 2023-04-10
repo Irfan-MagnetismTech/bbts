@@ -19,6 +19,8 @@
 <script src="{{ asset('js/sweetalert2.min.js') }} "></script>
 <script src="{{ asset('js/toastify-js.js') }} "></script>
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/dataTables.select.min.js') }}"></script>
+
 
 <script>
     const Toast = Swal.mixin({

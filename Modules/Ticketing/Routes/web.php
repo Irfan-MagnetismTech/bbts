@@ -67,6 +67,10 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::prefix('reports')->group(function() {
         Route::get('/', [ReportController::class, 'index'])->name('report-index'); // 
         Route::post('/filter-data', [ReportController::class, 'index'])->name('search-report-data'); // 
+
+        Route::post('/download-excel', [ReportController::class, 'excelDownload'])->name('excel-download'); // 
+        Route::post('/download-pdf', [ReportController::class, 'pdfDownload'])->name('pdf-download'); // 
+
         Route::get('pdf', [ReportController::class, 'pdf'])->name('report-pdf'); // jsPDF
     });
 });

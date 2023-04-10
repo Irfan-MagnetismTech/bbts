@@ -2,7 +2,20 @@
 @section('title', 'Tickets Reports')
 
 @section('style')
-    
+    <style>
+
+
+    table.dataTable tbody>tr.selected, table.dataTable tbody>tr>.selected {
+        background-color: #6b9cff !important;
+        color: #fff;
+    }
+
+    table.dataTable>tbody>tr.selected>td.select-checkbox:after, table.dataTable>tbody>tr.selected>th.select-checkbox:after {
+        color: #140a61;
+        font-size: 16px;
+        margin-left: -4px;
+    }
+    </style>
 @endsection
 
 @section('breadcrumb-title')
@@ -123,31 +136,17 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="form-group my-4 row">
-                    <div class="col-md-6">
-                        <button type="button" value="Reset" class="btn btn-outline-danger btn-sm col-12">
-                            PDF Download
-                            <i class="far fa-file-pdf"></i>
-                        </button>
-                    </div>
-                    <div class="col-md-6">
-                        <button type="button" value="Reset" class="btn btn-outline-success btn-sm col-12">
-                            Excel Download
-                            <i class="far fa-file-excel"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            
             
             
         </div>
     </form>
     <div class="dt-responsive table-responsive">
-        <table id="dataTable" class="table table-striped table-bordered">
+        <table id="filterableDatatable" class="table table-striped table-bordered">
             <thead>
             <tr>
-                <th>#SL</th>
+                <th>Select</th>
+                <th class="d-none"></th>
                 <th>Ticket No</th>
                 <th>Forwarded By</th>
                 <th>Priority</th>
@@ -160,7 +159,8 @@
             <tbody>
                 @foreach ($supportTickets as $supportTicket)
                     <tr>
-                        <td>{{ $loop->index + 1 }}</td>
+                        <td></td>
+                        <td class="d-none">{{ $supportTicket->id }}</td>
                         <td>{{ $supportTicket->ticket_no }}</td>
                         <td>{{ $supportTicket->createdBy->name }}</td>
                         <td>{{ $supportTicket->priority }}</td>
@@ -172,6 +172,33 @@
                 @endforeach
             </tbody>
         </table>
+
+        <div class="row mt-2 mb-4">
+            <div class="col-md-4">
+                <div class="form-group my-4 row">
+                    <div class="col-md-6">
+                        <form action="{{ route('pdf-download') }}" method="post" id="pdfDownload">
+                            @csrf
+                            <button type="button" class="btn btn-outline-danger btn-sm col-12">
+                                PDF Download
+                                <i class="far fa-file-pdf"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    
+                    <div class="col-md-6">
+                        <form action="{{ route('excel-download') }}" id="excelDownload" method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-success btn-sm col-12">
+                                Excel Download
+                                <i class="far fa-file-excel"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -207,5 +234,43 @@
         // $('#ticket_no').prop('selectedIndex',0);
     }
 
+    $(document).ready(function() {
+
+        var table =  $('#filterableDatatable').DataTable( {
+            columnDefs: [ {
+                orderable: false,
+                className: 'select-checkbox',
+                targets:   0
+            } ],
+            select: {
+                style:    'os',
+                selector: 'td:first-child'
+            },
+            order: [[ 1, 'asc' ]]
+        } );
+
+
+
+        $('#excelDownload').submit(function(event) {
+            event.preventDefault();
+            var selectedRows = table.rows({ selected: true }).data().pluck(1).toArray();
+
+            if(selectedRows.length != 0) {
+                
+                $("#excelDownload").append($('<input>', {
+                    type: 'hidden',
+                    name: 'supporTickets',
+                    value: JSON.stringify(selectedRows)
+                }));
+
+                console.log(JSON.stringify(selectedRows))
+
+                this.submit();
+
+            }
+            
+        });
+
+    });
 </script>
 @endsection

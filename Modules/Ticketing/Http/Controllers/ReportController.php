@@ -76,4 +76,8 @@ class ReportController extends Controller
     public function pdf(Request $request) {
         return view('ticketing::reports.pdf-complain-types');
     }
+
+    public function excelDownload(Request $request) {
+        return $request->all();
+    }
 }
