@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Pre Sale Client List')
+@section('title', 'Lead Generation List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Pre Sale Client List
+    Lead Generation List
 @endsection
 
 @section('style')

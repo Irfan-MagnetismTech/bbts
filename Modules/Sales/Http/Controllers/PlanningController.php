@@ -6,6 +6,9 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\Product;
+use Modules\Sales\Entities\Planning;
+use Modules\Sales\Entities\ServicePlan;
+use Modules\Sales\Entities\EquipmentPlan;
 
 class PlanningController extends Controller
 {
@@ -35,7 +38,30 @@ class PlanningController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->only('client_id', 'fr_no', 'link_type', 'option');
+        $data['user_id'] = auth()->user()->id ?? '';
+        $data['branch_id'] = auth()->user()->branch_id ?? '';
+        $service_plan = $request->only('particulars', 'client_req', 'plan');
+        $equipment_plan = $request->only('material', 'quantity', 'unit');
+        $planning = Planning::create($data);
+
+        foreach ($service_plan['particulars'] as $key => $particular) {
+            $service_plan['planning_id'] = $planning->id;
+            $service_plan['particulars'] = $particular;
+            $service_plan['client_req'] = $service_plan['client_req'][$key];
+            $service_plan['plan'] = $service_plan['plan'][$key];
+            ServicePlan::create($service_plan);
+        }
+
+        foreach ($equipment_plan['material'] as $key => $material) {
+            $equipment_plan['planning_id'] = $planning->id;
+            $equipment_plan['material'] = $material;
+            $equipment_plan['quantity'] = $equipment_plan['quantity'][$key];
+            $equipment_plan['unit'] = $equipment_plan['unit'][$key];
+            EquipmentPlan::create($equipment_plan);
+        }
+
+        return redirect()->route('planning.index')->with('success', 'Planning created successfully');
     }
 
     /**

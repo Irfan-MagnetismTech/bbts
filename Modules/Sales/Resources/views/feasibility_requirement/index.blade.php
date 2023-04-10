@@ -31,6 +31,8 @@
                     <th>Client Name</th>
                     <th>Client id</th>
                     <th>MQ No</th>
+                    <th>Total FR </th>
+                    <th>Survey/Planing</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -41,7 +43,9 @@
                     <th>Client Name</th>
                     <th>Client id</th>
                     <th>MQ No</th>
-                    <th>Status </th>
+                    <th>Total FR </th>
+                    <th>Survey/Planing</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -52,6 +56,8 @@
                         <td>{{ $feasibility_requirement->lead_generation->client_name }}</td>
                         <td>{{ $feasibility_requirement->client_id }}</td>
                         <td>{{ $feasibility_requirement->mq_no }}</td>
+                        <td>{{ $feasibility_requirement->feasibilityRequirementDetails->count() }}</td>
+                        <td>{{ $feasibility_requirement->feasibilityRequirementDetails[0]->surveySum->count() ?? '' }}/0</td>
                         <td>{{ $feasibility_requirement->is_existing }}</td>
                         <td>
                             <a href="{{ route('feasibility-requirement.edit', $feasibility_requirement->id) }}"

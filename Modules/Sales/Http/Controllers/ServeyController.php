@@ -156,11 +156,10 @@ class ServeyController extends Controller
     public function getSurveyDetails(Request $request)
     {
         $survey = Survey::where('client_id', $request->client_id)->where('fr_no', $request->fr_no)->first();
-        if($survey){
-            $surveyDetails = SurveyDetail::where('survey_id', $survey->id)->where('link_type', $request->type)->where('option', $request->option)->first();
+        if ($survey) {
+            $surveyDetails = SurveyDetail::where('survey_id', $survey->id)->where('link_type', $request->link_type)->where('option', $request->option)->first();
             return response()->json($surveyDetails);
-        } 
+        }
         return response()->json(['message' => 'No Survey Found']);
-        
     }
 }

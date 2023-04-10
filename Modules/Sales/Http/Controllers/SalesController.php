@@ -76,4 +76,14 @@ class SalesController extends Controller
     {
         //
     }
+
+    public function salesDashboard()
+    {
+        return view('sales::dashboard.sales_dashboard');
+    }
+
+    public function salesAdminDashboard()
+    {
+        return view('sales::dashboard.sales_admin_dashboard');
+    }
 }
