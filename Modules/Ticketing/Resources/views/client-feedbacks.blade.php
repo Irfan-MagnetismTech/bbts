@@ -94,7 +94,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td>No Data Found.</td>
+                    <td colspan="5">No Data Found.</td>
                 </tr>
                 @endforelse
             </tbody>
