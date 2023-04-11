@@ -6,5 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class ScmMirLine extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'scm_mir_id',
+        'material_id',
+        'serial_code',
+        'description',
+        'receiveable_id',
+        'receiveable_type',
+        'brand_id',
+        'model',
+        'quantity',
+        'remarks',
+    ];
 }

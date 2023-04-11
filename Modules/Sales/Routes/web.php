@@ -12,7 +12,7 @@ use Modules\Sales\Http\Controllers\FeasibilityRequirementController;
 use Modules\Sales\Http\Controllers\ServeyController;
 use Modules\Sales\Http\Controllers\VendorController;
 use Modules\Sales\Http\Controllers\PlanningController;
-
+use Modules\Sales\Http\Controllers\SalesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,4 +48,6 @@ Route::prefix('sales')->group(function () {
     Route::get('add-survey/{fr_id?}', [ServeyController::class, 'create'])->name('add-survey');
     Route::get('get-client-fr-list', [FeasibilityRequirementController::class, 'getClientFrList'])->name('get-client-fr-list');
     Route::get('get-survey-details', [ServeyController::class, 'getSurveyDetails'])->name('get-survey-details');
+    Route::get('sales-dashboard', [SalesController::class, 'salesDashboard'])->name('sales-dashboard');
+    Route::get('sales-admin-dashboard', [SalesController::class, 'salesAdminDashboard'])->name('sales-admin-dashboard');
 });

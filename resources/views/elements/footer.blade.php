@@ -19,6 +19,10 @@
 <script src="{{ asset('js/sweetalert2.min.js') }} "></script>
 <script src="{{ asset('js/toastify-js.js') }} "></script>
 <script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ asset('js/toastr.min.js') }} "></script>
+<script src="{{ asset('js/highcharts.min.js') }}"></script>
+
+<!-- jquery slimscroll js -->
 
 <script>
     const Toast = Swal.mixin({

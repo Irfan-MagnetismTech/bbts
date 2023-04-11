@@ -17,14 +17,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('scm_mir_id')->constrained('scm_mirs', 'id')->cascadeOnDelete();
             $table->integer('material_id')->nullable();
-            $table->string('item_code')->nullable();
+            $table->string('serial_code')->nullable();
             $table->string('description')->nullable();
             $table->integer('receiveable_id')->nullable();
             $table->string('receiveable_type')->nullable();
             $table->integer('brand_id')->nullable();
             $table->string('model')->nullable();
-            $table->bigInteger('initial_mark')->nullable();
-            $table->bigInteger('final_mark')->nullable();
             $table->double('quantity', 8, 2)->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();

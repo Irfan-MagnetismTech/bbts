@@ -50,6 +50,7 @@
                                 $gps = $survey->surveyDetails->pluck('gps')->toArray();
                                 $distances = $survey->surveyDetails->pluck('distance')->toArray();
                                 $current_capacities = $survey->surveyDetails->pluck('current_capacity')->toArray();
+                                $pops = $survey->surveyDetails->pluck('pop')->toArray();
                                 $remarks = $survey->surveyDetails->pluck('remarks')->toArray();
                                 $details_ids = $survey->surveyDetails->pluck('id')->toArray();
                             }
@@ -71,6 +72,7 @@
                             $current_capacities = $is_old ? old('current_capacity') : $current_capacities ?? [];
                             $remarks = $is_old ? old('remarks') : $remarks ?? [];
                             $details_ids = $details_ids ?? [];
+                            $lat_long = $is_old ? old('lat_long') : $survey->feasibilityRequirementDetails->lat_long ?? null;
                             
                         @endphp
                         {{-- exiting or new radio button --}}
@@ -114,6 +116,13 @@
                                     value="{{ $fr_no }}" readonly>
                             </div>
                         </div>
+                        <div class="col-xl-4 col-md-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="mq_no">GPS</label>
+                                <input type="text" name="mq_no" id="mq_no" class="form-control" placeholder="MQ No"
+                                    value="{{ $lat_long }}" readonly>
+                            </div>
+                        </div>
                         {{-- create a responsive table --}}
                     </div>
                 </div>
@@ -130,15 +139,16 @@
                                 <th>Link Type</th>
                                 <th>Option</th>
                                 <th>Status</th>
-                                <th>Method</th>
-                                <th>Vendor</th>
                                 <th>BTS/POP/LDP</th>
+                                <th>Vendor</th>
+                                <th>Pop</th>
+                                <th>Method</th>
                                 <th>GPS</th>
                                 <th>Distance</th>
                                 <th>Current Capacity</th>
                                 <th>Remarks</th>
                                 <th>
-                                    <button type="button" class="btn btn-sm btn-primary" id="addRow">
+                                    <button type="button" class="btn btn-sm btn-success" id="addRow">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </th>
@@ -198,15 +208,9 @@
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
-                                                <select name="method[]" id="method" class="form-control">
-                                                    <option value="">Select Method</option>
-                                                    <option value="Fiber"
-                                                        {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber</option>
-                                                    <option value="Radio"
-                                                        {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio</option>
-                                                    <option value="GSM"
-                                                        {{ $methods[$key] == 'GSM' ? 'selected' : '' }}>GSM</option>
-                                                </select>
+                                                <input type="text" name="bts_pop_ldp[]" id="bts_pop_ldp"
+                                                    class="form-control" placeholder="BTS/POP/LDP"
+                                                    value="{{ $bts_pop_ldps[$key] }}">
                                             </div>
                                         </td>
                                         <td>
@@ -218,11 +222,31 @@
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="bts_pop_ldp[]" id="bts_pop_ldp"
-                                                    class="form-control" placeholder="BTS/POP/LDP"
-                                                    value="{{ $bts_pop_ldps[$key] }}">
+                                                <select name="pop[]" id="pop" class="form-control">
+                                                    <option value="">Select Pop</option>
+                                                    <option value="Pop 1" {{ $pops[$key] == 'Pop 1' ? 'selected' : '' }}>
+                                                        Pop 1</option>
+                                                    <option value="Pop 2" {{ $pops[$key] == 'Pop 2' ? 'selected' : '' }}>
+                                                        Pop 2</option>
+                                                    <option value="Pop 3" {{ $pops[$key] == 'Pop 3' ? 'selected' : '' }}>
+                                                        Pop 3</option>
+                                                </select>
                                             </div>
                                         </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <select name="method[]" id="method" class="form-control">
+                                                    <option value="">Select Method</option>
+                                                    <option value="Fiber"
+                                                        {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber</option>
+                                                    <option value="Radio"
+                                                        {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio</option>
+                                                    <option value="GSM"
+                                                        {{ $methods[$key] == 'GSM' ? 'selected' : '' }}>GSM</option>
+                                                </select>
+                                            </div>
+                                        </td>
+
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="gps[]" id="gps" class="form-control"
@@ -275,7 +299,7 @@
                                         <div class="input-group input-group-sm input-group-primary">
                                             <select name="option[]" id="option" class="form-control">
                                                 <option value="">Select Option</option>
-                                                <option value="Option 1">Option 1</option>
+                                                <option selected value="Option 1">Option 1</option>
                                                 <option value="Option 2">Option 2</option>
                                                 <option value="Option 3">Option 3</option>
                                             </select>
@@ -302,16 +326,27 @@
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="bts_pop_ldp[]" id="bts_pop_ldp"
+                                                class="form-control" placeholder="BTS/POP/LDP">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="vendor[]" id="vendor" class="form-control"
                                                 placeholder="Vendor">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="bts_pop_ldp[]" id="bts_pop_ldp"
-                                                class="form-control" placeholder="BTS/POP/LDP">
+                                            <select name="pop[]" id="pop" class="form-control">
+                                                <option value="">Select Pop</option>
+                                                <option value="Pop 1">Pop 1</option>
+                                                <option value="Pop 2">Pop 2</option>
+                                                <option value="Pop 3">Pop 3</option>
+                                            </select>
                                         </div>
                                     </td>
+
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="gps[]" id="gps" class="form-control"
@@ -345,9 +380,10 @@
                         </tbody>
                     </table>
                 </div>
-                <button class="py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
             </div>
+            <button class="py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
         </div>
+    </div>
     </div>
     {!! Form::close() !!}
 @endsection
