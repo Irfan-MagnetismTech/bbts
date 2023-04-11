@@ -50,7 +50,8 @@ class MeetingController extends Controller
      */
     public function show(Meeting $meeting)
     {
-        return view('sales::meeting.show', compact('meeting'));
+        $previous_meetings = Meeting::where('client_id', $meeting->client_id)->where('id', '!=', $meeting->id)->get();
+        return view('sales::meeting.show', compact('meeting', 'previous_meetings'));
     }
 
     /**
@@ -86,5 +87,12 @@ class MeetingController extends Controller
     {
         $meeting->delete();
         return redirect()->route('meeting.index')->with('success', 'Meeting deleted successfully');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $meeting = Meeting::find($id);
+        $meeting->update(['status' => $request->status]);
+        return redirect()->route('meeting.index')->with('success', 'Meeting status updated successfully');
     }
 }

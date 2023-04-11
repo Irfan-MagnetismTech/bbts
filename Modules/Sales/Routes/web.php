@@ -50,4 +50,6 @@ Route::prefix('sales')->group(function () {
     Route::get('get-survey-details', [ServeyController::class, 'getSurveyDetails'])->name('get-survey-details');
     Route::get('sales-dashboard', [SalesController::class, 'salesDashboard'])->name('sales-dashboard');
     Route::get('sales-admin-dashboard', [SalesController::class, 'salesAdminDashboard'])->name('sales-admin-dashboard');
+    Route::get('lead-generation-update-status/{id}', [LeadGenerationController::class, 'updateStatus'])->name('lead-generation.status.update');
+    Route::get('meeting-status-update/{id}', [MeetingController::class, 'updateStatus'])->name('meeting.status.update');
 });

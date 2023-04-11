@@ -96,7 +96,7 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="division_id" id="division" class="form-control form-control-primary">
+                                <select name="division_id" id="division" class="form-control ">
                                     <option>Select Division</option>
                                     @foreach ($divisons as $division)
                                         <option value="{{ $division->id }}"
@@ -108,7 +108,7 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="district_id" id="district" class="form-control form-control-primary">
+                                <select name="district_id" id="district" class="form-control ">
                                     <option value="">Select District</option>
                                     @if ($districts)
                                         @foreach ($districts as $district)
@@ -122,7 +122,7 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="thana_id" id="thana" class="form-control form-control-primary">
+                                <select name="thana_id" id="thana" class="form-control ">
                                     <option value="">Select Thana</option>
                                     @if ($thanas)
                                         @foreach ($thanas as $thana)
@@ -179,8 +179,7 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="client_type" id="client_type" class="form-control form-control-primary"
-                                    required>
+                                <select name="client_type" id="client_type" class="form-control " required>
                                     <option>Client Type</option>
                                     <option value="1" {{ $client_type == 1 ? 'selected' : '' }}>Corporate</option>
                                     <option value="2" {{ $client_type == 2 ? 'selected' : '' }}>Individual</option>
@@ -189,8 +188,7 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="business_type" id="business_type"
-                                    class="form-control form-control-primary">
+                                <select name="business_type" id="business_type" class="form-control ">
                                     <option>Business Type</option>
                                     @foreach ($organizations as $organization)
                                         <option value="{{ $organization }}"
@@ -254,7 +252,16 @@
 
                             </div>
                         </div>
-                        <div class="mt-1 col-xl-12 col-md-12">
+                        @if (!empty($lead_generation->document))
+                            <div class="mt-1 col-xl-4 col-md-4 text-center">
+                                <div class="input-group input-group-sm input-group-primary">
+                                    <a href="{{ asset('storage/' . $lead_generation->document) }}" target="_blank"
+                                        class="btn btn-outline-primary">View document</a>
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="mt-1 col-xl-12 col-md-12 ">
                             <div class="form-item">
                                 <input type="text" id="remarks" name="remarks" class="form-control"
                                     autocomplete="off" value="{{ $remarks }}" required>
@@ -281,6 +288,7 @@
         <script>
             $('#division').on('change', function() {
                 var division_id = $(this).val();
+                var html = '';
                 $.ajax({
                     url: "{{ route('get-districts') }}",
                     data: {
@@ -288,13 +296,18 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(data) {
-                        $('#district').html(data);
+                        data.forEach(element => {
+                            html += '<option value="' + element.id + '">' + element.text +
+                                '</option>';
+                        });
+                        $('#district').html(html);
                     }
                 });
             });
 
             $('#district').on('change', function() {
                 var district_id = $(this).val();
+                var html = '';
                 $.ajax({
                     url: "{{ route('get-thanas') }}",
                     data: {
@@ -302,7 +315,11 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(data) {
-                        $('#thana').html(data);
+                        data.forEach(element => {
+                            html += '<option value="' + element.id + '">' + element.text +
+                                '</option>';
+                        });
+                        $('#thana').html(html);
                     }
                 });
             });

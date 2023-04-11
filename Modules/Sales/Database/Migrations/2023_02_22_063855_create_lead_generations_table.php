@@ -37,6 +37,8 @@ return new class extends Migration
             $table->string('chance_of_business')->nullable();
             $table->string('potentiality')->nullable();
             $table->string('remarks')->nullable();
+            $table->string('status')->nullable()->default('Pending');
+            $table->string('created_by')->nullable();
             $table->timestamps();
         });
     }
