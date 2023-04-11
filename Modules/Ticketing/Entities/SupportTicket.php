@@ -2,6 +2,7 @@
 
 namespace Modules\Ticketing\Entities;
 
+use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\User;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\ClientDetail;
@@ -33,5 +34,13 @@ class SupportTicket extends Model
 
     public function clientFeedbacks() {
         return $this->hasMany(ClientFeedback::class);
+    }
+
+    public function pop() {
+        return $this->belongsTo(Pop::class);
+    }
+
+    public function closedBy() {
+        return $this->belongsTo(User::class, 'closed_by');
     }
 }

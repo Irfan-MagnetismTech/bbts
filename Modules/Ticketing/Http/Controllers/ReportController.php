@@ -8,6 +8,8 @@ use Modules\Admin\Entities\Pop;
 use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\Client;
 use App\Services\BbtsGlobalService;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\Ticketing\CRMDailyReport;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Ticketing\Entities\SupportTicket;
 
@@ -70,7 +72,16 @@ class ReportController extends Controller
         $popInfo = Pop::where('id', $popId)->first();
         $clientInfo = Client::select('id', 'name')->where('id', $clientId)->first();
 
-        return view('ticketing::reports.index', compact('supportTickets', 'ticketSources', 'complainTypes', 'request', 'popInfo', 'clientInfo'));
+        if(empty($request->reportType)) {
+            return view('ticketing::reports.index', compact('supportTickets', 'ticketSources', 'complainTypes', 'request', 'popInfo', 'clientInfo'));
+        } else if($request->reportType == 'excel') {
+            return Excel::download(new CRMDailyReport($supportTickets), 'Ticket Report '.date('d-m-Y').'.xlsx');
+        } else if ($request->reportType == 'pdf') {
+
+        }
+
+        return $request->all();
+
     }
 
     public function pdf(Request $request) {

@@ -34,7 +34,7 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('search-report-data') }}" method="post" class="my-4">
+    <form action="{{ route('search-report-data') }}" method="post" class="my-4" id="reportForm">
         @csrf
         <div class="row">
             <div class="col-md-3">
@@ -136,8 +136,23 @@
                     </div>
                 </div>
             </div>
-            
-            
+            <div class="col-md-4">
+                <div class="form-group my-4 row">
+                    <div class="col-md-6">
+                        <button type="button" id="pdfDownload" onclick="reportDownload('pdf')" class="btn btn-outline-danger btn-sm col-12">
+                            PDF Download
+                            <i class="far fa-file-pdf"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <button type="button" id="excelDownload" onclick="reportDownload('excel')" class="btn btn-outline-success btn-sm col-12">
+                            Excel Download
+                            <i class="far fa-file-excel"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
             
         </div>
     </form>
@@ -177,9 +192,9 @@
             <div class="col-md-4">
                 <div class="form-group my-4 row">
                     <div class="col-md-6">
-                        <form action="{{ route('pdf-download') }}" method="post" id="pdfDownload">
+                        <form action="{{ route('pdf-download') }}" method="post" id="filteredPdfDownload">
                             @csrf
-                            <button type="button" class="btn btn-outline-danger btn-sm col-12">
+                            <button type="submit" class="btn btn-outline-danger btn-sm col-12">
                                 PDF Download
                                 <i class="far fa-file-pdf"></i>
                             </button>
@@ -188,7 +203,7 @@
 
                     
                     <div class="col-md-6">
-                        <form action="{{ route('excel-download') }}" id="excelDownload" method="post">
+                        <form action="{{ route('excel-download') }}" id="filteredExcelDownload" method="post">
                             @csrf
                             <button type="submit" class="btn btn-outline-success btn-sm col-12">
                                 Excel Download
@@ -230,8 +245,6 @@
         $('#pop_id').val('').trigger( "change" );
         $('#client_id').val('').trigger( "change" );
         $('#duration').val('');
-
-        // $('#ticket_no').prop('selectedIndex',0);
     }
 
     $(document).ready(function() {
@@ -250,27 +263,32 @@
         } );
 
 
-
-        $('#excelDownload').submit(function(event) {
+        $('#filteredExcelDownload').submit(function(event) {
             event.preventDefault();
             var selectedRows = table.rows({ selected: true }).data().pluck(1).toArray();
 
             if(selectedRows.length != 0) {
                 
-                $("#excelDownload").append($('<input>', {
+                $("#filteredExcelDownload").append($('<input>', {
                     type: 'hidden',
                     name: 'supporTickets',
                     value: JSON.stringify(selectedRows)
                 }));
 
                 console.log(JSON.stringify(selectedRows))
-
                 this.submit();
-
             }
-            
         });
 
     });
+
+    function reportDownload(reportType) {
+        $("#reportForm").append($('<input>', {
+                    type: 'hidden',
+                    name: 'reportType',
+                    value: reportType
+                }));
+        $("#reportForm").submit();
+    }
 </script>
 @endsection
