@@ -1,13 +1,31 @@
 @extends('layouts.backend-layout')
 @section('title', 'Challan')
+@php
+    $is_old = old('type') ? true : false;
+    $form_heading = !empty($challan) ? 'Update' : 'Add';
+    $form_url = !empty($challan) ? route('challans.update', $challan->id) : route('challans.store');
+    $form_method = !empty($challan) ? 'PUT' : 'POST';
+    
+    $date = old('date', !empty($challan) ? $challan->date : null);
+    $type = old('date', !empty($challan) ? $challan->type : null);
+    $scm_requisition_id = old('scm_requisition_id', !empty($challan) ? $challan->scm_requisition_id : null);
+    $scm_requisition_no = old('mrs_no', !empty($challan) ? $challan->scmRequisition->mrs_no : null);
+    $purpose = old('purpose', !empty($challan) ? $challan->purpose : null);
+    $client_id = old('client_id', !empty($challan) ? $challan->client_id : null);
+    $client_name = old('client_name', !empty($challan) ? $challan?->client?->name : null);
+    $client_fr_composite_key = old('client_name', !empty($challan) ? $challan?->client_fr_composite_key : null);
+    $client_no = old('client_no', !empty($challan) ? $challan?->client?->client_no : null);
+    $client_address = old('client_address', !empty($challan) ? $challan?->client?->address : null);
+    $branch_id = old('branch_id', !empty($challan) ? $challan->branch_id : null);
+    $branch_name = old('branch_id', !empty($challan) ? $challan?->branch?->name : null);
+    $pop_id = old('pop_id', !empty($challan) ? $challan->pop_id : null);
+    $pop_name = old('pop_name', !empty($challan) ? $challan?->pop?->name : null);
+    $pop_address = old('pop_address', !empty($challan) ? $challan?->pop?->address : null);
+    
+@endphp
 
 @section('breadcrumb-title')
-    @if ($formType == 'edit')
-        Edit
-    @else
-        Create
-    @endif
-    Challan
+{{ $form_heading }} Challan
 @endsection
 
 @section('style')
@@ -42,33 +60,33 @@
 @section('content-grid', 'col-12')
 
 @section('content')
-        <form
-            action="{{ $formType == 'edit' ? route('challans.update', @$requisition->id) : route('challans.store') }}"
-            method="post" class="custom-form">
-            @if ($formType == 'edit')
-                @method('PUT')
-            @endif
-            @csrf
+        {!! Form::open([
+            'url' => $form_url,
+            'method' => $form_method,
+            'encType' => 'multipart/form-data',
+            'class' => 'custom-form',
+        ]) !!}
             <div class="row">
                 <div class="col-md-12">
-                    <div class="typeSection mt-2 mb-4">
+                    <div class="
+                     mt-2 mb-4">
                         <div class="form-check-inline">
                             <label class="form-check-label" for="client">
                                 <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                    value="client" @checked(@$requisition->type == 'client' || old('type') == 'client' || ($formType == 'create' && !old()))> Client
+                                    value="client" @checked(@$type == 'client' || ($form_method == 'POST' && !old()))> Client
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label" for="pop">
                                 <input type="radio" class="form-check-input radioButton" id="pop" name="type"
-                                    value="pop" @checked(@$requisition->type == 'pop' || old('type') == 'pop')>
+                                    value="pop" @checked(@$type == 'pop')>
                                 POP
                             </label>
                         </div>
                         <div class="form-check-inline">
                             <label class="form-check-label" for="general">
                                 <input type="radio" class="form-check-input radioButton" id="general" name="type"
-                                    value="general" @checked(@$requisition->type == 'general' || old('type') == 'general')>
+                                    value="general" @checked(@$type == 'general')>
                                 General
                             </label>
                         </div>
@@ -87,29 +105,29 @@
                 <div class="form-group col-3 date">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
+                        value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
                 </div>
                 <div class="form-group col-3 mrs_no">
                     <label for="select2">MRS No</label>
                     <input class="form-control" id="mrs_no" name="mrs_no" aria-describedby="mrs_no"
-                        value="{{ old('mrs_no') ?? (@$requisition->mrs_no ?? '') }}" placeholder="Search a MRS No">
+                        value="{{ old('mrs_no') ?? (@$scm_requisition_no ?? '') }}" placeholder="Search a MRS No">
                         <input class="form-control" id="scm_requisition_id" name="scm_requisition_id" aria-describedby="scm_requisition_id"
-                        value="{{ old('scm_requisition_id') ?? (@$requisition->scm_requisition_id ?? '')}}" type="hidden">
+                        value="{{ old('scm_requisition_id') ?? (@$scm_requisition_id ?? '')}}" type="hidden">
                 </div>
                 <div class="form-group col-3">
                     <label for="select2">Purpose</label>
                     <select class="form-control select2" id="purpose" name="purpose">
                         <option value="" selected>Select Purpose</option>
-                        @foreach ($purposes as $key => $value)
+                        @foreach (config('businessinfo.challanPurpose') as $key => $value)
                             <option value="{{ $value }}"
-                                {{ old('purpose', @$requisition->purpose) == $value ? 'selected' : '' }}>
+                                {{ old('purpose', @$purpose) == $value ? 'selected' : '' }}>
                                 {{ $value }}
                             </option>
                         @endforeach
                     </select>
                 </div>
             </div>
-            
+           
             <div class="row">
                 <div class="form-group col-3 branch_name">
                     <label for="select2">From Branch</label>
@@ -117,7 +135,7 @@
                         <option value="20" selected>Select Branch</option>
                         @foreach ($branchs as $option)
                             <option value="{{ $option->id }}"
-                                {{ old('branch_id', @$requisition->branch_id) == $option->id ? 'selected' : '' }}>
+                                {{ $branch_id == $option->id ? 'selected' : '' }}>
                                 {{ $option->name }}
                             </option>
                         @endforeach
@@ -127,21 +145,21 @@
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? (@$requisition->client->name ?? '') }}"
+                        name="client_name" value="{{ old('client_name') ?? (@$client_name ?? '') }}"
                         placeholder="Search...">
                     <input type="hidden" name="client_id" id="client_id"
-                        value="{{ old('client_id') ?? @$requisition?->client->id }}">
+                        value="{{ old('client_id') ?? @$client_id }}">
                 </div>
                 <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>
                     <select class="form-control select2" id="client_links" name="client_links">
                         <option value="" readonly selected>Select Client Link</option>
-                        @if ($formType == 'create')
+                        @if ($form_method == 'POST')
                             <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
                         @endif
-                        @if ($formType == 'edit')
-                            @foreach ($clientInfos as $clientInfo)
-                                <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$requisition->fr_composite_key)>
+                        @if ($form_method == 'PUT')
+                            @foreach ($client_links as $clientInfo)
+                                <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$client_fr_composite_key)>
                                     {{ $clientInfo->link_name }}</option>
                             @endforeach
                         @endif
@@ -151,27 +169,27 @@
                 <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                        readonly value="{{ old('client_no') ?? (@$requisition->client->client_no ?? '') }}">
+                        readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
 
                 </div>
 
                 <div class="form-group col-3 client_address">
                     <label for="client_address">Client Address:</label>
                     <input type="text" class="form-control" id="client_address" name="client_address" aria-describedby="client_address"
-                        readonly value="{{ old('client_address') ?? (@$requisition->client_address ?? '') }}">
+                        readonly value="{{ old('client_address') ?? (@$client_address ?? '') }}">
                 </div>
                 
                 <div class="form-group col-3 pop_name" style="display: none">
                     <label for="select2">Pop Name</label>
                     <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
-                    value="{{ old('pop_name') ?? (@$requisition->pop_name ?? '') }}" placeholder="Search a POP Name">
+                    value="{{ old('pop_name') ?? (@$pop_name ?? '') }}" placeholder="Search a POP Name">
                     <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
-                    value="{{ old('pop_id') ?? (@$requisition->pop_id ?? '') }}">
+                    value="{{ old('pop_id') ?? (@$pop_id ?? '') }}">
                 </div>
                 <div class="form-group col-3 pop_address" style="display: none">
                     <label for="select2">Pop Address</label>
                     <input class="form-control" id="pop_address" name="pop_address" aria-describedby="pop_address"
-                    value="{{ old('pop_address') ?? (@$requisition->pop_address ?? '') }}" readonly placeholder="Select a POP Address">
+                    value="{{ old('pop_address') ?? (@$pop_address ?? '') }}" readonly placeholder="Select a POP Address">
                 </div>
             </div>
 
@@ -192,47 +210,27 @@
                 </thead>
                 <tbody>
                     @php
-                        $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
-                        $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
-                        $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
-                        $material_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
-                        $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
-                        $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
-                        $description = old('description', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('description') : []);
-                        $sl_code = old(
-                            'sl_code',
-                            !empty($materialReceive)
-                                ? $materialReceive->scmMrrLines->map(function ($item) {
-                                    return implode(',', $item->scmMrrSerialCodeLines->pluck('serial_or_drum_key')->toArray());
-                                })
-                                : '',
-                        );
-                        
-                        $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
-                        $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
-                        $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
-                        $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
-                        
-                        $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
-                        $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('unit_price') : []);
-                        $amount = old(
-                            'amount',
-                            !empty($materialReceive)
-                                ? collect($quantity)
-                                    ->map(function ($value, $key) use ($unit_price) {
-                                        return $value * $unit_price[$key];
-                                    })
-                                    ->toArray()
-                                : [],
-                        );
+                        $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
+                        $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
+                        $type_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('type_id') : []);
+                        $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('item_code') : []);
+                        $brand_id = old('brand_id', !empty($challan) ? $challan->scmChallanLines->pluck('brand_id') : []);
+                        $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
+                        $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
+                        $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
+                       
+                        $unit = old('initial_mark', !empty($challan) ? $challan->scmChallanLines->pluck('unit') : []);
+                        $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
+                        $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
+                       
                     @endphp
-                    @foreach ($mrr_lines as $key => $requisitionDetail)
+                    @foreach ($Challan_Lines as $key => $Challan_Line)
                         <tr>
                             <td>
                                 <select name="out_from[]" class="form-control out_from" autocomplete="off">
                                     <option value="">Select Out From</option>
-                                    @foreach ($out_from as $key1 => $value)
-                                        <option value="{{ $value }}" @selected($out_from[$key] == $value)>{{ $key1 }}
+                                    @foreach (config('businessinfo.receivedTypes')  as $key1 => $value)
+                                        <option value="{{ $value }}" @selected($received_type[$key] == $value)>{{ $key1 }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -323,7 +321,7 @@
                     </div>
                 </div>
             </div>
-        </form>
+            {!! Form::close() !!}
     </div>
 @endsection
 
@@ -348,7 +346,7 @@
                             <td>
                                 <select name="received_type[${indsd}]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
-                                    @foreach ($received_type as $value)
+                                    @foreach (config('businessinfo.receivedTypes') as $value)
                                         <option value="{{ $value }}">{{ strToUpper($value) }}</option>
                                     @endforeach
                                 </select>
@@ -415,8 +413,8 @@
 
         //Search Client
         var client_details = [];
-        @if ($formType === 'edit')
-            client_details = {!! collect($clientInfos) !!}
+        @if ($form_method === 'PUT')
+            client_details = {!! collect($client_links) !!}
         @endif
         $(document).on('keyup focus', '#client_name', function() {
             $(this).autocomplete({

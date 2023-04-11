@@ -6,8 +6,10 @@ use Carbon\Carbon;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
+use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\ScmChallanLine;
+use Modules\SCM\Entities\ScmRequisition;
 
 class ScmChallan extends Model
 {
@@ -46,5 +48,9 @@ class ScmChallan extends Model
     public function stockable()
     {
         return $this->morphMany(StockLedger::class, 'stockable');
+    }
+    public function scmRequisition()
+    {
+        return $this->belongsTo(ScmRequisition::class);
     }
 }

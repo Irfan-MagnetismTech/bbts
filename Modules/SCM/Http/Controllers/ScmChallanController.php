@@ -8,16 +8,24 @@ use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
+use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\ScmChallan;
 use Modules\SCM\Entities\ScmMrrLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\QueryException;
+use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 
 class ScmChallanController extends Controller
 {
+    private $ChallanNo;
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->ChallanNo = $globalService->generateUniqueId(ScmChallan::class, 'Challan');
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -37,15 +45,7 @@ class ScmChallanController extends Controller
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
-        $purposes = [
-            'activation' => 'Activation',
-            'maintenance' => 'Maintenance',
-            'shifting' => 'Shifting',
-            'own_use' => 'Own Use',
-            'stolen' => 'Stolen',
-        ];
-        $received_type = ['mrr', 'err', 'wcr'];
-        return view('scm::challans.create', compact('formType', 'brands', 'branchs', 'purposes', 'received_type'));
+        return view('scm::challans.create', compact('formType', 'brands', 'branchs'));
     }
 
     /**
@@ -57,22 +57,22 @@ class ScmChallanController extends Controller
     {
         try {
             DB::beginTransaction();
-            $challan_data = $request->only('type', 'challan_no', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id');
+            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id');
+            $challan_data['challan_no'] =  $this->ChallanNo;
+            $challan_data['created_by'] = auth()->id();
 
             $challan_details = [];
             foreach ($request->material_name as $kk => $val) {
                 if (isset($request->serial_code[$kk]) && count($request->serial_code[$kk])) {
                     foreach ($request->serial_code[$kk] as $key => $value) {
                         $stock_ledgers[] = $this->GetStockLedgerData($request, $kk, $key);
-                        // dump($kk ?? 'sdf', $key ?? 'jj');
-                        // (isset($req->serial_code[$key1]) && isset($req->serial_code[$key1][$key2])) ? $req->serial_code[$key1][$key2] : null,
                     };
                 } elseif (isset($request->material_name[$kk])) {
                     $stock_ledgers[] = $this->GetStockLedgerData($request, $kk);
-                    // dump($kk ?? 'sdf');
                 }
                 $challan_details[] = $this->GetMrrDetails($request, $kk);
             };
+
             $challan = ScmChallan::create($challan_data);
             $challan->scmChallanLines()->createMany($challan_details);
             $challan->stockable()->createMany($stock_ledgers);
@@ -100,9 +100,16 @@ class ScmChallanController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ScmChallan $challan)
     {
-        return view('scm::edit');
+        $brands = Brand::latest()->get();
+        $branchs = Branch::latest()->get();
+        $client_links = ClientDetail::where('client_id', $challan->client_id)->get();
+        $materials = [];
+        $challan->scmChallanLines->each(function ($item, $key) use (&$materials) {
+            $materials[] = Stockledger::where('material_id', $item->material_id)->get();
+        });
+        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links'));
     }
 
     /**
@@ -135,7 +142,7 @@ class ScmChallanController extends Controller
             'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : null,
             'model' => isset($req->model[$key1]) ? $req->model[$key1] : null,
             'serial_code' => (isset($req->serial_code[$key1]) && isset($req->serial_code[$key1][$key2])) ? $req->serial_code[$key1][$key2] : null,
-            'quantity' => is_null($key2) ? (($req->material_type[$key1] == "Drum") ? $req->quantity[$key1] : 1) : $req->quantity[$key1],
+            'quantity' =>  -1 * (isset($key2) ? (($req->material_type[$key1] == "Drum") ? $req->quantity[$key1] : 1) : $req->quantity[$key1]),
         ];
     }
 
@@ -144,6 +151,7 @@ class ScmChallanController extends Controller
         return  [
             'received_type' => $req->received_type[$key1],
             'type_id' => $req->type_id[$key1],
+            'item_code' => $req->item_code[$key1],
             'material_id'   => $req->material_name[$key1],
             'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : null,
             'model' => isset($req->model[$key1]) ? $req->model[$key1] : null,

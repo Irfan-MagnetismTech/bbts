@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Requisition')
+@section('title', 'Challans')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of Requisition Info
+    List of Challan Info
 @endsection
 
 @section('style')
@@ -14,7 +14,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('requisitions.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('challans.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
     Total: {{ count($challans) }}

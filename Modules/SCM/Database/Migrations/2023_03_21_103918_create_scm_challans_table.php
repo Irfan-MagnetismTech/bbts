@@ -21,8 +21,10 @@ return new class extends Migration
             $table->bigInteger('scm_requisition_id')->nullable();
             $table->string('purpose')->nullable();
             $table->bigInteger('client_id')->nullable();
+            $table->bigInteger('client_details_id')->nullable();
             $table->bigInteger('branch_id')->nullable();
             $table->bigInteger('pop_id')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }
