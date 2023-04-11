@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Modules\SCM\Entities\ScmMir;
 use Modules\SCM\Entities\ScmMrr;
@@ -56,24 +57,37 @@ class ScmMirController extends Controller
      */
     public function store(ScmMirRequest $request)
     {
-        // dd($request->all());
-
-
         try {
             $mir_data = $request->all();
 
             $mir_details = [];
-            foreach ($request->material_name as $key => $val) {                
+            foreach ($request->material_name as $key => $val) {
+                if (isset($request->serial_code[$key]) && count($request->serial_code[$key])) {
+                    foreach ($request->serial_code[$key] as $keyValue => $value) {
+                        $stock_ledgers[] = $this->getStockLedgerData($request, $key, $keyValue, $request->branch_id, true);
+                        $stock_ledgers[] = $this->getStockLedgerData($request, $key, $keyValue, $request->to_branch_id, false);
+                    };
+                } elseif (isset($request->material_name[$key])) {
+                    $stock_ledgers[] = $this->getStockLedgerData($request, $key, $key2 = null, $request->branch_id, true);
+                    $stock_ledgers[] = $this->getStockLedgerData($request, $key, $key2 = null, $request->to_branch_id, false);
+                }
                 $mir_details[] = $this->getMirDetails($request, $key);
             };
+            
             $mir_data['mir_no'] = $this->mirNo;
             $mir_data['created_by'] = auth()->user()->id;
+
+            DB::beginTransaction();
             $mir = ScmMir::create($mir_data);
             $mir->lines()->createMany($mir_details);
+            $mir->stockable()->createMany($stock_ledgers);
+            DB::commit();
+            
+            return redirect()->route('material-issues.create')->with('success', 'MIR Created Successfully');
         } catch (Exception $err) {
+            DB::rollBack();
+            return redirect()->route('material-issues.create')->with('error', $err->getMessage());
         }
-
-        return redirect()->route('material-issues.create')->with('success', 'MIR Created Successfully');
     }
 
     /**
@@ -117,7 +131,30 @@ class ScmMirController extends Controller
         //
     }
 
-    
+    /**
+     * Get Stock Ledger Data From Request
+     * 
+     * @param Request $request
+     * @param int $key1
+     * @param int $key2
+     * @param int $branch_id
+     * @param bool $qty
+     * 
+     * @return array
+     */
+    public function getStockLedgerData($request, $key1, $key2 = null, $branch_id, $qty): array
+    {
+        return [
+            'branch_id' => $branch_id,
+            'material_id' => $request->material_name[$key1],
+            'item_code' => $request->code[$key1],
+            'unit' => $request->unit[$key1],
+            'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
+            'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
+            'serial_code' => (isset($request->serial_code[$key1]) && isset($request->serial_code[$key1][$key2])) ? $request->serial_code[$key1][$key2] : null,
+            'quantity' => $qty ? (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1]) : (-1 * (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1])),
+        ];
+    }
 
     /**
      * Get MIR Details From Request
