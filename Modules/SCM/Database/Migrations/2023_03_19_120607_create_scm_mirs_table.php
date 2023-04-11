@@ -22,7 +22,6 @@ return new class extends Migration
             $table->integer('pop_id')->nullable();
             $table->integer('courier_id')->nullable();
             $table->string('courier_serial_no')->nullable();
-            $table->string('remarks')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('branch_id')->nullable();
             $table->timestamps();
