@@ -31,5 +31,16 @@ return [
     ],
     'ticketReopenValidity' => (60*24), // Time is in minutes, so it's 24 hours.
 
-    
+    //material received types
+    'receivedTypes' => [
+        'MRR' => 'MRR',
+        'ERR' => 'ERR',
+        'WCR' => 'WCR'
+    ],
+
+    //Tax or VAT
+    'vatOrTax' => [
+        'Include' => 'Include',
+        'Exclude' => 'Exclude'
+    ],
 ];
