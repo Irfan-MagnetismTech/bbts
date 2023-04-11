@@ -9,7 +9,7 @@ return [
     'url'   => 'https://bbts.net',
     'footer' => 'All Rights Reserved',
     'developer' => 'Developed by <a href="https://magnetismtech.com" target="_blank">Magnetism Tech Limited</a>',
-    
+
     'ticketStatuses' => ['Pending', 'Approved', 'Accepted', 'Processing', 'Closed', 'Reopen'],
     'ticketPriorities' => ['Low', 'Medium', 'High', 'Urgent'],
     'supportEmployeeLevels' => [
@@ -29,7 +29,7 @@ return [
         'Backward' => 'Backwarded',
         'Handover' => 'Handovered'
     ],
-    'ticketReopenValidity' => (60*24), // Time is in minutes, so it's 24 hours.
+    'ticketReopenValidity' => (60 * 24), // Time is in minutes, so it's 24 hours.
 
     //material received types
     'receivedTypes' => [

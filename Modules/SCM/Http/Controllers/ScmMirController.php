@@ -106,9 +106,9 @@ class ScmMirController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ScmMir $material_issue)
     {
-        return view('scm::mir.create');
+        return view('scm::mir.create', compact('material_issue'));
     }
 
     /**

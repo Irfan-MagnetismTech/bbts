@@ -3,21 +3,23 @@
 
 @php
     $is_old = old('supplier_name') ? true : false;
-    $form_heading = !empty($materialReceive) ? 'Update' : 'Add';
-    $form_url = !empty($materialReceive) ? route('material-issues.update', $materialReceive->id) : route('material-issues.store');
-    $form_method = !empty($materialReceive) ? 'PUT' : 'POST';
+    $form_heading = !empty($material_issue) ? 'Update' : 'Add';
+    $form_url = !empty($material_issue) ? route('material-issues.update', $material_issue->id) : route('material-issues.store');
+    $form_method = !empty($material_issue) ? 'PUT' : 'POST';
     
-    $branch_id = old('branch_id', !empty($materialReceive) ? $materialReceive->branch_id : null);
-    $material_list = old('branch_id') ? old('select_array') : (!empty($materialReceive) ? $material_list : []);
-    $applied_date = old('applied_date', !empty($materialReceive) ? $materialReceive->date : null);
-    $mrs_no = old('mrs_no', !empty($materialReceive) ? $materialReceive->purchaseOrder->mrs_no : null);
-    $po_id = old('po_id', !empty($materialReceive) ? $materialReceive->purchase_order_id : null);
-    $po_date = old('po_date', !empty($materialReceive) ? $materialReceive->purchaseOrder->date : null);
-    $supplier_name = old('supplier_name', !empty($materialReceive) ? $materialReceive->supplier->name : null);
-    $supplier_id = old('supplier_id', !empty($materialReceive) ? $materialReceive->supplier_id : null);
-    $challan_no = old('challan_no', !empty($materialReceive) ? $materialReceive->challan_no : null);
-    $challan_date = old('challan_date', !empty($materialReceive) ? $materialReceive->challan_date : null);
-    
+    $mrs_no = $is_old ? old('mrs_no') : (!empty($material_issue) ? $material_issue->scmRequisition->mrs_no : '');
+    $mrs_id = $is_old ? old('scm_requisition_id') : (!empty($material_issue) ? $material_issue->scm_requisition_id : '');
+    $date = $is_old ? old('date') : (!empty($material_issue) ? $material_issue->date : '');
+    $from_branch = $is_old ? old('from_branch') : (!empty($material_issue) ? $material_issue->fromBranch->FormattedAddress : '');
+    $from_branch_id = $is_old ? old('from_branch_id') : (!empty($material_issue) ? $material_issue->branch_id : '');
+    $to_branch = $is_old ? old('to_branch') : (!empty($material_issue) ? $material_issue->toBranch->FormattedAddress : '');
+    $to_branch_id = $is_old ? old('to_branch_id') : (!empty($material_issue) ? $material_issue->to_branch_id : '');
+    $courier = $is_old ? old('courier') : (!empty($material_issue) ? $material_issue->courier->name : '');
+    $courier_id = $is_old ? old('courier_id') : (!empty($material_issue) ? $material_issue->courier_id : '');
+    $courier_code = $is_old ? old('courier_code') : (!empty($material_issue) ? $material_issue->courier_code : '');
+    $pop = $is_old ? old('pop') : (!empty($material_issue) ? $material_issue->pop->name : '');
+    $pop_id = $is_old ? old('pop_id') : (!empty($material_issue) ? $material_issue->pop_id : '');
+    $pop_address = $is_old ? old('pop_address') : (!empty($material_issue) ? $material_issue->pop->address : '');
 @endphp
 
 @section('breadcrumb-title')
@@ -66,70 +68,70 @@
         'class' => 'custom-form',
     ]) !!}
     <div class="row">
-        @if (!empty($materialReceive->id))
+        @if (!empty($material_issue->id))
             <div class="form-group col-3">
                 <label for="mrr_no">MIR No</label>
                 <input type="text" class="form-control" id="mrr_no" name="mrr_no" aria-describedby="mrr_no"
-                    value="{{ old('mrr_no') ?? ($materialReceive->mrr_no ?? '') }}" readonly>
+                    value="{{ old('mrr_no') ?? ($material_issue->mir_no ?? '') }}" readonly>
             </div>
         @endif
-        
+
         <div class="form-group col-3">
             <label for="mrs_no">MRS No:</label>
             <input type="text" class="form-control" id="mrs_no" aria-describedby="mrs_no" name="mrs_no"
                 value="{{ $mrs_no }}" placeholder="Ex: MRS-####-##">
             <input type="hidden" class="form-control" id="scm_requisition_id" name="scm_requisition_id"
-                aria-describedby="scm_requisition_id" value="{{ $po_id }}">
+                aria-describedby="scm_requisition_id" value="{{ $mrs_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="applied_date">Applied Date:</label>
             <input class="form-control applied_date" name="date" aria-describedby="applied_date"
-                value="{{ $applied_date }}" readonly placeholder="Select a Date" id="applied_date">
+                value="{{ $date }}" readonly placeholder="Select a Date" id="applied_date">
         </div>
 
         <div class="form-group col-3">
             <label for="from_branch">From Branch:</label>
             <input type="text" class="form-control branch" id="from_branch" aria-describedby="from_branch"
-                name="from_branch" value="{{ $mrs_no }}" placeholder="Search Branch....">
+                name="from_branch" value="{{ $from_branch }}" placeholder="Search Branch....">
             <input type="hidden" class="form-control branch_id" id="from_branch_id" name="branch_id"
-                aria-describedby="from_branch_id" value="{{ $po_id }}">
+                aria-describedby="from_branch_id" value="{{ $from_branch_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="to_branch">To Branch:</label>
             <input type="text" class="form-control branch" id="to_branch" aria-describedby="to_branch" name="to_branch"
-                value="{{ $mrs_no }}" placeholder="Search Branch....">
+                value="{{ $to_branch }}" placeholder="Search Branch....">
             <input type="hidden" class="form-control branch_id" id="to_branch_id" name="to_branch_id"
-                aria-describedby="to_branch_id" value="{{ $po_id }}">
+                aria-describedby="to_branch_id" value="{{ $to_branch_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="pop_name">POP Name:</label>
-            <input type="text" class="form-control pop_name" name="pop_name" value="{{ $mrs_no }}"
+            <input type="text" class="form-control pop_name" name="pop_name" value="{{ $pop }}"
                 placeholder="Search POP....">
             <input type="hidden" class="form-control pop_id" id="pop_id" name="pop_id" aria-describedby="pop_id"
-                value="{{ $po_id }}">
+                value="{{ $pop_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="pop_address">POP Address:</label>
             <input type="text" class="form-control" id="pop_address" aria-describedby="pop_address" name="pop_address"
-                value="{{ $mrs_no }}" readonly>
+                value="{{ $pop_address }}" readonly>
         </div>
 
         <div class="form-group col-3">
             <label for="courier_nmae">Courier Name:</label>
             <input type="text" class="form-control" id="courier_nmae" aria-describedby="courier_nmae" name="courier_nmae"
-                value="{{ $mrs_no }}" placeholder="Search Courier....">
+                value="{{ $courier }}" placeholder="Search Courier....">
             <input type="hidden" class="form-control" id="courier_id" name="courier_id" aria-describedby="courier_id"
-                value="{{ $po_id }}">
+                value="{{ $courier_id }}">
         </div>
 
         <div class="form-group col-3">
             <label for="courier_serial_no">Courier Seriel No:</label>
             <input type="text" class="form-control" id="courier_serial_no" aria-describedby="courier_serial_no"
-                name="courier_serial_no" value="{{ $mrs_no }}" placeholder="Search Courier No....">
+                name="courier_serial_no" value="{{ $courier_code }}" placeholder="Search Courier No....">
         </div>
     </div>
 
@@ -152,125 +154,66 @@
         </thead>
         <tbody>
             @php
-                $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
-                $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
-                $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
-                $material_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
-                $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
-                $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
-                $description = old('description', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('description') : []);
-                $sl_code = old(
-                    'sl_code',
-                    !empty($materialReceive)
-                        ? $materialReceive->scmMrrLines->map(function ($item) {
-                            return implode(',', $item->scmMrrSerialCodeLines->pluck('serial_or_drum_key')->toArray());
-                        })
-                        : '',
-                );
-                
-                $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
-                $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
-                $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
-                $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
-                
-                $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
-                $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('unit_price') : []);
-                $amount = old(
-                    'amount',
-                    !empty($materialReceive)
-                        ? collect($quantity)
-                            ->map(function ($value, $key) use ($unit_price) {
-                                return $value * $unit_price[$key];
-                            })
-                            ->toArray()
-                        : [],
-                );
+                $receiveable_type = old('received_type') ?? (@$material_issue?->lines->pluck('receiveable_type') ?? []);
             @endphp
-            @foreach ($mrr_lines as $key => $requisitionDetail)
+            @foreach ($receiveable_type as $key => $value)
                 <tr>
                     <td>
-                        <select name="received_type[]" class="form-control received_type" autocomplete="off">
-                            <option value="">Select Out From</option>
-                            @foreach ($received_type as $key1 => $value)
-                                <option value="{{ $value }}" @selected($received_type[$key] == $value)>{{ $key1 }}
+                        <select class="form-control received_type" name="received_type[]">
+                            @foreach (config('businessinfo.receivedTypes') as $typeKey => $typeValue)
+                                <option value="{{ $typeValue }}"
+                                    {{ $receiveable_type[$key] == $typeValue ? 'selected' : '' }}>
+                                    {{ $typeValue }}
                                 </option>
-                            @endforeach
+                            @endforeach 
                         </select>
                     </td>
-                    <td class="form-group">
-                        <select class="form-control material_name" name="material_id[]">
-                            <option value="" readonly selected>Select Material</option>
-                            @foreach ($material_list as $key1 => $value)
-                                <option value="{{ $value }}" readonly @selected($material_id[$key] == $value)>
-                                    {{ $key1 }}</option>
-                            @endforeach
-                        </select>
-                        <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"
-                            value="{{ $item_code[$key] }}">
-                        <input type="hidden" name="material_type[]" class="form-control material_type"
-                            autocomplete="off" value="{{ $material_type[$key] }}">
-                    </td>
-
                     <td>
-                        <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                            <option value="">Select Brand</option>
-                            @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                    {{ $brand->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-
-                    <td>
-                        <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                            value="{{ $model[$key] }}">
+                        @dd($material_issue->lines->receivedTypeNo)
+                        <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off" value="{{ old('type_no')[$key] ?? ($material_issue->lines->receivedTypeNo->mrr_no[$key] ?? '') }}">
+                        <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off" value="{{ old('type_no')[$key] ?? ($material_issue->lines->receivedTypeNo->id[$key] ?? '') }}">
                     </td>
                     <td>
-                        <input type="text" name="description[]" class="form-control description" autocomplete="off"
-                            value="{{ $description[$key] }}">
+                        <input type="text" class="form-control" name="material_name[]"
+                            value="{{ old('material_name')[$key] ?? ($material_issue->lines->pluck('material_name')[$key] ?? '') }}">
                     </td>
                     <td>
-                        <div class="tags_add_multiple">
-                            <input class="" type="text" name="sl_code[]" value="{{ $sl_code[$key] }}"
-                                data-role="tagsinput">
-                        </div>
-                    </td>
-
-                    <td>
-                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off"
-                            value="{{ $initial_mark[$key] }}">
+                        <input type="text" class="form-control" name="brand[]"
+                            value="{{ old('brand')[$key] ?? ($material_issue->lines->pluck('brand')[$key] ?? '') }}">
                     </td>
                     <td>
-                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off"
-                            value="{{ $final_mark[$key] }}">
+                        <input type="text" class="form-control" name="model[]"
+                            value="{{ old('model')[$key] ?? ($material_issue->lines->pluck('model')[$key] ?? '') }}">
                     </td>
                     <td>
-                        <input type="text" name="warranty_period[]" class="form-control warranty_period"
-                            autocomplete="off" value="{{ $warranty_period[$key] }}">
+                        <input type="text" class="form-control" name="serial_code[]"
+                            value="{{ old('serial_code')[$key] ?? ($material_issue->lines->pluck('serial_code')[$key] ?? '') }}">
                     </td>
                     <td>
-                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                            value="{{ $unit[$key] }}" readonly>
+                        <input type="text" class="form-control" name="unit[]"
+                            value="{{ old('unit')[$key] ?? ($material_issue->lines->pluck('unit')[$key] ?? '') }}">
                     </td>
                     <td>
-                        <input class="form-control quantity" name="quantity[]" aria-describedby="date"
-                            value="{{ $quantity[$key] }}">
+                        <input type="text" class="form-control current_stock_from" name="current_stock_from[]"
+                            value="{{ old('current_stock_from')[$key] ?? ($material_issue->lines->pluck('current_stock_from')[$key] ?? '') }}">
                     </td>
                     <td>
-                        <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly
-                            value="10" value="{{ $unit_price[$key] }}">
+                        <input type="text" class="form-control current_stock_to" name="current_stock_to[]"
+                            value="{{ old('current_stock_to')[$key] ?? ($material_issue->lines->pluck('current_stock_to')[$key] ?? '') }}">
                     </td>
                     <td>
-                        <input name="amount[]" class="form-control amount" autocomplete="off" readonly
-                            value="{{ $amount[$key] }}">
+                        <input type="text" class="form-control issued_qty" name="issued_qty[]"
+                            value="{{ old('issued_qty')[$key] ?? ($material_issue->lines->pluck('issued_qty')[$key] ?? '') }}">
                     </td>
                     <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                        <input type="text" class="form-control" name="remarks[]"
+                            value="{{ old('remarks')[$key] ?? ($material_issue->lines->pluck('remarks')[$key] ?? '') }}">
+                    </td>
+                    <td>
+                        <i class="btn btn-danger btn-sm fa fa-trash remove-requisition-row"></i>
                     </td>
                 </tr>
             @endforeach
-
         </tbody>
         <tfoot>
         </tfoot>
@@ -374,9 +317,7 @@
                 }
             })
 
-            $('.select2').select2({
-                maximumSelectionLength: 1
-            });
+            $('.select2').select2();
 
             $('#applied_date').datepicker({
                 format: "dd-mm-yyyy",
@@ -385,82 +326,15 @@
                 showOtherMonths: true
             }).datepicker("setDate", new Date());
 
-            @if (empty($materialReceive) && empty(old('material_id')))
+            @if (empty($material_issue) && empty(old('material_id')))
                 appendCalculationRow();
             @endif
-            var indx = 0;
-
-            function appendCalculationRow() {
-                let row = `<tr>
-                            <td>
-                                <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
-                                    <option value="">Select Out From</option>
-                                    @foreach ($received_type as $value)
-                                        <option value="{{ $value }}">{{ strToUpper($value) }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
-                                <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
-                            </td>
-                            <td class="form-group">
-                                <select class="form-control material_name select2" name="material_name[${indx}]">
-                                </select>
-                                <input type="hidden" name="code[${indx}]" class="form-control code" autocomplete="off"> 
-                                <input type="hidden" name="type[${indx}]" class="form-control type" autocomplete="off"> 
-                            </td>                            
-                            <td>
-                                <select class="form-control brand select2" name="brand[${indx}]">
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control model select2" name="model[${indx}]">
-                                </select>
-                            </td>
-                            <td class="select2container">
-                                <select class="form-control serial_code select2" name="serial_code[${indx}][]" multiple="multiple">
-
-                                </select>
-                            </td>
-                            <td>
-                                <input name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly>
-                            </td>                                            
-                            <td>
-                                <input class="form-control avaiable_quantity" name="avaiable_quantity[${indx}]" aria-describedby="date" readonly>
-                            </td>
-                            <td>
-                                <input class="form-control opening_balance" name="opening_balance[${indx}]" aria-describedby="date" readonly>
-                            </td>
-                            <td>
-                                <input name="issued_qty[${indx}]" class="form-control issued_qty" autocomplete="off" type="number">
-                            </td>
-                            <td>
-                                <input name="remarks[${indx}]" class="form-control remarks" autocomplete="off">
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
-                            </td>
-                        </tr>
-                    `;
-                indx++;
-
-                $('#material_requisition tbody').append(row);
-                $('.select2').select2({
-                    maximumSelectionLength: 5,
-                    width: '100%'
-                }).on('select2:select', function(e) {
-                    if ($(this).val().length === 5) {
-                        $(this).next().find('.select2-selection').addClass('narrow-selection');
-                    }
-                });
-            }
 
             $(document).on('keyup', '.type_no', function() {
                 var event_this = $(this).closest('tr');
                 clearNext($(this));
                 let myObject = {
-                    type: event_this.find('.received_type').val().toUpperCase(),
+                    type: event_this.find('.received_type').val(),
                 }
 
                 jquaryUiAjax('.type_no', "{{ route('searchTypeNo') }}", uiList, myObject);
@@ -704,5 +578,72 @@
                 $(this).closest('tr').remove();
             });
         })
+
+        var indx = 0;
+        function appendCalculationRow() {
+            let row = `<tr>
+                            <td>
+                                <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
+                                    <option value="">Select Out From</option>
+                                    @foreach (config('businessinfo.receivedTypes') as $value)
+                                        <option value="{{ $value }}">{{ strToUpper($value) }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
+                                <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
+                            </td>
+                            <td class="form-group">
+                                <select class="form-control material_name select2" name="material_name[${indx}]">
+                                </select>
+                                <input type="hidden" name="code[${indx}]" class="form-control code" autocomplete="off"> 
+                                <input type="hidden" name="type[${indx}]" class="form-control type" autocomplete="off"> 
+                            </td>                            
+                            <td>
+                                <select class="form-control brand select2" name="brand[${indx}]">
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control model select2" name="model[${indx}]">
+                                </select>
+                            </td>
+                            <td class="select2container">
+                                <select class="form-control serial_code select2" name="serial_code[${indx}][]" multiple="multiple">
+
+                                </select>
+                            </td>
+                            <td>
+                                <input name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly>
+                            </td>                                            
+                            <td>
+                                <input class="form-control avaiable_quantity" name="avaiable_quantity[${indx}]" aria-describedby="date" readonly>
+                            </td>
+                            <td>
+                                <input class="form-control opening_balance" name="opening_balance[${indx}]" aria-describedby="date" readonly>
+                            </td>
+                            <td>
+                                <input name="issued_qty[${indx}]" class="form-control issued_qty" autocomplete="off" type="number">
+                            </td>
+                            <td>
+                                <input name="remarks[${indx}]" class="form-control remarks" autocomplete="off">
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                            </td>
+                        </tr>
+                    `;
+            indx++;
+
+            $('#material_requisition tbody').append(row);
+            $('.select2').select2({
+                maximumSelectionLength: 5,
+                width: '100%'
+            }).on('select2:select', function(e) {
+                if ($(this).val().length === 5) {
+                    $(this).next().find('.select2-selection').addClass('narrow-selection');
+                }
+            });
+        }
     </script>
 @endsection
