@@ -73,7 +73,7 @@
                     value="{{ old('mrr_no') ?? ($materialReceive->mrr_no ?? '') }}" readonly>
             </div>
         @endif
-
+        
         <div class="form-group col-3">
             <label for="mrs_no">MRS No:</label>
             <input type="text" class="form-control" id="mrs_no" aria-describedby="mrs_no" name="mrs_no"
@@ -407,8 +407,8 @@
                             <td class="form-group">
                                 <select class="form-control material_name select2" name="material_name[${indx}]">
                                 </select>
-                                <input type="hidden" name="item_code[${indx}]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[${indx}]" class="form-control material_type" autocomplete="off"> 
+                                <input type="hidden" name="code[${indx}]" class="form-control code" autocomplete="off"> 
+                                <input type="hidden" name="type[${indx}]" class="form-control type" autocomplete="off"> 
                             </td>                            
                             <td>
                                 <select class="form-control brand select2" name="brand[${indx}]">
@@ -525,7 +525,8 @@
                     to_branch: $('#to_branch_id').val(),
                 }, material_name, 'value', 'label', {
                     'data-type': 'type',
-                    'data-unit': 'unit'
+                    'data-unit': 'unit',
+                    'data-code': 'code',
                 })
             }
 
@@ -577,6 +578,14 @@
                 event_this.find('.unit').val($(
                         this).closest('tr').find('.material_name').find(':selected')
                     .data('unit'));
+
+                event_this.find('.code').val($(
+                        this).closest('tr').find('.material_name').find(':selected')
+                    .data('code'));
+
+                event_this.find('.type').val($(
+                        this).closest('tr').find('.material_name').find(':selected')
+                    .data('type'));
 
                 populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
                     material_id: material_id,
