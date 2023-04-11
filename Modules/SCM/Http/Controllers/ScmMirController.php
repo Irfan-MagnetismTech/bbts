@@ -35,7 +35,8 @@ class ScmMirController extends Controller
      */
     public function index()
     {
-        return view('scm::index');
+        $mirs = ScmMir::with('lines', 'toBranch', 'fromBranch', 'courier', 'scmRequisition', 'createdBy')->latest()->get();
+        return view('scm::mir.index', compact('mirs'));
     }
 
     /**
@@ -107,7 +108,7 @@ class ScmMirController extends Controller
      */
     public function edit($id)
     {
-        return view('scm::edit');
+        return view('scm::mir.create');
     }
 
     /**
