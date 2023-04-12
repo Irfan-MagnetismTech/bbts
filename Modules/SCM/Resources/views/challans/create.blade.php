@@ -212,6 +212,8 @@
                     @php
                         $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                         $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
+                        $received_no = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
+                        $receiveable_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('receiveable_id') : []);
                         $type_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('type_id') : []);
                         $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
                         $material_type = old('material_type', !empty($challan) ? $challan->scmChallanLines->pluck('material.type') : []);
@@ -237,8 +239,8 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
-                                <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
+                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off" value="{{ $received_no[$key] }}">
+                                <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off" value="{{ $receiveable_id[$key] }}">
                             </td>
                             <td class="form-group">
                                 <select class="form-control material_name select2" name="material_id[]">
@@ -255,24 +257,34 @@
                             </td>
         
                             <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <select name="brand_id[]" class="form-control brand select2" autocomplete="off">
                                     <option value="">Select Brand</option>
-                                    {{-- @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                            {{ $brand->name }}
+                                    @foreach ($brands[$key] as $key1 => $value)
+                                        <option value="{{ $value->brand->id }}" @selected($value->brand->id == $brand_id[$key])>
+                                            {{ $value->brand->name }}
                                         </option>
-                                    @endforeach --}}
+                                    @endforeach
                                 </select>
                             </td>
         
                             <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                                    value="{{ $model[$key] }}">
+                                <select class="form-control model select2" name="model[]">
+                                    <option value="" readonly selected>Select Model</option>
+                                    @foreach ($models[$key] as $key1 => $value)
+                                    <option value="{{ $value->model }}" @selected($value->model == $model[$key])>
+                                        {{ $value->model }}
+                                    </option>
+                                @endforeach
+                                </select>
                             </td>
-
                             <td class="select2_container">
-                                <select class="form-control serial_code select2" name='serial_code[]' multiple="multiple">
-
+                                <select class="form-control select2" multiple name="my_select">
+                                    @foreach($serial_codes[$key] as $key1 => $value)
+                                        <option value="{{ $value->serial_code }}"
+                                            @selected(in_array($value->serial_code,json_decode($serial_code[$key])))>
+                                            {{ $value->serial_code }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td>
@@ -360,7 +372,7 @@
         }).datepicker("setDate", new Date());;
         /* Append row */
         $(document).ready(function(){
-            @if (empty($requisition) && empty(old('material_name')))
+            @if (empty($challan) && empty(old('material_name')))
                 appendCalculationRow();
             @endif
         })

@@ -105,15 +105,47 @@ class ScmChallanController extends Controller
      */
     public function edit(ScmChallan $challan)
     {
-        $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
         $client_links = ClientDetail::where('client_id', $challan->client_id)->get();
         $materials = [];
-        $challan->scmChallanLines->each(function ($item, $key) use (&$materials) {
-            $materials[$key] = Stockledger::with('material')->where(['receivable_id' => $item->receiveable_id, 'receivable_type' => $item->receiveable_type])->get()->unique('material_id')->values();
+        $brands = [];
+        $models = [];
+        $serial_codes = [];
+        $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes) {
+            $materials[$key] = Stockledger::with('material')->where([
+                'receivable_id' => $item->receiveable_id,
+                'receivable_type' => $item->receiveable_type
+            ])->get()
+                ->unique('material_id')
+                ->values();
+            $brands[$key] = Stockledger::with('brand')->where([
+                'receivable_id' => $item->receiveable_id,
+                'receivable_type' => $item->receiveable_type,
+                'material_id' => $item->material_id
+            ])
+                ->get()
+                ->unique('brand_id')
+                ->values();
+            $models[$key] = StockLedger::query()->where([
+                'receivable_id' => $item->receiveable_id,
+                'receivable_type' => $item->receiveable_type,
+                'material_id' => $item->material_id,
+                'brand_id' => $item->brand_id
+            ])
+                ->get()
+                ->unique('model')
+                ->values();
+
+            $serial_codes[$key] = StockLedger::query()->where([
+                'receivable_id' => $item->receiveable_id,
+                'receivable_type' => $item->receiveable_type,
+                'material_id' => $item->material_id,
+                'brand_id' => $item->brand_id,
+                'model' => $item->model,
+            ])
+                ->get();
         });
-        // dd($materials);
-        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials'));
+        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes'));
     }
 
     /**
