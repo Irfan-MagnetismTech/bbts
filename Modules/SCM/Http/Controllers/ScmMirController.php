@@ -74,7 +74,7 @@ class ScmMirController extends Controller
                 }
                 $mir_details[] = $this->getMirDetails($request, $key);
             };
-            
+
             $mir_data['mir_no'] = $this->mirNo;
             $mir_data['created_by'] = auth()->user()->id;
 
@@ -83,7 +83,7 @@ class ScmMirController extends Controller
             $mir->lines()->createMany($mir_details);
             $mir->stockable()->createMany($stock_ledgers);
             DB::commit();
-            
+
             return redirect()->route('material-issues.create')->with('success', 'MIR Created Successfully');
         } catch (Exception $err) {
             DB::rollBack();
@@ -108,7 +108,16 @@ class ScmMirController extends Controller
      */
     public function edit(ScmMir $material_issue)
     {
-        return view('scm::mir.create', compact('material_issue'));
+        $materials = [];
+        $material_issue->lines->each(function ($item, $key) use (&$materials) {
+            $materials[] = StockLedger::with('material')->where(['receivable_id' => $item->receivable_id, 'receivable_type' => $item->receivable_type])->get()->unique('material_id');
+        });
+        $brands = [];
+        $material_issue->lines->each(function ($item, $key) use (&$brands) {
+            $brands[] = StockLedger::with('brand')->where(['receivable_id' => $item->receivable_id, 'receivable_type' => $item->receivable_type])->get()->unique('brand_id')->values();
+        });
+        dd($brands);
+        return view('scm::mir.create', compact('material_issue', 'materials'));
     }
 
     /**
@@ -170,7 +179,7 @@ class ScmMirController extends Controller
             'material_id'   => $request->material_name[$key1],
             'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : null,
             'receiveable_id' => $request->type_id[$key1],
-            'receiveable_type' => $request->received_type[$key1],
+            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
             'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
             'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
             'quantity' => $request->issued_qty[$key1],

@@ -154,28 +154,38 @@
         </thead>
         <tbody>
             @php
-                $receiveable_type = old('received_type') ?? (@$material_issue?->lines->pluck('receiveable_type') ?? []);
+                $receiveable_type = old('received_type', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable_type') : []);
+                $mrr_no = old('type_no', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable.mrr_no') : []);
+                $mrr_id = old('type_id', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable_id') : []);
             @endphp
             @foreach ($receiveable_type as $key => $value)
                 <tr>
                     <td>
                         <select class="form-control received_type" name="received_type[]">
+                            <option value="">Select</option>
                             @foreach (config('businessinfo.receivedTypes') as $typeKey => $typeValue)
                                 <option value="{{ $typeValue }}"
                                     {{ $receiveable_type[$key] == $typeValue ? 'selected' : '' }}>
                                     {{ $typeValue }}
                                 </option>
-                            @endforeach 
+                            @endforeach
                         </select>
                     </td>
                     <td>
-                        @dd($material_issue->lines->receivedTypeNo)
-                        <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off" value="{{ old('type_no')[$key] ?? ($material_issue->lines->receivedTypeNo->mrr_no[$key] ?? '') }}">
-                        <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off" value="{{ old('type_no')[$key] ?? ($material_issue->lines->receivedTypeNo->id[$key] ?? '') }}">
+                        <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off"
+                            value="{{ $mrr_no[$key] }}">
+                        <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off"
+                            value="{{ $mrr_id[$key] }}">
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="material_name[]"
-                            value="{{ old('material_name')[$key] ?? ($material_issue->lines->pluck('material_name')[$key] ?? '') }}">
+                        <select class="form-control material_id select2" name="material_id[]">
+                            @foreach ($materials[$key] as $key1 => $value)
+                                <option value="{{ $value->material->id }}"
+                                    {{ $material_issue->lines->pluck('material_id')[$key] == $value->material->id ? 'selected' : '' }}>
+                                    {{ $value->material->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </td>
                     <td>
                         <input type="text" class="form-control" name="brand[]"
@@ -580,6 +590,7 @@
         })
 
         var indx = 0;
+
         function appendCalculationRow() {
             let row = `<tr>
                             <td>

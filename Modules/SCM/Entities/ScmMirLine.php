@@ -20,10 +20,8 @@ class ScmMirLine extends Model
         'remarks',
     ];
 
-    public function receivedTypeNo()
+    public function receiveable()
     {
-        if ($this->receiveable_type == 'MRR') {
-            return $this->belongsTo(ScmMrr::class, 'receiveable_id')->withDefault();
-        }
+        return $this->morphTo();
     }
 }
