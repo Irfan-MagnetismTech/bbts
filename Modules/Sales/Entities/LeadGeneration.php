@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Dataencoding\Division;
 use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Thana;
+use Modules\Admin\Entities\User;
 
 class LeadGeneration extends Model
 {
@@ -24,5 +25,10 @@ class LeadGeneration extends Model
     public function thana()
     {
         return $this->hasOne(Thana::class, 'id', 'thana_id');
+    }
+
+    public function createdBy()
+    {
+        return $this->hasOne(User::class, 'id', 'created_by')->withDefault();
     }
 }
