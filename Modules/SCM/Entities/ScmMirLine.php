@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Entities;
 
+use Modules\SCM\Entities\ScmMrr;
 use Illuminate\Database\Eloquent\Model;
 
 class ScmMirLine extends Model
@@ -18,4 +19,9 @@ class ScmMirLine extends Model
         'quantity',
         'remarks',
     ];
+
+    public function receiveable()
+    {
+        return $this->morphTo();
+    }
 }
