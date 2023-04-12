@@ -213,34 +213,39 @@
                         $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                         $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
                         $type_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('type_id') : []);
-                        $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('item_code') : []);
+                        $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
+                        $material_type = old('material_type', !empty($challan) ? $challan->scmChallanLines->pluck('material.type') : []);
                         $brand_id = old('brand_id', !empty($challan) ? $challan->scmChallanLines->pluck('brand_id') : []);
                         $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
                         $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                         $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
                        
-                        $unit = old('initial_mark', !empty($challan) ? $challan->scmChallanLines->pluck('unit') : []);
+                        $unit = old('initial_mark', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
                         $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
                         $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
                        
                     @endphp
                     @foreach ($Challan_Lines as $key => $Challan_Line)
+               
                         <tr>
                             <td>
-                                <select name="out_from[]" class="form-control out_from" autocomplete="off">
+                                <select name="received_type[]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
-                                    @foreach (config('businessinfo.receivedTypes')  as $key1 => $value)
-                                        <option value="{{ $value }}" @selected($received_type[$key] == $value)>{{ $key1 }}
-                                        </option>
+                                    @foreach (config('businessinfo.receivedTypes') as $typeKey => $typevalue)
+                                        <option value="{{ $typevalue }}" @selected(($received_type[$key] == $typevalue))>{{ strToUpper($typevalue) }}</option>
                                     @endforeach
                                 </select>
                             </td>
+                            <td>
+                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
+                                <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
+                            </td>
                             <td class="form-group">
-                                <select class="form-control material_name" name="material_id[]">
+                                <select class="form-control material_name select2" name="material_id[]">
                                     <option value="" readonly selected>Select Material</option>
-                                    @foreach ($material_list as $key1 => $value)
-                                        <option value="{{ $value }}" readonly @selected($material_id[$key] == $value)>
-                                            {{ $key1 }}</option>
+                                    @foreach ($materials[$key] as $key1 => $value)
+                                        <option value="{{ $value->material->id }}" readonly @selected($material_id[$key] == $value->material->id)>
+                                            {{ $value->material->name }}</option>
                                     @endforeach
                                 </select>
                                 <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"
@@ -252,11 +257,11 @@
                             <td>
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
                                     <option value="">Select Brand</option>
-                                    @foreach ($brands as $brand)
+                                    {{-- @foreach ($brands as $brand)
                                         <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
                                             {{ $brand->name }}
                                         </option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </td>
         
@@ -264,7 +269,26 @@
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off"
                                     value="{{ $model[$key] }}">
                             </td>
+
+                            <td class="select2_container">
+                                <select class="form-control serial_code select2" name='serial_code[]' multiple="multiple">
+
+                                </select>
+                            </td>
                             <td>
+                                <input name="unit[]" class="form-control unit" readonly autocomplete="off" type="text" value="{{ $unit[$key] }}">
+                            </td> 
+                            <td>
+                                <input name="quantity[]" class="form-control quantity" autocomplete="off" value="{{ $quantity[$key] }}">
+                            </td>
+                            <td>
+                                <input name="remarks[]" class="form-control remarks" autocomplete="off" value="{{ $remarks[$key] }}">
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
+                            </td>
+
+                            {{-- <td>
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off"
                                     value="{{ $description[$key] }}">
                             </td>
@@ -305,7 +329,7 @@
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
-                            </td>
+                            </td> --}}
                         </tr>
                     @endforeach
         

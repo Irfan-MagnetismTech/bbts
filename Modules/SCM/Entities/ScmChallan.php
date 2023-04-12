@@ -38,7 +38,7 @@ class ScmChallan extends Model
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 
     public function pop()
@@ -49,6 +49,12 @@ class ScmChallan extends Model
     {
         return $this->morphMany(StockLedger::class, 'stockable');
     }
+
+    public function receiveable()
+    {
+        return $this->morphTo();
+    }
+
     public function scmRequisition()
     {
         return $this->belongsTo(ScmRequisition::class);

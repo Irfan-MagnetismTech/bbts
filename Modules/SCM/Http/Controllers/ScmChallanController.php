@@ -16,7 +16,10 @@ use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\ScmErr;
+use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmRequisitionDetail;
+use Modules\SCM\Entities\ScmWcr;
 
 class ScmChallanController extends Controller
 {
@@ -107,9 +110,10 @@ class ScmChallanController extends Controller
         $client_links = ClientDetail::where('client_id', $challan->client_id)->get();
         $materials = [];
         $challan->scmChallanLines->each(function ($item, $key) use (&$materials) {
-            $materials[] = Stockledger::where('material_id', $item->material_id)->get();
+            $materials[$key] = Stockledger::with('material')->where(['receivable_id' => $item->receiveable_id, 'receivable_type' => $item->receiveable_type])->get()->unique('material_id')->values();
         });
-        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links'));
+        // dd($materials);
+        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials'));
     }
 
     /**
@@ -149,8 +153,8 @@ class ScmChallanController extends Controller
     public function GetMrrDetails($req, $key1)
     {
         return  [
-            'received_type' => $req->received_type[$key1],
-            'type_id' => $req->type_id[$key1],
+            'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
+            'receiveable_id' => $req->type_id[$key1],
             'item_code' => $req->item_code[$key1],
             'material_id'   => $req->material_name[$key1],
             'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : null,
