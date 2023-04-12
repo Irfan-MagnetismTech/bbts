@@ -3,6 +3,7 @@
 namespace Modules\SCM\Entities;
 
 use Modules\SCM\Entities\ScmMrr;
+use Modules\SCM\Entities\Material;
 use Illuminate\Database\Eloquent\Model;
 
 class ScmMirLine extends Model
@@ -23,5 +24,24 @@ class ScmMirLine extends Model
     public function receiveable()
     {
         return $this->morphTo();
+    }
+
+    public function getReceivedTypeAttribute()
+    {
+        switch ($this->receiveable_type) {
+            case ScmMrr::class:
+                return 'MRR';
+            case ScmErr::class:
+                return 'ERR';
+            case ScmWcr::class:
+                return 'WCR';
+            default:
+                return '';
+        }
+    }
+
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
     }
 }

@@ -154,9 +154,16 @@
         </thead>
         <tbody>
             @php
-                $receiveable_type = old('received_type', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable_type') : []);
+                $receiveable_type = old('received_type', !empty($material_issue) ? $material_issue?->lines->pluck('received_type') : []);
                 $mrr_no = old('type_no', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable.mrr_no') : []);
                 $mrr_id = old('type_id', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable_id') : []);
+                $material_id = old('material_id', !empty($material_issue) ? $material_issue?->lines->pluck('material_id') : []);
+                $material_name = old('material_name', !empty($material_issue) ? $material_issue?->lines->pluck('material.name') : []);
+                $brand_id = old('brand_id', !empty($material_issue) ? $material_issue?->lines->pluck('brand_id') : []);
+                $brand_name = old('brand_name', !empty($material_issue) ? $material_issue?->lines->pluck('brand.name') : []);
+                $model = old('model', !empty($material_issue) ? $material_issue?->lines->pluck('model') : []);
+                $serial_code = old('serial_code', !empty($material_issue) ? $material_issue?->lines->pluck('serial_code') : []);
+                $unit_name = old('unit_name', !empty($material_issue) ? $material_issue?->lines->pluck('material.unit') : []);
             @endphp
             @foreach ($receiveable_type as $key => $value)
                 <tr>
@@ -181,35 +188,54 @@
                         <select class="form-control material_id select2" name="material_id[]">
                             @foreach ($materials[$key] as $key1 => $value)
                                 <option value="{{ $value->material->id }}"
-                                    {{ $material_issue->lines->pluck('material_id')[$key] == $value->material->id ? 'selected' : '' }}>
+                                    {{ $material_id[$key] == $value->material->id ? 'selected' : '' }}>
                                     {{ $value->material->name }}
                                 </option>
                             @endforeach
                         </select>
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="brand[]"
-                            value="{{ old('brand')[$key] ?? ($material_issue->lines->pluck('brand')[$key] ?? '') }}">
+                        <select class="form-control brand_id select2" name="brand_id[]">
+                            @foreach ($brands[$key] as $key1 => $value)
+                                <option value="{{ $value->brand->id }}"
+                                    {{ $brand_name[$key] == $value->brand->id ? 'selected' : '' }}>
+                                    {{ $value->brand->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="model[]"
-                            value="{{ old('model')[$key] ?? ($material_issue->lines->pluck('model')[$key] ?? '') }}">
+                        <select class="form-control model select2" name="model[]">
+                            @foreach ($models[$key] as $key1 => $value)
+                                <option value="{{ $value->model }}"
+                                    {{ $model[$key] == $value->model ? 'selected' : '' }}>
+                                    {{ $value->model }}
+                                </option>
+                            @endforeach
+                        </select>
                     </td>
-                    <td>
-                        <input type="text" class="form-control" name="serial_code[]"
-                            value="{{ old('serial_code')[$key] ?? ($material_issue->lines->pluck('serial_code')[$key] ?? '') }}">
+                    <td class="select2container">
+                        <select class="form-control serial_code select2" name="serial_code[${indx}][]"
+                            multiple="multiple">
+                            @foreach ($serial_codes[$key] as $key1 => $value)
+                                <option value="{{ $value->serial_code }}" @selected(in_array($value->serial_code, json_decode($serial_code[$key])))>
+                                    {{ $value->serial_code }}
+                                </option>
+                            @endforeach
+                        </select>
+
                     </td>
                     <td>
                         <input type="text" class="form-control" name="unit[]"
-                            value="{{ old('unit')[$key] ?? ($material_issue->lines->pluck('unit')[$key] ?? '') }}">
+                            value="{{ $unit_name[$key] }}" readonly>
                     </td>
                     <td>
                         <input type="text" class="form-control current_stock_from" name="current_stock_from[]"
-                            value="{{ old('current_stock_from')[$key] ?? ($material_issue->lines->pluck('current_stock_from')[$key] ?? '') }}">
+                            value="{{ $from_branch_stock[$key] }}" readonly>
                     </td>
                     <td>
                         <input type="text" class="form-control current_stock_to" name="current_stock_to[]"
-                            value="{{ old('current_stock_to')[$key] ?? ($material_issue->lines->pluck('current_stock_to')[$key] ?? '') }}">
+                            value="{{ $to_branch_stock[$key] }}" readonly>
                     </td>
                     <td>
                         <input type="text" class="form-control issued_qty" name="issued_qty[]"
@@ -539,6 +565,7 @@
                         model: (elemmtn).closest('tr').find('.model').val(),
                         received_type: (elemmtn).closest('tr').find('.received_type').val()
                             .toUpperCase(),
+                        receivable_id: (elemmtn).closest('tr').find('.type_id').val(),
                         from_branch_id: $('#from_branch_id').val(),
                         to_branch_id: $('#to_branch_id').val()
                     },
