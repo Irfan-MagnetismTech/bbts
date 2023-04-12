@@ -47,4 +47,9 @@ class ScmChallanLine extends Model
     {
         return $this->morphTo();
     }
+
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
+    }
 }
