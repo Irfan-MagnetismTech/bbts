@@ -50,11 +50,6 @@ class ScmChallan extends Model
         return $this->morphMany(StockLedger::class, 'stockable');
     }
 
-    public function receiveable()
-    {
-        return $this->morphTo();
-    }
-
     public function scmRequisition()
     {
         return $this->belongsTo(ScmRequisition::class);

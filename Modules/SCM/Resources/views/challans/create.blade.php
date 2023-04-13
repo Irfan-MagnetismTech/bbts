@@ -95,13 +95,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-3">
-                    <label for="select2">Challan No</label>
-                    <input type="text" class="form-control" id="challan_no" aria-describedby="challan_no"
-                    name="challan_no" value="{{ old('challan_no') ?? (@$requisition->challan_no ?? '') }}"
-                    placeholder="Challan No">
-                </div>
-
                 <div class="form-group col-3 date">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
@@ -126,13 +119,10 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
-           
-            <div class="row">
                 <div class="form-group col-3 branch_name">
                     <label for="select2">From Branch</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
-                        <option value="20" selected>Select Branch</option>
+                        <option value="" selected>Select Branch</option>
                         @foreach ($branchs as $option)
                             <option value="{{ $option->id }}"
                                 {{ $branch_id == $option->id ? 'selected' : '' }}>
@@ -141,6 +131,10 @@
                         @endforeach
                     </select>
                 </div>
+            </div>
+           
+            <div class="row">
+                
 
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
@@ -203,6 +197,7 @@
                         <th>Model</th>
                         <th>Serial/Drum Code <br /> No</th>
                         <th>Unit</th>
+                        <th>Available</th>
                         <th>Issued Qty</th>
                         <th>Remarks</th>
                         <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
@@ -212,6 +207,8 @@
                     @php
                         $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                         $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
+                        $received_no = old('type_no', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
+                        $receiveable_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('receiveable_id') : []);
                         $type_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('type_id') : []);
                         $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
                         $material_type = old('material_type', !empty($challan) ? $challan->scmChallanLines->pluck('material.type') : []);
@@ -220,7 +217,7 @@
                         $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                         $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
                        
-                        $unit = old('initial_mark', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
+                        $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
                         $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
                         $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
                        
@@ -229,7 +226,7 @@
                
                         <tr>
                             <td>
-                                <select name="received_type[]" class="form-control received_type" autocomplete="off">
+                                <select name="received_type[{{$key}}]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
                                     @foreach (config('businessinfo.receivedTypes') as $typeKey => $typevalue)
                                         <option value="{{ $typevalue }}" @selected(($received_type[$key] == $typevalue))>{{ strToUpper($typevalue) }}</option>
@@ -237,99 +234,69 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
-                                <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
+                                <input type="text" name="type_no[{{$key}}]" class="form-control type_no" autocomplete="off" value="{{ $received_no[$key] }}">
+                                <input type="hidden" name="type_id[{{$key}}]" class="form-control type_id" autocomplete="off" value="{{ $receiveable_id[$key] }}">
                             </td>
                             <td class="form-group">
-                                <select class="form-control material_name select2" name="material_id[]">
+                                <select class="form-control material_name select2" name="material_name[{{$key}}]">
                                     <option value="" readonly selected>Select Material</option>
                                     @foreach ($materials[$key] as $key1 => $value)
-                                        <option value="{{ $value->material->id }}" readonly @selected($material_id[$key] == $value->material->id)>
+                                        <option value="{{ $value->material->id }}" data-type="{{$value->material->type}}" data-unit="{{$value->material->unit}}" data-code="{{$value->material->code}}" readonly @selected($material_id[$key] == $value->material->id)>
                                             {{ $value->material->name }}</option>
                                     @endforeach
                                 </select>
-                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"
+                                <input type="hidden" name="item_code[{{$key}}]" class="form-control item_code" autocomplete="off"
                                     value="{{ $item_code[$key] }}">
-                                <input type="hidden" name="material_type[]" class="form-control material_type"
+                                <input type="hidden" name="material_type[{{$key}}]" class="form-control material_type"
                                     autocomplete="off" value="{{ $material_type[$key] }}">
                             </td>
         
                             <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <select name="brand_id[{{$key}}]" class="form-control brand select2" autocomplete="off">
                                     <option value="">Select Brand</option>
-                                    {{-- @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                            {{ $brand->name }}
+                                    @foreach ($brands[$key] as $key1 => $value)
+                                        <option value="{{ $value->brand->id }}" @selected($value->brand->id == $brand_id[$key])>
+                                            {{ $value->brand->name }}
                                         </option>
-                                    @endforeach --}}
+                                    @endforeach
                                 </select>
                             </td>
         
                             <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                                    value="{{ $model[$key] }}">
+                                <select class="form-control model select2" name="model[{{$key}}]">
+                                    <option value="" readonly selected>Select Model</option>
+                                    @foreach ($models[$key] as $key1 => $value)
+                                    <option value="{{ $value->model }}" @selected($value->model == $model[$key])>
+                                        {{ $value->model }}
+                                    </option>
+                                @endforeach
+                                </select>
                             </td>
-
                             <td class="select2_container">
-                                <select class="form-control serial_code select2" name='serial_code[]' multiple="multiple">
-
+                                <select class="form-control select2 serial_code" multiple name="serial_code[{{$key}}][]">
+                                    @foreach($serial_codes[$key] as $key1 => $value)
+                                        <option value="{{ $value->serial_code }}"
+                                            @selected(in_array($value->serial_code,json_decode($serial_code[$key])))>
+                                            {{ $value->serial_code }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td>
-                                <input name="unit[]" class="form-control unit" readonly autocomplete="off" type="text" value="{{ $unit[$key] }}">
+                                <input name="unit[{{$key}}]" class="form-control unit" readonly autocomplete="off" type="text" value="{{ $unit[$key] }}">
                             </td> 
                             <td>
-                                <input name="quantity[]" class="form-control quantity" autocomplete="off" value="{{ $quantity[$key] }}">
+                                <input name="avaiable_quantity[{{$key}}]" class="form-control avaiable_quantity" autocomplete="off" value="{{ $quantity[$key] }}">
                             </td>
                             <td>
-                                <input name="remarks[]" class="form-control remarks" autocomplete="off" value="{{ $remarks[$key] }}">
+                                <input name="quantity[{{$key}}]" class="form-control quantity" autocomplete="off" @if($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
-                            </td>
-
-                            {{-- <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off"
-                                    value="{{ $description[$key] }}">
-                            </td>
-                            <td>
-                                <div class="tags_add_multiple">
-                                    <input class="" type="text" name="sl_code[]" value="{{ $sl_code[$key] }}"
-                                        data-role="tagsinput">
-                                </div>
-                            </td>
-        
-                            <td>
-                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off"
-                                    value="{{ $initial_mark[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off"
-                                    value="{{ $final_mark[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="warranty_period[]" class="form-control warranty_period"
-                                    autocomplete="off" value="{{ $warranty_period[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                    value="{{ $unit[$key] }}" readonly>
-                            </td>
-                            <td>
-                                <input class="form-control quantity" name="quantity[]" aria-describedby="date"
-                                    value="{{ $quantity[$key] }}">
-                            </td>
-                            <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly
-                                    value="10" value="{{ $unit_price[$key] }}">
-                            </td>
-                            <td>
-                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly
-                                    value="{{ $amount[$key] }}">
+                                <input name="remarks[{{$key}}]" class="form-control remarks" autocomplete="off" value="{{ $remarks[$key] }}">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
-                            </td> --}}
+                            </td>
                         </tr>
                     @endforeach
         
@@ -360,15 +327,18 @@
         }).datepicker("setDate", new Date());;
         /* Append row */
         $(document).ready(function(){
-            @if (empty($requisition) && empty(old('material_name')))
+            @if (empty($challan) && empty(old('material_name')))
                 appendCalculationRow();
             @endif
         })
-        var indsd = 0;
+        var indx = 0;
+        @if ($form_method == 'PUT')
+            indx = {{count($Challan_Lines)}}
+        @endif
         function appendCalculationRow() {
             let row = `<tr>
                             <td>
-                                <select name="received_type[${indsd}]" class="form-control received_type" autocomplete="off">
+                                <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
                                     @foreach (config('businessinfo.receivedTypes') as $value)
                                         <option value="{{ $value }}">{{ strToUpper($value) }}</option>
@@ -376,48 +346,51 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="type_no[${indsd}]" class="form-control type_no" autocomplete="off">
-                                <input type="hidden" name="type_id[${indsd}]" class="form-control type_id" autocomplete="off">
+                                <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
+                                <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
                             </td>
                             <td class="form-group">
-                                <select class="form-control material_name select2" name="material_name[${indsd}]">
+                                <select class="form-control material_name select2" name="material_name[${indx}]">
                                     <option value="" readonly selected>Select Material</option>                  
                                 </select>
-                                <input type="hidden" name="item_code[${indsd}]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[${indsd}]" class="form-control material_type" autocomplete="off"> 
+                                <input type="hidden" name="item_code[${indx}]" class="form-control item_code" autocomplete="off"> 
+                                <input type="hidden" name="material_type[${indx}]" class="form-control material_type" autocomplete="off"> 
                             </td>                            
                             <td>
-                                <select class="form-control brand select2" name="brand[${indsd}]">
+                                <select class="form-control brand select2" name="brand[${indx}]">
                                     <option value="" readonly selected>Select Brand</option>
 
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control model select2" name="model[${indsd}]">
+                                <select class="form-control model select2" name="model[${indx}]">
                                     <option value="" readonly selected>Select Model</option>
 
                                 </select>
                             </td>
                             <td class="select2_container">
-                                <select class="form-control serial_code select2" name='serial_code[${indsd}][]' multiple="multiple">
+                                <select class="form-control serial_code select2" name='serial_code[${indx}][]' multiple="multiple">
 
                                 </select>
                             </td>
                             <td>
-                                <input name="unit[${indsd}]" class="form-control unit" readonly autocomplete="off" type="text">
+                                <input name="unit[${indx}]" class="form-control unit" readonly autocomplete="off" type="text">
                             </td> 
                             <td>
-                                <input name="quantity[${indsd}]" class="form-control quantity" autocomplete="off">
+                                <input class="form-control available_quantity" name="available_quantity[${indx}]" aria-describedby="available_quantity" readonly>
                             </td>
                             <td>
-                                <input name="remarks[${indsd}]" class="form-control remarks" autocomplete="off">
+                                <input name="quantity[${indx}]" class="form-control quantity" autocomplete="off">
+                            </td>
+                            <td>
+                                <input name="remarks[${indx}]" class="form-control remarks" autocomplete="off">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
                             </td>
                         </tr>
                     `;
-                    indsd++;
+                    indx++;
             $('#challan tbody').append(row);
             $('.select2').select2({
             });
@@ -644,6 +617,7 @@
                  }
 
                 $(document).on('change', '.material_name', function() {
+                    checkUniqueMaterial(this);
                     var event_this = $(this).closest('tr');
                     ClearNext($(this));
                     let material_id = $(this).val();
@@ -664,6 +638,7 @@
                 })
 
                 $(document).on('change', '.brand', function() {
+                    checkUniqueMaterial(this);
                     var event_this = $(this).closest('tr');
                     ClearNext($(this));
                     let brand_id = $(this).val();
@@ -682,6 +657,7 @@
                 });
 
                 $(document).on('change', '.model', function() {
+                    checkUniqueMaterial(this);
                     var event_this = $(this).closest('tr');
                     ClearNext($(this));
                     let model = $(this).val();
@@ -710,6 +686,102 @@
                         $(this).closest('tr').find('.quantity').val($(this).val().length);
                     }
                  })
+
+                 function checkUniqueMaterial(currentValue) {
+                var current_selector = $(currentValue);
+                var current_material = $(currentValue).closest('tr').find('.material_name').val();
+                var current_value_brand = $(currentValue).closest('tr').find('.brand').val();
+                var current_value_model = $(currentValue).closest('tr').find('.model').val();
+                var current_key = `${current_material}_${current_value_brand}_${current_value_model}`;
+                console.log(current_key);
+                var count_row = $('#challan tbody tr').length;
+                var thisMaterial = $(currentValue).closest('tr').find('.material_name');
+                let material_list = $('.material_name').not($(thisMaterial));
+
+                material_list.each(function() {
+                    var material_name = $(this).val();
+                    var brand = $(this).closest('tr').find('.brand').val();
+                    var model = $(this).closest('tr').find('.model').val();
+                    var key = `${material_name}_${brand}_${model}`;
+                    console.log(key);
+                    if (key === current_key && count_row > 1) {
+                        swal.fire({
+                            title: "Material Already Selected",
+                            type: "warning",
+                        }).then(function() {
+                            $(current_selector).val($(current_selector).find('option:first').val())
+                                .trigger('change.select2');
+                        });
+                        return false;
+                    }
+                });
+            }
+
+            $(document).on('change', '.serial_code', function() {
+                let elemmtn = $(this).closest('tr');
+                let material_type = (elemmtn).find('.material_name').find(':selected').data(
+                    'type');
+                if (material_type == 'Item') {
+                    (elemmtn).find('.quantity').attr('readonly', true);
+                    (elemmtn).find('.quantity').val($(this).val().length);
+                } else {
+                    (elemmtn).find('.quantity').attr('readonly', false);
+                }
+            });
+
+            $(document).on('change', '.received_type', function() {
+                var event_this = $(this).closest('tr');
+                ClearNext($(this));
+                if ($('#branch_id').val() == '') {
+                    $(this).val('');
+                    swal.fire({
+                        title: "Please Select From Branch",
+                        type: "warning",
+                    }).then(function() {
+                        $('#branch_id').focus();
+                    });
+                    return false;
+                }
+
+               
+            })
+            $(document).on('change', '.model, .material_name, .brand', function() {
+                var elemmtn = $(this);
+                $.ajax({
+                    url: "{{ route('getMaterialStock') }}",
+                    type: 'get',
+                    dataType: "json",
+                    data: {
+                        material_id: (elemmtn).closest('tr').find('.material_name').val(),
+                        brand_id: (elemmtn).closest('tr').find('.brand').val(),
+                        model: (elemmtn).closest('tr').find('.model').val(),
+                        received_type: (elemmtn).closest('tr').find('.received_type').val()
+                            .toUpperCase(),
+                        from_branch_id: $('#branch_id').val(),
+                        to_branch_id: null
+                    },
+                    success: function(data) {
+                        (elemmtn).closest('tr').find('.avaiable_quantity').val(data
+                            .from_branch_balance);
+                    }
+                })
+            })
+
+              //issued quantity cannot be greater than avaiable_quantity
+              $(document).on('keyup', '.quantity', function() {
+                let elemmtn = $(this).closest('tr');
+                let avaiable_quantity = parseFloat((elemmtn).find('.available_quantity').val());
+                let quantity = parseFloat((elemmtn).find('.quantity').val());
+                if (quantity > avaiable_quantity) {
+                    swal.fire({
+                        title: "Issued Quantity Cannot Be Greater Than Avaiable Quantity",
+                        type: "warning",
+                    }).then(function() {
+                        (elemmtn).find('.quantity').val(avaiable_quantity);
+                    });
+                }
+            });
+
             // $(document).on('change', '.serial_code', function() {
             //     var elemmtn = $(this);
             //     let global_fianl_mark = $(this).find(':selected').data('final_mark');

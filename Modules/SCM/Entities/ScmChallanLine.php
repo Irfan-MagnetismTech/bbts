@@ -28,4 +28,28 @@ class ScmChallanLine extends Model
                 return '';
         }
     }
+
+    public function getReceivedNoAttribute()
+    {
+        switch ($this->receiveable_type) {
+            case ScmMrr::class:
+                return $this->receiveable->mrr_no;
+            case ScmErr::class:
+                return 'ERR';
+            case ScmWcr::class:
+                return 'WCR';
+            default:
+                return '';
+        }
+    }
+
+    public function receiveable()
+    {
+        return $this->morphTo();
+    }
+
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
+    }
 }
