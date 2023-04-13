@@ -12,7 +12,7 @@ class ScmChallanLine extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'receivable_type' => 'string',
+        'receiveable_type' => 'string',
     ];
 
     public function getReceivedTypeAttribute()

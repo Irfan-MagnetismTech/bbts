@@ -272,7 +272,7 @@ class ScmMrrController extends Controller
     {
         try {
             DB::beginTransaction();
-            $materialReceive->stockLedgerReceivable()->delete();
+            $materialReceive->receiveable()->delete();
             $materialReceive->delete();
             DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been deleted successfully');
