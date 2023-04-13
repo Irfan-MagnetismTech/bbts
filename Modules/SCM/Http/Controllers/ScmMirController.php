@@ -236,29 +236,29 @@ class ScmMirController extends Controller
             ->where('received_type', request()->customQueryFields['type'])
             ->orderBy('receiveable_id')
             ->when(request()->customQueryFields['type'] == 'MRR', function ($query) {
-                $query->whereHasMorph('receivable', ScmMrr::class, function ($query2) {
+                $query->whereHasMorph('receiveable', ScmMrr::class, function ($query2) {
                     $query2->where('mrr_no', 'like', '%' . request()->search . '%');
                 });
             })
             ->when(request()->type == 'ERR', function ($query) {
-                $query->whereHasMorph('receivable', ScmPurchaseRequisition::class, function ($query) {
+                $query->whereHasMorph('receiveable', ScmPurchaseRequisition::class, function ($query) {
                     $query->where('err_no', 'like', '%' . request()->search . '%');
                 });
             })
             ->when(request()->type == 'WCR', function ($query) {
-                $query->whereHasMorph('receivable', ScmPurchaseRequisition::class, function ($query) {
+                $query->whereHasMorph('receiveable', ScmPurchaseRequisition::class, function ($query) {
                     $query->where('wcr_no', 'like', '%' . request()->search . '%');
                 });
             })
             ->get()
             ->unique(function ($item) {
-                return $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no;
+                return $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no;
             })
             ->take(10)
             ->map(fn ($item) => [
-                'value' => $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no,
-                'label' => $item->receivable->mrr_no ?? $item->receivable->err_no ?? $item->receivable->wcr_no,
-                'id'    => $item->receivable->id,
+                'value' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no,
+                'label' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no,
+                'id'    => $item->receiveable->id,
             ])
             ->values()
             ->all();
