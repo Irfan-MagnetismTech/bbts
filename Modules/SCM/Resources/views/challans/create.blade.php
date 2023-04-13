@@ -602,13 +602,12 @@
                     let received_type = event_this.find('.received_type').val().toUpperCase();
                     let receiveable_id = event_this.find('.type_id').val();
                     let material_name = event_this.find('.material_name');
-
                     populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
                         scm_requisition_id: scm_requisition_id,
                         received_type: received_type,
                         receiveable_id: receiveable_id,
                         from_branch: $('#branch_id').val(),
-                        to_branch_id: $('#branch_id').val(),
+                        to_branch: $('#branch_id').val(),
                     }, material_name, 'value', 'label', {
                         'data-type': 'type',
                         'data-unit': 'unit',
@@ -760,11 +759,12 @@
                         model: (elemmtn).closest('tr').find('.model').val(),
                         received_type: (elemmtn).closest('tr').find('.received_type').val()
                             .toUpperCase(),
+                        receiveable_id : (elemmtn).closest('tr').find('.type').val(),
                         from_branch_id: $('#branch_id').val(),
                         to_branch_id: null
                     },
                     success: function(data) {
-                        (elemmtn).closest('tr').find('.avaiable_quantity').val(data
+                        (elemmtn).closest('tr').find('.available_quantity').val(data
                             .from_branch_balance);
                     }
                 })
