@@ -154,9 +154,17 @@
         </thead>
         <tbody>
             @php
-                $receiveable_type = old('received_type', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable_type') : []);
+                $receiveable_type = old('received_type', !empty($material_issue) ? $material_issue?->lines->pluck('received_type') : []);
                 $mrr_no = old('type_no', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable.mrr_no') : []);
                 $mrr_id = old('type_id', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable_id') : []);
+                $material_id = old('material_id', !empty($material_issue) ? $material_issue?->lines->pluck('material_id') : []);
+                $material_data = old('material_name', !empty($material_issue) ? $material_issue?->lines->pluck('material') : []);
+                $brand_id = old('brand_id', !empty($material_issue) ? $material_issue?->lines->pluck('brand_id') : []);
+                $brand_name = old('brand_name', !empty($material_issue) ? $material_issue?->lines->pluck('brand.name') : []);
+                $model = old('model', !empty($material_issue) ? $material_issue?->lines->pluck('model') : []);
+                $serial_code = old('serial_code', !empty($material_issue) ? $material_issue?->lines->pluck('serial_code') : []);
+                $unit_name = old('unit_name', !empty($material_issue) ? $material_issue?->lines->pluck('material.unit') : []);
+                $issued_qty = old('issued_qty', !empty($material_issue) ? $material_issue?->lines->pluck('quantity') : []);
             @endphp
             @foreach ($receiveable_type as $key => $value)
                 <tr>
@@ -178,42 +186,63 @@
                             value="{{ $mrr_id[$key] }}">
                     </td>
                     <td>
-                        <select class="form-control material_id select2" name="material_id[]">
+                        <select class="form-control material_name select2" name="material_name[]">
                             @foreach ($materials[$key] as $key1 => $value)
                                 <option value="{{ $value->material->id }}"
-                                    {{ $material_issue->lines->pluck('material_id')[$key] == $value->material->id ? 'selected' : '' }}>
+                                    {{ $material_id[$key] == $value->material->id ? 'selected' : '' }} data-type="{{ $material_data[$key]->type }}" data-unit="{{ $material_data[$key]->unit }}" data-code="{{ $material_data[$key]->code }}">
                                     {{ $value->material->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="code[{{ $key }}]" class="form-control code" autocomplete="off">
+                        <input type="hidden" name="type[{{ $key }}]" class="form-control type" autocomplete="off">
+                    </td>
+                    <td>
+                        <select class="form-control brand select2" name="brand[]">
+                            @foreach ($brands[$key] as $key1 => $value)
+                                <option value="{{ $value->brand->id }}"
+                                    {{ $brand_name[$key] == $value->brand->id ? 'selected' : '' }}>
+                                    {{ $value->brand->name }}
                                 </option>
                             @endforeach
                         </select>
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="brand[]"
-                            value="{{ old('brand')[$key] ?? ($material_issue->lines->pluck('brand')[$key] ?? '') }}">
+                        <select class="form-control model select2" name="model[]">
+                            @foreach ($models[$key] as $key1 => $value)
+                                <option value="{{ $value->model }}"
+                                    {{ $model[$key] == $value->model ? 'selected' : '' }}>
+                                    {{ $value->model }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td class="select2container">
+                        <select class="form-control serial_code select2" name="serial_code[${indx}][]"
+                            multiple="multiple">
+                            @foreach ($serial_codes[$key] as $key1 => $value)
+                                <option value="{{ $value->serial_code }}" @selected(in_array($value->serial_code, json_decode($serial_code[$key])))>
+                                    {{ $value->serial_code }}
+                                </option>
+                            @endforeach
+                        </select>
+
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="model[]"
-                            value="{{ old('model')[$key] ?? ($material_issue->lines->pluck('model')[$key] ?? '') }}">
+                        <input type="text" class="form-control unit" name="unit[]" value="{{ $unit_name[$key] }}"
+                            readonly>
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="serial_code[]"
-                            value="{{ old('serial_code')[$key] ?? ($material_issue->lines->pluck('serial_code')[$key] ?? '') }}">
+                        <input type="text" class="form-control avaiable_quantity" name="avaiable_quantity[]"
+                            value="{{ $from_branch_stock[$key] }}" readonly>
                     </td>
                     <td>
-                        <input type="text" class="form-control" name="unit[]"
-                            value="{{ old('unit')[$key] ?? ($material_issue->lines->pluck('unit')[$key] ?? '') }}">
+                        <input type="text" class="form-control opening_balance" name="opening_balance[]"
+                            value="{{ $to_branch_stock[$key] }}" readonly>
                     </td>
                     <td>
-                        <input type="text" class="form-control current_stock_from" name="current_stock_from[]"
-                            value="{{ old('current_stock_from')[$key] ?? ($material_issue->lines->pluck('current_stock_from')[$key] ?? '') }}">
-                    </td>
-                    <td>
-                        <input type="text" class="form-control current_stock_to" name="current_stock_to[]"
-                            value="{{ old('current_stock_to')[$key] ?? ($material_issue->lines->pluck('current_stock_to')[$key] ?? '') }}">
-                    </td>
-                    <td>
-                        <input type="text" class="form-control issued_qty" name="issued_qty[]"
-                            value="{{ old('issued_qty')[$key] ?? ($material_issue->lines->pluck('issued_qty')[$key] ?? '') }}">
+                        <input type="number" class="form-control issued_qty" name="issued_qty[]"
+                            value="{{ $issued_qty[$key] }}" @if( $material_data[$key]->type == 'Item' && (!empty($serial_code[$key]))) readonly @endif>
                     </td>
                     <td>
                         <input type="text" class="form-control" name="remarks[]"
@@ -225,8 +254,6 @@
                 </tr>
             @endforeach
         </tbody>
-        <tfoot>
-        </tfoot>
     </table>
     <div class="row">
         <div class="offset-md-4 col-md-4 mt-2">
@@ -475,6 +502,7 @@
                     material_id: material_id,
                     received_type: received_type,
                     receivable_id: receivable_id,
+                    from_branch_id: $('#from_branch_id').val(),
                 }, brand, 'value', 'label');
             })
 
@@ -493,7 +521,8 @@
                     brand_id: brand_id,
                     material_id: material_id,
                     received_type: received_type,
-                    receivable_id: receivable_id
+                    receivable_id: receivable_id,
+                    from_branch_id: $('#from_branch_id').val(),
                 }, model, 'value', 'label');
             });
 
@@ -539,6 +568,7 @@
                         model: (elemmtn).closest('tr').find('.model').val(),
                         received_type: (elemmtn).closest('tr').find('.received_type').val()
                             .toUpperCase(),
+                        receivable_id: (elemmtn).closest('tr').find('.type_id').val(),
                         from_branch_id: $('#from_branch_id').val(),
                         to_branch_id: $('#to_branch_id').val()
                     },
