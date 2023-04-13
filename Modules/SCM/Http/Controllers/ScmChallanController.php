@@ -114,22 +114,22 @@ class ScmChallanController extends Controller
         $branch_stock = [];
         $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, $challan, &$branch_stock) {
             $materials[$key] = Stockledger::with('material')->where([
-                'receivable_id' => $item->receiveable_id,
-                'receivable_type' => $item->receiveable_type
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type
             ])->get()
                 ->unique('material_id')
                 ->values();
             $brands[$key] = Stockledger::with('brand')->where([
-                'receivable_id' => $item->receiveable_id,
-                'receivable_type' => $item->receiveable_type,
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type,
                 'material_id' => $item->material_id
             ])
                 ->get()
                 ->unique('brand_id')
                 ->values();
             $models[$key] = StockLedger::query()->where([
-                'receivable_id' => $item->receiveable_id,
-                'receivable_type' => $item->receiveable_type,
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type,
                 'material_id' => $item->material_id,
                 'brand_id' => $item->brand_id
             ])
@@ -138,8 +138,8 @@ class ScmChallanController extends Controller
                 ->values();
 
             $serial_codes[$key] = StockLedger::query()->where([
-                'receivable_id' => $item->receiveable_id,
-                'receivable_type' => $item->receiveable_type,
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type,
                 'material_id' => $item->material_id,
                 'brand_id' => $item->brand_id,
                 'model' => $item->model,
@@ -149,7 +149,7 @@ class ScmChallanController extends Controller
                 ->where([
                     'material_id' => $item->material_id,
                     'received_type' => $item->received_type,
-                    'receivable_id' => $item->receiveable_id,
+                    'receiveable_id' => $item->receiveable_id,
                     'branch_id' => $challan->branch_id,
                 ])
                 ->sum('quantity');

@@ -600,15 +600,15 @@
 
                     let scm_requisition_id = $('#scm_requisition_id').val();
                     let received_type = event_this.find('.received_type').val().toUpperCase();
-                    let receivable_id = event_this.find('.type_id').val();
+                    let receiveable_id = event_this.find('.type_id').val();
                     let material_name = event_this.find('.material_name');
 
                     populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
                         scm_requisition_id: scm_requisition_id,
                         received_type: received_type,
-                        receivable_id: receivable_id,
+                        receiveable_id: receiveable_id,
                         from_branch: $('#branch_id').val(),
-                        to_branch: $('#branch_id').val(),
+                        to_branch_id: $('#branch_id').val(),
                     }, material_name, 'value', 'label', {
                         'data-type': 'type',
                         'data-unit': 'unit',
@@ -623,7 +623,7 @@
                     let material_id = $(this).val();
                     let scm_requisition_id = $('#scm_requisition_id').val();
                     let received_type = event_this.find('.received_type').val().toUpperCase();
-                    let receivable_id = event_this.find('.type_id').val();
+                    let receiveable_id = event_this.find('.type_id').val();
                     let brand = $(this).closest('tr').find('.brand');
                     
                    event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected').data('unit'));
@@ -633,7 +633,7 @@
                     populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
                         material_id: material_id,
                         received_type: received_type,
-                        receivable_id: receivable_id,
+                        receiveable_id: receiveable_id,
                         from_branch_id: $('#branch_id').val(),
                     }, brand, 'value', 'label');
                 })
@@ -646,14 +646,14 @@
                     let material_id = event_this.find('.material_name').val();
                     let scm_requisition_id = $('#scm_requisition_id').val();
                     let received_type = event_this.find('.received_type').val().toUpperCase();
-                    let receivable_id = event_this.find('.type_id').val();
+                    let receiveable_id = event_this.find('.type_id').val();
                     let model = $(this).closest('tr').find('.model');
 
                     populateDropdownByAjax("{{ route('brandWiseModels') }}", {
                         brand_id: brand_id,
                         material_id: material_id,
                         received_type: received_type,
-                        receivable_id: receivable_id,
+                        receiveable_id: receiveable_id,
                         from_branch_id: $('#branch_id').val(),
                     }, model, 'value', 'label');
                 });
@@ -666,7 +666,7 @@
                     let material_id = event_this.find('.material_name').val();
                     let scm_requisition_id = $('#scm_requisition_id').val();
                     let received_type = event_this.find('.received_type').val().toUpperCase();
-                    let receivable_id = event_this.find('.type_id').val();
+                    let receiveable_id = event_this.find('.type_id').val();
                     let brand_id = event_this.find('.brand').val();
                     let serial_code = $(this).closest('tr').find('.serial_code');
                     let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
@@ -678,7 +678,7 @@
                         material_id: material_id,
                         brand_id: brand_id,
                         received_type: received_type,
-                        receivable_id: receivable_id,
+                        receiveable_id: receiveable_id,
                         from_branch_id: $('#branch_id').val(),
                     }, serial_code, 'value', 'label',null,false);
                  });
