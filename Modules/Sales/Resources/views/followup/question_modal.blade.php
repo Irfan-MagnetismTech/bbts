@@ -276,7 +276,7 @@
                                             <div class="radio radio-outline radio-inline">
                                                 <label>
                                                     <input type="radio" name="uptime_capable_sla" value="Yes">
-                                                    <i class="helper"></i>Yes  
+                                                    <i class="helper"></i>Yes
                                                 </label>
                                             </div>
                                             <div class="radio radio-outline radio-inline">
@@ -301,9 +301,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-outline-danger" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-outline-primary">Save</button>
+                <button type="button" class="btn btn-danger btn-outline-danger" id="ModalClose">Close</button>
+                <button type="submit" class="btn btn-primary btn-outline-primary" data-dismiss="modal">Save</button>
             </div>
         </div>
     </div>
 </div>
+
+<script></script>

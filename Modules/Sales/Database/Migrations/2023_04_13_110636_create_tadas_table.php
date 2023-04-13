@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('connectivity_requirement_details', function (Blueprint $table) {
+        Schema::create('tadas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('connectivity_requirement_id');
-            $table->string('link_type')->nullable();
-            $table->string('method')->nullable();
-            $table->string('connectivity_capacity')->nullable();
-            $table->string('vendor_id')->nullable();
+            $table->integer('follow_up_id')->unsigned();
+            $table->integer('client_id')->unsigned();
+            $table->integer('amount')->unsigned();
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('connectivity_requirement_details');
+        Schema::dropIfExists('tadas');
     }
 };

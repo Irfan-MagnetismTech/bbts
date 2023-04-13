@@ -329,7 +329,9 @@ span.select2-selection.select2-selection--single {
 }
 
 .form-item input:focus+label,
-.form-item input:valid+label {
+.form-item input:read-only+label,
+.form-item input:valid+label,
+.form-item select:valid+label {
     font-size: 11px;
     top: -8px
 }
@@ -337,3 +339,16 @@ span.select2-selection.select2-selection--single {
 .form-item input:focus+label {
     color: blue
 }
+
+.custom_table th {
+    color: #454444 !important;
+    background-color: #d3d3d3 !important;
+    padding: 5px 10px !important;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: #fdfeff !important;
+    opacity: 1;
+}
+
+
