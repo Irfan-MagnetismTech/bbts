@@ -95,13 +95,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-3">
-                    <label for="select2">Challan No</label>
-                    <input type="text" class="form-control" id="challan_no" aria-describedby="challan_no"
-                    name="challan_no" value="{{ old('challan_no') ?? (@$requisition->challan_no ?? '') }}"
-                    placeholder="Challan No">
-                </div>
-
                 <div class="form-group col-3 date">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
@@ -126,9 +119,6 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
-           
-            <div class="row">
                 <div class="form-group col-3 branch_name">
                     <label for="select2">From Branch</label>
                     <select class="form-control select2" id="branch_id" name="branch_id">
@@ -141,6 +131,10 @@
                         @endforeach
                     </select>
                 </div>
+            </div>
+           
+            <div class="row">
+                
 
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
@@ -232,7 +226,7 @@
                
                         <tr>
                             <td>
-                                <select name="received_type[]" class="form-control received_type" autocomplete="off">
+                                <select name="received_type[{{$key}}]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
                                     @foreach (config('businessinfo.receivedTypes') as $typeKey => $typevalue)
                                         <option value="{{ $typevalue }}" @selected(($received_type[$key] == $typevalue))>{{ strToUpper($typevalue) }}</option>
@@ -240,25 +234,25 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off" value="{{ $received_no[$key] }}">
-                                <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off" value="{{ $receiveable_id[$key] }}">
+                                <input type="text" name="type_no[{{$key}}]" class="form-control type_no" autocomplete="off" value="{{ $received_no[$key] }}">
+                                <input type="hidden" name="type_id[{{$key}}]" class="form-control type_id" autocomplete="off" value="{{ $receiveable_id[$key] }}">
                             </td>
                             <td class="form-group">
-                                <select class="form-control material_name select2" name="material_id[]">
+                                <select class="form-control material_name select2" name="material_name[{{$key}}]">
                                     <option value="" readonly selected>Select Material</option>
                                     @foreach ($materials[$key] as $key1 => $value)
-                                        <option value="{{ $value->material->id }}" readonly @selected($material_id[$key] == $value->material->id)>
+                                        <option value="{{ $value->material->id }}" data-type="{{$value->material->type}}" data-unit="{{$value->material->unit}}" data-code="{{$value->material->code}}" readonly @selected($material_id[$key] == $value->material->id)>
                                             {{ $value->material->name }}</option>
                                     @endforeach
                                 </select>
-                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"
+                                <input type="hidden" name="item_code[{{$key}}]" class="form-control item_code" autocomplete="off"
                                     value="{{ $item_code[$key] }}">
-                                <input type="hidden" name="material_type[]" class="form-control material_type"
+                                <input type="hidden" name="material_type[{{$key}}]" class="form-control material_type"
                                     autocomplete="off" value="{{ $material_type[$key] }}">
                             </td>
         
                             <td>
-                                <select name="brand_id[]" class="form-control brand select2" autocomplete="off">
+                                <select name="brand_id[{{$key}}]" class="form-control brand select2" autocomplete="off">
                                     <option value="">Select Brand</option>
                                     @foreach ($brands[$key] as $key1 => $value)
                                         <option value="{{ $value->brand->id }}" @selected($value->brand->id == $brand_id[$key])>
@@ -269,7 +263,7 @@
                             </td>
         
                             <td>
-                                <select class="form-control model select2" name="model[]">
+                                <select class="form-control model select2" name="model[{{$key}}]">
                                     <option value="" readonly selected>Select Model</option>
                                     @foreach ($models[$key] as $key1 => $value)
                                     <option value="{{ $value->model }}" @selected($value->model == $model[$key])>
@@ -279,7 +273,7 @@
                                 </select>
                             </td>
                             <td class="select2_container">
-                                <select class="form-control select2" multiple name="my_select">
+                                <select class="form-control select2 serial_code" multiple name="serial_code[{{$key}}][]">
                                     @foreach($serial_codes[$key] as $key1 => $value)
                                         <option value="{{ $value->serial_code }}"
                                             @selected(in_array($value->serial_code,json_decode($serial_code[$key])))>
@@ -289,60 +283,20 @@
                                 </select>
                             </td>
                             <td>
-                                <input name="unit[]" class="form-control unit" readonly autocomplete="off" type="text" value="{{ $unit[$key] }}">
+                                <input name="unit[{{$key}}]" class="form-control unit" readonly autocomplete="off" type="text" value="{{ $unit[$key] }}">
                             </td> 
                             <td>
-                                <input name="quantity[]" class="form-control quantity" autocomplete="off" value="{{ $quantity[$key] }}">
+                                <input name="avaiable_quantity[{{$key}}]" class="form-control avaiable_quantity" autocomplete="off" value="{{ $quantity[$key] }}">
                             </td>
                             <td>
-                                <input name="remarks[]" class="form-control remarks" autocomplete="off" value="{{ $remarks[$key] }}">
+                                <input name="quantity[{{$key}}]" class="form-control quantity" autocomplete="off" @if($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
-                            </td>
-
-                            {{-- <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off"
-                                    value="{{ $description[$key] }}">
-                            </td>
-                            <td>
-                                <div class="tags_add_multiple">
-                                    <input class="" type="text" name="sl_code[]" value="{{ $sl_code[$key] }}"
-                                        data-role="tagsinput">
-                                </div>
-                            </td>
-        
-                            <td>
-                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off"
-                                    value="{{ $initial_mark[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off"
-                                    value="{{ $final_mark[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="warranty_period[]" class="form-control warranty_period"
-                                    autocomplete="off" value="{{ $warranty_period[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                    value="{{ $unit[$key] }}" readonly>
-                            </td>
-                            <td>
-                                <input class="form-control quantity" name="quantity[]" aria-describedby="date"
-                                    value="{{ $quantity[$key] }}">
-                            </td>
-                            <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly
-                                    value="10" value="{{ $unit_price[$key] }}">
-                            </td>
-                            <td>
-                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly
-                                    value="{{ $amount[$key] }}">
+                                <input name="remarks[{{$key}}]" class="form-control remarks" autocomplete="off" value="{{ $remarks[$key] }}">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
-                            </td> --}}
+                            </td>
                         </tr>
                     @endforeach
         
@@ -378,6 +332,9 @@
             @endif
         })
         var indx = 0;
+        @if ($form_method == 'PUT')
+            indx = {{count($Challan_Lines)}}
+        @endif
         function appendCalculationRow() {
             let row = `<tr>
                             <td>
@@ -420,7 +377,7 @@
                                 <input name="unit[${indx}]" class="form-control unit" readonly autocomplete="off" type="text">
                             </td> 
                             <td>
-                                <input class="form-control avaiable_quantity" name="avaiable_quantity[${indx}]" aria-describedby="date" readonly>
+                                <input class="form-control available_quantity" name="available_quantity[${indx}]" aria-describedby="available_quantity" readonly>
                             </td>
                             <td>
                                 <input name="quantity[${indx}]" class="form-control quantity" autocomplete="off">
@@ -809,6 +766,21 @@
                     }
                 })
             })
+
+              //issued quantity cannot be greater than avaiable_quantity
+              $(document).on('keyup', '.quantity', function() {
+                let elemmtn = $(this).closest('tr');
+                let avaiable_quantity = parseFloat((elemmtn).find('.available_quantity').val());
+                let quantity = parseFloat((elemmtn).find('.quantity').val());
+                if (quantity > avaiable_quantity) {
+                    swal.fire({
+                        title: "Issued Quantity Cannot Be Greater Than Avaiable Quantity",
+                        type: "warning",
+                    }).then(function() {
+                        (elemmtn).find('.quantity').val(avaiable_quantity);
+                    });
+                }
+            });
 
             // $(document).on('change', '.serial_code', function() {
             //     var elemmtn = $(this);

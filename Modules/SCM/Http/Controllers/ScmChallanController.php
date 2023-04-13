@@ -154,9 +154,37 @@ class ScmChallanController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ScmChallan $challan)
     {
-        //
+        // dd($request->all());
+        try {
+            DB::beginTransaction();
+            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id');
+
+            $challan_details = [];
+            foreach ($request->material_name as $kk => $val) {
+                if (isset($request->serial_code[$kk]) && count($request->serial_code[$kk])) {
+                    foreach ($request->serial_code[$kk] as $key => $value) {
+                        $stock_ledgers[] = $this->GetStockLedgerData($request, $kk, $key);
+                    };
+                } elseif (isset($request->material_name[$kk])) {
+                    $stock_ledgers[] = $this->GetStockLedgerData($request, $kk);
+                }
+                $challan_details[] = $this->GetMrrDetails($request, $kk);
+            };
+
+            // $challan->update($challan_data);
+            // $challan->scmChallanLines()->delete();
+            // $challan->scmChallanLines()->createMany($challan_details);
+            // $challan->stockable()->delete();
+            // $challan->stockable()->createMany($stock_ledgers);
+            dd($challan_details, $stock_ledgers);
+            DB::commit();
+            return redirect()->route('challans.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('challans.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
