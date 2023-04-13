@@ -286,7 +286,7 @@
                                 <input name="unit[{{$key}}]" class="form-control unit" readonly autocomplete="off" type="text" value="{{ $unit[$key] }}">
                             </td> 
                             <td>
-                                <input name="avaiable_quantity[{{$key}}]" class="form-control avaiable_quantity" autocomplete="off" value="{{ $quantity[$key] }}">
+                                <input name="avaiable_quantity[{{$key}}]" class="form-control avaiable_quantity" autocomplete="off" value="{{ $branch_stock[$key] }}">
                             </td>
                             <td>
                                 <input name="quantity[{{$key}}]" class="form-control quantity" autocomplete="off" @if($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
@@ -607,8 +607,8 @@
                         scm_requisition_id: scm_requisition_id,
                         received_type: received_type,
                         receivable_id: receivable_id,
-                        from_branch: $('#from_branch_id').val(),
-                        to_branch: $('#to_branch_id').val(),
+                        from_branch: $('#branch_id').val(),
+                        to_branch: $('#branch_id').val(),
                     }, material_name, 'value', 'label', {
                         'data-type': 'type',
                         'data-unit': 'unit',
@@ -634,6 +634,7 @@
                         material_id: material_id,
                         received_type: received_type,
                         receivable_id: receivable_id,
+                        from_branch_id: $('#branch_id').val(),
                     }, brand, 'value', 'label');
                 })
 
@@ -652,7 +653,8 @@
                         brand_id: brand_id,
                         material_id: material_id,
                         received_type: received_type,
-                        receivable_id: receivable_id
+                        receivable_id: receivable_id,
+                        from_branch_id: $('#branch_id').val(),
                     }, model, 'value', 'label');
                 });
 
@@ -676,7 +678,8 @@
                         material_id: material_id,
                         brand_id: brand_id,
                         received_type: received_type,
-                        receivable_id: receivable_id
+                        receivable_id: receivable_id,
+                        from_branch_id: $('#branch_id').val(),
                     }, serial_code, 'value', 'label',null,false);
                  });
 
