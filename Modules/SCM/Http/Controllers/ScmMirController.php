@@ -115,19 +115,19 @@ class ScmMirController extends Controller
         $from_branch_stock = [];
         $to_branch_stock = [];
         $material_issue->lines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, &$from_branch_stock, &$material_issue, &$to_branch_stock) {
-            $materials[] = StockLedger::with('material')->where(['receivable_id' => $item->receiveable_id, 'receivable_type' => $item->receiveable_type])->get()->unique('material_id');
+            $materials[] = StockLedger::with('material')->where(['receiveable_id' => $item->receiveable_id, 'receiveable_type' => $item->receiveable_type])->get()->unique('material_id');
 
-            $brands[] = StockLedger::with('brand')->where(['material_id' => $item->material_id, 'receivable_id' => $item->receiveable_id, 'receivable_type' => $item->receiveable_type])->get()->unique('brand_id')->values();
+            $brands[] = StockLedger::with('brand')->where(['material_id' => $item->material_id, 'receiveable_id' => $item->receiveable_id, 'receiveable_type' => $item->receiveable_type])->get()->unique('brand_id')->values();
 
-            $models[] = StockLedger::where(['material_id' => $item->material_id, 'brand_id' => $item->brand_id, 'receivable_id' => $item->receiveable_id, 'receivable_type' => $item->receiveable_type])->get()->unique('model')->values();
+            $models[] = StockLedger::where(['material_id' => $item->material_id, 'brand_id' => $item->brand_id, 'receiveable_id' => $item->receiveable_id, 'receiveable_type' => $item->receiveable_type])->get()->unique('model')->values();
 
-            $serial_codes[] = StockLedger::where(['material_id' => $item->material_id, 'brand_id' => $item->brand_id, 'model' => $item->model, 'receivable_id' => $item->receiveable_id, 'receivable_type' => $item->receiveable_type])->get()->unique('serial_code')->values();
+            $serial_codes[] = StockLedger::where(['material_id' => $item->material_id, 'brand_id' => $item->brand_id, 'model' => $item->model, 'receiveable_id' => $item->receiveable_id, 'receiveable_type' => $item->receiveable_type])->get()->unique('serial_code')->values();
 
             $from_branch_stock[] = StockLedger::query()
                 ->where([
                     'material_id' => $item->material_id,
                     'received_type' => $item->received_type,
-                    'receivable_id' => $item->receiveable_id,
+                    'receiveable_id' => $item->receiveable_id,
                     'branch_id' => $material_issue->branch_id,
                 ])
                 ->sum('quantity');
@@ -136,7 +136,7 @@ class ScmMirController extends Controller
                 ->where([
                     'material_id' => $item->material_id,
                     'received_type' => $item->received_type,
-                    'receivable_id' => $item->receiveable_id,
+                    'receiveable_id' => $item->receiveable_id,
                     'branch_id' => $material_issue->to_branch_id,
                 ])
                 ->sum('quantity');
@@ -180,6 +180,9 @@ class ScmMirController extends Controller
     public function getStockLedgerData($request, $key1, $key2 = null, $branch_id, $qty): array
     {
         return [
+            'receiveable_id' => $request->type_id[$key1],
+            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
+            'recevied_type' => $request->received_type[$key1],
             'branch_id' => $branch_id,
             'material_id' => $request->material_name[$key1],
             'item_code' => $request->code[$key1],
@@ -187,7 +190,7 @@ class ScmMirController extends Controller
             'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
             'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
             'serial_code' => (isset($request->serial_code[$key1]) && isset($request->serial_code[$key1][$key2])) ? $request->serial_code[$key1][$key2] : null,
-            'quantity' => $qty ? (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1]) : (-1 * (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1])),
+            'quantity' => ($qty ? -1 : 1) * (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1])
         ];
     }
 
@@ -231,7 +234,7 @@ class ScmMirController extends Controller
     {
         $data = StockLedger::query()
             ->where('received_type', request()->customQueryFields['type'])
-            ->orderBy('receivable_id')
+            ->orderBy('receiveable_id')
             ->when(request()->customQueryFields['type'] == 'MRR', function ($query) {
                 $query->whereHasMorph('receivable', ScmMrr::class, function ($query2) {
                     $query2->where('mrr_no', 'like', '%' . request()->search . '%');
@@ -272,7 +275,7 @@ class ScmMirController extends Controller
                     ->from('scm_requisition_details')
                     ->where('scm_requisition_id', request()->scm_requisition_id);
             })
-            ->where(['receivable_id' => request()->receivable_id, 'received_type' => request()->received_type, 'branch_id' => request()->from_branch])
+            ->where(['receiveable_id' => request()->receiveable_id, 'received_type' => request()->received_type, 'branch_id' => request()->from_branch])
             ->get()
             ->unique('material_id')
             ->map(fn ($item) => [
@@ -294,7 +297,7 @@ class ScmMirController extends Controller
             ->with('brand')
             ->where([
                 'material_id' => request()->material_id,
-                'receivable_id' => request()->receivable_id,
+                'receiveable_id' => request()->receiveable_id,
                 'received_type' => request()->received_type,
                 'branch_id' => request()->from_branch_id
             ])
@@ -321,7 +324,7 @@ class ScmMirController extends Controller
             ->where([
                 'material_id' => request()->material_id,
                 'brand_id' => request()->brand_id,
-                'receivable_id' => request()->receivable_id,
+                'receiveable_id' => request()->receiveable_id,
                 'received_type' => request()->received_type,
                 'branch_id' => request()->from_branch_id
             ])
@@ -349,7 +352,7 @@ class ScmMirController extends Controller
                 'material_id' => request()->material_id,
                 'brand_id' => request()->brand_id,
                 'model' => request()->model,
-                'receivable_id' => request()->receivable_id,
+                'receiveable_id' => request()->receiveable_id,
                 'received_type' => request()->received_type
             ])
             ->get()
@@ -373,7 +376,7 @@ class ScmMirController extends Controller
             ->where([
                 'branch_id' => $branch,
                 'received_type' => request()->received_type,
-                'receivable_id' => request()->receivable_id,
+                'receiveable_id' => request()->receiveable_id,
             ])
             ->when(request()->material_id, function ($query) {
                 $query->where('material_id', request()->material_id);

@@ -27,8 +27,8 @@ return new class extends Migration
             $table->bigInteger('initial_mark')->nullable();
             $table->bigInteger('final_mark')->nullable();
             $table->string('received_type')->nullable();
-            $table->string('receivable_type')->nullable();
-            $table->bigInteger('receivable_id')->comment('MRR/ERR/WCR');
+            $table->string('receiveable_type')->nullable();
+            $table->bigInteger('receiveable_id')->comment('MRR/ERR/WCR');
             $table->double('quantity', 8, 2)->nullable();
             $table->double('unit_price', 22, 2)->nullable();
             $table->integer('warranty_period')->nullable();

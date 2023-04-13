@@ -249,7 +249,7 @@
                             value="{{ old('remarks')[$key] ?? ($material_issue->lines->pluck('remarks')[$key] ?? '') }}">
                     </td>
                     <td>
-                        <i class="btn btn-danger btn-sm fa fa-trash remove-requisition-row"></i>
+                        <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                     </td>
                 </tr>
             @endforeach
@@ -425,13 +425,13 @@
             function getMaterials(event_this) {
                 let scm_requisition_id = $('#scm_requisition_id').val();
                 let received_type = event_this.find('.received_type').val().toUpperCase();
-                let receivable_id = event_this.find('.type_id').val();
+                let receiveable_id = event_this.find('.type_id').val();
                 let material_name = event_this.find('.material_name');
 
                 populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
                     scm_requisition_id: scm_requisition_id,
                     received_type: received_type,
-                    receivable_id: receivable_id,
+                    receiveable_id: receiveable_id,
                     from_branch: $('#from_branch_id').val(),
                     to_branch: $('#to_branch_id').val(),
                 }, material_name, 'value', 'label', {
@@ -484,7 +484,7 @@
                 let material_id = $(this).val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
                 let received_type = event_this.find('.received_type').val().toUpperCase();
-                let receivable_id = event_this.find('.type_id').val();
+                let receiveable_id = event_this.find('.type_id').val();
                 let brand = $(this).closest('tr').find('.brand');
                 event_this.find('.unit').val($(
                         this).closest('tr').find('.material_name').find(':selected')
@@ -501,7 +501,7 @@
                 populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
                     material_id: material_id,
                     received_type: received_type,
-                    receivable_id: receivable_id,
+                    receiveable_id: receiveable_id,
                     from_branch_id: $('#from_branch_id').val(),
                 }, brand, 'value', 'label');
             })
@@ -514,14 +514,14 @@
                 let material_id = event_this.find('.material_name').val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
                 let received_type = event_this.find('.received_type').val().toUpperCase();
-                let receivable_id = event_this.find('.type_id').val();
+                let receiveable_id = event_this.find('.type_id').val();
                 let model = $(this).closest('tr').find('.model');
 
                 populateDropdownByAjax("{{ route('brandWiseModels') }}", {
                     brand_id: brand_id,
                     material_id: material_id,
                     received_type: received_type,
-                    receivable_id: receivable_id,
+                    receiveable_id: receiveable_id,
                     from_branch_id: $('#from_branch_id').val(),
                 }, model, 'value', 'label');
             });
@@ -534,7 +534,7 @@
                 let material_id = event_this.find('.material_name').val();
                 let scm_requisition_id = $('#scm_requisition_id').val();
                 let received_type = event_this.find('.received_type').val().toUpperCase();
-                let receivable_id = event_this.find('.type_id').val();
+                let receiveable_id = event_this.find('.type_id').val();
                 let brand_id = event_this.find('.brand').val();
                 let serial_code = $(this).closest('tr').find('.serial_code');
                 let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
@@ -552,7 +552,7 @@
                     material_id: material_id,
                     brand_id: brand_id,
                     received_type: received_type,
-                    receivable_id: receivable_id
+                    receiveable_id: receiveable_id
                 }, serial_code, 'value', 'label', null, disabledOption);
             });
 
@@ -568,7 +568,7 @@
                         model: (elemmtn).closest('tr').find('.model').val(),
                         received_type: (elemmtn).closest('tr').find('.received_type').val()
                             .toUpperCase(),
-                        receivable_id: (elemmtn).closest('tr').find('.type_id').val(),
+                        receiveable_id: (elemmtn).closest('tr').find('.type_id').val(),
                         from_branch_id: $('#from_branch_id').val(),
                         to_branch_id: $('#to_branch_id').val()
                     },
