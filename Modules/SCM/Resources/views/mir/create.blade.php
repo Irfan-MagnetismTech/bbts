@@ -189,13 +189,18 @@
                         <select class="form-control material_name select2" name="material_name[]">
                             @foreach ($materials[$key] as $key1 => $value)
                                 <option value="{{ $value->material->id }}"
-                                    {{ $material_id[$key] == $value->material->id ? 'selected' : '' }} data-type="{{ $material_data[$key]->type }}" data-unit="{{ $material_data[$key]->unit }}" data-code="{{ $material_data[$key]->code }}">
+                                    {{ $material_id[$key] == $value->material->id ? 'selected' : '' }}
+                                    data-type="{{ $material_data[$key]->type }}"
+                                    data-unit="{{ $material_data[$key]->unit }}"
+                                    data-code="{{ $material_data[$key]->code }}">
                                     {{ $value->material->name }}
                                 </option>
                             @endforeach
                         </select>
-                        <input type="hidden" name="code[{{ $key }}]" class="form-control code" autocomplete="off">
-                        <input type="hidden" name="type[{{ $key }}]" class="form-control type" autocomplete="off">
+                        <input type="hidden" name="code[{{ $key }}]" class="form-control code"
+                            autocomplete="off">
+                        <input type="hidden" name="type[{{ $key }}]" class="form-control type"
+                            autocomplete="off">
                     </td>
                     <td>
                         <select class="form-control brand select2" name="brand[]">
@@ -242,7 +247,7 @@
                     </td>
                     <td>
                         <input type="number" class="form-control issued_qty" name="issued_qty[]"
-                            value="{{ $issued_qty[$key] }}" @if( $material_data[$key]->type == 'Item' && (!empty($serial_code[$key]))) readonly @endif>
+                            value="{{ $issued_qty[$key] }}" @if ($material_data[$key]->type == 'Item' && !empty($serial_code[$key])) readonly @endif>
                     </td>
                     <td>
                         <input type="text" class="form-control" name="remarks[]"
@@ -552,7 +557,8 @@
                     material_id: material_id,
                     brand_id: brand_id,
                     received_type: received_type,
-                    receiveable_id: receiveable_id
+                    receiveable_id: receiveable_id,
+                    from_branch_id: $('#from_branch_id').val(),
                 }, serial_code, 'value', 'label', null, disabledOption);
             });
 

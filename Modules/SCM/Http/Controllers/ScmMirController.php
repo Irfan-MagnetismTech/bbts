@@ -117,11 +117,31 @@ class ScmMirController extends Controller
         $material_issue->lines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, &$from_branch_stock, &$material_issue, &$to_branch_stock) {
             $materials[] = StockLedger::with('material')->where(['receiveable_id' => $item->receiveable_id, 'receiveable_type' => $item->receiveable_type])->get()->unique('material_id');
 
-            $brands[] = StockLedger::with('brand')->where(['material_id' => $item->material_id, 'receiveable_id' => $item->receiveable_id, 'receiveable_type' => $item->receiveable_type])->get()->unique('brand_id')->values();
+            $brands[] = StockLedger::with('brand')->where([
+                'material_id' => $item->material_id,
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type,
+                'branch_id' => $material_issue->branch_id,
+            ])->get()->unique('brand_id')->values();
 
-            $models[] = StockLedger::where(['material_id' => $item->material_id, 'brand_id' => $item->brand_id, 'receiveable_id' => $item->receiveable_id, 'receiveable_type' => $item->receiveable_type])->get()->unique('model')->values();
+            $models[] = StockLedger::where([
+                'material_id' => $item->material_id,
+                'brand_id' => $item->brand_id,
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type,
+                'branch_id' => $material_issue->branch_id,
+            ])->get()->unique('model')->values();
 
-            $serial_codes[] = StockLedger::where(['material_id' => $item->material_id, 'brand_id' => $item->brand_id, 'model' => $item->model, 'receiveable_id' => $item->receiveable_id, 'receiveable_type' => $item->receiveable_type])->get()->unique('serial_code')->values();
+            $serial_codes[] = StockLedger::where([
+                'material_id' => $item->material_id,
+                'brand_id' => $item->brand_id,
+                'model' => $item->model,
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type
+            ])
+                ->get()
+                ->unique('serial_code')
+                ->values();
 
             $from_branch_stock[] = StockLedger::query()
                 ->where([
@@ -129,6 +149,8 @@ class ScmMirController extends Controller
                     'received_type' => $item->received_type,
                     'receiveable_id' => $item->receiveable_id,
                     'branch_id' => $material_issue->branch_id,
+                    'brand_id' => $item->brand_id,
+                    'model' => $item->model,
                 ])
                 ->sum('quantity');
 
@@ -138,6 +160,8 @@ class ScmMirController extends Controller
                     'received_type' => $item->received_type,
                     'receiveable_id' => $item->receiveable_id,
                     'branch_id' => $material_issue->to_branch_id,
+                    'brand_id' => $item->brand_id,
+                    'model' => $item->model,
                 ])
                 ->sum('quantity');
         });
@@ -182,7 +206,7 @@ class ScmMirController extends Controller
         return [
             'receiveable_id' => $request->type_id[$key1],
             'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
-            'recevied_type' => $request->received_type[$key1],
+            'received_type' => $request->received_type[$key1],
             'branch_id' => $branch_id,
             'material_id' => $request->material_name[$key1],
             'item_code' => $request->code[$key1],
@@ -353,14 +377,22 @@ class ScmMirController extends Controller
                 'brand_id' => request()->brand_id,
                 'model' => request()->model,
                 'receiveable_id' => request()->receiveable_id,
-                'received_type' => request()->received_type
+                'received_type' => request()->received_type,
+                'branch_id' => request()->from_branch_id
             ])
             ->get()
-            ->map(fn ($item) => [
-                'value' => $item->serial_code,
-                'label' => $item->serial_code,
-            ]);
-
+            ->groupBy('serial_code')
+            ->flatMap(function ($item, $key) {
+                $quantity = $item->sum('quantity');
+                if ($quantity > 0) {
+                    $serial_code[$key] = [
+                        'label' => $key,
+                        'value' => $key,
+                    ];
+                    return $serial_code;
+                }
+            })
+            ->values();
         return response()->json($data);
     }
 
