@@ -25,6 +25,10 @@
         .custom-form .input-group-addon {
             min-width: 130px !important;
         }
+
+        .radio .helper {
+            top: -0.4rem !important;
+        }
     </style>
 @endsection
 
@@ -165,8 +169,8 @@
                                     data-target="#TaDaModal">
                                     TA DA
                                 </button>
-                                <button type="submit" class="btn btn-sm btn-outline-success" data-toggle="modal"
-                                    data-target="#QuestionModal">
+                                <button type="button" class="btn btn-sm btn-outline-success" data-toggle="modal"
+                                    data-target=".questionModal">
                                     Questions
                                 </button>
                             </div>
@@ -189,25 +193,11 @@
 
 
     {{-- TA DA Modal --}}
-    <div class="modal fade" id="TaDaModal" tabindex="-1" aria-labelledby="TaDaModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    
+    @include('sales::followup.tada_modal')
     {{-- Question Modal --}}
+
+    @include('sales::followup.question_modal')
 
 @endsection
 
