@@ -105,15 +105,47 @@ class ScmChallanController extends Controller
      */
     public function edit(ScmChallan $challan)
     {
-        $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
         $client_links = ClientDetail::where('client_id', $challan->client_id)->get();
         $materials = [];
-        $challan->scmChallanLines->each(function ($item, $key) use (&$materials) {
-            $materials[$key] = Stockledger::with('material')->where(['receivable_id' => $item->receiveable_id, 'receivable_type' => $item->receiveable_type])->get()->unique('material_id')->values();
+        $brands = [];
+        $models = [];
+        $serial_codes = [];
+        $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes) {
+            $materials[$key] = Stockledger::with('material')->where([
+                'receivable_id' => $item->receiveable_id,
+                'receivable_type' => $item->receiveable_type
+            ])->get()
+                ->unique('material_id')
+                ->values();
+            $brands[$key] = Stockledger::with('brand')->where([
+                'receivable_id' => $item->receiveable_id,
+                'receivable_type' => $item->receiveable_type,
+                'material_id' => $item->material_id
+            ])
+                ->get()
+                ->unique('brand_id')
+                ->values();
+            $models[$key] = StockLedger::query()->where([
+                'receivable_id' => $item->receiveable_id,
+                'receivable_type' => $item->receiveable_type,
+                'material_id' => $item->material_id,
+                'brand_id' => $item->brand_id
+            ])
+                ->get()
+                ->unique('model')
+                ->values();
+
+            $serial_codes[$key] = StockLedger::query()->where([
+                'receivable_id' => $item->receiveable_id,
+                'receivable_type' => $item->receiveable_type,
+                'material_id' => $item->material_id,
+                'brand_id' => $item->brand_id,
+                'model' => $item->model,
+            ])
+                ->get();
         });
-        // dd($materials);
-        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials'));
+        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes'));
     }
 
     /**
@@ -122,9 +154,37 @@ class ScmChallanController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ScmChallan $challan)
     {
-        //
+        // dd($request->all());
+        try {
+            DB::beginTransaction();
+            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id');
+
+            $challan_details = [];
+            foreach ($request->material_name as $kk => $val) {
+                if (isset($request->serial_code[$kk]) && count($request->serial_code[$kk])) {
+                    foreach ($request->serial_code[$kk] as $key => $value) {
+                        $stock_ledgers[] = $this->GetStockLedgerData($request, $kk, $key);
+                    };
+                } elseif (isset($request->material_name[$kk])) {
+                    $stock_ledgers[] = $this->GetStockLedgerData($request, $kk);
+                }
+                $challan_details[] = $this->GetMrrDetails($request, $kk);
+            };
+
+            // $challan->update($challan_data);
+            // $challan->scmChallanLines()->delete();
+            // $challan->scmChallanLines()->createMany($challan_details);
+            // $challan->stockable()->delete();
+            // $challan->stockable()->createMany($stock_ledgers);
+            dd($challan_details, $stock_ledgers);
+            DB::commit();
+            return redirect()->route('challans.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('challans.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**

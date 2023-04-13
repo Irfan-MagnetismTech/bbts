@@ -1,3 +1,4 @@
-Pending Discussion about Mrr for general and product without serial code
+Pending Discussion about Mrr for general
 in update to limit tags to 1 for drum
-pending discussion about challan & mir for input
+need to update getReceivedNoAttribute() after WCR and ERR
+    
