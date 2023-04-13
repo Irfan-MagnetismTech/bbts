@@ -62,8 +62,8 @@ class ScmMrr extends Model
         return $this->morphMany(StockLedger::class, 'stockable');
     }
 
-    public function receivable()
+    public function receiveable()
     {
-        return $this->morphMany(StockLedger::class, 'receivable');
+        return $this->morphMany(StockLedger::class, 'receiveable');
     }
 }

@@ -111,7 +111,8 @@ class ScmChallanController extends Controller
         $brands = [];
         $models = [];
         $serial_codes = [];
-        $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes) {
+        $branch_stock = [];
+        $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, $challan, &$branch_stock) {
             $materials[$key] = Stockledger::with('material')->where([
                 'receivable_id' => $item->receiveable_id,
                 'receivable_type' => $item->receiveable_type
@@ -144,8 +145,16 @@ class ScmChallanController extends Controller
                 'model' => $item->model,
             ])
                 ->get();
+            $branch_stock[] = StockLedger::query()
+                ->where([
+                    'material_id' => $item->material_id,
+                    'received_type' => $item->received_type,
+                    'receivable_id' => $item->receiveable_id,
+                    'branch_id' => $challan->branch_id,
+                ])
+                ->sum('quantity');
         });
-        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes'));
+        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes', 'branch_stock'));
     }
 
     /**
@@ -201,6 +210,9 @@ class ScmChallanController extends Controller
         return [
             'branch_id' => $req->branch_id,
             'material_id' => $req->material_name[$key1],
+            'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
+            'received_type' => $req->received_type[$key1],
+            'receiveable_id' => $req->type_id[$key1],
             'item_code' => $req->item_code[$key1],
             'unit' => $req->unit[$key1],
             'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : null,
