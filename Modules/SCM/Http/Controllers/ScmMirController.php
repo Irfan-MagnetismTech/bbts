@@ -272,7 +272,7 @@ class ScmMirController extends Controller
                     ->from('scm_requisition_details')
                     ->where('scm_requisition_id', request()->scm_requisition_id);
             })
-            ->where(['receivable_id' => request()->receivable_id, 'received_type' => request()->received_type])
+            ->where(['receivable_id' => request()->receivable_id, 'received_type' => request()->received_type, 'branch_id' => request()->from_branch])
             ->get()
             ->unique('material_id')
             ->map(fn ($item) => [
@@ -295,7 +295,8 @@ class ScmMirController extends Controller
             ->where([
                 'material_id' => request()->material_id,
                 'receivable_id' => request()->receivable_id,
-                'received_type' => request()->received_type
+                'received_type' => request()->received_type,
+                'branch_id' => request()->from_branch_id
             ])
             ->get()
             ->unique('brand_id')
@@ -321,7 +322,8 @@ class ScmMirController extends Controller
                 'material_id' => request()->material_id,
                 'brand_id' => request()->brand_id,
                 'receivable_id' => request()->receivable_id,
-                'received_type' => request()->received_type
+                'received_type' => request()->received_type,
+                'branch_id' => request()->from_branch_id
             ])
             ->get()
             ->unique('model')
