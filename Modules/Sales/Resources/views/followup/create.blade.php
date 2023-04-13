@@ -189,15 +189,16 @@
             </div>
         </div>
     </div>
-    {!! Form::close() !!}
-
-
-    {{-- TA DA Modal --}}
-    
     @include('sales::followup.tada_modal')
     {{-- Question Modal --}}
 
     @include('sales::followup.question_modal')
+    {!! Form::close() !!}
+
+
+    {{-- TA DA Modal --}}
+
+
 
 @endsection
 
@@ -212,6 +213,25 @@
         })
 
         $('.select2').select2();
+
+        $('#ModalClose').on('click', function() {
+            $('input[name=reason_of_switching]').val('');
+            $('input[name=lan_issue]').val('');
+            $('input[name="device[]"]').prop('checked', false);
+            $('input[name=capability_of_bandwidth]').val('');
+            $('input[name=device_connected_with_lan]').val('');
+            $('input[name=mail_domain]').prop('checked', false);
+            $('input[name=license_of_antivirus]').val('');
+            $('input[name=client_site_it_person]').val('');
+            $('input[name=vpn_requirement]').prop('checked', false);
+            $('input[name=video_conferencing]').prop('checked', false);
+            $('input[name=iptsp_service_usage]').prop('checked', false);
+            $('input[name=software_usage]').prop('checked', false);
+            $('input[name=specific_destination]').val('');
+            $('input[name=uptime_capable_sla]').prop('checked', false);
+            $('input[name=isp_providing]').val('');
+            $('.questionModal').modal('hide');
+        });
     </script>
 
 @endsection

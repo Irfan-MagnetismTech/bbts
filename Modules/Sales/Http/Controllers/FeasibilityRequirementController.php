@@ -69,6 +69,7 @@ class FeasibilityRequirementController extends Controller
             }
             $feasibility_detail[] = [
                 'link_name' => $request['link_name'][$feasibility_key],
+                'agreegation_type' => $request['agreegation_type'][$feasibility_key],
                 'fr_no' => $fr_no,
                 'division_id' => $request['division_id'][$feasibility_key],
                 'district_id' => $request['district_id'][$feasibility_key],

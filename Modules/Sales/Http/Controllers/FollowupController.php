@@ -8,6 +8,9 @@ use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\Followup;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Http\Requests\FollowupRequest;
+use Modules\Sales\Entities\ClientQuestion;
+use Modules\Sales\Entities\Tada;
+use Illuminate\Support\Facades\DB;
 
 class FollowupController extends Controller
 {
@@ -52,7 +55,23 @@ class FollowupController extends Controller
     public function store(FollowupRequest $request)
     {
         $data = $request->only('meeting_id', 'client_id', 'client_type', 'work_nature_type', 'sales_type', 'activity_date', 'work_start_time', 'work_end_time', 'potentility_amount', 'meeting_outcome');
-        Followup::create($data);
+        $question_data = $request->only('reason_of_switching', 'lan_issue', 'capablity_of_bandwidth', 'device_connected_with_lan', 'license_of_antivirus', 'client_site_it_person', 'mail_domain', 'vpn_requirement', 'video_conferencing', 'istsp_service_usage', 'software_usage', 'specific_designation', 'uptime_capable_sla', 'isp_providing');
+        $question_data['device'] = json_encode($request->device ?? []);
+        $tada_amount = $request->tada_amount ?? 0;
+        DB::transaction(function () use ($data, $question_data, $tada_amount) {
+            $followup = Followup::create($data);
+            $question_data['follow_up_id'] = $followup->id;
+            $question_data['client_id'] = $followup->client_id;
+            ClientQuestion::create($question_data);
+            if ($tada_amount > 0) {
+                $tada_data = [
+                    'follow_up_id' => $followup->id,
+                    'client_id' => $followup->client_id,
+                    'amount' => $tada_amount,
+                ];
+                Tada::create($tada_data);
+            }
+        });
         return redirect()->route('followup.index');
     }
 
@@ -63,6 +82,7 @@ class FollowupController extends Controller
      */
     public function show(Followup $followup)
     {
+        $followup->load('meeting', 'client', 'clientQuestion', 'tada');
         return view('sales::followup.show', compact('followup'));
     }
 

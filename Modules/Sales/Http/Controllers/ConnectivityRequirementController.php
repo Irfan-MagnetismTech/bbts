@@ -14,6 +14,7 @@ use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\ConnectivityRequirementDetail;
 use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
 use Modules\Sales\Http\Requests\ConnectivityRequirementRequest;
+use Modules\Sales\Entities\Vendor;
 
 class ConnectivityRequirementController extends Controller
 {
@@ -37,7 +38,8 @@ class ConnectivityRequirementController extends Controller
         $feasibility_requirement = FeasibilityRequirement::where('client_id', $fr_detail->feasibilityRequirement->client_id)->first();
         $all_fr_list = FeasibilityRequirementDetail::where('feasibility_requirement_id', $feasibility_requirement->id)->get();
         $categories = Category::all();
-        return view('sales::connectivity_requirement.create', compact('fr_detail', 'categories', 'all_fr_list'));
+        $vendors = Vendor::all();
+        return view('sales::connectivity_requirement.create', compact('fr_detail', 'categories', 'all_fr_list', "vendors"));
     }
 
     /**
