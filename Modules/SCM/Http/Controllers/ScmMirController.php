@@ -115,55 +115,25 @@ class ScmMirController extends Controller
         $from_branch_stock = [];
         $to_branch_stock = [];
         $material_issue->lines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, &$from_branch_stock, &$material_issue, &$to_branch_stock) {
-            $materials[] = StockLedger::with('material')->where(['receiveable_id' => $item->receiveable_id, 'receiveable_type' => $item->receiveable_type])->get()->unique('material_id');
-
-            $brands[] = StockLedger::with('brand')->where([
-                'material_id' => $item->material_id,
-                'receiveable_id' => $item->receiveable_id,
-                'receiveable_type' => $item->receiveable_type,
-                'branch_id' => $material_issue->branch_id,
-            ])->get()->unique('brand_id')->values();
-
-            $models[] = StockLedger::where([
-                'material_id' => $item->material_id,
-                'brand_id' => $item->brand_id,
-                'receiveable_id' => $item->receiveable_id,
-                'receiveable_type' => $item->receiveable_type,
-                'branch_id' => $material_issue->branch_id,
-            ])->get()->unique('model')->values();
-
-            $serial_codes[] = StockLedger::where([
-                'material_id' => $item->material_id,
-                'brand_id' => $item->brand_id,
-                'model' => $item->model,
-                'receiveable_id' => $item->receiveable_id,
-                'receiveable_type' => $item->receiveable_type
-            ])
-                ->get()
-                ->unique('serial_code')
-                ->values();
-
-            $from_branch_stock[] = StockLedger::query()
+            $materials[] = StockLedger::query()
+                ->with('material')
                 ->where([
-                    'material_id' => $item->material_id,
-                    'received_type' => $item->received_type,
                     'receiveable_id' => $item->receiveable_id,
+                    'receiveable_type' => $item->receiveable_type,
                     'branch_id' => $material_issue->branch_id,
-                    'brand_id' => $item->brand_id,
-                    'model' => $item->model,
                 ])
-                ->sum('quantity');
+                ->get()
+                ->unique('material_id');
 
-            $to_branch_stock[] = StockLedger::query()
-                ->where([
-                    'material_id' => $item->material_id,
-                    'received_type' => $item->received_type,
-                    'receiveable_id' => $item->receiveable_id,
-                    'branch_id' => $material_issue->to_branch_id,
-                    'brand_id' => $item->brand_id,
-                    'model' => $item->model,
-                ])
-                ->sum('quantity');
+            $brands[] = StockLedger::query()->with('brand')->dropdownDataList('brand_id', $material_issue, $item);
+
+            $models[] = StockLedger::query()->dropdownDataList('model', $material_issue, $item);
+
+            $serial_codes[] = StockLedger::query()->dropdownDataList('serial_code', $material_issue, $item);
+
+            $from_branch_stock[] = StockLedger::query()->branchStock($material_issue->branch_id, $item);
+
+            $to_branch_stock[] = StockLedger::query()->branchStock($material_issue->to_branch_id, $item);
         });
 
         return view('scm::mir.create', compact('material_issue', 'materials', 'brands', 'models', 'serial_codes', 'from_branch_stock', 'to_branch_stock'));
@@ -205,15 +175,15 @@ class ScmMirController extends Controller
     {
         return [
             'receiveable_id' => $request->type_id[$key1],
-            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
+            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : NULL)),
             'received_type' => $request->received_type[$key1],
             'branch_id' => $branch_id,
             'material_id' => $request->material_name[$key1],
             'item_code' => $request->code[$key1],
             'unit' => $request->unit[$key1],
-            'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
-            'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
-            'serial_code' => (isset($request->serial_code[$key1]) && isset($request->serial_code[$key1][$key2])) ? $request->serial_code[$key1][$key2] : null,
+            'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : NULL,
+            'model' => isset($request->model[$key1]) ? $request->model[$key1] : NULL,
+            'serial_code' => (isset($request->serial_code[$key1]) && isset($request->serial_code[$key1][$key2])) ? $request->serial_code[$key1][$key2] : NULL,
             'quantity' => ($qty ? -1 : 1) * (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1])
         ];
     }
@@ -229,7 +199,7 @@ class ScmMirController extends Controller
     {
         return  [
             'material_id'   => $request->material_name[$key1],
-            'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : null,
+            'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : '[]',
             'receiveable_id' => $request->type_id[$key1],
             'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
             'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
