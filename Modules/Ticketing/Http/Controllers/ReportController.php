@@ -137,6 +137,7 @@ class ReportController extends Controller
 
         $clientInfo = Client::select('id', 'name')->where('id', $clientId)->first();
 
+
         if(empty($request->reportType)) {
             return view('ticketing::reports.downtime', compact('supportTickets', 'request', 'clientInfo'));
         } else if($request->reportType == 'excel') {
