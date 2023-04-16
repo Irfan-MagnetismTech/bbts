@@ -73,6 +73,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         Route::get('pdf', [ReportController::class, 'pdf'])->name('report-pdf'); // jsPDF
 
         Route::get('/downtime-report', [ReportController::class, 'downtimeReport'])->name('downtime-report-index');
+        Route::post('/filter-downtime-report', [ReportController::class, 'downtimeReport'])->name('filter-downtime-report');
 
     });
 });
