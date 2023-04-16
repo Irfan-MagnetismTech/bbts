@@ -23,7 +23,7 @@
 @endphp
 
 @section('breadcrumb-title')
-    {{ $form_heading }} MIR (Material Issuing Report)
+    {{-- {{ $form_heading }} MIR (Material Issuing Report) --}}
 @endsection
 
 @section('style')
@@ -206,7 +206,7 @@
                         <select class="form-control brand select2" name="brand[]">
                             @foreach ($brands[$key] as $key1 => $value)
                                 <option value="{{ $value->brand->id }}"
-                                    {{ $brand_name[$key] == $value->brand->id ? 'selected' : '' }}>
+                                    {{ $brand_id[$key] == $value->brand->id ? 'selected' : '' }}>
                                     {{ $value->brand->name }}
                                 </option>
                             @endforeach
