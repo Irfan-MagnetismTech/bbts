@@ -65,12 +65,14 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     // Ticketing Reports
     Route::prefix('reports')->group(function() {
-        Route::get('/', [ReportController::class, 'index'])->name('report-index'); // 
-        Route::post('/filter-data', [ReportController::class, 'index'])->name('search-report-data'); // 
+        Route::get('/', [ReportController::class, 'index'])->name('report-index');
+        Route::post('/filter-data', [ReportController::class, 'index'])->name('search-report-data');
 
-        Route::post('/download-excel', [ReportController::class, 'excelDownload'])->name('excel-download'); // 
-        Route::post('/download-pdf', [ReportController::class, 'pdfDownload'])->name('pdf-download'); // 
+        Route::post('/download-datatable-filtered-report', [ReportController::class, 'excelDownload'])->name('filtered-report-download'); // Datatable Filtered Data
 
         Route::get('pdf', [ReportController::class, 'pdf'])->name('report-pdf'); // jsPDF
+
+        Route::get('/downtime-report', [ReportController::class, 'downtimeReport'])->name('downtime-report-index');
+
     });
 });

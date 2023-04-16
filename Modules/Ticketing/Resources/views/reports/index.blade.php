@@ -191,26 +191,22 @@
         <div class="row mt-2 mb-4">
             <div class="col-md-4">
                 <div class="form-group my-4 row">
-                    <div class="col-md-6">
-                        <form action="{{ route('pdf-download') }}" method="post" id="filteredPdfDownload">
+                    <form action="{{ route('filtered-report-download') }}" method="post" id="datatableFilteredReportDownload" class="col-12 row">
+                        <div class="col-md-6">
                             @csrf
-                            <button type="submit" class="btn btn-outline-danger btn-sm col-12">
+                            <button type="button" onclick="dttablereport('pdf')" class="btn btn-outline-danger btn-sm col-12">
                                 PDF Download
                                 <i class="far fa-file-pdf"></i>
                             </button>
-                        </form>
-                    </div>
-
-                    
-                    <div class="col-md-6">
-                        <form action="{{ route('excel-download') }}" id="filteredExcelDownload" method="post">
-                            @csrf
-                            <button type="submit" class="btn btn-outline-success btn-sm col-12">
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" onclick="dttablereport('excel')" class="btn btn-outline-success btn-sm col-12">
                                 Excel Download
                                 <i class="far fa-file-excel"></i>
                             </button>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -247,9 +243,11 @@
         $('#duration').val('');
     }
 
+    var table = null;
+
     $(document).ready(function() {
 
-        var table =  $('#filterableDatatable').DataTable( {
+        table =  $('#filterableDatatable').DataTable( {
             columnDefs: [ {
                 orderable: false,
                 className: 'select-checkbox',
@@ -262,25 +260,30 @@
             order: [[ 1, 'asc' ]]
         } );
 
-
-        $('#filteredExcelDownload').submit(function(event) {
-            event.preventDefault();
-            var selectedRows = table.rows({ selected: true }).data().pluck(1).toArray();
-
-            if(selectedRows.length != 0) {
-                
-                $("#filteredExcelDownload").append($('<input>', {
-                    type: 'hidden',
-                    name: 'supporTickets',
-                    value: JSON.stringify(selectedRows)
-                }));
-
-                console.log(JSON.stringify(selectedRows))
-                this.submit();
-            }
-        });
-
     });
+
+    function dttablereport(reportType) {
+        
+        $("#datatableFilteredReportDownload").append($('<input>', {
+            type: 'hidden',
+            name: 'reportType',
+            value: reportType
+        }));
+
+        var selectedRows = table.rows({ selected: true }).data().pluck(1).toArray();
+
+        if(selectedRows.length != 0) {
+                
+            $("#datatableFilteredReportDownload").append($('<input>', {
+                type: 'hidden',
+                name: 'supportTickets',
+                value: JSON.stringify(selectedRows)
+            }));
+
+            $("#datatableFilteredReportDownload").submit();
+
+        }
+    }
 
     function reportDownload(reportType) {
         $("#reportForm").append($('<input>', {

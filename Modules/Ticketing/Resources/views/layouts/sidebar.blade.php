@@ -87,4 +87,16 @@
         </a>
     </li>
     @endif
+    <li class="{{ request()->routeIs('report-index') ? 'active' : null }}">
+        <a href="{{ route('report-index') }}">
+            <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-briefcase"></i></span>
+            <span class="pcoded-mtext">Reports</span>
+        </a>
+    </li>
+    <li class="{{ request()->routeIs('downtime-report-index') ? 'active' : null }}">
+        <a href="{{ route('downtime-report-index') }}">
+            <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-network-wired"></i></span>
+            <span class="pcoded-mtext">Downtime Report</span>
+        </a>
+    </li>
 </ul>
