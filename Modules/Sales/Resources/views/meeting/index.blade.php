@@ -10,8 +10,6 @@
 @endsection
 
 @section('style')
-    <style>
-    </style>
 @endsection
 @section('breadcrumb-button')
     <a href="{{ route('meeting.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>

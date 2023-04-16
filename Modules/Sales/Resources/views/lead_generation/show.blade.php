@@ -39,7 +39,7 @@
                     <!-- table  -->
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table table-bordered" style="font-size: 12px;">
+                            <table class="table custom_table table-bordered" style="font-size: 12px;">
                                 <tr>
                                     <th>Client Name</th>
                                     <td>{{ $lead_generation->client_name }}</td>
