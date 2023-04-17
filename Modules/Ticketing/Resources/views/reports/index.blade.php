@@ -132,7 +132,7 @@
                         <input type="button" onclick="resetForm()" value="Reset" class="btn btn-outline-warning btn-sm col-12">
                     </div>
                     <div class="col-md-6">
-                        <input type="submit" value="Search" class="btn btn-outline-primary btn-sm col-12">
+                        <input id="filterData" type="button" value="Search" class="btn btn-outline-primary btn-sm col-12">
                     </div>
                 </div>
             </div>
@@ -289,9 +289,15 @@
         $("#reportForm").append($('<input>', {
                     type: 'hidden',
                     name: 'reportType',
+                    id: 'reportType',
                     value: reportType
                 }));
         $("#reportForm").submit();
     }
+
+    $("#filterData").click(function(e) {
+        $('#reportType').val('');
+        $("#reportForm").submit();
+    });
 </script>
 @endsection
