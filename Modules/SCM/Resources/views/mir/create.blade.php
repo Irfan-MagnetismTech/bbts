@@ -23,7 +23,7 @@
 @endphp
 
 @section('breadcrumb-title')
-    {{-- {{ $form_heading }} MIR (Material Issuing Report) --}}
+    {{ $form_heading }} MIR (Material Issuing Report)
 @endsection
 
 @section('style')
@@ -198,9 +198,9 @@
                             @endforeach
                         </select>
                         <input type="hidden" name="code[{{ $key }}]" class="form-control code"
-                            autocomplete="off">
-                        <input type="hidden" name="type[{{ $key }}]" class="form-control type"
-                            autocomplete="off">
+                            autocomplete="off" value="{{ $material_data[$key]->code }}">
+                        <input type="hidden" name="type[{{ $key}}]" class="form-control type"
+                            autocomplete="off" value="{{ $material_data[$key]->type }}">
                     </td>
                     <td>
                         <select class="form-control brand select2" name="brand[]">
@@ -223,7 +223,7 @@
                         </select>
                     </td>
                     <td class="select2container">
-                        <select class="form-control serial_code select2" name="serial_code[${indx}][]"
+                        <select class="form-control serial_code select2" name="serial_code[{{ $key }}][]"
                             multiple="multiple">
                             @foreach ($serial_codes[$key] as $key1 => $value)
                                 <option value="{{ $value->serial_code }}" @selected(in_array($value->serial_code, json_decode($serial_code[$key])))>
@@ -627,6 +627,9 @@
 
         var indx = 0;
 
+        @if($form_method == 'PUT') 
+            indx = {{ count($material_issue->lines) }};
+        @endif
         function appendCalculationRow() {
             let row = `<tr>
                             <td>

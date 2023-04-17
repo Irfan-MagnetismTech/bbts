@@ -11,7 +11,7 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('material-receives.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
+    <a href="{{ route('material-issues.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
             class="fa fa-plus"></i></a>
 @endsection
 

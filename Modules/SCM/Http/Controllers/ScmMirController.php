@@ -125,11 +125,11 @@ class ScmMirController extends Controller
                 ->get()
                 ->unique('material_id');
 
-            $brands[] = StockLedger::query()->with('brand')->dropdownDataList('brand_id', $material_issue, $item);
+            $brands[] = StockLedger::query()->with('brand')->dropdownDataList('brand_id', $material_issue, false, false, $item);
 
-            $models[] = StockLedger::query()->dropdownDataList('model', $material_issue, $item);
+            $models[] = StockLedger::query()->dropdownDataList('model', $material_issue, true, false, $item);
 
-            $serial_codes[] = StockLedger::query()->dropdownDataList('serial_code', $material_issue, $item);
+            $serial_codes[] = StockLedger::query()->dropdownDataList('serial_code', $material_issue, true, true, $item);
 
             $from_branch_stock[] = StockLedger::query()->branchStock($material_issue->branch_id, $item);
 
@@ -141,23 +141,63 @@ class ScmMirController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * 
      * @param Request $request
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(ScmMirRequest $request, ScmMir $material_issue)
     {
-        //
+        try {
+            $mir_data = $request->all();
+
+            $mir_details = [];
+            foreach ($request->material_name as $key => $val) {
+                if (isset($request->serial_code[$key]) && count($request->serial_code[$key])) {
+                    foreach ($request->serial_code[$key] as $keyValue => $value) {
+                        $stock_ledgers[] = $this->getStockLedgerData($request, $key, $keyValue, $request->branch_id, true);
+                        $stock_ledgers[] = $this->getStockLedgerData($request, $key, $keyValue, $request->to_branch_id, false);
+                    };
+                } elseif (isset($request->material_name[$key])) {
+                    $stock_ledgers[] = $this->getStockLedgerData($request, $key, $key2 = null, $request->branch_id, true);
+                    $stock_ledgers[] = $this->getStockLedgerData($request, $key, $key2 = null, $request->to_branch_id, false);
+                }
+                $mir_details[] = $this->getMirDetails($request, $key);
+            };
+            DB::beginTransaction();
+            $material_issue->update($mir_data);
+            $material_issue->lines()->delete();
+            $material_issue->lines()->createMany($mir_details);
+            $material_issue->stockable()->delete();
+            $material_issue->stockable()->createMany($stock_ledgers);
+            DB::commit();
+
+            return redirect()->route('material-issues.index')->with('success', 'MIR Updated Successfully');
+        } catch (Exception $err) {
+            DB::rollBack();
+            return redirect()->route('material-issues.create')->with('error', $err->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
+     * 
+     * @param ScmMir $material_issue
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmMir $material_issue)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $material_issue->lines()->delete();
+            $material_issue->stockable()->delete();
+            $material_issue->delete();
+            DB::commit();
+            return redirect()->route('material-issues.index')->with('success', 'MIR Deleted Successfully');
+        } catch (Exception $err) {
+            DB::rollBack();
+            return redirect()->route('material-issues.index')->with('error', $err->getMessage());
+        }
     }
 
     /**
