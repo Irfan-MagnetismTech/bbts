@@ -148,4 +148,17 @@ class ReportController extends Controller
 
         return $request->all();
     }
+
+    public function downtimeDataTableExcelDownload(Request $request) {
+        $ticketIds = json_decode($request->supportTickets);
+
+        $supportTickets = SupportTicket::whereIn('id', $ticketIds)->get();
+        if($request->reportType == 'excel') {
+            return Excel::download(new DowntimeReportExport($supportTickets), 'Downtime Report '.date('d-m-Y').'.xlsx');
+        } else if ($request->reportType == 'pdf') {
+            
+        } else {
+            return redirect()->route('downtime-report-index')->withErrors('Invalid Report Request. Type Error.');
+        }
+    }
 }

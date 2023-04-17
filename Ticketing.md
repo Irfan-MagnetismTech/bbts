@@ -23,5 +23,3 @@ Ticket accpetance is kind of a movement actually. **Why?** Because it change the
 - Report Fitler and SupportTicket Lists Date filter... should we filter based on created_at or complain_time
 
 - Ticket Closing [Need to think about Feedback to Client and Feedback to BBTS as their may be reopen in future]
-
-- Fix excel download. When Download excel for once, then click search (submit) it downloads the excel. as reportType is still in append 

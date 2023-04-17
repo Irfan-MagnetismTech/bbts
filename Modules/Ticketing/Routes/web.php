@@ -67,14 +67,13 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::prefix('reports')->group(function() {
         Route::get('/', [ReportController::class, 'index'])->name('report-index');
         Route::post('/filter-data', [ReportController::class, 'index'])->name('search-report-data');
-
         Route::post('/download-datatable-filtered-report', [ReportController::class, 'excelDownload'])->name('filtered-report-download'); // Datatable Filtered Data
 
         Route::get('pdf', [ReportController::class, 'pdf'])->name('report-pdf'); // jsPDF
 
         Route::get('/downtime-report', [ReportController::class, 'downtimeReport'])->name('downtime-report-index');
-        Route::get('/filter-downtime-report', [ReportController::class, 'downtimeReport']); // just if user reload after clicking address bar. There is other purpose for this route but method is definitely being used in other routes.
         Route::post('/filter-downtime-report', [ReportController::class, 'downtimeReport'])->name('filter-downtime-report');
+        Route::post('/download-datatable-filtered-downtime-report', [ReportController::class, 'downtimeDataTableExcelDownload'])->name('filtered-downtime-report-download'); // Datatable Filtered Data
 
     });
 });

@@ -130,7 +130,7 @@
         <div class="row mt-2 mb-4">
             <div class="col-md-4">
                 <div class="form-group my-4 row">
-                    <form action="{{ route('filtered-report-download') }}" method="post" id="datatableFilteredReportDownload" class="col-12 row">
+                    <form action="{{ route('filtered-downtime-report-download') }}" method="post" id="datatableFilteredReportDownload" class="col-12 row">
                         @csrf
                         <div class="col-md-6">
                             <button type="submit" onclick="dttablereport('excel')" class="btn btn-outline-success btn-sm col-12">
