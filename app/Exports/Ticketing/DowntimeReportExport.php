@@ -57,7 +57,7 @@ class DowntimeReportExport implements FromCollection, WithHeadings, ShouldAutoSi
                 $ticketInfo?->clientDetail?->client?->name,
                 Carbon::parse($ticketInfo->complain_time)->format('d/m/Y'),
                 Carbon::parse($ticketInfo->complain_time)->format('H:i'),
-                $ticketInfo->feedback_to_bbts,
+                $ticketInfo->ticketFeedbacks()->orderBy('id', 'desc')?->first()?->feedback_to_bbts,
                 Carbon::parse($ticketInfo->closing_date)->format('d/m/Y'),
                 Carbon::parse($ticketInfo->closing_date)->format('H:i'),
                 $this->getDuration($ticketInfo->duration),

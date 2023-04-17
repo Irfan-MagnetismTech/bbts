@@ -65,12 +65,6 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::get('feedback-list', [ClientFeedbackController::class, 'feedbackList'])->name('feedback-list');
 
-
-    Route::get('/test', function() {
-        $supportTickets = \Modules\Ticketing\Entities\SupportTicket::findOrFail(13);
-
-        dd($supportTickets->ticketFeedbacks);
-    });
     // Ticketing Reports
     Route::prefix('reports')->group(function() {
         Route::get('/', [ReportController::class, 'index'])->name('report-index');
