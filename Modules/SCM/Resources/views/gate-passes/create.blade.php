@@ -119,9 +119,11 @@
             let row = `<tr>
                             <td>
                                 <input type="text" name="challan_no[]" class="form-control challan_no" autocomplete="off">
+                                <input type="hidden" name="challan_id[]" class="form-control challan_id" autocomplete="off">
                             </td>
                             <td>
                                 <input type="text" name="mir_no[]" class="form-control mir_no" autocomplete="off">
+                                <input type="hidden" name="mir_id[]" class="form-control mir_id" autocomplete="off">
                             </td>
                             <td>
                                 <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
@@ -145,6 +147,35 @@
                 }
                 $(this).closest('tr').remove();
             });
+            $(document).on('keyup','.challan_no',function(){
+                var event_this_challan = $(this).closest('tr');
+                let myObject = {
+                    challan_no: event_this_challan.find('.challan_no').val(),
+                }
+
+                jquaryUiAjax($(this), "{{ route('searchChallanNo') }}", uiList, myObject);
+
+                function uiList(item) {
+                    event_this_challan.find('.challan_id').val(item.id);
+                    return false;
+                }
+                
+            })
+
+            $(document).on('keyup','.mir_no',function(){
+                var event_this_mir = $(this).closest('tr');
+                let myObject = {
+                    mir_no: event_this_mir.find('.mir_no').val(),
+                }
+
+                jquaryUiAjax($(this), "{{ route('searchMirNo') }}", uiList, myObject);
+
+                function uiList(item) {
+                    event_this_mir.find('.mir_id').val(item.id);
+                    return false;
+                }
+                
+            })
 
         $('#date').datepicker({
             format: "dd-mm-yyyy",
@@ -152,5 +183,7 @@
             todayHighlight: true,
             showOtherMonths: true
         }).datepicker("setDate", new Date());
+
+
     </script>
 @endsection
