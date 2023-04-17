@@ -459,8 +459,15 @@ class SupportTicketController extends Controller
             
             $info['clients_feedback_url'] = Str::random(40);
 
-            DB::transaction(function() use($supportTicket, $info) {
+            DB::transaction(function() use($supportTicket, $info, $request) {
                 $supportTicket->update($info);
+                $supportTicket->ticketFeedbacks()->create([
+                    'feedbackable_type' => 'Modules\Ticketing\Entities\SupportTicket',
+                    'feedbackable_id' => $supportTicket->id,
+                    'user_id' => auth()->user()->id,
+                    'feedback_to_client' => $request->feedback_to_client,
+                    'feedback_to_bbts' => $request->feedback_to_bbts
+                ]);
                 $supportTicket->supportTicketLifeCycles()->create([
                     'status' => 'Closed',
                     'user_id' => auth()->user()->id,

@@ -10,6 +10,7 @@ use Modules\Ticketing\Http\Controllers\TicketSourceController;
 use Modules\Ticketing\Http\Controllers\SupportTicketController;
 use Modules\Ticketing\Http\Controllers\SupportComplainTypeController;
 use Modules\Ticketing\Http\Controllers\SupportQuickSolutionController;
+use Modules\Ticketing\Http\Controllers\TicketDashboardController;
 use Modules\Ticketing\Http\Controllers\TicketMovementController;
 
 /*
@@ -32,6 +33,8 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         'complain-sources' => TicketSourceController::class,
         'ticket-movements' => TicketMovementController::class,
     ]);
+
+    Route::get('/', [TicketDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('forwarded-tickets', [SupportTicketController::class, 'forwardedTickets'])->name('forwarded-tickets');
     Route::post('accept-forwarded-tickets', [TicketMovementController::class, 'acceptForwardedTickets'])->name('accept-forwarded-tickets');
@@ -63,6 +66,11 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::get('feedback-list', [ClientFeedbackController::class, 'feedbackList'])->name('feedback-list');
 
 
+    Route::get('/test', function() {
+        $supportTickets = \Modules\Ticketing\Entities\SupportTicket::findOrFail(13);
+
+        dd($supportTickets->ticketFeedbacks);
+    });
     // Ticketing Reports
     Route::prefix('reports')->group(function() {
         Route::get('/', [ReportController::class, 'index'])->name('report-index');

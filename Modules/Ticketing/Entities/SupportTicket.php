@@ -43,4 +43,12 @@ class SupportTicket extends Model
     public function closedBy() {
         return $this->belongsTo(User::class, 'closed_by');
     }
+
+    public function ticketFeedbacks() {
+        return $this->morphMany(TicketFeedback::class, 'feedbacks', 'feedbackable_type', 'feedbackable_id');
+    }
+
+    public function scopeClosed($query) {
+        return $query->where('status', 'Closed');
+    }
 }
