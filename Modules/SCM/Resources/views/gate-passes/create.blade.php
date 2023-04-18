@@ -41,6 +41,32 @@
                 </div>
             </div>
         @endif
+        <div class="col-md-12">
+            <div class="typeSection mt-2 mb-4">
+                <div class="form-check-inline">
+                    <label class="form-check-label" for="challan">
+                        <input type="radio" class="form-check-input radioButton" id="challan" name="type"
+                            value="challan" @checked(@$requisition->type == 'challan' || old('type') == 'challan')> Challan
+                    </label>
+                </div>
+
+                <div class="form-check-inline">
+                    <label class="form-check-label" for="mir">
+                        <input type="radio" class="form-check-input radioButton" id="mir" name="type"
+                            @checked(@$requisition->type == 'mir' || old('type') == 'mir') value="mir">
+                        MIR
+                    </label>
+                </div>
+
+                <div class="form-check-inline">
+                    <label class="form-check-label" for="pop">
+                        <input type="radio" class="form-check-input radioButton" id="pop" name="type"
+                            value="pop" @checked(@$requisition->type == 'pop' || old('type') == 'pop')>
+                        POP
+                    </label>
+                </div>
+            </div>
+        </div>
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <label class="input-group-addon" for="date">Date <span class="text-danger">*</span></label>
