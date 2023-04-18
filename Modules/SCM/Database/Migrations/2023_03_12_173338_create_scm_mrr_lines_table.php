@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('po_composit_key')->nullable();
             $table->bigInteger('brand_id')->nullable();
-            $table->bigInteger('model')->nullable();
+            $table->string('model')->nullable();
             $table->bigInteger('initial_mark')->nullable();
             $table->bigInteger('final_mark')->nullable();
             $table->bigInteger('warranty_period')->nullable();

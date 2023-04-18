@@ -252,11 +252,12 @@
                             </td>
         
                             <td>
-                                <select name="brand_id[{{$key}}]" class="form-control brand select2" autocomplete="off">
+                              
+                                <select name="brand[{{$key}}]" class="form-control brand select2" autocomplete="off">
                                     <option value="">Select Brand</option>
                                     @foreach ($brands[$key] as $key1 => $value)
-                                        <option value="{{ $value->brand->id }}" @selected($value->brand->id == $brand_id[$key])>
-                                            {{ $value->brand->name }}
+                                        <option value="{{ $value?->brand?->id ?? Null }}" @selected($value?->brand?->id == $brand_id[$key])>
+                                            {{ $value?->brand?->name ?? Null}}
                                         </option>
                                     @endforeach
                                 </select>
@@ -286,7 +287,7 @@
                                 <input name="unit[{{$key}}]" class="form-control unit" readonly autocomplete="off" type="text" value="{{ $unit[$key] }}">
                             </td> 
                             <td>
-                                <input name="avaiable_quantity[{{$key}}]" class="form-control avaiable_quantity" autocomplete="off" value="{{ $branch_stock[$key] }}">
+                                <input name="avaiable_quantity[{{$key}}]" class="form-control avaiable_quantity" autocomplete="off" value="{{ $branch_stock[$key] }}" readonly>
                             </td>
                             <td>
                                 <input name="quantity[{{$key}}]" class="form-control quantity" autocomplete="off" @if($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
@@ -602,13 +603,12 @@
                     let received_type = event_this.find('.received_type').val().toUpperCase();
                     let receiveable_id = event_this.find('.type_id').val();
                     let material_name = event_this.find('.material_name');
-
                     populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
                         scm_requisition_id: scm_requisition_id,
                         received_type: received_type,
                         receiveable_id: receiveable_id,
                         from_branch: $('#branch_id').val(),
-                        to_branch_id: $('#branch_id').val(),
+                        to_branch: $('#branch_id').val(),
                     }, material_name, 'value', 'label', {
                         'data-type': 'type',
                         'data-unit': 'unit',
@@ -760,11 +760,12 @@
                         model: (elemmtn).closest('tr').find('.model').val(),
                         received_type: (elemmtn).closest('tr').find('.received_type').val()
                             .toUpperCase(),
+                        receiveable_id : (elemmtn).closest('tr').find('.type_id').val(),
                         from_branch_id: $('#branch_id').val(),
                         to_branch_id: null
                     },
                     success: function(data) {
-                        (elemmtn).closest('tr').find('.avaiable_quantity').val(data
+                        (elemmtn).closest('tr').find('.available_quantity').val(data
                             .from_branch_balance);
                     }
                 })

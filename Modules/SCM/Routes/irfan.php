@@ -2,13 +2,17 @@
 
 
 use Illuminate\Support\Facades\Route;
-use Modules\SCM\Http\Controllers\ScmChallanController;
 use Modules\SCM\Http\Controllers\ScmMrrController;
 use Modules\SCM\Http\Controllers\ScmMurController;
+use Modules\SCM\Http\Controllers\ScmChallanController;
+use Modules\SCM\Http\Controllers\ScmGatePassController;
 
 Route::resource('material-receives', 'ScmMrrController')->parameters([
     'material-receives' => 'material_receive',
 ]);
+
+Route::get('search-challan-no', [ScmGatePassController::class, 'searchChallanNo'])->name('searchChallanNo');
+Route::get('search-mir-no', [ScmGatePassController::class, 'searchMirNo'])->name('searchMirNo');
 
 Route::resources([
     'challans'                 => ScmChallanController::class,
