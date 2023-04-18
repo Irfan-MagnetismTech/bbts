@@ -48,6 +48,18 @@ class SupportTicket extends Model
         return $this->morphMany(TicketFeedback::class, 'feedbacks', 'feedbackable_type', 'feedbackable_id');
     }
 
+    public function scopePending($query) {
+        return $query->where('status', 'Pending');
+    }
+
+    public function scopeAssigned($query) {
+        return $query->where('status', 'Accepted');
+    }
+
+    public function scopeProcessing($query) {
+        return $query->where('status', 'Processing');
+    }
+
     public function scopeClosed($query) {
         return $query->where('status', 'Closed');
     }
