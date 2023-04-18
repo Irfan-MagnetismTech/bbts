@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\ScmChallan;
 
 class ScmMurController extends Controller
 {
@@ -24,8 +25,10 @@ class ScmMurController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function create(Request $request)
     {
+        $request->challan_id;
+        $challanData = ScmChallan::FindOrFail($request->challan_id)->load('scmRequisition');
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
@@ -37,7 +40,7 @@ class ScmMurController extends Controller
             'stolen' => 'Stolen',
         ];
         $out_from = ['mrr', 'err', 'wcr'];
-        return view('scm::mur.create', compact('formType', 'brands', 'branchs', 'purposes', 'out_from'));
+        return view('scm::mur.create', compact('formType', 'brands', 'branchs', 'purposes', 'out_from', 'challanData'));
     }
 
     /**

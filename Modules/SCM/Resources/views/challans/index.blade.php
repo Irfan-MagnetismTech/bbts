@@ -67,6 +67,8 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
+                                    <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}" data-toggle="tooltip"
+                                        title="Edit" class="btn btn-outline-secondary">MUR</a>
                                 </nobr>
                             </div>
                         </td>

@@ -41,13 +41,6 @@
             @endif
             @csrf
             <div class="row">
-                <div class="form-group col-3">
-                    <label for="select2">MUR No</label>
-                    <input type="text" class="form-control" id="mur_no" aria-describedby="mur_no"
-                    name="mur_no" value="{{ old('mur_no') ?? (@$requisition->mur_no ?? '') }}"
-                    placeholder="MUR No">
-                </div>
-
                 <div class="form-group col-3 date">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
