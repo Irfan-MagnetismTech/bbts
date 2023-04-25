@@ -7,7 +7,7 @@
     @else
         Create
     @endif
-    Materil Utilization Report (MUR)
+    Material Utilization Report (MUR)
 @endsection
 
 @section('style')
@@ -44,14 +44,14 @@
                 <div class="form-group col-3 date">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
+                        value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date" readonly>
                 </div>
                 <div class="form-group col-3 mrs_no">
                     <label for="select2">MRS No</label>
                     <input class="form-control" id="mrs_no" name="mrs_no" aria-describedby="mrs_no"
-                        value="{{ old('mrs_no') ?? (@$requisition->mrs_no ?? '') }}" placeholder="Search a MRS No">
+                        value="{{ old('mrs_no') ?? (@$challanData->scmRequisition->mrs_no ?? '') }}" placeholder="Search a MRS No">
                         <input class="form-control" id="scm_requisition_id" name="scm_requisition_id" aria-describedby="scm_requisition_id"
-                        value="{{ old('scm_requisition_id') ?? (@$requisition->scm_requisition_id ?? '')}}" type="hidden">
+                        value="{{ old('scm_requisition_id') ?? (@$challanData->scm_requisition_id ?? '')}}" type="hidden">
                 </div>
                 <div class="form-group col-3">
                     <label for="select2">Purpose</label>
@@ -59,7 +59,7 @@
                         <option value="" selected>Select Purpose</option>
                         @foreach ($purposes as $key => $value)
                             <option value="{{ $value }}"
-                                {{ old('purpose', @$requisition->purpose) == $value ? 'selected' : '' }}>
+                                {{ old('purpose', @$challanData->purpose) == $value ? 'selected' : '' }}>
                                 {{ $value }}
                             </option>
                         @endforeach
@@ -72,10 +72,10 @@
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? (@$requisition->client->name ?? '') }}"
+                        name="client_name" value="{{ old('client_name') ?? (@$challanData->client->name ?? '') }}"
                         placeholder="Search...">
                     <input type="hidden" name="client_id" id="client_id"
-                        value="{{ old('client_id') ?? @$requisition?->client->id }}">
+                        value="{{ old('client_id') ?? @$challanData?->client->id }}">
                 </div>
                 <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>

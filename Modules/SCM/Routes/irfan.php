@@ -16,7 +16,7 @@ Route::get('search-mir-no', [ScmGatePassController::class, 'searchMirNo'])->name
 
 Route::resources([
     'challans'                 => ScmChallanController::class,
-    'material-utilizations'     => ScmMurController::class,
+    'material-utilizations'    => ScmMurController::class,
 ]);
 
 Route::get('search_po_with_date', [ScmMrrController::class, 'searchPoWithDate'])->name('search_po_with_date');

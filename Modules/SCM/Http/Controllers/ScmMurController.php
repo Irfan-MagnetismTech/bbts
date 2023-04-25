@@ -25,10 +25,10 @@ class ScmMurController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create(Request $request)
+    public function create()
     {
-        $request->challan_id;
-        $challanData = ScmChallan::FindOrFail($request->challan_id)->load('scmRequisition');
+        request()->challan_id;
+        $challanData = ScmChallan::find(request()->challan_id)->load('scmRequisition', 'client');
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();

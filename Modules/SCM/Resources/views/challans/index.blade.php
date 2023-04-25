@@ -67,8 +67,10 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
+                                    @if(in_array($challan->type, ['client', 'pop']))
                                     <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-secondary">MUR</a>
+                                    @endif
                                 </nobr>
                             </div>
                         </td>
