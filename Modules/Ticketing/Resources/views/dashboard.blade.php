@@ -60,77 +60,114 @@
 @endsection
 
 @section('content')
+<form action="" method="get" class="my-4">
     <div class="row">
-        <div class="col-12 col-md-3 my-3">
-            <div class="ap-po-details ap-po-details--2 p-25 rounded d-flex justify-content-between bg-info-08">
-                <div class="overview-content w-100">
-                    <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
-                        <div>
-                            <div class="ap-po-details__titlebar">
-                                <p>Open Ticket</p>
-                                <h5>{{ $supportTickets->where('status', '!=', 'Closed')->count() }}</h5>
+        
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="date_from" class="font-weight-bold">From Date:</label>
+                <input type="text" class="form-control date" id="date_from" name="date_from" aria-describedby="date_from"
+                    value="{{ old('date_from') ?? (request()?->date_from ?? null) }}" readonly>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="date_to" class="font-weight-bold">To Date:</label>
+                <input type="text" class="form-control date" id="date_to" name="date_to" aria-describedby="date_to"
+                    value="{{ old('date_to') ?? (request()?->date_to ?? null) }}" readonly>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group my-4 row">
+                <div class="col-md-6">
+                    <input type="button" onclick="resetForm()" value="Reset" class="btn btn-outline-warning btn-sm col-12">
+                </div>
+                <div class="col-md-6">
+                    <input type="submit" value="Search" class="btn btn-outline-primary btn-sm col-12">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+    <div class="row">
+        <div class="col-12 col-md-3 my-3 ">
+            <div class="card">
+                <div class="ap-po-details ap-po-details--2 p-25 rounded d-flex justify-content-between bg-info-08">
+                    <div class="overview-content w-100">
+                        <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
+                            <div>
+                                <div class="ap-po-details__titlebar">
+                                    <p>Open Ticket</p>
+                                    <h5>{{ $supportTickets->where('status', '!=', 'Closed')->count() }}</h5>
+                                </div>
                             </div>
-                        </div>
-                        <div class="ap-po-details__icon-area d-flex align-items-center">
-                            <div class="svg-icon bg-info color-white rounded-circle">
-                                <i class="fas fa-exclamation fa-2x p-2"></i>
+                            <div class="ap-po-details__icon-area d-flex align-items-center">
+                                <div class="svg-icon bg-info color-white rounded-circle">
+                                    <i class="fas fa-exclamation fa-2x p-2"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-3 my-3">
-            <div class="ap-po-details ap-po-details--2 p-25 rounded d-flex justify-content-between bg-secondary-08">
-                <div class="overview-content w-100">
-                    <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
-                        <div>
-                            <div class="ap-po-details__titlebar">
-                                <p>In Progress</p>
-                                <h5>{{ $supportTickets->where('status', 'Processing')->count() }}</h5>
+        <div class="col-12 col-md-3 my-3 ">
+            <div class="card">
+                <div class="ap-po-details ap-po-details--2 p-25 rounded d-flex justify-content-between bg-secondary-08">
+                    <div class="overview-content w-100">
+                        <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
+                            <div>
+                                <div class="ap-po-details__titlebar">
+                                    <p>In Progress</p>
+                                    <h5>{{ $supportTickets->where('status', 'Processing')->count() }}</h5>
+                                </div>
                             </div>
-                        </div>
-                        <div class="ap-po-details__icon-area d-flex align-items-center">
-                            <div class="svg-icon bg-secondary text-white rounded-circle">
-                                <i class="fas fa-tools fa-2x p-2"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-3 my-3">
-            <div class="ap-po-details ap-po-details--2 p-25 rounded d-flex justify-content-between bg-success-08">
-                <div class="overview-content w-100">
-                    <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
-                        <div>
-                            <div class="ap-po-details__titlebar">
-                                <p>Pending</p>
-                                <h5>{{ $supportTickets->where('status', 'Pending')->count() }}</h5>
-                            </div>
-                        </div>
-                        <div class="ap-po-details__icon-area d-flex align-items-center">
-                            <div class="svg-icon bg-success color-white rounded-circle">
-                                <i class="fas fa-hourglass-end fa-2x p-2"></i>
+                            <div class="ap-po-details__icon-area d-flex align-items-center">
+                                <div class="svg-icon bg-secondary text-white rounded-circle">
+                                    <i class="fas fa-tools fa-2x p-2"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-3 my-3">
-            <div class="ap-po-details ap-po-details--2 p-25 rounded d-flex justify-content-between bg-primary-08">
-                <div class="overview-content w-100">
-                    <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
-                        <div>
-                            <div class="ap-po-details__titlebar">
-                                <p>Closed Ticket</p>
-                                <h5>{{ $supportTickets->where('status', 'Closed')->count() }}</h5>
+        <div class="col-12 col-md-3 my-3 ">
+            <div class="card">
+                <div class="ap-po-details ap-po-details--2 p-25 rounded d-flex justify-content-between bg-success-08">
+                    <div class="overview-content w-100">
+                        <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
+                            <div>
+                                <div class="ap-po-details__titlebar">
+                                    <p>Pending</p>
+                                    <h5>{{ $supportTickets->where('status', 'Pending')->count() }}</h5>
+                                </div>
+                            </div>
+                            <div class="ap-po-details__icon-area d-flex align-items-center">
+                                <div class="svg-icon bg-success color-white rounded-circle">
+                                    <i class="fas fa-hourglass-end fa-2x p-2"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="ap-po-details__icon-area d-flex align-items-center">
-                            <div class="svg-icon bg-primary color-white rounded-circle">
-                                <i class="fas fa-vector-square fa-2x p-2"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-3 my-3 ">
+            <div class="card">
+                <div class="ap-po-details ap-po-details--2 p-25 rounded d-flex justify-content-between bg-primary-08">
+                    <div class="overview-content w-100">
+                        <div class=" ap-po-details-content d-flex flex-wrap justify-content-between">
+                            <div>
+                                <div class="ap-po-details__titlebar">
+                                    <p>Closed Ticket</p>
+                                    <h5>{{ $supportTickets->where('status', 'Closed')->count() }}</h5>
+                                </div>
+                            </div>
+                            <div class="ap-po-details__icon-area d-flex align-items-center">
+                                <div class="svg-icon bg-primary color-white rounded-circle">
+                                    <i class="fas fa-vector-square fa-2x p-2"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -341,5 +378,24 @@
         lineChartRender.render();
       
       
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $('.date').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true,
+            });
+    })
+
+    function resetForm() {
+        $('#date_from').val('');
+        $('#date_to').val('');
+        $('#ticket_no').val('').trigger( "change" );
+        // $('#ticket_no').prop('selectedIndex',0);
+    }
+
 </script>
 @endsection

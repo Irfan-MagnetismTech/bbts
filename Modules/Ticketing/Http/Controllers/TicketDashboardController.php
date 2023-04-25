@@ -18,8 +18,8 @@ class TicketDashboardController extends Controller
      */
     public function index(Request $request)
     {
-        $from = $request->date_from;
-        $to = $request->date_to;
+        $from = $request->date_from ?? Carbon::now()->startOfMonth()->startOfDay();
+        $to = $request->date_to ?? Carbon::now()->endOfMonth()->endOfDay();
 
         $supportTickets = SupportTicket::when(!empty($from), function($fromQuery) use($from) {
                                 $fromQuery->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
