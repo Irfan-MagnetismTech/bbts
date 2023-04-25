@@ -34,7 +34,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         'ticket-movements' => TicketMovementController::class,
     ]);
 
-    Route::get('/', [TicketDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [TicketDashboardController::class, 'index'])->name('ticketing-dashboard');
 
     Route::get('forwarded-tickets', [SupportTicketController::class, 'forwardedTickets'])->name('forwarded-tickets');
     Route::post('accept-forwarded-tickets', [TicketMovementController::class, 'acceptForwardedTickets'])->name('accept-forwarded-tickets');

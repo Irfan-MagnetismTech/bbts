@@ -44,7 +44,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    Downtime Reports
+    Ticketing Dashboard
 @endsection
 
 @section('style')
@@ -142,7 +142,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card px-3">
-                <h4 class="text-secondary text-center py-3">Ticket Activity</h4>
+                <h4 class="text-secondary text-center py-3">Ticket Activity <small>({{ \Carbon\Carbon::parse($from)->format('d-M-Y'); }} to {{ \Carbon\Carbon::parse($to)->format('d-M-Y'); }})</small></h4>
                 <div id="ticketActivity">
                 </div>
             </div>
@@ -209,62 +209,78 @@
 
         var lineChart = {
           series: [
-                {
-                    name: "Assigned",
-                    data: [
-                        @while ($start_date->lte($end_date))
-                            {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Accepted']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Accepted']) : 0}},
-                            @php
-                                $start_date->addDay();
-                            @endphp
-                        @endwhile
-                    ]
-                },
-                {
-                    name: "Processing",
-                    data: [
-                        @while ($start_date->lte($end_date))
-                            {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Processing']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Processing']) : 0}},
-                            @php
-                                $start_date->addDay();
-                            @endphp
-                        @endwhile
-                    ]
-                },
-                {
-                    name: "Pending",
-                    data: [
-                        @while ($start_date->lte($end_date))
-                            {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Pending']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Pending']) : 0}},
-                            @php
-                                $start_date->addDay();
-                            @endphp
-                        @endwhile
-                    ]
-                },
-                {
-                    name: "Closed",
-                    data: [
-                        @while ($start_date->lte($end_date))
-                            {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Closed']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Closed']) : 0}},
-                            @php
-                                $start_date->addDay();
-                            @endphp
-                        @endwhile
-                    ]
-                },
-                {
-                    name: "Opened",
-                    data: [
-                        @while ($start_date->lte($end_date))
-                            {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Pending']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Pending']) : 0}},
-                            @php
-                                $start_date->addDay();
-                            @endphp
-                        @endwhile
-                    ]
-                }
-            ],
+            {
+                name: "Assigned",
+                data: [
+                    @while ($start_date->lte($end_date))
+                        {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Accepted']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Accepted']) : 0}},
+                        @php
+                            $start_date->addDay();
+                        @endphp
+                    @endwhile
+                ]
+            },
+            @php
+                $start_date = \Carbon\Carbon::parse($from);
+                $end_date = \Carbon\Carbon::parse($to);
+            @endphp
+            {
+                name: "Processing",
+                data: [
+                    @while ($start_date->lte($end_date))
+                        {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Processing']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Processing']) : 0}},
+                        @php
+                            $start_date->addDay();
+                        @endphp
+                    @endwhile
+                ]
+            },
+            @php
+                $start_date = \Carbon\Carbon::parse($from);
+                $end_date = \Carbon\Carbon::parse($to);
+            @endphp
+            {
+                name: "Pending",
+                data: [
+                    @while ($start_date->lte($end_date))
+                        {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Pending']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Pending']) : 0}},
+                        @php
+                            $start_date->addDay();
+                        @endphp
+                    @endwhile
+                ]
+            },
+            @php
+                $start_date = \Carbon\Carbon::parse($from);
+                $end_date = \Carbon\Carbon::parse($to);
+            @endphp
+            {
+                name: "Closed",
+                data: [
+                    @while ($start_date->lte($end_date))
+                        {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Closed']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Closed']) : 0}},
+                        @php
+                            $start_date->addDay();
+                        @endphp
+                    @endwhile
+                ]
+            },
+            @php
+                $start_date = \Carbon\Carbon::parse($from);
+                $end_date = \Carbon\Carbon::parse($to);
+            @endphp
+            {
+                name: "Opened",
+                data: [
+                    @while ($start_date->lte($end_date))
+                        {{ isset($supportTicketLifeCycles[$start_date->toDateString()]['Pending']) ? count($supportTicketLifeCycles[$start_date->toDateString()]['Pending']) : 0}},
+                        @php
+                            $start_date->addDay();
+                        @endphp
+                    @endwhile
+                ]
+            }  
+          ],
           chart: {
             height: 350,
             type: 'line',
@@ -290,8 +306,12 @@
           },
           xaxis: {
             categories: [
+                @php
+                    $start_date = \Carbon\Carbon::parse($from);
+                    $end_date = \Carbon\Carbon::parse($to);
+                @endphp
                 @while ($start_date->lte($end_date))
-                    '{{ $start_date->toDateString() }}',
+                    '{{ \Carbon\Carbon::parse($start_date->toDateString())->format("d-M") }}',
                     @php
                         $start_date->addDay();
                     @endphp
@@ -300,8 +320,8 @@
           }
         };
 
-        var lineChart = new ApexCharts(document.querySelector("#ticketActivity"), lineChart);
-        lineChart.render();
+        var lineChartRender = new ApexCharts(document.querySelector("#ticketActivity"), lineChart);
+        lineChartRender.render();
       
       
 </script>
