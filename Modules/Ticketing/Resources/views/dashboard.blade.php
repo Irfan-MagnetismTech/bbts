@@ -149,10 +149,27 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-7">
+        <div class="col-md-7 card">
             <h4 class="text-info text-center py-3">Recent Activity</h4>
-            <div class="card px-3">
-                
+            <div class="p-3">
+                <div class="dt-responsive table-responsive">
+                    <table id="dataTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#SL</th>
+                                <th>Activity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($recentActivities as $activity)
+                                <tr>
+                                    <td>{{ $loop->index+1 }}</td>
+                                    <td class="text-left">Ticket: {{ $activity->ticket->ticket_no }} => {{ $activity->remarks }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="col-md-5">

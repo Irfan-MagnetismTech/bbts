@@ -40,12 +40,15 @@ class TicketDashboardController extends Controller
                             $toQuery->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
                         })
                         ->selectRaw('*, DATE(created_at) as date')
-                        ->get()
-                        ->groupBy('date')->map(function($item) {
+                        ->get();
+        $recentActivities = $supportTicketLifeCycles->reverse()->take(5);
+
+        $supportTicketLifeCycles = $supportTicketLifeCycles->groupBy('date')->map(function($item) {
                             return $item->groupBy('status');
                         });
+        
 
-        return view('ticketing::dashboard', compact('supportTickets', 'sources', 'from', 'to', 'supportTicketLifeCycles'));
+        return view('ticketing::dashboard', compact('supportTickets', 'sources', 'from', 'to', 'supportTicketLifeCycles', 'recentActivities'));
     }
 
     /**
