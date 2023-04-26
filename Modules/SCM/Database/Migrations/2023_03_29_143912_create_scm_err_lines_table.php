@@ -15,8 +15,7 @@ return new class extends Migration
     {
         Schema::create('scm_err_lines', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('scm_err_id');
-            $table->foreign('scm_err_id')->references('id')->on('scm_errs');
+            $table->foreignId('scm_err_id')->constrained('scm_errs', 'id')->cascadeOnDelete();
             $table->bigInteger('material_id')->nullable();
             $table->string('item_code')->nullable();
             $table->bigInteger('description')->nullable();
