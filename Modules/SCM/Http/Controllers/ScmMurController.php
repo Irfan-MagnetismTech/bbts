@@ -27,8 +27,11 @@ class ScmMurController extends Controller
      */
     public function create()
     {
-        request()->challan_id;
-        $challanData = ScmChallan::find(request()->challan_id)->load('scmRequisition', 'client');
+        $challanData = ScmChallan::find(request()->challan_id);
+        if ($challanData) {
+            $challanData->load('scmRequisition', 'client');
+        }
+
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();

@@ -304,12 +304,7 @@
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
                             <td>
-                                <select name="out_from[]" class="form-control received_type" autocomplete="off">
-                                    <option value="">Select Out From</option>
-                                    @foreach ($out_from as $value)
-                                        <option value="{{ $value }}">{{ strToUpper($value) }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
                             </td>
                             <td>
                                 <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
