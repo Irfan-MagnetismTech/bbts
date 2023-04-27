@@ -50,7 +50,7 @@ class SupplierController extends Controller
         try{
             $data = $request->all();
             Supplier::create($data);
-            return redirect()->route('suppliers.create')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('suppliers.index')->with('message', 'Data has been inserted successfully');
         }catch(QueryException $e){
             return redirect()->route('suppliers.create')->withInput()->withErrors($e->getMessage());
         }

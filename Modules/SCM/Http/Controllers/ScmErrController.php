@@ -5,16 +5,18 @@ namespace Modules\SCM\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Termwind\Components\Dd;
 
 class ScmErrController extends Controller
 {
+    protected $laravel;
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('scm::index');
+        return view('scm::errs.index');
     }
 
     /**
@@ -23,7 +25,8 @@ class ScmErrController extends Controller
      */
     public function create()
     {
-        return view('scm::create');
+        dd(app()->version());
+        return view('scm::errs.create');
     }
 
     /**
