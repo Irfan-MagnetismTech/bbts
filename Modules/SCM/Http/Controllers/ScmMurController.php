@@ -96,4 +96,22 @@ class ScmMurController extends Controller
     {
         //
     }
+
+    public function searchChallanNo()
+    {
+        $data = ScmChallan::query()
+            ->where('challan_no', 'like', '%' . request()->search . '%')
+            ->get()
+            ->take(10)
+            ->map(fn ($item) => [
+                'value' => $item->challan_no,
+                'label' => $item->challan_no,
+                'id'    => $item->id,
+                'date'    => $item->date,
+            ])
+            ->values()
+            ->all();
+
+        return response()->json($data);
+    }
 }

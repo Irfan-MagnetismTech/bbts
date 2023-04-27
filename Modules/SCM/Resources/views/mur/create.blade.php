@@ -506,6 +506,23 @@
                 }
             })
 
+
+            $(document).on('keyup', '#challan_no', function() {
+                var event_this = $(this).closest('tr');
+                let myObject = {
+                    type: null
+                }
+                jquaryUiAjax('#challan_no', "{{ route('searchChallanNo') }}", uiList, myObject);
+
+                function uiList(item) {
+                    console.log(item)
+                    $('#challan_no').val(item.label);
+                    $('#challan_id').val(item.id);
+                    $('#challan_date').val(item.date);
+                    return false;
+                }
+            })
+
             function getMaterials(event_this) {
                 let scm_requisition_id = $('#scm_requisition_id').val();
 

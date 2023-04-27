@@ -23,3 +23,4 @@ Route::get('search_po_with_date', [ScmMrrController::class, 'searchPoWithDate'])
 Route::get('get_materials_for_po/{po_no}', [ScmMrrController::class, 'getMaterialForPo'])->name('get_materials_for_po');
 Route::get('get_unit/{material_id}', [ScmMrrController::class, 'getUnit'])->name('get_unit');
 Route::get('get_pocomposite_with_price/{po_id}/{material_id}/{brand_id}', [ScmMrrController::class, 'getPocompositeWithPrice'])->name('get_pocomposite_with_price');
+Route::get('search-challan-no', [ScmMurController::class, 'searchChallanNo'])->name('searchChallanNo');
