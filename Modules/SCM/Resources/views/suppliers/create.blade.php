@@ -62,7 +62,7 @@
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="address">Supplier Name <span class="text-danger">*</span></label>
+                        <label class="input-group-addon" for="address">Supplier Address <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="address" name="address"
                             placeholder="Enter supplier address" value="{{ old('address') ?? ($supplier->address ?? '') }}" required>
                     </div>
