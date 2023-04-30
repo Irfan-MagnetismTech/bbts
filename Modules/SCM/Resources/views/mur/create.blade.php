@@ -7,7 +7,7 @@
     @else
         Create
     @endif
-    Materil Utilization Report (MUR)
+    Material Utilization Report (MUR)
 @endsection
 
 @section('style')
@@ -41,24 +41,17 @@
             @endif
             @csrf
             <div class="row">
-                <div class="form-group col-3">
-                    <label for="select2">MUR No</label>
-                    <input type="text" class="form-control" id="mur_no" aria-describedby="mur_no"
-                    name="mur_no" value="{{ old('mur_no') ?? (@$requisition->mur_no ?? '') }}"
-                    placeholder="MUR No">
-                </div>
-
                 <div class="form-group col-3 date">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
+                        value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date" readonly>
                 </div>
                 <div class="form-group col-3 mrs_no">
                     <label for="select2">MRS No</label>
                     <input class="form-control" id="mrs_no" name="mrs_no" aria-describedby="mrs_no"
-                        value="{{ old('mrs_no') ?? (@$requisition->mrs_no ?? '') }}" placeholder="Search a MRS No">
+                        value="{{ old('mrs_no') ?? (@$challanData->scmRequisition->mrs_no ?? '') }}" placeholder="Search a MRS No">
                         <input class="form-control" id="scm_requisition_id" name="scm_requisition_id" aria-describedby="scm_requisition_id"
-                        value="{{ old('scm_requisition_id') ?? (@$requisition->scm_requisition_id ?? '')}}" type="hidden">
+                        value="{{ old('scm_requisition_id') ?? (@$challanData->scm_requisition_id ?? '')}}" type="hidden">
                 </div>
                 <div class="form-group col-3">
                     <label for="select2">Purpose</label>
@@ -66,7 +59,7 @@
                         <option value="" selected>Select Purpose</option>
                         @foreach ($purposes as $key => $value)
                             <option value="{{ $value }}"
-                                {{ old('purpose', @$requisition->purpose) == $value ? 'selected' : '' }}>
+                                {{ old('purpose', @$challanData->purpose) == $value ? 'selected' : '' }}>
                                 {{ $value }}
                             </option>
                         @endforeach
@@ -79,10 +72,10 @@
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? (@$requisition->client->name ?? '') }}"
+                        name="client_name" value="{{ old('client_name') ?? (@$challanData->client->name ?? '') }}"
                         placeholder="Search...">
                     <input type="hidden" name="client_id" id="client_id"
-                        value="{{ old('client_id') ?? @$requisition?->client->id }}">
+                        value="{{ old('client_id') ?? @$challanData?->client->id }}">
                 </div>
                 <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>
@@ -311,12 +304,7 @@
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
                             <td>
-                                <select name="out_from[]" class="form-control received_type" autocomplete="off">
-                                    <option value="">Select Out From</option>
-                                    @foreach ($out_from as $value)
-                                        <option value="{{ $value }}">{{ strToUpper($value) }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
                             </td>
                             <td>
                                 <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
@@ -514,6 +502,23 @@
                     event_this.find('.type_no').val(item.label);
                     event_this.find('.type_id').val(item.id);
                     getMaterials(event_this)
+                    return false;
+                }
+            })
+
+
+            $(document).on('keyup', '#challan_no', function() {
+                var event_this = $(this).closest('tr');
+                let myObject = {
+                    type: null
+                }
+                jquaryUiAjax('#challan_no', "{{ route('searchChallanNo') }}", uiList, myObject);
+
+                function uiList(item) {
+                    console.log(item)
+                    $('#challan_no').val(item.label);
+                    $('#challan_id').val(item.id);
+                    $('#challan_date').val(item.date);
                     return false;
                 }
             })

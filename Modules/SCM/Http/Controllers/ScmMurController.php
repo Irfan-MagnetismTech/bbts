@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
+use Modules\SCM\Entities\ScmChallan;
+use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
 
@@ -26,6 +28,11 @@ class ScmMurController extends Controller
      */
     public function create()
     {
+        $challanData = ScmChallan::find(request()->challan_id);
+        if ($challanData) {
+            $challanData->load('scmRequisition', 'client');
+        }
+
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
@@ -36,8 +43,9 @@ class ScmMurController extends Controller
             'own_use' => 'Own Use',
             'stolen' => 'Stolen',
         ];
-        $out_from = ['mrr', 'err', 'wcr'];
-        return view('scm::mur.create', compact('formType', 'brands', 'branchs', 'purposes', 'out_from'));
+        $client_links = ClientDetail::where('client_id', $challanData->client_id)->get();
+        dd();
+        return view('scm::mur.create', compact('formType', 'brands', 'branchs', 'purposes', 'challanData'));
     }
 
     /**
@@ -89,5 +97,23 @@ class ScmMurController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function searchChallanNo()
+    {
+        $data = ScmChallan::query()
+            ->where('challan_no', 'like', '%' . request()->search . '%')
+            ->get()
+            ->take(10)
+            ->map(fn ($item) => [
+                'value'     => $item->challan_no,
+                'label'     => $item->challan_no,
+                'id'        => $item->id,
+                'date'      => $item->date,
+            ])
+            ->values()
+            ->all();
+
+        return response()->json($data);
     }
 }

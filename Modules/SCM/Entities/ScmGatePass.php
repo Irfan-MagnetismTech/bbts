@@ -25,4 +25,5 @@ class ScmGatePass extends Model
     {
         return $this->hasMany(ScmGatePassLine::class);
     }
+   
 }

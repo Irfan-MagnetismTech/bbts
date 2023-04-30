@@ -12,8 +12,8 @@
     $scm_requisition_no = old('mrs_no', !empty($challan) ? $challan->scmRequisition->mrs_no : null);
     $purpose = old('purpose', !empty($challan) ? $challan->purpose : null);
     $client_id = old('client_id', !empty($challan) ? $challan->client_id : null);
+    $fr_composite_key = old('fr_composite_key', !empty($challan) ? $challan->fr_composite_key : null);
     $client_name = old('client_name', !empty($challan) ? $challan?->client?->name : null);
-    $client_fr_composite_key = old('client_name', !empty($challan) ? $challan?->client_fr_composite_key : null);
     $client_no = old('client_no', !empty($challan) ? $challan?->client?->client_no : null);
     $client_address = old('client_address', !empty($challan) ? $challan?->client?->address : null);
     $branch_id = old('branch_id', !empty($challan) ? $challan->branch_id : null);
@@ -153,11 +153,14 @@
                         @endif
                         @if ($form_method == 'PUT')
                             @foreach ($client_links as $clientInfo)
-                                <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$client_fr_composite_key)>
+                                <option value="{{ $clientInfo->link_name }}" data-fr="{{ $clientInfo->fr_composite_key }}" @selected($clientInfo->fr_composite_key == @$fr_composite_key)>
                                     {{ $clientInfo->link_name }}</option>
                             @endforeach
                         @endif
                     </select>
+
+                    <input type="hidden" name="fr_composite_key" id="fr_composite_key"
+                        value="{{ old('fr_composite_key') ?? @$fr_composite_key }}">
                 </div>
 
                 <div class="form-group col-3 client_no">
@@ -439,7 +442,7 @@
 
                     ui.item.details.forEach(function(element) {
                         link_options +=
-                            `<option value="${element.link_name}">${element.link_name}</option>`;
+                            `<option value="${element.link_name}" data-fr="${element.fr_composite_key}">${element.link_name}</option>`;
                     });
                     client_details = ui.item.details;
                     $('#client_links').html(link_options);
@@ -450,7 +453,9 @@
         });
 
        
-
+            $('#client_links').on('change',function(){
+                $('#fr_composite_key').val($(this).find(':selected').data('fr'));
+            })
        
 
         $(function() {

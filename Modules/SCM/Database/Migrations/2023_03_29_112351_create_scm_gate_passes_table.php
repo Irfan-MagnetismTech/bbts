@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('gate_pass_no');
             $table->date('date')->nullable();
+            $table->string('type')->nullable();
             $table->string('carrier')->nullable();
             $table->timestamps();
         });
