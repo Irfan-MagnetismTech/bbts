@@ -25,7 +25,6 @@ class ScmErrController extends Controller
      */
     public function create()
     {
-        dd(app()->version());
         return view('scm::errs.create');
     }
 
