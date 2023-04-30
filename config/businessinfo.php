@@ -52,4 +52,12 @@ return [
         'own_use' => 'Own Use',
         'stolen' => 'Stolen',
     ],
+
+    //err return for
+    'errReturnFor' => [
+        'Inactive Client' => 'Inactive Client',
+        'BBTS' => 'BBTS',
+        'Shifting Client' => 'Shifting Client',
+        'Method Change' => 'Method Change',
+    ],
 ];

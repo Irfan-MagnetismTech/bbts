@@ -1,29 +1,31 @@
 @extends('layouts.backend-layout')
-@section('title', 'ERR')
-
+@section('title', 'Equipment Restore Report')
 @php
-    $is_old = old('supplier_name') ? true : false;
-    $form_heading = !empty($materialReceive) ? 'Update' : 'Add';
-    $form_url = !empty($materialReceive) ? route('material-receives.update', $materialReceive->id) : route('material-receives.store');
-    $form_method = !empty($materialReceive) ? 'PUT' : 'POST';
-
-    $branch_id = old('branch_id', !empty($materialReceive) ? $materialReceive->branch_id : null);
-    $material_list = old('branch_id') ? old('select_array') : (!empty($materialReceive) ? $material_list : []);
-    $applied_date = old('applied_date', !empty($materialReceive) ? $materialReceive->date : null);
-    $po_no = old('po_no', !empty($materialReceive) ? $materialReceive->purchaseOrder->po_no : null);
-    $po_id = old('purchase_order_id', !empty($materialReceive) ? $materialReceive->purchase_order_id : null);
-    $po_date = old('po_date', !empty($materialReceive) ? $materialReceive->purchaseOrder->date : null);
-    $supplier_name = old('supplier_name', !empty($materialReceive) ? $materialReceive->supplier->name : null);
-    $supplier_id = old('supplier_id', !empty($materialReceive) ? $materialReceive->supplier_id : null);
-    $challan_no = old('challan_no', !empty($materialReceive) ? $materialReceive->challan_no : null);
-    $challan_date = old('challan_date', !empty($materialReceive) ? $materialReceive->challan_date : null);
-
-
-
+    $is_old = old('type') ? true : false;
+    $form_heading = !empty($challan) ? 'Update' : 'Add';
+    $form_url = !empty($challan) ? route('errs.update', $challan->id) : route('errs.store');
+    $form_method = !empty($challan) ? 'PUT' : 'POST';
+    
+    $date = old('date', !empty($challan) ? $challan->date : null);
+    $type = old('date', !empty($challan) ? $challan->type : null);
+    $scm_requisition_id = old('scm_requisition_id', !empty($challan) ? $challan->scm_requisition_id : null);
+    $purpose = old('purpose', !empty($challan) ? $challan->purpose : null);
+    $client_id = old('client_id', !empty($challan) ? $challan->client_id : null);
+    $fr_composite_key = old('fr_composite_key', !empty($challan) ? $challan->fr_composite_key : null);
+    $fr_id = old('fr_composite_key', !empty($challan) ? $challan->clientDetails?->fr_id : null);
+    $client_name = old('client_name', !empty($challan) ? $challan?->client?->name : null);
+    $client_no = old('client_no', !empty($challan) ? $challan?->client?->client_no : null);
+    $client_address = old('client_address', !empty($challan) ? $challan?->client?->address : null);
+    $branch_id = old('branch_id', !empty($challan) ? $challan->branch_id : null);
+    $branch_name = old('branch_id', !empty($challan) ? $challan?->branch?->name : null);
+    $pop_id = old('pop_id', !empty($challan) ? $challan->pop_id : null);
+    $pop_name = old('pop_name', !empty($challan) ? $challan?->pop?->name : null);
+    $pop_address = old('pop_address', !empty($challan) ? $challan?->pop?->address : null);
+    
 @endphp
 
 @section('breadcrumb-title')
-    {{ $form_heading }} MRR (ERR)
+{{ $form_heading }} Equipment Restore Report (ERR)
 @endsection
 
 @section('style')
@@ -33,14 +35,21 @@
         }
 
         .input-group-info .input-group-addon {
-            background-color: #04748a!important;
-                }
-        
+            /*background-color: #04748a!important;*/
+        }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice span {
+    color: #b10000;
+}
+
+        .select2_container{
+            max-width: 200px;
+            white-space: inherit;
+        }
+
     </style>
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('material-receives.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('errs.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -48,241 +57,366 @@
     <span class="text-danger">*</span> Marked are required.
 @endsection
 
-@section('content-grid', null)
+@section('content-grid', 'col-12')
 
 @section('content')
-        
-    {!! Form::open([
-        'url' => $form_url,
-        'method' => $form_method,
-        'encType' => 'multipart/form-data',
-        'class' => 'custom-form',
-    ]) !!}
-    <div class="row">
-        <div class="form-group col-3 warehouse_name">
-            <label for="select2">Warehouse Name</label>
-            <select class="form-control select2" id="branch_id" name="branch_id">
-                <option value="0" selected>Select Branch</option>
-                @foreach ($branches as $option)
-                    <option value="{{ $option->id }}"
-                        {{ $branch_id == $option->id ? 'selected' : '' }}>
-                        {{ $option->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-       
-        @if (!empty($materialReceive->id))
-        <div class="form-group col-3">
-             <label for="mrr_no">MRR No</label>
-            <input type="text" class="form-control" id="mrr_no" name="mrr_no" aria-describedby="mrr_no"
-                    value="{{ old('mrr_no') ?? ($materialReceive->mrr_no ?? '') }}" readonly>
-        </div>
-        <div class="form-group col-6">
-        </div>
-        @else
-        <div class="form-group col-8">
-        </div>
-        @endif
-       
-        <div class="form-group col-3">
-            <label for="applied_date">Applied Date:</label>
-            <input class="form-control applied_date" name="date" aria-describedby="applied_date"
-                value="{{ $applied_date }}" readonly placeholder="Select a Date" id="applied_date">
-        </div>
-       
-        <div class="form-group col-3">
-            <label for="po_no">PO No:</label>
-            <input type="text" class="form-control" id="po_no" aria-describedby="po_no"
-                name="po_no"
-                value="{{ $po_no }}" autocomplete="off">
-                <input type="hidden" class="form-control" id="purchase_order_id" name="purchase_order_id" aria-describedby="purchase_order_id"
-                value="{{ $po_id }}">
-        </div>
-       
-        <div class="form-group col-3">
-            <label for="date">PO Date:</label>
-            <input class="form-control po_date" name="po_date" aria-describedby="po_date" id="po_date"
-                value="{{ $po_date }}" readonly placeholder="PO Date">
-        </div>
-       
-        <div class="form-group col-3 supplier_name">
-            <label for="supplier_name">Supplier Name:</label>
-            <input type="text" class="form-control supplier_name" aria-describedby="supplier_name" id="supplier_name"
-                name="supplier_name" value="{{ $supplier_name }}"
-                placeholder="Supplier Name" readonly>
-            <input type="hidden" name="supplier_id" id="supplier_id"
-                value="{{ $supplier_id }}">
-        </div>
-        
-        <div class="form-group col-3 challan_no">
-            <label for="challan_no">Chalan No:</label>
-            <input type="text" class="form-control" id="challan_no" aria-describedby="challan_no" name="challan_no"
-                value="{{ $challan_no }}" placeholder="Type Chalan No">
-        </div>
-
-        <div class="form-group col-3">
-            <label for="date">Chalan Date:</label>
-            <input class="form-control challan_date" name="challan_date" aria-describedby="challan_date" id="challan_date"
-                value="{{ $challan_date }}" placeholder="Select a Date" readonly>
-        </div>
-    </div>
-   
-    <table class="table table-bordered table-responsive" id="material_requisition">
-        <thead>
-            <tr>
-                <th>Material Name</th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Description</th>
-                <th>Serial/Drum Code <br/> No</th>
-                <th>Initial Mark</th>
-                <th>Final Mark</th>
-                <th>Warranty Period</th>
-                <th>Unit</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Amount</th>
-                <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
-            </tr>
-        </thead>
-        <tbody>
-        @php
-            $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
-            $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
-            $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
-            $item_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
-            $material_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
-            $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
-            $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
-            $description = old('description', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('description') : []);
-            $sl_code = old('sl_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->map(function ($item) {
-                return implode(',', $item->scmMrrSerialCodeLines->pluck('serial_or_drum_key')->toArray());
-            }) : '');
-          
-            $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
-            $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
-            $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
-            $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
-            $po_composit_key = old('po_composit_key', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('po_composit_key') : []);
-           
-            $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
-            $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('unit_price') : []);
-            $amount = old('amount', !empty($materialReceive) ? collect($quantity)->map(function ($value, $key) use ($unit_price) {
-                    return $value * $unit_price[$key];
-                })->toArray() : []);
-        @endphp 
-            @foreach ($mrr_lines as $key => $requisitionDetail)
-                @php
-                    if($item_type[$key] == "Drum"){
-                        $max_tag = 1;
-                    }else{
-                        $max_tag = null;
-                    }
-                @endphp
-                <tr>
-                    <td class="form-group">
-                        <select class="form-control material_name" name="material_id[]">
-                            <option value="" readonly selected>Select Material</option>
-                            @foreach ($material_list as $key1 => $value )
-                            <option value="{{$value->material->id}}" data-unit="{{$value->material->unit}}" data-type="{{$value->material->type}}" data-code="{{$value->material->code}}" readonly @selected($material_id[$key] == $value->material->id)>{{$value->material->materialNameWithCode}}</option>
-                            @endforeach
-                        </select>
-                        <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="{{ $item_code[$key]  }}"> 
-                        <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off" value="{{ $material_type[$key]  }}"> 
-                        <input type="hidden" name="po_composit_key[]" class="form-control po_composit_key" autocomplete="off" value="{{ $po_composit_key[$key]  }}"> 
-                    </td>
-
-                    <td>
-                        <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                            <option value="">Select Brand</option>
-                            @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                    {{ $brand->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-
-                    <td>
-                        <input type="text" name="model[]" class="form-control model" autocomplete="off" value="{{ $model[$key]  }}">
-                    </td>
-                    <td>
-                        <input type="text" name="description[]" class="form-control description" autocomplete="off" value="{{ $description[$key]  }}">
-                    </td>
-                    <td>
-                        <div class="tags_add_multiple">
-                            <input class="" type="text" name="sl_code[]" value="{{$sl_code[$key]}}" data-role="tagsinput" data-max-tags="{{ $max_tag }}">
+        {!! Form::open([
+            'url' => $form_url,
+            'method' => $form_method,
+            'encType' => 'multipart/form-data',
+            'class' => 'custom-form',
+        ]) !!}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="
+                     mt-2 mb-4">
+                        <div class="form-check-inline">
+                            <label class="form-check-label" for="client">
+                                <input type="radio" class="form-check-input radioButton" id="client" name="type"
+                                    value="client" @checked(@$type == 'client' || ($form_method == 'POST' && !old()))> Client
+                            </label>
                         </div>
-                    </td>
-
-                    <td>
-                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" value="{{ $initial_mark[$key]  }}">
-                    </td>
-                    <td>
-                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" value="{{ $final_mark[$key]  }}">
-                    </td>
-                    <td>
-                        <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="{{ $warranty_period[$key]  }}">
-                    </td>
-                    <td>
-                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off" value="{{ $unit[$key]  }}" readonly>
-                    </td>
-                    <td>
-                        <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ $quantity[$key] }}" >
-                    </td>
-                    <td>
-                        <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10" value="{{ $unit_price[$key] }}">
-                    </td>
-                    <td>
-                        <input name="amount[]" class="form-control amount" autocomplete="off" readonly value="{{ $amount[$key] }}">
-                    </td>
-                    <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
-                    </td>
-                </tr>
-            @endforeach
-           
-            </tbody>
-        <tfoot>
-        <tr>
-                <td colspan="11" class="text-right">Total Amount</td>
-                <td>
-                    <input type="text" name="total_amount" class="form-control total_amount" autocomplete="off"
-                        value="{{ old('total_amount', !empty($materialReceive) ? $materialReceive->total_amount : 0) }}"
-                        readonly>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-    <div class="row">
-        <div class="offset-md-4 col-md-4 mt-2">
-            <div class="input-group input-group-sm ">
-                <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+                        <div class="form-check-inline">
+                            <label class="form-check-label" for="internal">
+                                <input type="radio" class="form-check-input radioButton" id="internal" name="type"
+                                    value="internal" @checked(@$type == 'internal')>
+                                internal
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="form-group col-3 date">
+                    <label for="date">Applied Date:</label>
+                    <input class="form-control" id="date" name="date" aria-describedby="date"
+                        value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
+                </div>
+                <div class="form-group col-3">
+                    <label for="select2">Purpose</label>
+                    <select class="form-control select2" id="purpose" name="purpose">
+                        <option value="" selected>Select Purpose</option>
+                        @foreach (config('businessinfo.errReturnFor') as $key => $value)
+                            <option value="{{ $value }}"
+                                {{ old('purpose', @$purpose) == $value ? 'selected' : '' }}>
+                                {{ $value }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group col-3 branch_name">
+                    <label for="select2">From Branch</label>
+                    <select class="form-control select2" id="branch_id" name="branch_id">
+                        <option value="" selected>Select Branch</option>
+                        @foreach ($branchs as $option)
+                            <option value="{{ $option->id }}"
+                                {{ $branch_id == $option->id ? 'selected' : '' }}>
+                                {{ $option->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+           
+            <div class="row">
+                
+
+                <div class="form-group col-3 client_name">
+                    <label for="client_name">Client Name:</label>
+                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                        name="client_name" value="{{ old('client_name') ?? (@$client_name ?? '') }}"
+                        placeholder="Search...">
+                    <input type="hidden" name="client_id" id="client_id"
+                        value="{{ old('client_id') ?? @$client_id }}">
+                </div>
+                <div class="form-group col-3 client_links">
+                    <label for="select2">Client Links</label>
+                    <select class="form-control select2" id="client_links" name="client_links">
+                        <option value="" readonly selected>Select Client Link</option>
+                        @if ($form_method == 'POST')
+                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
+                        @endif
+                        @if ($form_method == 'PUT')
+                            @foreach ($client_links as $clientInfo)
+                                <option value="{{ $clientInfo->link_name }}" data-fr-composite="{{ $clientInfo->fr_composite_key }}" data-fr-id="{{ $clientInfo->fr_id }}"  @selected($clientInfo->fr_composite_key == @$fr_composite_key)>
+                                    {{ $clientInfo->link_name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+
+                    <input type="hidden" name="fr_composite_key" id="fr_composite_key"
+                        value="{{ old('fr_composite_key') ?? @$fr_composite_key }}">
+                </div>
+
+                <div class="form-group col-3 fr_id">
+                    <label for="fr_id">Fr ID:</label>
+                    <input type="text" class="form-control" id="fr_id" aria-describedby="fr_id" name="fr_id"
+                        readonly value="{{ old('fr_id') ?? (@$fr_id ?? '') }}">
+
+                </div>
+                <div class="form-group col-3 client_no">
+                    <label for="client_no">Client No:</label>
+                    <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
+                        readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
+
+                </div>
+
+                <div class="form-group col-3 client_address">
+                    <label for="client_address">Client Address:</label>
+                    <input type="text" class="form-control" id="client_address" name="client_address" aria-describedby="client_address"
+                        readonly value="{{ old('client_address') ?? (@$client_address ?? '') }}">
+                </div>
+                
+                <div class="form-group col-3 pop_name" style="display: none">
+                    <label for="select2">Pop Name</label>
+                    <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
+                    value="{{ old('pop_name') ?? (@$pop_name ?? '') }}" placeholder="Search a POP Name">
+                    <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
+                    value="{{ old('pop_id') ?? (@$pop_id ?? '') }}">
+                </div>
+                <div class="form-group col-3 pop_address" style="display: none">
+                    <label for="select2">Pop Address</label>
+                    <input class="form-control" id="pop_address" name="pop_address" aria-describedby="pop_address"
+                    value="{{ old('pop_address') ?? (@$pop_address ?? '') }}" readonly placeholder="Select a POP Address">
+                </div>
+            </div>
+
+            <table class="table table-bordered" id="challan">
+                <thead>
+                    <tr>
+                        <th>Material Name</th>
+                        <th>Description</th>
+                        <th>Provided Qty</th>
+                        <th>Item Code</th>
+                        <th>Unit</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Serial/Drum Code <br /> No</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Remarks</th>
+                        <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
+                        $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
+                        $received_no = old('type_no', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
+                        $receiveable_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('receiveable_id') : []);
+                        $type_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('type_id') : []);
+                        $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
+                        $material_type = old('material_type', !empty($challan) ? $challan->scmChallanLines->pluck('material.type') : []);
+                        $brand_id = old('brand_id', !empty($challan) ? $challan->scmChallanLines->pluck('brand_id') : []);
+                        $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
+                        $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
+                        $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
+                       
+                        $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
+                        $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
+                        $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
+                       
+                    @endphp
+                    @foreach ($Challan_Lines as $key => $Challan_Line)
+               
+                        <tr>
+                            <td>
+                                <select name="received_type[{{$key}}]" class="form-control received_type" autocomplete="off">
+                                    <option value="">Select Out From</option>
+                                    @foreach (config('businessinfo.receivedTypes') as $typeKey => $typevalue)
+                                        <option value="{{ $typevalue }}" @selected(($received_type[$key] == $typevalue))>{{ strToUpper($typevalue) }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="type_no[{{$key}}]" class="form-control type_no" autocomplete="off" value="{{ $received_no[$key] }}">
+                                <input type="hidden" name="type_id[{{$key}}]" class="form-control type_id" autocomplete="off" value="{{ $receiveable_id[$key] }}">
+                            </td>
+                            <td class="form-group">
+                                <select class="form-control material_name select2" name="material_name[{{$key}}]">
+                                    <option value="" readonly selected>Select Material</option>
+                                    @foreach ($materials[$key] as $key1 => $value)
+                                        <option value="{{ $value->material->id }}" data-type="{{$value->material->type}}" data-unit="{{$value->material->unit}}" data-code="{{$value->material->code}}" readonly @selected($material_id[$key] == $value->material->id)>
+                                            {{ $value->material->name }}</option>
+                                    @endforeach
+                                </select>
+                                <input type="hidden" name="item_code[{{$key}}]" class="form-control item_code" autocomplete="off"
+                                    value="{{ $item_code[$key] }}">
+                                <input type="hidden" name="material_type[{{$key}}]" class="form-control material_type"
+                                    autocomplete="off" value="{{ $material_type[$key] }}">
+                            </td>
+        
+                            <td>
+                              
+                                <select name="brand[{{$key}}]" class="form-control brand select2" autocomplete="off">
+                                    <option value="">Select Brand</option>
+                                    @foreach ($brands[$key] as $key1 => $value)
+                                        <option value="{{ $value?->brand?->id ?? Null }}" @selected($value?->brand?->id == $brand_id[$key])>
+                                            {{ $value?->brand?->name ?? Null}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+        
+                            <td>
+                                <select class="form-control model select2" name="model[{{$key}}]">
+                                    <option value="" readonly selected>Select Model</option>
+                                    @foreach ($models[$key] as $key1 => $value)
+                                    <option value="{{ $value->model }}" @selected($value->model == $model[$key])>
+                                        {{ $value->model }}
+                                    </option>
+                                @endforeach
+                                </select>
+                            </td>
+                            <td class="select2_container">
+                                <select class="form-control select2 serial_code" multiple name="serial_code[{{$key}}][]">
+                                    @foreach($serial_codes[$key] as $key1 => $value)
+                                        <option value="{{ $value->serial_code }}"
+                                            @selected(in_array($value->serial_code,json_decode($serial_code[$key])))>
+                                            {{ $value->serial_code }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input name="unit[{{$key}}]" class="form-control unit" readonly autocomplete="off" type="text" value="{{ $unit[$key] }}">
+                            </td> 
+                            <td>
+                                <input name="avaiable_quantity[{{$key}}]" class="form-control avaiable_quantity" autocomplete="off" value="{{ $branch_stock[$key] }}" readonly>
+                            </td>
+                            <td>
+                                <input name="quantity[{{$key}}]" class="form-control quantity" autocomplete="off" @if($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
+                            </td>
+                            <td>
+                                <input name="remarks[{{$key}}]" class="form-control remarks" autocomplete="off" value="{{ $remarks[$key] }}">
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
+                            </td>
+                        </tr>
+                    @endforeach
+        
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+
+            <div class="row">
+                <div class="offset-md-4 col-md-4 mt-2">
+                    <div class="input-group input-group-sm ">
+                        <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+                    </div>
+                </div>
+            </div>
+            {!! Form::close() !!}
     </div>
-    {!! Form::close() !!}
 @endsection
 
 @section('script')
-<script src="{{ asset('js/bootstrap-tagsinput.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
-
     <script>
-        
-        /*****/
         const CSRF_TOKEN = "{{ csrf_token() }}";
-          
-        $(document).ready(function() {
-            $("#po_no").autocomplete({
+        $('#date').datepicker({
+            format: "dd-mm-yyyy",
+            autoclose: true,
+            todayHighlight: true,
+            showOtherMonths: true
+        }).datepicker("setDate", new Date());;
+        /* Append row */
+        $(document).ready(function(){
+            @if (empty($challan) && empty(old('material_name')))
+                appendCalculationRow();
+            @endif
+        })
+        var indx = 0;
+        @if ($form_method == 'PUT')
+            indx = {{count($Challan_Lines)}}
+        @endif
+        function appendCalculationRow() {
+            let row = `<tr>
+                            <td>
+                                <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
+                                    <option value="">Select Out From</option>
+                                    @foreach (config('businessinfo.receivedTypes') as $value)
+                                        <option value="{{ $value }}">{{ strToUpper($value) }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
+                                <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
+                            </td>
+                            <td class="form-group">
+                                <select class="form-control material_name select2" name="material_name[${indx}]">
+                                    <option value="" readonly selected>Select Material</option>                  
+                                </select>
+                                <input type="hidden" name="item_code[${indx}]" class="form-control item_code" autocomplete="off"> 
+                                <input type="hidden" name="material_type[${indx}]" class="form-control material_type" autocomplete="off"> 
+                            </td>                            
+                            <td>
+                                <select class="form-control brand select2" name="brand[${indx}]">
+                                    <option value="" readonly selected>Select Brand</option>
+
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control model select2" name="model[${indx}]">
+                                    <option value="" readonly selected>Select Model</option>
+
+                                </select>
+                            </td>
+                            <td class="select2_container">
+                                <select class="form-control serial_code select2" name='serial_code[${indx}][]' multiple="multiple">
+
+                                </select>
+                            </td>
+                            <td>
+                                <input name="unit[${indx}]" class="form-control unit" readonly autocomplete="off" type="text">
+                            </td> 
+                            <td>
+                                <input class="form-control available_quantity" name="available_quantity[${indx}]" aria-describedby="available_quantity" readonly>
+                            </td>
+                            <td>
+                                <input name="quantity[${indx}]" class="form-control quantity" autocomplete="off">
+                            </td>
+                            <td>
+                                <input name="remarks[${indx}]" class="form-control remarks" autocomplete="off">
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
+                            </td>
+                        </tr>
+                    `;
+                    indx++;
+            $('#challan tbody').append(row);
+            $('.select2').select2({
+            });
+            $('.select2.serial_code').select2({
+                multiple: true,
+            });
+        }
+
+        /* Adds and removes quantity row on click */
+        $("#challan")
+            .on('click', '.add-challan-row', () => {
+                appendCalculationRow();
+            })
+            .on('click', '.remove-challan-row', function() {
+                $(this).closest('tr').remove();
+            });
+
+        //Search Client
+        var client_details = [];
+        @if ($form_method === 'PUT')
+            client_details = {!! collect($client_links) !!}
+        @endif
+        $(document).on('keyup focus', '#client_name', function() {
+            $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url: "{{ route('search_po_with_date') }}",
+                        url: "{{ url('search-client') }}",
                         type: 'get',
                         dataType: "json",
                         data: {
-                            _token: CSRF_TOKEN,
                             search: request.term
                         },
                         success: function(data) {
@@ -291,220 +425,383 @@
                     });
                 },
                 select: function(event, ui) {
-                    $('#purchase_order_id').val(ui.item.value);
-                    $('#po_no').val(ui.item.label);
-                    $('#po_date').val(ui.item.date);
-                    $('#supplier_id').val(ui.item.supplier_id);
-                    $('#supplier_name').val(ui.item.supplier_name);
-                    loadMateaials();
+                    $('#client_name').val(ui.item.label);
+                    $('#client_id').val(ui.item.value);
+                    $('#client_no').val(ui.item.client_no);
+                    $('#client_address').val(ui.item.address);
+
+                    $('#client_links').html('');
+                    var link_options = '<option value="">Select link</option>';
+
+                    ui.item.details.forEach(function(element) {
+                        link_options +=
+                            `<option value="${element.link_name}" data-fr-composite="${element.fr_composite_key}" data-fr-id="${element.fr_id}">${element.link_name}</option>`;
+                    });
+                    client_details = ui.item.details;
+                    $('#client_links').html(link_options);
+
                     return false;
                 }
+            });
+        });
+
+       
+            $('#client_links').on('change',function(){
+                $('#fr_composite_key').val($(this).find(':selected').data('fr-composite'));
+                $('#fr_id').val($(this).find(':selected').data('fr-id'));
             })
-           
+       
+
+        $(function() {
+            onChangeRadioButton();
+
             $('.select2').select2({
-                maximumSelectionLength: 1
-                });
+                maximumSelectionLength: 5,
+                scrollAfterSelect: true
+        });
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            //using form custom function js file
-            $('#challan_date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            }).datepicker("setDate", new Date());
-            $('#applied_date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            }).datepicker("setDate", new Date());
+            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_name', 'get', null)
 
-            @if (empty($materialReceive) && empty(old('material_id')))
-                appendCalculationRow();
-                
-            @endif
-        function appendCalculationRow() {
-            
-            let row = `<tr>
-                            <td class="form-group">
-                                <select class="form-control material_name" name="material_id[]">
-                                    <option value="" readonly selected>Select Material</option>
-                                   
-                                </select>
-                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
-                                <input type="hidden" name="po_composit_key[]" class="form-control po_composit_key" autocomplete="off"> 
-                            </td>
-                            <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                    <option value="">Select Brand</option>
-                                    @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">
-                                            {{ $brand->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
-
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off"> 
-                            </td>
-                            <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                            </td>
-                            <td>
-                                <div class="tags_add_multiple">
-                                    <input class="" type="text" name="sl_code[]" value="111" data-role="tagsinput">
-                                </div>
-                            </td>
-
-                            <td>
-                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                            </td>
-
-                            <td>
-                                <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                            </td>
-                            
-                            <td>
-                                <input type="number" name="warranty_period[]" class="form-control warranty_period" autocomplete="off">
-                            </td>
-                            
-                            <td>
-                                <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
-                            </td>
-                            <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
-                            </td>
-                        </tr>
-                    `;
-            $('#material_requisition tbody').append(row);
-            $('input[data-role="tagsinput"]').tagsinput({
-                        });
-           
-        }
-        /* Adds and removes quantity row on click */
-        $("#material_requisition")
-            .on('click', '.add-requisition-row', () => {
-                appendCalculationRow();
-                loadMateaials();
-            })
-            .on('click', '.remove-requisition-row', function() {
-                $(this).closest('tr').remove();
+            $(".radioButton").click(function() {
+                onChangeRadioButton()
             });
 
-            function loadMateaials() {
-                let purchase_order_id = $("#purchase_order_id").val();
-                if (purchase_order_id) {
-                    const url = '{{ url('scm/get_materials_for_po') }}/' + purchase_order_id;
-                    let dropdown;
-
-                    $('.material_name').each(function() {
-                        dropdown = $(this).closest('tr').find('.material_name');
+            $("#pop_name").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ route('searchPop') }}",
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
                     });
-                    dropdown.empty();
-                    dropdown.append('<option selected disabled>Select Material</option>');
-                    dropdown.prop('selectedIndex', 0);
-
-                    $.getJSON(url, function(items) {
-                        $.each(items, function(key, data) {
-                            dropdown.append($(`<option>Select Material</option>`)
-                                .attr('value', data.material_id)
-                                .attr('data-code', data.material.code)
-                                .attr('data-type', data.material.type)
-                                .attr('data-unit', data.material.unit)
-                                .text(data.material.name + " - " + data.material.code));
-                        })
-                    });
-
-                    
+                },
+                select: function(event, ui) {
+                    $(this).val(ui.item.label);
+                    $('#pop_id').val(ui.item.id);
+                    $('#pop_address').val(ui.item.address);
+                    return false;
                 }
-            };
-        $(document).on('change','.material_name',function(){
-            let material_id = $(this).closest('tr').find('.material_name').val();
-            let code = $(this).find(':selected').data('code');
-            let type = $(this).find(':selected').data('type');
-            let unit = $(this).find(':selected').data('unit');
-            var elemmtn = $(this);
-            (elemmtn).closest('tr').find('.final_mark').attr('readonly',true).val(null);
-            (elemmtn).closest('tr').find('.initial_mark').attr('readonly',true).val(null);
-                (elemmtn).closest('tr').find('.unit').val(unit);
-                (elemmtn).closest('tr').find('.item_code').val(code);
-                (elemmtn).closest('tr').find('.material_type').val(type);
-
-                if(type == 'Drum'){
-                    (elemmtn).closest('tr').find('.final_mark').attr('readonly',false);
-                    (elemmtn).closest('tr').find('.initial_mark').attr('readonly',false);
-                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
-                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
-                            maxTags: 1
-                        });
-                    }else{
-                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
-                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
-                        });
-                    }
             })
 
+        });
 
-            $(document).on('change','.brand',function(){
-            let material_id = $(this).closest('tr').find('.material_name').val();
-            let brand_id = $(this).closest('tr').find('.brand').val();
-            let purchase_order_id = $("#purchase_order_id").val();
+        function onChangeRadioButton() {
+            var radioValue = $("input[name='type']:checked").val();
+            if (radioValue == 'client') {
+                $('.pop_id').hide('slow');
+                $('.pop_name').hide('slow');
+                $('.pop_address').hide('slow');
+                $('.address').show('slow');
+                $('.client_name').show('slow');
+                $('.client_no').show('slow');
+                $('.client_address').show('slow');
+                $('.client_links').show('slow');
+                $('.fr_id').show('slow');
+            } else if (radioValue == 'internal') {
+                $('.pop_id').show('slow');
+                $('.pop_name').show('slow');
+                $('.pop_address').show('slow');
+                $('.address').hide('slow');
+                $('.client_name').hide('slow');
+                $('.client_no').hide('slow');
+                $('.client_address').hide('slow');
+                $('.client_links').hide('slow');
+                $('.fr_id').hide('slow');
+            }
+        }
 
-            const url = '{{ url('scm/get_pocomposite_with_price') }}/' + purchase_order_id + '/' + material_id + '/' + brand_id;
-            var elemmtn = this;
-            $(elemmtn).closest('tr').find('.unit_price').val(null);
-            $(elemmtn).closest('tr').find('.po_composit_key').val(null);
-            $.getJSON(url, function(item) {
-                    if(item.length){
-                        $(elemmtn).closest('tr').find('.unit_price').val(item[0].unit_price);
-                        $(elemmtn).closest('tr').find('.po_composit_key').val(item[0].po_composit_key);
-                        var maxTags = 1; // maximum number of tags allowed
-                        calculateAmount(elemmtn);
-                    }else{
-                        alert('No po is given for this Brand of that material');
+
+
+
+
+
+
+        $(document).on('keyup', '.type_no', function() {
+                var event_this = $(this).closest('tr');
+                ClearNext($(this));
+                let myObject = {
+                    type: event_this.find('.received_type').val().toUpperCase(),
+                }
+                jquaryUiAjax(this, "{{ route('searchTypeNo') }}", uiList, myObject);
+
+                function uiList(item) {
+                    event_this.find('.type_no').val(item.label);
+                    event_this.find('.type_id').val(item.id);
+                    getMaterials(event_this)
+                    return false;
+                }
+            })
+
+            function ClearNext(selector) {
+                let sib = $(selector).parent().nextAll('td');
+                // loop siblings
+                sib.each(function() {
+                    let input = $(this).find('input');
+                    let select = $(this).find('select');
+                    if (!input.hasClass('unit')) {
+                        input.val('');
+                    }
+                    select.empty();
+                });
+            }
+            $(document).on('change', '.received_type', function() {
+                var event_this = $(this).closest('tr');
+                ClearNext($(this));
+            })
+
+        function getMaterials(event_this) {
+
+                    let scm_requisition_id = $('#scm_requisition_id').val();
+                    let received_type = event_this.find('.received_type').val().toUpperCase();
+                    let receiveable_id = event_this.find('.type_id').val();
+                    let material_name = event_this.find('.material_name');
+                    populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
+                        scm_requisition_id: scm_requisition_id,
+                        received_type: received_type,
+                        receiveable_id: receiveable_id,
+                        from_branch: $('#branch_id').val(),
+                        to_branch: $('#branch_id').val(),
+                    }, material_name, 'value', 'label', {
+                        'data-type': 'type',
+                        'data-unit': 'unit',
+                        'data-code': 'code',
+                    })
+                 }
+
+                $(document).on('change', '.material_name', function() {
+                    checkUniqueMaterial(this);
+                    var event_this = $(this).closest('tr');
+                    ClearNext($(this));
+                    let material_id = $(this).val();
+                    let scm_requisition_id = $('#scm_requisition_id').val();
+                    let received_type = event_this.find('.received_type').val().toUpperCase();
+                    let receiveable_id = event_this.find('.type_id').val();
+                    let brand = $(this).closest('tr').find('.brand');
+                    
+                   event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected').data('unit'));
+                   event_this.find('.item_code').val($(this).closest('tr').find('.material_name').find(':selected').data('code'));
+                   event_this.find('.material_type').val($(this).closest('tr').find('.material_name').find(':selected').data('type'));
+
+                    populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
+                        material_id: material_id,
+                        received_type: received_type,
+                        receiveable_id: receiveable_id,
+                        from_branch_id: $('#branch_id').val(),
+                    }, brand, 'value', 'label');
+                })
+
+                $(document).on('change', '.brand', function() {
+                    checkUniqueMaterial(this);
+                    var event_this = $(this).closest('tr');
+                    ClearNext($(this));
+                    let brand_id = $(this).val();
+                    let material_id = event_this.find('.material_name').val();
+                    let scm_requisition_id = $('#scm_requisition_id').val();
+                    let received_type = event_this.find('.received_type').val().toUpperCase();
+                    let receiveable_id = event_this.find('.type_id').val();
+                    let model = $(this).closest('tr').find('.model');
+
+                    populateDropdownByAjax("{{ route('brandWiseModels') }}", {
+                        brand_id: brand_id,
+                        material_id: material_id,
+                        received_type: received_type,
+                        receiveable_id: receiveable_id,
+                        from_branch_id: $('#branch_id').val(),
+                    }, model, 'value', 'label');
+                });
+
+                $(document).on('change', '.model', function() {
+                    checkUniqueMaterial(this);
+                    var event_this = $(this).closest('tr');
+                    ClearNext($(this));
+                    let model = $(this).val();
+                    let material_id = event_this.find('.material_name').val();
+                    let scm_requisition_id = $('#scm_requisition_id').val();
+                    let received_type = event_this.find('.received_type').val().toUpperCase();
+                    let receiveable_id = event_this.find('.type_id').val();
+                    let brand_id = event_this.find('.brand').val();
+                    let serial_code = $(this).closest('tr').find('.serial_code');
+                    let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+                        'type');
+
+                   
+                    populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
+                        model: model,
+                        material_id: material_id,
+                        brand_id: brand_id,
+                        received_type: received_type,
+                        receiveable_id: receiveable_id,
+                        from_branch_id: $('#branch_id').val(),
+                    }, serial_code, 'value', 'label',null,false);
+                 });
+
+                 $(document).on('change', '.serial_code', function() {
+                    let material_type = $(this).closest('tr').find('.material_name').find(':selected').data('type');
+                    if (material_type == 'Item') {
+                        $(this).closest('tr').find('.quantity').val($(this).val().length);
+                    }
+                 })
+
+                 function checkUniqueMaterial(currentValue) {
+                var current_selector = $(currentValue);
+                var current_material = $(currentValue).closest('tr').find('.material_name').val();
+                var current_value_brand = $(currentValue).closest('tr').find('.brand').val();
+                var current_value_model = $(currentValue).closest('tr').find('.model').val();
+                var current_key = `${current_material}_${current_value_brand}_${current_value_model}`;
+                console.log(current_key);
+                var count_row = $('#challan tbody tr').length;
+                var thisMaterial = $(currentValue).closest('tr').find('.material_name');
+                let material_list = $('.material_name').not($(thisMaterial));
+
+                material_list.each(function() {
+                    var material_name = $(this).val();
+                    var brand = $(this).closest('tr').find('.brand').val();
+                    var model = $(this).closest('tr').find('.model').val();
+                    var key = `${material_name}_${brand}_${model}`;
+                    console.log(key);
+                    if (key === current_key && count_row > 1) {
+                        swal.fire({
+                            title: "Material Already Selected",
+                            type: "warning",
+                        }).then(function() {
+                            $(current_selector).val($(current_selector).find('option:first').val())
+                                .trigger('change.select2');
+                        });
+                        return false;
                     }
                 });
+            }
+
+            $(document).on('change', '.serial_code', function() {
+                let elemmtn = $(this).closest('tr');
+                let material_type = (elemmtn).find('.material_name').find(':selected').data(
+                    'type');
+                if (material_type == 'Item') {
+                    (elemmtn).find('.quantity').attr('readonly', true);
+                    (elemmtn).find('.quantity').val($(this).val().length);
+                } else {
+                    (elemmtn).find('.quantity').attr('readonly', false);
+                }
+            });
+
+            $(document).on('change', '.received_type', function() {
+                var event_this = $(this).closest('tr');
+                ClearNext($(this));
+                if ($('#branch_id').val() == '') {
+                    $(this).val('');
+                    swal.fire({
+                        title: "Please Select From Branch",
+                        type: "warning",
+                    }).then(function() {
+                        $('#branch_id').focus();
+                    });
+                    return false;
+                }
+
                
             })
+            $(document).on('change', '.model, .material_name, .brand', function() {
+                var elemmtn = $(this);
+                $.ajax({
+                    url: "{{ route('getMaterialStock') }}",
+                    type: 'get',
+                    dataType: "json",
+                    data: {
+                        material_id: (elemmtn).closest('tr').find('.material_name').val(),
+                        brand_id: (elemmtn).closest('tr').find('.brand').val(),
+                        model: (elemmtn).closest('tr').find('.model').val(),
+                        received_type: (elemmtn).closest('tr').find('.received_type').val()
+                            .toUpperCase(),
+                        receiveable_id : (elemmtn).closest('tr').find('.type_id').val(),
+                        from_branch_id: $('#branch_id').val(),
+                        to_branch_id: null
+                    },
+                    success: function(data) {
+                        (elemmtn).closest('tr').find('.available_quantity').val(data
+                            .from_branch_balance);
+                    }
+                })
+            })
 
-
-
-            $(document).on('keyup change', '.unit_price, .quantity', function() {
-                calculateAmount(this);
+              //issued quantity cannot be greater than avaiable_quantity
+              $(document).on('keyup', '.quantity', function() {
+                let elemmtn = $(this).closest('tr');
+                let avaiable_quantity = parseFloat((elemmtn).find('.available_quantity').val());
+                let quantity = parseFloat((elemmtn).find('.quantity').val());
+                if (quantity > avaiable_quantity) {
+                    swal.fire({
+                        title: "Issued Quantity Cannot Be Greater Than Avaiable Quantity",
+                        type: "warning",
+                    }).then(function() {
+                        (elemmtn).find('.quantity').val(avaiable_quantity);
+                    });
+                }
             });
-        function calculateAmount(ref){
-            var unit_price = $(ref).closest('tr').find('.unit_price').val() != '' ? $(ref).closest('tr').find('.unit_price').val() : 0;
-            var quantity = $(ref).closest('tr').find('.quantity').val() != '' ? $(ref).closest('tr').find('.quantity').val() : 0;
-            var amount = unit_price * quantity;
-            $(ref).closest('tr').find('.amount').val(amount);
-            calculateTotalAmount()
-        }
-             //function for calculate total amount from all sub total amount
-             function calculateTotalAmount() {
-                var final_total_amount = 0;
-                $('.amount').each(function() {
-                    final_total_amount += parseFloat($(this).val());
-                });
-                $('.total_amount').val(final_total_amount.toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }));
-            }
-        })
-        
-        /*****/
+
+            // $(document).on('change', '.serial_code', function() {
+            //     var elemmtn = $(this);
+            //     let global_fianl_mark = $(this).find(':selected').data('final_mark');
+            //     let material_name = (elemmtn).find(':selected').data('material_name');
+            //     let brand = (elemmtn).find(':selected').data('brand');
+            //     let model = (elemmtn).find(':selected').data('model');
+            //     let unit = (elemmtn).find(':selected').data('unit');
+            //     let type = $(this).find(':selected').data('type');
+            //     let initial_mark = $(this).find(':selected').data('initial_mark');
+            //     let final_mark = global_fianl_mark;
+
+            //     (elemmtn).closest('tr').find('.material_name').val(material_name);
+            //     (elemmtn).closest('tr').find('.brand').val(brand);
+            //     (elemmtn).closest('tr').find('.model').val(model);
+            //     (elemmtn).closest('tr').find('.unit').val(unit);
+
+            //     (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
+            //     (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
+            //     if (type == 'Drum') {
+            //         (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(initial_mark);
+            //         (elemmtn).closest('tr').find('.final_mark').attr('readonly', false).val(final_mark);
+            //         $(document).on('keyup', '.final_mark', function() {
+            //             var elemmtn = $(this);
+            //             let initial_mark = (elemmtn).closest('tr').find('.initial_mark').val();
+            //             let final_mark = (elemmtn).closest('tr').find('.final_mark').val();
+            //             if (final_mark < initial_mark) {
+            //                 alert('Final Mark can not be smaller than Initial Mark');
+            //                 (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
+            //             } else if (final_mark > global_fianl_mark) {
+            //                 alert('Final Mark can not be bigger than ' + global_fianl_mark);
+            //                 (elemmtn).closest('tr').find('.final_mark').val(global_fianl_mark);
+            //             }
+            //         })
+            //     } else {
+            //         (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
+            //         (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
+            //     };
+
+            //     $.ajax({
+            //         url: "{{ route('getMaterialStock') }}",
+            //         type: 'get',
+            //         dataType: "json",
+            //         data: {
+            //             material_id: $(this).val(),
+            //             from_branch_id: $('#from_branch_id').val(),
+            //             to_branch_id: $('#to_branch_id').val(),
+            //             type: type
+            //         },
+            //         success: function(data) {
+            //             // (elemmtn).closest('tr').find('.stock').val(data.stock);
+            //             console.log(data);
+            //             (elemmtn).closest('tr').find('.opening_balance').val(data
+            //                 .to_branch_balance);
+            //             (elemmtn).closest('tr').find('.avaiable_quantity').val(data
+            //                 .from_branch_balance);
+            //         }
+            //     })
+            // })
     </script>
 @endsection
