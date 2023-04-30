@@ -8,6 +8,7 @@ use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmChallanLine;
 use Modules\SCM\Entities\ScmRequisition;
 
@@ -53,5 +54,10 @@ class ScmChallan extends Model
     public function scmRequisition()
     {
         return $this->belongsTo(ScmRequisition::class);
+    }
+
+    public function clientDetails()
+    {
+        return $this->belongsTo(ClientDetail::class, 'fr_composite_key', 'fr_composite_key');
     }
 }

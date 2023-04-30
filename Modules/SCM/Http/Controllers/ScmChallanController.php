@@ -60,7 +60,7 @@ class ScmChallanController extends Controller
     {
         try {
             DB::beginTransaction();
-            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id');
+            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id', 'fr_composite_key');
             $challan_data['challan_no'] =  $this->ChallanNo;
             $challan_data['created_by'] = auth()->id();
 
@@ -172,7 +172,7 @@ class ScmChallanController extends Controller
         // dd($request->all());
         try {
             DB::beginTransaction();
-            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id');
+            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id', 'fr_composite_key');
 
             $challan_details = [];
             foreach ($request->material_name as $kk => $val) {

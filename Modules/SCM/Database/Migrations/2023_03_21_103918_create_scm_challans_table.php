@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('purpose')->nullable();
             $table->bigInteger('client_id')->nullable();
             $table->bigInteger('client_details_id')->nullable();
+            $table->string('fr_composite_key')->nullable();
             $table->bigInteger('branch_id')->nullable();
             $table->bigInteger('pop_id')->nullable();
             $table->integer('created_by')->nullable();

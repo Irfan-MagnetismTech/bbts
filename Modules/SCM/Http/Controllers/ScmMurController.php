@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
+use Modules\SCM\Entities\ScmChallan;
+use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SCM\Entities\ScmChallan;
 
 class ScmMurController extends Controller
 {
@@ -42,8 +43,9 @@ class ScmMurController extends Controller
             'own_use' => 'Own Use',
             'stolen' => 'Stolen',
         ];
-        $out_from = ['mrr', 'err', 'wcr'];
-        return view('scm::mur.create', compact('formType', 'brands', 'branchs', 'purposes', 'out_from', 'challanData'));
+        $client_links = ClientDetail::where('client_id', $challanData->client_id)->get();
+        dd();
+        return view('scm::mur.create', compact('formType', 'brands', 'branchs', 'purposes', 'challanData'));
     }
 
     /**
@@ -104,10 +106,10 @@ class ScmMurController extends Controller
             ->get()
             ->take(10)
             ->map(fn ($item) => [
-                'value' => $item->challan_no,
-                'label' => $item->challan_no,
-                'id'    => $item->id,
-                'date'    => $item->date,
+                'value'     => $item->challan_no,
+                'label'     => $item->challan_no,
+                'id'        => $item->id,
+                'date'      => $item->date,
             ])
             ->values()
             ->all();
