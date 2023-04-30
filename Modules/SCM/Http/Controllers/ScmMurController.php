@@ -36,15 +36,8 @@ class ScmMurController extends Controller
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
-        $purposes = [
-            'activation' => 'Activation',
-            'maintenance' => 'Maintenance',
-            'shifting' => 'Shifting',
-            'own_use' => 'Own Use',
-            'stolen' => 'Stolen',
-        ];
         $client_links = ClientDetail::where('client_id', $challanData->client_id)->get();
-        return view('scm::mur.create', compact('formType', 'brands', 'branchs', 'purposes', 'challanData'));
+        return view('scm::mur.create', compact('formType', 'brands', 'branchs', 'challanData'));
     }
 
     /**
