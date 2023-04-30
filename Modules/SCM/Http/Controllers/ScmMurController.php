@@ -44,7 +44,6 @@ class ScmMurController extends Controller
             'stolen' => 'Stolen',
         ];
         $client_links = ClientDetail::where('client_id', $challanData->client_id)->get();
-        dd();
         return view('scm::mur.create', compact('formType', 'brands', 'branchs', 'purposes', 'challanData'));
     }
 

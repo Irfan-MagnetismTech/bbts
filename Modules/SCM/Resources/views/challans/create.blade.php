@@ -13,6 +13,7 @@
     $purpose = old('purpose', !empty($challan) ? $challan->purpose : null);
     $client_id = old('client_id', !empty($challan) ? $challan->client_id : null);
     $fr_composite_key = old('fr_composite_key', !empty($challan) ? $challan->fr_composite_key : null);
+    $fr_id = old('fr_composite_key', !empty($challan) ? $challan->clientDetails?->fr_id : null);
     $client_name = old('client_name', !empty($challan) ? $challan?->client?->name : null);
     $client_no = old('client_no', !empty($challan) ? $challan?->client?->client_no : null);
     $client_address = old('client_address', !empty($challan) ? $challan?->client?->address : null);
@@ -153,7 +154,7 @@
                         @endif
                         @if ($form_method == 'PUT')
                             @foreach ($client_links as $clientInfo)
-                                <option value="{{ $clientInfo->link_name }}" data-fr="{{ $clientInfo->fr_composite_key }}" @selected($clientInfo->fr_composite_key == @$fr_composite_key)>
+                                <option value="{{ $clientInfo->link_name }}" data-fr-composite="{{ $clientInfo->fr_composite_key }}" data-fr-id="{{ $clientInfo->fr_id }}"  @selected($clientInfo->fr_composite_key == @$fr_composite_key)>
                                     {{ $clientInfo->link_name }}</option>
                             @endforeach
                         @endif
@@ -163,6 +164,12 @@
                         value="{{ old('fr_composite_key') ?? @$fr_composite_key }}">
                 </div>
 
+                <div class="form-group col-3 fr_id">
+                    <label for="fr_id">Fr ID:</label>
+                    <input type="text" class="form-control" id="fr_id" aria-describedby="fr_id" name="fr_id"
+                        readonly value="{{ old('fr_id') ?? (@$fr_id ?? '') }}">
+
+                </div>
                 <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
@@ -442,7 +449,7 @@
 
                     ui.item.details.forEach(function(element) {
                         link_options +=
-                            `<option value="${element.link_name}" data-fr="${element.fr_composite_key}">${element.link_name}</option>`;
+                            `<option value="${element.link_name}" data-fr-composite="${element.fr_composite_key}" data-fr-id="${element.fr_id}">${element.link_name}</option>`;
                     });
                     client_details = ui.item.details;
                     $('#client_links').html(link_options);
@@ -454,7 +461,8 @@
 
        
             $('#client_links').on('change',function(){
-                $('#fr_composite_key').val($(this).find(':selected').data('fr'));
+                $('#fr_composite_key').val($(this).find(':selected').data('fr-composite'));
+                $('#fr_id').val($(this).find(':selected').data('fr-id'));
             })
        
 
@@ -542,6 +550,7 @@
                 $('.client_no').show('slow');
                 $('.client_address').show('slow');
                 $('.client_links').show('slow');
+                $('.fr_id').show('slow');
             } else if (radioValue == 'pop') {
                 $('.pop_id').show('slow');
                 $('.pop_name').show('slow');
@@ -551,6 +560,7 @@
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
                 $('.client_links').hide('slow');
+                $('.fr_id').hide('slow');
             }else if (radioValue == 'general') {
                 $('.pop_id').hide('slow');
                 $('.pop_name').hide('slow');
@@ -560,6 +570,7 @@
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
                 $('.client_links').hide('slow');
+                $('.fr_id').show('slow');
             }
         }
 
