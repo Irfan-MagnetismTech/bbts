@@ -23,11 +23,6 @@
        <link rel="stylesheet" type="text/css" href="{{ asset('css/switchery.min.css') }}">
        <link rel="stylesheet" type="text/css" href="{{ asset('/css/style.css') }}">
 @endsection
-@section('script')
-<script  src="{{ asset('/js/switchery.min.js')}}"></script>
-<script  src="{{ asset('/js/swithces.js')}}"></script>
-<script  src="{{ asset('/js/script.js') }}"></script>
-@endsection
 @section('breadcrumb-button')
     <a href="{{ route('material-utilizations.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
@@ -213,13 +208,7 @@
                             <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
                         </td>
                         <td>
-                            <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10">
-                        </td>
-                        <td>
-                            <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
-                        </td>
-                        <td>
-                            <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                            <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
                         </td>
                     </tr>
                 </tbody>
@@ -239,6 +228,7 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('/js/switchery.min.js')}}"></script>
     <script>
         const CSRF_TOKEN = "{{ csrf_token() }}";
         $('#date').datepicker({
@@ -518,6 +508,7 @@
             }
             $(document).ready(function(){
                 onChangeRadioButton();
+                switchInitialization();
             })
             function onChangeRadioButton() {
             var radioValue = $("input[name='type']").val();
@@ -588,5 +579,10 @@
                     }
                 })
             })
+
+            function switchInitialization(){
+                var elemprimary = document.querySelector('.js-primary');
+	            var switchery = new Switchery(elemprimary, { color: '#4099ff', jackColor: '#fff',size: 'small'});
+            }
     </script>
 @endsection
