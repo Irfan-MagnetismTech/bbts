@@ -41,6 +41,10 @@
             @if ($formType == 'edit')
                 @method('PUT')
             @endif
+            @php
+            $challan_id = old('challan_id', !empty($challanData) ? $challanData->id: null);
+            
+        @endphp
             @csrf
             <div class="row">
                 <div class="col-md-3">
@@ -65,6 +69,7 @@
                         value="{{ old('mrs_no') ?? (@$challanData->scmRequisition->mrs_no ?? '') }}" placeholder="Search a MRS No">
                         <input class="form-control" id="scm_requisition_id" name="scm_requisition_id" aria-describedby="scm_requisition_id"
                         value="{{ old('scm_requisition_id') ?? (@$challanData->scm_requisition_id ?? '')}}" type="hidden">
+                       
                 </div>
                 <div class="form-group col-3">
                     <label for="select2">Purpose</label>
@@ -138,8 +143,8 @@
                     <label for="select2">Challan No</label>
                     <input class="form-control" id="challan_no" name="challan_no" aria-describedby="challan_no"
                     value="{{ old('challan_no') ?? (@$challanData->challan_no ?? '') }}" placeholder="Search a Challan Name">
-                    <input type="hidden" class="form-control" id="challan_id" name="challan_id" aria-describedby="challan_id"
-                    value="{{ old('challan_id') ?? (@$challanData->challan_id ?? '') }}">
+                    <input class="form-control" id="challan_id" name="challan_id" aria-describedby="challan_id"
+                    value="{{ old('challan_id') ?? ($challan_id ?? '')}}" type="hidden">
                 </div>
                 <div class="form-group col-3 challan_date" style="">
                     <label for="select2">Challan Date</label>
@@ -147,70 +152,67 @@
                     value="{{ old('challan_date') ?? (@$challanData->date ?? '') }}" readonly>
                 </div>
             </div>
-
+                {{-- @dd($challanData->scmChallanLines) --}}
             <table class="table table-bordered" id="material_requisition">
                 <thead>
                     <tr>
-                        <th rowspan="2">Utilization</th>
-                        <th rowspan="2">Material Name</th>
-                        <th rowspan="2">Description</th>
-                        <th rowspan="2">Item Code</th>
-                        <th rowspan="2">Unit</th>
-                        <th rowspan="2">Brand</th>
-                        <th rowspan="2">Model</th>
-                        <th rowspan="2">Serial/Drum Code <br /> No</th>
-                        <th colspan="2">Applicable For Fiber</th>
-                        <th rowspan="2">Quantity</th>
-                        <th rowspan="2">Remarks</th>
-                    </tr>
-                    <tr>
-                        <th>Initial Mark</th>
-                        <th>Final Mark</th>
+                        <th>Utilization</th>
+                        <th>Material Name</th>
+                        <th>Description</th>
+                        <th>Item Code</th>
+                        <th>Unit</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Serial/Drum Code <br /> No</th>
+                        <th>Challan Quantity</th>
+                        <th>Utilized Quantity</th>
+                        <th>Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach ($challanLines as $item)
+                    @php
+                        $item = collect($item);
+                    @endphp
                     <tr>
                         <td>
                             <input type="checkbox" class="js-primary" checked />
                         </td>
                         <td>
-                            <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
-                            <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
+                            <input type="material_name" name="material_name[]" class="form-control type_no" autocomplete="off" value="{{ $item['material_name'] }}">
+                            <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off" value="{{ $item['material_id'] }}">
                             </td>
                         <td class="form-group">
-                            <select class="form-control serial_code select2" name="serial_code[]">                      
-                            </select>
-                            <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
-                            <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
+                            <input type="text" name="description[]" class="form-control description">  
                         </td>
                         <td>
-                            <input type="text" name="material_name[]" class="form-control material_name" readonly>
+                            <input type="text" name="item_code[]" class="form-control item_code" readonly value="{{ $item['item_code'] }}">
                         </td>
                         <td>
-                            <input type="text" name="opening_balance[]" class="form-control opening_balance" readonly>
+                            <input type="text" name="unit[]" class="form-control unit" readonly value="{{ $item['unit'] }}">
                         </td>
                         <td>
-                            <input type="text" name="brand[]" class="form-control brand" readonly>
+                            <input type="text" name="brand_name[]" class="form-control brand_name" readonly value="{{ $item['brand_name'] }}">
+                            <input type="hidden" name="brand_id[]" class="form-control brand_id" readonly value="{{ $item['brand_id'] }}">
                         </td>
                         <td>
-                            <input type="text" name="model[]" class="form-control model" readonly>
+                            <input type="text" name="model[]" class="form-control model" readonly value="{{ $item['model'] }}">
                         </td>
                         <td>
-                            <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                            <input name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly value="{{ $item['serial_code'] }}">
+                        </td>                                        
+                        <td>
+                            <input name="quantity[]" class="form-control quantity" autocomplete="off" readonly value="{{ $item['quantity'] }}">
                         </td>
                         <td>
-                            <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                            <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" value="{{ $item['quantity'] }}">
                         </td>
                         <td>
-                            <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                        </td>                                                  
-                        <td>
-                            <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
-                        </td>
-                        <td>
-                            <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
+                            <input class="form-control remarks" name="remarks[]" aria-describedby="remarks">
                         </td>
                     </tr>
+                    @endforeach
+                    
                 </tbody>
                 <tfoot>
                 </tfoot>
@@ -581,8 +583,20 @@
             })
 
             function switchInitialization(){
-                var elemprimary = document.querySelector('.js-primary');
-	            var switchery = new Switchery(elemprimary, { color: '#4099ff', jackColor: '#fff',size: 'small'});
+                var elemprimary = document.querySelectorAll('.js-primary');
+	            elemprimary.forEach(function(checkbox) {
+                    new Switchery(checkbox, { color: '#4099ff', jackColor: '#fff', size: 'small' });
+                });
             }
+
+            $('.utilized_quantity').on('keyup',function(){
+                let utilized_qty = $(this).val();
+                let challan_qty = $(this).closest('tr').find('.quantity').val();
+
+                if(utilized_qty > challan_qty){
+                    alert('utilized quantity can not be greater than challan quantity');
+                    $(this).val(challan_qty);   
+                }
+            })
     </script>
 @endsection

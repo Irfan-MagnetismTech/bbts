@@ -31,10 +31,11 @@ class MrrRequest extends FormRequest
         $values = $this->input('sl_code', []);
         $uniqueValues = array_unique(array_map('trim', $values));
         $combined = array_merge($values);
-        if (array_diff_key($combined, array_unique($combined))) {
-            throw ValidationException::withMessages(['sl_code' => 'The input contains duplicate values.'])
-                ->redirectTo($this->getRedirectUrl());
-        }
+        // dd(array_diff_key($combined, array_unique($combined)));
+        // if (array_diff_key($combined, array_unique($combined))) {
+        //     throw ValidationException::withMessages(['sl_code' => 'The input contains duplicate values.'])
+        //         ->redirectTo($this->getRedirectUrl());
+        // } //need check later
         $cities = [];
         foreach ($uniqueValues as $item) {
             $cities = array_merge($cities, explode(',', $item));
