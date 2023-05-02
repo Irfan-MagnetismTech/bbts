@@ -6,6 +6,7 @@ use Modules\SCM\Entities\ScmErr;
 use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmWcr;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Admin\Entities\Brand;
 
 class ScmChallanLine extends Model
 {
@@ -51,5 +52,10 @@ class ScmChallanLine extends Model
     public function material()
     {
         return $this->belongsTo(Material::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 }

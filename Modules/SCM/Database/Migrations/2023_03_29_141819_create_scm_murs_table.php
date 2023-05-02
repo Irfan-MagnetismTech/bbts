@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('scm_murs', function (Blueprint $table) {
             $table->id();
-
+            $table->bigInteger('challan_id');
+            $table->string('date')->nullable();
+            $table->string('mur_no')->nullable();
+            $table->bigInteger('created_by');
             $table->timestamps();
         });
     }
