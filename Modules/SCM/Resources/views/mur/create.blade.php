@@ -72,8 +72,11 @@
                        
                 </div>
                 <div class="form-group col-3">
-                    <label for="select2">Purpose</label>
-                    <select class="form-control select2" id="purpose" name="purpose">
+                    <label for="purpose">Purpose</label>
+                    <input type="text" class="form-control" id="purpose" aria-describedby="purpose"
+                        name="purpose" value="{{ old('purpose') ?? (@$challanData->purpose ?? '') }}"
+                        placeholder="Search...">
+                    {{-- <select class="form-control select2" id="purpose" name="purpose">
                         <option value="" selected>Select Purpose</option>
                         @foreach (config('businessinfo.challanPurpose') as $key => $value)
                             <option value="{{ $value }}"
@@ -81,7 +84,7 @@
                                 {{ $value }}
                             </option>
                         @endforeach
-                    </select>
+                    </select> --}}
                 </div>
             </div>
             <div class="row">
@@ -156,7 +159,6 @@
             <table class="table table-bordered" id="material_requisition">
                 <thead>
                     <tr>
-                        <th>Utilization</th>
                         <th>Material Name</th>
                         <th>Description</th>
                         <th>Item Code</th>
@@ -164,8 +166,10 @@
                         <th>Brand</th>
                         <th>Model</th>
                         <th>Serial/Drum Code <br /> No</th>
-                        <th>Challan Quantity</th>
+                        <th>Provided Quantity</th>
                         <th>Utilized Quantity</th>
+                        <th>BBTS Ownership</th>
+                        <th>Clien Ownership</th>
                         <th>Remarks</th>
                     </tr>
                 </thead>
@@ -175,9 +179,6 @@
                         $item = collect($item);
                     @endphp
                     <tr>
-                        <td>
-                            <input type="checkbox" class="js-primary" checked />
-                        </td>
                         <td>
                             <input type="material_name" name="material_name[]" class="form-control type_no" autocomplete="off" value="{{ $item['material_name'] }}">
                             <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off" value="{{ $item['material_id'] }}">
@@ -206,6 +207,12 @@
                         </td>
                         <td>
                             <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" value="{{ $item['quantity'] }}">
+                        </td>
+                        <td>
+                            <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" value="">
+                        </td>
+                        <td>
+                            <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off" value="">
                         </td>
                         <td>
                             <input class="form-control remarks" name="remarks[]" aria-describedby="remarks">
