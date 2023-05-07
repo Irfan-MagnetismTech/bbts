@@ -23,4 +23,11 @@ class CommonService
         }
         return $old_file;
     }
+
+    public static function deleteFile($file)
+    {
+        if (file_exists($file)) {
+            unlink($file);
+        }
+    }
 }

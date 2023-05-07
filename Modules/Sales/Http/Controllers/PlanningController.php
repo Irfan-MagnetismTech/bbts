@@ -9,6 +9,10 @@ use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\Planning;
 use Modules\Sales\Entities\ServicePlan;
 use Modules\Sales\Entities\EquipmentPlan;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Modules\Sales\Entities\LeadGeneration;
+use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
+use Modules\Sales\Entities\ConnectivityRequirement;
 
 class PlanningController extends Controller
 {
@@ -25,10 +29,14 @@ class PlanningController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function create($id = null)
     {
+        $feasibilityRequirementDetail = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('id', $id)->first();
+        $lead_generation = LeadGeneration::where('id', $feasibilityRequirementDetail->feasibilityRequirement->lead_generation_id)->first();
+        $connectivityRequirement = ConnectivityRequirement::where('fr_no', $feasibilityRequirementDetail->fr_no)->first();
+        $connectivityProductRequirementDetails = ConnectivityProductRequirementDetail::where('connectivity_requirement_id', $connectivityRequirement->id)->get();
         $particulars = Product::get();
-        return view('sales::planning.create', compact('particulars'));
+        return view('sales::planning.create', compact('feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars'));
     }
 
     /**

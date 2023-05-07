@@ -77,61 +77,176 @@
                         @endphp
                         {{-- exiting or new radio button --}}
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_type">Date<span
-                                        class="text-danger">*</span></label>
+                            <div class="form-item">
                                 <input class="form-control" id="date" name="date" aria-describedby="date"
                                     value="{{ old('date') ?? ($date ?? '') }}" readonly placeholder="Select a Date">
+                                <label for="date">Date</label>
                             </div>
                         </div>
 
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_id">Client ID<span
-                                        class="text-danger">*</span></label>
+                            <div class="form-item">
                                 <input class="form-control" id="client_id" name="client_id" aria-describedby="client_id"
                                     value="{{ $client_id ?? '' }}" readonly placeholder="Client ID">
+                                <label for="client_id">Client ID<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_name">Client Name<span
-                                        class="text-danger">*</span></label>
+                            <div class="form-item">
                                 <input class="form-control" id="client_name" name="client_name"
                                     aria-describedby="client_name" value="{{ $client_name ?? '' }}" readonly
                                     placeholder="Client Name">
+                                <label for="client_name">Client Name<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="link_name">Name of the link</label>
+                            <div class="form-item">
                                 <input type="text" name="link_name" id="link_name" class="form-control"
                                     placeholder="Name of the link" value="{{ $link_name }}" required>
+                                <label for="link_name">Name of the link</label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="fr_id">FR ID</label>
+                            <div class="form-item">
                                 <input type="text" name="fr_no" id="fr_no" class="form-control" placeholder="FR ID"
                                     value="{{ $fr_no }}" readonly>
+                                <label for="fr_no">FR ID</label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="mq_no">GPS</label>
-                                <input type="text" name="mq_no" id="mq_no" class="form-control" placeholder="MQ No"
+                            <div class="form-item">
+                                <input type="text" name="gps" id="gps" class="form-control" placeholder="GPS"
                                     value="{{ $lat_long }}" readonly>
+                                <label for="gps">GPS</label>
                             </div>
                         </div>
-                        {{-- create a responsive table --}}
+                        <div class="col-xl-4 col-md-4">
+                            <div class="form-item">
+                                <input type="text" name="mq_no" id="mq_no" class="form-control" placeholder="MQ No"
+                                    value="{{ $mq_no }}" readonly>
+                                <label for="mq_no">MQ No</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-4">
+                            <div class="form-item">
+                                <input type="file" name="document" id="file" class="form-control"
+                                    placeholder="File">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <br>
-                <div class="text-center"
-                    style="border-top: 1px solid #d2d2d2; padding: 12px; border-bottom: 1px solid #d2d2d2;">
+                <hr />
+                <div class="text-center">
+                    <h5> <span> &#10070; </span> Connectivity Details <span>&#10070;</span> </h5>
+                </div>
+                <hr />
+                {{-- create a responsive table --}}
+                <div class="row">
+                    <div class="md-col-6 col-6">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5">Product Details</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Product</th>
+                                        <th>Capacity</th>
+                                        <th>Unit</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="productBody">
+                                    @foreach ($connectivity_requirement->connectivityProductRequirementDetails as $connectivityProductRequirementDetail)
+                                        <tr class="product_details_row">
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->category->name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->product->name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->capacity }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->product->unit }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->remarks ?? '' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="md-col-6 col-6">
+                        {{-- Connectivity Details --}}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5">Connectivity Details</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Link Type</th>
+                                        <th>Method</th>
+                                        <th>Capacity %</th>
+                                        <th>Uptime Reg/SLA</th>
+                                        <th>Vendor</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="connectivityBody">
+                                    @foreach ($connectivity_requirement->connectivityRequirementDetails as $connectivityRequirementDetail)
+                                        <tr class="connectivity_details_row">
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->link_type }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->method }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->connectivity_capacity }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->sla }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->vendor->name ?? '' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="text-center">
                     <h5> <span> &#10070; </span> Survey Details <span>&#10070;</span> </h5>
                 </div>
-                <br>
+                <hr />
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -167,7 +282,8 @@
                                                 @endif
                                                 <select name="link_type[]" id="link_type" class="form-control">
                                                     <option value="">Select Link Type</option>
-                                                    <option value="Primary" {{ $link_type == 'Primary' ? 'selected' : '' }}>
+                                                    <option value="Primary"
+                                                        {{ $link_type == 'Primary' ? 'selected' : '' }}>
                                                         Primary</option>
                                                     <option value="Secondary"
                                                         {{ $link_type == 'Secondary' ? 'selected' : '' }}>
@@ -238,9 +354,11 @@
                                                 <select name="method[]" id="method" class="form-control">
                                                     <option value="">Select Method</option>
                                                     <option value="Fiber"
-                                                        {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber</option>
+                                                        {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber
+                                                    </option>
                                                     <option value="Radio"
-                                                        {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio</option>
+                                                        {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio
+                                                    </option>
                                                     <option value="GSM"
                                                         {{ $methods[$key] == 'GSM' ? 'selected' : '' }}>GSM</option>
                                                 </select>

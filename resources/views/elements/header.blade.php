@@ -29,6 +29,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/toastify.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/switchery.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.step.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/myCustomScroll.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .select2-container--default .select2-selection--single .select2-selection__rendered {

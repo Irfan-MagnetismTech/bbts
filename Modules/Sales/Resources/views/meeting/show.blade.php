@@ -4,17 +4,6 @@
 @section('style')
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
-    <style>
-        #client_table th {
-            color: #454444 !important;
-            background-color: #d3d3d3 !important;
-        }
-
-        #meeting_info th {
-            color: #454444 !important;
-            background-color: #d3d3d3 !important;
-        }
-    </style>
 @endsection
 
 @section('breadcrumb-title')
@@ -40,7 +29,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="client_table" style="font-size: 12px;">
+                            <table class="table custom_table table-bordered" id="client_table" style="font-size: 12px;">
                                 <tr>
                                     <th>Client Name</th>
                                     <td>{{ $meeting->client->client_name }}</td>
@@ -97,7 +86,7 @@
                     <!-- table  -->
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="meeting_info" style="font-size: 12px;">
+                            <table class="table custom_table table-bordered" id="meeting_info" style="font-size: 12px;">
                                 <tr>
                                     <th>Client Name</th>
                                     <td>{{ $meeting->client->client_name }}</td>
@@ -137,11 +126,11 @@
                     </div>
                 </div>
             </div>
-            @if($previous_meetings->count() > 0)
-            <div class="card-header">
-                <h5>Previous Meetings</h5>
-            </div>
-            @endif 
+            @if ($previous_meetings->count() > 0)
+                <div class="card-header">
+                    <h5>Previous Meetings</h5>
+                </div>
+            @endif
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">

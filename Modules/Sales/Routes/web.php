@@ -13,6 +13,7 @@ use Modules\Sales\Http\Controllers\ServeyController;
 use Modules\Sales\Http\Controllers\VendorController;
 use Modules\Sales\Http\Controllers\PlanningController;
 use Modules\Sales\Http\Controllers\SalesController;
+use Modules\Sales\Http\Controllers\ClientProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +38,11 @@ Route::prefix('sales')->group(function () {
         'survey' => ServeyController::class,
         'vendor' => VendorController::class,
         'planning' => PlanningController::class,
+        'client-profile' => ClientProfileController::class,
     ]);
     Route::get('followup/create/{meeting_id?}', [FollowUpController::class, 'create'])->name('followup.create');
     Route::get('get-client', [LeadGenerationController::class, 'getClient'])->name('get-client');
+    Route::get('get-client-information-for-profile', [LeadGenerationController::class, 'getClientInformationForProfile'])->name('get-client-information-for-profile');
     Route::get('delete-feasibility-requirement-detail', [FeasibilityRequirementController::class, 'deleteFeasibilityRequirementDetail'])->name('delete-feasibility-requirement-details');
     Route::get('connectivity-requirement-add/{fr_id?}', [ConnectivityRequirementController::class, 'create'])->name('connectivity-requirement-add');
     Route::get('delete-product-requirement-details', [ConnectivityRequirementController::class, 'deleteProductRequirementDetails'])->name('delete-product-requirement-details');
@@ -52,4 +55,5 @@ Route::prefix('sales')->group(function () {
     Route::get('sales-admin-dashboard', [SalesController::class, 'salesAdminDashboard'])->name('sales-admin-dashboard');
     Route::get('lead-generation-update-status/{id}', [LeadGenerationController::class, 'updateStatus'])->name('lead-generation.status.update');
     Route::get('meeting-status-update/{id}', [MeetingController::class, 'updateStatus'])->name('meeting.status.update');
+    Route::get('add-planning/{id}', [PlanningController::class, 'create'])->name('add-planning');
 });
