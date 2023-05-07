@@ -42,4 +42,9 @@ class FeasibilityRequirementDetail extends Model
     {
         return $this->hasMany(Survey::class, 'fr_no', 'fr_no');
     }
+
+    public function survey()
+    {
+        return $this->belongsTo(Survey::class, 'fr_no', 'fr_no');
+    }
 }

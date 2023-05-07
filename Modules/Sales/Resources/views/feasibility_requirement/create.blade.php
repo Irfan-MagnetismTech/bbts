@@ -81,7 +81,7 @@
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
                                 <input type="date" name="date" id="date" class="form-control"
-                                    value="{{ $date ? $data : now()->format('Y-m-d') }}" autocomplete="off">
+                                    value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off">
                                 <label for="client_type">Date<span class="text-danger">*</span></label>
                             </div>
                         </div>

@@ -62,15 +62,134 @@
                                 <span class="form-control">{{ $survey->fr_no }}</span>
                             </div>
                         </div>
-                        {{-- create a responsive table --}}
+                        {{-- gps --}}
+                        <div class="col-xl-4 col-md-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="gps">GPS</label>
+                                <span
+                                    class="form-control">{{ $survey->feasibilityRequirementDetails->lat_long ?? '' }}</span>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="mq_id">MQ ID</label>
+                                <span class="form-control">{{ $survey->mq_no }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <br>
-                <div class="text-center"
-                    style="border-top: 1px solid #d2d2d2; padding: 12px; border-bottom: 1px solid #d2d2d2;">
+                <hr />
+                <div class="text-center">
+                    <h5> <span> &#10070; </span> Connectivity Details <span>&#10070;</span> </h5>
+                </div>
+                <hr />
+                {{-- create a responsive table --}}
+                <div class="row">
+                    <div class="md-col-6 col-6">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5">Product Details</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Product</th>
+                                        <th>Capacity</th>
+                                        <th>Unit</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="productBody">
+                                    @foreach ($connectivity_requirement->connectivityProductRequirementDetails as $connectivityProductRequirementDetail)
+                                        <tr class="product_details_row">
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->category->name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->product->name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->capacity }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->product->unit }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->remarks ?? '' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="md-col-6 col-6">
+                        {{-- Connectivity Details --}}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5">Connectivity Details</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Link Type</th>
+                                        <th>Method</th>
+                                        <th>Capacity %</th>
+                                        <th>Uptime Reg/SLA</th>
+                                        <th>Vendor</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="connectivityBody">
+                                    @foreach ($connectivity_requirement->connectivityRequirementDetails as $connectivityRequirementDetail)
+                                        <tr class="connectivity_details_row">
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->link_type }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->method }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->connectivity_capacity }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->sla }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->vendor->name ?? '' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="text-center">
                     <h5> <span> &#10070; </span> Survey Details <span>&#10070;</span> </h5>
                 </div>
-                <br>
+                <hr />
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>

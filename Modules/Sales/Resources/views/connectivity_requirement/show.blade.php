@@ -9,9 +9,14 @@
 @section('breadcrumb-button')
     <a href="{{ route('connectivity-requirement.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-list"></i></a>
-
 @endsection
-
+@section('style')
+    <style>
+        .input-group-addon {
+            width: 115px !important;
+        }
+    </style>
+@endsection
 @section('sub-title')
     <span class="text-danger">*</span> Marked are required.
 @endsection
@@ -58,35 +63,51 @@
                         @endphp
                     </div>
                     <div class="row">
-                        <div class="md-col-3 col-3">
-                            <label for="client_id">Client ID <span class="text-danger">*</span></label>
-                            <span class="form-control">{{ $client_id }}</span>
+                        <div class="md-col-4 col-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="fr_id">Client ID</label>
+                                <span class="form-control">{{ $client_id }}</span>
+                            </div>
                         </div>
-                        <div class="md-col-3 col-3">
-                            <label for="client_name">Client Name <span class="text-danger">*</span></label>
-                            <span class="form-control">{{ $client_name }}</span>
+                        <div class="md-col-4 col-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="fr_id">Client Name</label>
+                                <span class="form-control">{{ $client_name }}</span>
+                            </div>
                         </div>
-                        <div class="md-col-3 col-3">
-                            <label for="date">Date <span class="text-danger">*</span></label>
-                            <span class="form-control">{{ $date }}</span>
-                        </div>
-                        <div class="md-col-3 col-3">
-                            <label for="from_location">From Location <span class="text-danger">*</span></label>
-                            <span class="form-control">{{ $from_location }}</span>
+                        <div class="md-col-4 col-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="fr_id">Date</label>
+                                <span class="form-control">{{ $date }}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="md-col-3 col-3">
-                            <label for="aggregation_type">Aggregation Type <span class="text-danger">*</span></label>
-                            <span class="form-control">{{ $aggregation_type }}</span>
+                        <div class="md-col-4 col-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="fr_id">From Location</label>
+                                <span class="form-control">{{ $from_location }}</span>
+                            </div>
                         </div>
-                        <div class="md-col-3 col-3">
-                            <label for="link_name">Link Name <span class="text-danger">*</span></label>
-                            <span class="form-control">{{ $link_name }}</span>
+                        <div class="md-col-4 col-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="fr_id">Aggregation Type</label>
+                                <span class="form-control">{{ $aggregation_type }}</span>
+                            </div>
                         </div>
-                        <div class="md-col-3 col-3">
-                            <label for="fr_no">FR No <span class="text-danger">*</span></label>
-                            <span class="form-control">{{ $fr_no }}</span>
+                        <div class="md-col-4 col-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="fr_id">Link Name</label>
+                                <span class="form-control">{{ $link_name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="md-col-4 col-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="fr_id">FR No</label>
+                                <span class="form-control">{{ $fr_no }}</span>
+                            </div>
                         </div>
                     </div>
                     <hr />
@@ -98,7 +119,7 @@
                     <div class="row">
                         <div class="md-col-6 col-6">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
+                                <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th colspan="5">Product Details</th>
@@ -108,29 +129,35 @@
                                             <th>Product</th>
                                             <th>Capacity</th>
                                             <th>Unit</th>
+                                            <th>Remarks</th>
                                         </tr>
                                     </thead>
                                     <tbody class="productBody">
                                         @foreach ($connectivity_requirement->connectivityProductRequirementDetails as $connectivityProductRequirementDetail)
                                             <tr class="product_details_row">
                                                 <td>
-                                                    <span class="form-control">
+                                                    <span>
                                                         {{ $connectivityProductRequirementDetail->category->name }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="form-control">
+                                                    <span>
                                                         {{ $connectivityProductRequirementDetail->product->name }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="form-control">
+                                                    <span>
                                                         {{ $connectivityProductRequirementDetail->capacity }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="form-control">
+                                                    <span>
                                                         {{ $connectivityProductRequirementDetail->product->unit }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        {{ $connectivityProductRequirementDetail->remarks ?? '' }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -152,29 +179,35 @@
                                             <th>Method</th>
                                             <th>Capacity %</th>
                                             <th>Uptime Reg/SLA</th>
+                                            <th>Vendor</th>
                                         </tr>
                                     </thead>
                                     <tbody class="connectivityBody">
                                         @foreach ($connectivity_requirement->connectivityRequirementDetails as $connectivityRequirementDetail)
                                             <tr class="connectivity_details_row">
                                                 <td>
-                                                    <span class="form-control">
+                                                    <span>
                                                         {{ $connectivityRequirementDetail->link_type }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="form-control">
+                                                    <span>
                                                         {{ $connectivityRequirementDetail->method }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="form-control">
+                                                    <span>
                                                         {{ $connectivityRequirementDetail->connectivity_capacity }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="form-control">
+                                                    <span>
                                                         {{ $connectivityRequirementDetail->sla }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        {{ $connectivityRequirementDetail->vendor->name ?? '' }}
                                                     </span>
                                                 </td>
                                             </tr>

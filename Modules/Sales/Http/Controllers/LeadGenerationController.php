@@ -145,4 +145,37 @@ class LeadGenerationController extends Controller
         $lead_generation->save();
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Status Updated Successfully');
     }
+
+    public function getClientInformationForProfile(Request $request)
+    {
+        $main_leads = [];
+        //get client where match the request data
+        $lead_generations = LeadGeneration::where('client_id', 'like', '%' . $request->client_id . '%')->get();
+        foreach ($lead_generations as $lead_generation) {
+            $main_leads[] = [
+                'label' => $lead_generation->client_id,
+                'value' => $lead_generation->client_name,
+                'lead_generation_id' => $lead_generation->id,
+                'location' => $lead_generation->address,
+                'division' => $lead_generation->division_id,
+                'district' => $lead_generation->district_id,
+                'thana' => $lead_generation->thana_id,
+                'lat_long' => $lead_generation->lat_long,
+                'contact_person' => $lead_generation->contact_person,
+                'designation' => $lead_generation->designation,
+                'contact_no' => $lead_generation->contact_no,
+                'email' => $lead_generation->email,
+                'business_type' => $lead_generation->business_type,
+                'client_type' => $lead_generation->client_type,
+            ];
+        }
+        $districts = District::where('division_id', $lead_generation->division_id)->get();
+        $thanas = Thana::where('district_id', $lead_generation->district_id)->get();
+        $data = [
+            'lead_generation' => $main_leads,
+            'districts' => $districts,
+            'thanas' => $thanas,
+        ];
+        return response()->json($data);
+    }
 }

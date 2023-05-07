@@ -13,6 +13,9 @@ use Modules\Sales\Entities\SurveyDetail;
 use Modules\Sales\Http\Requests\SurveyRequest;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\LeadGeneration;
+use Modules\Sales\Entities\ConnectivityRequirement;
+use Modules\Sales\Services\CommonService;
+
 
 class ServeyController extends Controller
 {
@@ -34,7 +37,8 @@ class ServeyController extends Controller
     {
         $fr_detail = FeasibilityRequirementDetail::with('feasibilityRequirement.lead_generation')->find($fr_id);
         $all_fr_list = FeasibilityRequirementDetail::get();
-        return view('sales::survey.create', compact('fr_detail', 'all_fr_list'));
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $fr_detail->fr_no)->first();
+        return view('sales::survey.create', compact('fr_detail', 'all_fr_list', 'connectivity_requirement'));
     }
 
     /**
@@ -52,6 +56,10 @@ class ServeyController extends Controller
         $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_id', $connectivity_requirement_data['client_id'])->first()->mq_no;
         $connectivity_requirement_data['lead_generation_id'] = LeadGeneration::where('client_id', $connectivity_requirement_data['client_id'])->first()->id;
         $connectivity_requirement_data['feasibility_requirement_details_id'] = FeasibilityRequirementDetail::where('fr_no', $connectivity_requirement_data['fr_no'])->first()->id;
+        if ($request->hasFile('document')) {
+            $file_name = CommonService::fileUpload($request->file('document'), 'uploads/survey');
+            $data['document'] = $file_name;
+        }
         DB::beginTransaction();
         try {
             $connectivity_requirement = Survey::create($connectivity_requirement_data);
@@ -87,7 +95,8 @@ class ServeyController extends Controller
     public function show($id)
     {
         $survey = Survey::with('surveyDetails', 'lead_generation')->find($id);
-        return view('sales::survey.show', compact('survey'));
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $survey->fr_no)->first();
+        return view('sales::survey.show', compact('survey', 'connectivity_requirement'));
     }
 
     /**
@@ -98,7 +107,8 @@ class ServeyController extends Controller
     public function edit($id)
     {
         $survey = Survey::with('surveyDetails', 'lead_generation')->find($id);
-        return view('sales::survey.create', compact('survey'));
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $survey->fr_no)->first();
+        return view('sales::survey.create', compact('survey', 'connectivity_requirement'));
     }
 
     /**
@@ -116,6 +126,10 @@ class ServeyController extends Controller
         $survey_data['mq_no'] = FeasibilityRequirement::where('client_id', $survey_data['client_id'])->first()->mq_no;
         $survey_data['lead_generation_id'] = LeadGeneration::where('client_id', $survey_data['client_id'])->first()->id;
         $survey_data['feasibility_requirement_details_id'] = FeasibilityRequirementDetail::where('fr_no', $survey_data['fr_no'])->first()->id;
+        if ($request->hasFile('document')) {
+            $file_name = CommonService::UpdatefileUpload($request->file('document'), 'uploads/survey', $survey->document);
+            $data['document'] = $file_name;
+        }
         DB::beginTransaction();
         try {
             $survey->update($survey_data);
