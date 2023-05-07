@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('product_id')->nullable();
             $table->string('capacity')->nullable();
             $table->string('sla')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

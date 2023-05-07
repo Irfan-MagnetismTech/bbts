@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Indent')
+@section('title', 'Gate Pass')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of Indent Info
+    List of Gate Pass
 @endsection
 
 @section('style')
@@ -14,10 +14,10 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('indents.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('gate-passes.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    Total: {{ count($indents) }}
+    Total: {{ count($gate_passes) }}
 @endsection
 
 @section('content')
@@ -26,38 +26,31 @@
             <thead>
                 <tr>
                     <th>#SL</th>
-                    <th>Indent No.</th>
+                    <th>Gate Pass No.</th>
                     <th>Date</th>
-                    <th>PRS No</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
                     <th>#SL</th>
-                    <th>Indent No.</th>
+                    <th>Gate Pass No.</th>
                     <th>Date</th>
-                    <th>PRS No</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($indents as $key => $indent)        
+                @foreach ($gate_passes as $key => $gate_pass)        
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $indent->indent_no }}</td>
-                        <td class="text-center">{{ $indent->date }}</td>
-                        <td class="text-center">
-                            @foreach ($indent->indentLines as $line)
-                                <p>{{ $line->scmPurchaseRequisition->prs_no }}</p>
-                            @endforeach
-                        </td>
+                        <td class="text-center">{{ $gate_pass->gate_pass_no }}</td>
+                        <td class="text-center">{{ $gate_pass->date }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('indents.edit', $indent->id) }}" data-toggle="tooltip" title="Edit"
+                                    <a href="{{ route('gate-passes.edit', $gate_pass->id) }}" data-toggle="tooltip" title="Edit"
                                         class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    <form action="{{ url("scm/indents/$indent->id") }}" method="POST" data-toggle="tooltip"
+                                    <form action="{{ url("scm/gate-passes/$gate_pass->id") }}" method="POST" data-toggle="tooltip"
                                         title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')

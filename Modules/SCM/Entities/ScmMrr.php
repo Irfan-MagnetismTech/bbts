@@ -57,13 +57,13 @@ class ScmMrr extends Model
     {
         return $this->belongsTo(Branch::class, 'branch_id');
     }
-    public function stockLedger()
+    public function stockable()
     {
         return $this->morphMany(StockLedger::class, 'stockable');
     }
 
-    public function stockLedgerReceivable()
+    public function receiveable()
     {
-        return $this->morphMany(StockLedger::class, 'receivable');
+        return $this->morphMany(StockLedger::class, 'receiveable');
     }
 }

@@ -64,38 +64,42 @@
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_id">Client ID<span
-                                        class="text-danger">*</span></label>
-                                {{ Form::text('client_id', $client_id, ['class' => 'form-control', 'id' => 'client_id', 'autocomplete' => 'off', 'placeholder' => 'Client ID', 'required']) }}
+                            <div class="form-item">
+                                <input type="text" class="form-control" name="client_id" id="client_id"
+                                    value="{{ $client_id }}" autocomplete="off" required>
+                                <label for="client_id">Client ID<span class="text-danger">*</span></label>
                                 <input type="hidden" name="lead_generation_id" id="lead_generation_id" value="">
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_name">Client Name<span
-                                        class="text-danger">*</span></label>
-                                {{ Form::text('client_name', $client_name, ['class' => 'form-control', 'id' => 'client_name', 'autocomplete' => 'off', 'placeholder' => 'Client Name', 'required']) }}
+                            <div class="form-item">
+                                <input type="text" class="form-control" name="client_name" id="client_name"
+                                    value="{{ $client_name }}" autocomplete="off" required>
+                                <label for="client_name">Client Name<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_type">Date<span
-                                        class="text-danger">*</span></label>
-                                {{ Form::date('date', $date, ['class' => 'form-control', 'id' => 'date', 'autocomplete' => 'off', 'placeholder' => 'Date', 'required']) }}
+                            <div class="form-item">
+                                <input type="date" name="date" id="date" class="form-control"
+                                    value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off">
+                                <label for="client_type">Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        {{-- create a responsive table --}}
-                        <hr />
-                        <div class="text-center">
-                            <h5> Connectivity Details </h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <hr>
+                            <div class="text-center">
+                                <h5> <span> &#10070; </span> Feasibility Requirement <span>&#10070;</span> </h5>
+                            </div>
+                            <hr>
                         </div>
-                        <hr />
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th rowspan="2">Name of the Link</th>
+                                        <th rowspan="2">Agreegation Type</th>
                                         <th colspan="5">Connectivity Address</th>
                                         <th colspan="5">Local Contact Details</th>
                                     </tr>
@@ -130,6 +134,23 @@
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
+                                                        <select name="aggregation_type" class="form-control"
+                                                            autocomplete="off" placeholder="Select Aggregation Type">
+                                                            <option value="">Select Aggregation Type</option>
+                                                            <option value="DC"
+                                                                {{ $item->aggregation_type == 'DC' ? 'selected' : '' }}>
+                                                                DC</option>
+                                                            <option value="DR"
+                                                                {{ $item->aggregation_type == 'DR' ? 'selected' : '' }}>
+                                                                DR</option>
+                                                            <option value="Branch"
+                                                                {{ $item->aggregation_type == 'Branch' ? 'selected' : '' }}>
+                                                                Branch</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-group-sm input-group-primary">
                                                         <select name="division_id[]" class="form-control division"
                                                             id="division" autocomplete="off" placeholder="Select Division">
                                                             <option value="">Select Division</option>
@@ -160,8 +181,8 @@
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <select name="thana_id[]" class="form-control thana" id="thana"
-                                                            autocomplete="off" placeholder="Select Thana">
+                                                        <select name="thana_id[]" class="form-control thana"
+                                                            id="thana" autocomplete="off" placeholder="Select Thana">
                                                             @if ($item->thana_id)
                                                                 @foreach ($thanas as $thana)
                                                                     <option value="{{ $thana->id }}"
@@ -228,6 +249,17 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="link_name[]" class="form-control"
                                                         id="link_name" autocomplete="off" placeholder="Link Name">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <select name="aggregation_type" class="form-control"
+                                                        autocomplete="off" placeholder="Select Aggregation Type">
+                                                        <option value="">Select Aggregation Type</option>
+                                                        <option value="DC">DC</option>
+                                                        <option value="DR">DR</option>
+                                                        <option value="Branch">Branch</option>
+                                                    </select>
                                                 </div>
                                             </td>
                                             <td>
@@ -340,7 +372,10 @@
                                 _token: "{{ csrf_token() }}"
                             },
                             success: function(data) {
-                                row.html(data);
+                                data.forEach(element => {
+                                    row.append('<option value="' + element.id + '">' + element.text +
+                                        '</option>');
+                                });
                             }
                         });
                     });
@@ -356,7 +391,10 @@
                                 _token: "{{ csrf_token() }}"
                             },
                             success: function(data) {
-                                row.html(data);
+                                data.forEach(element => {
+                                    row.append('<option value="' + element.id + '">' + element.text +
+                                        '</option>');
+                                });
                             }
                         });
                     });

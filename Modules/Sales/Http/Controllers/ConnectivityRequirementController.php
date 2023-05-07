@@ -8,12 +8,14 @@ use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\Category;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
-
+use Modules\Sales\Services\CommonService;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\ConnectivityRequirementDetail;
 use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
 use Modules\Sales\Http\Requests\ConnectivityRequirementRequest;
+use Modules\Sales\Entities\Vendor;
+
 
 class ConnectivityRequirementController extends Controller
 {
@@ -37,7 +39,8 @@ class ConnectivityRequirementController extends Controller
         $feasibility_requirement = FeasibilityRequirement::where('client_id', $fr_detail->feasibilityRequirement->client_id)->first();
         $all_fr_list = FeasibilityRequirementDetail::where('feasibility_requirement_id', $feasibility_requirement->id)->get();
         $categories = Category::all();
-        return view('sales::connectivity_requirement.create', compact('fr_detail', 'categories', 'all_fr_list'));
+        $vendors = Vendor::all();
+        return view('sales::connectivity_requirement.create', compact('fr_detail', 'categories', 'all_fr_list', "vendors"));
     }
 
     /**
@@ -52,6 +55,10 @@ class ConnectivityRequirementController extends Controller
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
         $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
         $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_id', $connectivity_requirement_data['client_id'])->first()->mq_no;
+        if ($request->hasFile('document')) {
+            $file_name = CommonService::fileUpload($request->file('document'), 'uploads/connectivity_details');
+            $connectivity_requirement_data['document'] = $file_name;
+        }
 
         DB::beginTransaction();
         try {
@@ -61,6 +68,7 @@ class ConnectivityRequirementController extends Controller
                 $connectivity_requirement_details['category_id'] = $category_id;
                 $connectivity_requirement_details['product_id'] = $request->product_id[$key];
                 $connectivity_requirement_details['capacity'] = $request->capacity[$key];
+                $connectivity_requirement_details['remarks'] = $request->remarks[$key];
                 ConnectivityProductRequirementDetail::create($connectivity_requirement_details);
             }
             foreach ($request->link_type as $key => $link_type) {
@@ -69,6 +77,7 @@ class ConnectivityRequirementController extends Controller
                 $connectivity_product_requirement_details['method'] = $request->method[$key];
                 $connectivity_product_requirement_details['connectivity_capacity'] = $request->connectivity_capacity[$key];
                 $connectivity_product_requirement_details['sla'] = $request->uptime_req[$key];
+                $connectivity_product_requirement_details['vendor_id'] = $request->vendor_id[$key];
                 ConnectivityRequirementDetail::create($connectivity_product_requirement_details);
             }
             DB::commit();
@@ -86,7 +95,7 @@ class ConnectivityRequirementController extends Controller
      */
     public function show($id)
     {
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->find($id);
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->find($id);
         return view('sales::connectivity_requirement.show', compact('connectivity_requirement'));
     }
 
@@ -109,8 +118,9 @@ class ConnectivityRequirementController extends Controller
         $connectivity_requirement->product_select = $product_select;
         $all_fr_list = FeasibilityRequirementDetail::where('feasibility_requirement_id', $connectivity_requirement->fromLocation->feasibility_requirement_id)->get();
         $categories = Category::all();
+        $vendors = Vendor::all();
         // dd($categories);
-        return view('sales::connectivity_requirement.create', compact('connectivity_requirement', 'categories', 'all_fr_list'));
+        return view('sales::connectivity_requirement.create', compact('connectivity_requirement', 'categories', 'all_fr_list', 'vendors'));
     }
 
     /**
@@ -126,6 +136,10 @@ class ConnectivityRequirementController extends Controller
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
         $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
         $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_id', $connectivity_requirement_data['client_id'])->first()->mq_no;
+        if ($request->hasFile('document')) {
+            $file_name = CommonService::UpdatefileUpload($request->file('document'), 'uploads/connectivity_details', $connectivity_requirement->document);
+            $data['document'] = $file_name;
+        }
 
         DB::beginTransaction();
         try {
@@ -137,6 +151,7 @@ class ConnectivityRequirementController extends Controller
                 $connectivity_requirement_details['category_id'] = $category_id;
                 $connectivity_requirement_details['product_id'] = $request->product_id[$key];
                 $connectivity_requirement_details['capacity'] = $request->capacity[$key];
+                $connectivity_requirement_details['remarks'] = $request->remarks[$key];
                 ConnectivityProductRequirementDetail::create($connectivity_requirement_details);
             }
             foreach ($request->link_type as $key => $link_type) {
@@ -145,6 +160,7 @@ class ConnectivityRequirementController extends Controller
                 $connectivity_product_requirement_details['method'] = $request->method[$key];
                 $connectivity_product_requirement_details['connectivity_capacity'] = $request->connectivity_capacity[$key];
                 $connectivity_product_requirement_details['sla'] = $request->uptime_req[$key];
+                $connectivity_product_requirement_details['vendor_id'] = $request->vendor_id[$key];
                 ConnectivityRequirementDetail::create($connectivity_product_requirement_details);
             }
             DB::commit();

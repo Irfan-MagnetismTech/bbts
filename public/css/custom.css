@@ -252,7 +252,7 @@ a {
 }
 
 .input-group-primary .form-control {
-    border-color: #efefef;
+    border-color: #ccc;
 }
 
 
@@ -284,3 +284,70 @@ span.select2-selection.select2-selection--single {
     display: flex !important;
     align-items: center !important;
 }
+
+*:focus {
+    outline: none
+}
+
+.form {
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 150px;
+    font-family: sans-serif;
+    background: #fff
+}
+
+.form-item {
+    position: relative;
+    margin-bottom: 15px
+}
+
+.form-item input, select {
+    display: block;
+    border: solid 1px #ccc;
+    transition: all .3s ease;
+    padding: 0.5rem 0.75rem;
+}
+
+.form-item input:focus {
+    border-color: blue
+}
+
+.form-item label {
+    position: absolute;
+    cursor: text;
+    z-index: 2;
+    top: 9px;
+    left: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    background: #fff;
+    padding: 0 10px;
+    color: #999;
+    transition: all .3s ease
+}
+
+.form-item input:focus+label,
+.form-item input:read-only+label,
+.form-item input:valid+label,
+.form-item select:valid+label {
+    font-size: 11px;
+    top: -8px
+}
+
+.form-item input:focus+label {
+    color: blue
+}
+
+.custom_table th {
+    color: #454444 !important;
+    background-color: #51c8e6 !important;
+    padding: 5px 10px !important;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    background-color: #fdfeff !important;
+    opacity: 1;
+}
+
+

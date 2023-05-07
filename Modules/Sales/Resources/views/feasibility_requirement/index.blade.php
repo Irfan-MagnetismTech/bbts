@@ -31,6 +31,8 @@
                     <th>Client Name</th>
                     <th>Client id</th>
                     <th>MQ No</th>
+                    <th>Total FR </th>
+                    <th>Survey/Planing</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -41,7 +43,9 @@
                     <th>Client Name</th>
                     <th>Client id</th>
                     <th>MQ No</th>
-                    <th>Status </th>
+                    <th>Total FR </th>
+                    <th>Survey/Planing</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -52,18 +56,31 @@
                         <td>{{ $feasibility_requirement->lead_generation->client_name }}</td>
                         <td>{{ $feasibility_requirement->client_id }}</td>
                         <td>{{ $feasibility_requirement->mq_no }}</td>
+                        <td>{{ $feasibility_requirement->feasibilityRequirementDetails->count() }}</td>
+                        <td>{{ $feasibility_requirement->feasibilityRequirementDetails[0]->surveySum->count() ?? '' }}/0
+                        </td>
                         <td>{{ $feasibility_requirement->is_existing }}</td>
                         <td>
-                            <a href="{{ route('feasibility-requirement.edit', $feasibility_requirement->id) }}"
-                                class="btn btn-sm btn-primary" style="padding: 6px 7px;"><i class="fas fa-edit"></i></a>
-                            <a href="{{ route('feasibility-requirement.show', $feasibility_requirement->id) }}"
-                                class="btn btn-sm btn-success" style="padding: 6px 7px;"><i class="fas fa-eye"></i></a>
-                            <form action="{{ route('feasibility-requirement.destroy', $feasibility_requirement->id) }}"
-                                method="POST" class="d-inline-block" id="deleteFeasibility">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                            </form>
+                            <div class="icon-btn">
+                                <nobr>
+                                    <a href="{{ route('feasibility-requirement.show', $feasibility_requirement->id) }}"
+                                        data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i
+                                            class="fas fa-eye"></i></a>
+
+                                    <a href="{{ route('feasibility-requirement.edit', $feasibility_requirement->id) }}"
+                                        data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
+                                            class="fas fa-pen"></i></a>
+
+                                    <form
+                                        action="{{ route('feasibility-requirement.destroy', $feasibility_requirement->id) }}"
+                                        method="POST" class="d-inline" id="deleteClientProfile">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                </nobr>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\SCM\Http\Controllers\ScmErrController;
 use Modules\SCM\Http\Controllers\ScmMirController;
 use Modules\SCM\Http\Controllers\ScmGatePassController;
 use Modules\SCM\Http\Controllers\PurchaseOrderController;
@@ -17,4 +18,5 @@ Route::get('getMaterialStock', [ScmMirController::class, 'getMaterialStock'])->n
 Route::resources([
     'material-issues' => ScmMirController::class,
     'gate-passes' => ScmGatePassController::class,
+    'errs' => ScmErrController::class,
 ]);

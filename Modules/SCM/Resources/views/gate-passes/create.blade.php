@@ -3,9 +3,9 @@
 
 @php
     $is_old = old('prs_no') ? true : false;
-    $form_heading = !empty($indent->id) ? 'Update' : 'Add';
-    $form_url = !empty($indent->id) ? route('gate-passes.update', $indent->id) : route('gate-passes.store');
-    $form_method = !empty($indent->id) ? 'PUT' : 'POST';
+    $form_heading = !empty($gate_pass->id) ? 'Update' : 'Add';
+    $form_url = !empty($gate_pass->id) ? route('gate-passes.update', $gate_pass->id) : route('gate-passes.store');
+    $form_method = !empty($gate_pass->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
@@ -32,34 +32,52 @@
     ]) !!}
 
     <div class="row">
-        @if (!empty($indent->id))
+        @if (!empty($gate_pass->id))
             <div class="form-group col-3">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="name">Indent No <span class="text-danger">*</span></label>
-                    <input class="form-control" id="indent_no" name="indent_no" aria-describedby="indent_no"
-                        value="{{ old('indent_no') ?? ($indent->indent_no ?? '') }}" readonly placeholder="Indent No">
+                    <label class="input-group-addon" for="name">gate_pass No <span class="text-danger">*</span></label>
+                    <input class="form-control" id="gate_pass_no" name="gate_pass_no" aria-describedby="gate_pass_no"
+                        value="{{ old('gate_pass_no') ?? ($gate_pass->gate_pass_no ?? '') }}" readonly placeholder="gate_pass No">
                 </div>
             </div>
         @endif
+        <div class="col-md-12">
+            <div class="typeSection mt-2 mb-4">
+                <div class="form-check-inline">
+                    <label class="form-check-label" for="challan">
+                        <input type="radio" class="form-check-input radioButton" id="challan" name="type"
+                            value="challan" @checked(@$gate_pass->type == 'challan' || old('type') == 'challan' || $form_method == "POST" )> Challan
+                    </label>
+                </div>
+
+                <div class="form-check-inline">
+                    <label class="form-check-label" for="mir">
+                        <input type="radio" class="form-check-input radioButton" id="mir" name="type"
+                            @checked(@$gate_pass->type == 'mir' || old('type') == 'mir') value="mir">
+                        MIR
+                    </label>
+                </div>
+            </div>
+        </div>
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <label class="input-group-addon" for="date">Date <span class="text-danger">*</span></label>
                 <input class="form-control" id="date" name="date" aria-describedby="date"
-                    value="{{ old('date') ?? ($indent->date ?? '') }}" readonly placeholder="Select a Date">
+                    value="{{ old('date') ?? ($gate_pass->date ?? '') }}" readonly placeholder="Select a Date">
             </div>
         </div>
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <label class="input-group-addon" for="carrier_name">Carrier Name <span class="text-danger">*</span></label>
                 <input class="form-control" id="carrier_name" name="carrier_name" aria-describedby="carrier_name"
-                    value="{{ old('date') ?? ($indent->date ?? '') }}" placeholder="Carrier Name">
+                    value="{{ old('carrier_name') ?? ($gate_pass->carrier ?? '') }}" placeholder="Carrier Name">
             </div>
         </div>
         <table class="table table-bordered" id="material_requisition">
             <thead>
                 <tr>
-                    <th> Challan No.</th>
-                    <th> MIR No.</th>
+                    <th class="challan" style="display: none"> Challan No.</th>
+                    <th class="mir" style="display: none"> MIR No.</th>
                     <th> Remarks</th>
                     <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
                 </tr>
@@ -67,28 +85,25 @@
             <tbody></tbody>
             <tfoot>
                 @php
-                    $quantity = old('quantity', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('quantity') : []);
-                    $brand_id = old('brand_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('brand_id') : []);
-                    $model = old('model', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('model') : []);
-                    $purpose = old('purpose', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('purpose') : []);
+                    $challan_no = old('challan_no', !empty($gate_pass) ? $gate_pass->lines->pluck('challan.challan_no') : []);
+                    $challan_id = old('challan_id', !empty($gate_pass) ? $gate_pass->lines->pluck('challan_id') : []);
+                    $mir_no = old('challan_no', !empty($gate_pass) ? $gate_pass->lines->pluck('mir.mir_no') : []);
+                    $mir_id = old('challan_id', !empty($gate_pass) ? $gate_pass->lines->pluck('mir_id') : []);
+                    $remarks = old('brand_id', !empty($gate_pass) ? $gate_pass->lines->pluck('remarks') : []);
                 @endphp
-                @foreach ($quantity as $key => $requisitionDetail)
+                @foreach ($remarks as $key => $requisitionDetail)
                     <tr>
-                        <td>
-                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
-                                value="{{ $unit[$key] }}">
+                        <td class="challan">
+                            <input type="text" name="challan_no[]" class="form-control challan_no" autocomplete="off" value="{{$challan_no[$key]}}">
+                            <input type="hidden" name="challan_id[]" class="form-control challan_id" autocomplete="off" value="{{$challan_id[$key]}}">
+                        </td>
+                        <td class="mir">
+                            <input type="text" name="mir_no[]" class="form-control mir_no" autocomplete="off" value="{{$mir_no[$key]}}">
+                            <input type="hidden" name="mir_id[]" class="form-control mir_id" autocomplete="off" value="{{$mir_id[$key]}}">
                         </td>
                         <td>
-                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
-                                value="{{ $unit[$key] }}">
-                        </td>
-                        <td>
-                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
-                                value="{{ $unit[$key] }}">
-                        </td>
-                        <td>
-                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
-                                value="{{ $unit[$key] }}">
+                            <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off" readonly
+                                value="{{ $remarks[$key] }}">
                         </td>
                         <td>
                             <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
@@ -112,25 +127,39 @@
 @section('script')
     <script>
         /* Append row */
-        @if (empty($requisition) && empty(old('material_name')))
-            appendCalculationRow();
-        @endif
+        
         function appendCalculationRow() {
+            var type = $("input[name=type]:checked").val()
+            console.log(type)
             let row = `<tr>
-                            <td>
-                                <input type="text" name="challan_no[]" class="form-control challan_no" autocomplete="off">
-                            </td>
-                            <td>
+                            ${ type === 'mir' ? 
+                            `<td class="mir">
                                 <input type="text" name="mir_no[]" class="form-control mir_no" autocomplete="off">
+                                <input type="hidden" name="mir_id[]" class="form-control mir_id" autocomplete="off">
                             </td>
+                            <td class="challan" style="display: none">
+                                <input type="text" name="challan_no[]" class="form-control challan_no" autocomplete="off">
+                                <input type="hidden" name="challan_id[]" class="form-control challan_id" autocomplete="off">
+                            </td>
+                            ` 
+                            : 
+                            `<td class="challan">
+                                <input type="text" name="challan_no[]" class="form-control challan_no" autocomplete="off">
+                                <input type="hidden" name="challan_id[]" class="form-control challan_id" autocomplete="off">
+                            </td>
+                            <td class="mir" style="display: none">
+                                <input type="text" name="mir_no[]" class="form-control mir_no" autocomplete="off">
+                                <input type="hidden" name="mir_id[]" class="form-control mir_id" autocomplete="off">
+                            </td>
+                            `
+                             } 
                             <td>
                                 <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
                             </td>
-                    </tr>
-                    `;
+                    </tr>`;
             $('#material_requisition tbody').append(row);
         }
 
@@ -145,6 +174,35 @@
                 }
                 $(this).closest('tr').remove();
             });
+            $(document).on('keyup','.challan_no',function(){
+                var event_this_challan = $(this).closest('tr');
+                let myObject = {
+                    challan_no: event_this_challan.find('.challan_no').val(),
+                }
+
+                jquaryUiAjax($(this), "{{ route('searchChallanNo') }}", uiList, myObject);
+
+                function uiList(item) {
+                    event_this_challan.find('.challan_id').val(item.id);
+                    return false;
+                }
+                
+            })
+
+            $(document).on('keyup','.mir_no',function(){
+                var event_this_mir = $(this).closest('tr');
+                let myObject = {
+                    mir_no: event_this_mir.find('.mir_no').val(),
+                }
+
+                jquaryUiAjax($(this), "{{ route('searchMirNo') }}", uiList, myObject);
+
+                function uiList(item) {
+                    event_this_mir.find('.mir_id').val(item.id);
+                    return false;
+                }
+                
+            })
 
         $('#date').datepicker({
             format: "dd-mm-yyyy",
@@ -152,5 +210,26 @@
             todayHighlight: true,
             showOtherMonths: true
         }).datepicker("setDate", new Date());
+
+        $(function() {
+            onChangeRadioButton();
+            @if (empty($gate_pass) && empty(old('material_name')))
+            appendCalculationRow();
+        @endif
+        $(".radioButton").click(function() {
+                onChangeRadioButton()
+            });
+        });
+
+        function onChangeRadioButton() {
+            var radioValue = $("input[name='type']:checked").val();
+            if (radioValue == 'challan') {
+                $('.mir').hide('slow');
+                $('.challan').show('slow');
+            } else if (radioValue == 'mir') {
+                $('.mir').show('slow');
+                $('.challan').hide('slow');
+            }
+        }
     </script>
 @endsection

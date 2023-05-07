@@ -20,7 +20,7 @@ class FeasibilityRequirementController extends Controller
      */
     public function index()
     {
-        $feasibility_requirements = FeasibilityRequirement::with('lead_generation')->get();
+        $feasibility_requirements = FeasibilityRequirement::with('lead_generation', 'feasibilityRequirementDetails.surveySum')->get();
         return view('sales::feasibility_requirement.index', compact('feasibility_requirements'));
     }
 
@@ -69,6 +69,7 @@ class FeasibilityRequirementController extends Controller
             }
             $feasibility_detail[] = [
                 'link_name' => $request['link_name'][$feasibility_key],
+                'agreegation_type' => $request['agreegation_type'][$feasibility_key],
                 'fr_no' => $fr_no,
                 'division_id' => $request['division_id'][$feasibility_key],
                 'district_id' => $request['district_id'][$feasibility_key],
@@ -95,7 +96,7 @@ class FeasibilityRequirementController extends Controller
      */
     public function show($id)
     {
-        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.connectivityRequirement',)->find($id);
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.connectivityRequirement', 'feasibilityRequirementDetails.survey')->find($id);
         return view('sales::feasibility_requirement.show', compact('feasibility_requirement'));
     }
 

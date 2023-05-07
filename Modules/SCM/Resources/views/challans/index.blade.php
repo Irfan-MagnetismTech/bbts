@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Requisition')
+@section('title', 'Challans')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of Requisition Info
+    List of Challan Info
 @endsection
 
 @section('style')
@@ -14,12 +14,11 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('requisitions.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('challans.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    Total: {{ count($requisitions) }}
+    Total: {{ count($challans) }}
 @endsection
-
 
 @section('content')
     <div class="dt-responsive table-responsive">
@@ -27,9 +26,9 @@
             <thead>
                 <tr>
                     <th>#SL</th>
-                    <th>MRS No</th>
+                    <th>Challan No</th>
                     <th>Type</th>
-                    <th>Requisition By</th>
+                    <th>From Branch</th>
                     <th>Date</th>
                     <th>Action</th>
                 </tr>
@@ -37,37 +36,41 @@
             <tfoot>
                 <tr>
                     <th>#SL</th>
-                    <th>MRS No</th>
+                    <th>Challan No</th>
                     <th>Type</th>
-                    <th>Requisition By</th>
+                    <th>From Branch</th>
                     <th>Date</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($requisitions as $key => $requisition)
+                @foreach ($challans as $key => $challan)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $requisition->mrs_no }}</td>
-                        <td class="text-center">{{ ucfirst($requisition->type) }}</td>
-                        <td class="text-center">{{ ucfirst($requisition->requisitionBy->name) }}</td>
-                        <td class="text-center">{{ $requisition->date }}</td>
+                        <td class="text-center">{{ $challan->challan_no }}</td>
+                        <td class="text-center">{{ ucfirst($challan->type) }}</td>
+                        <td class="text-center">{{ ucfirst($challan->branch->name) }}</td>
+                        <td class="text-center">{{ $challan->date }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ url("scm/requisitions/$requisition->id") }}" data-toggle="tooltip"
+                                    <a href="{{ url("scm/challans/$challan->id") }}" data-toggle="tooltip"
                                         title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('requisitions.edit', $requisition->id) }}" data-toggle="tooltip"
+                                    <a href="{{ route('challans.edit', $challan->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ url("scm/requisitions/$requisition->id") }}" method="POST"
+                                    <form action="{{ url("scm/challans/$challan->id") }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
+                                    @if(in_array($challan->type, ['client', 'pop']))
+                                    <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}" data-toggle="tooltip"
+                                        title="Edit" class="btn btn-outline-secondary">MUR</a>
+                                    @endif
                                 </nobr>
                             </div>
                         </td>

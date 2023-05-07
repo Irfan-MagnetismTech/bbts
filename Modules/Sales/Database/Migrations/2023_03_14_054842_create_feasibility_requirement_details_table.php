@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('feasibility_requirement_id');
             $table->string('fr_no')->nullable();
             $table->string('link_name')->nullable();
+            $table->string('agreegation_type')->nullable();
             $table->integer('division_id')->nullable();
             $table->integer('district_id')->nullable();
             $table->integer('thana_id')->nullable();

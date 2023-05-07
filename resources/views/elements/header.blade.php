@@ -26,8 +26,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/select2.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{asset('css/Datatables/dataTables.bootstrap4.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/toastify.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/switchery.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.step.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/myCustomScroll.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -111,32 +114,36 @@
                                 <a href="#!">
                                     <i class="ti-bell" style="font-size: 24px"></i>
                                     <span class="badge bg-c-pink" style="top: 5px" id="notificationCount">
-                                    {{ count(auth()->user()->unreadNotifications) }}
+                                        {{ count(auth()->user()->unreadNotifications) }}
                                     </span>
                                 </a>
                                 <ul class="show-notification" id="notification-list-popup">
-                                   
+
 
                                     @forelse(auth()->user()->unreadNotifications as $notification)
-                                    <li>
-                                        <a href="{{ route('support-tickets.show', ['support_ticket' => $notification->data['supportTicketId']]) }}" style="font-size: 12px; padding: 0" class="text-left p-0 d-block">
-                                            {{ $notification->data['message'] }} <br>
-                                        
-                                            <small>
-                                                at {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y \a\t h:i a') }}
-                                            </small>
-                                        </a>
-                                    </li>
-                                    @if($loop->index > 8)
-                                        @php break; @endphp
-                                    @endif
+                                        <li>
+                                            <a href="{{ route('support-tickets.show', ['support_ticket' => $notification->data['supportTicketId']]) }}"
+                                                style="font-size: 12px; padding: 0" class="text-left p-0 d-block">
+                                                {{ $notification->data['message'] }} <br>
+
+                                                <small>
+                                                    at
+                                                    {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y \a\t h:i a') }}
+                                                </small>
+                                            </a>
+                                        </li>
+                                        @if ($loop->index > 8)
+                                            @php break; @endphp
+                                        @endif
                                     @empty
-                                    <li id="no-notification">No notification</li>
+                                        <li id="no-notification">No notification</li>
                                     @endforelse
                                     <li>
                                         <div class="d-flex justify-content-between">
-                                            <a href="{{ route('read-all-notification') }}" class="btn btn-primary">Mark all as read</a>
-                                            <a href="{{ route('all-notifications') }}" class="btn btn-info">See all notification</a>
+                                            <a href="{{ route('read-all-notification') }}"
+                                                class="btn btn-primary">Mark all as read</a>
+                                            <a href="{{ route('all-notifications') }}" class="btn btn-info">See all
+                                                notification</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -150,7 +157,8 @@
 
 
                                     <li>
-                                        <a href="{{ route('password-change-form') }}"><i class="ti-settings"></i>Change
+                                        <a href="{{ route('password-change-form') }}"><i
+                                                class="ti-settings"></i>Change
                                             Password</a>
                                     </li>
 

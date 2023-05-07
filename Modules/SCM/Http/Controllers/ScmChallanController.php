@@ -2,25 +2,41 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
+use App\Services\BbtsGlobalService;
+use Modules\SCM\Entities\ScmChallan;
+use Modules\SCM\Entities\ScmMrrLine;
+use Modules\SCM\Entities\StockLedger;
+use Illuminate\Database\QueryException;
+use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SCM\Entities\ScmMrrLine;
+use Modules\SCM\Entities\ScmErr;
+use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmRequisitionDetail;
-use Modules\SCM\Entities\StockLedger;
+use Modules\SCM\Entities\ScmWcr;
 
 class ScmChallanController extends Controller
 {
+    private $ChallanNo;
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->ChallanNo = $globalService->generateUniqueId(ScmChallan::class, 'Challan');
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('scm::index');
+        $challans = ScmChallan::with('scmChallanLines')->latest()->get();
+        return view('scm::challans.index', compact('challans'));
     }
 
     /**
@@ -32,15 +48,7 @@ class ScmChallanController extends Controller
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
-        $purposes = [
-            'activation' => 'Activation',
-            'maintenance' => 'Maintenance',
-            'shifting' => 'Shifting',
-            'own_use' => 'Own Use',
-            'stolen' => 'Stolen',
-        ];
-        $received_type = ['mrr', 'err', 'wcr'];
-        return view('scm::challans.create', compact('formType', 'brands', 'branchs', 'purposes', 'received_type'));
+        return view('scm::challans.create', compact('formType', 'brands', 'branchs'));
     }
 
     /**
@@ -50,47 +58,34 @@ class ScmChallanController extends Controller
      */
     public function store(Request $request)
     {
-        $mrr_details = [];
+        try {
+            DB::beginTransaction();
+            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id', 'fr_composite_key');
+            $challan_data['challan_no'] =  $this->ChallanNo;
+            $challan_data['created_by'] = auth()->id();
 
-        foreach ($request->material_name as $kk => $val) {
-            if (isset($request->serial_code[$kk]) && count($request->serial_code[$kk])) {
-                foreach ($request->serial_code[$kk] as $key => $value) {
-                    $stock_ledgers[] = [
-                        'branch_id' => null,
-                        'material_id' => $request->material_name[$kk],
-                        'item_code' => null,
-                        'unit' => $request->unit[$kk],
-                        'brand_id' => $request->brand[$kk],
-                        'model' => $request->model[$kk],
-                        'serial_code' => $request->serial_code[$kk][$key],
-                        'quantity' => $request->quantity[$kk],
-                    ];
-                };
-            } elseif (isset($request->material_name[$kk])) {
-                $stock_ledgers[] = [
-                    'branch_id' => null,
-                    'material_id' => $request->material_name[$kk],
-                    'item_code' => null,
-                    'unit' => $request->unit[$kk],
-                    'brand_id' => isset($request->brand[$kk]) ? $request->brand[$kk] : null,
-                    'model' => isset($request->model[$kk]) ? $request->model[$kk] : null,
-                    'serial_code' => null,
-                    'quantity' => $request->quantity[$kk],
-                ];
-            }
-            $mrr_details[] = [
-                'received_type' => $request->received_type[$kk],
-                'type_id' => $request->type_id[$kk],
-                'material_id'   => $request->material_name[$kk],
-                'brand_id' => isset($request->brand[$kk]) ? $request->brand[$kk] : null,
-                'model' => isset($request->model[$kk]) ? $request->model[$kk] : null,
-                'serial_code' => isset($request->serial_code[$kk]) ? json_encode($request->serial_code[$kk]) : [],
-                'unit' => json_encode($request->unit[$kk]),
-                'quantity' => json_encode($request->quantity[$kk]),
-                'remarks' => json_encode($request->remarks[$kk]),
-            ];
-        };
-        dd($stock_ledgers, $mrr_details, $request->all());
+            $challan_details = [];
+            foreach ($request->material_name as $kk => $val) {
+                if (isset($request->serial_code[$kk]) && count($request->serial_code[$kk])) {
+                    foreach ($request->serial_code[$kk] as $key => $value) {
+                        $stock_ledgers[] = $this->GetStockLedgerData($request, $kk, $key);
+                    };
+                } elseif (isset($request->material_name[$kk])) {
+                    $stock_ledgers[] = $this->GetStockLedgerData($request, $kk);
+                }
+                $challan_details[] = $this->GetMrrDetails($request, $kk);
+            };
+
+            $challan = ScmChallan::create($challan_data);
+            $challan->scmChallanLines()->createMany($challan_details);
+            $challan->stockable()->createMany($stock_ledgers);
+
+            DB::commit();
+            return redirect()->route('challans.index')->with('message', 'Data has been inserted successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('challans.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -108,9 +103,62 @@ class ScmChallanController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ScmChallan $challan)
     {
-        return view('scm::edit');
+        $branchs = Branch::latest()->get();
+        $client_links = ClientDetail::where('client_id', $challan->client_id)->get();
+        $materials = [];
+        $brands = [];
+        $models = [];
+        $serial_codes = [];
+        $branch_stock = [];
+        $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, $challan, &$branch_stock) {
+            $materials[$key] = Stockledger::with('material')->where([
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type
+            ])->get()
+                ->unique('material_id')
+                ->values();
+            $brands[$key] = Stockledger::with('brand')->where([
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type,
+                'material_id' => $item->material_id
+            ])
+                ->get()
+                ->unique('brand_id')
+                ->values();
+
+            $models[$key] = StockLedger::query()->where([
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type,
+                'material_id' => $item->material_id,
+                'brand_id' => $item->brand_id
+            ])
+                ->get()
+                ->unique('model')
+                ->values();
+
+            $serial_codes[$key] = StockLedger::query()->where([
+                'receiveable_id' => $item->receiveable_id,
+                'receiveable_type' => $item->receiveable_type,
+                'material_id' => $item->material_id,
+                'brand_id' => $item->brand_id,
+                'model' => $item->model,
+            ])
+                ->get()
+                ->unique('serial_code')
+                ->values();;
+            $branch_stock[] = StockLedger::query()
+                ->where([
+                    'material_id' => $item->material_id,
+                    'received_type' => $item->received_type,
+                    'receiveable_id' => $item->receiveable_id,
+                    'branch_id' => $challan->branch_id,
+                ])
+                ->sum('quantity');
+        });
+        // dd($brands);
+        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes', 'branch_stock'));
     }
 
     /**
@@ -119,9 +167,36 @@ class ScmChallanController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ScmChallan $challan)
     {
-        //
+        // dd($request->all());
+        try {
+            DB::beginTransaction();
+            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id', 'fr_composite_key');
+
+            $challan_details = [];
+            foreach ($request->material_name as $kk => $val) {
+                if (isset($request->serial_code[$kk]) && count($request->serial_code[$kk])) {
+                    foreach ($request->serial_code[$kk] as $key => $value) {
+                        $stock_ledgers[] = $this->GetStockLedgerData($request, $kk, $key);
+                    };
+                } elseif (isset($request->material_name[$kk])) {
+                    $stock_ledgers[] = $this->GetStockLedgerData($request, $kk);
+                }
+                $challan_details[] = $this->GetMrrDetails($request, $kk);
+            };
+
+            $challan->update($challan_data);
+            $challan->scmChallanLines()->delete();
+            $challan->scmChallanLines()->createMany($challan_details);
+            $challan->stockable()->delete();
+            $challan->stockable()->createMany($stock_ledgers);
+            DB::commit();
+            return redirect()->route('challans.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('challans.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -129,7 +204,50 @@ class ScmChallanController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmChallan $challan)
     {
+        try {
+            DB::beginTransaction();
+            $challan->stockable()->delete();
+            $challan->delete();
+            DB::commit();
+            return redirect()->route('challans.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->route('challans.index')->withInput()->withErrors($err->getMessage());
+        }
+    }
+
+    public function GetStockLedgerData($req, $key1, $key2 = NULL)
+    {
+        return [
+            'branch_id' => $req->branch_id,
+            'material_id' => $req->material_name[$key1],
+            'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : NULL)),
+            'received_type' => $req->received_type[$key1],
+            'receiveable_id' => $req->type_id[$key1],
+            'item_code' => $req->item_code[$key1],
+            'unit' => $req->unit[$key1],
+            'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : NULL,
+            'model' => isset($req->model[$key1]) ? $req->model[$key1] : NULL,
+            'serial_code' => (isset($req->serial_code[$key1]) && isset($req->serial_code[$key1][$key2])) ? $req->serial_code[$key1][$key2] : '',
+            'quantity' =>  -1 * (isset($key2) ? (($req->material_type[$key1] == "Drum") ? $req->quantity[$key1] : 1) : $req->quantity[$key1]),
+        ];
+    }
+
+    public function GetMrrDetails($req, $key1)
+    {
+        return  [
+            'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : NULL)),
+            'receiveable_id' => $req->type_id[$key1],
+            'item_code' => $req->item_code[$key1],
+            'material_id'   => $req->material_name[$key1],
+            'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : NULL,
+            'model' => isset($req->model[$key1]) ? $req->model[$key1] : NULL,
+            'serial_code' => isset($req->serial_code[$key1]) ? json_encode($req->serial_code[$key1]) : '[]',
+            'unit' => $req->unit[$key1],
+            'quantity' => $req->quantity[$key1],
+            'remarks' => $req->remarks[$key1],
+        ];
     }
 }

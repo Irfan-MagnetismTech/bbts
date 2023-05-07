@@ -31,4 +31,11 @@ class Branch extends Model
     {
         return $this->belongsTo(Pop::class);
     }
+
+    public function getFormattedAddressAttribute()
+    {
+        $formatted = "{$this->name} ({$this->location}) - {$this->thana->name} - {$this->district->name}";
+
+        return $formatted;
+    }
 }

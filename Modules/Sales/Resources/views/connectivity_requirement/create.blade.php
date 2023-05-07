@@ -47,10 +47,12 @@
                                 $category_data = $connectivity_requirement->connectivityProductRequirementDetails->pluck('category_id')->toArray();
                                 $product_id = $connectivity_requirement->connectivityProductRequirementDetails->pluck('product_id')->toArray();
                                 $capacity = $connectivity_requirement->connectivityProductRequirementDetails->pluck('capacity')->toArray();
+                                $remarks = $connectivity_requirement->connectivityProductRequirementDetails->pluck('remarks')->toArray();
                                 $link_type = $connectivity_requirement->connectivityRequirementDetails->pluck('link_type')->toArray();
                                 $connectivity_capacity = $connectivity_requirement->connectivityRequirementDetails->pluck('connectivity_capacity')->toArray();
                                 $method = $connectivity_requirement->connectivityRequirementDetails->pluck('method')->toArray();
                                 $uptime_req = $connectivity_requirement->connectivityRequirementDetails->pluck('sla')->toArray();
+                                $vendor_id = $connectivity_requirement->connectivityRequirementDetails->pluck('vendor_id')->toArray(); 
                             }
                             
                             $client_name = $is_old ? old('client_name') : $connectivity_requirement->lead_generation->client_name ?? $fr_detail->feasibilityRequirement->lead_generation->client_name;
@@ -74,49 +76,68 @@
                     </div>
                     <div class="row">
                         <div class="md-col-3 col-3">
-                            <label for="client_id">Client ID <span class="text-danger">*</span></label>
-                            <input type="text" name="client_id" id="client_id" class="form-control"
-                                value="{{ $client_id }}" readonly>
+                            <div class="form-item">
+                                <input type="text" name="client_id" id="client_id" class="form-control"
+                                    value="{{ $client_id }}" readonly>
+                                <label for="client_id">Client ID <span class="text-danger">*</span></label>
+                            </div>
                         </div>
                         <div class="md-col-3 col-3">
-                            <label for="client_name">Client Name <span class="text-danger">*</span></label>
-                            <input type="text" name="client_name" id="client_name" class="form-control"
-                                value="{{ $client_name }}" readonly>
+                            <div class="form-item">
+                                <input type="text" name="client_name" id="client_name" class="form-control"
+                                    value="{{ $client_name }}" readonly>
+                                <label for="client_name">Client Name <span class="text-danger">*</span></label>
+                            </div>
                         </div>
                         <div class="md-col-3 col-3">
-                            <label for="date">Date <span class="text-danger">*</span></label>
-                            <input type="text" name="date" id="date" class="form-control"
-                                value="{{ $date }}" readonly>
+                            <div class="form-item">
+                                <input type="text" name="date" id="date" class="form-control"
+                                    value="{{ $date }}" readonly>
+                                <label for="date">Date <span class="text-danger">*</span></label>
+                            </div>
                         </div>
                         <div class="md-col-3 col-3">
-                            <label for="from_location">From Location <span class="text-danger">*</span></label>
-                            <select name="from_location" id="from_location" class="form-control">
-                                <option value="">Select From Location</option>
-                                @foreach ($all_fr_list as $fr)
-                                    <option value="{{ $fr->id }}" {{ $fr->id == $from_location ? 'selected' : '' }}>
-                                        {{ $fr->fr_no }}</option>
-                                @endforeach
-                            </select>
+                            <div class="form-item">
+                                <select name="from_location" id="from_location" class="form-control">
+                                    <option value="">Select From Location</option>
+                                    @foreach ($all_fr_list as $fr)
+                                        <option value="{{ $fr->id }}"
+                                            {{ $fr->id == $from_location ? 'selected' : '' }}>
+                                            {{ $fr->fr_no }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="from_location">From Location <span class="text-danger">*</span></label>
+                            </div>
                         </div>
                         <div class="md-col-3 col-3">
-                            <label for="aggregation_type">Aggregation Type <span class="text-danger">*</span></label>
-                            <select name="aggregation_type" id="aggregation_type" class="form-control">
-                                <option value="">Select Aggregation Type</option>
-                                <option value="DR" {{ $aggregation_type == 'DR' ? 'selected' : '' }}>DR</option>
-                                <option value="DC" {{ $aggregation_type == 'DC' ? 'selected' : '' }}>IR</option>
-                                <option value="Branch" {{ $aggregation_type == 'Branch' ? 'selected' : '' }}>Branch
-                                </option>
-                            </select>
+                            <div class="form-item">
+                                <select name="aggregation_type" id="aggregation_type" class="form-control">
+                                    <option value="">Select Aggregation Type</option>
+                                    <option value="DR" {{ $aggregation_type == 'DR' ? 'selected' : '' }}>DR</option>
+                                    <option value="DC" {{ $aggregation_type == 'DC' ? 'selected' : '' }}>IR</option>
+                                    <option value="Branch" {{ $aggregation_type == 'Branch' ? 'selected' : '' }}>Branch
+                                    </option>
+                                </select>
+                                <label for="aggregation_type">Aggregation Type <span class="text-danger">*</span></label>
+                            </div>
                         </div>
                         <div class="md-col-3 col-3">
-                            <label for="link_name">Link Name <span class="text-danger">*</span></label>
-                            <input type="text" name="link_name" id="link_name" class="form-control"
-                                value="{{ $link_name }}" readonly>
+                            <div class="form-item">
+                                <input type="text" name="link_name" id="link_name" class="form-control"
+                                    value="{{ $link_name }}" readonly>
+                                <label for="link_name">Link Name <span class="text-danger">*</span></label>
+                            </div>
                         </div>
                         <div class="md-col-3 col-3">
-                            <label for="fr_no">FR No <span class="text-danger">*</span></label>
-                            <input type="text" name="fr_no" id="fr_no" class="form-control"
-                                value="{{ $fr_no }}" readonly>
+                            <div class="form-item">
+                                <input type="text" name="fr_no" id="fr_no" class="form-control"
+                                    value="{{ $fr_no }}" readonly>
+                                <label for="fr_no">FR No <span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+                        {{-- file upload --}}
+                        <div class="md-col-3 col-3">
+                            <input type="file" name="document" id="file" class="form-control" title="Upload File">
                         </div>
                     </div>
                     <div class="row">
@@ -136,13 +157,14 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th colspan="5">Product Details</th>
+                                            <th colspan="6">Product Details</th>
                                         </tr>
                                         <tr>
-                                            <th>Category</th>
-                                            <th>Product</th>
+                                            <th style="width:25%">Category</th>
+                                            <th style="width:25%">Product</th>
                                             <th>Capacity</th>
                                             <th>Unit</th>
+                                            <th>Remarks</th>
                                             <th>
                                                 <button type="button" class="btn btn-sm btn-success" id="addProductRow"><i
                                                         class="fas fa-plus"></i></button>
@@ -188,6 +210,11 @@
                                                             class="form-control unit" placeholder="Unit" />
                                                     </td>
                                                     <td>
+                                                        <input type="text" name="remarks[]"
+                                                            value="{{ $remarks[$key] }}" class="form-control remarks"
+                                                            placeholder="Remarks" />
+                                                    </td>
+                                                    <td>
                                                         <button type="button" producut_attr=""
                                                             class="btn btn-sm btn-danger removeProductRow"><i
                                                                 class="fas fa-trash"></i></button>
@@ -219,6 +246,10 @@
                                                         placeholder="Unit" />
                                                 </td>
                                                 <td>
+                                                    <input type="text" name="remarks[]" class="form-control remarks"
+                                                        placeholder="Remarks" />
+                                                </td>
+                                                <td>
                                                     <button type="button" producut_attr=""
                                                         class="btn btn-sm btn-danger removeProductRow"><i
                                                             class="fas fa-trash"></i></button>
@@ -235,13 +266,14 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th colspan="5">Connectivity Details</th>
+                                            <th colspan="6">Connectivity Details</th>
                                         </tr>
                                         <tr>
-                                            <th>Link Type</th>
-                                            <th>Method</th>
+                                            <th style="width:15%">Link Type</th>
+                                            <th style="width:25%">Method</th>
                                             <th>Capacity %</th>
                                             <th>Uptime Reg/SLA</th>
+                                            <th style="width:25%">Vendor</th>
                                             <th>
                                                 <button type="button" class="btn btn-sm btn-success"
                                                     id="addConnectivityRow"><i class="fas fa-plus"></i></button>
@@ -293,6 +325,16 @@
                                                             placeholder="Uptime Reg/SLA" />
                                                     </td>
                                                     <td>
+                                                        <select name="vendor_id[]" class="form-control vendor_id">
+                                                            <option value="">Select Vendor</option>
+                                                            @foreach ($vendors as $vendor)
+                                                                <option value="{{ $vendor->id }}"
+                                                                    @if ($vendor_id[$key] == $vendor->id) selected @endif>
+                                                                    {{ $vendor->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
                                                         <button type="button" connectivity_attr=""
                                                             class="btn btn-sm btn-danger removeConnectivityRow"><i
                                                                 class="fas fa-trash"></i></button>
@@ -325,6 +367,15 @@
                                                 <td>
                                                     <input type="text" name="uptime_req[]" id="uptime_req"
                                                         class="form-control" placeholder="Uptime Reg/SLA" />
+                                                </td>
+                                                <td>
+                                                    <select name="vendor_id[]" class="form-control vendor_id">
+                                                        <option value="">Select Vendor</option>
+                                                        @foreach ($vendors as $vendor)
+                                                            <option value="{{ $vendor->id }}">
+                                                                {{ $vendor->name }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </td>
                                                 <td>
                                                     <button type="button" connectivity_attr=""

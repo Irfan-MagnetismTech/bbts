@@ -17,5 +17,14 @@ class Followup extends Model
     {
         return $this->hasOne(LeadGeneration::class, 'id', 'client_id');
     }
-    
+
+    public function clientQuestion()
+    {
+        return $this->hasOne(ClientQuestion::class, 'follow_up_id', 'id');
+    }
+
+    public function tada()
+    {
+        return $this->hasOne(Tada::class, 'follow_up_id', 'id');
+    }
 }

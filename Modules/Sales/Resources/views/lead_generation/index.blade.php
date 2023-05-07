@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Pre Sale Client List')
+@section('title', 'Lead Generation List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Pre Sale Client List
+    Lead Generation List
 @endsection
 
 @section('style')
@@ -28,43 +28,43 @@
             <thead>
                 <tr>
                     <th>#SL</th>
-                    <th>Client Name</th>
+                    <th>Date</th>
                     <th>Client id</th>
-                    <th>Address</th>
-                    <th>Divison</th>
-                    <th>District</th>
-                    <th>Thana</th>
+                    <th>Client Name</th>
                     <th>Contact Person</th>
+                    <th>Designation</th>
                     <th>Contact No</th>
+                    <th>Created By</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
                     <th>#SL</th>
-                    <th>Client Name</th>
+                    <th>Date</th>
                     <th>Client id</th>
-                    <th>Address</th>
-                    <th>Divison</th>
-                    <th>District</th>
-                    <th>Thana</th>
+                    <th>Client Name</th>
                     <th>Contact Person</th>
+                    <th>Designation</th>
                     <th>Contact No</th>
+                    <th>Created By</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
                 @foreach ($lead_generations as $key => $lead_generation)
                     <tr>
-                        <td> {{ $key + 1 }} </td>
-                        <td> {{ $lead_generation->client_name }} </td>
-                        <td> {{ $lead_generation->client_id }} </td>
-                        <td> {{ $lead_generation->address }} </td>
-                        <td> {{ $lead_generation->division->name ?? '' }} </td>
-                        <td> {{ $lead_generation->district->name ?? '' }} </td>
-                        <td> {{ $lead_generation->thana->name ?? '' }} </td>
-                        <td> {{ $lead_generation->contact_person }} </td>
-                        <td> {{ $lead_generation->contact_no }} </td>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $lead_generation->created_at->format('d-m-Y') }}</td>
+                        <td>{{ $lead_generation->client_id }}</td>
+                        <td>{{ $lead_generation->client_name }}</td>
+                        <td>{{ $lead_generation->contact_person }}</td>
+                        <td>{{ $lead_generation->designation }}</td>
+                        <td>{{ $lead_generation->contact_no }}</td>
+                        <td>{{ $lead_generation->createdBy->name }}</td>
+                        <td>{{ $lead_generation->status }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

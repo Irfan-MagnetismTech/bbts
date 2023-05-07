@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('meeting_place')->nullable();
             $table->integer('client_id')->nullable();
             $table->text('purpose')->nullable();
+            $table->string('status')->nullable()->default('Pending');
             $table->timestamps();
         });
     }

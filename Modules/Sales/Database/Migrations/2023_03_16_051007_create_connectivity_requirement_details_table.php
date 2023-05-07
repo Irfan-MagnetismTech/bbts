@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('link_type')->nullable();
             $table->string('method')->nullable();
             $table->string('connectivity_capacity')->nullable();
+            $table->string('vendor_id')->nullable();
             $table->timestamps();
         });
     }

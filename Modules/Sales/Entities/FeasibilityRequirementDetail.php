@@ -33,7 +33,18 @@ class FeasibilityRequirementDetail extends Model
         return $this->belongsTo(Thana::class);
     }
 
-    public function connectivityRequirement(){
+    public function connectivityRequirement()
+    {
         return $this->belongsTo(ConnectivityRequirement::class, 'fr_no', 'fr_no');
+    }
+
+    public function surveySum()
+    {
+        return $this->hasMany(Survey::class, 'fr_no', 'fr_no');
+    }
+
+    public function survey()
+    {
+        return $this->belongsTo(Survey::class, 'fr_no', 'fr_no');
     }
 }

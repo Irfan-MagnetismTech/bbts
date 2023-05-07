@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scm_challan_lines', function (Blueprint $table) {
+        Schema::create('tadas', function (Blueprint $table) {
             $table->id();
-
+            $table->integer('follow_up_id')->unsigned();
+            $table->integer('client_id')->unsigned();
+            $table->integer('amount')->unsigned();
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scm_challan_lines');
+        Schema::dropIfExists('tadas');
     }
 };

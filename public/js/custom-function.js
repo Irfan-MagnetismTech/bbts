@@ -192,7 +192,7 @@ function populateDropdownByAjax(
             dropdown.prop("selectedIndex", 0);
             if (selected) {
                 dropdown.append(
-                    "<option selected value=''>Select Option</option>"
+                    "<option selected value='null'>Select Option</option>"
                 );
             }
             data.options.map(function (item) {

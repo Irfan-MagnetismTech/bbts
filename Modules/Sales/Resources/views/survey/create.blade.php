@@ -50,6 +50,7 @@
                                 $gps = $survey->surveyDetails->pluck('gps')->toArray();
                                 $distances = $survey->surveyDetails->pluck('distance')->toArray();
                                 $current_capacities = $survey->surveyDetails->pluck('current_capacity')->toArray();
+                                $pops = $survey->surveyDetails->pluck('pop')->toArray();
                                 $remarks = $survey->surveyDetails->pluck('remarks')->toArray();
                                 $details_ids = $survey->surveyDetails->pluck('id')->toArray();
                             }
@@ -71,58 +72,181 @@
                             $current_capacities = $is_old ? old('current_capacity') : $current_capacities ?? [];
                             $remarks = $is_old ? old('remarks') : $remarks ?? [];
                             $details_ids = $details_ids ?? [];
+                            $lat_long = $is_old ? old('lat_long') : $survey->feasibilityRequirementDetails->lat_long ?? null;
                             
                         @endphp
                         {{-- exiting or new radio button --}}
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_type">Date<span
-                                        class="text-danger">*</span></label>
+                            <div class="form-item">
                                 <input class="form-control" id="date" name="date" aria-describedby="date"
                                     value="{{ old('date') ?? ($date ?? '') }}" readonly placeholder="Select a Date">
+                                <label for="date">Date</label>
                             </div>
                         </div>
 
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_id">Client ID<span
-                                        class="text-danger">*</span></label>
+                            <div class="form-item">
                                 <input class="form-control" id="client_id" name="client_id" aria-describedby="client_id"
                                     value="{{ $client_id ?? '' }}" readonly placeholder="Client ID">
+                                <label for="client_id">Client ID<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_name">Client Name<span
-                                        class="text-danger">*</span></label>
+                            <div class="form-item">
                                 <input class="form-control" id="client_name" name="client_name"
                                     aria-describedby="client_name" value="{{ $client_name ?? '' }}" readonly
                                     placeholder="Client Name">
+                                <label for="client_name">Client Name<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="link_name">Name of the link</label>
+                            <div class="form-item">
                                 <input type="text" name="link_name" id="link_name" class="form-control"
                                     placeholder="Name of the link" value="{{ $link_name }}" required>
+                                <label for="link_name">Name of the link</label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="fr_id">FR ID</label>
+                            <div class="form-item">
                                 <input type="text" name="fr_no" id="fr_no" class="form-control" placeholder="FR ID"
                                     value="{{ $fr_no }}" readonly>
+                                <label for="fr_no">FR ID</label>
                             </div>
                         </div>
-                        {{-- create a responsive table --}}
+                        <div class="col-xl-4 col-md-4">
+                            <div class="form-item">
+                                <input type="text" name="gps" id="gps" class="form-control" placeholder="GPS"
+                                    value="{{ $lat_long }}" readonly>
+                                <label for="gps">GPS</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-4">
+                            <div class="form-item">
+                                <input type="text" name="mq_no" id="mq_no" class="form-control" placeholder="MQ No"
+                                    value="{{ $mq_no }}" readonly>
+                                <label for="mq_no">MQ No</label>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-4">
+                            <div class="form-item">
+                                <input type="file" name="document" id="file" class="form-control"
+                                    placeholder="File">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <br>
-                <div class="text-center"
-                    style="border-top: 1px solid #d2d2d2; padding: 12px; border-bottom: 1px solid #d2d2d2;">
+                <hr />
+                <div class="text-center">
+                    <h5> <span> &#10070; </span> Connectivity Details <span>&#10070;</span> </h5>
+                </div>
+                <hr />
+                {{-- create a responsive table --}}
+                <div class="row">
+                    <div class="md-col-6 col-6">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5">Product Details</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Product</th>
+                                        <th>Capacity</th>
+                                        <th>Unit</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="productBody">
+                                    @foreach ($connectivity_requirement->connectivityProductRequirementDetails as $connectivityProductRequirementDetail)
+                                        <tr class="product_details_row">
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->category->name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->product->name }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->capacity }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->product->unit }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityProductRequirementDetail->remarks ?? '' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="md-col-6 col-6">
+                        {{-- Connectivity Details --}}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th colspan="5">Connectivity Details</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Link Type</th>
+                                        <th>Method</th>
+                                        <th>Capacity %</th>
+                                        <th>Uptime Reg/SLA</th>
+                                        <th>Vendor</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="connectivityBody">
+                                    @foreach ($connectivity_requirement->connectivityRequirementDetails as $connectivityRequirementDetail)
+                                        <tr class="connectivity_details_row">
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->link_type }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->method }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->connectivity_capacity }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->sla }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    {{ $connectivityRequirementDetail->vendor->name ?? '' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="text-center">
                     <h5> <span> &#10070; </span> Survey Details <span>&#10070;</span> </h5>
                 </div>
-                <br>
+                <hr />
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
@@ -130,15 +254,16 @@
                                 <th>Link Type</th>
                                 <th>Option</th>
                                 <th>Status</th>
-                                <th>Method</th>
-                                <th>Vendor</th>
                                 <th>BTS/POP/LDP</th>
+                                <th>Vendor</th>
+                                <th>Pop</th>
+                                <th>Method</th>
                                 <th>GPS</th>
                                 <th>Distance</th>
                                 <th>Current Capacity</th>
                                 <th>Remarks</th>
                                 <th>
-                                    <button type="button" class="btn btn-sm btn-primary" id="addRow">
+                                    <button type="button" class="btn btn-sm btn-success" id="addRow">
                                         <i class="fa fa-plus"></i>
                                     </button>
                                 </th>
@@ -157,7 +282,8 @@
                                                 @endif
                                                 <select name="link_type[]" id="link_type" class="form-control">
                                                     <option value="">Select Link Type</option>
-                                                    <option value="Primary" {{ $link_type == 'Primary' ? 'selected' : '' }}>
+                                                    <option value="Primary"
+                                                        {{ $link_type == 'Primary' ? 'selected' : '' }}>
                                                         Primary</option>
                                                     <option value="Secondary"
                                                         {{ $link_type == 'Secondary' ? 'selected' : '' }}>
@@ -198,15 +324,9 @@
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
-                                                <select name="method[]" id="method" class="form-control">
-                                                    <option value="">Select Method</option>
-                                                    <option value="Fiber"
-                                                        {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber</option>
-                                                    <option value="Radio"
-                                                        {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio</option>
-                                                    <option value="GSM"
-                                                        {{ $methods[$key] == 'GSM' ? 'selected' : '' }}>GSM</option>
-                                                </select>
+                                                <input type="text" name="bts_pop_ldp[]" id="bts_pop_ldp"
+                                                    class="form-control" placeholder="BTS/POP/LDP"
+                                                    value="{{ $bts_pop_ldps[$key] }}">
                                             </div>
                                         </td>
                                         <td>
@@ -218,11 +338,33 @@
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="bts_pop_ldp[]" id="bts_pop_ldp"
-                                                    class="form-control" placeholder="BTS/POP/LDP"
-                                                    value="{{ $bts_pop_ldps[$key] }}">
+                                                <select name="pop[]" id="pop" class="form-control">
+                                                    <option value="">Select Pop</option>
+                                                    <option value="Pop 1" {{ $pops[$key] == 'Pop 1' ? 'selected' : '' }}>
+                                                        Pop 1</option>
+                                                    <option value="Pop 2" {{ $pops[$key] == 'Pop 2' ? 'selected' : '' }}>
+                                                        Pop 2</option>
+                                                    <option value="Pop 3" {{ $pops[$key] == 'Pop 3' ? 'selected' : '' }}>
+                                                        Pop 3</option>
+                                                </select>
                                             </div>
                                         </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <select name="method[]" id="method" class="form-control">
+                                                    <option value="">Select Method</option>
+                                                    <option value="Fiber"
+                                                        {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber
+                                                    </option>
+                                                    <option value="Radio"
+                                                        {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio
+                                                    </option>
+                                                    <option value="GSM"
+                                                        {{ $methods[$key] == 'GSM' ? 'selected' : '' }}>GSM</option>
+                                                </select>
+                                            </div>
+                                        </td>
+
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="gps[]" id="gps" class="form-control"
@@ -275,7 +417,7 @@
                                         <div class="input-group input-group-sm input-group-primary">
                                             <select name="option[]" id="option" class="form-control">
                                                 <option value="">Select Option</option>
-                                                <option value="Option 1">Option 1</option>
+                                                <option selected value="Option 1">Option 1</option>
                                                 <option value="Option 2">Option 2</option>
                                                 <option value="Option 3">Option 3</option>
                                             </select>
@@ -302,16 +444,27 @@
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="bts_pop_ldp[]" id="bts_pop_ldp"
+                                                class="form-control" placeholder="BTS/POP/LDP">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="vendor[]" id="vendor" class="form-control"
                                                 placeholder="Vendor">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="bts_pop_ldp[]" id="bts_pop_ldp"
-                                                class="form-control" placeholder="BTS/POP/LDP">
+                                            <select name="pop[]" id="pop" class="form-control">
+                                                <option value="">Select Pop</option>
+                                                <option value="Pop 1">Pop 1</option>
+                                                <option value="Pop 2">Pop 2</option>
+                                                <option value="Pop 3">Pop 3</option>
+                                            </select>
                                         </div>
                                     </td>
+
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="gps[]" id="gps" class="form-control"
@@ -345,9 +498,10 @@
                         </tbody>
                     </table>
                 </div>
-                <button class="py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
             </div>
+            <button class="py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
         </div>
+    </div>
     </div>
     {!! Form::close() !!}
 @endsection

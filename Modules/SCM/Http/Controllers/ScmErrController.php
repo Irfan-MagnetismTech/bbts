@@ -2,19 +2,24 @@
 
 namespace Modules\SCM\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use Termwind\Components\Dd;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use Modules\Admin\Entities\Branch;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\ScmMur;
 
 class ScmErrController extends Controller
 {
+    protected $laravel;
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('scm::index');
+        return view('scm::errs.index');
     }
 
     /**
@@ -23,7 +28,10 @@ class ScmErrController extends Controller
      */
     public function create()
     {
-        return view('scm::create');
+        $formType = "create";
+        $brands = Brand::latest()->get();
+        $branchs = Branch::latest()->get();
+        return view('scm::errs.create', compact('formType', 'brands', 'branchs'));
     }
 
     /**
@@ -75,5 +83,11 @@ class ScmErrController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function clientMurWiseMaterials()
+    {
+        $materials = ScmMur::where('client_id', request()->client_id)->get();
+        return response()->json($materials);
     }
 }

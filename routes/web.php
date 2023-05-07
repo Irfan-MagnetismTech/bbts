@@ -20,9 +20,9 @@ use Modules\Admin\Http\Controllers\AuthController;
 |
 */
 
-// Route::get('/', function () {
-//    return view('welcome');
-// });
+Route::get('/welcome', function () {
+   return view('welcome');
+});
 // Route::get('/login', [AuthController::class, 'login'])->name('login');
 
 // Route::get('/password-change-config', 'Auth\ResetOldPasswordController@PasswordResetForm')->name('password-change-form');
