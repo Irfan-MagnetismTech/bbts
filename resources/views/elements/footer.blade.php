@@ -26,6 +26,8 @@
 <script src="{{ asset('js/form-validate.js') }}"></script>
 
 <!-- jquery slimscroll js -->
+<script src="{{ asset('js/dataTables.select.min.js') }}"></script>
+
 
 <script>
     const Toast = Swal.mixin({

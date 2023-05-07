@@ -10,6 +10,7 @@ use Modules\Ticketing\Http\Controllers\TicketSourceController;
 use Modules\Ticketing\Http\Controllers\SupportTicketController;
 use Modules\Ticketing\Http\Controllers\SupportComplainTypeController;
 use Modules\Ticketing\Http\Controllers\SupportQuickSolutionController;
+use Modules\Ticketing\Http\Controllers\TicketDashboardController;
 use Modules\Ticketing\Http\Controllers\TicketMovementController;
 
 /*
@@ -32,6 +33,8 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         'complain-sources' => TicketSourceController::class,
         'ticket-movements' => TicketMovementController::class,
     ]);
+
+    Route::get('/', [TicketDashboardController::class, 'index'])->name('ticketing-dashboard');
 
     Route::get('forwarded-tickets', [SupportTicketController::class, 'forwardedTickets'])->name('forwarded-tickets');
     Route::post('accept-forwarded-tickets', [TicketMovementController::class, 'acceptForwardedTickets'])->name('accept-forwarded-tickets');
@@ -65,6 +68,14 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     // Ticketing Reports
     Route::prefix('reports')->group(function() {
         Route::get('/', [ReportController::class, 'index'])->name('report-index');
-        Route::get('pdf', [ReportController::class, 'pdf'])->name('report-pdf');
+        Route::post('/filter-data', [ReportController::class, 'index'])->name('search-report-data');
+        Route::post('/download-datatable-filtered-report', [ReportController::class, 'excelDownload'])->name('filtered-report-download'); // Datatable Filtered Data
+
+        Route::get('pdf', [ReportController::class, 'pdf'])->name('report-pdf'); // jsPDF
+
+        Route::get('/downtime-report', [ReportController::class, 'downtimeReport'])->name('downtime-report-index');
+        Route::post('/filter-downtime-report', [ReportController::class, 'downtimeReport'])->name('filter-downtime-report');
+        Route::post('/download-datatable-filtered-downtime-report', [ReportController::class, 'downtimeDataTableExcelDownload'])->name('filtered-downtime-report-download'); // Datatable Filtered Data
+
     });
 });
