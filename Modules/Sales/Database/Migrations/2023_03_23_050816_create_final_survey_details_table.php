@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('survey_details', function (Blueprint $table) {
+        Schema::create('final_survey_details', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('survey_id')->nullable();
             $table->string('link_type')->nullable();
@@ -38,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('survey_details');
+        Schema::dropIfExists('final_survey_details');
     }
 };

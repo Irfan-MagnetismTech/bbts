@@ -14,10 +14,11 @@ use Modules\Sales\Http\Requests\SurveyRequest;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\ConnectivityRequirement;
+use Modules\Sales\Entities\FinalSurveyDetail;
 use Modules\Sales\Services\CommonService;
 
 
-class ServeyController extends Controller
+class SurveyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -48,7 +49,6 @@ class ServeyController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $connectivity_requirement_data = $request->only('date', 'client_id', 'fr_no');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
@@ -67,6 +67,7 @@ class ServeyController extends Controller
             foreach ($connectivity_requirement_details['link_type'] as $key => $value) {
                 $connectivity_requirement_details['survey_id'] = $connectivity_requirement->id;
                 $connectivity_requirement_details['link_type'] = $value;
+                $connectivity_requirement_details['link_no'] = $connectivity_requirement_data['fr_no'] . '-' . substr($value, 0, 1) . $key + 1;
                 $connectivity_requirement_details['option'] = $request->option[$key];
                 $connectivity_requirement_details['status'] = $request->status[$key];
                 $connectivity_requirement_details['method'] = $request->method[$key];
@@ -133,9 +134,12 @@ class ServeyController extends Controller
         DB::beginTransaction();
         try {
             $survey->update($survey_data);
+            $survey->surveyDetails()->delete();
+            $survey->finalSurveyDetails()->delete();
             foreach ($request->link_type as $key => $value) {
                 $survey_details['survey_id'] = $survey->id;
                 $survey_details['link_type'] = $value;
+                $survey_details['link_no'] = $survey_data['fr_no'] . '-' . substr($value, 0, 1) . $key + 1;
                 $survey_details['option'] = $request->option[$key];
                 $survey_details['status'] = $request->status[$key];
                 $survey_details['method'] = $request->method[$key];
@@ -145,7 +149,8 @@ class ServeyController extends Controller
                 $survey_details['distance'] = $request->distance[$key];
                 $survey_details['current_capacity'] = $request->current_capacity[$key];
                 $survey_details['remarks'] = $request->remarks[$key];
-                SurveyDetail::updateOrCreate(['id' => $request->details_id[$key]], $survey_details);
+                SurveyDetail::create($survey_details);
+                FinalSurveyDetail::create($survey_details);
             }
             DB::commit();
             return redirect()->route('survey.index')->with('success', 'Survey Updated Successfully');

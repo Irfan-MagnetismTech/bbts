@@ -50,7 +50,6 @@
                                 $gps = $survey->surveyDetails->pluck('gps')->toArray();
                                 $distances = $survey->surveyDetails->pluck('distance')->toArray();
                                 $current_capacities = $survey->surveyDetails->pluck('current_capacity')->toArray();
-                                $pops = $survey->surveyDetails->pluck('pop')->toArray();
                                 $remarks = $survey->surveyDetails->pluck('remarks')->toArray();
                                 $details_ids = $survey->surveyDetails->pluck('id')->toArray();
                             }
@@ -256,7 +255,6 @@
                                 <th>Status</th>
                                 <th>BTS/POP/LDP</th>
                                 <th>Vendor</th>
-                                <th>Pop</th>
                                 <th>Method</th>
                                 <th>GPS</th>
                                 <th>Distance</th>
@@ -270,7 +268,7 @@
 
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="tbody">
                             @if (!empty($link_types))
                                 @foreach ($link_types as $key => $link_type)
                                     <tr class="feasibility_details_row">
@@ -334,19 +332,6 @@
                                                 <input type="text" name="vendor[]" id="vendor"
                                                     class="form-control" placeholder="Vendor"
                                                     value="{{ $vendors[$key] }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group input-group-sm input-group-primary">
-                                                <select name="pop[]" id="pop" class="form-control">
-                                                    <option value="">Select Pop</option>
-                                                    <option value="Pop 1" {{ $pops[$key] == 'Pop 1' ? 'selected' : '' }}>
-                                                        Pop 1</option>
-                                                    <option value="Pop 2" {{ $pops[$key] == 'Pop 2' ? 'selected' : '' }}>
-                                                        Pop 2</option>
-                                                    <option value="Pop 3" {{ $pops[$key] == 'Pop 3' ? 'selected' : '' }}>
-                                                        Pop 3</option>
-                                                </select>
                                             </div>
                                         </td>
                                         <td>
@@ -456,17 +441,6 @@
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <select name="pop[]" id="pop" class="form-control">
-                                                <option value="">Select Pop</option>
-                                                <option value="Pop 1">Pop 1</option>
-                                                <option value="Pop 2">Pop 2</option>
-                                                <option value="Pop 3">Pop 3</option>
-                                            </select>
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="gps[]" id="gps" class="form-control"
                                                 placeholder="GPS">
                                         </div>
@@ -513,7 +487,7 @@
         });
 
         function addRow() {
-            $('.feasibility_details_row').first().clone().appendTo('tbody');
+            $('.feasibility_details_row').first().clone().appendTo('.tbody');
             $('.feasibility_details_row').last().find('input').val('');
             $('.feasibility_details_row').last().find('select').val('');
         };
