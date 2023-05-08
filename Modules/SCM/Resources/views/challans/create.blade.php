@@ -168,18 +168,19 @@
                     <select class="form-control select2" id="link_no" name="link_no">
                         <option value="" readonly selected>Select Link No</option>
                     </select>
-                </div>
-                <div class="form-group col-3 fr_id">
-                    <label for="fr_id">Fr ID:</label>
-                    <input type="text" class="form-control" id="fr_id" aria-describedby="fr_id" name="fr_id"
-                        readonly value="{{ old('fr_id') ?? (@$fr_id ?? '') }}">
-
-                </div>
-                
+                </div>                
                 <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
                         readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
+
+                </div>
+                <div class="form-group col-3 type">
+                    <label for="type">Type:</label>
+                    <select class="form-control select2" id="type" name="type">
+                        <option value="service">Service Equipment</option>
+                        <option value="link">Link</option>
+                    </select>
 
                 </div>
 
@@ -558,6 +559,7 @@
                 $('.client_name').show('slow');
                 $('.client_no').show('slow');
                 $('.client_address').show('slow');
+                $('.type').show('slow');
                 $('.link_no').show('slow');
                 $('.fr_no').show('slow');
                 $('.fr_id').show('slow');
@@ -569,6 +571,7 @@
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
+                $('.type').hide('slow');
                 $('.link_no').hide('slow');
                 $('.fr_no').hide('slow');
                 $('.fr_id').hide('slow');
@@ -580,6 +583,7 @@
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
+                $('.type').hide('slow');
                 $('.link_no').hide('slow');
                 $('.fr_no').hide('slow');
                 $('.fr_id').show('slow');
