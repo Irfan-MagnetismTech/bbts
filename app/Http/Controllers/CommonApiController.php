@@ -14,6 +14,7 @@ use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Employee;
 use App\Models\Dataencoding\Department;
 use Modules\Sales\Entities\ClientDetail;
+use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Ticketing\Entities\SupportTeam;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\SCM\Entities\Cs;
@@ -26,22 +27,38 @@ class CommonApiController extends Controller
     public function searchClient()
     {
         $results = Client::query()
-            ->with('clientDetails')
-            ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->with('saleDetails')
+            ->where('client_name', 'LIKE', '%' . request('search') . '%')
             ->limit(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->id,
                 'id' => $item->id,
-                'label' => $item->name,
-                'text' => $item->name,
+                'label' => $item->client_name,
+                'text' => $item->client_name,
                 'client_no' => $item->client_no,
-                'address' => $item->address,
-                'details' => $item->clientDetails,
+                'address' => $item->location,
+                'saleDetails' => $item->saleDetails,
             ]);
 
         return response()->json($results);
     }
+
+    public function getLinkNo()
+    {
+         $data['options'] = SaleLinkDetail::query()
+            ->where(['fr_no' => request()->fr_no])
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->link_no,
+                'label' => $item->link_no,
+            ])
+            ->values()
+            ->all();
+
+        return response()->json($data);
+    }
+
 
     public function getClientsByLinkId()
     {
@@ -257,13 +274,14 @@ class CommonApiController extends Controller
                 'id' => $item->id,
                 'text' => $item->name,
             ]);
-        
+
         return response()->json($thanas);
     }
 
-    public function getSupportTeamMembers() {
-        $teamId = request('search');  
-        $team = SupportTeam::with('supportTeamMembers.user')->where('id', $teamId)->first();  
+    public function getSupportTeamMembers()
+    {
+        $teamId = request('search');
+        $team = SupportTeam::with('supportTeamMembers.user')->where('id', $teamId)->first();
 
         if (auth()->user()->employee->branch_id != $team->branch_id) {
             abort(404);
@@ -322,7 +340,8 @@ class CommonApiController extends Controller
         return response()->json($results);
     }
 
-    public function getSupportTicket() {
+    public function getSupportTicket()
+    {
         $results = SupportTicket::query()
             ->where('ticket_no', 'LIKE', '%' . request('search') . '%')
             ->limit(15)

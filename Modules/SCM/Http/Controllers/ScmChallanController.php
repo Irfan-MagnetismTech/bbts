@@ -4,10 +4,14 @@ namespace Modules\SCM\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
+use Modules\SCM\Entities\ScmErr;
+use Modules\SCM\Entities\ScmMrr;
+use Modules\SCM\Entities\ScmWcr;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
+use Modules\Sales\Entities\Client;
 use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\ScmChallan;
 use Modules\SCM\Entities\ScmMrrLine;
@@ -16,10 +20,7 @@ use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SCM\Entities\ScmErr;
-use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmRequisitionDetail;
-use Modules\SCM\Entities\ScmWcr;
 
 class ScmChallanController extends Controller
 {
