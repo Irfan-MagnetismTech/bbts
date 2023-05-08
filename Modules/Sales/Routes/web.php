@@ -9,7 +9,7 @@ use Modules\Sales\Http\Controllers\CategoryController;
 use Modules\Sales\Http\Controllers\ConnectivityRequirementController;
 use Modules\Sales\Http\Controllers\ProductController;
 use Modules\Sales\Http\Controllers\FeasibilityRequirementController;
-use Modules\Sales\Http\Controllers\ServeyController;
+use Modules\Sales\Http\Controllers\SurveyController;
 use Modules\Sales\Http\Controllers\VendorController;
 use Modules\Sales\Http\Controllers\PlanningController;
 use Modules\Sales\Http\Controllers\SalesController;
@@ -35,7 +35,7 @@ Route::prefix('sales')->group(function () {
         'product' => ProductController::class,
         'feasibility-requirement' => FeasibilityRequirementController::class,
         'connectivity-requirement' => ConnectivityRequirementController::class,
-        'survey' => ServeyController::class,
+        'survey' => SurveyController::class,
         'vendor' => VendorController::class,
         'planning' => PlanningController::class,
         'client-profile' => ClientProfileController::class,
@@ -48,9 +48,9 @@ Route::prefix('sales')->group(function () {
     Route::get('delete-product-requirement-details', [ConnectivityRequirementController::class, 'deleteProductRequirementDetails'])->name('delete-product-requirement-details');
     Route::get('delete-connectivity-requirement-details', [ConnectivityRequirementController::class, 'deleteConnectivityRequirementDetails'])->name('delete-connectivity-requirement-details');
     Route::get('get-products', [ProductController::class, 'getProducts'])->name('get-products');
-    Route::get('add-survey/{fr_id?}', [ServeyController::class, 'create'])->name('add-survey');
+    Route::get('add-survey/{fr_id?}', [SurveyController::class, 'create'])->name('add-survey');
     Route::get('get-client-fr-list', [FeasibilityRequirementController::class, 'getClientFrList'])->name('get-client-fr-list');
-    Route::get('get-survey-details', [ServeyController::class, 'getSurveyDetails'])->name('get-survey-details');
+    Route::get('get-survey-details', [SurveyController::class, 'getSurveyDetails'])->name('get-survey-details');
     Route::get('sales-dashboard', [SalesController::class, 'salesDashboard'])->name('sales-dashboard');
     Route::get('sales-admin-dashboard', [SalesController::class, 'salesAdminDashboard'])->name('sales-admin-dashboard');
     Route::get('lead-generation-update-status/{id}', [LeadGenerationController::class, 'updateStatus'])->name('lead-generation.status.update');

@@ -9,7 +9,7 @@ use App\Models\Dataencoding\Division;
 use Modules\Sales\Services\CommonService;
 use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Thana;
-use Modules\Sales\Entities\ClientProfile;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\CollectionAddress;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +23,7 @@ class ClientProfileController extends Controller
      */
     public function index()
     {
-        $client_profiles = ClientProfile::with('division', 'district', 'thana')->get();
+        $client_profiles = Client::with('division', 'district', 'thana')->get();
         return view('sales::client_profile.index', compact('client_profiles'));
     }
 
@@ -74,7 +74,7 @@ class ClientProfileController extends Controller
         $client_profile_data['branch_id'] = auth()->user()->branch_id;
 
         DB::transaction(function () use ($client_profile_data, $client_billing_info, $client_collection_info) {
-            $client_profile = ClientProfile::create($client_profile_data);
+            $client_profile = Client::create($client_profile_data);
             $client_billing_info['client_profile_id'] = $client_profile->id;
             $client_billing_info['client_id'] = $client_profile_data['client_id'];
             $client_collection_info['client_profile_id'] = $client_profile->id;
@@ -103,7 +103,7 @@ class ClientProfileController extends Controller
      */
     public function edit($id)
     {
-        $client_profile = ClientProfile::with('division', 'district', 'thana', 'billingAddress', 'collectionAddress')->find($id);
+        $client_profile = Client::with('division', 'district', 'thana', 'billingAddress', 'collectionAddress')->find($id);
         $divisions = Division::all();
         $districts = District::where('division_id', $client_profile->division_id)->get();
         $thanas = Thana::where('district_id', $client_profile->district_id)->get();
@@ -151,7 +151,7 @@ class ClientProfileController extends Controller
         $client_profile_data['user_id'] = auth()->user()->id;
 
         DB::transaction(function () use ($client_profile_data, $client_billing_info, $client_collection_info, $id) {
-            $client_profile = ClientProfile::find($id);
+            $client_profile = Client::find($id);
             $client_profile->update($client_profile_data);
             $client_billing_info['client_profile_id'] = $client_profile->id;
             $client_billing_info['client_id'] = $client_profile_data['client_id'];
@@ -170,7 +170,7 @@ class ClientProfileController extends Controller
      */
     public function destroy($id)
     {
-        $client_profile = ClientProfile::find($id);
+        $client_profile = Client::find($id);
         CommonService::deleteFile('uploads/client_profile/trade_license/' . $client_profile->trade_license);
         CommonService::deleteFile('uploads/client_profile/nid/' . $client_profile->nid);
         CommonService::deleteFile('uploads/client_profile/photo/' . $client_profile->photo);
