@@ -10,8 +10,9 @@ class ScmMur extends Model
     protected $fillable = [
         'type',
         'purpose',
-        'client_id',
-        'fr_composite_key',
+        'client_no',
+        'fr_no',
+        'link_no',
         'pop_id',
         'branch_id',
         'challan_id',

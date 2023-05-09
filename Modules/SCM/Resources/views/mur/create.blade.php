@@ -88,40 +88,41 @@
                 </div>
             </div>
             <div class="row">
-                
+                <div class="form-group col-3 equipment_type client">
+                    <label for="equipment_type">Equipment Type:</label>
+                    <input type="text" class="form-control" id="equipment_type" aria-describedby="equipment_type" name="equipment_type"
+                        readonly value="{{ old('equipment_type') ?? (@$challanData->equipment_type ?? '') }}">
+                </div>
 
                 <div class="form-group col-3 client_name client">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? (@$challanData->client->name ?? '') }}"
+                        name="client_name" value="{{ old('client_name') ?? (@$challanData->client->client_name ?? '') }}"
                         placeholder="Search...">
-                    <input type="hidden" name="client_id" id="client_id"
-                        value="{{ old('client_id') ?? @$challanData?->client->id }}">
                 </div>
                 <div class="form-group col-3 client_links client">
                     <label for="select2">Client Links</label>
-                    <input type="text" class="form-control" id="link_name" aria-describedby="link_name"
-                    name="client_name" value="{{ old('link_name') ?? (@$challanData->clientDetails->link_name ?? '') }}"
+                    <input type="text" class="form-control" id="link_no" aria-describedby="link_no"
+                    name="link_no" value="{{ old('link_no') ?? (@$challanData->link_no ?? '') }}"
                     placeholder="Search...">
                 </div>
 
+              
                 <div class="form-group col-3 client_no client">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                        readonly value="{{ old('client_no') ?? (@$challanData->clientDetails->client->client_no ?? '') }}">
+                        readonly value="{{ old('client_no') ?? (@$challanData->client->client_no ?? '') }}">
                 </div>
-                <div class="form-group col-3 client_fr_id client">
-                    <label for="client_fr_id">Client Fr:</label>
-                    <input type="text" class="form-control" id="client_fr_id" aria-describedby="client_fr_id" name="client_fr_id"
-                        readonly value="{{ old('client_fr') ?? (@$challanData->clientDetails->fr_id ?? '') }}">
-                    <input type="hidden" class="form-control" id="fr_composite_key" aria-describedby="fr_composite_key" name="fr_composite_key"
-                        readonly value="{{ old('fr_composite_key') ?? (@$challanData->clientDetails->fr_composite_key ?? '') }}">
+                <div class="form-group col-3 fr_no client">
+                    <label for="fr_no">Client Fr:</label>
+                    <input type="text" class="form-control" id="fr_no" aria-describedby="fr_no" name="fr_no"
+                        readonly value="{{ old('client_fr') ?? (@$challanData->fr_no ?? '') }}">
                 </div>
 
                 <div class="form-group col-3 client_address client">
                     <label for="client_address">Client Address:</label>
                     <input type="text" class="form-control" id="client_address" name="client_address" aria-describedby="client_address"
-                        readonly value="{{ old('client_address') ?? (@$challanData->clientDetails->client->address ?? '') }}">
+                        readonly value="{{ old('client_address') ?? (@$challanData->client->location ?? '') }}">
                 </div>
                 <div class="form-group col-3 pop_name pop">
                     <label for="pop_name">POP Name:</label>
@@ -169,7 +170,7 @@
                         <th>Provided Quantity</th>
                         <th>Utilized Quantity</th>
                         <th>BBTS Ownership</th>
-                        <th>Clien Ownership</th>
+                        <th>Client Ownership</th>
                         <th>Remarks</th>
                     </tr>
                 </thead>
