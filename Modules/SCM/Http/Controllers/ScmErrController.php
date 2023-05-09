@@ -97,6 +97,26 @@ class ScmErrController extends Controller
         return response()->json($materials);
     }
 
+    /**
+     * Get MRR Details From Request
+     * 
+     * @param Request $request
+     * @param int $key1
+     * @return array
+     */
+    public function getMrrDetails($request, $key1): array
+    {
+        return  [
+            'material_id'   => $request->material_name[$key1],
+            'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : '[]',
+            'receiveable_id' => $request->type_id[$key1],
+            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
+            'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
+            'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
+            'quantity' => $request->issued_qty[$key1],
+            'remarks' => $request->remarks[$key1],
+        ];
+    }
 
     /**
      * Get Stock Ledger Data From Request

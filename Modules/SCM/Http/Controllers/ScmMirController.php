@@ -438,8 +438,6 @@ class ScmMirController extends Controller
      * Get branch wise stock for from and to branch
      *
      * @return JsonResponse
-     * @type Array
-     * @response { "from_branch_balance": 0, "to_branch_balance": 0 }
      * 
      */
     public function getMaterialStock(): JsonResponse
