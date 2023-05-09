@@ -21,7 +21,7 @@ use Modules\Admin\Http\Controllers\AuthController;
 */
 
 Route::get('/welcome', function () {
-   return view('welcome');
+    return view('welcome');
 });
 // Route::get('/login', [AuthController::class, 'login'])->name('login');
 
@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-indent-no', [CommonApiController::class, 'searchIndentNo'])->name('searchIndentNo');
     Route::get('search-cs-no/{supplierId}', [CommonApiController::class, 'searchCsNo'])->name('searchCsNo');
     Route::get('search-support-ticket', [CommonApiController::class, 'getSupportTicket'])->name('search-support-ticket');
+    Route::get('search-link-no', [CommonApiController::class, 'getLinkNo'])->name('getLinkNo');
 
     Route::get('all-notifications', [DashboardController::class, 'allNotifications'])->name('all-notifications');
     Route::get('read-all-notification', [DashboardController::class, 'readAllNotification'])->name('read-all-notification');

@@ -145,15 +145,15 @@
                     <input type="hidden" name="client_id" id="client_id"
                         value="{{ old('client_id') ?? @$client_id }}">
                 </div>
-                <div class="form-group col-3 client_links">
-                    <label for="select2">Client Links</label>
-                    <select class="form-control select2" id="client_links" name="client_links">
-                        <option value="" readonly selected>Select Client Link</option>
+                <div class="form-group col-3 fr_no">
+                    <label for="select2">FR No</label>
+                    <select class="form-control select2" id="fr_no" name="fr_no">
+                        <option value="" readonly selected>Select FR No</option>
                         @if ($form_method == 'POST')
-                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
+                            <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
                         @endif
                         @if ($form_method == 'PUT')
-                            @foreach ($client_links as $clientInfo)
+                            @foreach ($fr_no as $clientInfo)
                                 <option value="{{ $clientInfo->link_name }}" data-fr-composite="{{ $clientInfo->fr_composite_key }}" data-fr-id="{{ $clientInfo->fr_id }}"  @selected($clientInfo->fr_composite_key == @$fr_composite_key)>
                                     {{ $clientInfo->link_name }}</option>
                             @endforeach
@@ -163,17 +163,24 @@
                     <input type="hidden" name="fr_composite_key" id="fr_composite_key"
                         value="{{ old('fr_composite_key') ?? @$fr_composite_key }}">
                 </div>
-
-                <div class="form-group col-3 fr_id">
-                    <label for="fr_id">Fr ID:</label>
-                    <input type="text" class="form-control" id="fr_id" aria-describedby="fr_id" name="fr_id"
-                        readonly value="{{ old('fr_id') ?? (@$fr_id ?? '') }}">
-
-                </div>
+                <div class="form-group col-3 link_no">
+                    <label for="link_no">Link No:</label>
+                    <select class="form-control select2" id="link_no" name="link_no">
+                        <option value="" readonly selected>Select Link No</option>
+                    </select>
+                </div>                
                 <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
                         readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
+
+                </div>
+                <div class="form-group col-3 type">
+                    <label for="type">Type:</label>
+                    <select class="form-control select2" id="type" name="type">
+                        <option value="service">Service Equipment</option>
+                        <option value="link">Link</option>
+                    </select>
 
                 </div>
 
@@ -444,15 +451,15 @@
                     $('#client_id').val(ui.item.value);
                     $('#client_no').val(ui.item.client_no);
 
-                    $('#client_links').html('');
+                    $('#fr_no').html('');
                     var link_options = '<option value="">Select link</option>';
 
-                    ui.item.details.forEach(function(element) {
+                    ui.item.saleDetails.forEach(function(element) {
                         link_options +=
-                            `<option value="${element.link_name}" data-fr-composite="${element.fr_composite_key}" data-fr-id="${element.fr_id}">${element.link_name}</option>`;
+                            `<option value="${element.fr_no}">${element.fr_no}</option>`;
                     });
                     client_details = ui.item.details;
-                    $('#client_links').html(link_options);
+                    $('#fr_no').html(link_options);
 
                     return false;
                 }
@@ -460,9 +467,12 @@
         });
 
        
-            $('#client_links').on('change',function(){
-                $('#fr_composite_key').val($(this).find(':selected').data('fr-composite'));
-                $('#fr_id').val($(this).find(':selected').data('fr-id'));
+            $('#fr_no').on('change',function(){
+                let fr_no = $(this).val();
+                let link_no = $('#link_no');
+                populateDropdownByAjax("{{ route('getLinkNo') }}", {
+                        fr_no: fr_no,
+                    }, link_no, 'value', 'label');
             })
        
 
@@ -549,7 +559,9 @@
                 $('.client_name').show('slow');
                 $('.client_no').show('slow');
                 $('.client_address').show('slow');
-                $('.client_links').show('slow');
+                $('.type').show('slow');
+                $('.link_no').show('slow');
+                $('.fr_no').show('slow');
                 $('.fr_id').show('slow');
             } else if (radioValue == 'pop') {
                 $('.pop_id').show('slow');
@@ -559,7 +571,9 @@
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
-                $('.client_links').hide('slow');
+                $('.type').hide('slow');
+                $('.link_no').hide('slow');
+                $('.fr_no').hide('slow');
                 $('.fr_id').hide('slow');
             }else if (radioValue == 'general') {
                 $('.pop_id').hide('slow');
@@ -569,7 +583,9 @@
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
-                $('.client_links').hide('slow');
+                $('.type').hide('slow');
+                $('.link_no').hide('slow');
+                $('.fr_no').hide('slow');
                 $('.fr_id').show('slow');
             }
         }
