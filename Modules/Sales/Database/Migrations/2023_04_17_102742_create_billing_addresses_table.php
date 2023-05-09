@@ -21,11 +21,11 @@ return new class extends Migration
             $table->string('designation')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->string('division_id')->nullable();
-            $table->string('district_id')->nullable();
-            $table->string('thana_id')->nullable();
+            $table->integer('division_id')->nullable();
+            $table->integer('district_id')->nullable();
+            $table->integer('thana_id')->nullable();
             $table->string('address')->nullable();
-            $table->string('submission_by')->nullable();
+            $table->integer('submission_by')->nullable();
             $table->string('submission_date')->nullable();
             $table->timestamps();
         });

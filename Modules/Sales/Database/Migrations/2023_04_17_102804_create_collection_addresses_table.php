@@ -16,14 +16,14 @@ return new class extends Migration
         Schema::create('collection_addresses', function (Blueprint $table) {
             $table->id();
             $table->integer('client_id')->nullable();
-            $table->string('client_profile_id')->nullable();
+            $table->integer('client_profile_id')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('designation')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->string('division_id')->nullable();
-            $table->string('district_id')->nullable();
-            $table->string('thana_id')->nullable();
+            $table->integer('division_id')->nullable();
+            $table->integer('district_id')->nullable();
+            $table->integer('thana_id')->nullable();
             $table->string('address')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('payment_date')->nullable();
