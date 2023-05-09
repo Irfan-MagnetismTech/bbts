@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('survey_id')->nullable();
             $table->string('link_type')->nullable();
+            $table->string('link_no')->nullable();
             $table->string('option')->nullable();
             $table->string('status')->nullable();
             $table->string('method')->nullable();

@@ -1,6 +1,12 @@
 {{-- Ticketing and Support --}}
 <div class="pcoded-navigation-label text-uppercase bg-primary">Support & Ticketing</div>
 <ul class="pcoded-item pcoded-left-item">
+    <li class="{{ request()->routeIs('ticketing-dashboard') ? 'active' : null }}">
+        <a href="{{ route('ticketing-dashboard') }}">
+            <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-tachometer-alt"></i></span>
+            <span class="pcoded-mtext">Dashboard</span>
+        </a>
+    </li>
     @if(auth()->user()->hasPermissionTo('ticket-create'))
     <li class="{{ request()->routeIs('support-tickets.create') ? 'active' : null }}">
         <a href="{{ route('support-tickets.create') }}">
@@ -87,4 +93,16 @@
         </a>
     </li>
     @endif
+    <li class="{{ request()->routeIs('report-index') ? 'active' : null }}">
+        <a href="{{ route('report-index') }}">
+            <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-briefcase"></i></span>
+            <span class="pcoded-mtext">Reports</span>
+        </a>
+    </li>
+    <li class="{{ request()->routeIs('downtime-report-index') ? 'active' : null }}">
+        <a href="{{ route('downtime-report-index') }}">
+            <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-network-wired"></i></span>
+            <span class="pcoded-mtext">Downtime Report</span>
+        </a>
+    </li>
 </ul>

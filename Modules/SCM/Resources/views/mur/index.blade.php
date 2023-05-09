@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Requisition')
+@section('title', 'Material-Utilization')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
@@ -14,10 +14,10 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('requisitions.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    
 @endsection
 @section('sub-title')
-    Total: {{ count($requisitions) }}
+    Total: {{ count($scmMurs) }}
 @endsection
 
 
@@ -27,41 +27,41 @@
             <thead>
                 <tr>
                     <th>#SL</th>
-                    <th>MRS No</th>
                     <th>Type</th>
-                    <th>Requisition By</th>
+                    <th>Purpose</th>
                     <th>Date</th>
+                    <th>Mur No</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
                     <th>#SL</th>
-                    <th>MRS No</th>
                     <th>Type</th>
-                    <th>Requisition By</th>
+                    <th>Purpose</th>
                     <th>Date</th>
+                    <th>Mur No</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($requisitions as $key => $requisition)
+                @foreach ($scmMurs as $key => $scmMur)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $requisition->mrs_no }}</td>
-                        <td class="text-center">{{ ucfirst($requisition->type) }}</td>
-                        <td class="text-center">{{ ucfirst($requisition->requisitionBy->name) }}</td>
-                        <td class="text-center">{{ $requisition->date }}</td>
+                        <td class="text-center">{{ $scmMur->type }}</td>
+                        <td class="text-center">{{ $scmMur->purpose }}</td>
+                        <td class="text-center">{{ $scmMur->date }}</td>
+                        <td class="text-center">{{ $scmMur->mur_no }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ url("scm/requisitions/$requisition->id") }}" data-toggle="tooltip"
+                                    <a href="{{ url("scm/material-utilizations/$scmMur->id") }}" data-toggle="tooltip"
                                         title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('requisitions.edit', $requisition->id) }}" data-toggle="tooltip"
+                                    <a href="{{ route('material-utilizations.edit', $scmMur->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ url("scm/requisitions/$requisition->id") }}" method="POST"
+                                    <form action="{{ url("scm/material-utilizations/$scmMur->id") }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')

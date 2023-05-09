@@ -54,16 +54,23 @@
                         <td>{{ $survey->mq_no }}</td>
                         <td>{{ $survey->fr_no }}</td>
                         <td>
-                            <a href="{{ route('survey.edit', $survey->id) }}" class="btn btn-sm btn-primary"
-                                style="padding: 6px 7px;"><i class="fas fa-edit"></i></a>
-                            <a href="{{ route('survey.show', $survey->id) }}" class="btn btn-sm btn-success"
-                                style="padding: 6px 7px;"><i class="fas fa-eye"></i></a>
-                            <form action="{{ route('survey.destroy', $survey->id) }}" method="POST" class="d-inline-block"
-                                id="deleteFeasibility">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                            </form>
+                            <div class="icon-btn">
+                                <nobr>
+                                    <a href="{{ route('survey.show', $survey->id) }}" data-toggle="tooltip" title="Details"
+                                        class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+
+                                    <a href="{{ route('survey.edit', $survey->id) }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+
+                                    <form action="{{ route('survey.destroy', $survey->id) }}" method="POST"
+                                        class="d-inline" id="deleteClientProfile">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                </nobr>
+                            </div>
                         </td>
                     </tr>
                 @endforeach

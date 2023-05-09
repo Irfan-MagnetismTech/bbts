@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class ScmMur extends Model
 {
     protected $fillable = [
+        'type',
+        'purpose',
+        'client_id',
+        'fr_composite_key',
+        'pop_id',
+        'branch_id',
         'challan_id',
         'date',
         'mur_no',

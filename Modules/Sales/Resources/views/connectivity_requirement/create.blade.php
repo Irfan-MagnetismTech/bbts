@@ -52,6 +52,7 @@
                                 $connectivity_capacity = $connectivity_requirement->connectivityRequirementDetails->pluck('connectivity_capacity')->toArray();
                                 $method = $connectivity_requirement->connectivityRequirementDetails->pluck('method')->toArray();
                                 $uptime_req = $connectivity_requirement->connectivityRequirementDetails->pluck('sla')->toArray();
+                                $vendor_id = $connectivity_requirement->connectivityRequirementDetails->pluck('vendor_id')->toArray(); 
                             }
                             
                             $client_name = $is_old ? old('client_name') : $connectivity_requirement->lead_generation->client_name ?? $fr_detail->feasibilityRequirement->lead_generation->client_name;
@@ -136,7 +137,7 @@
                         </div>
                         {{-- file upload --}}
                         <div class="md-col-3 col-3">
-                            <input type="file" name="file" id="file" class="form-control" title="Upload File">
+                            <input type="file" name="document" id="file" class="form-control" title="Upload File">
                         </div>
                     </div>
                     <div class="row">
@@ -159,8 +160,8 @@
                                             <th colspan="6">Product Details</th>
                                         </tr>
                                         <tr>
-                                            <th>Category</th>
-                                            <th>Product</th>
+                                            <th style="width:25%">Category</th>
+                                            <th style="width:25%">Product</th>
                                             <th>Capacity</th>
                                             <th>Unit</th>
                                             <th>Remarks</th>
@@ -268,11 +269,11 @@
                                             <th colspan="6">Connectivity Details</th>
                                         </tr>
                                         <tr>
-                                            <th>Link Type</th>
-                                            <th>Method</th>
+                                            <th style="width:15%">Link Type</th>
+                                            <th style="width:25%">Method</th>
                                             <th>Capacity %</th>
                                             <th>Uptime Reg/SLA</th>
-                                            <th>Vendor</th>
+                                            <th style="width:25%">Vendor</th>
                                             <th>
                                                 <button type="button" class="btn btn-sm btn-success"
                                                     id="addConnectivityRow"><i class="fas fa-plus"></i></button>

@@ -13,8 +13,12 @@ use Modules\Sales\Entities\SurveyDetail;
 use Modules\Sales\Http\Requests\SurveyRequest;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\LeadGeneration;
+use Modules\Sales\Entities\ConnectivityRequirement;
+use Modules\Sales\Entities\FinalSurveyDetail;
+use Modules\Sales\Services\CommonService;
 
-class ServeyController extends Controller
+
+class SurveyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +38,8 @@ class ServeyController extends Controller
     {
         $fr_detail = FeasibilityRequirementDetail::with('feasibilityRequirement.lead_generation')->find($fr_id);
         $all_fr_list = FeasibilityRequirementDetail::get();
-        return view('sales::survey.create', compact('fr_detail', 'all_fr_list'));
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $fr_detail->fr_no)->first();
+        return view('sales::survey.create', compact('fr_detail', 'all_fr_list', 'connectivity_requirement'));
     }
 
     /**
@@ -44,7 +49,6 @@ class ServeyController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $connectivity_requirement_data = $request->only('date', 'client_id', 'fr_no');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
@@ -52,6 +56,10 @@ class ServeyController extends Controller
         $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_id', $connectivity_requirement_data['client_id'])->first()->mq_no;
         $connectivity_requirement_data['lead_generation_id'] = LeadGeneration::where('client_id', $connectivity_requirement_data['client_id'])->first()->id;
         $connectivity_requirement_data['feasibility_requirement_details_id'] = FeasibilityRequirementDetail::where('fr_no', $connectivity_requirement_data['fr_no'])->first()->id;
+        if ($request->hasFile('document')) {
+            $file_name = CommonService::fileUpload($request->file('document'), 'uploads/survey');
+            $data['document'] = $file_name;
+        }
         DB::beginTransaction();
         try {
             $connectivity_requirement = Survey::create($connectivity_requirement_data);
@@ -59,6 +67,7 @@ class ServeyController extends Controller
             foreach ($connectivity_requirement_details['link_type'] as $key => $value) {
                 $connectivity_requirement_details['survey_id'] = $connectivity_requirement->id;
                 $connectivity_requirement_details['link_type'] = $value;
+                $connectivity_requirement_details['link_no'] = $connectivity_requirement_data['fr_no'] . '-' . substr($value, 0, 1) . $key + 1;
                 $connectivity_requirement_details['option'] = $request->option[$key];
                 $connectivity_requirement_details['status'] = $request->status[$key];
                 $connectivity_requirement_details['method'] = $request->method[$key];
@@ -87,7 +96,8 @@ class ServeyController extends Controller
     public function show($id)
     {
         $survey = Survey::with('surveyDetails', 'lead_generation')->find($id);
-        return view('sales::survey.show', compact('survey'));
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $survey->fr_no)->first();
+        return view('sales::survey.show', compact('survey', 'connectivity_requirement'));
     }
 
     /**
@@ -98,7 +108,8 @@ class ServeyController extends Controller
     public function edit($id)
     {
         $survey = Survey::with('surveyDetails', 'lead_generation')->find($id);
-        return view('sales::survey.create', compact('survey'));
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $survey->fr_no)->first();
+        return view('sales::survey.create', compact('survey', 'connectivity_requirement'));
     }
 
     /**
@@ -116,12 +127,19 @@ class ServeyController extends Controller
         $survey_data['mq_no'] = FeasibilityRequirement::where('client_id', $survey_data['client_id'])->first()->mq_no;
         $survey_data['lead_generation_id'] = LeadGeneration::where('client_id', $survey_data['client_id'])->first()->id;
         $survey_data['feasibility_requirement_details_id'] = FeasibilityRequirementDetail::where('fr_no', $survey_data['fr_no'])->first()->id;
+        if ($request->hasFile('document')) {
+            $file_name = CommonService::UpdatefileUpload($request->file('document'), 'uploads/survey', $survey->document);
+            $data['document'] = $file_name;
+        }
         DB::beginTransaction();
         try {
             $survey->update($survey_data);
+            $survey->surveyDetails()->delete();
+            $survey->finalSurveyDetails()->delete();
             foreach ($request->link_type as $key => $value) {
                 $survey_details['survey_id'] = $survey->id;
                 $survey_details['link_type'] = $value;
+                $survey_details['link_no'] = $survey_data['fr_no'] . '-' . substr($value, 0, 1) . $key + 1;
                 $survey_details['option'] = $request->option[$key];
                 $survey_details['status'] = $request->status[$key];
                 $survey_details['method'] = $request->method[$key];
@@ -131,7 +149,8 @@ class ServeyController extends Controller
                 $survey_details['distance'] = $request->distance[$key];
                 $survey_details['current_capacity'] = $request->current_capacity[$key];
                 $survey_details['remarks'] = $request->remarks[$key];
-                SurveyDetail::updateOrCreate(['id' => $request->details_id[$key]], $survey_details);
+                SurveyDetail::create($survey_details);
+                FinalSurveyDetail::create($survey_details);
             }
             DB::commit();
             return redirect()->route('survey.index')->with('success', 'Survey Updated Successfully');

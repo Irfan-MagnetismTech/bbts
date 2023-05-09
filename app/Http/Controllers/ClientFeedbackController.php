@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\BbtsGlobalService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Services\BbtsGlobalService;
 use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Entities\ClientFeedback;
-use Modules\Ticketing\Entities\ClientsFeedback;
 
 class ClientFeedbackController extends Controller
 {
@@ -52,9 +52,31 @@ class ClientFeedbackController extends Controller
         }
     }
 
-    public function feedbackList() {
-        $feedbacks = (new BbtsGlobalService())->getClientFeedbacks(500)->groupBy('support_ticket_id');
+    public function feedbackList(Request $request) {
 
-        return view('ticketing::client-feedbacks', compact('feedbacks'));
+        $from = $request->date_from;
+        $to = $request->date_to;
+        $supportTicketId = $request->ticket_no;
+        $ticketNo = '';
+        if(!empty($supportTicketId)) {
+            $ticketNo = SupportTicket::findOrFail($supportTicketId)->ticket_no;
+        }
+        $limit = 500;
+
+        $feedbacks = ClientFeedback::when(!empty($from), function($fromQuery) use($from) {
+                            $fromQuery->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
+                        })
+                        ->when(!empty($to), function($toQuery) use($to) {
+                            $toQuery->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
+                        })
+                        ->when(!empty($supportTicketId), function($ticketNoQuery) use($supportTicketId) {
+                            $ticketNoQuery->where('support_ticket_id', $supportTicketId);
+                        })
+                        ->orderBy('created_at', 'desc')
+                        ->take($limit)
+                        ->get()
+                        ->groupBy('support_ticket_id');
+
+        return view('ticketing::client-feedbacks', compact('feedbacks', 'ticketNo'));
     }
 }

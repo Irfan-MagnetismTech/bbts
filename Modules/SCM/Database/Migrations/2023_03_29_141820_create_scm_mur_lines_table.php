@@ -23,6 +23,8 @@ return new class extends Migration
             $table->string('serial_code')->nullable();
             $table->string('quantity')->nullable();
             $table->string('utilized_quantity')->nullable();
+            $table->string('bbts_ownership')->nullable();
+            $table->string('client_ownership')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
         });

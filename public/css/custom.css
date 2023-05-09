@@ -110,7 +110,7 @@ button.close {
 }
 .custom-form .form-control {
     height: 35px!important;
-    padding-left: 20px!important;
+    padding-left: 4px!important;
     padding-right: 4px!important;
 }
 
@@ -302,12 +302,11 @@ span.select2-selection.select2-selection--single {
     margin-bottom: 15px
 }
 
-.form-item input {
+.form-item input, select {
     display: block;
-    background: transparent;
     border: solid 1px #ccc;
     transition: all .3s ease;
-    padding: 0 15px
+    padding: 0.5rem 0.75rem;
 }
 
 .form-item input:focus {
@@ -342,7 +341,7 @@ span.select2-selection.select2-selection--single {
 
 .custom_table th {
     color: #454444 !important;
-    background-color: #d3d3d3 !important;
+    background-color: #51c8e6 !important;
     padding: 5px 10px !important;
 }
 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Modules\SCM\Entities\ScmMur;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\ScmChallan;
@@ -28,7 +29,8 @@ class ScmMurController extends Controller
      */
     public function index()
     {
-        return view('scm::index');
+        $scmMurs = ScmMur::latest()->get();
+        return view('scm::mur.index', compact('scmMurs'));
     }
 
     /**
@@ -91,6 +93,7 @@ class ScmMurController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $challan_data = ScmChallan::find($request->challan_id);
             $stock_data = $challan_data->stockable;
             $receivable_id = $stock_data->first()->receiveable_id;
@@ -110,6 +113,8 @@ class ScmMurController extends Controller
                     'serial_code' => $request->model[$key],
                     'quantity' => $request->quantity[$key],
                     'utilized_quantity' => $request->utilized_quantity[$key],
+                    'client_ownership' => $request->client_ownership[$key],
+                    'bbts_ownership' => $request->bbts_ownership[$key],
                     'remarks' => $request->remarks[$key],
                 ];
 
@@ -117,7 +122,7 @@ class ScmMurController extends Controller
                     'received_type'     => 'MRR',
                     'stockable_type'    => ScmMur::class,
                     'receiveable_id'    => $receivable_id,
-                    'receiveable_type'    => $receivable_type,
+                    'receiveable_type'  => $receivable_type,
                     'material_id'       => $request->material_id[$key],
                     'stockable_type'    => ScmMur::class,
                     'stockable_id'      => $mur->id,
@@ -130,13 +135,14 @@ class ScmMurController extends Controller
                     'unit'              => $request->unit[$key],
                 ];
             };
-            $mur_data['mur_no'] = $this->murNo;
-            $mur_data['created_by'] = auth()->user()->id;
             $mur->lines()->createMany($mur_lines);
             $challan_data->stockable()->delete();
             $mur->stockable()->createMany($stock);
+            DB::commit();
+            return redirect()->route('material-utilizations.index')->with('message', 'Data has been updated successfully');
         } catch (Exception $err) {
-            dd($err);
+            DB::rollBack();
+            return redirect()->route('material-utilizations.create')->withInput()->withErrors($err->getMessage());
         }
     }
 
@@ -145,7 +151,7 @@ class ScmMurController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show()
     {
         return view('scm::show');
     }
@@ -155,8 +161,9 @@ class ScmMurController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ScmMur $material_utilization)
     {
+        dd($material_utilization);
         return view('scm::edit');
     }
 

@@ -20,3 +20,12 @@ Ticket accpetance is kind of a movement actually. **Why?** Because it change the
 
 - Take Decision to whome should we send email. Specific Branches email or mail clients email.
 
+- Report Fitler and SupportTicket Lists Date filter... should we filter based on created_at or complain_time
+
+- Ticket Closing [Need to think about Feedback to Client and Feedback to BBTS as their may be reopen in future]
+
+- Ticket Backward Notification should also be sent to Handovered person.
+
+- Ticket Pending List(History) to details.
+
+- 

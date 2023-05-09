@@ -21,8 +21,13 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/toastr.min.js') }} "></script>
 <script src="{{ asset('js/highcharts.min.js') }}"></script>
+<script src="{{ asset('js/jquery.step.js') }}"></script>
+<script src="{{ asset('js/form-wizards.js') }}"></script>
+<script src="{{ asset('js/form-validate.js') }}"></script>
 
 <!-- jquery slimscroll js -->
+<script src="{{ asset('js/dataTables.select.min.js') }}"></script>
+
 
 <script>
     const Toast = Swal.mixin({
@@ -52,7 +57,7 @@
                 return false;
             }
         });
-        
+
     });
 
     $(document).ready(function() {
@@ -63,7 +68,6 @@
 </script>
 
 <script>
-
     let userId = '{{ auth()->user()->id }}';
     Echo.private(`Modules.Admin.Entities.User.${userId}`).notification((notification) => {
 
@@ -101,6 +105,4 @@
     }).error((error) => {
         console.error(error);
     });
-
-
 </script>
