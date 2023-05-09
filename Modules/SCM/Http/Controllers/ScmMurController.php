@@ -13,6 +13,7 @@ use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\ScmChallan;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
+use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
 
 class ScmMurController extends Controller
@@ -47,7 +48,7 @@ class ScmMurController extends Controller
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
-        $client_links = ClientDetail::where('client_id', $challanData->client_id)->get();
+        $client_links = SaleLinkDetail::where('fr_no', $challanData->fr_no)->pluck('link_no');
         $challanLines = [];
         foreach ($challanData->scmChallanLines as $key => $value) {
             $serial_count = count(json_decode($value->serial_code));
@@ -142,7 +143,7 @@ class ScmMurController extends Controller
             return redirect()->route('material-utilizations.index')->with('message', 'Data has been updated successfully');
         } catch (Exception $err) {
             DB::rollBack();
-            return redirect()->route('material-utilizations.create')->withInput()->withErrors($err->getMessage());
+            return redirect()->route('material-utilizations.index')->withInput()->withErrors($err->getMessage());
         }
     }
 

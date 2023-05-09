@@ -20,6 +20,8 @@ use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\SaleDetail;
+use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 
 class ScmChallanController extends Controller
@@ -60,8 +62,9 @@ class ScmChallanController extends Controller
     public function store(Request $request)
     {
         try {
+            dd($request->all());
             DB::beginTransaction();
-            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id', 'fr_composite_key');
+            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_no', 'pop_id', 'fr_composite_key', 'link_no', 'fr_no', 'equipment_type');
             $challan_data['challan_no'] =  $this->ChallanNo;
             $challan_data['created_by'] = auth()->id();
 
@@ -107,7 +110,8 @@ class ScmChallanController extends Controller
     public function edit(ScmChallan $challan)
     {
         $branchs = Branch::latest()->get();
-        $client_links = ClientDetail::where('client_id', $challan->client_id)->get();
+        $client_links = SaleLinkDetail::where('fr_no', $challan->fr_no)->pluck('link_no');
+        $fr_no_list = SaleDetail::where('client_no', $challan->client_no)->pluck('fr_no');
         $materials = [];
         $brands = [];
         $models = [];
@@ -159,7 +163,7 @@ class ScmChallanController extends Controller
                 ->sum('quantity');
         });
         // dd($brands);
-        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes', 'branch_stock'));
+        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes', 'branch_stock', 'fr_no_list'));
     }
 
     /**
@@ -173,7 +177,7 @@ class ScmChallanController extends Controller
         // dd($request->all());
         try {
             DB::beginTransaction();
-            $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_id', 'pop_id', 'fr_composite_key');
+            $challan_data = $request->only('type', 'equipment_type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_no', 'pop_id', 'link_no', 'fr_no');
 
             $challan_details = [];
             foreach ($request->material_name as $kk => $val) {

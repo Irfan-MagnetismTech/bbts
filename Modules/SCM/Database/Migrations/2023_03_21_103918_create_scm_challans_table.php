@@ -20,9 +20,10 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->bigInteger('scm_requisition_id')->nullable();
             $table->string('purpose')->nullable();
-            $table->bigInteger('client_id')->nullable();
-            $table->bigInteger('client_details_id')->nullable();
-            $table->string('fr_composite_key')->nullable();
+            $table->string('client_no')->nullable();
+            $table->string('fr_no')->nullable();
+            $table->string('link_no')->nullable();
+            $table->string('equipment_type')->nullable();
             $table->bigInteger('branch_id')->nullable();
             $table->bigInteger('pop_id')->nullable();
             $table->integer('created_by')->nullable();
