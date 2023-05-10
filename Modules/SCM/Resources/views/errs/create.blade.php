@@ -8,8 +8,10 @@
     
     $date = old('date', !empty($challan) ? $challan->date : null);
     $type = old('date', !empty($challan) ? $challan->type : null);
+
     $scm_requisition_id = old('scm_requisition_id', !empty($challan) ? $challan->scm_requisition_id : null);
     $purpose = old('purpose', !empty($challan) ? $challan->purpose : null);
+    $equipment_type = old('equipment_type', !empty($challan) ? $challan?->equipment_type : null);
     $client_id = old('client_id', !empty($challan) ? $challan->client_id : null);
     $fr_composite_key = old('fr_composite_key', !empty($challan) ? $challan->fr_composite_key : null);
     $fr_id = old('fr_composite_key', !empty($challan) ? $challan->clientDetails?->fr_id : null);
@@ -116,11 +118,19 @@
     </div>
 
     <div class="row">
+        <div class="form-group col-3 equipment_type">
+            <label for="equipment_type">Type:</label>
+            <select class="form-control select2" id="equipment_type" name="equipment_type">
+                <option value="Service Equipment" @if($equipment_type == "Service Equipment") selected @endif>Service Equipment</option>
+                <option value="Link" @if($equipment_type == "Link") selected @endif>Link</option>
+            </select>
+
+        </div>
         <div class="form-group col-3 client_name">
             <label for="client_name">Client Name:</label>
-            <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
-                value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
-            <input type="hidden" name="client_id" id="client_id" value="{{ old('client_id') ?? @$client_id }}">
+            <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                name="client_name" value="{{ old('client_name') ?? (@$client_name ?? '') }}"
+                placeholder="Search...">
         </div>
         <div class="form-group col-3 fr_no">
             <label for="select2">FR No</label>
@@ -130,44 +140,40 @@
                     <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
                 @endif
                 @if ($form_method == 'PUT')
-                    @foreach ($fr_no as $clientInfo)
-                        <option value="{{ $clientInfo->link_name }}"
-                            data-fr-composite="{{ $clientInfo->fr_composite_key }}" data-fr-id="{{ $clientInfo->fr_id }}"
-                            @selected($clientInfo->fr_composite_key == @$fr_composite_key)>
-                            {{ $clientInfo->link_name }}</option>
+                    @foreach ($fr_no_list as $key => $value)
+                        <option value="{{ $value }}" @selected($value == @$fr_no)>
+                            {{ $value }}</option>
                     @endforeach
                 @endif
-            </select>
-
-            <input type="hidden" name="fr_composite_key" id="fr_composite_key"
-                value="{{ old('fr_composite_key') ?? @$fr_composite_key }}">
+            </select>        
         </div>
+            
         <div class="form-group col-3 link_no">
             <label for="link_no">Link No:</label>
             <select class="form-control select2" id="link_no" name="link_no">
                 <option value="" readonly selected>Select Link No</option>
+                @if ($form_method == 'POST')
+                <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
+                @endif
+                @if ($form_method == 'PUT')
+                    @foreach ($client_links as $key => $value)
+                        <option value="{{ $value }}" @selected($value == @$link_no)>
+                            {{ $value }}</option>
+                    @endforeach
+                @endif
             </select>
         </div>
+
         <div class="form-group col-3 client_no">
             <label for="client_no">Client No:</label>
-            <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no" readonly
-                value="{{ old('client_no') ?? (@$client_no ?? '') }}">
-
-        </div>
-        <div class="form-group col-3 type">
-            <label for="type">Type:</label>
-            <select class="form-control select2" id="type" name="type">
-                <option value="service">Service Equipment</option>
-                <option value="link">Link</option>
-            </select>
-
+            <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
+                readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
         </div>
 
         <div class="form-group col-3 client_address">
             <label for="client_address">Client Address:</label>
-            <input type="text" class="form-control" id="client_address" name="client_address"
-                aria-describedby="client_address" readonly
-                value="{{ old('client_address') ?? (@$client_address ?? '') }}">
+            <input type="text" class="form-control" id="client_address" name="client_address" aria-describedby="client_address"
+                readonly value="{{ old('client_address') ?? (@$client_address ?? '') }}">
         </div>
 
         <div class="form-group col-3 pop_name" style="display: none">
