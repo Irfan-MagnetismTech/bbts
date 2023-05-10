@@ -8,7 +8,7 @@
     
     $date = old('date', !empty($challan) ? $challan->date : null);
     $type = old('date', !empty($challan) ? $challan->type : null);
-
+    
     $scm_requisition_id = old('scm_requisition_id', !empty($challan) ? $challan->scm_requisition_id : null);
     $purpose = old('purpose', !empty($challan) ? $challan->purpose : null);
     $equipment_type = old('equipment_type', !empty($challan) ? $challan?->equipment_type : null);
@@ -103,34 +103,23 @@
                     </option>
                 @endforeach
             </select>
-        </div>
-        <div class="form-group col-3 branch_name">
-            <label for="select2">From Branch</label>
-            <select class="form-control select2" id="branch_id" name="branch_id">
-                <option value="" selected>Select Branch</option>
-                @foreach ($branchs as $option)
-                    <option value="{{ $option->id }}" {{ $branch_id == $option->id ? 'selected' : '' }}>
-                        {{ $option->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        </div>        
     </div>
 
     <div class="row">
         <div class="form-group col-3 equipment_type">
             <label for="equipment_type">Type:</label>
             <select class="form-control select2" id="equipment_type" name="equipment_type">
-                <option value="Service Equipment" @if($equipment_type == "Service Equipment") selected @endif>Service Equipment</option>
-                <option value="Link" @if($equipment_type == "Link") selected @endif>Link</option>
+                <option value="Service Equipment" @if ($equipment_type == 'Service Equipment') selected @endif>Service Equipment
+                </option>
+                <option value="Link" @if ($equipment_type == 'Link') selected @endif>Link</option>
             </select>
 
         </div>
         <div class="form-group col-3 client_name">
             <label for="client_name">Client Name:</label>
-            <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                name="client_name" value="{{ old('client_name') ?? (@$client_name ?? '') }}"
-                placeholder="Search...">
+            <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
+                value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
         </div>
         <div class="form-group col-3 fr_no">
             <label for="select2">FR No</label>
@@ -145,15 +134,15 @@
                             {{ $value }}</option>
                     @endforeach
                 @endif
-            </select>        
+            </select>
         </div>
-            
+
         <div class="form-group col-3 link_no">
             <label for="link_no">Link No:</label>
             <select class="form-control select2" id="link_no" name="link_no">
                 <option value="" readonly selected>Select Link No</option>
                 @if ($form_method == 'POST')
-                <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
+                    <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
                 @endif
                 @if ($form_method == 'PUT')
                     @foreach ($client_links as $key => $value)
@@ -166,14 +155,14 @@
 
         <div class="form-group col-3 client_no">
             <label for="client_no">Client No:</label>
-            <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
+            <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no" readonly
+                value="{{ old('client_no') ?? (@$client_no ?? '') }}">
         </div>
 
         <div class="form-group col-3 client_address">
             <label for="client_address">Client Address:</label>
-            <input type="text" class="form-control" id="client_address" name="client_address" aria-describedby="client_address"
-                readonly value="{{ old('client_address') ?? (@$client_address ?? '') }}">
+            <input type="text" class="form-control" id="client_address" name="client_address"
+                aria-describedby="client_address" readonly value="{{ old('client_address') ?? (@$client_address ?? '') }}">
         </div>
 
         <div class="form-group col-3 pop_name" style="display: none">
@@ -341,80 +330,12 @@
 
 @section('script')
     <script>
-        const CSRF_TOKEN = "{{ csrf_token() }}";
         $('#date').datepicker({
             format: "dd-mm-yyyy",
             autoclose: true,
             todayHighlight: true,
             showOtherMonths: true
         }).datepicker("setDate", new Date());;
-        /* Append row */
-        $(document).ready(function() {
-            @if (empty($challan) && empty(old('material_name')))
-                appendCalculationRow();
-            @endif
-        })
-        var indx = 0;
-        @if ($form_method == 'PUT')
-            indx = {{ count($Challan_Lines) }}
-        @endif
-
-        /* Adds and removes quantity row on click */
-        $("#challan")
-            .on('click', '.add-challan-row', () => {
-                appendCalculationRow();
-            })
-            .on('click', '.remove-challan-row', function() {
-                $(this).closest('tr').remove();
-            });
-
-        //Search Client
-        var client_details = [];
-        @if ($form_method === 'PUT')
-            client_details = {!! collect($client_links) !!}
-        @endif
-        $(document).on('keyup focus', '#client_name', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-client') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $('#client_name').val(ui.item.label);
-                    $('#client_id').val(ui.item.value);
-                    $('#client_no').val(ui.item.client_no);
-                    $('#client_address').val(ui.item.address);
-
-                    $('#client_links').html('');
-                    var link_options = '<option value="">Select link</option>';
-
-                    ui.item.details.forEach(function(element) {
-                        link_options +=
-                            `<option value="${element.link_name}" data-fr-composite="${element.fr_composite_key}" data-fr-id="${element.fr_id}">${element.link_name}</option>`;
-                    });
-                    client_details = ui.item.details;
-                    $('#client_links').html(link_options);
-
-                    return false;
-                }
-            });
-        });
-
-
-        $('#client_links').on('change', function() {
-            $('#fr_composite_key').val($(this).find(':selected').data('fr-composite'));
-            $('#fr_id').val($(this).find(':selected').data('fr-id'));
-        })
-
 
         $(function() {
             onChangeRadioButton();
@@ -426,7 +347,6 @@
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_name', 'get', null)
 
             $(".radioButton").click(function() {
                 onChangeRadioButton()
@@ -462,22 +382,28 @@
                 $('.pop_id').hide('slow');
                 $('.pop_name').hide('slow');
                 $('.pop_address').hide('slow');
+                $('.equipment_type').show('slow');
                 $('.address').show('slow');
                 $('.client_name').show('slow');
                 $('.client_no').show('slow');
                 $('.client_address').show('slow');
-                $('.client_links').show('slow');
+                $('.type').show('slow');
+                $('.link_no').show('slow');
+                $('.fr_no').show('slow');
                 $('.fr_id').show('slow');
             } else if (radioValue == 'internal') {
-                $('.pop_id').show('slow');
-                $('.pop_name').show('slow');
-                $('.pop_address').show('slow');
+                $('.pop_id').hide('slow');
+                $('.pop_name').hide('slow');
+                $('.pop_address').hide('slow');
+                $('.equipment_type').hide('slow');
                 $('.address').hide('slow');
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
-                $('.client_links').hide('slow');
-                $('.fr_id').hide('slow');
+                $('.type').hide('slow');
+                $('.link_no').hide('slow');
+                $('.fr_no').hide('slow');
+                $('.fr_id').show('slow');
             }
         }
 
@@ -898,4 +824,7 @@
             }
         });
     </script>
+
+    <script src="{{ asset('js/search-client.js') }}"></script>
+
 @endsection
