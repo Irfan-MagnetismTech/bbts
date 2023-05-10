@@ -62,7 +62,6 @@ class ScmChallanController extends Controller
     public function store(Request $request)
     {
         try {
-            dd($request->all());
             DB::beginTransaction();
             $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_no', 'pop_id', 'fr_composite_key', 'link_no', 'fr_no', 'equipment_type');
             $challan_data['challan_no'] =  $this->ChallanNo;
@@ -174,7 +173,6 @@ class ScmChallanController extends Controller
      */
     public function update(Request $request, ScmChallan $challan)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
             $challan_data = $request->only('type', 'equipment_type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_no', 'pop_id', 'link_no', 'fr_no');

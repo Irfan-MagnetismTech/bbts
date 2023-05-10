@@ -123,11 +123,11 @@
             <label for="select2">From Branch</label>
             <select class="form-control select2" id="branch_id" name="branch_id">
                 <option value="" selected>Select Branch</option>
-                @foreach ($branchs as $option)
-                    <option value="{{ $option->id }}" {{ $branch_id == $option->id ? 'selected' : '' }}>
-                        {{ $option->name }}
-                    </option>
-                @endforeach
+                @if ($form_method == 'PUT')
+                    {{-- <option value="{{ $branch_id }}" selected>
+                        {{ $branch_name }}
+                    </option> --}}
+                @endif
             </select>
         </div>
     </div>
@@ -514,6 +514,14 @@
             })
 
         });
+        
+        @if($form_method=='PUT')
+
+        $(document).on('DOMNodeInserted', '#branch_id', function() {
+                let selectedValue = "{{$branch_id}}"
+                $('#branch_id').val(selectedValue)
+                });
+        @endif
 
         function onChangeRadioButton() {
             var radioValue = $("input[name='type']:checked").val();
