@@ -8,6 +8,7 @@ use App\Http\Controllers\CommonApiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClientFeedbackController;
 use Modules\Admin\Http\Controllers\AuthController;
+use Modules\SCM\Http\Controllers\ScmErrController;
 
 /*
 |--------------------------------------------------------------------------

@@ -88,11 +88,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="form-group col-3 date">
+        <div class="form-group col-3">
             <label for="date">Applied Date:</label>
-            <input class="form-control" id="date" name="date" aria-describedby="date"
+            <input class="form-control date" id="date" name="date" aria-describedby="date"
                 value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
         </div>
+
         <div class="form-group col-3">
             <label for="select2">Purpose</label>
             <select class="form-control select2" id="purpose" name="purpose">
@@ -103,10 +104,47 @@
                     </option>
                 @endforeach
             </select>
-        </div>        
+        </div>
+
+        <div class="form-group col-3">
+            <label for="select2">From Branch</label>
+            <select class="form-control select2" id="branch_id" name="branch_id">
+                <option value="" selected>Select Branch</option>
+            </select>
+        </div>
+
+        <div class="form-group col-3 assigned_person">
+            <label for="assigned_person">Assigned Person:</label>
+            <input type="text" class="form-control" id="assigned_person" aria-describedby="assigned_person" name="assigned_person"
+                readonly value="{{ old('assigned_person') ?? (@$assigned_person ?? '') }}">
+        </div>
+
+        <div class="form-group col-3 reason_of_inactive">
+            <label for="reason_of_inactive">Reason of Inactive:</label>
+            <input type="text" class="form-control" id="reason_of_inactive" aria-describedby="reason_of_inactive" name="reason_of_inactive"
+                readonly value="{{ old('reason_of_inactive') ?? (@$reason_of_inactive ?? '') }}">
+        </div>
+        
+        <div class="form-group col-3 inactive_date">
+            <label for="inactive_date">Permanently Inactive Date:</label>
+            <input class="form-control date" id="inactive_date" name="inactive_date" aria-describedby="inactive_date"
+                value="{{ old('inactive_date') ?? (@$inactive_date ?? '') }}" readonly placeholder="Select a Date">
+        </div>
     </div>
 
     <div class="row">
+        <div class="form-group col-3 pop_name" style="display: none">
+            <label for="select2">Pop Name</label>
+            <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
+                value="{{ old('pop_name') ?? (@$pop_name ?? '') }}" placeholder="Search a POP Name">
+            <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
+                value="{{ old('pop_id') ?? (@$pop_id ?? '') }}">
+        </div>
+        <div class="form-group col-3 pop_address" style="display: none">
+            <label for="select2">Pop Address</label>
+            <input class="form-control" id="pop_address" name="pop_address" aria-describedby="pop_address"
+                value="{{ old('pop_address') ?? (@$pop_address ?? '') }}" readonly placeholder="Select a POP Address">
+        </div>
         <div class="form-group col-3 equipment_type">
             <label for="equipment_type">Type:</label>
             <select class="form-control select2" id="equipment_type" name="equipment_type">
@@ -155,27 +193,15 @@
 
         <div class="form-group col-3 client_no">
             <label for="client_no">Client No:</label>
-            <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no" readonly
-                value="{{ old('client_no') ?? (@$client_no ?? '') }}">
+            <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
+                readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
         </div>
 
         <div class="form-group col-3 client_address">
             <label for="client_address">Client Address:</label>
             <input type="text" class="form-control" id="client_address" name="client_address"
-                aria-describedby="client_address" readonly value="{{ old('client_address') ?? (@$client_address ?? '') }}">
-        </div>
-
-        <div class="form-group col-3 pop_name" style="display: none">
-            <label for="select2">Pop Name</label>
-            <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
-                value="{{ old('pop_name') ?? (@$pop_name ?? '') }}" placeholder="Search a POP Name">
-            <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
-                value="{{ old('pop_id') ?? (@$pop_id ?? '') }}">
-        </div>
-        <div class="form-group col-3 pop_address" style="display: none">
-            <label for="select2">Pop Address</label>
-            <input class="form-control" id="pop_address" name="pop_address" aria-describedby="pop_address"
-                value="{{ old('pop_address') ?? (@$pop_address ?? '') }}" readonly placeholder="Select a POP Address">
+                aria-describedby="client_address" readonly
+                value="{{ old('client_address') ?? (@$client_address ?? '') }}">
         </div>
     </div>
 
@@ -330,7 +356,7 @@
 
 @section('script')
     <script>
-        $('#date').datepicker({
+        $('.date').datepicker({
             format: "dd-mm-yyyy",
             autoclose: true,
             todayHighlight: true,
@@ -393,8 +419,8 @@
                 $('.fr_id').show('slow');
             } else if (radioValue == 'internal') {
                 $('.pop_id').hide('slow');
-                $('.pop_name').hide('slow');
-                $('.pop_address').hide('slow');
+                $('.pop_name').show('slow');
+                $('.pop_address').show('slow');
                 $('.equipment_type').hide('slow');
                 $('.address').hide('slow');
                 $('.client_name').hide('slow');
@@ -407,422 +433,14 @@
             }
         }
 
-        $(document).on('keyup', '.type_no', function() {
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            let myObject = {
-                type: event_this.find('.received_type').val().toUpperCase(),
-            }
-            jquaryUiAjax(this, "{{ route('searchTypeNo') }}", uiList, myObject);
-
-            function uiList(item) {
-                event_this.find('.type_no').val(item.label);
-                event_this.find('.type_id').val(item.id);
-                getMaterials(event_this)
-                return false;
-            }
-        })
-
-        function ClearNext(selector) {
-            let sib = $(selector).parent().nextAll('td');
-            // loop siblings
-            sib.each(function() {
-                let input = $(this).find('input');
-                let select = $(this).find('select');
-                if (!input.hasClass('unit')) {
-                    input.val('');
-                }
-                select.empty();
+        @if ($form_method == 'PUT')
+            $(document).on('DOMNodeInserted', '#branch_id', function() {
+                let selectedValue = "{{ $branch_id }}"
+                $('#branch_id').val(selectedValue)
             });
-        }
-        $(document).on('change', '.received_type', function() {
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-        })
+        @endif
 
-        function getMaterials(event_this) {
-
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
-            let receiveable_id = event_this.find('.type_id').val();
-            let material_name = event_this.find('.material_name');
-            populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
-                scm_requisition_id: scm_requisition_id,
-                received_type: received_type,
-                receiveable_id: receiveable_id,
-                from_branch: $('#branch_id').val(),
-                to_branch: $('#branch_id').val(),
-            }, material_name, 'value', 'label', {
-                'data-type': 'type',
-                'data-unit': 'unit',
-                'data-code': 'code',
-            })
-        }
-
-        $(document).on('change', '.material_name', function() {
-            checkUniqueMaterial(this);
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            let material_id = $(this).val();
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
-            let receiveable_id = event_this.find('.type_id').val();
-            let brand = $(this).closest('tr').find('.brand');
-
-            event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected').data(
-                'unit'));
-            event_this.find('.item_code').val($(this).closest('tr').find('.material_name').find(':selected').data(
-                'code'));
-            event_this.find('.material_type').val($(this).closest('tr').find('.material_name').find(':selected')
-                .data('type'));
-
-            populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
-                material_id: material_id,
-                received_type: received_type,
-                receiveable_id: receiveable_id,
-                from_branch_id: $('#branch_id').val(),
-            }, brand, 'value', 'label');
-        })
-
-        $(document).on('change', '.brand', function() {
-            checkUniqueMaterial(this);
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            let brand_id = $(this).val();
-            let material_id = event_this.find('.material_name').val();
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
-            let receiveable_id = event_this.find('.type_id').val();
-            let model = $(this).closest('tr').find('.model');
-
-            populateDropdownByAjax("{{ route('brandWiseModels') }}", {
-                brand_id: brand_id,
-                material_id: material_id,
-                received_type: received_type,
-                receiveable_id: receiveable_id,
-                from_branch_id: $('#branch_id').val(),
-            }, model, 'value', 'label');
-        });
-
-        $(document).on('change', '.model', function() {
-            checkUniqueMaterial(this);
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            let model = $(this).val();
-            let material_id = event_this.find('.material_name').val();
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
-            let receiveable_id = event_this.find('.type_id').val();
-            let brand_id = event_this.find('.brand').val();
-            let serial_code = $(this).closest('tr').find('.serial_code');
-            let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
-                'type');
-
-
-            populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
-                model: model,
-                material_id: material_id,
-                brand_id: brand_id,
-                received_type: received_type,
-                receiveable_id: receiveable_id,
-                from_branch_id: $('#branch_id').val(),
-            }, serial_code, 'value', 'label', null, false);
-        });
-
-        $(document).on('change', '.serial_code', function() {
-            let material_type = $(this).closest('tr').find('.material_name').find(':selected').data('type');
-            if (material_type == 'Item') {
-                $(this).closest('tr').find('.quantity').val($(this).val().length);
-            }
-        })
-
-        function checkUniqueMaterial(currentValue) {
-            var current_selector = $(currentValue);
-            var current_material = $(currentValue).closest('tr').find('.material_name').val();
-            var current_value_brand = $(currentValue).closest('tr').find('.brand').val();
-            var current_value_model = $(currentValue).closest('tr').find('.model').val();
-            var current_key = `${current_material}_${current_value_brand}_${current_value_model}`;
-            console.log(current_key);
-            var count_row = $('#challan tbody tr').length;
-            var thisMaterial = $(currentValue).closest('tr').find('.material_name');
-            let material_list = $('.material_name').not($(thisMaterial));
-
-            material_list.each(function() {
-                var material_name = $(this).val();
-                var brand = $(this).closest('tr').find('.brand').val();
-                var model = $(this).closest('tr').find('.model').val();
-                var key = `${material_name}_${brand}_${model}`;
-                console.log(key);
-                if (key === current_key && count_row > 1) {
-                    swal.fire({
-                        title: "Material Already Selected",
-                        type: "warning",
-                    }).then(function() {
-                        $(current_selector).val($(current_selector).find('option:first').val())
-                            .trigger('change.select2');
-                    });
-                    return false;
-                }
-            });
-        }
-
-        $(document).on('change', '.serial_code', function() {
-            let elemmtn = $(this).closest('tr');
-            let material_type = (elemmtn).find('.material_name').find(':selected').data(
-                'type');
-            if (material_type == 'Item') {
-                (elemmtn).find('.quantity').attr('readonly', true);
-                (elemmtn).find('.quantity').val($(this).val().length);
-            } else {
-                (elemmtn).find('.quantity').attr('readonly', false);
-            }
-        });
-
-        $(document).on('change', '.received_type', function() {
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            if ($('#branch_id').val() == '') {
-                $(this).val('');
-                swal.fire({
-                    title: "Please Select From Branch",
-                    type: "warning",
-                }).then(function() {
-                    $('#branch_id').focus();
-                });
-                return false;
-            }
-
-
-        })
-        $(document).on('change', '.model, .material_name, .brand', function() {
-            var elemmtn = $(this);
-            $.ajax({
-                url: "{{ route('getMaterialStock') }}",
-                type: 'get',
-                dataType: "json",
-                data: {
-                    material_id: (elemmtn).closest('tr').find('.material_name').val(),
-                    brand_id: (elemmtn).closest('tr').find('.brand').val(),
-                    model: (elemmtn).closest('tr').find('.model').val(),
-                    received_type: (elemmtn).closest('tr').find('.received_type').val()
-                        .toUpperCase(),
-                    receiveable_id: (elemmtn).closest('tr').find('.type_id').val(),
-                    from_branch_id: $('#branch_id').val(),
-                    to_branch_id: null
-                },
-                success: function(data) {
-                    (elemmtn).closest('tr').find('.available_quantity').val(data
-                        .from_branch_balance);
-                }
-            })
-        })
-
-        //issued quantity cannot be greater than avaiable_quantity
-        $(document).on('keyup', '.quantity', function() {
-            let elemmtn = $(this).closest('tr');
-            let avaiable_quantity = parseFloat((elemmtn).find('.available_quantity').val());
-            let quantity = parseFloat((elemmtn).find('.quantity').val());
-            if (quantity > avaiable_quantity) {
-                swal.fire({
-                    title: "Issued Quantity Cannot Be Greater Than Avaiable Quantity",
-                    type: "warning",
-                }).then(function() {
-                    (elemmtn).find('.quantity').val(avaiable_quantity);
-                });
-            }
-        });
-
-        function getMaterials(event_this) {
-
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
-            let receiveable_id = event_this.find('.type_id').val();
-            let material_name = event_this.find('.material_name');
-            populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
-                scm_requisition_id: scm_requisition_id,
-                received_type: received_type,
-                receiveable_id: receiveable_id,
-                from_branch: $('#branch_id').val(),
-                to_branch: $('#branch_id').val(),
-            }, material_name, 'value', 'label', {
-                'data-type': 'type',
-                'data-unit': 'unit',
-                'data-code': 'code',
-            })
-        }
-
-        $(document).on('change', '.material_name', function() {
-            checkUniqueMaterial(this);
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            let material_id = $(this).val();
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
-            let receiveable_id = event_this.find('.type_id').val();
-            let brand = $(this).closest('tr').find('.brand');
-
-            event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected').data(
-                'unit'));
-            event_this.find('.item_code').val($(this).closest('tr').find('.material_name').find(':selected').data(
-                'code'));
-            event_this.find('.material_type').val($(this).closest('tr').find('.material_name').find(':selected')
-                .data('type'));
-
-            populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
-                material_id: material_id,
-                received_type: received_type,
-                receiveable_id: receiveable_id,
-                from_branch_id: $('#branch_id').val(),
-            }, brand, 'value', 'label');
-        })
-
-        $(document).on('change', '.brand', function() {
-            checkUniqueMaterial(this);
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            let brand_id = $(this).val();
-            let material_id = event_this.find('.material_name').val();
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
-            let receiveable_id = event_this.find('.type_id').val();
-            let model = $(this).closest('tr').find('.model');
-
-            populateDropdownByAjax("{{ route('brandWiseModels') }}", {
-                brand_id: brand_id,
-                material_id: material_id,
-                received_type: received_type,
-                receiveable_id: receiveable_id,
-                from_branch_id: $('#branch_id').val(),
-            }, model, 'value', 'label');
-        });
-
-        $(document).on('change', '.model', function() {
-            checkUniqueMaterial(this);
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            let model = $(this).val();
-            let material_id = event_this.find('.material_name').val();
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
-            let receiveable_id = event_this.find('.type_id').val();
-            let brand_id = event_this.find('.brand').val();
-            let serial_code = $(this).closest('tr').find('.serial_code');
-            let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
-                'type');
-
-
-            populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
-                model: model,
-                material_id: material_id,
-                brand_id: brand_id,
-                received_type: received_type,
-                receiveable_id: receiveable_id,
-                from_branch_id: $('#branch_id').val(),
-            }, serial_code, 'value', 'label', null, false);
-        });
-
-        $(document).on('change', '.serial_code', function() {
-            let material_type = $(this).closest('tr').find('.material_name').find(':selected').data('type');
-            if (material_type == 'Item') {
-                $(this).closest('tr').find('.quantity').val($(this).val().length);
-            }
-        })
-
-        function checkUniqueMaterial(currentValue) {
-            var current_selector = $(currentValue);
-            var current_material = $(currentValue).closest('tr').find('.material_name').val();
-            var current_value_brand = $(currentValue).closest('tr').find('.brand').val();
-            var current_value_model = $(currentValue).closest('tr').find('.model').val();
-            var current_key = `${current_material}_${current_value_brand}_${current_value_model}`;
-            console.log(current_key);
-            var count_row = $('#challan tbody tr').length;
-            var thisMaterial = $(currentValue).closest('tr').find('.material_name');
-            let material_list = $('.material_name').not($(thisMaterial));
-
-            material_list.each(function() {
-                var material_name = $(this).val();
-                var brand = $(this).closest('tr').find('.brand').val();
-                var model = $(this).closest('tr').find('.model').val();
-                var key = `${material_name}_${brand}_${model}`;
-                console.log(key);
-                if (key === current_key && count_row > 1) {
-                    swal.fire({
-                        title: "Material Already Selected",
-                        type: "warning",
-                    }).then(function() {
-                        $(current_selector).val($(current_selector).find('option:first').val())
-                            .trigger('change.select2');
-                    });
-                    return false;
-                }
-            });
-        }
-
-        $(document).on('change', '.serial_code', function() {
-            let elemmtn = $(this).closest('tr');
-            let material_type = (elemmtn).find('.material_name').find(':selected').data(
-                'type');
-            if (material_type == 'Item') {
-                (elemmtn).find('.quantity').attr('readonly', true);
-                (elemmtn).find('.quantity').val($(this).val().length);
-            } else {
-                (elemmtn).find('.quantity').attr('readonly', false);
-            }
-        });
-
-        $(document).on('change', '.received_type', function() {
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            if ($('#branch_id').val() == '') {
-                $(this).val('');
-                swal.fire({
-                    title: "Please Select From Branch",
-                    type: "warning",
-                }).then(function() {
-                    $('#branch_id').focus();
-                });
-                return false;
-            }
-
-
-        })
-        $(document).on('change', '.model, .material_name, .brand', function() {
-            var elemmtn = $(this);
-            $.ajax({
-                url: "{{ route('getMaterialStock') }}",
-                type: 'get',
-                dataType: "json",
-                data: {
-                    material_id: (elemmtn).closest('tr').find('.material_name').val(),
-                    brand_id: (elemmtn).closest('tr').find('.brand').val(),
-                    model: (elemmtn).closest('tr').find('.model').val(),
-                    received_type: (elemmtn).closest('tr').find('.received_type').val()
-                        .toUpperCase(),
-                    receiveable_id: (elemmtn).closest('tr').find('.type_id').val(),
-                    from_branch_id: $('#branch_id').val(),
-                    to_branch_id: null
-                },
-                success: function(data) {
-                    (elemmtn).closest('tr').find('.available_quantity').val(data
-                        .from_branch_balance);
-                }
-            })
-        })
-
-        //issued quantity cannot be greater than avaiable_quantity
-        $(document).on('keyup', '.quantity', function() {
-            let elemmtn = $(this).closest('tr');
-            let avaiable_quantity = parseFloat((elemmtn).find('.available_quantity').val());
-            let quantity = parseFloat((elemmtn).find('.quantity').val());
-            if (quantity > avaiable_quantity) {
-                swal.fire({
-                    title: "Issued Quantity Cannot Be Greater Than Avaiable Quantity",
-                    type: "warning",
-                }).then(function() {
-                    (elemmtn).find('.quantity').val(avaiable_quantity);
-                });
-            }
-        });
+        
     </script>
 
     <script src="{{ asset('js/search-client.js') }}"></script>
