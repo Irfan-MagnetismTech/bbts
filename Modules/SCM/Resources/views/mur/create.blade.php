@@ -1,6 +1,32 @@
 @extends('layouts.backend-layout')
 @section('title', 'Material Utilization')
 
+@php
+
+    $is_old = old('type') ? true : false;
+    $form_heading = !empty($material_utilization) ? 'Update' : 'Add';
+    $form_url = !empty($material_utilization) ? route('material-utilizations.update', $material_utilization->id) : route('material-utilizations.store');
+    $form_method = !empty($material_utilization) ? 'PUT' : 'POST';
+    
+    $type = $is_old ? old('type') : (!empty($material_utilization) ? $material_utilization->type : (!empty($challanData) ? $challanData->type: null));
+    $date = $is_old ? old('date') : (!empty($material_utilization) ? $material_utilization->date : now());
+    $purpose = $is_old ? old('purpose') : (!empty($material_utilization) ? $material_utilization->purpose : null);
+    $challan_no = $is_old ? old('challan_no') : (!empty($material_utilization) ? $material_utilization?->challan?->challan_no : (!empty($challanData) ? $challanData->type: null));
+    $challan_id = $is_old ? old('challan_id') : (!empty($material_utilization) ? $material_utilization?->challan_id : (!empty($challanData) ? $challanData->id: null));
+    $challan_date = $is_old ? old('challan_date') : (!empty($material_utilization) ? $material_utilization?->challan?->date : (!empty($challanData) ? $challanData->date: null));
+    $equipment_type = $is_old ? old('equipment_type') : (!empty($material_utilization) ? $material_utilization->equipment_type : (!empty($challanData) ? $challanData->equipment_type : null));
+    $client_name = $is_old ? old('client_name') : (!empty($material_utilization) ? $material_utilization?->client?->client_name : (!empty($challanData) ? $challanData->client->client_name : null));
+    $client_no = $is_old ? old('client_no') : (!empty($material_utilization) ? $material_utilization?->client?->client_no : (!empty($challanData) ? $challanData->client->client_no : null));
+    $client_address = $is_old ? old('client_address') : (!empty($material_utilization) ? $material_utilization?->client?->location : (!empty($challanData) ? $challanData?->client?->location : null));
+    $link_no = $is_old ? old('link_no') : (!empty($material_utilization) ? $material_utilization->link_no : (!empty($challanData) ? $challanData->link_no : null));
+    $fr_no = $is_old ? old('fr_no') : (!empty($material_utilization) ? $material_utilization->fr_no : (!empty($challanData) ? $challanData->fr_no : null));
+    $pop_name = $is_old ? old('pop_name') : (!empty($material_utilization) ? $material_utilization?->pop?->name : (!empty($challanData) ? $challanData?->pop?->name : null));
+    $pop_id = $is_old ? old('pop_id') : (!empty($material_utilization) ? $material_utilization->pop_id : (!empty($challanData) ? $challanData->pop_id : null));
+    $pop_address = $is_old ? old('pop_address') : (!empty($material_utilization) ? $material_utilization?->pop?->address : (!empty($challanData) ? $challanData?->pop?->address : null));
+    $branch_id = $is_old ? old('branch_id') : (!empty($material_utilization) ? $material_utilization->branch_id :  (!empty($challanData) ? $challanData->branch_id : null));
+    $branch_name = $is_old ? old('branch_name') : (!empty($material_utilization) ? $material_utilization?->branch?->name : (!empty($challanData) ? $challanData?->branch?->name : null));
+@endphp
+
 @section('breadcrumb-title')
     @if ($formType == 'edit')
         Edit
@@ -36,15 +62,15 @@
 
 @section('content')
         <form
-            action="{{ $formType == 'edit' ? route('material-utilizations.update', @$requisition->id) : route('material-utilizations.store') }}"
+            action="{{$form_url}}"
             method="post" class="custom-form">
             @if ($formType == 'edit')
                 @method('PUT')
             @endif
-            @php
+            {{-- @php
             $challan_id = old('challan_id', !empty($challanData) ? $challanData->id: null);
             
-        @endphp
+        @endphp --}}
             @csrf
             <div class="row">
                 <div class="col-md-3">
@@ -53,7 +79,7 @@
                         
                         <label for="type">Type:</label>
                     <input class="form-control" id="type" name="type" aria-describedby="type"
-                        value="{{ old('type') ?? (@$challanData->type ?? '') }}" readonly>
+                        value="{{ old('type') ?? ($type ?? '') }}" readonly>
                     </div>
                 </div>
             </div>
@@ -61,20 +87,13 @@
                 <div class="form-group col-3 date">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date" readonly>
+                        value="{{ old('date') ?? ($date ?? '') }}" readonly placeholder="Select a Date" readonly>
                 </div>
-                <div class="form-group col-3 mrs_no">
-                    <label for="select2">MRS No</label>
-                    <input class="form-control" id="mrs_no" name="mrs_no" aria-describedby="mrs_no"
-                        value="{{ old('mrs_no') ?? (@$challanData->scmRequisition->mrs_no ?? '') }}" placeholder="Search a MRS No">
-                        <input class="form-control" id="scm_requisition_id" name="scm_requisition_id" aria-describedby="scm_requisition_id"
-                        value="{{ old('scm_requisition_id') ?? (@$challanData->scm_requisition_id ?? '')}}" type="hidden">
-                       
-                </div>
+               
                 <div class="form-group col-3">
                     <label for="purpose">Purpose</label>
                     <input type="text" class="form-control" id="purpose" aria-describedby="purpose"
-                        name="purpose" value="{{ old('purpose') ?? (@$challanData->purpose ?? '') }}"
+                        name="purpose" value="{{ old('purpose') ?? ($purpose ?? '') }}"
                         placeholder="Search...">
                     {{-- <select class="form-control select2" id="purpose" name="purpose">
                         <option value="" selected>Select Purpose</option>
@@ -88,22 +107,36 @@
                 </div>
             </div>
             <div class="row">
+                <div class="form-group col-3 challan_no" style="">
+                    <label for="select2">Challan No</label>
+                    <input class="form-control" id="challan_no" name="challan_no" aria-describedby="challan_no"
+                    value="{{ old('challan_no') ?? ($challan_no ?? '') }}" placeholder="Search a Challan Name">
+                    <input class="form-control" id="challan_id" name="challan_id" aria-describedby="challan_id"
+                    value="{{ old('challan_id') ?? ($challan_id ?? '')}}" type="hidden">
+                </div>
+                <div class="form-group col-3 challan_date" style="">
+                    <label for="select2">Challan Date</label>
+                    <input class="form-control" id="challan_date" name="challan_date" aria-describedby="challan_date"
+                    value="{{ old('challan_date') ?? ($challan_date ?? '') }}" readonly>
+                </div>
+            </div>
+            <div class="row">
                 <div class="form-group col-3 equipment_type client">
                     <label for="equipment_type">Equipment Type:</label>
                     <input type="text" class="form-control" id="equipment_type" aria-describedby="equipment_type" name="equipment_type"
-                        readonly value="{{ old('equipment_type') ?? (@$challanData->equipment_type ?? '') }}">
+                        readonly value="{{ old('equipment_type') ?? ($equipment_type ?? '') }}">
                 </div>
 
                 <div class="form-group col-3 client_name client">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? (@$challanData->client->client_name ?? '') }}"
+                        name="client_name" value="{{ old('client_name') ?? ($client_name ?? '') }}"
                         placeholder="Search...">
                 </div>
                 <div class="form-group col-3 client_links client">
                     <label for="select2">Client Links</label>
                     <input type="text" class="form-control" id="link_no" aria-describedby="link_no"
-                    name="link_no" value="{{ old('link_no') ?? (@$challanData->link_no ?? '') }}"
+                    name="link_no" value="{{ old('link_no') ?? ($link_no ?? '') }}"
                     placeholder="Search...">
                 </div>
 
@@ -111,50 +144,39 @@
                 <div class="form-group col-3 client_no client">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                        readonly value="{{ old('client_no') ?? (@$challanData->client->client_no ?? '') }}">
+                        readonly value="{{ old('client_no') ?? ($client_no ?? '') }}">
                 </div>
                 <div class="form-group col-3 fr_no client">
                     <label for="fr_no">Client Fr:</label>
                     <input type="text" class="form-control" id="fr_no" aria-describedby="fr_no" name="fr_no"
-                        readonly value="{{ old('client_fr') ?? (@$challanData->fr_no ?? '') }}">
+                        readonly value="{{ old('client_fr') ?? ($fr_no ?? '') }}">
                 </div>
 
                 <div class="form-group col-3 client_address client">
                     <label for="client_address">Client Address:</label>
                     <input type="text" class="form-control" id="client_address" name="client_address" aria-describedby="client_address"
-                        readonly value="{{ old('client_address') ?? (@$challanData->client->location ?? '') }}">
+                        readonly value="{{ old('client_address') ?? ($client_address ?? '') }}">
                 </div>
                 <div class="form-group col-3 pop_name pop">
                     <label for="pop_name">POP Name:</label>
                     <input type="text" class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
-                        readonly value="{{ old('pop_name') ?? (@$challanData->pop->name ?? '') }}">
+                        readonly value="{{ old('pop_name') ?? ($pop_name ?? '') }}">
                         <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
-                        readonly value="{{ old('pop_id') ?? (@$challanData->pop_id ?? '') }}" >
+                        readonly value="{{ old('pop_id') ?? ($pop_id ?? '') }}" >
                 </div>
                 <div class="form-group col-3 pop_address pop">
                     <label for="pop_address">POP Address:</label>
                     <input type="text" class="form-control" id="pop_address" name="pop_address" aria-describedby="pop_address"
-                        readonly value="{{ old('pop_address') ?? (@$challanData->pop->address ?? '') }}">
+                        readonly value="{{ old('pop_address') ?? ($pop_address ?? '') }}">
                 </div>
                 <div class="form-group col-3 branch_name" style="">
                     <label for="branch_id">Branch Name</label>
                     <input class="form-control" id="branch_id" name="branch_id" aria-describedby="branch_id"
-                    value="{{ old('branch_id') ?? (@$challanData->branch_id ?? '') }}" type="hidden">
+                    value="{{ old('branch_id') ?? ($branch_id ?? '') }}" type="hidden">
                     <input class="form-control" id="branch_name" name="branch_name" aria-describedby="branch_name"
-                    value="{{ old('branch_name') ?? (@$challanData->branch->name ?? '') }}">
+                    value="{{ old('branch_name') ?? ($branch_name ?? '') }}">
                 </div>
-                <div class="form-group col-3 challan_no" style="">
-                    <label for="select2">Challan No</label>
-                    <input class="form-control" id="challan_no" name="challan_no" aria-describedby="challan_no"
-                    value="{{ old('challan_no') ?? (@$challanData->challan_no ?? '') }}" placeholder="Search a Challan Name">
-                    <input class="form-control" id="challan_id" name="challan_id" aria-describedby="challan_id"
-                    value="{{ old('challan_id') ?? ($challan_id ?? '')}}" type="hidden">
-                </div>
-                <div class="form-group col-3 challan_date" style="">
-                    <label for="select2">Challan Date</label>
-                    <input class="form-control" id="challan_date" name="challan_date" aria-describedby="challan_date"
-                    value="{{ old('challan_date') ?? (@$challanData->date ?? '') }}" readonly>
-                </div>
+                
             </div>
                 {{-- @dd($challanData->scmChallanLines) --}}
             <table class="table table-bordered" id="material_requisition">
@@ -175,6 +197,8 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if($formType == 'create')
+                   
                     @foreach ($challanLines as $item)
                     @php
                         $item = collect($item);
@@ -220,7 +244,68 @@
                         </td>
                     </tr>
                     @endforeach
-                    
+                    @else
+                    @php
+                        $material_name = old('material_name', !empty($material_utilization) ? $material_utilization->lines->pluck('material.name') : []);
+                        $material_id = old('material_id', !empty($material_utilization) ? $material_utilization->lines->pluck('material.id') : []);
+                        $description = old('description', !empty($material_utilization) ? $material_utilization->lines->pluck('description') : []);
+                        $item_code = old('item_code', !empty($material_utilization) ? $material_utilization->lines->pluck('material.code') : []);
+                        $unit = old('unit', !empty($material_utilization) ? $material_utilization->lines->pluck('material.unit') : []);
+                        $brand_name = old('brand_name', !empty($material_utilization) ? $material_utilization->lines->pluck('brand.name') : []);
+                        $model = old('model', !empty($material_utilization) ? $material_utilization->lines->pluck('model') : []);
+                        $brand_id = old('brand_id', !empty($material_utilization) ? $material_utilization->lines->pluck('brand_id') : []);
+                        $serial_code = old('serial_code', !empty($material_utilization) ? json_decode($material_utilization->lines->pluck('serial_code')) : []);
+                        
+                        $utilized_quantity = old('utilized_quantity', !empty($material_utilization) ? $material_utilization->lines->pluck('utilized_quantity') : []);
+                        $quantity = old('quantity', !empty($material_utilization) ? $material_utilization->lines->pluck('quantity') : []);
+                        $bbts_ownership = old('bbts_ownership', !empty($material_utilization) ? $material_utilization->lines->pluck('bbts_ownership') : []);
+                        $client_ownership = old('client_ownership', !empty($material_utilization) ? $material_utilization->lines->pluck('client_ownership') : []);
+                        $remarks = old('remarks', !empty($material_utilization) ? $material_utilization->lines->pluck('remarks') : []);
+                        
+                    @endphp
+                    @foreach ($material_name as $key => $item)
+                    <tr>
+                        <td>
+                            <input type="material_name" name="material_name[]" class="form-control type_no" autocomplete="off" value="{{ $material_name[$key] }}">
+                            <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off" value="{{ $material_id[$key] }}">
+                            </td>
+                        <td class="form-group">
+                            <input type="text" name="description[]" class="form-control description" value="{{ $description[$key] }}">  
+                        </td>
+                        <td>
+                            <input type="text" name="item_code[]" class="form-control item_code" readonly value="{{ $item_code[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="unit[]" class="form-control unit" readonly value="{{ $unit[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="brand_name[]" class="form-control brand_name" readonly value="{{ $brand_name[$key] }}">
+                            <input type="hidden" name="brand_id[]" class="form-control brand_id" readonly value="{{ $brand_id[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="model[]" class="form-control model" readonly value="{{ $model[$key] }}">
+                        </td>
+                        <td>
+                            <input name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly value="{{ $serial_code[$key] }}">
+                        </td>                                        
+                        <td>
+                            <input name="quantity[]" class="form-control quantity" autocomplete="off" readonly value="{{ $quantity[$key] }}">
+                        </td>
+                        <td>
+                            <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" value="{{ $utilized_quantity[$key] }}">
+                        </td>
+                        <td>
+                            <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" value="{{ $bbts_ownership[$key] }}">
+                        </td>
+                        <td>
+                            <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off" value="{{ $client_ownership[$key] }}">
+                        </td>
+                        <td>
+                            <input class="form-control remarks" name="remarks[]" aria-describedby="remarks" value="{{ $remarks[$key] }}">
+                        </td>
+                    </tr>
+                    @endforeach
+                    @endif
                 </tbody>
                 <tfoot>
                 </tfoot>
@@ -314,11 +399,7 @@
                 $(this).closest('tr').remove();
             });
 
-        //Search Client
-        var client_details = [];
-        @if ($formType === 'edit')
-            client_details = {!! collect($clientInfos) !!}
-        @endif
+      
         $(document).on('keyup focus', '#client_name', function() {
             $(this).autocomplete({
                 source: function(request, response) {
@@ -346,7 +427,7 @@
                         link_options +=
                             `<option value="${element.link_name}">${element.link_name}</option>`;
                     });
-                    client_details = ui.item.details;
+                    // client_details = ui.item.details;
                     $('#client_links').html(link_options);
 
                     return false;

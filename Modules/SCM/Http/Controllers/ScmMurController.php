@@ -140,10 +140,10 @@ class ScmMurController extends Controller
             $challan_data->stockable()->delete();
             $mur->stockable()->createMany($stock);
             DB::commit();
-            return redirect()->route('material-utilizations.index')->with('message', 'Data has been updated successfully');
+            return redirect()->route('material-utilizations.index')->with('message', 'Data has been created successfully');
         } catch (Exception $err) {
             DB::rollBack();
-            return redirect()->route('material-utilizations.index')->withInput()->withErrors($err->getMessage());
+            return redirect()->back()->withInput()->withErrors($err->getMessage());
         }
     }
 
@@ -164,8 +164,8 @@ class ScmMurController extends Controller
      */
     public function edit(ScmMur $material_utilization)
     {
-        dd($material_utilization);
-        return view('scm::edit');
+        $formType = "edit";
+        return view('scm::mur.create', compact('formType', 'material_utilization'));
     }
 
     /**
@@ -174,9 +174,61 @@ class ScmMurController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ScmMur $material_utilization)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $challan_data = ScmChallan::find($request->challan_id);
+            $stock_data = $challan_data->stockable;
+            $receivable_id = $stock_data->first()->receiveable_id;
+            $receivable_type = $stock_data->first()->receiveable_type;
+            $mur_data = $request->all();
+            $mur_data['mur_no'] = $this->murNo;
+            $mur_data['created_by'] = auth()->user()->id;
+            $material_utilization->update($mur_data);
+            $stock = [];
+            $mur_lines = [];
+            foreach ($request->material_name as $key => $val) {
+                $mur_lines[] = [
+                    'material_id' => $request->material_id[$key],
+                    'description' => $request->description[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                    'serial_code' => $request->model[$key],
+                    'quantity' => $request->quantity[$key],
+                    'utilized_quantity' => $request->utilized_quantity[$key],
+                    'client_ownership' => $request->client_ownership[$key],
+                    'bbts_ownership' => $request->bbts_ownership[$key],
+                    'remarks' => $request->remarks[$key],
+                ];
+
+                $stock[] = [
+                    'received_type'     => 'MRR',
+                    'stockable_type'    => ScmMur::class,
+                    'receiveable_id'    => $receivable_id,
+                    'receiveable_type'  => $receivable_type,
+                    'material_id'       => $request->material_id[$key],
+                    'stockable_type'    => ScmMur::class,
+                    'stockable_id'      => $material_utilization->id,
+                    'brand_id'          => $request->brand_id[$key],
+                    'branch_id'         => $request->branch_id,
+                    'model'             => $request->model[$key],
+                    'quantity'          => -1 * ($request->utilized_quantity[$key]),
+                    'item_code'         => $request->item_code[$key],
+                    'serial_code'       =>  $request->serial_code[$key],
+                    'unit'              => $request->unit[$key],
+                ];
+            };
+            $material_utilization->lines()->delete();
+            $material_utilization->lines()->createMany($mur_lines);
+            $material_utilization->stockable()->delete();
+            $material_utilization->stockable()->createMany($stock);
+            DB::commit();
+            return redirect()->route('material-utilizations.index')->with('message', 'Data has been updated successfully');
+        } catch (Exception $err) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($err->getMessage());
+        }
     }
 
     /**
