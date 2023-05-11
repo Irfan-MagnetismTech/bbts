@@ -207,6 +207,8 @@
                         <td>
                             <input type="material_name" name="material_name[]" class="form-control type_no" autocomplete="off" value="{{ $item['material_name'] }}">
                             <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off" value="{{ $item['material_id'] }}">
+                            <input type="hidden" name="receiveable_type[]" class="form-control receiveable_type" autocomplete="off" value="{{ $item['receiveable_type'] }}">
+                            <input type="hidden" name="receiveable_id[]" class="form-control receiveable_id" autocomplete="off" value="{{ $item['receiveable_id'] }}">
                             </td>
                         <td class="form-group">
                             <input type="text" name="description[]" class="form-control description">  
@@ -261,6 +263,8 @@
                         $bbts_ownership = old('bbts_ownership', !empty($material_utilization) ? $material_utilization->lines->pluck('bbts_ownership') : []);
                         $client_ownership = old('client_ownership', !empty($material_utilization) ? $material_utilization->lines->pluck('client_ownership') : []);
                         $remarks = old('remarks', !empty($material_utilization) ? $material_utilization->lines->pluck('remarks') : []);
+                        $receiveable_id = old('receiveable_id', !empty($material_utilization) ? $material_utilization->lines->pluck('receiveable_id') : []);
+                        $receiveable_type = old('receiveable_type', !empty($material_utilization) ? $material_utilization->lines->pluck('receiveable_type') : []);
                         
                     @endphp
                     @foreach ($material_name as $key => $item)
@@ -268,6 +272,8 @@
                         <td>
                             <input type="material_name" name="material_name[]" class="form-control type_no" autocomplete="off" value="{{ $material_name[$key] }}">
                             <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off" value="{{ $material_id[$key] }}">
+                            <input type="hidden" name="receiveable_type[]" class="form-control receiveable_type" autocomplete="off" value="{{ $receiveable_type[$key] }}">
+                            <input type="hidden" name="receiveable_id[]" class="form-control receiveable_id" autocomplete="off" value="{{ $receiveable_id[$key] }}">
                             </td>
                         <td class="form-group">
                             <input type="text" name="description[]" class="form-control description" value="{{ $description[$key] }}">  
