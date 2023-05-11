@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\ScmChallan;
+use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmChallanLine;
 use Modules\SCM\Entities\ScmRequisition;
@@ -214,13 +215,13 @@ class ScmMurController extends Controller
                     'client_ownership'  => $request->client_ownership[$key],
                     'bbts_ownership'    => $request->bbts_ownership[$key],
                     'remarks'           => $request->remarks[$key],
-                    'receiveable_id'    => $request->receivable_id[$key],
-                    'receiveable_type'  => $request->receiveable_type[$key]
+                    'receiveable_id'    => $request->receivable_id[$key] ?? NULL,
+                    'receiveable_type'  => $request->receiveable_type[$key] ?? NULL
                 ];
 
                 $stock[] = [
-                    'received_type'     => $request->receiveable_type[$key],
-                    'receiveable_id'    => $request->receivable_id[$key],
+                    'received_type'     => $request->receiveable_type[$key] ?? NULL,
+                    'receiveable_id'    => $request->receivable_id[$key] ?? NULL,
                     'receiveable_type'  => ($request->receiveable_type[$key] == 'MRR') ? ScmMrr::class : (($request->receiveable_type[$key] == 'WCR') ? ScmWcr::class : (($request->receiveable_type[$key] == 'ERR') ? ScmErr::class : NULL)),
                     'material_id'       => $request->material_id[$key],
                     'stockable_type'    => ScmMur::class,
@@ -251,9 +252,18 @@ class ScmMurController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmMur $material_utilization)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $material_utilization->stockable()->delete();
+            $material_utilization->delete();
+            DB::commit();
+            return redirect()->route('material-utilizations.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->route('material-utilizations.index')->withInput()->withErrors($err->getMessage());
+        }
     }
 
     public function searchChallanNo()
