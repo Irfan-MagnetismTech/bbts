@@ -10,6 +10,6 @@ class Meeting extends Model
 
     public function client()
     {
-        return $this->hasOne(LeadGeneration::class, 'id', 'client_id');
+        return $this->hasOne(LeadGeneration::class, 'id', 'client_no');
     }
 }

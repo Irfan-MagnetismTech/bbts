@@ -50,7 +50,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $survey->lead_generation->client_name }}</td>
-                        <td>{{ $survey->client_id }}</td>
+                        <td>{{ $survey->client_no }}</td>
                         <td>{{ $survey->mq_no }}</td>
                         <td>{{ $survey->fr_no }}</td>
                         <td>

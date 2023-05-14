@@ -40,7 +40,7 @@
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="client_id">Client ID<span
                                         class="text-danger">*</span></label>
-                                <span class="form-control">{{ $survey->lead_generation->client_id }}</span>
+                                <span class="form-control">{{ $survey->lead_generation->client_no }}</span>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">

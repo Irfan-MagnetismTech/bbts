@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('lead_generations', function (Blueprint $table) {
             $table->id();
             $table->string('client_name')->nullable();
-            $table->integer('client_id')->nullable();
+            $table->integer('client_no')->nullable();
             $table->text('address')->nullable();
             $table->integer('division_id')->nullable();
             $table->integer('district_id')->nullable();

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('connectivity_requirements', function (Blueprint $table) {
             $table->id();
             $table->string('fr_no');
-            $table->string('client_id');
+            $table->string('client_no');
             $table->string('mq_no');
             $table->string('from_location')->nullable();
             $table->string('aggregation_type')->nullable();

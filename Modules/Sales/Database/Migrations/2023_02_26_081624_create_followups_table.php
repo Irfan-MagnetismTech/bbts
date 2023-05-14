@@ -21,7 +21,7 @@ return new class extends Migration
             $table->time('work_end_time')->nullable();
             $table->string('work_nature_type')->nullable();
             $table->string('sales_type')->nullable();
-            $table->string('client_id')->nullable();
+            $table->string('client_no')->nullable();
             $table->float('potentility_amount')->nullable();
             $table->text('meeting_outcome')->nullable();
             $table->timestamps();

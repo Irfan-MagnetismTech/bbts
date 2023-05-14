@@ -43,7 +43,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Date</th>
-                    <th>Client id</th>
+                    <th>Client No</th>
                     <th>Client Name</th>
                     <th>Contact Person</th>
                     <th>Designation</th>
@@ -58,7 +58,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $lead_generation->created_at->format('d-m-Y') }}</td>
-                        <td>{{ $lead_generation->client_id }}</td>
+                        <td>{{ $lead_generation->client_no }}</td>
                         <td>{{ $lead_generation->client_name }}</td>
                         <td>{{ $lead_generation->contact_person }}</td>
                         <td>{{ $lead_generation->designation }}</td>

@@ -14,7 +14,7 @@ class FeasibilityRequirementRequest extends FormRequest
     public function rules()
     {
         return [
-            'client_id' => 'required',
+            'client_no' => 'required',
             'is_existing' => 'required',
 
         ];
