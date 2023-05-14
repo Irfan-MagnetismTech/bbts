@@ -54,7 +54,7 @@
                                 $details_ids = $survey->surveyDetails->pluck('id')->toArray();
                             }
                             $client_name = $is_old ? old('client_name') : $survey->lead_generation->client_name ?? $fr_detail->feasibilityRequirement->lead_generation->client_name;
-                            $client_id = $is_old ? old('client_id') : $survey->lead_generation->client_id ?? $fr_detail->feasibilityRequirement->lead_generation->client_id;
+                            $client_no = $is_old ? old('client_no') : $survey->lead_generation->client_no ?? $fr_detail->feasibilityRequirement->lead_generation->client_no;
                             $date = $is_old ? old('date') : $survey->date ?? null;
                             $mq_no = $is_old ? old('mq_no') : $survey->mq_no ?? $fr_detail->feasibilityRequirement->mq_no;
                             $fr_no = $is_old ? old('fr_no') : $survey->fr_no ?? $fr_detail->fr_no;
@@ -85,8 +85,8 @@
 
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
-                                <input class="form-control" id="client_id" name="client_id" aria-describedby="client_id"
-                                    value="{{ $client_id ?? '' }}" readonly placeholder="Client ID">
+                                <input class="form-control" id="client_id" name="client_no" aria-describedby="client_id"
+                                    value="{{ $client_no ?? '' }}" readonly placeholder="Client ID">
                                 <label for="client_id">Client ID<span class="text-danger">*</span></label>
                             </div>
                         </div>

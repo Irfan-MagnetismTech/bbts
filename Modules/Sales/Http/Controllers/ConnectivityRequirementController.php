@@ -36,7 +36,7 @@ class ConnectivityRequirementController extends Controller
     public function create($fr_id)
     {
         $fr_detail = FeasibilityRequirementDetail::with('feasibilityRequirement.lead_generation', 'feasibilityRequirement.feasibilityRequirementDetails')->find($fr_id);
-        $feasibility_requirement = FeasibilityRequirement::where('client_id', $fr_detail->feasibilityRequirement->client_id)->first();
+        $feasibility_requirement = FeasibilityRequirement::where('client_no', $fr_detail->feasibilityRequirement->client_no)->first();
         $all_fr_list = FeasibilityRequirementDetail::where('feasibility_requirement_id', $feasibility_requirement->id)->get();
         $categories = Category::all();
         $vendors = Vendor::all();
@@ -50,11 +50,11 @@ class ConnectivityRequirementController extends Controller
      */
     public function store(ConnectivityRequirementRequest $request)
     {
-        $connectivity_requirement_data = $request->only('date', 'client_id', 'from_location', 'aggregation_type', 'fr_no');
+        $connectivity_requirement_data = $request->only('date', 'client_no', 'from_location', 'aggregation_type', 'fr_no');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
         $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
-        $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_id', $connectivity_requirement_data['client_id'])->first()->mq_no;
+        $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_no', $connectivity_requirement_data['client_no'])->first()->mq_no;
         if ($request->hasFile('document')) {
             $file_name = CommonService::fileUpload($request->file('document'), 'uploads/connectivity_details');
             $connectivity_requirement_data['document'] = $file_name;
@@ -131,11 +131,11 @@ class ConnectivityRequirementController extends Controller
      */
     public function update(Request $request, ConnectivityRequirement $connectivity_requirement)
     {
-        $connectivity_requirement_data = $request->only('date', 'client_id', 'from_location', 'aggregation_type', 'fr_no');
+        $connectivity_requirement_data = $request->only('date', 'client_no', 'from_location', 'aggregation_type', 'fr_no');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
         $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
-        $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_id', $connectivity_requirement_data['client_id'])->first()->mq_no;
+        $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_no', $connectivity_requirement_data['client_no'])->first()->mq_no;
         if ($request->hasFile('document')) {
             $file_name = CommonService::UpdatefileUpload($request->file('document'), 'uploads/connectivity_details', $connectivity_requirement->document);
             $data['document'] = $file_name;

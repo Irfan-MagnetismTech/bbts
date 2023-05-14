@@ -29,7 +29,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Client Name</th>
-                    <th>Client id</th>
+                    <th>Client No</th>
                     <th>MQ No</th>
                     <th>Total FR </th>
                     <th>Survey/Planing</th>
@@ -41,7 +41,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Client Name</th>
-                    <th>Client id</th>
+                    <th>Client No</th>
                     <th>MQ No</th>
                     <th>Total FR </th>
                     <th>Survey/Planing</th>
@@ -54,7 +54,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $feasibility_requirement->lead_generation->client_name }}</td>
-                        <td>{{ $feasibility_requirement->client_id }}</td>
+                        <td>{{ $feasibility_requirement->client_no }}</td>
                         <td>{{ $feasibility_requirement->mq_no }}</td>
                         <td>{{ $feasibility_requirement->feasibilityRequirementDetails->count() }}</td>
                         <td>{{ $feasibility_requirement->feasibilityRequirementDetails[0]->surveySum->count() ?? '' }}/0

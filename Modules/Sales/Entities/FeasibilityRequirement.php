@@ -11,11 +11,11 @@ class FeasibilityRequirement extends Model
 
     public function feasibilityRequirementDetails()
     {
-        return $this->hasMany(FeasibilityRequirementDetail::class)->with('division', 'district', 'thana');
+        return $this->hasMany(FeasibilityRequirementDetail::class, 'feasibility_requirement_id', 'id')->with('division', 'district', 'thana');
     }
 
     public function lead_generation()
     {
-        return $this->hasOne(LeadGeneration::class, 'client_id', 'client_id');
+        return $this->hasOne(LeadGeneration::class, 'client_no', 'client_no');
     }
 }

@@ -52,7 +52,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $connectivity_requirement->lead_generation->client_name }}</td>
-                        <td>{{ $connectivity_requirement->client_id }}</td>
+                        <td>{{ $connectivity_requirement->client_no }}</td>
                         <td>{{ $connectivity_requirement->mq_no }}</td>
                         <td>{{ $connectivity_requirement->fr_no }}</td>
                         <td>{{ $connectivity_requirement->fromLocation->location ?? '' }}</td>

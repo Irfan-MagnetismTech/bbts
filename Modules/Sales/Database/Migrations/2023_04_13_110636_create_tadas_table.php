@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('tadas', function (Blueprint $table) {
             $table->id();
             $table->integer('follow_up_id')->unsigned();
-            $table->integer('client_id')->unsigned();
+            $table->integer('client_no')->unsigned();
             $table->integer('amount')->unsigned();
             $table->timestamps();
         });

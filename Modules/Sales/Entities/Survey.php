@@ -20,7 +20,7 @@ class Survey extends Model
 
     public function lead_generation()
     {
-        return $this->hasOne(LeadGeneration::class, 'client_id', 'client_id');
+        return $this->hasOne(LeadGeneration::class, 'client_no', 'client_no');
     }
 
     public function feasibilityRequirementDetails()

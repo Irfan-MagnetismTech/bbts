@@ -25,12 +25,11 @@ class ConnectivityRequirement extends Model
 
     public function lead_generation()
     {
-        return $this->belongsTo(LeadGeneration::class, 'client_id', 'client_id');
+        return $this->belongsTo(LeadGeneration::class, 'client_no', 'client_no');
     }
 
     public function fromLocation()
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'from_location', 'id');
     }
-
 }

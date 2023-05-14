@@ -18,7 +18,7 @@ class MeetingRequest extends FormRequest
             'sales_representative' => 'required',
             'meeting_start_time' => 'required',
             'meeting_end_time' => 'required',
-            'client_id' => 'required',
+            'client_no' => 'required',
             'purpose' => 'required',
         ];
     }
@@ -35,7 +35,7 @@ class MeetingRequest extends FormRequest
             'sales_representative.required' => 'Sales representative is required',
             'meeting_start_time.required' => 'Meeting start time is required',
             'meeting_end_time.required' => 'Meeting end time is required',
-            'client_id.required' => 'Client is required',
+            'client_no.required' => 'Client is required',
             'purpose.required' => 'Purpose is required',
         ];
     }
