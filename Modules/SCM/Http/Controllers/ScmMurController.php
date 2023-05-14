@@ -188,8 +188,6 @@ class ScmMurController extends Controller
         try {
             DB::beginTransaction();
             $mur_data = $request->all();
-            $mur_data['mur_no'] = $this->murNo;
-            $mur_data['created_by'] = auth()->user()->id;
             $material_utilization->update($mur_data);
             $stock = [];
             $mur_lines = [];

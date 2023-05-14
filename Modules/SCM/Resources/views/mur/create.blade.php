@@ -105,8 +105,6 @@
                         @endforeach
                     </select> --}}
                 </div>
-            </div>
-            <div class="row">
                 <div class="form-group col-3 challan_no" style="">
                     <label for="select2">Challan No</label>
                     <input class="form-control" id="challan_no" name="challan_no" aria-describedby="challan_no"
@@ -119,6 +117,9 @@
                     <input class="form-control" id="challan_date" name="challan_date" aria-describedby="challan_date"
                     value="{{ old('challan_date') ?? ($challan_date ?? '') }}" readonly>
                 </div>
+            </div>
+            <div class="row">
+               
             </div>
             <div class="row">
                 <div class="form-group col-3 equipment_type client">
@@ -182,18 +183,21 @@
             <table class="table table-bordered" id="material_requisition">
                 <thead>
                     <tr>
-                        <th>Material Name</th>
-                        <th>Description</th>
-                        <th>Item Code</th>
-                        <th>Unit</th>
-                        <th>Brand</th>
-                        <th>Model</th>
-                        <th>Serial/Drum Code <br /> No</th>
-                        <th>Provided Quantity</th>
-                        <th>Utilized Quantity</th>
-                        <th>BBTS Ownership</th>
-                        <th>Client Ownership</th>
-                        <th>Remarks</th>
+                        <th rowspan="2">Material Name</th>
+                        <th rowspan="2">Description</th>
+                        <th rowspan="2">Item Code</th>
+                        <th rowspan="2">Unit</th>
+                        <th rowspan="2">Brand</th>
+                        <th rowspan="2">Model</th>
+                        <th rowspan="2">Serial/Drum Code <br /> No</th>
+                        <th rowspan="2">Provided Quantity</th>
+                        <th colspan="2">Ownership</th>
+                        <th rowspan="2">Utilized Quantity</th>
+                        <th rowspan="2">Remarks</th>
+                    </tr>
+                    <tr>
+                        <th>BBTS</th>
+                        <th>Client</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -232,14 +236,15 @@
                         <td>
                             <input name="quantity[]" class="form-control quantity" autocomplete="off" readonly value="{{ $item['quantity'] }}">
                         </td>
+                      
                         <td>
-                            <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" value="{{ $item['quantity'] }}">
+                            <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" value="{{ $item['quantity'] }}">
                         </td>
                         <td>
-                            <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" value="">
+                            <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off" value="0">
                         </td>
                         <td>
-                            <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off" value="">
+                            <input name="utilized_quantity[]" class="form-control utilized_quantity" readonly autocomplete="off" value="{{ $item['quantity'] }}">
                         </td>
                         <td>
                             <input class="form-control remarks" name="remarks[]" aria-describedby="remarks">
@@ -297,14 +302,15 @@
                         <td>
                             <input name="quantity[]" class="form-control quantity" autocomplete="off" readonly value="{{ $quantity[$key] }}">
                         </td>
-                        <td>
-                            <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" value="{{ $utilized_quantity[$key] }}">
-                        </td>
+                      
                         <td>
                             <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" value="{{ $bbts_ownership[$key] }}">
                         </td>
                         <td>
                             <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off" value="{{ $client_ownership[$key] }}">
+                        </td>
+                        <td>
+                            <input name="utilized_quantity[]" class="form-control utilized_quantity" readonly autocomplete="off" value="{{ $utilized_quantity[$key] }}">
                         </td>
                         <td>
                             <input class="form-control remarks" name="remarks[]" aria-describedby="remarks" value="{{ $remarks[$key] }}">
@@ -342,68 +348,8 @@
         @if (empty($requisition) && empty(old('material_name')))
             // appendCalculationRow();
         @endif
-        function appendCalculationRow() {
-            var type = $("input[name=type]").val()
-            let row = `<tr>
-                            <td>
-                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off">
-                                <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off">
-                                </td>
-                            <td class="form-group">
-                                <select class="form-control serial_code select2" name="serial_code[]">                      
-                                </select>
-                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
-                            </td>
-                            <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="opening_balance[]" class="form-control opening_balance" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="brand[]" class="form-control brand" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" readonly>
-                            </td>
-                            <td>
-                                <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                            </td>                                                  
-                            <td>
-                                <input class="form-control avaiable_quantity" name="avaiable_quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
-                            </td>
-                            <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly value="10">
-                            </td>
-                            <td>
-                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
-                            </td>
-                        </tr>
-                    `;
-            $('#material_requisition tbody').append(row);
-        }
-
-        /* Adds and removes quantity row on click */
-        $("#material_requisition")
-            .on('click', '.add-requisition-row', () => {
-                appendCalculationRow();
-            })
-            .on('click', '.remove-calculation-row', function() {
-                $(this).closest('tr').remove();
-            });
+       
+       
 
       
         $(document).on('keyup focus', '#client_name', function() {
@@ -553,7 +499,6 @@
                 jquaryUiAjax('#challan_no', "{{ route('searchChallanNo') }}", uiList, myObject);
 
                 function uiList(item) {
-                    console.log(item)
                     $('#challan_no').val(item.label);
                     $('#challan_id').val(item.id);
                     $('#challan_date').val(item.date);
@@ -668,7 +613,6 @@
                     },
                     success: function(data) {
                         // (elemmtn).closest('tr').find('.stock').val(data.stock);
-                        console.log(data);
                         (elemmtn).closest('tr').find('.opening_balance').val(data
                             .to_branch_balance);
                         (elemmtn).closest('tr').find('.avaiable_quantity').val(data
@@ -683,6 +627,30 @@
                     new Switchery(checkbox, { color: '#4099ff', jackColor: '#fff', size: 'small' });
                 });
             }
+
+            $(document).on('keyup','.bbts_ownership, .client_ownership',function(){
+                let bbts_ownership = Number($(this).closest('tr').find('.bbts_ownership').val());
+                let client_ownership = Number($(this).closest('tr').find('.client_ownership').val());
+                let quantity = Number($(this).closest('tr').find('.quantity').val());
+                var classNames = this.classList;
+                
+                if(quantity >= (bbts_ownership + client_ownership)){
+                    
+                    
+                    $(this).closest('tr').find('.utilized_quantity').val(bbts_ownership + client_ownership);	
+                }else{
+                    alert('utilized quantity can not greater than provided quantity');
+                    if (classNames.contains('client_ownership')) {
+                        $(this).closest('tr').find('.client_ownership').val(quantity);
+                        $(this).closest('tr').find('.bbts_ownership').val(0);
+                    }else{
+                        $(this).closest('tr').find('.client_ownership').val(0);
+                        $(this).closest('tr').find('.bbts_ownership').val(quantity);
+                    }
+                    $(this).closest('tr').find('.utilized_quantity').val(quantity);	
+                }
+              
+            })
 
             $('.utilized_quantity').on('keyup',function(){
                 let utilized_qty = $(this).val();
