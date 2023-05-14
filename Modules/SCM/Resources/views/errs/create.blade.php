@@ -115,16 +115,16 @@
 
         <div class="form-group col-3 assigned_person">
             <label for="assigned_person">Assigned Person:</label>
-            <input type="text" class="form-control" id="assigned_person" aria-describedby="assigned_person" name="assigned_person"
-                readonly value="{{ old('assigned_person') ?? (@$assigned_person ?? '') }}">
+            <input type="text" class="form-control" id="assigned_person" aria-describedby="assigned_person"
+                name="assigned_person" value="{{ old('assigned_person') ?? (@$assigned_person ?? '') }}">
         </div>
 
         <div class="form-group col-3 reason_of_inactive">
             <label for="reason_of_inactive">Reason of Inactive:</label>
-            <input type="text" class="form-control" id="reason_of_inactive" aria-describedby="reason_of_inactive" name="reason_of_inactive"
-                readonly value="{{ old('reason_of_inactive') ?? (@$reason_of_inactive ?? '') }}">
+            <input type="text" class="form-control" id="reason_of_inactive" aria-describedby="reason_of_inactive"
+                name="reason_of_inactive" value="{{ old('reason_of_inactive') ?? (@$reason_of_inactive ?? '') }}">
         </div>
-        
+
         <div class="form-group col-3 inactive_date">
             <label for="inactive_date">Permanently Inactive Date:</label>
             <input class="form-control date" id="inactive_date" name="inactive_date" aria-describedby="inactive_date"
@@ -156,8 +156,8 @@
         </div>
         <div class="form-group col-3 client_name">
             <label for="client_name">Client Name:</label>
-            <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
-                value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
+            <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                name="client_name" value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
         </div>
         <div class="form-group col-3 fr_no">
             <label for="select2">FR No</label>
@@ -205,7 +205,7 @@
         </div>
     </div>
 
-    <table class="table table-bordered" id="challan">
+    <table class="table table-bordered" id="errTable">
         <thead>
             <tr>
                 <th rowspan="2">Material Name</th>
@@ -216,10 +216,10 @@
                 <th rowspan="2">Brand</th>
                 <th rowspan="2">Model</th>
                 <th rowspan="2">Serial/Drum Code <br /> No</th>
-                <th rowspan="2">Quantity</th>
+                <th colspan="2">Ownership</th>
                 <th colspan="2">Damaged</th>
                 <th colspan="2">Useable</th>
-                <th colspan="2">Ownership</th>
+                <th rowspan="2">Quantity</th>
                 <th rowspan="2">Remarks</th>
             </tr>
             <tr>
@@ -250,97 +250,8 @@
                 $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
                 
             @endphp
-            @foreach ($Challan_Lines as $key => $Challan_Line)
-                <tr>
-                    <td>
-                        <select name="received_type[{{ $key }}]" class="form-control received_type"
-                            autocomplete="off">
-                            <option value="">Select Out From</option>
-                            @foreach (config('businessinfo.receivedTypes') as $typeKey => $typevalue)
-                                <option value="{{ $typevalue }}" @selected($received_type[$key] == $typevalue)>
-                                    {{ strToUpper($typevalue) }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" name="type_no[{{ $key }}]" class="form-control type_no"
-                            autocomplete="off" value="{{ $received_no[$key] }}">
-                        <input type="hidden" name="type_id[{{ $key }}]" class="form-control type_id"
-                            autocomplete="off" value="{{ $receiveable_id[$key] }}">
-                    </td>
-                    <td class="form-group">
-                        <select class="form-control material_name select2" name="material_name[{{ $key }}]">
-                            <option value="" readonly selected>Select Material</option>
-                            @foreach ($materials[$key] as $key1 => $value)
-                                <option value="{{ $value->material->id }}" data-type="{{ $value->material->type }}"
-                                    data-unit="{{ $value->material->unit }}" data-code="{{ $value->material->code }}"
-                                    readonly @selected($material_id[$key] == $value->material->id)>
-                                    {{ $value->material->name }}</option>
-                            @endforeach
-                        </select>
-                        <input type="hidden" name="item_code[{{ $key }}]" class="form-control item_code"
-                            autocomplete="off" value="{{ $item_code[$key] }}">
-                        <input type="hidden" name="material_type[{{ $key }}]"
-                            class="form-control material_type" autocomplete="off" value="{{ $material_type[$key] }}">
-                    </td>
-
-                    <td>
-
-                        <select name="brand[{{ $key }}]" class="form-control brand select2" autocomplete="off">
-                            <option value="">Select Brand</option>
-                            @foreach ($brands[$key] as $key1 => $value)
-                                <option value="{{ $value?->brand?->id ?? null }}" @selected($value?->brand?->id == $brand_id[$key])>
-                                    {{ $value?->brand?->name ?? null }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-
-                    <td>
-                        <select class="form-control model select2" name="model[{{ $key }}]">
-                            <option value="" readonly selected>Select Model</option>
-                            @foreach ($models[$key] as $key1 => $value)
-                                <option value="{{ $value->model }}" @selected($value->model == $model[$key])>
-                                    {{ $value->model }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td class="select2_container">
-                        <select class="form-control select2 serial_code" multiple
-                            name="serial_code[{{ $key }}][]">
-                            @foreach ($serial_codes[$key] as $key1 => $value)
-                                <option value="{{ $value->serial_code }}" @selected(in_array($value->serial_code, json_decode($serial_code[$key])))>
-                                    {{ $value->serial_code }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input name="unit[{{ $key }}]" class="form-control unit" readonly autocomplete="off"
-                            type="text" value="{{ $unit[$key] }}">
-                    </td>
-                    <td>
-                        <input name="avaiable_quantity[{{ $key }}]" class="form-control avaiable_quantity"
-                            autocomplete="off" value="{{ $branch_stock[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input name="quantity[{{ $key }}]" class="form-control quantity" autocomplete="off"
-                            @if ($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
-                    </td>
-                    <td>
-                        <input name="remarks[{{ $key }}]" class="form-control remarks" autocomplete="off"
-                            value="{{ $remarks[$key] }}">
-                    </td>
-                    <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
-                    </td>
-                </tr>
-            @endforeach
 
         </tbody>
-        <tfoot>
-        </tfoot>
     </table>
 
     <div class="row">
@@ -396,10 +307,11 @@
                     $(this).val(ui.item.label);
                     $('#pop_id').val(ui.item.id);
                     $('#pop_address').val(ui.item.address);
+                    $('#pop_id').trigger('change');
+
                     return false;
                 }
             })
-
         });
 
         function onChangeRadioButton() {
@@ -440,7 +352,135 @@
             });
         @endif
 
-        
+        $(document).on('change', '#fr_no, #pop_id, #link_no', function() {
+            emptyRow()
+            let type = $("input[name='type']:checked").val();
+            let fr_no = $('#fr_no').val();
+            let pop_name = $('#pop_name').val();
+            let client_no = $('#client_no').val();
+            let equipment_type = $('#equipment_type').val();
+            let link_no = $('#link_no').val();
+            let pop_id = $('#pop_id').val();
+
+            let url = "{{ route('clientMurWiseMaterials') }}";
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                dataType: "json",
+                data: {
+                    type: type,
+                    fr_no: fr_no,
+                    pop_name: pop_name,
+                    client_no: client_no,
+                    equipment_type: equipment_type,
+                    link_no: link_no,
+                    pop_id: pop_id,
+                },
+                success: function(data) {
+                    $.each(data, function(key, value) {
+                        addRow(value)
+                    });
+                }
+            });
+
+        });
+
+        function addRow(value) {
+            let row = `<tr>
+                            <td>
+                                <input name="material_name[]" class="form-control material_name" readonly autocomplete="off" type="text" value="${value.material_name}" readonly>
+                                <input name="material_id[]" class="form-control material_id" readonly autocomplete="off" type="hidden" value="${value.material_id}">
+                            </td>
+                            <td>
+                                <input name="description[]" class="form-control description" autocomplete="off" type="text" value="">
+                            </td>
+                            <td>
+                                <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" type="text" value="${value.utilized_quantity}" readonl>
+                            </td>
+                            <td>
+                                <input name="item_code[]" class="form-control item_code" autocomplete="off" type="text" value="${value.item_code}" readonly>
+                            </td>
+                            <td>
+                                <input name="unit[]" class="form-control unit" autocomplete="off" type="text" value="${value.unit}" readonly>
+                            </td>
+                            <td>
+                                <input name="brand_name[]" class="form-control brand_name" autocomplete="off" type="text" value="${value.brand_name}" readonly>
+                            </td>
+                            <td>
+                                <input name="model[]" class="form-control model" autocomplete="off" type="text" value="${value.model}" readonly>
+                            </td>
+                            <td>
+                                <input name="serial_code[]" class="form-control serial_code" autocomplete="off" type="text" value="${value.serial_code}" readonly>
+                            </td>
+                            <td>
+                                <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" type="text" value="${value.bbts_ownership}" readonly>
+                            </td>
+                            <td>
+                                <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off" type="text" value="${value.client_ownership}" readonly>
+                            </td>
+                            <td>
+                                <input name="bbts_damaged[]" class="form-control bbts_damaged" autocomplete="off" type="number" value="0">
+                            </td>
+                            <td>
+                                <input name="client_damaged[]" class="form-control client_damaged" autocomplete="off" type="number" value="0">
+                            </td>
+                            <td>
+                                <input name="bbts_useable[]" class="form-control bbts_useable" autocomplete="off" type="number" value="0">
+                            </td>
+                            <td>
+                                <input name="client_useable[]" class="form-control client_useable" autocomplete="off" type="number" value="0">   
+                            </td>
+                            <td>
+                                <input name="quantity[]" class="form-control quantity" autocomplete="off" type="number" value="0" readonly>
+                            </td>
+                            <td>
+                                <input name="remarks[]" class="form-control remarks" autocomplete="off" value="">
+                            </td>
+                        </tr>
+                    `;
+            $('#errTable tbody').append(row);
+        }
+
+        function emptyRow() {
+            $('#errTable tbody').empty();
+        }
+
+        //on keyup bbts_damaged or client_damaged or bbts_useable or client_useable add value to quantity
+        $(document).on('input', '.bbts_damaged, .client_damaged, .bbts_useable, .client_useable', function() {
+            let bbts_damaged = $(this).closest('tr').find('.bbts_damaged').val();
+            let client_damaged = $(this).closest('tr').find('.client_damaged').val();
+            let bbts_useable = $(this).closest('tr').find('.bbts_useable').val();
+            let client_useable = $(this).closest('tr').find('.client_useable').val();
+            let quantity = $(this).closest('tr').find('.quantity').val();
+
+            let total = parseInt(bbts_damaged) + parseInt(client_damaged) + parseInt(bbts_useable) + parseInt(
+                client_useable);
+            $(this).closest('tr').find('.quantity').val(total);
+        });
+
+        $(document).on('click', '.bbts_damaged, .client_damaged, .bbts_useable, .client_useable', function() {
+            $(this).select();
+        });
+
+        //quantity cannot be greater than utilized_quantity
+        $(document).on('input', '.bbts_damaged, .client_damaged, .bbts_useable, .client_useable', function() {
+            let utilized_quantity = $(this).closest('tr').find('.utilized_quantity').val();
+            let quantity = $(this).closest('tr').find('.quantity').val();
+
+            if (parseInt(quantity) > parseInt(utilized_quantity)) {
+                swal.fire({
+                    title: "Quantity cannot be greater than utilized quantity",
+                    type: "warning",
+                })
+
+                $(this).closest('tr').find('.quantity').val(0);
+                $(this).closest('tr').find('.bbts_damaged').val(0);
+                $(this).closest('tr').find('.client_damaged').val(0);
+                $(this).closest('tr').find('.bbts_useable').val(0);
+                $(this).closest('tr').find('.client_useable').val(0);
+            }
+        });
     </script>
 
     <script src="{{ asset('js/search-client.js') }}"></script>
