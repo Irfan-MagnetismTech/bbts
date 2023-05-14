@@ -6,6 +6,7 @@ use Modules\SCM\Http\Controllers\ScmMrrController;
 use Modules\SCM\Http\Controllers\ScmMurController;
 use Modules\SCM\Http\Controllers\ScmChallanController;
 use Modules\SCM\Http\Controllers\ScmGatePassController;
+use Modules\SCM\Http\Controllers\ScmWcrController;
 
 Route::resource('material-receives', 'ScmMrrController')->parameters([
     'material-receives' => 'material_receive',
@@ -17,6 +18,7 @@ Route::get('search-mir-no', [ScmGatePassController::class, 'searchMirNo'])->name
 Route::resources([
     'challans'                 => ScmChallanController::class,
     'material-utilizations'    => ScmMurController::class,
+    'warranty-claims'           => ScmWcrController::class,
 ]);
 
 Route::get('search_po_with_date', [ScmMrrController::class, 'searchPoWithDate'])->name('search_po_with_date');

@@ -2,9 +2,11 @@
 
 namespace Modules\SCM\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use Modules\Admin\Entities\Branch;
+use Illuminate\Contracts\Support\Renderable;
 
 class ScmWcrController extends Controller
 {
@@ -23,7 +25,10 @@ class ScmWcrController extends Controller
      */
     public function create()
     {
-        return view('scm::create');
+        $formType = "create";
+        $brands = Brand::latest()->get();
+        $branchs = Branch::latest()->get();
+        return view('scm::wcrs.create', compact('formType', 'brands', 'branchs'));
     }
 
     /**
