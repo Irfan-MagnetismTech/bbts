@@ -823,6 +823,8 @@
                 });
             }
         });
+                                       I
+
     </script>
 
     <script src="{{ asset('js/search-client.js') }}"></script>

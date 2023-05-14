@@ -59,9 +59,6 @@ class ScmMurController extends Controller
             $serial_count = count(json_decode($value->serial_code));
             if ($serial_count) {
                 foreach (json_decode($value->serial_code) as $key1 => $value1) {
-                    // $iiidd = $challanData->scmChallanLines->where([
-                    //     'material_id' => $value->material_id, 'item_code' => $value->material->code, 'brand_id' => $value->brand_id, 'model' => $value->model, 'serial_code'   => $value1,
-                    // ]);
                     $iiidd = ScmChallanLine::where(['material_id' => $value->material_id, 'item_code' => $value->material->code, 'brand_id' => $value->brand_id, 'model' => $value->model, 'serial_code'   => $value1, 'scm_challan_id' => $challanData->id])->get();
                     $challanLines[] = [
                         'material_id'       => $value->material_id,
@@ -109,9 +106,6 @@ class ScmMurController extends Controller
         try {
             DB::beginTransaction();
             $challan_data = ScmChallan::find($request->challan_id);
-            $stock_data = $challan_data->stockable;
-            $receivable_id = $stock_data->first()->receiveable_id;
-            $receivable_type = $stock_data->first()->receiveable_type;
             $mur_data = $request->all();
             $mur_data['mur_no'] = $this->murNo;
             $mur_data['created_by'] = auth()->user()->id;
@@ -193,10 +187,6 @@ class ScmMurController extends Controller
     {
         try {
             DB::beginTransaction();
-            $challan_data = ScmChallan::find($request->challan_id);
-            $stock_data = $challan_data->stockable;
-            $receivable_id = $stock_data->first()->receiveable_id;
-            $receivable_type = $stock_data->first()->receiveable_type;
             $mur_data = $request->all();
             $mur_data['mur_no'] = $this->murNo;
             $mur_data['created_by'] = auth()->user()->id;

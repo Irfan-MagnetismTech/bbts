@@ -112,8 +112,8 @@ class ScmMrrController extends Controller
                     $stock[] = [
                         'received_type'     => 'MRR',
                         'material_id'       => $value->material_id,
-                        'stockable_type'    => ScmMrr::class,
-                        'stockable_id'      => $materialReceive->id,
+                        'receiveable_type'  => ScmMrr::class,
+                        'receiveable_id'    => $materialReceive->id,
                         'brand_id'          => $value->brand_id,
                         'branch_id'         => $request->branch_id,
                         'model'             => $value->model,
@@ -132,7 +132,7 @@ class ScmMrrController extends Controller
                     ];
                 }, $serialCode[$key]));
             }
-            $materialReceive->receiveable()->createMany($stock);
+            $materialReceive->stockable()->createMany($stock);
             // FiberTracking::insert($CablePeace);
             dd($stock);
             DB::commit();
@@ -202,7 +202,7 @@ class ScmMrrController extends Controller
             }
             $materialReceive->update($requestData);
             $materialReceive->scmMrrLines()->delete();
-            $materialReceive->receiveable()->delete();
+            $materialReceive->stockable()->delete();
             $MrrDetail = $materialReceive->scmMrrLines()->createMany($mrrDetails);
             $stock = [];
             // $CablePeace = [];
@@ -234,8 +234,8 @@ class ScmMrrController extends Controller
                     $stock[] = [
                         'received_type'     => 'MRR',
                         'material_id'       => $value->material_id,
-                        'stockable_type'    => ScmMrr::class,
-                        'stockable_id'      => $materialReceive->id,
+                        'receiveable_type'  => ScmMrr::class,
+                        'receiveable_id'    => $materialReceive->id,
                         'brand_id'          => $value->brand_id,
                         'branch_id'         => $request->branch_id,
                         'model'             => $value->model,
@@ -254,7 +254,7 @@ class ScmMrrController extends Controller
                     ];
                 }, $serialCode[$key]));
             }
-            $materialReceive->receiveable()->createMany($stock);
+            $materialReceive->stockable()->createMany($stock);
             // FiberTracking::insert($CablePeace);
             DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been updated successfully');
@@ -273,7 +273,7 @@ class ScmMrrController extends Controller
     {
         try {
             DB::beginTransaction();
-            $materialReceive->receiveable()->delete();
+            $materialReceive->stockable()->delete();
             $materialReceive->delete();
             DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been deleted successfully');
