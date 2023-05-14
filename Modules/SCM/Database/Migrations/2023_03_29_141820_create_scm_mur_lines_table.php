@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('model')->nullable();
             $table->string('serial_code')->nullable();
             $table->string('quantity')->nullable();
+            $table->bigInteger('receivable_id')->nullable();
+            $table->string('receivable_type')->nullable();
             $table->string('utilized_quantity')->nullable();
             $table->string('bbts_ownership')->nullable();
             $table->string('client_ownership')->nullable();

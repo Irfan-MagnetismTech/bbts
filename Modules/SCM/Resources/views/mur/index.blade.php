@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of Requisition Info
+    List of Material Utilization
 @endsection
 
 @section('style')
