@@ -18,10 +18,10 @@ return new class extends Migration
             $table->foreignId('scm_err_id')->constrained('scm_errs', 'id')->cascadeOnDelete();
             $table->bigInteger('material_id')->nullable();
             $table->string('item_code')->nullable();
-            $table->bigInteger('description')->nullable();
+            $table->string('description')->nullable();
             $table->bigInteger('brand_id')->nullable();
             $table->string('model')->nullable();
-            $table->bigInteger('serial_code')->nullable();
+            $table->string('serial_code')->nullable();
             $table->integer('quantity')->nullable();
             $table->string('status')->comment('Damage/Usable')->nullable();
             $table->string('remarks')->nullable();

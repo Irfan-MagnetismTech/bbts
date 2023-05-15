@@ -18,6 +18,8 @@ use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\QueryException;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\Client;
+use Modules\SCM\Entities\ScmErrLine;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
 
 class ScmErrController extends Controller
@@ -35,7 +37,9 @@ class ScmErrController extends Controller
      */
     public function index()
     {
-        return view('scm::errs.index');
+        $errs = ScmErr::with('scmErrLines', 'scmErrLines.material')->get();
+
+        return view('scm::errs.index', compact('errs'));
     }
 
     /**
@@ -82,20 +86,6 @@ class ScmErrController extends Controller
         }
     }
 
-    public function getErrLines($req, $key1)
-    {
-        return  [
-            'material_id'   => $req->material_name[$key1],
-            'item_code' => $req->item_code[$key1],
-            'description' => $req->description[$key1],
-            'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : NULL,
-            'model' => isset($req->model[$key1]) ? $req->model[$key1] : NULL,
-            'serial_code' => isset($req->serial_code[$key1]) ? json_encode($req->serial_code[$key1]) : '[]',
-            'quantity' => $req->quantity[$key1],
-            'remarks' => $req->remarks[$key1],
-        ];
-    }
-
     /**
      * Show the specified resource.
      * @param int $id
@@ -111,9 +101,12 @@ class ScmErrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ScmErr $err)
     {
-        return view('scm::edit');
+        $fr_nos = Client::with('saleDetails')->where('client_no', $err->client_no)->first();
+        $client_links = Client::with('saleLinkDetails')->where('client_no', $err->client_no)->first();
+
+        return view('scm::errs.create', compact('err', 'fr_nos', 'client_links'));
     }
 
     /**
@@ -177,5 +170,19 @@ class ScmErrController extends Controller
             ->get();
 
         return response()->json($materials);
+    }
+
+    public function getErrLines($req, $key1)
+    {
+        return  [
+            'material_id'   => $req->material_id[$key1],
+            'item_code' => $req->item_code[$key1],
+            'description' => $req->description[$key1],
+            'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : NULL,
+            'model' => isset($req->model[$key1]) ? $req->model[$key1] : NULL,
+            'serial_code' => isset($req->serial_code[$key1]) ? json_encode($req->serial_code[$key1]) : '[]',
+            'quantity' => $req->quantity[$key1],
+            'remarks' => $req->remarks[$key1],
+        ];
     }
 }

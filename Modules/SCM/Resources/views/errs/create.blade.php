@@ -2,28 +2,28 @@
 @section('title', 'Equipment Restore Report')
 @php
     $is_old = old('type') ? true : false;
-    $form_heading = !empty($challan) ? 'Update' : 'Add';
-    $form_url = !empty($challan) ? route('errs.update', $challan->id) : route('errs.store');
-    $form_method = !empty($challan) ? 'PUT' : 'POST';
+    $form_heading = !empty($err) ? 'Update' : 'Add';
+    $form_url = !empty($err) ? route('errs.update', $err->id) : route('errs.store');
+    $form_method = !empty($err) ? 'PUT' : 'POST';
     
-    $date = old('date', !empty($challan) ? $challan->date : null);
-    $type = old('date', !empty($challan) ? $challan->type : null);
-    
-    $scm_requisition_id = old('scm_requisition_id', !empty($challan) ? $challan->scm_requisition_id : null);
-    $purpose = old('purpose', !empty($challan) ? $challan->purpose : null);
-    $equipment_type = old('equipment_type', !empty($challan) ? $challan?->equipment_type : null);
-    $client_id = old('client_id', !empty($challan) ? $challan->client_id : null);
-    $fr_composite_key = old('fr_composite_key', !empty($challan) ? $challan->fr_composite_key : null);
-    $fr_id = old('fr_composite_key', !empty($challan) ? $challan->clientDetails?->fr_id : null);
-    $client_name = old('client_name', !empty($challan) ? $challan?->client?->name : null);
-    $client_no = old('client_no', !empty($challan) ? $challan?->client?->client_no : null);
-    $client_address = old('client_address', !empty($challan) ? $challan?->client?->address : null);
-    $branch_id = old('branch_id', !empty($challan) ? $challan->branch_id : null);
-    $branch_name = old('branch_id', !empty($challan) ? $challan?->branch?->name : null);
-    $pop_id = old('pop_id', !empty($challan) ? $challan->pop_id : null);
-    $pop_name = old('pop_name', !empty($challan) ? $challan?->pop?->name : null);
-    $pop_address = old('pop_address', !empty($challan) ? $challan?->pop?->address : null);
-    
+    $date = old('date', !empty($err) ? $err->date : null);
+    $type = old('date', !empty($err) ? $err->type : null);
+    $purpose = old('purpose', !empty($err) ? $err->purpose : null);
+    $assigned_person = old('assigned_person', !empty($err) ? $err->assigned_person : null);
+    $reason_of_inactive = old('reason_of_inactive', !empty($err) ? $err->reason_of_inactive : null);
+    $equipment_type = old('equipment_type', !empty($err) ? $err?->equipment_type : null);
+    $client_id = old('client_id', !empty($err) ? $err->client_id : null);
+    $fr_no = old('fr_no', !empty($err) ? $err->fr_no : null);
+    $client_name = old('client_name', !empty($err) ? $err?->client?->client_name : null);
+    $client_no = old('client_no', !empty($err) ? $err?->client_no : null);
+    $client_link_no = old('client_link_no', !empty($err) ? $err?->link_no : null);
+    $client_address = old('client_address', !empty($err) ? $err?->client?->location : null);
+    $branch_id = old('branch_id', !empty($err) ? $err->branch_id : null);
+    $branch_name = old('branch_id', !empty($err) ? $err?->branch?->name : null);
+    $pop_id = old('pop_id', !empty($err) ? $err->pop_id : null);
+    $pop_name = old('pop_name', !empty($err) ? $err?->pop?->name : null);
+    $pop_address = old('pop_address', !empty($err) ? $err?->pop?->address : null);
+    $inactive_date = old('inactive_date', !empty($err) ? $err->inactive_date : now()->add(2));
 @endphp
 
 @section('breadcrumb-title')
@@ -125,6 +125,7 @@
                 name="reason_of_inactive" value="{{ old('reason_of_inactive') ?? (@$reason_of_inactive ?? '') }}">
         </div>
 
+        {{-- @dd($inactive_date) --}}
         <div class="form-group col-3 inactive_date">
             <label for="inactive_date">Permanently Inactive Date:</label>
             <input class="form-control date" id="inactive_date" name="inactive_date" aria-describedby="inactive_date"
@@ -156,20 +157,22 @@
         </div>
         <div class="form-group col-3 client_name">
             <label for="client_name">Client Name:</label>
-            <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                name="client_name" value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
+            <input type="text" class="form-control" id="client_name" onkeyup="clientWiseFr()"
+                aria-describedby="client_name" name="client_name"
+                value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
         </div>
+        {{-- @dd($fr_nos->saleDetails) --}}
+
         <div class="form-group col-3 fr_no">
             <label for="select2">FR No</label>
             <select class="form-control select2" id="fr_no" name="fr_no">
                 <option value="" readonly selected>Select FR No</option>
                 @if ($form_method == 'POST')
                     <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
-                @endif
-                @if ($form_method == 'PUT')
-                    @foreach ($fr_no_list as $key => $value)
-                        <option value="{{ $value }}" @selected($value == @$fr_no)>
-                            {{ $value }}</option>
+                @else
+                    @foreach ($fr_nos->saleDetails as $key => $value)
+                        <option value="{{ $value->fr_no }}" @if ($fr_no == $value->fr_no) selected @endif>
+                            {{ $value->fr_no }}</option>
                     @endforeach
                 @endif
             </select>
@@ -181,11 +184,10 @@
                 <option value="" readonly selected>Select Link No</option>
                 @if ($form_method == 'POST')
                     <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
-                @endif
-                @if ($form_method == 'PUT')
-                    @foreach ($client_links as $key => $value)
-                        <option value="{{ $value }}" @selected($value == @$link_no)>
-                            {{ $value }}</option>
+                @else
+                    @foreach ($client_links->saleLinkDetails as $key => $value)
+                        <option value="{{ $value->link_no }}" @if ($client_link_no == $value->link_no) selected @endif>
+                            {{ $value->link_no }}</option>
                     @endforeach
                 @endif
             </select>
@@ -266,13 +268,23 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('js/search-client.js') }}"></script>
     <script>
-        $('.date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());;
+        @if ($form_method == 'POST')
+            $('.date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());;
+        @else
+            $('.date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            });
+        @endif
 
         $(function() {
             onChangeRadioButton();
@@ -452,23 +464,14 @@
             let client_damaged = $(this).closest('tr').find('.client_damaged').val();
             let bbts_useable = $(this).closest('tr').find('.bbts_useable').val();
             let client_useable = $(this).closest('tr').find('.client_useable').val();
-            let quantity = $(this).closest('tr').find('.quantity').val();
 
             let total = parseInt(bbts_damaged) + parseInt(client_damaged) + parseInt(bbts_useable) + parseInt(
                 client_useable);
             $(this).closest('tr').find('.quantity').val(total);
-        });
 
-        $(document).on('click', '.bbts_damaged, .client_damaged, .bbts_useable, .client_useable', function() {
-            $(this).select();
-        });
-
-        //quantity cannot be greater than utilized_quantity
-        $(document).on('input', '.bbts_damaged, .client_damaged, .bbts_useable, .client_useable', function() {
             let utilized_quantity = $(this).closest('tr').find('.utilized_quantity').val();
-            let quantity = $(this).closest('tr').find('.quantity').val();
 
-            if (parseInt(quantity) > parseInt(utilized_quantity)) {
+            if (parseInt(total) > parseInt(utilized_quantity)) {
                 swal.fire({
                     title: "Quantity cannot be greater than utilized quantity",
                     type: "warning",
@@ -481,8 +484,44 @@
                 $(this).closest('tr').find('.client_useable').val(0);
             }
         });
+
+        $(document).on('click', '.bbts_damaged, .client_damaged, .bbts_useable, .client_useable', function() {
+            $(this).select();
+        });
+
+        // $(document).ready(function() {
+        //     var link_options = `<option value="" selected>Select FR No</option>`;
+        //     fetch('{{ route('searchClient') }}', {
+        //             method: 'get',
+        //             headers: {
+        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //             },
+        //             data:{
+        //                 'search': $('#client_name').val()
+        //             }
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             console.log('data', data);
+        //             data.forEach(element => {
+        //                 element.saleDetails.forEach(function(item) {
+        //                     link_options +=
+        //                         `<option value="${item.fr_no}">${item.fr_no}</option>`;
+        //                 });
+        //             });
+        //             $("#fr_no").html(link_options);
+        //         });
+        // });
+
+
+        // @if ($form_method == 'PUT')
+        //     $(document).on('DOMNodeInserted', '#fr_no', function() {
+        //         let selectedValue = "{{ $fr_no }}"
+        //         $('#fr_no').val(selectedValue).trigger('change');
+        //     });
+        // @endif
     </script>
 
-    <script src="{{ asset('js/search-client.js') }}"></script>
+    {{-- <script src="{{ asset('js/search-client.js') }}"></script> --}}
 
 @endsection

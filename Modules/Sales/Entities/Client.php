@@ -10,6 +10,7 @@ use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\Sales\Entities\BillingAddress;
+use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Ticketing\Entities\SupportTicket;
 
@@ -25,6 +26,11 @@ class Client extends Model
     public function saleDetails()
     {
         return $this->hasMany(SaleDetail::class, 'client_no', 'client_no');
+    }
+
+    public function saleLinkDetails()
+    {
+        return $this->hasMany(SaleLinkDetail::class, 'client_no', 'client_no');
     }
 
     public function supportTickets()
