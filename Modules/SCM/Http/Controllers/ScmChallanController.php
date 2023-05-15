@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Modules\SCM\Entities\ScmErr;
 use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmWcr;
+use Illuminate\Http\JsonResponse;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -16,12 +17,12 @@ use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\ScmChallan;
 use Modules\SCM\Entities\ScmMrrLine;
 use Modules\SCM\Entities\StockLedger;
+use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
-use Illuminate\Contracts\Support\Renderable;
-use Modules\Sales\Entities\SaleDetail;
 use Modules\Sales\Entities\SaleLinkDetail;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 
 class ScmChallanController extends Controller
