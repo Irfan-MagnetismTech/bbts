@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('model')->nullable();
             $table->string('serial_code')->nullable();
             $table->string('unit')->nullable();
-            $table->string('quantity')->nullable();
+            $table->double('quantity', 8, 2)->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
         });

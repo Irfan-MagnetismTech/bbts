@@ -21,7 +21,7 @@ return new class extends Migration
             $table->bigInteger('brand_id')->nullable();
             $table->string('model')->nullable();
             $table->string('serial_code')->nullable();
-            $table->string('quantity')->nullable();
+            $table->double('quantity', 8, 2)->nullable();
             $table->bigInteger('receivable_id')->nullable();
             $table->string('receivable_type')->nullable();
             $table->string('utilized_quantity')->nullable();

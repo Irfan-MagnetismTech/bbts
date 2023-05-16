@@ -95,10 +95,15 @@
         <div class="form-group col-3 supplier_name">
             <label for="select2">Supplier Name</label>
             <input class="form-control" id="supplier_name" name="supplier_name" aria-describedby="supplier_name"
-                value="{{ old('supplier_name') ?? (@$supplier_name ?? '') }}" placeholder="Search a Supplier Name">
+                value="{{ old('supplier_name') ?? (@$supplier_name ?? '') }}" placeholder="Search a Supplier Name" autocomplete="off">
             <input class="form-control" id="supplier_id" name="supplier_id"
                 aria-describedby="supplier_id"
                 value="{{ old('supplier_id') ?? (@$supplier_id ?? '') }}" type="hidden">
+        </div>
+        <div class="form-group col-3 supplier_address">
+            <label for="select2">Supplier Address</label>
+            <input class="form-control" id="supplier_address" name="supplier_address" aria-describedby="supplier_address"
+                value="{{ old('supplier_address') ?? (@$supplier_address ?? '') }}" readonly placeholder="Search a Supplier Name">
         </div>
         <div class="form-group col-3 branch_name">
             <label for="select2">From Branch</label>
@@ -492,6 +497,7 @@
                     select: function(event, ui) {
                         $('#supplier_name').val(ui.item.label);
                         $('#supplier_id').val(ui.item.value);
+                        $('#supplier_address').val(ui.item.address);
                         return false;
                     }
                 });

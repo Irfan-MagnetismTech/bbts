@@ -15,7 +15,16 @@ return new class extends Migration
     {
         Schema::create('scm_wcrs', function (Blueprint $table) {
             $table->id();
-
+            $table->string('wcr_no')->nullable();
+            $table->unsignedBigInteger('supplier_id')->nullable();
+            $table->date('date')->nullable();
+            $table->string('client_no')->nullable();
+            $table->string('fr_no')->nullable();
+            $table->string('link_no')->nullable();
+            $table->unsignedBigInteger('branch_id')->nullable();
+            $table->string('status')->nullable();
+            $table->string('remarks')->nullable();
+            $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
         });
     }
