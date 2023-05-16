@@ -40,7 +40,7 @@ $("#fr_no").on("change", function () {
     let fr_no = $(this).val();
     let type = $("#equipment_type").val();
     $("#link_no").html("");
-    if (type == "Link") {
+    if (type != "Service Equipment") {
         let link_no = $("#link_no");
         populateDropdownByAjax(
             window.location.origin + "/search-link-no",
