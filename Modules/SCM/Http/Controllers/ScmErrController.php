@@ -37,7 +37,7 @@ class ScmErrController extends Controller
      */
     public function index()
     {
-        $errs = ScmErr::with('scmErrLines', 'scmErrLines.material')->get();
+        $errs = ScmErr::with('scmErrLines', 'scmErrLines.material')->latest()->get();
 
         return view('scm::errs.index', compact('errs'));
     }
@@ -103,8 +103,8 @@ class ScmErrController extends Controller
      */
     public function edit(ScmErr $err)
     {
-        $fr_nos = Client::with('saleDetails')->where('client_no', $err->client_no)->first();
-        $client_links = Client::with('saleLinkDetails')->where('client_no', $err->client_no)->first();
+        $fr_nos = Client::with('saleDetails')->where('client_no', $err->client_no)->first()?->saleDetails ?? [];
+        $client_links = Client::with('saleLinkDetails')->where('client_no', $err->client_no)->first()?->saleLinkDetails ?? [];
 
         return view('scm::errs.create', compact('err', 'fr_nos', 'client_links'));
     }
@@ -176,11 +176,18 @@ class ScmErrController extends Controller
     {
         return  [
             'material_id'   => $req->material_id[$key1],
-            'item_code' => $req->item_code[$key1],
             'description' => $req->description[$key1],
-            'brand_id' => isset($req->brand[$key1]) ? $req->brand[$key1] : NULL,
-            'model' => isset($req->model[$key1]) ? $req->model[$key1] : NULL,
-            'serial_code' => isset($req->serial_code[$key1]) ? json_encode($req->serial_code[$key1]) : '[]',
+            'utilized_quantity' => $req->utilized_quantity[$key1],
+            'item_code' => $req->item_code[$key1],
+            'brand_id' => $req->brand_id[$key1],
+            'model' => $req->model[$key1],
+            'serial_code' => $req->serial_code[$key1],
+            'bbts_ownership' => $req->bbts_ownership[$key1],
+            'client_ownership' => $req->client_ownership[$key1],
+            'bbts_damaged' => $req->bbts_damaged[$key1],
+            'client_damaged' => $req->client_damaged[$key1],
+            'bbts_useable' => $req->bbts_useable[$key1],
+            'client_useable' => $req->client_useable[$key1],
             'quantity' => $req->quantity[$key1],
             'remarks' => $req->remarks[$key1],
         ];
