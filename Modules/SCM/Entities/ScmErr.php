@@ -7,6 +7,7 @@ use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\ScmErrLine;
+use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
 
 class ScmErr extends Model
@@ -53,5 +54,10 @@ class ScmErr extends Model
     public function pop()
     {
         return $this->belongsTo(Pop::class);
+    }
+
+    public function stockable()
+    {
+        return $this->morphMany(StockLedger::class, 'stockable');
     }
 }

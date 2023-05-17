@@ -70,13 +70,16 @@ class ScmErrController extends Controller
             $err_data['err_no'] =  $this->errNo;
             $err_data['created_by'] = auth()->id();
 
+            $err = ScmErr::create($err_data);       
+
             $err_lines = [];
             foreach ($request->material_name as $key => $val) {
                 $err_lines[] = $this->getErrLines($request, $key);
+                $stock[] = $this->getStockData($request, $key, $err);
             };
 
-            $err = ScmErr::create($err_data);
             $err->scmErrLines()->createMany($err_lines);
+            $err->stockable()->createMany($stock);
 
             DB::commit();
             return redirect()->route('errs.index')->with('message', 'Data has been inserted successfully');
@@ -172,24 +175,43 @@ class ScmErrController extends Controller
         return response()->json($materials);
     }
 
-    public function getErrLines($req, $key1)
+    private function getErrLines($request, $key1)
     {
         return  [
-            'material_id'   => $req->material_id[$key1],
-            'description' => $req->description[$key1],
-            'utilized_quantity' => $req->utilized_quantity[$key1],
-            'item_code' => $req->item_code[$key1],
-            'brand_id' => $req->brand_id[$key1],
-            'model' => $req->model[$key1],
-            'serial_code' => $req->serial_code[$key1],
-            'bbts_ownership' => $req->bbts_ownership[$key1],
-            'client_ownership' => $req->client_ownership[$key1],
-            'bbts_damaged' => $req->bbts_damaged[$key1],
-            'client_damaged' => $req->client_damaged[$key1],
-            'bbts_useable' => $req->bbts_useable[$key1],
-            'client_useable' => $req->client_useable[$key1],
-            'quantity' => $req->quantity[$key1],
-            'remarks' => $req->remarks[$key1],
+            'material_id'   => $request->material_id[$key1],
+            'description' => $request->description[$key1],
+            'utilized_quantity' => $request->utilized_quantity[$key1],
+            'item_code' => $request->item_code[$key1],
+            'brand_id' => $request->brand_id[$key1],
+            'model' => $request->model[$key1],
+            'serial_code' => $request->serial_code[$key1],
+            'bbts_ownership' => $request->bbts_ownership[$key1],
+            'client_ownership' => $request->client_ownership[$key1],
+            'bbts_damaged' => $request->bbts_damaged[$key1],
+            'client_damaged' => $request->client_damaged[$key1],
+            'bbts_useable' => $request->bbts_useable[$key1],
+            'client_useable' => $request->client_useable[$key1],
+            'quantity' => $request->quantity[$key1],
+            'remarks' => $request->remarks[$key1],
+        ];
+    }
+
+    private function getStockData($request, $key, $err)
+    {
+        return [
+            'received_type'     => 'ERR',
+            'receiveable_id'    => $err->id,
+            'receiveable_type'  => ScmErr::class,
+            'material_id'       => $request->material_id[$key],
+            'stockable_type'    => ScmErr::class,
+            'stockable_id'      => $err->id,
+            'brand_id'          => $request->brand_id[$key],
+            'branch_id'         => $request->branch_id,
+            'model'             => $request->model[$key],
+            'quantity'          => $request->utilized_quantity[$key],
+            'item_code'         => $request->item_code[$key],
+            'serial_code'       => $request->serial_code[$key],
+            'unit'              => $request->unit[$key],
         ];
     }
 }
