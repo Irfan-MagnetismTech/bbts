@@ -61,22 +61,19 @@ class ScmErrController extends Controller
     {
         try {
             DB::beginTransaction();
-            if ($request->type == 'client') {
-                $err_data = $request->only('type', 'date', 'purpose', 'branch_id', 'assigned_person', 'reason_of_inactive', 'inactive_date', 'equipment_type', 'fr_no', 'link_no', 'client_no');
-            } elseif ($request->type == 'internal') {
-                $err_data = $request->only('type', 'date', 'purpose', 'branch_id', 'assigned_person', 'reason_of_inactive', 'inactive_date', 'pop_id');
-            }
 
-            $err_data['err_no'] =  $this->errNo;
+            $err_data = $this->checkType($request);
+            $err_data['err_no'] = $this->errNo;
             $err_data['created_by'] = auth()->id();
-
-            $err = ScmErr::create($err_data);       
+            
+            $err = ScmErr::create($err_data);
 
             $err_lines = [];
+            $stock = [];
             foreach ($request->material_name as $key => $val) {
                 $err_lines[] = $this->getErrLines($request, $key);
                 $stock[] = $this->getStockData($request, $key, $err);
-            };
+            }
 
             $err->scmErrLines()->createMany($err_lines);
             $err->stockable()->createMany($stock);
@@ -118,9 +115,36 @@ class ScmErrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ScmErr $err)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $err_data = $this->checkType($request);
+            $err_data['err_no'] = $this->errNo;
+            $err_data['created_by'] = auth()->id();
+            
+            $err->update($err_data);
+
+            $err_lines = [];
+            $stock = [];
+            foreach ($request->material_name as $key => $val) {
+                $err_lines[] = $this->getErrLines($request, $key);
+                $stock[] = $this->getStockData($request, $key, $err);
+            }
+
+            $err->scmErrLines()->delete();
+            $err->scmErrLines()->createMany($err_lines);
+
+            $err->stockable()->delete();
+            $err->stockable()->createMany($stock);
+
+            DB::commit();
+            return redirect()->route('errs.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('errs.edit', $err->id)->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -208,10 +232,26 @@ class ScmErrController extends Controller
             'brand_id'          => $request->brand_id[$key],
             'branch_id'         => $request->branch_id,
             'model'             => $request->model[$key],
-            'quantity'          => $request->utilized_quantity[$key],
+            'quantity'          => $request->bbts_useable[$key] + $request->client_useable[$key],
+            'damaged_quantity'  => $request->bbts_damaged[$key] + $request->client_damaged[$key],
             'item_code'         => $request->item_code[$key],
             'serial_code'       => $request->serial_code[$key],
             'unit'              => $request->unit[$key],
         ];
+    }
+
+    private function checkType($request)
+    {
+        $err_data = $request->only('type', 'date', 'purpose', 'branch_id', 'assigned_person', 'reason_of_inactive', 'inactive_date');
+
+        if ($request->type == 'client') {
+            $err_data['equipment_type'] = $request->equipment_type;
+            $err_data['fr_no'] = $request->fr_no;
+            $err_data['link_no'] = $request->link_no;
+            $err_data['client_no'] = $request->client_no;
+        } elseif ($request->type == 'internal') {
+            $err_data['pop_id'] = $request->pop_id;
+        }
+        return $err_data;
     }
 }
