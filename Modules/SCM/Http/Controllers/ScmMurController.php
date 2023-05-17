@@ -113,37 +113,8 @@ class ScmMurController extends Controller
             $stock = [];
             $mur_lines = [];
             foreach ($request->material_name as $key => $val) {
-                $mur_lines[] = [
-                    'material_id'       => $request->material_id[$key],
-                    'description'       => $request->description[$key],
-                    'brand_id'          => $request->brand_id[$key],
-                    'model'             => $request->model[$key],
-                    'serial_code'       => $request->serial_code[$key],
-                    'quantity'          => $request->quantity[$key],
-                    'receiveable_type'  => $request->receiveable_type[$key],
-                    'utilized_quantity' => $request->utilized_quantity[$key],
-                    'client_ownership'  => $request->client_ownership[$key],
-                    'bbts_ownership'    => $request->bbts_ownership[$key],
-                    'remarks'           => $request->remarks[$key],
-                    'receiveable_id'    => $request->receivable_id[$key],
-                    'receiveable_type'  => $request->receiveable_type[$key]
-                ];
-
-                $stock[] = [
-                    'received_type'     => $request->receiveable_type[$key],
-                    'receiveable_id'    => $request->receivable_id[$key],
-                    'receiveable_type'  => ($request->receiveable_type[$key] == 'MRR') ? ScmMrr::class : (($request->receiveable_type[$key] == 'WCR') ? ScmWcr::class : (($request->receiveable_type[$key] == 'ERR') ? ScmErr::class : NULL)),
-                    'material_id'       => $request->material_id[$key],
-                    'stockable_type'    => ScmMur::class,
-                    'stockable_id'      => $mur->id,
-                    'brand_id'          => $request->brand_id[$key],
-                    'branch_id'         => $request->branch_id,
-                    'model'             => $request->model[$key],
-                    'quantity'          => -1 * ($request->utilized_quantity[$key]),
-                    'item_code'         => $request->item_code[$key],
-                    'serial_code'       => $request->serial_code[$key],
-                    'unit'              => $request->unit[$key],
-                ];
+                $mur_lines[] = $this->getLineData($request, $key);
+                $stock[] = $this->getStockData($request, $key, $mur->id);
             };
             $mur->lines()->createMany($mur_lines);
             $challan_data->stockable()->delete();
@@ -192,36 +163,8 @@ class ScmMurController extends Controller
             $stock = [];
             $mur_lines = [];
             foreach ($request->material_name as $key => $val) {
-                $mur_lines[] = [
-                    'material_id'       => $request->material_id[$key],
-                    'description'       => $request->description[$key],
-                    'brand_id'          => $request->brand_id[$key],
-                    'model'             => $request->model[$key],
-                    'serial_code'       => $request->serial_code[$key],
-                    'quantity'          => $request->quantity[$key],
-                    'utilized_quantity' => $request->utilized_quantity[$key],
-                    'client_ownership'  => $request->client_ownership[$key],
-                    'bbts_ownership'    => $request->bbts_ownership[$key],
-                    'remarks'           => $request->remarks[$key],
-                    'receiveable_id'    => $request->receivable_id[$key] ?? NULL,
-                    'receiveable_type'  => $request->receiveable_type[$key] ?? NULL
-                ];
-
-                $stock[] = [
-                    'received_type'     => $request->receiveable_type[$key] ?? NULL,
-                    'receiveable_id'    => $request->receivable_id[$key] ?? NULL,
-                    'receiveable_type'  => ($request->receiveable_type[$key] == 'MRR') ? ScmMrr::class : (($request->receiveable_type[$key] == 'WCR') ? ScmWcr::class : (($request->receiveable_type[$key] == 'ERR') ? ScmErr::class : NULL)),
-                    'material_id'       => $request->material_id[$key],
-                    'stockable_type'    => ScmMur::class,
-                    'stockable_id'      => $material_utilization->id,
-                    'brand_id'          => $request->brand_id[$key],
-                    'branch_id'         => $request->branch_id,
-                    'model'             => $request->model[$key],
-                    'quantity'          => -1 * ($request->utilized_quantity[$key]),
-                    'item_code'         => $request->item_code[$key],
-                    'serial_code'       => $request->serial_code[$key],
-                    'unit'              => $request->unit[$key],
-                ];
+                $mur_lines[] = $this->getLineData($request, $key);
+                $stock[] = $this->getStockData($request, $key, $material_utilization->id);
             };
             $material_utilization->lines()->delete();
             $material_utilization->lines()->createMany($mur_lines);
@@ -270,5 +213,44 @@ class ScmMurController extends Controller
             ->all();
 
         return response()->json($data);
+    }
+
+    private function getLineData($req, $ke)
+    {
+        return [
+            'material_id'       => $req->material_id[$ke],
+            'description'       => $req->description[$ke],
+            'brand_id'          => $req->brand_id[$ke],
+            'model'             => $req->model[$ke],
+            'serial_code'       => $req->serial_code[$ke],
+            'quantity'          => $req->quantity[$ke],
+            'receiveable_type'  => $req->receiveable_type[$ke],
+            'utilized_quantity' => $req->utilized_quantity[$ke],
+            'client_ownership'  => $req->client_ownership[$ke],
+            'bbts_ownership'    => $req->bbts_ownership[$ke],
+            'remarks'           => $req->remarks[$ke],
+            'receiveable_id'    => $req->receivable_id[$ke],
+            'receiveable_type'  => $req->receiveable_type[$ke]
+        ];
+    }
+
+
+    private function getStockData($req, $ke, $id)
+    {
+        return [
+            'received_type'     => $req->receiveable_type[$ke] ?? NULL,
+            'receiveable_id'    => $req->receivable_id[$ke] ?? NULL,
+            'receiveable_type'  => ($req->receiveable_type[$ke] == 'MRR') ? ScmMrr::class : (($req->receiveable_type[$ke] == 'WCR') ? ScmWcr::class : (($req->receiveable_type[$ke] == 'ERR') ? ScmErr::class : NULL)),
+            'material_id'       => $req->material_id[$ke],
+            'stockable_type'    => ScmMur::class,
+            'stockable_id'      => $id/*$material_utilization->id*/,
+            'brand_id'          => $req->brand_id[$ke],
+            'branch_id'         => $req->branch_id,
+            'model'             => $req->model[$ke],
+            'quantity'          => -1 * ($req->utilized_quantity[$ke]),
+            'item_code'         => $req->item_code[$ke],
+            'serial_code'       => $req->serial_code[$ke],
+            'unit'              => $req->unit[$ke],
+        ];
     }
 }
