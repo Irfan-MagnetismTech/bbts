@@ -23,7 +23,7 @@ class WorkOrderController extends Controller
      */
     public function create()
     {
-        return view('scm::create');
+        return view('scm::work-orders.create');
     }
 
     /**
