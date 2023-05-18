@@ -3,9 +3,12 @@
 namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\SCM\Entities\ScmMrr;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
+use Modules\SCM\Entities\StockLedger;
 use Illuminate\Contracts\Support\Renderable;
 
 class ScmWcrController extends Controller
@@ -80,5 +83,18 @@ class ScmWcrController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function searchSerialForWcr(Request $request)
+    {
+        $data = StockLedger::where('stockable_type', ScmMrr::class)->get();
+        return $data;
+        $positiveMaterials = StockLedger::query()
+            ->where('received_type', 'ERR')
+            ->select('*', 'material_id', 'brand_id', DB::raw('SUM(quantity) as totalQuantity'))
+            ->groupBy(['serial_code'])
+            ->havingRaw('SUM(quantity) > 0')
+            ->get();
+        return ['asd' => $positiveMaterials];
     }
 }

@@ -132,38 +132,6 @@
             <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
                 value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
         </div>
-        <div class="form-group col-3 fr_no">
-            <label for="select2">FR No</label>
-            <select class="form-control select2" id="fr_no" name="fr_no">
-                <option value="" readonly selected>Select FR No</option>
-                @if ($form_method == 'POST')
-                    <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
-                @endif
-                @if ($form_method == 'PUT')
-                    @foreach ($fr_no_list as $key => $value)
-                        <option value="{{ $value }}" @selected($value == @$fr_no)>
-                            {{ $value }}</option>
-                    @endforeach
-                @endif
-            </select>
-        </div>
-
-
-        <div class="form-group col-3 link_no">
-            <label for="link_no">Link No:</label>
-            <select class="form-control select2" id="link_no" name="link_no">
-                <option value="" readonly selected>Select Link No</option>
-                @if ($form_method == 'POST')
-                    <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
-                @endif
-                @if ($form_method == 'PUT')
-                    @foreach ($client_links as $key => $value)
-                        <option value="{{ $value }}" @selected($value == @$link_no)>
-                            {{ $value }}</option>
-                    @endforeach
-                @endif
-            </select>
-        </div>
         <div class="form-group col-3 client_no">
             <label for="client_no">Client No:</label>
             <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
@@ -211,7 +179,6 @@
                 $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
                 $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                 $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
-                
                 $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
                 $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
                 $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
@@ -343,13 +310,17 @@
             indx = {{ count($Challan_Lines) }}
         @endif
         function appendCalculationRow() {
+            var type = $("input[name=type]:checked").val()
             let row = `<tr>
                             <td>
                                 <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
-                                    <option value="">Select Out From</option>
-                                    @foreach (config('businessinfo.receivedTypes') as $value)
-                                        <option value="{{ $value }}">{{ strToUpper($value) }}</option>
-                                    @endforeach
+                                    <option value="" disabled>Select Out From</option>
+                                    ${ type === 'client' ? 
+                                    `<option value="mrr">{{ strToUpper('mrr') }}</option>
+                                    <option value="wcr">{{ strToUpper('wcr') }}</option>`
+                                    : 
+                                    `<option value="err" selected>{{ strToUpper('err') }}</option>`
+                                    } 
                                 </select>
                             </td>
                             <td>
@@ -680,6 +651,24 @@
         //         });
         //     }
         // });        
+
+        $(document).on('keyup', '.type_no', function() {
+            $.ajax({
+                url: "{{ route('searchSerialForWcr') }}",
+                type: 'get',
+                dataType: "json",
+                data: {
+                    sl_no: $(this).val(),
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            })
+        });        
+        $("input[name='type']").on('change', function() {
+            $('#challan tbody').empty();
+            appendCalculationRow();
+        });        
        
     </script>
 
