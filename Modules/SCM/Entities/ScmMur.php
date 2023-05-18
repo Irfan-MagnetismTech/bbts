@@ -23,6 +23,7 @@ class ScmMur extends Model
         'challan_id',
         'date',
         'mur_no',
+        'equipment_type',
         'created_by'
     ];
     public function lines()

@@ -218,19 +218,18 @@ class ScmMurController extends Controller
     private function getLineData($req, $ke)
     {
         return [
-            'material_id'       => $req->material_id[$ke],
-            'description'       => $req->description[$ke],
-            'brand_id'          => $req->brand_id[$ke],
-            'model'             => $req->model[$ke],
-            'serial_code'       => $req->serial_code[$ke],
-            'quantity'          => $req->quantity[$ke],
-            'receiveable_type'  => $req->receiveable_type[$ke],
-            'utilized_quantity' => $req->utilized_quantity[$ke],
-            'client_ownership'  => $req->client_ownership[$ke],
-            'bbts_ownership'    => $req->bbts_ownership[$ke],
-            'remarks'           => $req->remarks[$ke],
-            'receiveable_id'    => $req->receivable_id[$ke],
-            'receiveable_type'  => $req->receiveable_type[$ke]
+            'material_id'       => $req->material_id[$ke] ?? null,
+            'description'       => $req->description[$ke] ?? null,
+            'brand_id'          => $req->brand_id[$ke] ?? null,
+            'model'             => $req->model[$ke]  ?? null,
+            'serial_code'       => $req->serial_code[$ke] ?? null,
+            'quantity'          => $req->quantity[$ke] ?? null,
+            'utilized_quantity' => $req->utilized_quantity[$ke] ?? null,
+            'client_ownership'  => $req->client_ownership[$ke] ?? null,
+            'bbts_ownership'    => $req->bbts_ownership[$ke] ?? null,
+            'remarks'           => $req->remarks[$ke] ?? null,
+            'receiveable_id'    => $req->receiveable_id[$ke] ?? null,
+            'receiveable_type'    => $req->receiveable_type[$ke] ?? null
         ];
     }
 
@@ -239,18 +238,18 @@ class ScmMurController extends Controller
     {
         return [
             'received_type'     => $req->receiveable_type[$ke] ?? NULL,
-            'receiveable_id'    => $req->receivable_id[$ke] ?? NULL,
+            'receiveable_id'    => $req->receiveable_id[$ke] ?? NULL,
             'receiveable_type'  => ($req->receiveable_type[$ke] == 'MRR') ? ScmMrr::class : (($req->receiveable_type[$ke] == 'WCR') ? ScmWcr::class : (($req->receiveable_type[$ke] == 'ERR') ? ScmErr::class : NULL)),
-            'material_id'       => $req->material_id[$ke],
-            'stockable_type'    => ScmMur::class,
-            'stockable_id'      => $id/*$material_utilization->id*/,
-            'brand_id'          => $req->brand_id[$ke],
-            'branch_id'         => $req->branch_id,
-            'model'             => $req->model[$ke],
-            'quantity'          => -1 * ($req->utilized_quantity[$ke]),
-            'item_code'         => $req->item_code[$ke],
-            'serial_code'       => $req->serial_code[$ke],
-            'unit'              => $req->unit[$ke],
+            'material_id'       => $req->material_id[$ke] ?? null,
+            'stockable_type'    => ScmMur::class ?? null,
+            'stockable_id'      => $id ?? null,
+            'brand_id'          => $req->brand_id[$ke] ?? null,
+            'branch_id'         => $req->branch_id ?? null,
+            'model'             => $req->model[$ke] ?? null,
+            'quantity'          => -1 * ($req->utilized_quantity[$ke]) ?? null,
+            'item_code'         => $req->item_code[$ke] ?? null,
+            'serial_code'       => $req->serial_code[$ke] ?? null,
+            'unit'              => $req->unit[$ke] ?? null,
         ];
     }
 }
