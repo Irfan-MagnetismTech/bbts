@@ -65,7 +65,7 @@ class ScmErrController extends Controller
             $err_data = $this->checkType($request);
             $err_data['err_no'] = $this->errNo;
             $err_data['created_by'] = auth()->id();
-            
+
             $err = ScmErr::create($err_data);
 
             $err_lines = [];
@@ -123,7 +123,7 @@ class ScmErrController extends Controller
             $err_data = $this->checkType($request);
             $err_data['err_no'] = $this->errNo;
             $err_data['created_by'] = auth()->id();
-            
+
             $err->update($err_data);
 
             $err_lines = [];
@@ -152,9 +152,21 @@ class ScmErrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmErr $err)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $err->scmErrLines()->delete();
+            $err->stockable()->delete();
+            $err->delete();
+
+            DB::commit();
+            return redirect()->route('errs.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('errs.index')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     public function clientMurWiseMaterials()
