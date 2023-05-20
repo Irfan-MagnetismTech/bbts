@@ -659,6 +659,7 @@
                 dataType: "json",
                 data: {
                     sl_no: $(this).val(),
+                    supplier_id : $('#supplier_id').val()
                 },
                 success: function(data) {
                     console.log(data);

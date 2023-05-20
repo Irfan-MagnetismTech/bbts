@@ -87,13 +87,15 @@ class ScmWcrController extends Controller
 
     public function searchSerialForWcr(Request $request)
     {
-        $data = StockLedger::where('stockable_type', ScmMrr::class)->get();
-        return $data;
+        $data = StockLedger::whereHasMorph('stockable',[ScmMrr::class],function($item) use ($request){
+            return $item->where('supplier_id',$request->supplier_id);
+        })->where('quantity','<=',1)->pluck('serial_code')->toArray();
         $positiveMaterials = StockLedger::query()
-            ->where('received_type', 'ERR')
-            ->select('*', 'material_id', 'brand_id', DB::raw('SUM(quantity) as totalQuantity'))
+           ->whereIn('serial_code',$data)
+             /*->where('received_type', 'ERR')
+           ->select('*', 'material_id', 'brand_id', DB::raw('SUM(quantity) as totalQuantity'))
             ->groupBy(['serial_code'])
-            ->havingRaw('SUM(quantity) > 0')
+            ->havingRaw('SUM(quantity) > 0')*/
             ->get();
         return ['asd' => $positiveMaterials];
     }
