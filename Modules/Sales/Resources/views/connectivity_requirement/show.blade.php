@@ -43,15 +43,15 @@
                                 $uptime_req = $connectivity_requirement->connectivityRequirementDetails->pluck('sla')->toArray();
                             }
                             
-                            $client_name = $connectivity_requirement->lead_generation->client_name ?? $fr_detail->feasibilityRequirement->lead_generation->client_name;
-                            $client_id = $connectivity_requirement->lead_generation->client_id ?? $fr_detail->feasibilityRequirement->lead_generation->client_id;
+                            $client_name = $connectivity_requirement->lead_generation->client_name;
+                            $client_no = $connectivity_requirement->lead_generation->client_no;
                             $date = $connectivity_requirement->date ?? null;
-                            $mq_no = $connectivity_requirement->mq_no ?? $fr_detail->feasibilityRequirement->mq_no;
+                            $mq_no = $connectivity_requirement->mq_no;
                             $category_data = $category_data ?? [];
                             $aggregation_type = $connectivity_requirement->aggregation_type ?? null;
                             $from_location = $connectivity_requirement->fromLocation->fr_no ?? null;
-                            $link_name = $connectivity_requirement->fromLocation->link_name ?? $fr_detail->link_name;
-                            $fr_no = $connectivity_requirement->fr_no ?? $fr_detail->fr_no;
+                            $link_name = $connectivity_requirement->fromLocation->link_name;
+                            $fr_no = $connectivity_requirement->fr_no;
                             $product_id = $product_id ?? null;
                             $capacity = $capacity ?? null;
                             $unit = $connectivity_requirement->product_unit ?? null;
@@ -66,7 +66,7 @@
                         <div class="md-col-4 col-4">
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="fr_id">Client ID</label>
-                                <span class="form-control">{{ $client_id }}</span>
+                                <span class="form-control">{{ $client_no }}</span>
                             </div>
                         </div>
                         <div class="md-col-4 col-4">

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Modules\SCM\Entities\ScmErr;
 use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmWcr;
+use Illuminate\Http\JsonResponse;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -16,12 +17,12 @@ use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\ScmChallan;
 use Modules\SCM\Entities\ScmMrrLine;
 use Modules\SCM\Entities\StockLedger;
+use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
-use Illuminate\Contracts\Support\Renderable;
-use Modules\Sales\Entities\SaleDetail;
 use Modules\Sales\Entities\SaleLinkDetail;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 
 class ScmChallanController extends Controller
@@ -252,5 +253,107 @@ class ScmChallanController extends Controller
             'quantity' => $req->quantity[$key1],
             'remarks' => $req->remarks[$key1],
         ];
+    }
+
+    /**
+     * brandWiseModels
+     *
+     * @return void
+     */
+    public function brandWiseModels()
+    {
+        $data['options'] = StockLedger::query()
+            ->where([
+                'material_id' => request()->material_id,
+                'brand_id' => request()->brand_id,
+                'receiveable_id' => request()->receiveable_id,
+                'received_type' => request()->received_type,
+                'branch_id' => request()->from_branch_id
+            ])
+            ->get()
+            ->unique('model')
+            ->map(fn ($item) => [
+                'value' => $item->model,
+                'label' => $item->model,
+            ])
+            ->values()
+            ->all();
+
+        return response()->json($data);
+    }
+
+    /**
+     * Get model wise serial codes
+     *
+     * @return void
+     */
+    public function modelWiseSerialCodes()
+    {
+        $data['options'] = StockLedger::query()
+            ->where([
+                'material_id' => request()->material_id,
+                'brand_id' => request()->brand_id,
+                'model' => request()->model,
+                'receiveable_id' => request()->receiveable_id,
+                'received_type' => request()->received_type,
+                'branch_id' => request()->from_branch_id
+            ])
+            ->get()
+            ->groupBy('serial_code')
+            ->flatMap(function ($item, $key) {
+                $quantity = $item->sum('quantity');
+                if ($quantity > 0) {
+                    $serial_code[$key] = [
+                        'label' => $key,
+                        'value' => $key,
+                    ];
+                    return $serial_code;
+                }
+            })
+            ->values();
+        return response()->json($data);
+    }
+
+    /**
+     * Common function for all branch stock
+     *
+     * @param  integer $branch branch id form request()
+     * @return integer sum of stock
+     */
+    public function branchWiseStock($branch): int
+    {
+        $branch_balance = StockLedger::query()
+            ->where([
+                'branch_id' => $branch,
+                'received_type' => request()->received_type,
+                'receiveable_id' => request()->receiveable_id,
+            ])
+            ->when(request()->material_id, function ($query) {
+                $query->where('material_id', request()->material_id);
+            })
+            ->when(request()->brand_id, function ($query) {
+                $query->where('brand_id', request()->brand_id);
+            })
+            ->when(request()->model, function ($query) {
+                $query->where('model', request()->model);
+            })
+            ->sum('quantity');
+
+        return $branch_balance;
+    }
+
+    /**
+     * Get branch wise stock for from and to branch
+     *
+     * @return JsonResponse
+     * 
+     */
+    public function getMaterialStock(): JsonResponse
+    {
+        $data = [
+            'from_branch_balance' => $this->branchWiseStock(request()->from_branch_id),
+            'to_branch_balance' => $this->branchWiseStock(request()->to_branch_id),
+        ];
+        return response()->json($data);
     }
 }

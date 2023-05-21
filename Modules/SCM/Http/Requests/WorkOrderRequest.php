@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Sales\Http\Requests;
+namespace Modules\SCM\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FeasibilityRequirementRequest extends FormRequest
+class WorkOrderRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +14,7 @@ class FeasibilityRequirementRequest extends FormRequest
     public function rules()
     {
         return [
-            'client_no' => 'required',
-            'is_existing' => 'required',
-
+            //
         ];
     }
 

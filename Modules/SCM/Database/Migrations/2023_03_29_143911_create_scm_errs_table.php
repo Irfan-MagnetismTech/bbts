@@ -16,17 +16,22 @@ return new class extends Migration
         Schema::create('scm_errs', function (Blueprint $table) {
             $table->id();
             $table->string('err_no');
+            $table->string('type')->nullable();
             $table->date('date')->nullable();
-            $table->bigInteger('client_id')->nullable();
-            $table->string('fr_composit_key')->nullable();
-            $table->bigInteger('client_link_id')->nullable();
+            $table->string('client_no')->nullable();
+            $table->string('purpose')->nullable();
+            $table->string('fr_no')->nullable();
+            $table->string('link_no')->nullable();
             $table->bigInteger('challan_id')->nullable();
-            $table->string('inactive_reason')->nullable();
+            $table->string('reason_of_inactive')->nullable();
+            $table->date('inactive_date')->nullable();
+            $table->string('equipment_type')->nullable();
             $table->string('assigned_person')->nullable();
             $table->string('return_for')->comment('BBTS/ Inactive Client/Shifting Client/ Methode Change')->nullable();
             $table->string('remarks')->nullable();
             $table->bigInteger('created_by');
             $table->bigInteger('branch_id')->nullable();
+            $table->bigInteger('pop_id')->nullable();
             $table->timestamps();
         });
     }

@@ -49,12 +49,12 @@ class SurveyController extends Controller
      */
     public function store(Request $request)
     {
-        $connectivity_requirement_data = $request->only('date', 'client_id', 'fr_no');
+        $connectivity_requirement_data = $request->only('date', 'client_no', 'fr_no');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
         $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
-        $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_id', $connectivity_requirement_data['client_id'])->first()->mq_no;
-        $connectivity_requirement_data['lead_generation_id'] = LeadGeneration::where('client_id', $connectivity_requirement_data['client_id'])->first()->id;
+        $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_no', $connectivity_requirement_data['client_no'])->first()->mq_no;
+        $connectivity_requirement_data['lead_generation_id'] = LeadGeneration::where('client_no', $connectivity_requirement_data['client_no'])->first()->id;
         $connectivity_requirement_data['feasibility_requirement_details_id'] = FeasibilityRequirementDetail::where('fr_no', $connectivity_requirement_data['fr_no'])->first()->id;
         if ($request->hasFile('document')) {
             $file_name = CommonService::fileUpload($request->file('document'), 'uploads/survey');
@@ -174,7 +174,7 @@ class SurveyController extends Controller
 
     public function getSurveyDetails(Request $request)
     {
-        $survey = Survey::where('client_id', $request->client_id)->where('fr_no', $request->fr_no)->first();
+        $survey = Survey::where('client_no', $request->client_id)->where('fr_no', $request->fr_no)->first();
         if ($survey) {
             $surveyDetails = SurveyDetail::where('survey_id', $survey->id)->where('link_type', $request->link_type)->where('option', $request->option)->first();
             return response()->json($surveyDetails);

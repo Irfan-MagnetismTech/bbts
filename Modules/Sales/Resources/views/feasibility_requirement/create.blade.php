@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="client_id" id="client_id"
+                                <input type="text" class="form-control" name="client_no" id="client_id"
                                     value="{{ $client_id }}" autocomplete="off" required>
                                 <label for="client_id">Client ID<span class="text-danger">*</span></label>
                                 <input type="hidden" name="lead_generation_id" id="lead_generation_id" value="">
@@ -134,7 +134,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <select name="aggregation_type" class="form-control"
+                                                        <select name="aggregation_type[]" class="form-control"
                                                             autocomplete="off" placeholder="Select Aggregation Type">
                                                             <option value="">Select Aggregation Type</option>
                                                             <option value="DC"
@@ -253,7 +253,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="aggregation_type" class="form-control"
+                                                    <select name="aggregation_type[]" class="form-control"
                                                         autocomplete="off" placeholder="Select Aggregation Type">
                                                         <option value="">Select Aggregation Type</option>
                                                         <option value="DC">DC</option>

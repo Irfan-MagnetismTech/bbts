@@ -44,19 +44,19 @@
                     <div class="row">
                         @php
                             if (!empty($connectivity_requirement)) {
-                                $category_data = $connectivity_requirement->connectivityProductRequirementDetails->pluck('category_id')->toArray();
-                                $product_id = $connectivity_requirement->connectivityProductRequirementDetails->pluck('product_id')->toArray();
-                                $capacity = $connectivity_requirement->connectivityProductRequirementDetails->pluck('capacity')->toArray();
-                                $remarks = $connectivity_requirement->connectivityProductRequirementDetails->pluck('remarks')->toArray();
-                                $link_type = $connectivity_requirement->connectivityRequirementDetails->pluck('link_type')->toArray();
-                                $connectivity_capacity = $connectivity_requirement->connectivityRequirementDetails->pluck('connectivity_capacity')->toArray();
-                                $method = $connectivity_requirement->connectivityRequirementDetails->pluck('method')->toArray();
-                                $uptime_req = $connectivity_requirement->connectivityRequirementDetails->pluck('sla')->toArray();
-                                $vendor_id = $connectivity_requirement->connectivityRequirementDetails->pluck('vendor_id')->toArray(); 
+                                $category_data = $connectivity_requirement->connectivityProductRequirementDetails->pluck('category_id')->toArray() ?? [];
+                                $product_id = $connectivity_requirement->connectivityProductRequirementDetails->pluck('product_id')->toArray() ?? [];
+                                $capacity = $connectivity_requirement->connectivityProductRequirementDetails->pluck('capacity')->toArray() ?? [];
+                                $remarks = $connectivity_requirement->connectivityProductRequirementDetails->pluck('remarks')->toArray() ?? [];
+                                $link_type = $connectivity_requirement->connectivityRequirementDetails->pluck('link_type')->toArray() ?? [];
+                                $connectivity_capacity = $connectivity_requirement->connectivityRequirementDetails->pluck('connectivity_capacity')->toArray() ?? [];
+                                $method = $connectivity_requirement->connectivityRequirementDetails->pluck('method')->toArray() ?? [];
+                                $uptime_req = $connectivity_requirement->connectivityRequirementDetails->pluck('sla')->toArray() ?? [];
+                                $vendor_id = $connectivity_requirement->connectivityRequirementDetails->pluck('vendor_id')->toArray() ?? [];
                             }
                             
                             $client_name = $is_old ? old('client_name') : $connectivity_requirement->lead_generation->client_name ?? $fr_detail->feasibilityRequirement->lead_generation->client_name;
-                            $client_id = $is_old ? old('client_id') : $connectivity_requirement->lead_generation->client_id ?? $fr_detail->feasibilityRequirement->lead_generation->client_id;
+                            $client_no = $is_old ? old('client_no') : $connectivity_requirement->lead_generation->client_no ?? $fr_detail->feasibilityRequirement->lead_generation->client_no;
                             $date = $is_old ? old('date') : $connectivity_requirement->date ?? null;
                             $mq_no = $is_old ? old('mq_no') : $connectivity_requirement->mq_no ?? $fr_detail->feasibilityRequirement->mq_no;
                             $category_data = $is_old ? old('category_id') : $category_data ?? [];
@@ -77,8 +77,8 @@
                     <div class="row">
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_id" id="client_id" class="form-control"
-                                    value="{{ $client_id }}" readonly>
+                                <input type="text" name="client_no" id="client_id" class="form-control"
+                                    value="{{ $client_no }}" readonly>
                                 <label for="client_id">Client ID <span class="text-danger">*</span></label>
                             </div>
                         </div>

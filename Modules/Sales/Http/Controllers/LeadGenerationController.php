@@ -50,12 +50,12 @@ class LeadGenerationController extends Controller
      */
     public function store(LeadGenerationRequest $request)
     {
-        $data = $request->only('client_name', 'address', 'division_id', 'district_id', 'thana_id', 'landmark', 'lat_long', 'contact_person', 'designation', 'contact_no',  'email', 'business_type', 'client_type', 'website');
+        $data = $request->only('client_name', 'address', 'division_id', 'district_id', 'thana_id', 'landmark', 'lat_long', 'contact_person', 'designation', 'contact_no',  'email', 'business_type', 'client_type', 'website', 'current_provider', 'existing_bandwidth', 'existing_mrc', 'chance_of_business', 'potentiality', 'remarks');
         if ($request->hasFile('upload_file')) {
             $file_name = CommonService::fileUpload($request->file('upload_file'), 'uploads/lead_generation');
             $data['document'] = $file_name;
         }
-        $data['client_id'] = date('Y') . '-' . LeadGeneration::count() + 1;
+        $data['client_no'] = date('Y') . '-' . LeadGeneration::count() + 1;
         LeadGeneration::create($data);
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Created Successfully');
     }
@@ -126,10 +126,10 @@ class LeadGenerationController extends Controller
     {
         $main_leads = [];
         //get client where match the request data
-        $lead_generations = LeadGeneration::where('client_id', 'like', '%' . $request->client_id . '%')->get();
+        $lead_generations = LeadGeneration::where('client_no', 'like', '%' . $request->client_id . '%')->get();
         foreach ($lead_generations as $lead_generation) {
             $main_leads[] = [
-                'label' => $lead_generation->client_id,
+                'label' => $lead_generation->client_no,
                 'value' => $lead_generation->client_name,
                 'lead_generation_id' => $lead_generation->id,
             ];
@@ -150,10 +150,10 @@ class LeadGenerationController extends Controller
     {
         $main_leads = [];
         //get client where match the request data
-        $lead_generations = LeadGeneration::where('client_id', 'like', '%' . $request->client_id . '%')->get();
+        $lead_generations = LeadGeneration::where('client_no', 'like', '%' . $request->client_no . '%')->get();
         foreach ($lead_generations as $lead_generation) {
             $main_leads[] = [
-                'label' => $lead_generation->client_id,
+                'label' => $lead_generation->client_no,
                 'value' => $lead_generation->client_name,
                 'lead_generation_id' => $lead_generation->id,
                 'location' => $lead_generation->address,

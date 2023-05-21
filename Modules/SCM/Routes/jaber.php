@@ -14,6 +14,7 @@ Route::get('search-materialwise-brand', [ScmMirController::class, 'materialWiseB
 Route::get('search-brandwise-model', [ScmMirController::class, 'brandWiseModels'])->name('brandWiseModels');
 Route::get('search-modelwise-serial-code', [ScmMirController::class, 'modelWiseSerialCodes'])->name('modelWiseSerialCodes');
 Route::get('getMaterialStock', [ScmMirController::class, 'getMaterialStock'])->name('getMaterialStock');
+Route::get('clientMurWiseMaterials', [ScmErrController::class, 'clientMurWiseMaterials'])->name('clientMurWiseMaterials');
 
 Route::resources([
     'material-issues' => ScmMirController::class,

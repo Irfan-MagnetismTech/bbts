@@ -312,7 +312,7 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" id="client_id" name="client_id" value="{{ $lead_generation->client_id }}">
+                    <input type="hidden" id="client_no" name="client_no" value="{{ $lead_generation->client_no }}">
                     <input type="hidden" id="fr_no" name="fr_no"
                         value="{{ $feasibilityRequirementDetail->fr_no }}">
 
@@ -368,7 +368,7 @@
                 $('#option').on('change', function() {
                     var option = $('#option').val();
                     var link_type = $('#link_type').val();
-                    let client_id = $('#client_id').val();
+                    let client_id = $('#client_no').val();
                     let fr_no = $('#fr_no').val();
                     $.ajax({
                         url: "{{ route('get-survey-details') }}",

@@ -10,22 +10,36 @@ use Modules\SCM\Entities\ScmMur;
 use Modules\SCM\Entities\ScmWcr;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
+use App\Services\BbtsGlobalService;
+use Modules\SCM\Entities\ScmMurLine;
 use Modules\SCM\Entities\StockLedger;
+use Illuminate\Database\QueryException;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\Client;
+use Modules\SCM\Entities\ScmErrLine;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
 
 class ScmErrController extends Controller
 {
-    protected $laravel;
+    private $errNo;
+
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->errNo = $globalService->generateUniqueId(ScmErr::class, 'Err');
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('scm::errs.index');
+        $errs = ScmErr::with('scmErrLines', 'scmErrLines.material')->latest()->get();
+
+        return view('scm::errs.index', compact('errs'));
     }
 
     /**
@@ -35,9 +49,7 @@ class ScmErrController extends Controller
     public function create()
     {
         $formType = "create";
-        $brands = Brand::latest()->get();
-        $branchs = Branch::latest()->get();
-        return view('scm::errs.create', compact('formType', 'brands', 'branchs'));
+        return view('scm::errs.create', compact('formType'));
     }
 
     /**
@@ -47,7 +59,31 @@ class ScmErrController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $err_data = $this->checkType($request);
+            $err_data['err_no'] = $this->errNo;
+            $err_data['created_by'] = auth()->id();
+
+            $err = ScmErr::create($err_data);
+
+            $err_lines = [];
+            $stock = [];
+            foreach ($request->material_name as $key => $val) {
+                $err_lines[] = $this->getErrLines($request, $key);
+                $stock[] = $this->getStockData($request, $key, $err);
+            }
+
+            $err->scmErrLines()->createMany($err_lines);
+            $err->stockable()->createMany($stock);
+
+            DB::commit();
+            return redirect()->route('errs.index')->with('message', 'Data has been inserted successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('errs.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -65,9 +101,12 @@ class ScmErrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ScmErr $err)
     {
-        return view('scm::edit');
+        $fr_nos = Client::with('saleDetails')->where('client_no', $err->client_no)->first()?->saleDetails ?? [];
+        $client_links = Client::with('saleLinkDetails')->where('client_no', $err->client_no)->first()?->saleLinkDetails ?? [];
+
+        return view('scm::errs.create', compact('err', 'fr_nos', 'client_links'));
     }
 
     /**
@@ -76,9 +115,36 @@ class ScmErrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ScmErr $err)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $err_data = $this->checkType($request);
+            $err_data['err_no'] = $this->errNo;
+            $err_data['created_by'] = auth()->id();
+
+            $err->update($err_data);
+
+            $err_lines = [];
+            $stock = [];
+            foreach ($request->material_name as $key => $val) {
+                $err_lines[] = $this->getErrLines($request, $key);
+                $stock[] = $this->getStockData($request, $key, $err);
+            }
+
+            $err->scmErrLines()->delete();
+            $err->scmErrLines()->createMany($err_lines);
+
+            $err->stockable()->delete();
+            $err->stockable()->createMany($stock);
+
+            DB::commit();
+            return redirect()->route('errs.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('errs.edit', $err->id)->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -86,209 +152,118 @@ class ScmErrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmErr $err)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $err->scmErrLines()->delete();
+            $err->stockable()->delete();
+            $err->delete();
+
+            DB::commit();
+            return redirect()->route('errs.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('errs.index')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     public function clientMurWiseMaterials()
     {
-        $materials = ScmMur::where('client_id', request()->client_id)->get();
+        $types = ['client', 'internal'];
+        $materials = ScmMurLine::query()
+            ->when(request()->type === 'client', function ($query) {
+                $query->whereHas('scmMur', function ($query) {
+                    $query->where([
+                        'client_no' => request()->client_no,
+                        'fr_no' => request()->fr_no,
+                        'equipment_type' => request()->equipment_type,
+                        'type' => 'client',
+                    ]);
+                    if (request()->link_no) {
+                        $query->where('link_no', request()->link_no);
+                    }
+                });
+            })
+            ->when(request()->type === 'internal', function ($query) {
+                $query->whereHas('scmMur', function ($query) {
+                    $query->where(['pop_id' => request()->pop_id, 'type' => 'pop']);
+                });
+            })
+            ->when(!request()->type || !in_array(request()->type, $types), function ($query) {
+                $query->where('id', null);
+            })
+            ->select([
+                DB::raw('(SELECT name FROM materials WHERE id = scm_mur_lines.material_id) AS material_name'),
+                DB::raw('(SELECT code FROM materials WHERE id = scm_mur_lines.material_id) AS item_code'),
+                DB::raw('(SELECT unit FROM materials WHERE id = scm_mur_lines.material_id) AS unit'),
+                DB::raw('(SELECT name FROM brands WHERE id = scm_mur_lines.brand_id) AS brand_name'),
+                'serial_code',
+                'material_id',
+                'brand_id',
+                'model',
+                DB::raw('SUM(utilized_quantity) as utilized_quantity, SUM(bbts_ownership) as bbts_ownership, SUM(client_ownership) as client_ownership'),
+            ])
+            ->groupBy(['material_id', 'brand_id', 'model', 'serial_code'])
+            ->get();
+
         return response()->json($materials);
     }
 
-    /**
-     * Get MRR Details From Request
-     * 
-     * @param Request $request
-     * @param int $key1
-     * @return array
-     */
-    public function getMrrDetails($request, $key1): array
+    private function getErrLines($request, $key1)
     {
         return  [
-            'material_id'   => $request->material_name[$key1],
-            'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : '[]',
-            'receiveable_id' => $request->type_id[$key1],
-            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
-            'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
-            'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
-            'quantity' => $request->issued_qty[$key1],
+            'material_id'   => $request->material_id[$key1],
+            'description' => $request->description[$key1],
+            'utilized_quantity' => $request->utilized_quantity[$key1],
+            'item_code' => $request->item_code[$key1],
+            'brand_id' => $request->brand_id[$key1],
+            'model' => $request->model[$key1],
+            'serial_code' => $request->serial_code[$key1],
+            'bbts_ownership' => $request->bbts_ownership[$key1],
+            'client_ownership' => $request->client_ownership[$key1],
+            'bbts_damaged' => $request->bbts_damaged[$key1],
+            'client_damaged' => $request->client_damaged[$key1],
+            'bbts_useable' => $request->bbts_useable[$key1],
+            'client_useable' => $request->client_useable[$key1],
+            'quantity' => $request->quantity[$key1],
             'remarks' => $request->remarks[$key1],
         ];
     }
 
-    /**
-     * Get Stock Ledger Data From Request
-     * 
-     * @param Request $request
-     * @param int $key1
-     * @param int $key2
-     * @param int $branch_id
-     * @param bool $qty
-     * 
-     * @return array
-     */
-    public function getStockLedgerData($request, $key1, $key2 = null, $branch_id, $qty): array
+    private function getStockData($request, $key, $err)
     {
         return [
-            'receiveable_id' => $request->type_id[$key1],
-            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : NULL)),
-            'received_type' => $request->received_type[$key1],
-            'branch_id' => $branch_id,
-            'material_id' => $request->material_name[$key1],
-            'item_code' => $request->code[$key1],
-            'unit' => $request->unit[$key1],
-            'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : NULL,
-            'model' => isset($request->model[$key1]) ? $request->model[$key1] : NULL,
-            'serial_code' => (isset($request->serial_code[$key1]) && isset($request->serial_code[$key1][$key2])) ? $request->serial_code[$key1][$key2] : NULL,
-            'quantity' => ($qty ? -1 : 1) * (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1])
+            'received_type'     => 'ERR',
+            'receiveable_id'    => $err->id,
+            'receiveable_type'  => ScmErr::class,
+            'material_id'       => $request->material_id[$key],
+            'stockable_type'    => ScmErr::class,
+            'stockable_id'      => $err->id,
+            'brand_id'          => $request->brand_id[$key],
+            'branch_id'         => $request->branch_id,
+            'model'             => $request->model[$key],
+            'quantity'          => $request->bbts_useable[$key] + $request->client_useable[$key],
+            'damaged_quantity'  => $request->bbts_damaged[$key] + $request->client_damaged[$key],
+            'item_code'         => $request->item_code[$key],
+            'serial_code'       => $request->serial_code[$key],
+            'unit'              => $request->unit[$key],
         ];
     }
 
-    /**
-     * Get MIR Details From Request
-     * 
-     * @param Request $request
-     * @param int $key1
-     * @return array
-     */
-    public function getMirDetails($request, $key1): array
+    private function checkType($request)
     {
-        return  [
-            'material_id'   => $request->material_name[$key1],
-            'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : '[]',
-            'receiveable_id' => $request->type_id[$key1],
-            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
-            'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
-            'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
-            'quantity' => $request->issued_qty[$key1],
-            'remarks' => $request->remarks[$key1],
-        ];
-    }
+        $err_data = $request->only('type', 'date', 'purpose', 'branch_id', 'assigned_person', 'reason_of_inactive', 'inactive_date');
 
-    public function searchMrs()
-    {
-        $items = ScmRequisition::query()
-            ->where("mrs_no", "like", "%" . request()->search . "%")
-            ->take(10)
-            ->get()
-            ->map(fn ($item) => [
-                'value' => $item->mrs_no,
-                'label' => $item->mrs_no,
-                'scm_requisition_id' => $item->id,
-            ]);
-
-        return response()->json($items);
-    }
-
-    public function searchTypeNo()
-    {
-        $data = StockLedger::query()
-            ->where('received_type', request()->customQueryFields['type'])
-            ->orderBy('receiveable_id')
-            ->when(request()->customQueryFields['type'] == 'MRR', function ($query) {
-                $query->whereHasMorph('receiveable', ScmMrr::class, function ($query2) {
-                    $query2->where('mrr_no', 'like', '%' . request()->search . '%');
-                });
-            })
-            ->when(request()->type == 'ERR', function ($query) {
-                $query->whereHasMorph('receiveable', ScmPurchaseRequisition::class, function ($query) {
-                    $query->where('err_no', 'like', '%' . request()->search . '%');
-                });
-            })
-            ->when(request()->type == 'WCR', function ($query) {
-                $query->whereHasMorph('receiveable', ScmPurchaseRequisition::class, function ($query) {
-                    $query->where('wcr_no', 'like', '%' . request()->search . '%');
-                });
-            })
-            ->get()
-            ->unique(function ($item) {
-                return $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no;
-            })
-            ->take(10)
-            ->map(fn ($item) => [
-                'value' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no,
-                'label' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no,
-                'id'    => $item->receiveable->id,
-            ])
-            ->values()
-            ->all();
-
-        return response()->json($data);
-    }
-
-    public function mrsAndTypeWiseMaterials()
-    {
-        $data['options'] = StockLedger::query()
-            ->with('material')
-            ->whereIn('material_id', function ($q) {
-                return $q->select('material_id')
-                    ->from('scm_requisition_details')
-                    ->where('scm_requisition_id', request()->scm_requisition_id);
-            })
-            ->where(['receiveable_id' => request()->receiveable_id, 'received_type' => request()->received_type, 'branch_id' => request()->from_branch])
-            ->get()
-            ->unique('material_id')
-            ->map(fn ($item) => [
-                'value' => $item->material->id,
-                'label' => $item->material->name,
-                'type' => $item->material->type,
-                'unit' => $item->material->unit,
-                'code' => $item->material->code,
-            ])
-            ->values()
-            ->all();
-
-        return response()->json($data);
-    }
-
-    public function materialWiseBrands()
-    {
-        $data['options'] = StockLedger::query()
-            ->with('brand')
-            ->where([
-                'material_id' => request()->material_id,
-                'receiveable_id' => request()->receiveable_id,
-                'received_type' => request()->received_type,
-                'branch_id' => request()->from_branch_id
-            ])
-            ->get()
-            ->unique('brand_id')
-            ->map(fn ($item) => [
-                'value' => $item->brand->id,
-                'label' => $item->brand->name,
-            ])
-            ->values()
-            ->all();
-
-        return response()->json($data);
-    }
-
-    /**
-     * brandWiseModels
-     *
-     * @return void
-     */
-    public function brandWiseModels()
-    {
-        $data['options'] = StockLedger::query()
-            ->where([
-                'material_id' => request()->material_id,
-                'brand_id' => request()->brand_id,
-                'receiveable_id' => request()->receiveable_id,
-                'received_type' => request()->received_type,
-                'branch_id' => request()->from_branch_id
-            ])
-            ->get()
-            ->unique('model')
-            ->map(fn ($item) => [
-                'value' => $item->model,
-                'label' => $item->model,
-            ])
-            ->values()
-            ->all();
-
-        return response()->json($data);
+        if ($request->type == 'client') {
+            $err_data['equipment_type'] = $request->equipment_type;
+            $err_data['fr_no'] = $request->fr_no;
+            $err_data['link_no'] = $request->link_no;
+            $err_data['client_no'] = $request->client_no;
+        } elseif ($request->type == 'internal') {
+            $err_data['pop_id'] = $request->pop_id;
+        }
+        return $err_data;
     }
 }

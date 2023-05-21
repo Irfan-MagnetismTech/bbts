@@ -56,7 +56,8 @@
                             $work_end_time = $is_old ? old('work_end_time') : (!empty($followup->work_end_time) ? $followup->work_end_time : null);
                             $work_nature_type = $is_old ? old('work_nature_type') : (!empty($followup->work_nature_type) ? $followup->work_nature_type : null);
                             $sales_type = $is_old ? old('sales_type') : (!empty($followup->sales_type) ? $followup->sales_type : null);
-                            $client_id = $is_old ? old('client_id') : (!empty($followup->client_id) ? $followup->client_id : null);
+                            $client_id = $is_old ? old('client_id') : (!empty($followup->client->id) ? $followup->client->id : null);
+                            $client_no = $is_old ? old('client_no') : (!empty($followup->client_no) ? $followup->client_no : null);
                             $address = $is_old ? old('address') : (!empty($followup->client->address) ? $followup->client->address : null);
                             $potentility_amount = $is_old ? old('potentility_amount') : (!empty($followup->potentility_amount) ? $followup->potentility_amount : null);
                             $meeting_outcome = $is_old ? old('meeting_outcome') : (!empty($followup->meeting_outcome) ? $followup->meeting_outcome : null);
@@ -65,7 +66,7 @@
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
                                 <input type="date" name="activity_date" class="form-control" id="activity_date"
-                                    autocomplete="off" placeholder="Activity Date" required value="{{ $activity_date }}">
+                                    autocomplete="off" placeholder="" required value="{{ $activity_date }}">
                                 <label for="activity_date">Date
                                     of Activity Report</label>
                             </div>
@@ -127,7 +128,7 @@
                         </div>
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
-                                <select class="form-control" name="client_id" id="client_id">
+                                <select class="form-control" name="client_no" id="client_id">
                                     <option value="">Select Client</option>
                                     @if (!empty($clients))
                                         @foreach ($clients as $client)
@@ -142,23 +143,21 @@
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
                                 <input type="text" name="address" class="form-control" id="address" autocomplete="off"
-                                    placeholder="Address" required value="{{ $address }}">
+                                    placeholder="" required value="{{ $address }}">
                                 <label for="address">Address<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
                                 <input type="text" name="potentility_amount" class="form-control" id="potentility_amount"
-                                    autocomplete="off" placeholder="Potentility Amount" required
-                                    value="{{ $potentility_amount }}">
+                                    autocomplete="off" placeholder="" required value="{{ $potentility_amount }}">
                                 <label for="potentility_amount">Potentility Amount<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
                                 <input type="text" name="meeting_outcome" class="form-control" id="meeting_outcome"
-                                    autocomplete="off" placeholder="Meeting Outcome" required
-                                    value="{{ $meeting_outcome }}">
+                                    autocomplete="off" placeholder="" required value="{{ $meeting_outcome }}">
                                 <label for="meeting_outcome">Meeting Outcome<span class="text-danger">*</span></label>
                             </div>
                             {{ Form::hidden('meeting_id', $meeting_id) }}

@@ -38,12 +38,12 @@
             <tbody>
                 @foreach ($meetings as $meeting)
                     <tr>
-                        <td>{{ $meeting->client->client_name }}</td>
+                        <td>{{ $meeting->client->client_name ?? '' }}</td>
                         <td>{{ $meeting->visit_date }}</td>
                         <td>{{ $meeting->meeting_start_time }}</td>
                         <td>{{ $meeting->meeting_end_time }}</td>
-                        <td>{{ $meeting->client->contact_person }}</td>
-                        <td>{{ $meeting->client->contact_no }}</td>
+                        <td>{{ $meeting->client->contact_person ?? '' }}</td>
+                        <td>{{ $meeting->client->contact_no ?? '' }}</td>
                         <td>{{ $meeting->purpose }}</td>
                         <td>{{ $meeting->status }}</td>
                         <td>

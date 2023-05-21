@@ -42,17 +42,17 @@ class FeasibilityRequirementController extends Controller
     public function store(FeasibilityRequirementRequest $request)
     {
         // dd($request->all());
-        $data = $request->only('client_id', 'is_existing', 'date', 'lead_generation_id');
+        $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id');
 
         $data['user_id'] = auth()->user()->id;
         $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
-        $max_mq_no = FeasibilityRequirement::where('client_id', $data['client_id'])->max('mq_no');
+        $max_mq_no = FeasibilityRequirement::where('client_no', $data['client_no'])->max('mq_no');
         if ($max_mq_no == null) {
-            $data['mq_no'] = 'MQ' . '-' . $data['client_id'] . '-' . '1';
+            $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . '1';
         } else {
             $mq_array = explode('-', $max_mq_no);
-            $data['mq_no'] = 'MQ' . '-' . $data['client_id'] . '-' . ($mq_array[2] + 1);
+            $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($mq_array[2] + 1);
         }
 
         $feasibilityRequirement = FeasibilityRequirement::create($data);
@@ -62,14 +62,14 @@ class FeasibilityRequirementController extends Controller
         foreach (array_keys($request['link_name']) as $feasibility_key) {
             $fr_no = FeasibilityRequirementDetail::where('feasibility_requirement_id', $feasibilityRequirement->id)->max('fr_no');
             if ($fr_no == null) {
-                $fr_no = 'fr' . '-' . $feasibilityRequirement->client_id . '-' . '1';
+                $fr_no = 'fr' . '-' . $feasibilityRequirement->client_no . '-' . '1';
             } else {
                 $fr_array = explode('-', $fr_no);
-                $fr_no = 'fr' . '-' . $feasibilityRequirement->client_id . '-' . ($fr_array[2] + 1);
+                $fr_no = 'fr' . '-' . $feasibilityRequirement->client_no . '-' . ($fr_array[2] + 1);
             }
             $feasibility_detail[] = [
                 'link_name' => $request['link_name'][$feasibility_key],
-                'agreegation_type' => $request['agreegation_type'][$feasibility_key],
+                'aggregation_type' => $request['aggregation_type'][$feasibility_key],
                 'fr_no' => $fr_no,
                 'division_id' => $request['division_id'][$feasibility_key],
                 'district_id' => $request['district_id'][$feasibility_key],

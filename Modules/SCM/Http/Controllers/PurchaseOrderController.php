@@ -127,10 +127,11 @@ class PurchaseOrderController extends Controller
             ->where('indent_id', $purchaseOrder->indent_id)
             ->get()
             ->map(
-                fn ($item) =>
-                [
-                    $item->scmPurchaseRequisition->id => $item->scmPurchaseRequisition->prs_no
-                ]
+                function ($item) {
+                    return [
+                        $item->scmPurchaseRequisition->id => $item->scmPurchaseRequisition->prs_no
+                    ];
+                }
             );
 
         foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {

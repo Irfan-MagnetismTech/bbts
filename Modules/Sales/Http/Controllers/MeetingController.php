@@ -38,7 +38,7 @@ class MeetingController extends Controller
      */
     public function store(MeetingRequest $request)
     {
-        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_id', 'purpose']);
+        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose']);
         Meeting::create($data);
         return redirect()->route('meeting.index')->with('success', 'Meeting created successfully');
     }
@@ -50,7 +50,7 @@ class MeetingController extends Controller
      */
     public function show(Meeting $meeting)
     {
-        $previous_meetings = Meeting::where('client_id', $meeting->client_id)->where('id', '!=', $meeting->id)->get();
+        $previous_meetings = Meeting::where('client_no', $meeting->client_id)->where('id', '!=', $meeting->id)->get();
         return view('sales::meeting.show', compact('meeting', 'previous_meetings'));
     }
 
@@ -73,7 +73,7 @@ class MeetingController extends Controller
      */
     public function update(MeetingRequest $request, Meeting $meeting)
     {
-        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_id', 'purpose']);
+        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose']);
         $meeting->update($data);
         return redirect()->route('meeting.index')->with('success', 'Meeting updated successfully');
     }

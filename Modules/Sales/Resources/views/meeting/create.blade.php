@@ -89,7 +89,7 @@
                         </div>
                         <div class="mt-1 col-xl-3 col-md-3">
                             <div class="form-item">
-                                <select name="client_id" id="client_id" class="form-control select2" rows="2">
+                                <select name="client_no" id="client_id" class="form-control select2" rows="2">
                                     <option value="">Select Client</option>
                                     @if ($clients)
                                         @foreach ($clients as $client)
