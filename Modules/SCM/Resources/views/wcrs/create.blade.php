@@ -1,4 +1,4 @@
-@extends('layouts.backend-layout')
+0.@extends('layouts.backend-layout')
 @section('title', 'Warranty Claim')
 @php
     $is_old = old('type') ? true : false;
@@ -153,12 +153,11 @@
             <tr>
                 <th>Received Type</th>
                 <th>Material Name</th>
-                <th>Description</th>
-                <th>Item Code</th>
-                <th>Unit</th>
-                <th>Brand</th>
                 <th>Model</th>
+                <th>Brand</th>
                 <th>Serial Code</th>
+                <th>Unit</th>
+                <th>Description</th>
                 <th>Receiving Date</th>
                 <th>Warranty Period</th>
                 <th>Remaining Day</th>
@@ -324,36 +323,24 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
-                                <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
-                            </td>
-                            <td class="form-group">
-                                <select class="form-control material_name select2" name="material_name[${indx}]">
-                                    <option value="" readonly selected>Select Material</option>                  
-                                </select>
+                                <input type="text" name="material_name[${indx}]" class="form-control material_name" autocomplete="off">
+                                <input type="hidden" name="material_id[${indx}]" class="form-control material_id" autocomplete="off">
                                 <input type="hidden" name="item_code[${indx}]" class="form-control item_code" autocomplete="off"> 
                                 <input type="hidden" name="material_type[${indx}]" class="form-control material_type" autocomplete="off"> 
+                            </td>
+                            <td class="form-group">
+                                <input type="text" name="brand_name[${indx}]" class="form-control brand_name" autocomplete="off" readonly>
+                                <input type="hidden" name="brand_id[${indx}]" class="form-control brand_id" autocomplete="off">
                             </td>                            
                             <td>
-                                <select class="form-control brand select2" name="brand[${indx}]">
-                                    <option value="" readonly selected>Select Brand</option>
-
-                                </select>
+                                <input type="text" name="model[${indx}]" class="form-control model" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <select class="form-control model select2" name="model[${indx}]">
-                                    <option value="" readonly selected>Select Model</option>
-
-                                </select>
+                                <input type="text" name="serial_code[${indx}]" class="form-control serial_code" autocomplete="off" readonly>
                             </td>
                             <td class="select2_container">
-                                <select class="form-control serial_code select2" name='serial_code[${indx}][]' multiple="multiple">
-
-                                </select>
+                                <input type="text" name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly>
                             </td>
-                            <td>
-                                <input name="unit[${indx}]" class="form-control unit" readonly autocomplete="off" type="text">
-                            </td> 
                             <td>
                                 <input class="form-control available_quantity" name="available_quantity[${indx}]" aria-describedby="available_quantity" readonly>
                             </td>
@@ -652,20 +639,45 @@
         //     }
         // });        
 
-        $(document).on('keyup', '.type_no', function() {
-            $.ajax({
-                url: "{{ route('searchSerialForWcr') }}",
-                type: 'get',
-                dataType: "json",
-                data: {
-                    sl_no: $(this).val(),
-                    supplier_id : $('#supplier_id').val()
-                },
-                success: function(data) {
-                    console.log(data);
-                }
-            })
-        });        
+        // $(document).on('keyup', '.type_no', function() {
+        //     $.ajax({
+        //         url: "{{ route('searchSerialForWcr') }}",
+        //         type: 'get',
+        //         dataType: "json",
+        //         data: {
+        //             sl_no: $(this).val(),
+        //             supplier_id : $('#supplier_id').val()
+        //         },
+        //         success: function(data) {
+        //             console.log(data);
+        //         }
+        //     })
+        // });     
+        
+        $(document).on('keyup', '.material_name', function() {
+            var event_this = $(this).closest('tr');
+            let myObject = {
+                sl_no: $(this).val(),
+                supplier_id : $('#supplier_id').val(),
+                type : event_this.find('.received_type').find(':selected').text(),
+            }
+            jquaryUiAjax(this, "{{ route('searchSerialForWcr') }}", uiList, myObject);
+
+            function uiList(item) {
+                event_this.find('.material_name').val(item.value);
+                event_this.find('.material_id').val(item.material_id);
+                event_this.find('.brand_name').val(item.brand_name);
+                event_this.find('.brand_id').val(item.brand_id);
+                event_this.find('.unit').val(item.unit);
+                event_this.find('.serial_code').val(item.serial_code);
+                event_this.find('.model').val(item.model);
+                event_this.find('.item_code').val(item.item_code);
+                event_this.find('.material_type').val(item.item_type);
+                return false;
+            }
+        })
+
+
         $("input[name='type']").on('change', function() {
             $('#challan tbody').empty();
             appendCalculationRow();
