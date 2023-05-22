@@ -3,9 +3,9 @@
 
 @php
     $is_old = old('supplier_name') ? true : false;
-    $form_heading = !empty($purchaseOrder->id) ? 'Update' : 'Add';
-    $form_url = !empty($purchaseOrder->id) ? route('work-orders.update', $purchaseOrder->id) : route('work-orders.store');
-    $form_method = !empty($purchaseOrder->id) ? 'PUT' : 'POST';
+    $form_heading = !empty($workOrder->id) ? 'Update' : 'Add';
+    $form_url = !empty($workOrder->id) ? route('work-orders.update', $workOrder->id) : route('work-orders.store');
+    $form_method = !empty($workOrder->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
@@ -55,49 +55,49 @@
         'class' => 'custom-form',
     ]) !!}
     <div class="row">
-        @if (!empty($purchaseOrder->id))
+        @if (!empty($workOrder->id))
             <div class="form-group col-4">
                 <label for="po_no">PO No <span class="text-danger">*</span></label>
                 <input class="form-control" id="po_no" name="po_no" aria-describedby="po_no"
-                    value="{{ old('po_no') ?? ($purchaseOrder->po_no ?? '') }}" readonly>
+                    value="{{ old('po_no') ?? ($workOrder->po_no ?? '') }}" readonly>
             </div>
         @endif
         <div class="form-group col-4">
             <label for="date">Purchase Date:</label>
             <input class="form-control purchase_date" name="date" aria-describedby="date"
-                value="{{ old('date') ?? (@$purchaseOrder->date ?? '') }}" readonly placeholder="Select a Date">
+                value="{{ old('date') ?? (@$workOrder->date ?? '') }}" readonly placeholder="Select a Date">
         </div>
 
         <div class="form-group col-4 delivery_location">
             <label for="delivery_location">Delivery Location:</label>
             <input type="text" class="form-control" id="delivery_location" aria-describedby="delivery_location"
                 name="delivery_location"
-                value="{{ old('delivery_location') ?? (@$purchaseOrder->delivery_location ?? '') }}">
+                value="{{ old('delivery_location') ?? (@$workOrder->delivery_location ?? '') }}">
         </div>
 
         <div class="form-group col-4 supplier_name">
             <label for="supplier_name">Supplier Name: <span class="text-danger">*</span></label>
             <input type="text" class="form-control supplier_name" aria-describedby="supplier_name" id="supplier_name"
                 autocomplete="off" name="supplier_name"
-                value="{{ old('supplier_name') ?? (@$purchaseOrder->supplier->name ?? '') }}" placeholder="Search..."
+                value="{{ old('supplier_name') ?? (@$workOrder->supplier->name ?? '') }}" placeholder="Search..."
                 required>
             <input type="hidden" class="supplier_id" name="supplier_id" id="supplier_id"
-                value="{{ old('supplier_id') ?? @$purchaseOrder?->supplier_id }}">
+                value="{{ old('supplier_id') ?? @$workOrder?->supplier_id }}">
         </div>
 
         <div class="form-group col-4 indent_no">
             <label for="indent_no">Indent No: <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="indent_no" aria-describedby="indent_no" name="indent_no"
-                autocomplete="off" value="{{ old('indent_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}"
+                autocomplete="off" value="{{ old('indent_no') ?? (@$workOrder->indent->indent_no ?? '') }}"
                 placeholder="Search...">
             <input type="hidden" name="indent_id" id="indent_id"
-                value="{{ old('indent_id') ?? @$purchaseOrder?->indent_id }}">
+                value="{{ old('indent_id') ?? @$workOrder?->indent_id }}">
         </div>
 
         <div class="form-group col-4 remarks">
             <label for="remarks">Remarks</label>
             <input type="text" class="form-control" id="remarks" aria-describedby="remarks" name="remarks"
-                value="{{ old('remarks') ?? (@$purchaseOrder->remarks ?? '') }}">
+                value="{{ old('remarks') ?? (@$workOrder->remarks ?? '') }}">
         </div>
     </div>
 
@@ -123,36 +123,36 @@
         </thead>
         <tbody>
             @php
-                $purchase_requisition = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
-                $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scm_purchase_requisition_id') : []);
+                $purchase_requisition = old('purchase_requisition_id', !empty($workOrder) ? $workOrder->workOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
+                $purchase_requisition_id = old('purchase_requisition_id', !empty($workOrder) ? $workOrder->workOrderLines->pluck('scm_purchase_requisition_id') : []);
                 
-                $cs_no = old('cs_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('cs.cs_no') : []);
-                $cs_id = old('cs_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('cs.id') : []);
+                $cs_no = old('cs_no', !empty($workOrder) ? $workOrder->workOrderLines->pluck('cs.cs_no') : []);
+                $cs_id = old('cs_id', !empty($workOrder) ? $workOrder->workOrderLines->pluck('cs.id') : []);
                 
-                $quotation_no = old('quotation_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quotation_no') : []);
+                $quotation_no = old('quotation_no', !empty($workOrder) ? $workOrder->workOrderLines->pluck('quotation_no') : []);
                 
-                $material_name = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.name') : []);
-                $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.id') : []);
+                $material_name = old('material_name', !empty($workOrder) ? $workOrder->workOrderLines->pluck('material.name') : []);
+                $material_id = old('material_id', !empty($workOrder) ? $workOrder->workOrderLines->pluck('material.id') : []);
                 
-                $brand = old('brand', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand') : []);
-                $brand_id = old('brand_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand_id') : []);
+                $brand = old('brand', !empty($workOrder) ? $workOrder->workOrderLines->pluck('brand') : []);
+                $brand_id = old('brand_id', !empty($workOrder) ? $workOrder->workOrderLines->pluck('brand_id') : []);
                 
-                $description = old('description', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('description') : []);
+                $description = old('description', !empty($workOrder) ? $workOrder->workOrderLines->pluck('description') : []);
                 
-                $unit = old('unit', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.unit') : []);
+                $unit = old('unit', !empty($workOrder) ? $workOrder->workOrderLines->pluck('material.unit') : []);
                 
-                $quantity = old('quantity', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quantity') : []);
+                $quantity = old('quantity', !empty($workOrder) ? $workOrder->workOrderLines->pluck('quantity') : []);
                 
-                $warranty_period = old('warranty_period', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('warranty_period') : []);
+                $warranty_period = old('warranty_period', !empty($workOrder) ? $workOrder->workOrderLines->pluck('warranty_period') : []);
                 
-                $unit_price = old('unit_price', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('unit_price') : []);
-                $vat = old('vat', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('vat') : []);
+                $unit_price = old('unit_price', !empty($workOrder) ? $workOrder->workOrderLines->pluck('unit_price') : []);
+                $vat = old('vat', !empty($workOrder) ? $workOrder->workOrderLines->pluck('vat') : []);
                 
-                $tax = old('tax', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('tax') : []);
+                $tax = old('tax', !empty($workOrder) ? $workOrder->workOrderLines->pluck('tax') : []);
                 
-                $total_amount = old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('total_amount') : []);
+                $total_amount = old('total_amount', !empty($workOrder) ? $workOrder->workOrderLines->pluck('total_amount') : []);
                 
-                $required_date = old('required_date', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('required_date') : []);
+                $required_date = old('required_date', !empty($workOrder) ? $workOrder->workOrderLines->pluck('required_date') : []);
                 
             @endphp
             @foreach ($purchase_requisition as $key => $value)
@@ -268,7 +268,7 @@
                 <td>
                     <input type="text" name="final_total_amount" class="form-control text-center final_total_amount"
                         autocomplete="off"
-                        value="{{ old('final_total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->sum('total_amount') : 0) }}"
+                        value="{{ old('final_total_amount', !empty($workOrder) ? $workOrder->workOrderLines->sum('total_amount') : 0) }}"
                         readonly>
                 </td>
             </tr>
@@ -279,8 +279,8 @@
         <label for="terms_and_conditions" class="terms_label">Terms and Conditions
             <i class="btn-primary btn-custom fa fa-plus add-terms-row"></i>
         </label>
-        @if (isset($purchaseOrder) && $purchaseOrder?->poTermsAndConditions->count() > 0)
-            @foreach ($purchaseOrder->poTermsAndConditions as $key => $value)
+        @if (isset($workOrder) && $workOrder?->poTermsAndConditions->count() > 0)
+            @foreach ($workOrder->poTermsAndConditions as $key => $value)
                 <div class="input-group">
                     <input type="text" name="terms_and_conditions[]" class="form-control terms_and_conditions"
                         autocomplete="off" value="{{ $value->particular }}">
@@ -309,7 +309,7 @@
     <script>
         var req_options = null;
 
-        @if (!empty($purchaseOrder->id))
+        @if (!empty($workOrder->id))
             var indentWiseRequisitions = @json($indentWiseRequisitions);
             var options = '<option value="">Select PRS No</option>';
 
@@ -492,7 +492,7 @@
         });
 
         /* Append row */
-        @if (empty($purchaseOrder) && empty(old('material_name')))
+        @if (empty($workOrder) && empty(old('material_name')))
             appendCalculationRow();
         @endif
         function appendCalculationRow() {
@@ -506,9 +506,9 @@
 
                             <td>
                                 <input type="text" class="form-control cs_no" aria-describedby="cs_no" name="cs_no[]"
-                                    value="{{ old('cs_no') ?? (@$purchaseOrder->client->name ?? '') }}" placeholder="Search...">
+                                    value="{{ old('cs_no') ?? (@$workOrder->client->name ?? '') }}" placeholder="Search...">
                                 <input type="hidden" name="cs_id[]" class="form-control cs_id"
-                                    value="{{ old('cs_id') ?? @$purchaseOrder?->client->id }}">
+                                    value="{{ old('cs_id') ?? @$workOrder?->client->id }}">
                             </td>
 
                             <td>
@@ -552,7 +552,7 @@
                             <td>
                                 <select class="form-control" name="vat[]">
                                     @foreach ($vatOrTax as $key => $value)
-                                        <option value="{{ $value }}" @selected($key == @$purchaseOrder->vat)>
+                                        <option value="{{ $value }}" @selected($key == @$workOrder->vat)>
                                             {{ $value }}</option>
                                     @endforeach
                                 </select>
@@ -561,7 +561,7 @@
                             <td>
                                 <select class="form-control" name="tax[]">
                                     @foreach ($vatOrTax as $key => $value)
-                                        <option value="{{ $value }}" @selected($key == @$purchaseOrder->tax)>
+                                        <option value="{{ $value }}" @selected($key == @$workOrder->tax)>
                                             {{ $value }}</option>
                                     @endforeach
                                 </select>
@@ -571,7 +571,7 @@
                                 <input name="total_amount[]" class="form-control total_amount" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input class="form-control date" name="required_date[]" aria-describedby="date" value="{{ old('required_date') ?? (@$purchaseOrder->required_date ?? '') }}" readonly>
+                                <input class="form-control date" name="required_date[]" aria-describedby="date" value="{{ old('required_date') ?? (@$workOrder->required_date ?? '') }}" readonly>
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
