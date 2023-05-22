@@ -157,11 +157,11 @@
                 <th>Brand</th>
                 <th>Serial Code</th>
                 <th>Unit</th>
-                <th>Description</th>
                 <th>Receiving Date</th>
                 <th>Warranty Period</th>
                 <th>Remaining Day</th>
                 <th>Challan No</th>
+                <th>Description</th>
                 <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
             </tr>
         </thead>
@@ -304,17 +304,14 @@
             @endif
         })
 
-        var indx = 0;
-        @if ($form_method == 'PUT')
-            indx = {{ count($Challan_Lines) }}
-        @endif
+        
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
             let row = `<tr>
                             <td>
-                                <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
+                                <select name="received_type[]" class="form-control received_type" autocomplete="off">
                                     <option value="" disabled>Select Out From</option>
-                                    ${ type === 'client' ? 
+                                    ${ type === 'warehouse' ? 
                                     `<option value="mrr">{{ strToUpper('mrr') }}</option>
                                     <option value="wcr">{{ strToUpper('wcr') }}</option>`
                                     : 
@@ -323,45 +320,46 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="material_name[${indx}]" class="form-control material_name" autocomplete="off">
-                                <input type="hidden" name="material_id[${indx}]" class="form-control material_id" autocomplete="off">
-                                <input type="hidden" name="item_code[${indx}]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[${indx}]" class="form-control material_type" autocomplete="off"> 
+                                <input type="text" name="material_name[]" class="form-control material_name" autocomplete="off">
+                                <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off">
+                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
+                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
+                                <input type="hidden" name="receiveable_id[]" class="form-control receiveable_id" autocomplete="off"> 
                             </td>
                             <td class="form-group">
-                                <input type="text" name="brand_name[${indx}]" class="form-control brand_name" autocomplete="off" readonly>
-                                <input type="hidden" name="brand_id[${indx}]" class="form-control brand_id" autocomplete="off">
+                                <input type="text" name="brand_name[]" class="form-control brand_name" autocomplete="off" readonly>
+                                <input type="hidden" name="brand_id[]" class="form-control brand_id" autocomplete="off">
                             </td>                            
                             <td>
-                                <input type="text" name="model[${indx}]" class="form-control model" autocomplete="off" readonly>
+                                <input type="text" name="model[]" class="form-control model" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input type="text" name="serial_code[${indx}]" class="form-control serial_code" autocomplete="off" readonly>
+                                <input type="text" name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly>
                             </td>
                             <td class="select2_container">
-                                <input type="text" name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly>
+                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                            </td>
+                            
+                            <td>
+                                <input name="receiving_date[]" class="form-control receiving_date" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input class="form-control available_quantity" name="available_quantity[${indx}]" aria-describedby="available_quantity" readonly>
+                                <input name="warranty_period[]" class="form-control warranty_period" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input name="quantity[${indx}]" class="form-control quantity" autocomplete="off">
+                                <input class="form-control remaining_days" name="remaining_days[]" aria-describedby="available_quantity" readonly>
                             </td>
                             <td>
-                                <input name="remarks[${indx}]" class="form-control remarks" autocomplete="off">
+                                <input name="challan_no[]" class="form-control challan_no" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <input class="form-control available_quantity" name="available_quantity[${indx}]" aria-describedby="available_quantity" readonly>
-                            </td>
-                            <td>
-                                <input name="quantity[${indx}]" class="form-control quantity" autocomplete="off">
+                                <input class="form-control description" name="description[]" aria-describedby="description">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
                             </td>
                         </tr>
                     `;
-            indx++;
             $('#challan tbody').append(row);
             $('.select2').select2({});
             $('.select2.serial_code').select2({
@@ -659,6 +657,9 @@
             let myObject = {
                 sl_no: $(this).val(),
                 supplier_id : $('#supplier_id').val(),
+                client_no  : $('#client_no').val(),
+                type : $("input[name='type']:checked").val(),
+                branch_id : $('#branch_id').find(':selected').val(),
                 type : event_this.find('.received_type').find(':selected').text(),
             }
             jquaryUiAjax(this, "{{ route('searchSerialForWcr') }}", uiList, myObject);
@@ -673,6 +674,11 @@
                 event_this.find('.model').val(item.model);
                 event_this.find('.item_code').val(item.item_code);
                 event_this.find('.material_type').val(item.item_type);
+                event_this.find('.receiving_date').val(item.receiving_date);
+                event_this.find('.warranty_period').val(item.warranty_period);
+                event_this.find('.remaining_days').val(item.remaining_days);
+                event_this.find('.challan_no').val(item.challan_no);
+                event_this.find('.receiveable_id').val(item.receiveable_id);
                 return false;
             }
         })
