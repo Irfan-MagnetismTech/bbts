@@ -195,4 +195,153 @@ class WorkOrderController extends Controller
             return redirect()->route('requisitions.index')->withErrors($e->getMessage());
         }
     }
+
+    public function searchMaterialByRequsiition($csId, $reqId)
+    {
+        return CsMaterial::with('material', 'brand')
+            ->orderBy('id')
+            ->where('cs_id', $csId)
+            ->whereIn('material_id', function ($query) use ($reqId) {
+                $query->select('material_id')
+                    ->from('scm_purchase_requisition_details')
+                    ->where('scm_purchase_requisition_id', $reqId);
+            })
+            ->get()
+            ->unique('material_id', 'brand_id');
+    }
+
+    public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
+    {
+        return CsMaterialSupplier::query()
+            ->with('csMaterial.brand', function ($query) {
+                $query->select('id', 'name');
+            })
+            ->with('csMaterial.material', function ($query) {
+                $query->select('id', 'name', 'unit');
+            })
+            ->whereHas('csMaterial', function ($query) use ($csId, $materialId) {
+                $query->where('cs_id', $csId)
+                    ->where('material_id', $materialId);
+            })
+            ->whereHas('csSupplier', function ($query) use ($csId, $supplierId) {
+                $query->where('cs_id', $csId)
+                    ->where('supplier_id', $supplierId);
+            })
+            ->get();
+    }
+
+    private function checkValidation($request)
+    {
+        $customValidations = Validator::make($request->all(), [
+            'date' => 'required',
+            'supplier_id' => 'required',
+            'indent_id' => 'required',
+            'cs_id.*' => 'required',
+            'quotaion_id.*' => 'required',
+            'matterial_name.*' => 'required',
+            'material_id.*' => 'required',
+        ], [
+            'date.required' => 'Date is required',
+            'supplier_id.required' => 'Supplier is required',
+            'indent_id.required' => 'Indent is required',
+            'cs_id.*.required' => 'CS is required',
+            'quotaion_id.*.required' => 'Quotation is required',
+            'matterial_name.*.required' => 'Material Name is required',
+            'material_id.*.required' => 'Material is required',
+        ]);
+
+        if ($customValidations->fails()) {
+            return response()->json($customValidations->errors());
+        }
+    }
+
+    private function prepareworkOrderData($request, $workOrder = null)
+    {
+        $requestMethod = request()->method();
+        $workOrderData = $request->all();
+
+        $workOrderLinesData = [];
+        foreach ($workOrderData['purchase_requisition_id'] as $key => $value) {
+            $workOrderLinesData[] = [
+                'scm_purchase_requisition_id' => $request->purchase_requisition_id[$key] ?? null,
+                'po_composit_key'         => ($requestMethod === "PUT" ? $workOrder->po_no :  $this->workOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key] ?? null,
+                'cs_id'                      => $request->cs_id[$key] ?? null,
+                'quotation_no'               => $request->quotation_no[$key] ?? null,
+                'material_id'             => $request->material_id[$key] ?? null,
+                'brand_id'                => $request->brand_id[$key] ?? null,
+                'description'             => $request->description[$key] ?? null,
+                'quantity'                => $request->quantity[$key] ?? null,
+                'warranty_period'         => $request->warranty_period[$key] ?? null,
+                'unit_price'              => $request->unit_price[$key] ?? null,
+                'vat'                     => $request->vat[$key] ?? null,
+                'tax'                     => $request->tax[$key] ?? null,
+                'total_amount'            => $request->quantity[$key] * $request->unit_price[$key] ?? null,
+                'required_date'           => $request->required_date[$key] ?? null,
+            ];
+        }
+
+        $poTermsAndConditions = [];
+        foreach ($workOrderData['terms_and_conditions'] as $key => $value) {
+            $poTermsAndConditions[] = [
+                'particular' => $value
+            ];
+        }
+
+        $materials = [];
+        $allMaterialsAreSame = true;
+        $firstMaterialId = $workOrderLinesData[0]['material_id'];
+        foreach ($workOrderLinesData as $key => $value) {
+            if ($firstMaterialId != $value['material_id']) {
+                $allMaterialsAreSame = false;
+                break;
+            }
+        }
+
+        if ($allMaterialsAreSame) {
+            $materials[] = [
+                'po_composit_key' => ($requestMethod === "PUT" ? $workOrder->po_no :  $this->workOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key],
+                'material_id' => $firstMaterialId,
+                'quantity' => array_sum(array_column($workOrderLinesData, 'quantity')),
+                'brand_id' => $request->brand_id[$key] ?? null,
+                'unit_price' => $request->unit_price[$key] ?? null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        } else {
+            foreach ($workOrderLinesData as $key => $value) {
+                $materials[] = [
+                    'po_composit_key' => ($requestMethod === "PUT" ? $workOrder->po_no :  $this->workOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key],
+                    'material_id' => $value['material_id'],
+                    'quantity' => $value['quantity'],
+                    'brand_id' => $request->brand_id[$key] ?? null,
+                    'unit_price' => $request->unit_price[$key] ?? null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+        }
+
+        $poMaterials = [];
+        // Iterate through each element of the given array
+        foreach ($materials as $item) {
+            // Create a unique key based on material_id and brand_id
+            $key = $item['material_id'] . '-' . $item['brand_id'];
+            // If the key already exists in the merged array, add the quantity
+            if (isset($poMaterials[$key])) {
+                $poMaterials[$key]['quantity'] += (int) $item['quantity'];
+            } else {
+                // If the key doesn't exist, add a new item to the merged array
+                $poMaterials[$key] = $item;
+            }
+        }
+        // Convert the merged array back to a sequential array
+        $poMaterials = array_values($poMaterials);
+
+        return [
+            'workOrderData' => $workOrderData,
+            'workOrderLinesData' => $workOrderLinesData,
+            'poTermsAndConditions' => $poTermsAndConditions,
+            'poMaterials' => $poMaterials,
+        ];
+    }
 }
