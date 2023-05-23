@@ -3,6 +3,7 @@
 namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
+use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\ScmWcrLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
@@ -29,5 +30,10 @@ class ScmWcr extends Model
     public function stockable()
     {
         return $this->morphMany(StockLedger::class, 'stockable');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }

@@ -32,7 +32,8 @@ class ScmWcrController extends Controller
      */
     public function index()
     {
-        return view('scm::index');
+        $ScmDatas = ScmWcr::latest()->get();
+        return view('scm::wcrs.index', compact('ScmDatas'));
     }
 
     /**
@@ -55,6 +56,7 @@ class ScmWcrController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $scm_wcr = $request->only('type', 'date', 'supplier_id', 'branch_id', 'client_no');
             $scm_wcr['wcr_no'] = $this->wcrNo;
             $scm_wcr['created_by'] = auth()->user()->id;
@@ -67,9 +69,11 @@ class ScmWcrController extends Controller
             };
             $wcr->lines()->createMany($wcr_lines);
             $wcr->stockable()->createMany($stock);
-            dd('done');
+            DB::commit();
+            return redirect()->route('warranty-claims.index')->with('message', 'Data has been created successfully');
         } catch (QueryException $err) {
-            dd($err);
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($err->getMessage());
         }
     }
 
