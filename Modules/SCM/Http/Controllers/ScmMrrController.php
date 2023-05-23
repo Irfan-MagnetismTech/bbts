@@ -134,7 +134,7 @@ class ScmMrrController extends Controller
             }
             $materialReceive->stockable()->createMany($stock);
             // FiberTracking::insert($CablePeace);
-            dd($stock);
+            
             DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {

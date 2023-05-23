@@ -66,6 +66,7 @@ class ScmWcrController extends Controller
                 $stock[] = $this->getStockData($request, $key, $wcr->id);
             };
             $wcr->lines()->createMany($wcr_lines);
+            $wcr->stockable()->createMany($stock);
             dd('done');
         } catch (QueryException $err) {
             dd($err);
@@ -126,7 +127,7 @@ class ScmWcrController extends Controller
             'warranty_period'           => $req->warranty_period[$ke] ?? null,
             'remaining_days'            => $req->remaining_days[$ke] ?? null,
             'challan_no'                => $req->challan_no[$ke] ?? null,
-            'received_type'             => $req->received_type[$ke] ?? null,
+            'received_type'             => strtoupper($req->received_type[$ke]) ?? null,
             'warranty_composite_key'    => $id . '-' . $req->serial_code[$ke],
         ];
     }
@@ -134,9 +135,9 @@ class ScmWcrController extends Controller
     private function getStockData($req, $ke, $id)
     {
         return [
-            'received_type'     => $req->received_type[$ke] ?? NULL,
+            'received_type'     => strtoupper($req->received_type[$ke]) ?? NULL,
             'receiveable_id'    => $req->receiveable_id[$ke] ?? NULL,
-            'receiveable_type'  => ($req->received_type[$ke] == 'MRR') ? ScmMrr::class : (($req->receiveable_type[$ke] == 'WCR') ? ScmWcr::class : (($req->receiveable_type[$ke] == 'ERR') ? ScmErr::class : NULL)),
+            'receiveable_type'  => (strtoupper($req->received_type[$ke]) == 'MRR') ? ScmMrr::class : ((strtoupper($req->received_type[$ke]) == 'WCR') ? ScmWcr::class : ((strtoupper($req->received_type[$ke]) == 'ERR') ? ScmErr::class : NULL)),
             'material_id'       => $req->material_id[$ke] ?? null,
             'stockable_type'    => ScmWcr::class,
             'stockable_id'      => $id ?? null,

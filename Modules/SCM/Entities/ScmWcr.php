@@ -4,6 +4,7 @@ namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
 use Modules\SCM\Entities\ScmWcrLine;
+use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
 
 class ScmWcr extends Model
@@ -23,5 +24,10 @@ class ScmWcr extends Model
     public function setDateAttribute($input)
     {
         $this->attributes['date'] = !empty($input) ? Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
+    }
+
+    public function stockable()
+    {
+        return $this->morphMany(StockLedger::class, 'stockable');
     }
 }
