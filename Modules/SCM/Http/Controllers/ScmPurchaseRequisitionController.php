@@ -55,9 +55,9 @@ class ScmPurchaseRequisitionController extends Controller
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'client_id', 'date', 'fr_composite_key', 'assessment_no');
+                $requestData = $request->only('type', 'prs_type', 'client_id', 'date', 'fr_composite_key', 'assessment_no');
             } else {
-                $requestData = $request->only('type', 'date');
+                $requestData = $request->only('type', 'prs_type', 'date');
             }
 
             $lastMRSId = ScmPurchaseRequisition::latest()->first();
@@ -135,9 +135,9 @@ class ScmPurchaseRequisitionController extends Controller
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'client_id', 'date', 'fr_composite_key', 'assessment_no');
+                $requestData = $request->only('type', 'prs_type', 'client_id', 'date', 'fr_composite_key', 'assessment_no');
             } else {
-                $requestData = $request->only('type', 'date');
+                $requestData = $request->only('type', 'prs_type', 'date');
             }
             $requestData['requisition_by'] = auth()->id();
 
