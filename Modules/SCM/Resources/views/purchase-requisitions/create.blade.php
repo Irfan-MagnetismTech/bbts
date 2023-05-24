@@ -63,6 +63,22 @@
             </div>
 
             <div class="row">
+                <div class="form-group col-3">
+                    <label for="prs_type">PRS Type <span class="text-danger">*</span></label>
+                    <select class="form-control" name="prs_type" id="prs_type" required>
+                        <option value="" disabled selected>Select PRS Type</option>
+                        <option value="Purchase Order" @selected(1 == @$purchaseOrder->prs_type)>Purchase Order</option>
+                        <option value="Work Order" @selected(2 == @$purchaseOrder->prs_type)>Work Order</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-3">
+                    <label for="date">Applied Date:</label>
+                    <input class="form-control" id="date" name="date" aria-describedby="date"
+                        value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly
+                        placeholder="Select a Date">
+                </div>
+
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
@@ -71,6 +87,7 @@
                     <input type="hidden" name="client_id" id="client_id"
                         value="{{ old('client_id') ?? @$purchaseRequisition?->client->id }}">
                 </div>
+
                 <div class="form-group col-3 client_links">
                     <label for="select2">Client Links</label>
                     <select class="form-control select2" id="client_links" name="client_links">
@@ -90,7 +107,6 @@
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
                         readonly value="{{ old('client_no') ?? (@$purchaseRequisition->client->client_no ?? '') }}">
-
                 </div>
 
                 <div class="form-group col-3 fr_id">
@@ -101,24 +117,10 @@
                         value="{{ old('fr_composite_key') ?? @$purchaseRequisition->clientDetailsWithCompositeKey->fr_composite_key }}">
                 </div>
 
-                <div class="form-group col-3">
-                    <label for="date">Applied Date:</label>
-                    <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly
-                        placeholder="Select a Date">
-                </div>
-
                 <div class="form-group col-3 assesment_no">
                     <label for="select2">Assesment No</label>
                     <select class="form-control select2" id="assesment_no" name="assesment_no">
                         <option value="" readonly selected>Select Assesment No</option>
-                        {{-- @if (!empty($purchaseRequisition))
-                            @foreach ($branchwisePops as $branchwisePop)
-                                <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$purchaseRequisition->assesment_no)>
-                                    {{ $branchwisePop->name }}
-                                </option>
-                            @endforeach
-                        @endif --}}
                     </select>
                 </div>
             </div>
@@ -370,7 +372,8 @@
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            associativeDropdown("{{ route('searchPopByBranchId') }}", 'search', '#branch_id', '#pop_id', 'get', null)
+            associativeDropdown("{{ route('searchPopByBranchId') }}", 'search', '#branch_id', '#pop_id', 'get',
+                null)
 
             $(".radioButton").click(function() {
                 onChangeRadioButton()

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('scm_purchase_requisitions', function (Blueprint $table) {
             $table->id();
             $table->string('prs_no');
+            $table->string('prs_type');
             $table->string('type')->nullable();
             $table->date('date')->nullable();
             $table->integer('client_id')->nullable();
