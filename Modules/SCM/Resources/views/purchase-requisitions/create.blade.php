@@ -54,14 +54,14 @@
                         <div class="form-check-inline">
                             <label class="form-check-label" for="client">
                                 <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                    value="client" @checked(@$purchaseRequisition->type == 'client' || old('type') == 'client')> Client Purpose
+                                    value="client" @checked(@$purchaseRequisition->type == 'client' || old('type') == 'client') required> Client Purpose
                             </label>
                         </div>
 
                         <div class="form-check-inline">
                             <label class="form-check-label" for="internal">
                                 <input type="radio" class="form-check-input radioButton" id="internal" name="type"
-                                    @checked(@$purchaseRequisition->type == 'internal' || old('type') == 'internal') value="internal">
+                                    @checked(@$purchaseRequisition->type == 'internal' || old('type') == 'internal') value="internal" required>
                                 Internal Purpose
                             </label>
                         </div>
@@ -85,49 +85,7 @@
                         value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly
                         placeholder="Select a Date">
                 </div>
-
-                {{-- <div class="form-group col-3 client_name">
-                    <label for="client_name">Client Name:</label>
-                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? (@$purchaseRequisition->client->name ?? '') }}"
-                        placeholder="Search...">
-                    <input type="hidden" name="client_id" id="client_id"
-                        value="{{ old('client_id') ?? @$purchaseRequisition?->client->id }}">
-                </div>
-
-                <div class="form-group col-3 client_links">
-                    <label for="select2">Client Links</label>
-                    <select class="form-control select2" id="client_links" name="client_links">
-                        <option value="" readonly selected>Select Client Link</option>
-                        @if (!empty($purchaseRequisition))
-                            @foreach ($clientInfos as $clientInfo)
-                                <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$purchaseRequisition->fr_composite_key)>
-                                    {{ $clientInfo->link_name }}</option>
-                            @endforeach
-                        @else
-                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
-                        @endif
-                    </select>
-                </div>
-
-                <div class="form-group col-3 client_no">
-                    <label for="client_no">Client No:</label>
-                    <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                        readonly value="{{ old('client_no') ?? (@$purchaseRequisition->client->client_no ?? '') }}">
-                </div>
-
-                <div class="form-group col-3 fr_id">
-                    <label for="fr_id">FR ID:</label>
-                    <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                        value="{{ old('fr_id') ?? @$purchaseRequisition->clientDetailsWithCompositeKey->fr_id }}" readonly>
-                    <input type="hidden" name="fr_composite_key" id="fr_composite_key"
-                        value="{{ old('fr_composite_key') ?? @$purchaseRequisition->clientDetailsWithCompositeKey->fr_composite_key }}">
-                </div> --}}
-
-
-
-
-
+                
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" onkeyup=""
@@ -181,7 +139,6 @@
                         aria-describedby="client_address" readonly
                         value="{{ old('client_address') ?? (@$client_address ?? '') }}">
                 </div>
-
 
                 <div class="form-group col-3 assesment_no">
                     <label for="select2">Assesment No</label>

@@ -12,7 +12,18 @@ use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
 
 class ScmPurchaseRequisition extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'prs_no',
+        'prs_type',
+        'type',
+        'date',
+        'client_no',
+        'fr_no',
+        'link_no',
+        'assessment_no',
+        'requisition_by',
+        'branch_id',
+    ];
     
     /**
      * @param $input

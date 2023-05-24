@@ -8,18 +8,24 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
+use App\Services\BbtsGlobalService;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
-use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\SCM\Http\Requests\SupplierRequest;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\SCM\Http\Requests\ScmPurchaseRequisitionRequest;
 
 class ScmPurchaseRequisitionController extends Controller
 {
     use HasRoles;
-    function __construct()
+
+    private $purchaseRequisitionNo;
+
+    function __construct(BbtsGlobalService $globalService)
     {
+        $this->purchaseRequisitionNo = $globalService->generateUniqueId(ScmPurchaseRequisition::class, 'PRS');
+        
         // $this->middleware('permission:requisition-view|requisition-create|requisition-edit|requisition-delete', ['only' => ['index','show']]);
         // $this->middleware('permission:requisition-create', ['only' => ['create','store']]);
         // $this->middleware('permission:requisition-edit', ['only' => ['edit','update']]);
@@ -55,7 +61,7 @@ class ScmPurchaseRequisitionController extends Controller
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'prs_type', 'client_id', 'date', 'fr_composite_key', 'assessment_no');
+                $requestData = $request->only('type', 'prs_type', 'client_no', 'date', 'fr_no', 'link_no', 'assessment_no');
             } else {
                 $requestData = $request->only('type', 'prs_type', 'date');
             }

@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('prs_type');
             $table->string('type')->nullable();
             $table->date('date')->nullable();
-            $table->integer('client_id')->nullable();
-            $table->string('fr_composite_key')->nullable();
+            $table->string('client_no')->nullable();
+            $table->string('fr_no')->nullable();
+            $table->string('link_no')->nullable();
             $table->string('assessment_no')->nullable();
             $table->integer('requisition_by');
             $table->integer('branch_id')->nullable();
