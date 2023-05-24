@@ -82,7 +82,7 @@ class ScmWcrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(ScmWcr $warranty_claim)
     {
         return view('scm::show');
     }
@@ -92,9 +92,12 @@ class ScmWcrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ScmWcr $warranty_claim)
     {
-        return view('scm::edit');
+        $formType = "edit";
+        $brands = Brand::latest()->get();
+        $branchs = Branch::latest()->get();
+        return view('scm::wcrs.create', compact('formType', 'brands', 'branchs', 'warranty_claim'));
     }
 
     /**
@@ -103,9 +106,30 @@ class ScmWcrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ScmWcr $warranty_claim)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $scm_wcr = $request->only('type', 'date', 'supplier_id', 'branch_id', 'client_no');
+            $scm_wcr['wcr_no'] = $this->wcrNo;
+            $scm_wcr['created_by'] = auth()->user()->id;
+            $warranty_claim->update($scm_wcr);
+            $stock = [];
+            $wcr_lines = [];
+            foreach ($request->material_name as $key => $val) {
+                $wcr_lines[] = $this->getLineData($request, $key, $warranty_claim->id);
+                $stock[] = $this->getStockData($request, $key, $warranty_claim->id);
+            };
+            $warranty_claim->lines()->delete();
+            $warranty_claim->lines()->createMany($wcr_lines);
+            $warranty_claim->stockable()->delete();
+            $warranty_claim->stockable()->createMany($stock);
+            DB::commit();
+            return redirect()->route('warranty-claims.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($err->getMessage());
+        }
     }
 
     /**
@@ -113,9 +137,18 @@ class ScmWcrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmWcr $warranty_claim)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $warranty_claim->stockable()->delete();
+            $warranty_claim->delete();
+            DB::commit();
+            return redirect()->route('warranty-claims.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->route('warranty-claims.index')->withInput()->withErrors($err->getMessage());
+        }
     }
 
     private function getLineData($req, $ke, $id)
@@ -131,6 +164,7 @@ class ScmWcrController extends Controller
             'warranty_period'           => $req->warranty_period[$ke] ?? null,
             'remaining_days'            => $req->remaining_days[$ke] ?? null,
             'challan_no'                => $req->challan_no[$ke] ?? null,
+            'receiveable_id'            => $req->receiveable_id[$ke] ?? null,
             'received_type'             => strtoupper($req->received_type[$ke]) ?? null,
             'warranty_composite_key'    => $id . '-' . $req->serial_code[$ke],
         ];

@@ -7,6 +7,7 @@ use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\ScmWcrLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\Client;
 
 class ScmWcr extends Model
 {
@@ -35,5 +36,15 @@ class ScmWcr extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'branch_id');
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 }

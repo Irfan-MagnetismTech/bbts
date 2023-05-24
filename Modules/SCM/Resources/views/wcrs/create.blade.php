@@ -2,26 +2,21 @@
 @section('title', 'Warranty Claim')
 @php
     $is_old = old('type') ? true : false;
-    $form_heading = !empty($challan) ? 'Update' : 'Add';
-    $form_url = !empty($challan) ? route('warranty-claims.update', $challan->id) : route('warranty-claims.store');
-    $form_method = !empty($challan) ? 'PUT' : 'POST';
+    $form_heading = !empty($warranty_claim) ? 'Update' : 'Add';
+    $form_url = !empty($warranty_claim) ? route('warranty-claims.update', $warranty_claim->id) : route('warranty-claims.store');
+    $form_method = !empty($warranty_claim) ? 'PUT' : 'POST';
     
-    $date = old('date', !empty($challan) ? $challan->date : null);
-    $type = old('date', !empty($challan) ? $challan->type : null);
-    $scm_requisition_id = old('scm_requisition_id', !empty($challan) ? $challan->scm_requisition_id : null);
-    $scm_requisition_no = old('mrs_no', !empty($challan) ? $challan->scmRequisition->mrs_no : null);
-    $purpose = old('purpose', !empty($challan) ? $challan->purpose : null);
-    $fr_no = old('fr_no', !empty($challan) ? $challan->fr_no : null);
-    $link_no = old('link_no', !empty($challan) ? $challan->link_no : null);
-    $client_name = old('client_name', !empty($challan) ? $challan?->client?->client_name : null);
-    $equipment_type = old('equipment_type', !empty($challan) ? $challan?->equipment_type : null);
-    $client_no = old('client_no', !empty($challan) ? $challan?->client?->client_no : null);
-    $client_address = old('client_address', !empty($challan) ? $challan?->client?->location : null);
-    $branch_id = old('branch_id', !empty($challan) ? $challan->branch_id : null);
-    $branch_name = old('branch_id', !empty($challan) ? $challan?->branch?->name : null);
-    $pop_id = old('pop_id', !empty($challan) ? $challan->pop_id : null);
-    $pop_name = old('pop_name', !empty($challan) ? $challan?->pop?->name : null);
-    $pop_address = old('pop_address', !empty($challan) ? $challan?->pop?->address : null);
+    $date = old('date', !empty($warranty_claim) ? $warranty_claim->date : null);
+    $type = old('type', !empty($warranty_claim) ? $warranty_claim->type : null);
+    $wcr_no = old('wcr_no', !empty($warranty_claim) ? $warranty_claim->wcr_no : null);
+    $supplier_id = old('supplier_id', !empty($warranty_claim) ? $warranty_claim->supplier_id : null);
+    $supplier_name = old('supplier_name', !empty($warranty_claim) ? $warranty_claim->supplier->name : null);
+    $supplier_address = old('supplier_address', !empty($warranty_claim) ? $warranty_claim->supplier->address : null);
+    $branch_id = old('branch_id', !empty($warranty_claim) ? $warranty_claim->branch_id : null);
+    $branch_name = old('branch_id', !empty($warranty_claim) ? $warranty_claim?->branch?->name : null);
+    $client_name = old('client_name', !empty($warranty_claim) ? $warranty_claim?->client?->client_name : null);
+    $client_no = old('client_no', !empty($warranty_claim) ? $warranty_claim?->client?->client_no : null);
+    $client_address = old('client_address', !empty($warranty_claim) ? $warranty_claim?->client?->location : null);
     
 @endphp
 
@@ -167,103 +162,73 @@
         </thead>
         <tbody>
             @php
-                $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
-                $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
-                $received_no = old('type_no', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
-                $receiveable_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('receiveable_id') : []);
-                $type_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('type_id') : []);
-                $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
-                $material_type = old('material_type', !empty($challan) ? $challan->scmChallanLines->pluck('material.type') : []);
-                $brand_id = old('brand_id', !empty($challan) ? $challan->scmChallanLines->pluck('brand_id') : []);
-                $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
-                $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
-                $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
-                $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
-                $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
-                $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
+                $material_id = old('material_id', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material_id') : []);
+                $material_name = old('material_name', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material.name') : []);
+                $received_type = old('received_type', !empty($warranty_claim) ? $warranty_claim->lines->pluck('received_type') : []);
+                $receiveable_id = old('receiveable_id', !empty($warranty_claim) ? $warranty_claim->lines->pluck('receiveable_id') : []);
+                $item_code = old('item_code', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material.code') : []);
+                $material_type = old('material_type', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material.type') : []);
+                $serial_code = old('serial_code', !empty($warranty_claim) ? $warranty_claim->lines->pluck('serial_code') : []);
+                $brand_id = old('brand_id', !empty($warranty_claim) ? $warranty_claim->lines->pluck('brand_id') : []);
+                $brand_name = old('brand_name', !empty($warranty_claim) ? $warranty_claim->lines->pluck('brand.name') : []);
+                $model = old('model', !empty($warranty_claim) ? $warranty_claim->lines->pluck('model') : []);
+                $challan_no = old('challan_no', !empty($warranty_claim) ? $warranty_claim->lines->pluck('challan_no') : []);
+                $receiving_date = old('receiving_date', !empty($warranty_claim) ? $warranty_claim->lines->pluck('receiving_date') : []);
+                $warranty_period = old('warranty_period', !empty($warranty_claim) ? $warranty_claim->lines->pluck('warranty_period') : []);
+                $remaining_days = old('remaining_days', !empty($warranty_claim) ? $warranty_claim->lines->pluck('remaining_days') : []);
+                $serial_code = old('serial_code', !empty($warranty_claim) ? json_decode($warranty_claim->lines->pluck('serial_code')) : []);
+                $unit = old('unit', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material.unit') : []);
+                $description = old('warranty_period', !empty($warranty_claim) ? $warranty_claim->lines->pluck('description') : []);
                 
             @endphp
-            @foreach ($Challan_Lines as $key => $Challan_Line)
+            @foreach ($material_id  as $key => $wcr_Line)
                 <tr>
                     <td>
-                        <select name="received_type[{{ $key }}]" class="form-control received_type"
-                            autocomplete="off">
-                            <option value="">Select Out From</option>
-                            @foreach (config('businessinfo.receivedTypes') as $typeKey => $typevalue)
-                                <option value="{{ $typevalue }}" @selected($received_type[$key] == $typevalue)>
-                                    {{ strToUpper($typevalue) }}</option>
-                            @endforeach
+                        <select name="received_type[]" class="form-control received_type" autocomplete="off">
+                            <option value="" disabled>Select Out From</option>
+                            @if(in_array($type, ['MRR', 'WCR'])) 
+                            <option value="mrr" @selected($type == 'MRR')>{{ strToUpper('mrr') }}</option>
+                            <option value="wcr" @selected($type == 'WCR')>{{ strToUpper('wcr') }}</option>
+                            @else
+                            <option value="err" @selected($type == 'ERR')>{{ strToUpper('err') }}</option>
+                            @endif 
                         </select>
                     </td>
                     <td>
-                        <input type="text" name="type_no[{{ $key }}]" class="form-control type_no"
-                            autocomplete="off" value="{{ $received_no[$key] }}">
-                        <input type="hidden" name="type_id[{{ $key }}]" class="form-control type_id"
-                            autocomplete="off" value="{{ $receiveable_id[$key] }}">
+                        <input type="text" name="material_name[]" class="form-control material_name" autocomplete="off" value="{{$material_name[$key]}}">
+                        <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off" value="{{$material_id[$key]}}">
+                        <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="{{$item_code[$key]}}"> 
+                        <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off" value="{{$material_type[$key]}}"> 
+                        <input type="hidden" name="receiveable_id[]" class="form-control receiveable_id" autocomplete="off" value="{{$receiveable_id[$key]}}"> 
                     </td>
                     <td class="form-group">
-                        <select class="form-control material_name select2" name="material_name[{{ $key }}]">
-                            <option value="" readonly selected>Select Material</option>
-                            @foreach ($materials[$key] as $key1 => $value)
-                                <option value="{{ $value->material->id }}" data-type="{{ $value->material->type }}"
-                                    data-unit="{{ $value->material->unit }}" data-code="{{ $value->material->code }}"
-                                    readonly @selected($material_id[$key] == $value->material->id)>
-                                    {{ $value->material->name }}</option>
-                            @endforeach
-                        </select>
-                        <input type="hidden" name="item_code[{{ $key }}]" class="form-control item_code"
-                            autocomplete="off" value="{{ $item_code[$key] }}">
-                        <input type="hidden" name="material_type[{{ $key }}]"
-                            class="form-control material_type" autocomplete="off" value="{{ $material_type[$key] }}">
-                    </td>
-
+                        <input type="text" name="brand_name[]" class="form-control brand_name" autocomplete="off" readonly value="{{$brand_name[$key]}}">
+                        <input type="hidden" name="brand_id[]" class="form-control brand_id" autocomplete="off" value="{{$brand_id[$key]}}">
+                    </td>                            
                     <td>
-
-                        <select name="brand[{{ $key }}]" class="form-control brand select2" autocomplete="off">
-                            <option value="">Select Brand</option>
-                            @foreach ($brands[$key] as $key1 => $value)
-                                <option value="{{ $value?->brand?->id ?? null }}" @selected($value?->brand?->id == $brand_id[$key])>
-                                    {{ $value?->brand?->name ?? null }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="model[]" class="form-control model" autocomplete="off" readonly value="{{$model[$key]}}">
                     </td>
-
                     <td>
-                        <select class="form-control model select2" name="model[{{ $key }}]">
-                            <option value="" readonly selected>Select Model</option>
-                            @foreach ($models[$key] as $key1 => $value)
-                                <option value="{{ $value->model }}" @selected($value->model == $model[$key])>
-                                    {{ $value->model }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly value="{{$serial_code[$key]}}">
                     </td>
                     <td class="select2_container">
-                        <select class="form-control select2 serial_code" multiple
-                            name="serial_code[{{ $key }}][]">
-                            @foreach ($serial_codes[$key] as $key1 => $value)
-                                <option value="{{ $value->serial_code }}" @selected(in_array($value->serial_code, json_decode($serial_code[$key])))>
-                                    {{ $value->serial_code }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly value="{{$unit[$key]}}">
+                    </td>
+                    
+                    <td>
+                        <input name="receiving_date[]" class="form-control receiving_date" autocomplete="off" readonly value="{{$receiving_date[$key]}}">
                     </td>
                     <td>
-                        <input name="unit[{{ $key }}]" class="form-control unit" readonly autocomplete="off"
-                            type="text" value="{{ $unit[$key] }}">
+                        <input name="warranty_period[]" class="form-control warranty_period" autocomplete="off" readonly value="{{$warranty_period[$key]}}">
                     </td>
                     <td>
-                        <input name="avaiable_quantity[{{ $key }}]" class="form-control avaiable_quantity"
-                            autocomplete="off" value="{{ $branch_stock[$key] }}" readonly>
+                        <input class="form-control remaining_days" name="remaining_days[]" aria-describedby="remaining_days" readonly value="{{$remaining_days[$key]}}">
                     </td>
                     <td>
-                        <input name="quantity[{{ $key }}]" class="form-control quantity" autocomplete="off"
-                            @if ($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
+                        <input name="challan_no[]" class="form-control challan_no" autocomplete="off" readonly value="{{$challan_no[$key]}}">
                     </td>
                     <td>
-                        <input name="remarks[{{ $key }}]" class="form-control remarks" autocomplete="off"
-                            value="{{ $remarks[$key] }}">
+                        <input class="form-control description" name="description[]" aria-describedby="description" value="{{$description[$key]}}">
                     </td>
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
@@ -299,7 +264,7 @@
         
         /* Append row */
         $(document).ready(function() {
-            @if (empty($challan) && empty(old('material_name')))
+            @if (empty($warranty_claim) && empty(old('material_id')))
                 appendCalculationRow();
             @endif
         })

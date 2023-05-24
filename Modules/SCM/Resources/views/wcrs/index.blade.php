@@ -57,13 +57,13 @@
                                     <a href="{{ route('warranty-claims.edit', $ScmData->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    {{-- <form action="{{ url("scm/ScmDatas/$ScmData->id") }}" method="POST"
+                                    <form action="{{ url("scm/warranty-claims/$ScmData->id") }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
-                                    </form> --}}
+                                    </form>
                                     {{-- @if(in_array($ScmData->type, ['client', 'pop']))
                                     <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-secondary">MUR</a>
