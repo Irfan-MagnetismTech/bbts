@@ -95,9 +95,8 @@
 
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
-                    <input type="text" class="form-control" id="client_name"
-                        aria-describedby="client_name" name="client_name"
-                        value="{{ old('client_name') ?? ($client_name ?? '') }}" placeholder="Search...">
+                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                        name="client_name" value="{{ old('client_name') ?? ($client_name ?? '') }}" placeholder="Search...">
                 </div>
 
                 <div class="form-group col-3 fr_no">
@@ -303,8 +302,7 @@
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
                             </td>
-                        </tr>
-                    `;
+                        </tr>`;
             $('#material_requisition tbody').append(row);
         }
 

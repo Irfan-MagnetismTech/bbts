@@ -46,13 +46,26 @@
                             $expiry_date = $is_old ? old('expiry_date') : $cs->expiry_date ?? null;
                             $remarks = $is_old ? old('remarks') : $cs->remarks ?? null;
                         @endphp
+                        @if (!empty($cs_no))
+                            <div class="col-xl-4 col-md-4">
+                                <div class="input-group input-group-sm input-group-primary">
+                                    <label class="input-group-addon" for="cs_no">CS NO</label>
+                                    {{ Form::text('cs_no', $cs_no, ['class' => 'form-control', 'id' => 'cs_no', 'readonly']) }}
+                                </div>
+                            </div>
+                        @endif
+
                         <div class="col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="effective_date">CS No<span
-                                        class="text-danger">*</span></label>
-                                {{ Form::text('cs_no', $cs_no, ['class' => 'form-control', 'id' => 'cs_no', 'autocomplete' => 'off', 'placeholder' => '#Reference', 'required']) }}
+                                <label class="input-group-addon" for="cs_type">CS Type <span class="text-danger">*</span></label>
+                                <select class="form-control" name="cs_type" id="cs_type" required>
+                                    <option value="" disabled selected>Select PRS Type</option>
+                                    <option value="Purchase Order" @selected('Purchase Order' == @$cs->cs_type)>Purchase Order</option>
+                                    <option value="Work Order" @selected('Work Order' == @$cs->cs_type)>Work Order</option>
+                                </select>
                             </div>
                         </div>
+
                         <div class="col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="effective_date">Effective Date<span
@@ -270,10 +283,10 @@
                                                 {{ $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode }}
                                             </td>
                                             <td class="cs_brand text-center">
-                                                {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? "Null" }}
+                                                {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? 'Null' }}
                                             </td>
                                             <input type="hidden" name="cs_brand_name[]" class="cs_brand_name"
-                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? "Null"}}">
+                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? 'Null' }}">
                                     @endif
                                     <td>
                                         <input type="text" name="price[]"
@@ -451,7 +464,7 @@
                 $(this).children(`td:eq(${index + 1})`).remove();
             });
         }
-        
+
         $(function() {
             $(document).on('keyup', ".supplier_name", function() {
                 $(this).autocomplete({

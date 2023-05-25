@@ -33,7 +33,6 @@ class CsRequest extends FormRequest
     public function rules()
     {
         return [
-            'cs_no'                   => ['required', 'string', 'max:255', Rule::unique('cs')->ignore($this->c, 'cs_no')], //$this->c is the id of the cs
             'effective_date'          => ['required', 'date', 'date_format:d-m-Y'],
             'expiry_date'             => ['required', 'date', 'date_format:d-m-Y', 'after:effective_date'],
             'remarks'                 => ['present', 'nullable', 'string'],
@@ -69,10 +68,6 @@ class CsRequest extends FormRequest
     {
         return [
             'material_brand.*.distinct'           => 'The material and brand combination must be unique.',
-            'cs_no.required'                    => 'Reference No. is required',
-            'cs_no.string'                      => 'Reference No. must be a string',
-            'cs_no.max'                         => 'Reference No. may not be greater than 255 characters',
-            'cs_no.unique'                      => 'Reference No. has already been taken',
 
             'effective_date.required'           => 'Effective Date is required',
             'effective_date.date'               => 'Effective Date must be a date',

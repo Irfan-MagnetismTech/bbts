@@ -10,7 +10,7 @@ use Modules\SCM\Entities\CsMaterialSupplier;
 
 class Cs extends Model
 {
-    protected $fillable = ['cs_no', 'effective_date', 'expiry_date', 'remarks', 'created_by'];
+    protected $fillable = ['cs_no', 'cs_type', 'effective_date', 'expiry_date', 'remarks', 'created_by'];
 
     /**
      * @var array
