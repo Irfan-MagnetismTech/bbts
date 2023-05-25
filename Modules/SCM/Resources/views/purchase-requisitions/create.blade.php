@@ -3,9 +3,16 @@
 
 @php
     $is_old = old('type') ? true : false;
-    $form_heading = !empty($err) ? 'Update' : 'Add';
-    $form_url = !empty($err) ? route('errs.update', $err->id) : route('errs.store');
-    $form_method = !empty($err) ? 'PUT' : 'POST';
+    $form_heading = !empty($purchaseRequisition) ? 'Update' : 'Add';
+    $form_url = !empty($purchaseRequisition) ? route('errs.update', $purchaseRequisition->id) : route('errs.store');
+    $form_method = !empty($purchaseRequisition) ? 'PUT' : 'POST';
+    
+    $client_id = old('client_id', !empty($purchaseRequisition) ? $purchaseRequisition->client_id : null);
+    $fr_no = old('fr_no', !empty($purchaseRequisition) ? $purchaseRequisition->fr_no : null);
+    $client_name = old('client_name', !empty($purchaseRequisition) ? $purchaseRequisition?->client?->client_name : null);
+    $client_no = old('client_no', !empty($purchaseRequisition) ? $purchaseRequisition?->client_no : null);
+    $client_link_no = old('client_link_no', !empty($purchaseRequisition) ? $purchaseRequisition?->link_no : null);
+    $client_address = old('client_address', !empty($purchaseRequisition) ? $purchaseRequisition?->client?->location : null);
 @endphp
 
 @section('breadcrumb-title')
@@ -74,8 +81,8 @@
                     <label for="prs_type">PRS Type <span class="text-danger">*</span></label>
                     <select class="form-control" name="prs_type" id="prs_type" required>
                         <option value="" disabled selected>Select PRS Type</option>
-                        <option value="Purchase Order" @selected(1 == @$purchaseOrder->prs_type)>Purchase Order</option>
-                        <option value="Work Order" @selected(2 == @$purchaseOrder->prs_type)>Work Order</option>
+                        <option value="Purchase Order" @selected('Purchase Order' == @$purchaseRequisition->prs_type)>Purchase Order</option>
+                        <option value="Work Order" @selected('Work Order' == @$purchaseRequisition->prs_type)>Work Order</option>
                     </select>
                 </div>
 
@@ -85,12 +92,12 @@
                         value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly
                         placeholder="Select a Date">
                 </div>
-                
+
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
-                    <input type="text" class="form-control" id="client_name" onkeyup=""
+                    <input type="text" class="form-control" id="client_name"
                         aria-describedby="client_name" name="client_name"
-                        value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
+                        value="{{ old('client_name') ?? ($client_name ?? '') }}" placeholder="Search...">
                 </div>
 
                 <div class="form-group col-3 fr_no">
@@ -359,6 +366,9 @@
                 $('.client_no').show('slow');
                 $('.client_links').show('slow');
                 $('.assesment_no').show('slow');
+                $('.fr_no').show('slow');
+                $('.link_no').show('slow');
+                $('.client_address').show('slow');
             } else if (radioValue == 'internal') {
                 $('.pop_id').hide('slow');
                 $('.fr_id').hide('slow');
@@ -366,6 +376,9 @@
                 $('.client_no').hide('slow');
                 $('.client_links').hide('slow');
                 $('.assesment_no').hide('slow');
+                $('.fr_no').hide('slow');
+                $('.link_no').hide('slow');
+                $('.client_address').hide('slow');
             }
         }
     </script>

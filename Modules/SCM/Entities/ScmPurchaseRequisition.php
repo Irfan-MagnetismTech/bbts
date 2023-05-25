@@ -58,11 +58,6 @@ class ScmPurchaseRequisition extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class);
-    }
-
-    public function clientDetailsWithCompositeKey()
-    {
-        return $this->belongsTo(ClientDetail::class, 'fr_composite_key', 'fr_composite_key');
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 }

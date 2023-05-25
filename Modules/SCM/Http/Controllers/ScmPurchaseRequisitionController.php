@@ -124,9 +124,10 @@ class ScmPurchaseRequisitionController extends Controller
         $branchs = Branch::latest()->get();
         $pops = Pop::latest()->get();
         $clients = Client::latest()->get();
-        $clientDetails = ClientDetail::latest()->get();
-        $clientInfos = ClientDetail::where('client_id', $purchaseRequisition->client_id)->get();
-        return view('scm::purchase-requisitions.create', compact('purchaseRequisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfos', 'branchs'));
+        $fr_nos = Client::with('saleDetails')->where('client_no', $purchaseRequisition->client_no)->first()?->saleDetails ?? [];
+        $client_links = Client::with('saleLinkDetails')->where('client_no', $purchaseRequisition->client_no)->first()?->saleLinkDetails ?? [];
+        
+        return view('scm::purchase-requisitions.create', compact('purchaseRequisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs'));
     }
 
     /**
@@ -141,7 +142,7 @@ class ScmPurchaseRequisitionController extends Controller
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'prs_type', 'client_id', 'date', 'fr_composite_key', 'assessment_no');
+                $requestData = $request->only('type', 'prs_type', 'client_no', 'date', 'fr_no', 'link_no', 'assessment_no');
             } else {
                 $requestData = $request->only('type', 'prs_type', 'date');
             }

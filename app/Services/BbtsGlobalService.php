@@ -45,7 +45,7 @@ class BbtsGlobalService extends Controller
     }
 
     /**
-     * @param model $model
+     * @param    model $model
      * @param string $prefix
      * @return string - unique id
      * 
