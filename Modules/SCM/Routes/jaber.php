@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\SCM\Http\Controllers\ScmErrController;
 use Modules\SCM\Http\Controllers\ScmMirController;
+use Modules\SCM\Http\Controllers\WorkOrderController;
 use Modules\SCM\Http\Controllers\ScmGatePassController;
 use Modules\SCM\Http\Controllers\PurchaseOrderController;
 
@@ -20,4 +21,5 @@ Route::resources([
     'material-issues' => ScmMirController::class,
     'gate-passes' => ScmGatePassController::class,
     'errs' => ScmErrController::class,
+    'work-orders' => WorkOrderController::class,
 ]);
