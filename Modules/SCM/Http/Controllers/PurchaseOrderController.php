@@ -354,4 +354,65 @@ class PurchaseOrderController extends Controller
             'poMaterials' => $poMaterials,
         ];
     }
+
+    public function searchMaterialByRequsiition($csId, $reqId)
+    {
+        return CsMaterial::with('material', 'brand')
+            ->orderBy('id')
+            ->where('cs_id', $csId)
+            ->whereIn('material_id', function ($query) use ($reqId) {
+                $query->select('material_id')
+                    ->from('scm_purchase_requisition_details')
+                    ->where('scm_purchase_requisition_id', $reqId);
+            })
+            ->get()
+            ->unique('material_id', 'brand_id');
+    }
+
+    public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
+    {
+        return CsMaterialSupplier::query()
+            ->with('csMaterial.brand', function ($query) {
+                $query->select('id', 'name');
+            })
+            ->with('csMaterial.material', function ($query) {
+                $query->select('id', 'name', 'unit');
+            })
+            ->whereHas('csMaterial', function ($query) use ($csId, $materialId) {
+                $query->where('cs_id', $csId)
+                    ->where('material_id', $materialId);
+            })
+            ->whereHas('csSupplier', function ($query) use ($csId, $supplierId) {
+                $query->where('cs_id', $csId)
+                    ->where('supplier_id', $supplierId);
+            })
+            ->get();
+    }
+
+    private function checkValidation($request)
+    {
+        $customValidations = Validator::make($request->all(), [
+            'date' => 'required',
+            'supplier_id' => 'required',
+            'indent_id' => 'required',
+            'cs_id.*' => 'required',
+            'quotaion_id.*' => 'required',
+            'matterial_name.*' => 'required',
+            'material_id.*' => 'required',
+        ], [
+            'date.required' => 'Date is required',
+            'supplier_id.required' => 'Supplier is required',
+            'indent_id.required' => 'Indent is required',
+            'cs_id.*.required' => 'CS is required',
+            'quotaion_id.*.required' => 'Quotation is required',
+            'matterial_name.*.required' => 'Material Name is required',
+            'material_id.*.required' => 'Material is required',
+        ]);
+
+        if ($customValidations->fails()) {
+            return response()->json($customValidations->errors());
+        }
+    }
+
+    
 }
