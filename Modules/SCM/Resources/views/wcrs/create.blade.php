@@ -250,6 +250,7 @@
     </div>
     {!! Form::close() !!}
     </div>
+      
 @endsection
 
 @section('script')

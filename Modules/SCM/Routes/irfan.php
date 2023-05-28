@@ -27,3 +27,4 @@ Route::get('get_unit/{material_id}', [ScmMrrController::class, 'getUnit'])->name
 Route::get('get_pocomposite_with_price/{po_id}/{material_id}/{brand_id}', [ScmMrrController::class, 'getPocompositeWithPrice'])->name('get_pocomposite_with_price');
 Route::get('search-challan-no', [ScmMurController::class, 'searchChallanNo'])->name('searchChallanNo');
 Route::get('search-serial-for-wcr', [ScmWcrController::class, 'searchSerialForWcr'])->name('searchSerialForWcr');
+Route::post('warranty-claims/sent-to-supplier/{id?}', [ScmWcrController::class, 'sentToSupplier'])->name('sentToSupplier');
