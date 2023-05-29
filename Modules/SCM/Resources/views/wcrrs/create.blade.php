@@ -43,6 +43,8 @@
             white-space: inherit;
         }
     </style>
+       <link rel="stylesheet" type="text/css" href="{{ asset('css/switchery.min.css') }}">
+       <link rel="stylesheet" type="text/css" href="{{ asset('/css/style.css') }}">
 @endsection
 @section('breadcrumb-button')
     <a href="{{ route('warranty-claims.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
@@ -68,24 +70,35 @@
                 value="{{ old('wcr_no') ?? (@$wcr_no ?? '') }}">
              <input type="hidden" class="form-control" id="wcr_id" aria-describedby="wcr_id" name="wcr_id"
                 value="{{ old('wcr_id') ?? (@$wcr_id ?? '') }}">
+                <input type="checkbox" class="js-primary" checked />
         </div>
         <div class="form-group col-3 send_date">
             <label for="send_date">Send Date:</label>
             <input type="text" class="form-control" id="send_date" aria-describedby="send_date" name="send_date"
                 readonly value="{{ old('send_date') ?? (@$send_date ?? '') }}">
         </div>
+        <div class="form-group col-3 branch_name">
+            <label for="select2">Branch</label>
+            <select class="form-control select2" id="branch_id" name="branch_id">
+                <option value="" selected>Select Branch</option>
+                @if ($form_method == 'PUT')
+                    {{-- <option value="{{ $branch_id }}" selected>
+                        {{ $branch_name }}
+                    </option> --}}
+                @endif
+            </select>
+        </div>
     </div>
 
     <table class="table table-bordered" id="challan">
         <thead>
             <tr>
+                <th>Receive Status</th>
                 <th>Material Name</th>
                 <th>Model</th>
                 <th>Brand</th>
                 <th>Serial Code</th>
                 <th>Unit</th>
-                <th>Remarks</th>
-                <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
             </tr>
         </thead>
         <tbody>
@@ -182,6 +195,9 @@
 @endsection
 
 @section('script')
+<script  src="{{ asset('/js/switchery.min.js')}}"></script>
+<script  src="{{ asset('/js/swithces.js')}}"></script>
+<script  src="{{ asset('/js/script.js') }}"></script>
     <script>
         const CSRF_TOKEN = "{{ csrf_token() }}";
         $('#date').datepicker({
@@ -191,47 +207,31 @@
             showOtherMonths: true
         }).datepicker("setDate", new Date());;
         
-        /* Append row */
-        $(document).ready(function() {
-            @if (empty($warranty_claim) && empty(old('material_id')))
-                appendCalculationRow();
-            @endif
-        })
-
+      
         
-        function appendCalculationRow() {
-            var type = $("input[name=type]:checked").val()
+        function addRow(val) {
             let row = `<tr>
+                         <td>
+                            <input type="checkbox" class="js-primary" checked />
+                        </td>
                             <td>
-                                <select name="received_type[]" class="form-control received_type" autocomplete="off">
-                                    <option value="" disabled>Select Out From</option>
-                                    ${ type === 'warehouse' ? 
-                                    `<option value="mrr">{{ strToUpper('mrr') }}</option>
-                                    <option value="wcr">{{ strToUpper('wcr') }}</option>`
-                                    : 
-                                    `<option value="err" selected>{{ strToUpper('err') }}</option>`
-                                    } 
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" autocomplete="off">
-                                <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off">
-                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
-                                <input type="hidden" name="receiveable_id[]" class="form-control receiveable_id" autocomplete="off"> 
+                                <input type="text" name="material_name[]" class="form-control material_name" autocomplete="off" value="${val.material_name}">
+                                <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off" value="${val.material_id}">
+                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="${val.item_code}"> 
+                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off" value="${val.item_type}"> 
                             </td>
                             <td class="form-group">
-                                <input type="text" name="brand_name[]" class="form-control brand_name" autocomplete="off" readonly>
-                                <input type="hidden" name="brand_id[]" class="form-control brand_id" autocomplete="off">
+                                <input type="text" name="brand_name[]" class="form-control brand_name" autocomplete="off" readonly value="${val.brand_name}">
+                                <input type="hidden" name="brand_id[]" class="form-control brand_id" autocomplete="off" value="${val.brand_id}">
                             </td>                            
                             <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off" readonly>
+                                <input type="text" name="model[]" class="form-control model" autocomplete="off" readonly value="${val.model}">
                             </td>
                             <td>
-                                <input type="text" name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly>
+                                <input type="text" name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly value="${val.serial_code}">
                             </td>
-                            <td class="select2_container">
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                            <td class="">
+                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly value="${val.unit}">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
@@ -328,11 +328,26 @@
                 },
                 success: function(data) {
                     console.log(data);
+                    $.each(data, function(key, value) {
+                        addRow(value)
+                    });
                 }
             });
 
         });
       
-       
+        $(function() {
+
+            //using form custom function js file
+            fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
+
+        });
+        @if($form_method=='PUT')
+
+            $(document).on('DOMNodeInserted', '#branch_id', function() {
+                    let selectedValue = "{{$branch_id}}"
+                    $('#branch_id').val(selectedValue)
+                    });
+        @endif
     </script>
 @endsection

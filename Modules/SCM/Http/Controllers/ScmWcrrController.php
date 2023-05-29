@@ -106,9 +106,26 @@ class ScmWcrrController extends Controller
             return $item->where('id', request()->wcr_id);
         })->pluck('serial_code');
 
-        $datas = StockLedger::query()->whereHasMorph('stockable', [ScmWcr::class], function ($item) use ($request) {
-            return $item->where('id', request()->wcr_id);
-        })->whereIn('serial_code', $data)->get();
+        $datas = StockLedger::query()->whereIn('serial_code', $data)->get()
+        ->groupBy(['serial_code'])
+        ->map(function ($group) {
+            return $group->last();
+        })
+        ->filter(function ($item) {
+            return $item->stockable_type == ScmWcr::class;
+        })
+        ->flatten()
+        ->map(fn ($item) => [
+            'material_name' => $item->material->name,
+            'material_id' => $item->material_id,
+            'serial_code' => $item->serial_code,
+            'brand_id' => $item->brand_id,
+            'brand_name' => $item->brand->name,
+            'model' => $item->model,
+            'unit' => $item->material->unit,
+            'item_code' => $item->material->code,
+            'item_type' => $item->material->type,
+        ]);
 
         return response()->json($datas);
     }
