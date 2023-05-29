@@ -73,6 +73,7 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $validatedRequest = $this->checkValidation($request);
         if (!empty($validatedRequest->original)) {
             return response()->json($validatedRequest->original);
@@ -97,6 +98,7 @@ class PurchaseOrderController extends Controller
             return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Created Successfully'], 200);
         } catch (QueryException $e) {
             DB::rollBack();
+
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -165,12 +167,11 @@ class PurchaseOrderController extends Controller
 
             $oldPoCompositeKeys = $purchaseOrder->purchaseOrderLines()->pluck('po_composit_key')->unique();
             $oldpoMaterials = PoMaterial::whereIn('po_composit_key', $oldPoCompositeKeys)->get();
-            $oldpoMaterials->each->forceDelete();
 
+            $oldpoMaterials->each->forceDelete();
             $purchaseOrder->purchaseOrderLines()->delete();
             $purchaseOrder->purchaseOrderLines()->createMany($finalData['purchaseOrderLinesData']);
-
-            $purchaseOrder->poTermsAndConditions()->delete();
+            $purchaseOrder->poTermsAndConditions()->delete();            
             if ($finalData['poTermsAndConditions'] != null) {
                 $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
             }
@@ -179,7 +180,7 @@ class PurchaseOrderController extends Controller
             DB::commit();
             return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Updated Successfully'], 200);
         } catch (QueryException $e) {
-            DB::rollBack();
+            DB::rollBack();            
             return redirect()->route('requisitions.index')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -243,6 +244,7 @@ class PurchaseOrderController extends Controller
     private function checkValidation($request)
     {
         $customValidations = Validator::make($request->all(), [
+            'po_type' => 'required',
             'date' => 'required',
             'supplier_id' => 'required',
             'indent_id' => 'required',
@@ -251,6 +253,7 @@ class PurchaseOrderController extends Controller
             'matterial_name.*' => 'required',
             'material_id.*' => 'required',
         ], [
+            'po_type.required' => 'PO Type is required',
             'date.required' => 'Date is required',
             'supplier_id.required' => 'Supplier is required',
             'indent_id.required' => 'Indent is required',
@@ -354,65 +357,4 @@ class PurchaseOrderController extends Controller
             'poMaterials' => $poMaterials,
         ];
     }
-
-    public function searchMaterialByRequsiition($csId, $reqId)
-    {
-        return CsMaterial::with('material', 'brand')
-            ->orderBy('id')
-            ->where('cs_id', $csId)
-            ->whereIn('material_id', function ($query) use ($reqId) {
-                $query->select('material_id')
-                    ->from('scm_purchase_requisition_details')
-                    ->where('scm_purchase_requisition_id', $reqId);
-            })
-            ->get()
-            ->unique('material_id', 'brand_id');
-    }
-
-    public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
-    {
-        return CsMaterialSupplier::query()
-            ->with('csMaterial.brand', function ($query) {
-                $query->select('id', 'name');
-            })
-            ->with('csMaterial.material', function ($query) {
-                $query->select('id', 'name', 'unit');
-            })
-            ->whereHas('csMaterial', function ($query) use ($csId, $materialId) {
-                $query->where('cs_id', $csId)
-                    ->where('material_id', $materialId);
-            })
-            ->whereHas('csSupplier', function ($query) use ($csId, $supplierId) {
-                $query->where('cs_id', $csId)
-                    ->where('supplier_id', $supplierId);
-            })
-            ->get();
-    }
-
-    private function checkValidation($request)
-    {
-        $customValidations = Validator::make($request->all(), [
-            'date' => 'required',
-            'supplier_id' => 'required',
-            'indent_id' => 'required',
-            'cs_id.*' => 'required',
-            'quotaion_id.*' => 'required',
-            'matterial_name.*' => 'required',
-            'material_id.*' => 'required',
-        ], [
-            'date.required' => 'Date is required',
-            'supplier_id.required' => 'Supplier is required',
-            'indent_id.required' => 'Indent is required',
-            'cs_id.*.required' => 'CS is required',
-            'quotaion_id.*.required' => 'Quotation is required',
-            'matterial_name.*.required' => 'Material Name is required',
-            'material_id.*.required' => 'Material is required',
-        ]);
-
-        if ($customValidations->fails()) {
-            return response()->json($customValidations->errors());
-        }
-    }
-
-    
 }

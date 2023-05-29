@@ -62,6 +62,15 @@
                     value="{{ old('po_no') ?? ($purchaseOrder->po_no ?? '') }}" readonly>
             </div>
         @endif
+        <div class="form-group col-3">
+            <label for="po_type">PRS Type <span class="text-danger">*</span></label>
+            <select class="form-control" name="po_type" id="po_type" required>
+                <option value="" disabled selected>Select PRS Type</option>
+                <option value="Purchase Order" @selected('Purchase Order' == @$purchaseOrder->po_type)>Purchase Order</option>
+                <option value="Work Order" @selected('Work Order' == @$purchaseOrder->po_type)>Work Order</option>
+            </select>
+        </div>
+
         <div class="form-group col-4">
             <label for="date">Purchase Date:</label>
             <input class="form-control purchase_date" name="date" aria-describedby="date"
@@ -114,8 +123,8 @@
                 <th> Quantity </th>
                 <th>Warranty Period</th>
                 <th>Price </th>
-                <th>Vat</th>
-                <th>Tax</th>
+                <th style="width: 80px !important">Vat</th>
+                <th style="width: 80px !important">Tax</th>
                 <th> Sub Total Amount </th>
                 <th> Required Date </th>
                 <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
@@ -152,8 +161,7 @@
                 
                 $total_amount = old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('total_amount') : []);
                 
-                $required_date = old('required_date', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('required_date') : []);
-                
+                $required_date = old('required_date', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('required_date') : []);                
             @endphp
             @foreach ($purchase_requisition as $key => $value)
                 <tr>
@@ -265,7 +273,7 @@
         <tfoot>
             <tr>
                 <td colspan="11" class="text-right">Total Amount</td>
-                <td>
+                <td colspan="3">
                     <input type="text" name="final_total_amount" class="form-control text-center final_total_amount"
                         autocomplete="off"
                         value="{{ old('final_total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->sum('total_amount') : 0) }}"

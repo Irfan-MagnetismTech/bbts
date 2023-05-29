@@ -73,12 +73,12 @@ class BbtsGlobalService extends Controller
      */
     public function generateUniqueId($model, $prefix): string
     {
-        $lastIndentId = $model::latest()->first();
-        if ($lastIndentId) {
-            if (now()->format('Y') != date('Y', strtotime($lastIndentId->created_at))) {
+        $lastIndentData = $model::latest()->first();
+        if ($lastIndentData) {
+            if (now()->format('Y') != date('Y', strtotime($lastIndentData->created_at))) {
                 return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;
             } else {
-                return strtoupper($prefix) . '-' . now()->format('Y') . '-' . $this->getNextAutoIncrementValue($model);
+                return strtoupper($prefix) . '-' . now()->format('Y') . '-' . $lastIndentData->id + 1;
             }
         } else {
             return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;

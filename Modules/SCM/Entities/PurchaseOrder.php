@@ -15,7 +15,7 @@ use Modules\SCM\Entities\ScmPurchaseRequisition;
 
 class PurchaseOrder extends Model
 {
-	protected $fillable = ['po_no', 'date', 'supplier_id', 'indent_id', 'remarks', 'delivery_location', 'created_by', 'branch_id'];
+	protected $fillable = ['po_no', 'po_type', 'date', 'supplier_id', 'indent_id', 'remarks', 'delivery_location', 'created_by', 'branch_id'];
 
 	public function getDateAttribute($input)
 	{

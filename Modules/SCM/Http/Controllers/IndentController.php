@@ -86,11 +86,6 @@ class IndentController extends Controller
      */
     public function edit(Indent $indent)
     {
-        $statement = DB::select("SHOW TABLE STATUS");
-        $columns = Schema::getColumnListing('indents');
-        return $statement;
-
-        dd($this->indentNo);
         return view('scm::indents.create', compact('indent'));
     }
 

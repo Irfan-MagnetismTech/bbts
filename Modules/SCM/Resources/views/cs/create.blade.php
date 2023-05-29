@@ -57,7 +57,8 @@
 
                         <div class="col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="cs_type">CS Type <span class="text-danger">*</span></label>
+                                <label class="input-group-addon" for="cs_type">CS Type <span
+                                        class="text-danger">*</span></label>
                                 <select class="form-control" name="cs_type" id="cs_type" required>
                                     <option value="" disabled selected>Select PRS Type</option>
                                     <option value="Purchase Order" @selected('Purchase Order' == @$cs->cs_type)>Purchase Order</option>
