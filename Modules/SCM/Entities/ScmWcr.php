@@ -28,6 +28,17 @@ class ScmWcr extends Model
         $this->attributes['date'] = !empty($input) ? Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
     }
 
+    public function getSendingDateAttribute($input)
+    {
+        $date = !empty($input) ? Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y') : null;
+        return $date;
+    }
+
+    public function setSendingDateAttribute($input)
+    {
+        $this->attributes['sending_date'] = !empty($input) ? Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
+    }
+
     public function stockable()
     {
         return $this->morphMany(StockLedger::class, 'stockable');

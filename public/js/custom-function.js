@@ -154,6 +154,7 @@ function jquaryUiAjax(triggerElement, route, callback, ...customQueryFields) {
                 return false;
             }
             callback(ui.item);
+            return false;
         },
     });
 }

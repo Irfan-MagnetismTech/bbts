@@ -21,7 +21,7 @@
 @endphp
 
 @section('breadcrumb-title')
-    {{ $form_heading }} Warranty Claim
+    {{ $form_heading }} Warranty Claim Receive
 @endsection
 
 @section('style')
@@ -62,101 +62,29 @@
         'class' => 'custom-form',
     ]) !!}
     <div class="row">
-        <div class="col-md-12">
-            <div class="
-                     mt-2 mb-4">
-                <div class="form-check-inline">
-                    <label class="form-check-label" for="client">
-                        <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                            value="client" @checked(@$type == 'client' || ($form_method == 'POST' && !old()))> Client
-                    </label>
-                </div>
-                <div class="form-check-inline">
-                    <label class="form-check-label" for="warehouse">
-                        <input type="radio" class="form-check-input radioButton" id="warehouse" name="type"
-                            value="warehouse" @checked(@$type == 'warehouse')>
-                        Warehouse
-                    </label>
-                </div>
-            </div>
+        <div class="form-group col-3 wcr_no">
+            <label for="wcr_no">Wcr No:</label>
+            <input type="text" class="form-control" id="wcr_no" aria-describedby="wcr_no" name="wcr_no"
+                value="{{ old('wcr_no') ?? (@$wcr_no ?? '') }}">
+             <input type="hidden" class="form-control" id="wcr_id" aria-describedby="wcr_id" name="wcr_id"
+                value="{{ old('wcr_id') ?? (@$wcr_id ?? '') }}">
         </div>
-    </div>
-    <div class="row">
-        <div class="form-group col-3 date">
-            <label for="date">Applied Date:</label>
-            <input class="form-control" id="date" name="date" aria-describedby="date"
-                value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
-        </div>
-        <div class="form-group col-3 supplier_name">
-            <label for="select2">Supplier Name</label>
-            <input class="form-control" id="supplier_name" name="supplier_name" aria-describedby="supplier_name"
-                value="{{ old('supplier_name') ?? (@$supplier_name ?? '') }}" placeholder="Search a Supplier Name" autocomplete="off">
-            <input class="form-control" id="supplier_id" name="supplier_id"
-                aria-describedby="supplier_id"
-                value="{{ old('supplier_id') ?? (@$supplier_id ?? '') }}" type="hidden">
-        </div>
-        <div class="form-group col-3 supplier_address">
-            <label for="select2">Supplier Address</label>
-            <input class="form-control" id="supplier_address" name="supplier_address" aria-describedby="supplier_address"
-                value="{{ old('supplier_address') ?? (@$supplier_address ?? '') }}" readonly placeholder="Search a Supplier Name">
-        </div>
-        <div class="form-group col-3 branch_name">
-            <label for="select2">From Branch</label>
-            <select class="form-control select2" id="branch_id" name="branch_id">
-                <option value="" selected>Select Branch</option>
-                @if ($form_method == 'PUT')
-                    {{-- <option value="{{ $branch_id }}" selected>
-                        {{ $branch_name }}
-                    </option> --}}
-                @endif
-            </select>
-        </div>
-        {{-- <div class="form-group col-3 equipment_type">
-            <label for="equipment_type">Type:</label>
-            <select class="form-control select2" id="equipment_type" name="equipment_type">
-                <option value="Service Equipment" @if ($equipment_type == 'Service Equipment') selected @endif>Service Equipment</option>
-                <option value="Link" @if ($equipment_type == 'Link') selected @endif>Link</option>
-            </select>
-
-        </div> --}}
-    </div>
-
-    <div class="row">
-        <div class="form-group col-3 client_name">
-            <label for="client_name">Client Name:</label>
-            <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
-                value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
-        </div>
-        <div class="form-group col-3 client_no">
-            <label for="client_no">Client No:</label>
-            <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
-
-        </div>
-
-
-        <div class="form-group col-3 client_address">
-            <label for="client_address">Client Address:</label>
-            <input type="text" class="form-control" id="client_address" name="client_address"
-                aria-describedby="client_address" readonly
-                value="{{ old('client_address') ?? (@$client_address ?? '') }}">
+        <div class="form-group col-3 send_date">
+            <label for="send_date">Send Date:</label>
+            <input type="text" class="form-control" id="send_date" aria-describedby="send_date" name="send_date"
+                readonly value="{{ old('send_date') ?? (@$send_date ?? '') }}">
         </div>
     </div>
 
     <table class="table table-bordered" id="challan">
         <thead>
             <tr>
-                <th>Received Type</th>
                 <th>Material Name</th>
                 <th>Model</th>
                 <th>Brand</th>
                 <th>Serial Code</th>
                 <th>Unit</th>
-                <th>Receiving Date</th>
-                <th>Warranty Period</th>
-                <th>Remaining Day</th>
-                <th>Challan No</th>
-                <th>Description</th>
+                <th>Remarks</th>
                 <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
             </tr>
         </thead>
@@ -305,32 +233,12 @@
                             <td class="select2_container">
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
-                            
-                            <td>
-                                <input name="receiving_date[]" class="form-control receiving_date" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input name="warranty_period[]" class="form-control warranty_period" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input class="form-control remaining_days" name="remaining_days[]" aria-describedby="available_quantity" readonly>
-                            </td>
-                            <td>
-                                <input name="challan_no[]" class="form-control challan_no" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input class="form-control description" name="description[]" aria-describedby="description">
-                            </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
                             </td>
                         </tr>
                     `;
             $('#challan tbody').append(row);
-            $('.select2').select2({});
-            $('.select2.serial_code').select2({
-                multiple: true,
-            });
         }
 
         /* Adds and removes quantity row on click */
@@ -342,101 +250,20 @@
                 $(this).closest('tr').remove();
             });
 
-        $(function() {
-            onChangeRadioButton();
-
-            $('.select2').select2({
-                maximumSelectionLength: 5,
-                scrollAfterSelect: true
-            });
-
-            //using form custom function js file
-            fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_name', 'get', null)
-
-            $(".radioButton").click(function() {
-                onChangeRadioButton()
-            });
-
-            
-            
-
-        });
         
-        @if($form_method=='PUT')
-
-        $(document).on('DOMNodeInserted', '#branch_id', function() {
-                let selectedValue = "{{$branch_id}}"
-                $('#branch_id').val(selectedValue)
-                });
-        @endif
-
-        function onChangeRadioButton() {
-            var radioValue = $("input[name='type']:checked").val();
-            if (radioValue == 'client') {
-                $('.pop_id').hide('slow');
-                $('.pop_name').hide('slow');
-                $('.pop_address').hide('slow');
-                $('.address').show('slow');
-                $('.client_name').show('slow');
-                $('.client_no').show('slow');
-                $('.client_address').show('slow');
-                $('.type').show('slow');
-                $('.link_no').show('slow');
-                $('.fr_no').show('slow');
-                $('.fr_id').show('slow');
-            } else if (radioValue == 'warehouse') {
-                $('.pop_id').show('slow');
-                $('.pop_name').show('slow');
-                $('.pop_address').show('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.client_no').hide('slow');
-                $('.client_address').hide('slow');
-                $('.type').hide('slow');
-                $('.link_no').hide('slow');
-                $('.fr_no').hide('slow');
-                $('.fr_id').hide('slow');
-            } 
-        }
+       
+      
+       
+        
 
        
-        $(document).on('keyup', "#supplier_name", function() {
-                $(this).autocomplete({
-                    source: function(request, response) {
-                        $.ajax({
-                            url: "{{ route('searchSupplier') }}",
-                            type: 'get',
-                            dataType: "json",
-                            data: {
-                                search: request.term
-                            },
-                            success: function(data) {
-                                response(data);
-                            }
-                        });
-                    },
-                    select: function(event, ui) {
-                        $('#supplier_name').val(ui.item.label);
-                        $('#supplier_id').val(ui.item.value);
-                        $('#supplier_address').val(ui.item.address);
-                        return false;
-                    }
-                });
-            });
-           
         
         $(document).on('keyup', '.material_name', function() {
             var event_this = $(this).closest('tr');
             let myObject = {
-                sl_no: $(this).val(),
-                supplier_id : $('#supplier_id').val(),
-                client_no  : $('#client_no').val(),
-                type : $("input[name='type']:checked").val(),
-                branch_id : $('#branch_id').find(':selected').val(),
-                type : event_this.find('.received_type').find(':selected').text(),
+                sl_no: null
             }
-            jquaryUiAjax(this, "{{ route('searchSerialForWcr') }}", uiList, myObject);
+            jquaryUiAjax(this, "{{ route('searchMaterialForWcrr') }}", uiList, myObject);
 
             function uiList(item) {
                 event_this.find('.material_name').val(item.value);
@@ -457,13 +284,55 @@
             }
         })
 
+        $('#wcr_no').on('keyup',function(){
+            var event_this = $(this).closest('tr');
+            let myObject = {
+                sl_no: null
+            }
+            jquaryUiAjax(this, "{{ route('searchWcrForWcrr') }}", uiList, myObject);
 
-        $("input[name='type']").on('change', function() {
-            $('#challan tbody').empty();
-            appendCalculationRow();
-        });        
+            function uiList(item) {
+                console.log(item);
+                $('#wcr_no').val(item.label);
+                $('#wcr_id').val(item.wcr_id);
+                $('#send_date').val(item.sending_date);
+                $('#wcr_id').trigger('change');
+                return false;
+            }
+        })
+
+        // $('#wcr_id').on('change',function(){
+        //     var event_this = $(this).closest('tr');
+        //     let myObject = {
+        //         wcr_id: $('#wcr_id').val();
+        //     }
+        //     jquaryUiAjax(this, "{{ route('searchMaterialForWcrr') }}", uiList, myObject);
+
+        //     function uiList(item) {
+        //         console.log(item);
+                
+        //         return false;
+        //     }
+        // })
+        $(document).on('change', '#wcr_id', function() {
+            let wcr_id = $('#wcr_id').val();
+
+            let url = "{{ route('searchMaterialForWcrr') }}";
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                dataType: "json",
+                data: {
+                    wcr_id,
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+
+        });
+      
        
     </script>
-
-<script src="{{ asset('js/search-client.js') }}"></script>
 @endsection

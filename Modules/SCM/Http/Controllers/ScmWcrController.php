@@ -171,6 +171,24 @@ class ScmWcrController extends Controller
         }
     }
 
+    public function sentToSupplier(ScmWcr $wcr)
+    {
+        try {
+            DB::beginTransaction();
+            $wcr->update([
+                'sent_by' => auth()->user()->id,
+                'sending_date' => request()->date,
+                'Status'    => 'sent'
+            ]);
+            DB::commit();
+            return redirect()->route('warranty-claims.index')->with('message', 'Product has been sent successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->route('warranty-claims.index')->withInput()->withErrors($err->getMessage());
+        }
+    }
+
+
     private function getLineData($req, $ke, $id)
     {
         return [
