@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
 use Modules\SCM\Entities\Cs;
 use Modules\Admin\Entities\Brand;
@@ -15,14 +16,17 @@ use Termwind\Components\Dd;
 
 class CsController extends Controller
 {
+    protected $csNo;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
-    function __construct()
+    function __construct(BbtsGlobalService $globalService)
     {
+        $this->csNo = $globalService->generateUniqueId(Cs::class, 'CS');
+
         // $this->middleware('permission:comparative-statement-view|comparative-statement-create|comparative-statement-edit|comparative-statement-delete', ['only' => ['index','show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
         // $this->middleware('permission:comparative-statement-create', ['only' => ['create','store']]);
         // $this->middleware('permission:comparative-statement-edit', ['only' => ['edit','update']]);
@@ -65,13 +69,16 @@ class CsController extends Controller
      */
     public function store(CsRequest $request)
     {
+        // dd($request->all());
         try {
             $all_details = $this->getAllDetails($request->toArray());
-
+            // dd($all_details);
             DB::beginTransaction();
 
+            $all_details['all_request']['cs_no'] = $this->csNo;
             $all_details['all_request']['created_by'] = auth()->id();
-            $cs = Cs    ::create($all_details['all_request']);
+
+            $cs = Cs::create($all_details['all_request']);
             $cs_materials = $cs->csMaterials()->createMany($all_details['cs_materials']);
             $cs_suppliers = $cs->csSuppliers()->createMany($all_details['cs_suppliers']);
             $cs->csMaterialsSuppliers()->createMany($this->getMaterialSuppliersDetails($cs_materials, $cs_suppliers, $request));

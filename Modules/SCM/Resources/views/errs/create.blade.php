@@ -157,7 +157,7 @@
         </div>
         <div class="form-group col-3 client_name">
             <label for="client_name">Client Name:</label>
-            <input type="text" class="form-control" id="client_name" onkeyup="clientWiseFr()"
+            <input type="text" class="form-control" id="client_name"
                 aria-describedby="client_name" name="client_name"
                 value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
         </div>

@@ -7,6 +7,7 @@ use Modules\SCM\Entities\Indent;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\BbtsGlobalService;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Http\Requests\IndentRequest;
 

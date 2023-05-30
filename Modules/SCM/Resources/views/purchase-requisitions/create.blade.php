@@ -1,6 +1,20 @@
 @extends('layouts.backend-layout')
 @section('title', 'Purchase Requisitions Slip')
 
+@php
+    $is_old = old('type') ? true : false;
+    $form_heading = !empty($purchaseRequisition) ? 'Update' : 'Add';
+    $form_url = !empty($purchaseRequisition) ? route('errs.update', $purchaseRequisition->id) : route('errs.store');
+    $form_method = !empty($purchaseRequisition) ? 'PUT' : 'POST';
+    
+    $client_id = old('client_id', !empty($purchaseRequisition) ? $purchaseRequisition->client_id : null);
+    $fr_no = old('fr_no', !empty($purchaseRequisition) ? $purchaseRequisition->fr_no : null);
+    $client_name = old('client_name', !empty($purchaseRequisition) ? $purchaseRequisition?->client?->client_name : null);
+    $client_no = old('client_no', !empty($purchaseRequisition) ? $purchaseRequisition?->client_no : null);
+    $client_link_no = old('client_link_no', !empty($purchaseRequisition) ? $purchaseRequisition?->link_no : null);
+    $client_address = old('client_address', !empty($purchaseRequisition) ? $purchaseRequisition?->client?->location : null);
+@endphp
+
 @section('breadcrumb-title')
     @if (!empty($purchaseRequisition))
         Edit
@@ -47,14 +61,14 @@
                         <div class="form-check-inline">
                             <label class="form-check-label" for="client">
                                 <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                    value="client" @checked(@$purchaseRequisition->type == 'client' || old('type') == 'client')> Client Purpose
+                                    value="client" @checked(@$purchaseRequisition->type == 'client' || old('type') == 'client') required> Client Purpose
                             </label>
                         </div>
 
                         <div class="form-check-inline">
                             <label class="form-check-label" for="internal">
                                 <input type="radio" class="form-check-input radioButton" id="internal" name="type"
-                                    @checked(@$purchaseRequisition->type == 'internal' || old('type') == 'internal') value="internal">
+                                    @checked(@$purchaseRequisition->type == 'internal' || old('type') == 'internal') value="internal" required>
                                 Internal Purpose
                             </label>
                         </div>
@@ -63,42 +77,13 @@
             </div>
 
             <div class="row">
-                <div class="form-group col-3 client_name">
-                    <label for="client_name">Client Name:</label>
-                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? (@$purchaseRequisition->client->name ?? '') }}"
-                        placeholder="Search...">
-                    <input type="hidden" name="client_id" id="client_id"
-                        value="{{ old('client_id') ?? @$purchaseRequisition?->client->id }}">
-                </div>
-                <div class="form-group col-3 client_links">
-                    <label for="select2">Client Links</label>
-                    <select class="form-control select2" id="client_links" name="client_links">
-                        <option value="" readonly selected>Select Client Link</option>
-                        @if (!empty($purchaseRequisition))
-                            @foreach ($clientInfos as $clientInfo)
-                                <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$purchaseRequisition->fr_composite_key)>
-                                    {{ $clientInfo->link_name }}</option>
-                            @endforeach
-                        @else
-                            <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
-                        @endif
+                <div class="form-group col-3">
+                    <label for="prs_type">PRS Type <span class="text-danger">*</span></label>
+                    <select class="form-control" name="prs_type" id="prs_type" required>
+                        <option value="" disabled selected>Select PRS Type</option>
+                        <option value="Purchase Order" @selected('Purchase Order' == @$purchaseRequisition->prs_type)>Purchase Order</option>
+                        <option value="Work Order" @selected('Work Order' == @$purchaseRequisition->prs_type)>Work Order</option>
                     </select>
-                </div>
-
-                <div class="form-group col-3 client_no">
-                    <label for="client_no">Client No:</label>
-                    <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                        readonly value="{{ old('client_no') ?? (@$purchaseRequisition->client->client_no ?? '') }}">
-
-                </div>
-
-                <div class="form-group col-3 fr_id">
-                    <label for="fr_id">FR ID:</label>
-                    <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                        value="{{ old('fr_id') ?? @$purchaseRequisition->clientDetailsWithCompositeKey->fr_id }}" readonly>
-                    <input type="hidden" name="fr_composite_key" id="fr_composite_key"
-                        value="{{ old('fr_composite_key') ?? @$purchaseRequisition->clientDetailsWithCompositeKey->fr_composite_key }}">
                 </div>
 
                 <div class="form-group col-3">
@@ -108,17 +93,63 @@
                         placeholder="Select a Date">
                 </div>
 
+                <div class="form-group col-3 client_name">
+                    <label for="client_name">Client Name:</label>
+                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                        name="client_name" value="{{ old('client_name') ?? ($client_name ?? '') }}" placeholder="Search...">
+                </div>
+
+                <div class="form-group col-3 fr_no">
+                    <label for="select2">FR No</label>
+                    <select class="form-control select2" id="fr_no" name="fr_no">
+                        <option value="" readonly selected>Select FR No</option>
+                        @if ($form_method == 'POST')
+                            <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
+                        @elseif($form_method == 'PUT')
+                            @forelse ($fr_nos as $key => $value)
+                                <option value="{{ $value->fr_no }}" @if ($fr_no == $value->fr_no) selected @endif>
+                                    {{ $value->fr_no }}
+                                </option>
+                            @empty
+                            @endforelse
+                        @endif
+                    </select>
+                </div>
+
+                <div class="form-group col-3 link_no">
+                    <label for="link_no">Link No:</label>
+                    <select class="form-control select2" id="link_no" name="link_no">
+                        <option value="" readonly selected>Select Link No</option>
+                        @if ($form_method == 'POST')
+                            <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
+                        @elseif($form_method == 'PUT')
+                            @forelse ($client_links as $key => $value)
+                                <option value="{{ $value->link_no }}" @if ($client_link_no == $value->link_no) selected @endif>
+                                    {{ $value->link_no }}
+                                </option>
+                            @empty
+                            @endforelse
+                        @endif
+                    </select>
+                </div>
+
+                <div class="form-group col-3 client_no">
+                    <label for="client_no">Client No:</label>
+                    <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
+                        readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
+                </div>
+
+                <div class="form-group col-3 client_address">
+                    <label for="client_address">Client Address:</label>
+                    <input type="text" class="form-control" id="client_address" name="client_address"
+                        aria-describedby="client_address" readonly
+                        value="{{ old('client_address') ?? (@$client_address ?? '') }}">
+                </div>
+
                 <div class="form-group col-3 assesment_no">
                     <label for="select2">Assesment No</label>
                     <select class="form-control select2" id="assesment_no" name="assesment_no">
                         <option value="" readonly selected>Select Assesment No</option>
-                        {{-- @if (!empty($purchaseRequisition))
-                            @foreach ($branchwisePops as $branchwisePop)
-                                <option value="{{ $branchwisePop->id }}" @selected($branchwisePop->id == @$purchaseRequisition->assesment_no)>
-                                    {{ $branchwisePop->name }}
-                                </option>
-                            @endforeach
-                        @endif --}}
                     </select>
                 </div>
             </div>
@@ -215,6 +246,7 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('js/search-client.js') }}"></script>
     <script>
         $(document).on('keyup', '.unit_price, .quantity', function() {
             var unit_price = $(this).closest('tr').find('.unit_price').val();
@@ -270,8 +302,7 @@
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
                             </td>
-                        </tr>
-                    `;
+                        </tr>`;
             $('#material_requisition tbody').append(row);
         }
 
@@ -283,58 +314,6 @@
             .on('click', '.remove-calculation-row', function() {
                 $(this).closest('tr').remove();
             });
-
-        //Search Client
-        var client_details = [];
-        @if (!empty($purchaseRequisition))
-            client_details = {!! collect($clientInfos) !!}
-        @endif
-        $(document).on('keyup focus', '#client_name', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-client') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $('#client_name').val(ui.item.label);
-                    $('#client_id').val(ui.item.value);
-                    $('#client_no').val(ui.item.client_no);
-
-                    $('#client_links').html('');
-                    var link_options = '<option value="">Select link</option>';
-
-                    ui.item.details.forEach(function(element) {
-                        link_options +=
-                            `<option value="${element.link_name}">${element.link_name}</option>`;
-                    });
-                    client_details = ui.item.details;
-                    $('#client_links').html(link_options);
-
-                    return false;
-                }
-            });
-        });
-
-        //Select FR key based on link name
-        $('#client_links').on('change', function() {
-            var link_name = $("input[name='gender']:checked").val();
-            var link_name = $(this).val();
-            var client_id = $('#client_id').val();
-            var client = client_details.find(function(element) {
-                return element.link_name == link_name;
-            });
-            $('#fr_id').val(client.fr_id);
-            $('#fr_composite_key').val(client.fr_composite_key);
-        });
 
         //Search Material
         $(document).on('keyup focus', '.material_name', function() {
@@ -360,17 +339,16 @@
                     return false;
                 }
             });
-
         });
 
         $(function() {
             onChangeRadioButton();
-
             $('.select2').select2();
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            associativeDropdown("{{ route('searchPopByBranchId') }}", 'search', '#branch_id', '#pop_id', 'get', null)
+            associativeDropdown("{{ route('searchPopByBranchId') }}", 'search', '#branch_id', '#pop_id', 'get',
+                null)
 
             $(".radioButton").click(function() {
                 onChangeRadioButton()
@@ -386,6 +364,9 @@
                 $('.client_no').show('slow');
                 $('.client_links').show('slow');
                 $('.assesment_no').show('slow');
+                $('.fr_no').show('slow');
+                $('.link_no').show('slow');
+                $('.client_address').show('slow');
             } else if (radioValue == 'internal') {
                 $('.pop_id').hide('slow');
                 $('.fr_id').hide('slow');
@@ -393,6 +374,9 @@
                 $('.client_no').hide('slow');
                 $('.client_links').hide('slow');
                 $('.assesment_no').hide('slow');
+                $('.fr_no').hide('slow');
+                $('.link_no').hide('slow');
+                $('.client_address').hide('slow');
             }
         }
     </script>
