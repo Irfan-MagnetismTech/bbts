@@ -1,4 +1,4 @@
-0.@extends('layouts.backend-layout')
+@extends('layouts.backend-layout')
 @section('title', 'Warranty Claim')
 @php
     $is_old = old('type') ? true : false;
@@ -261,7 +261,7 @@
             autoclose: true,
             todayHighlight: true,
             showOtherMonths: true
-        }).datepicker("setDate", new Date());;
+        }).datepicker("setDate", new Date());
         
         /* Append row */
         $(document).ready(function() {

@@ -1,22 +1,17 @@
-0.@extends('layouts.backend-layout')
-@section('title', 'Warranty Claim')
+@extends('layouts.backend-layout')
+@section('title', 'Warranty Claim Receive')
 @php
     $is_old = old('type') ? true : false;
-    $form_heading = !empty($warranty_claim) ? 'Update' : 'Add';
-    $form_url = !empty($warranty_claim) ? route('warranty-claims.update', $warranty_claim->id) : route('warranty-claims.store');
-    $form_method = !empty($warranty_claim) ? 'PUT' : 'POST';
+    $form_heading = !empty($warranty_claims_receife) ? 'Update' : 'Add';
+    $form_url = !empty($warranty_claims_receife) ? route('warranty-claims-receives.update', $warranty_claims_receife->id) : route('warranty-claims-receives.store');
+    $form_method = !empty($warranty_claims_receife) ? 'PUT' : 'POST';
     
-    $date = old('date', !empty($warranty_claim) ? $warranty_claim->date : null);
-    $type = old('type', !empty($warranty_claim) ? $warranty_claim->type : null);
-    $wcr_no = old('wcr_no', !empty($warranty_claim) ? $warranty_claim->wcr_no : null);
-    $supplier_id = old('supplier_id', !empty($warranty_claim) ? $warranty_claim->supplier_id : null);
-    $supplier_name = old('supplier_name', !empty($warranty_claim) ? $warranty_claim->supplier->name : null);
-    $supplier_address = old('supplier_address', !empty($warranty_claim) ? $warranty_claim->supplier->address : null);
-    $branch_id = old('branch_id', !empty($warranty_claim) ? $warranty_claim->branch_id : null);
-    $branch_name = old('branch_id', !empty($warranty_claim) ? $warranty_claim?->branch?->name : null);
-    $client_name = old('client_name', !empty($warranty_claim) ? $warranty_claim?->client?->client_name : null);
-    $client_no = old('client_no', !empty($warranty_claim) ? $warranty_claim?->client?->client_no : null);
-    $client_address = old('client_address', !empty($warranty_claim) ? $warranty_claim?->client?->location : null);
+    $date = old('date', !empty($warranty_claims_receife) ? $warranty_claims_receife->date : null);
+    $wcr_no = old('wcr_no', !empty($warranty_claims_receife) ? $warranty_claims_receife->wcr->wcr_no : null);
+    $wcr_id = old('wcr_id', !empty($warranty_claims_receife) ? $warranty_claims_receife->wcr_id : null);
+    $send_date = old('send_date', !empty($warranty_claims_receife) ? $warranty_claims_receife->wcr->sending_date : null);
+    $branch_id = old('branch_id', !empty($warranty_claims_receife) ? $warranty_claims_receife->branch_id : null);
+    $branch_name = old('branch_id', !empty($warranty_claims_receife) ? $warranty_claims_receife?->branch?->name : null);
     
 @endphp
 
@@ -47,7 +42,7 @@
        <link rel="stylesheet" type="text/css" href="{{ asset('/css/style.css') }}">
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('warranty-claims.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('warranty-claims-receives.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -64,13 +59,18 @@
         'class' => 'custom-form',
     ]) !!}
     <div class="row">
+        <div class="form-group col-3 date">
+            <label for="date">Date:</label>
+            <input type="text" class="form-control" id="date" aria-describedby="date" name="date"
+                readonly value="{{ old('date') ?? (@$date ?? '') }}">
+        </div>
         <div class="form-group col-3 wcr_no">
             <label for="wcr_no">Wcr No:</label>
             <input type="text" class="form-control" id="wcr_no" aria-describedby="wcr_no" name="wcr_no"
                 value="{{ old('wcr_no') ?? (@$wcr_no ?? '') }}">
              <input type="hidden" class="form-control" id="wcr_id" aria-describedby="wcr_id" name="wcr_id"
                 value="{{ old('wcr_id') ?? (@$wcr_id ?? '') }}">
-                <input type="checkbox" class="js-primary" checked />
+                
         </div>
         <div class="form-group col-3 send_date">
             <label for="send_date">Send Date:</label>
@@ -81,11 +81,6 @@
             <label for="select2">Branch</label>
             <select class="form-control select2" id="branch_id" name="branch_id">
                 <option value="" selected>Select Branch</option>
-                @if ($form_method == 'PUT')
-                    {{-- <option value="{{ $branch_id }}" selected>
-                        {{ $branch_name }}
-                    </option> --}}
-                @endif
             </select>
         </div>
     </div>
@@ -103,76 +98,40 @@
         </thead>
         <tbody>
             @php
-                $material_id = old('material_id', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material_id') : []);
-                $material_name = old('material_name', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material.name') : []);
-                $received_type = old('received_type', !empty($warranty_claim) ? $warranty_claim->lines->pluck('received_type') : []);
-                $receiveable_id = old('receiveable_id', !empty($warranty_claim) ? $warranty_claim->lines->pluck('receiveable_id') : []);
-                $item_code = old('item_code', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material.code') : []);
-                $material_type = old('material_type', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material.type') : []);
-                $serial_code = old('serial_code', !empty($warranty_claim) ? $warranty_claim->lines->pluck('serial_code') : []);
-                $brand_id = old('brand_id', !empty($warranty_claim) ? $warranty_claim->lines->pluck('brand_id') : []);
-                $brand_name = old('brand_name', !empty($warranty_claim) ? $warranty_claim->lines->pluck('brand.name') : []);
-                $model = old('model', !empty($warranty_claim) ? $warranty_claim->lines->pluck('model') : []);
-                $challan_no = old('challan_no', !empty($warranty_claim) ? $warranty_claim->lines->pluck('challan_no') : []);
-                $receiving_date = old('receiving_date', !empty($warranty_claim) ? $warranty_claim->lines->pluck('receiving_date') : []);
-                $warranty_period = old('warranty_period', !empty($warranty_claim) ? $warranty_claim->lines->pluck('warranty_period') : []);
-                $remaining_days = old('remaining_days', !empty($warranty_claim) ? $warranty_claim->lines->pluck('remaining_days') : []);
-                $serial_code = old('serial_code', !empty($warranty_claim) ? json_decode($warranty_claim->lines->pluck('serial_code')) : []);
-                $unit = old('unit', !empty($warranty_claim) ? $warranty_claim->lines->pluck('material.unit') : []);
-                $description = old('warranty_period', !empty($warranty_claim) ? $warranty_claim->lines->pluck('description') : []);
+                $material_id = old('material_id', !empty($warranty_claims_receife) ? $warranty_claims_receife->lines->pluck('material_id') : []);
+                $material_name = old('material_name', !empty($warranty_claims_receife) ? $warranty_claims_receife->lines->pluck('material.name') : []);
+                $item_code = old('item_code', !empty($warranty_claims_receife) ? $warranty_claims_receife->lines->pluck('material.code') : []);
+                $material_type = old('material_type', !empty($warranty_claims_receife) ? $warranty_claims_receife->lines->pluck('material.type') : []);
+                $serial_code = old('serial_code', !empty($warranty_claims_receife) ? $warranty_claims_receife->lines->pluck('serial_code') : []);
+                $brand_id = old('brand_id', !empty($warranty_claims_receife) ? $warranty_claims_receife->lines->pluck('brand_id') : []);
+                $brand_name = old('brand_name', !empty($warranty_claims_receife) ? $warranty_claims_receife->lines->pluck('brand.name') : []);
+                $model = old('model', !empty($warranty_claims_receife) ? $warranty_claims_receife->lines->pluck('model') : []);
+                $unit = old('unit', !empty($warranty_claims_receife) ? $warranty_claims_receife->lines->pluck('material.unit') : []);
                 
             @endphp
             @foreach ($material_id  as $key => $wcr_Line)
                 <tr>
                     <td>
-                        <select name="received_type[]" class="form-control received_type" autocomplete="off">
-                            <option value="" disabled>Select Out From</option>
-                            @if(in_array($type, ['MRR', 'WCR'])) 
-                            <option value="mrr" @selected($type == 'MRR')>{{ strToUpper('mrr') }}</option>
-                            <option value="wcr" @selected($type == 'WCR')>{{ strToUpper('wcr') }}</option>
-                            @else
-                            <option value="err" @selected($type == 'ERR')>{{ strToUpper('err') }}</option>
-                            @endif 
-                        </select>
+                        <input type="checkbox" class="js-primary" checked name="status[{{$key}}]" value="1"/>
                     </td>
                     <td>
-                        <input type="text" name="material_name[]" class="form-control material_name" autocomplete="off" value="{{$material_name[$key]}}">
-                        <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off" value="{{$material_id[$key]}}">
-                        <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="{{$item_code[$key]}}"> 
-                        <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off" value="{{$material_type[$key]}}"> 
-                        <input type="hidden" name="receiveable_id[]" class="form-control receiveable_id" autocomplete="off" value="{{$receiveable_id[$key]}}"> 
+                        <input type="text" name="material_name[{{$key}}]" class="form-control material_name" autocomplete="off" value="{{$material_name[$key]}}">
+                                <input type="hidden" name="material_id[{{$key}}]" class="form-control material_id" autocomplete="off" value="{{$material_id[$key]}}">
+                                <input type="hidden" name="item_code[{{$key}}]" class="form-control item_code" autocomplete="off" value="{{$item_code[$key]}}"> 
+                                <input type="hidden" name="material_type[{{$key}}]" class="form-control material_type" autocomplete="off" value="{{$material_type[$key]}}"> 
                     </td>
                     <td class="form-group">
-                        <input type="text" name="brand_name[]" class="form-control brand_name" autocomplete="off" readonly value="{{$brand_name[$key]}}">
-                        <input type="hidden" name="brand_id[]" class="form-control brand_id" autocomplete="off" value="{{$brand_id[$key]}}">
+                        <input type="text" name="brand_name[{{$key}}]" class="form-control brand_name" autocomplete="off" readonly value="{{$brand_name[$key]}}">
+                        <input type="hidden" name="brand_id[{{$key}}]" class="form-control brand_id" autocomplete="off" value="{{$brand_id[$key]}}">
                     </td>                            
                     <td>
-                        <input type="text" name="model[]" class="form-control model" autocomplete="off" readonly value="{{$model[$key]}}">
+                        <input type="text" name="model[{{$key}}]" class="form-control model" autocomplete="off" readonly value="{{$model[$key]}}">
                     </td>
                     <td>
-                        <input type="text" name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly value="{{$serial_code[$key]}}">
+                        <input type="text" name="serial_code[{{$key}}]" class="form-control serial_code" autocomplete="off" readonly value="{{$serial_code[$key]}}">
                     </td>
-                    <td class="select2_container">
-                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly value="{{$unit[$key]}}">
-                    </td>
-                    
-                    <td>
-                        <input name="receiving_date[]" class="form-control receiving_date" autocomplete="off" readonly value="{{$receiving_date[$key]}}">
-                    </td>
-                    <td>
-                        <input name="warranty_period[]" class="form-control warranty_period" autocomplete="off" readonly value="{{$warranty_period[$key]}}">
-                    </td>
-                    <td>
-                        <input class="form-control remaining_days" name="remaining_days[]" aria-describedby="remaining_days" readonly value="{{$remaining_days[$key]}}">
-                    </td>
-                    <td>
-                        <input name="challan_no[]" class="form-control challan_no" autocomplete="off" readonly value="{{$challan_no[$key]}}">
-                    </td>
-                    <td>
-                        <input class="form-control description" name="description[]" aria-describedby="description" value="{{$description[$key]}}">
-                    </td>
-                    <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
+                    <td class="">
+                        <input type="text" name="unit[{{$key}}]" class="form-control unit" autocomplete="off" readonly value="{{$unit[$key]}}">
                     </td>
                 </tr>
             @endforeach
@@ -195,9 +154,7 @@
 @endsection
 
 @section('script')
-<script  src="{{ asset('/js/switchery.min.js')}}"></script>
-<script  src="{{ asset('/js/swithces.js')}}"></script>
-<script  src="{{ asset('/js/script.js') }}"></script>
+<script src="{{ asset('/js/switchery.min.js')}}"></script>
     <script>
         const CSRF_TOKEN = "{{ csrf_token() }}";
         $('#date').datepicker({
@@ -207,38 +164,51 @@
             showOtherMonths: true
         }).datepicker("setDate", new Date());;
         
-      
-        
+      function switchInitialization(){
+                var elemsPrimary = document.querySelectorAll('.js-primary');
+                elemsPrimary.forEach(function(elem) {
+                    new Switchery(elem, { color: '#4099ff', jackColor: '#fff', size: 'small' });
+                });
+            }
+        var indx = 1;
+        @if($form_method=='PUT')
+
+        indx = {{count($warranty_claims_receife->lines) + 1}}
+
+        @endif
+
         function addRow(val) {
             let row = `<tr>
                          <td>
-                            <input type="checkbox" class="js-primary" checked />
+                            <input type="checkbox" class="js-primary" name="status[${indx}]" value="1"/>
                         </td>
                             <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" autocomplete="off" value="${val.material_name}">
-                                <input type="hidden" name="material_id[]" class="form-control material_id" autocomplete="off" value="${val.material_id}">
-                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off" value="${val.item_code}"> 
-                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off" value="${val.item_type}"> 
+                                <input type="text" name="material_name[${indx}]" class="form-control material_name" autocomplete="off" value="${val.material_name}">
+                                <input type="hidden" name="material_id[${indx}]" class="form-control material_id" autocomplete="off" value="${val.material_id}">
+                                <input type="hidden" name="item_code[${indx}]" class="form-control item_code" autocomplete="off" value="${val.item_code}"> 
+                                <input type="hidden" name="material_type[${indx}]" class="form-control material_type" autocomplete="off" value="${val.item_type}"> 
                             </td>
                             <td class="form-group">
-                                <input type="text" name="brand_name[]" class="form-control brand_name" autocomplete="off" readonly value="${val.brand_name}">
-                                <input type="hidden" name="brand_id[]" class="form-control brand_id" autocomplete="off" value="${val.brand_id}">
+                                <input type="text" name="brand_name[${indx}]" class="form-control brand_name" autocomplete="off" readonly value="${val.brand_name}">
+                                <input type="hidden" name="brand_id[${indx}]" class="form-control brand_id" autocomplete="off" value="${val.brand_id}">
                             </td>                            
                             <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off" readonly value="${val.model}">
+                                <input type="text" name="model[${indx}]" class="form-control model" autocomplete="off" readonly value="${val.model}">
                             </td>
                             <td>
-                                <input type="text" name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly value="${val.serial_code}">
+                                <input type="text" name="serial_code[${indx}]" class="form-control serial_code" autocomplete="off" readonly value="${val.serial_code}">
                             </td>
                             <td class="">
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly value="${val.unit}">
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
+                                <input type="text" name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly value="${val.unit}">
                             </td>
                         </tr>
                     `;
+            
             $('#challan tbody').append(row);
+            var lastRow = $('#challan tbody tr:last');
+                var elemPrimary = lastRow.find('.js-primary')[0];
+                new Switchery(elemPrimary, { color: '#4099ff', jackColor: '#fff', size: 'small' });
+                indx++
         }
 
         /* Adds and removes quantity row on click */
@@ -300,19 +270,10 @@
                 return false;
             }
         })
+        $(document).ready(function(){
+                switchInitialization();
+            })
 
-        // $('#wcr_id').on('change',function(){
-        //     var event_this = $(this).closest('tr');
-        //     let myObject = {
-        //         wcr_id: $('#wcr_id').val();
-        //     }
-        //     jquaryUiAjax(this, "{{ route('searchMaterialForWcrr') }}", uiList, myObject);
-
-        //     function uiList(item) {
-        //         console.log(item);
-                
-        //         return false;
-        //     }
         // })
         $(document).on('change', '#wcr_id', function() {
             let wcr_id = $('#wcr_id').val();
@@ -327,7 +288,6 @@
                     wcr_id,
                 },
                 success: function(data) {
-                    console.log(data);
                     $.each(data, function(key, value) {
                         addRow(value)
                     });
@@ -340,14 +300,20 @@
 
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
+            @if($form_method=='PUT')
+
+                $(document).on('DOMNodeInserted', '#branch_id', function() {
+                    let selectedValue = "{{$branch_id}}"
+                    $('#branch_id').val(selectedValue);
+                    });
+                    $('#wcr_id').trigger('change');
+
+            @endif
 
         });
-        @if($form_method=='PUT')
+       
 
-            $(document).on('DOMNodeInserted', '#branch_id', function() {
-                    let selectedValue = "{{$branch_id}}"
-                    $('#branch_id').val(selectedValue)
-                    });
-        @endif
+        
+           
     </script>
 @endsection

@@ -15,7 +15,14 @@ return new class extends Migration
     {
         Schema::create('scm_wcrr_lines', function (Blueprint $table) {
             $table->id();
-
+            $table->foreignId('scm_wcrr_id')->constrained('scm_wcrrs', 'id')->cascadeOnDelete();
+            $table->unsignedBigInteger('material_id');
+            $table->string('item_code')->nullable();
+            $table->string('material_type')->nullable();
+            $table->string('serial_code')->nullable();
+            $table->unsignedBigInteger('brand_id');
+            $table->string('model')->nullable();
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
