@@ -10,7 +10,7 @@ use App\Models\Dataencoding\Designation;
 
 class DesignationController extends Controller
 {
-    // use HasRoles;
+    use HasRoles;
     // function __construct()
     // {
     //     $this->middleware('permission:designation-view|designation-create|designation-edit|designation-delete', ['only' => ['index','show']]);
