@@ -48,9 +48,9 @@ class DesignationController extends Controller
         try{
             $data = $request->all();
             Designation::create($data);
-            return redirect()->route('designations.create')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('dataencoding.designations.create')->with('message', 'Data has been inserted successfully');
         }catch(QueryException $e){
-            return redirect()->route('designations.create')->withInput()->withErrors($e->getMessage());
+            return redirect()->route('dataencoding.designations.create')->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -90,9 +90,9 @@ class DesignationController extends Controller
         try{
             $data = $request->all();
             $designation->update($data);
-            return redirect()->route('designations.create')->with('message', 'Data has been updated successfully');
+            return redirect()->route('dataencoding.designations.create')->with('message', 'Data has been updated successfully');
         }catch(QueryException $e){
-            return redirect()->route('designations.create')->withInput()->withErrors($e->getMessage());
+            return redirect()->route('dataencoding.designations.create')->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -109,9 +109,9 @@ class DesignationController extends Controller
                 return back()->withErrors(["There are some Employees who belongs this Designation. Please remove them first."]);
             }
             $designation->delete();
-            return redirect()->route('designations.create')->with('message', 'Data has been deleted successfully');
+            return redirect()->route('dataencoding.designations.create')->with('message', 'Data has been deleted successfully');
         }catch(QueryException $e){
-            return redirect()->route('designations.create')->withErrors($e->getMessage());
+            return redirect()->route('dataencoding.designations.create')->withErrors($e->getMessage());
         }
     }
 }
