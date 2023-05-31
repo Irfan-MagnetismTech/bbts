@@ -134,7 +134,7 @@ class ScmMrrController extends Controller
             }
             $materialReceive->stockable()->createMany($stock);
             // FiberTracking::insert($CablePeace);
-            
+
             DB::commit();
             return redirect()->route('material-receives.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
@@ -283,12 +283,12 @@ class ScmMrrController extends Controller
         }
     }
 
-    public function searchPoWithDate(Request $request)
+    public function searchPoWithDate()
     {
-        $search = $request->search;
         $items = PurchaseOrder::query()
             ->with('purchaseOrderLines')
-            ->where("po_no", "like", "%$search%")
+            ->where("po_no", "like", "%" . request('search') . "%")
+            ->where('po_type', request('po_type'))
             ->get()
             ->map(fn ($item) => [
                 'value'          => $item->id,
