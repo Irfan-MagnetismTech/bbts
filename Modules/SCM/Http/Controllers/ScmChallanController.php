@@ -24,6 +24,7 @@ use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmRequisitionDetail;
+use Spatie\Permission\Traits\HasRoles;
 
 class ScmChallanController extends Controller
 {
@@ -31,6 +32,10 @@ class ScmChallanController extends Controller
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->ChallanNo = $globalService->generateUniqueId(ScmChallan::class, 'Challan');
+        $this->middleware('permission:scm-challan-view|scm-challan-create|scm-challan-edit|scm-challan-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-challan-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-challan-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-challan-delete', ['only' => ['destroy']]);
     }
 
     /**

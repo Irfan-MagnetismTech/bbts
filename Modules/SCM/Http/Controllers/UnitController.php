@@ -14,10 +14,10 @@ class UnitController extends Controller
     use HasRoles;
     function __construct()
     {
-        // $this->middleware('permission:unit-view|unit-create|unit-edit|unit-delete', ['only' => ['index','show']]);
-        // $this->middleware('permission:unit-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:unit-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:unit-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:unit-view|unit-create|unit-edit|unit-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:unit-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:unit-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:unit-delete', ['only' => ['destroy']]);
     }
     public function index()
     {
@@ -43,14 +43,14 @@ class UnitController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */ 
+     */
     public function store(UnitRequest $request)
     {
-        try{
+        try {
             $data = $request->all();
             Unit::create($data);
             return redirect()->route('units.create')->with('message', 'Data has been inserted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('units.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -88,11 +88,11 @@ class UnitController extends Controller
      */
     public function update(UnitRequest $request, Unit $unit)
     {
-        try{
+        try {
             $data = $request->all();
             $unit->update($data);
             return redirect()->route('units.create')->with('message', 'Data has been updated successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('units.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -105,10 +105,10 @@ class UnitController extends Controller
      */
     public function destroy(Unit $unit)
     {
-        try{
+        try {
             $unit->delete();
             return redirect()->route('units.create')->with('message', 'Data has been deleted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('units.create')->withErrors($e->getMessage());
         }
     }

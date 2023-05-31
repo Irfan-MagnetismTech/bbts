@@ -71,7 +71,7 @@
             </li>
         </ul>
     </li>
-
+    @can('scm-comparative-statement-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['cs.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i></span>
@@ -91,7 +91,8 @@
             </li>
         </ul>
     </li>
-
+    @endcan
+    @can('scm-indent-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['indents.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -111,7 +112,8 @@
             </li>
         </ul>
     </li>
-
+    @endcan
+    @can('scm-purchase-order-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['purchase-orders.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -131,6 +133,7 @@
             </li>
         </ul>
     </li>
+    @endcan
     <li class="pcoded-hasmenu {{ request()->routeIs(['material-receives.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -150,6 +153,7 @@
             </li>
         </ul>
     </li>
+    @can('scm-mir-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['material-issues.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -169,6 +173,8 @@
             </li>
         </ul>
     </li>
+    @endcan
+    @can('scm-challan-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['challans.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -188,6 +194,8 @@
             </li>
         </ul>
     </li>
+    @endcan
+    @can('scm-gate-pass-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['gate-passes.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -207,6 +215,8 @@
             </li>
         </ul>
     </li>
+    @endcan
+    @can('scm-mur-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['material-utilizations.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -222,7 +232,8 @@
             </li>
         </ul>
     </li>
-
+    @endcan
+    @can('scm-err-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['errs.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -232,7 +243,8 @@
         <ul class="pcoded-submenu">
             <li class="{{ request()->routeIs('errs.create') ? 'active' : null }}">
                 <a href="{{ route('errs.create') }}"> <span class="pcoded-micon"><i
-                            class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
+                           
+                    lass="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
             <li class="{{ request()->routeIs('errs.index') ? 'active' : null }}">
@@ -242,6 +254,8 @@
             </li>
         </ul>
     </li>
+    @endcan
+    @can('scm-wcr-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['warranty-claims.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -261,6 +275,8 @@
             </li>
         </ul>
     </li>
+    @endcan
+    @can('scm-wcrr-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['warranty-claims-receives.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -280,6 +296,7 @@
             </li>
         </ul>
     </li>
+    @endcan
     <li class="pcoded-hasmenu {{ request()->routeIs(['work-orders.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>

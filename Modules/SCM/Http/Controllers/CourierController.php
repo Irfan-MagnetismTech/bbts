@@ -14,10 +14,10 @@ class CourierController extends Controller
     use HasRoles;
     function __construct()
     {
-        // $this->middleware('permission:courier-view|courier-create|courier-edit|courier-delete', ['only' => ['index','show']]);
-        // $this->middleware('permission:courier-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:courier-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:courier-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:courier-view|courier-create|courier-edit|courier-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:courier-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:courier-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:courier-delete', ['only' => ['destroy']]);
     }
     public function index()
     {
@@ -49,7 +49,6 @@ class CourierController extends Controller
         try {
             $data = $request->all();
             Courier::create($data);
-            
             return redirect()->route('couriers.create')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
             return redirect()->route('couriers.create')->withInput()->withErrors($e->getMessage());

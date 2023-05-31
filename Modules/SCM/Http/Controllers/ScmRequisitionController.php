@@ -21,10 +21,10 @@ class ScmRequisitionController extends Controller
     use HasRoles;
     function __construct()
     {
-        // $this->middleware('permission:requisition-view|requisition-create|requisition-edit|requisition-delete', ['only' => ['index','show']]);
-        // $this->middleware('permission:requisition-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:requisition-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:requisition-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-requisition-view|scm-requisition-create|scm-requisition-edit|scm-requisition-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-requisition-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-requisition-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-requisition-delete', ['only' => ['destroy']]);
     }
     public function index()
     {

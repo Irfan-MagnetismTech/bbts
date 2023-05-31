@@ -21,6 +21,10 @@ class ScmWcrrController extends Controller
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->wcrrNo = $globalService->generateUniqueId(ScmWcrr::class, 'WCRR');
+        $this->middleware('permission:scm-wcrr-view|scm-wcrr-create|scm-wcrr-edit|scm-wcrr-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-wcrr-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-wcrr-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-wcrr-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.

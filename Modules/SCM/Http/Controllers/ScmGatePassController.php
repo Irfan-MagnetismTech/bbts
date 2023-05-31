@@ -11,6 +11,7 @@ use Modules\SCM\Entities\ScmChallan;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmGatePass;
+use Spatie\Permission\Traits\HasRoles;
 
 class ScmGatePassController extends Controller
 {
@@ -18,6 +19,10 @@ class ScmGatePassController extends Controller
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->GatePassNo = $globalService->generateUniqueId(ScmGatePass::class, 'GatePass');
+        $this->middleware('permission:scm-gate-pass-view|scm-gate-pass-create|scm-gate-pass-edit|scm-gate-pass-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-gate-pass-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-gate-pass-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-gate-pass-delete', ['only' => ['destroy']]);
     }
 
     /**
