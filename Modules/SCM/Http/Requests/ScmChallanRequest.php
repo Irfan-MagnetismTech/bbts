@@ -14,7 +14,16 @@ class ScmChallanRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'date'               => 'required',
+            'scm_requisition_id' => 'required',
+            'purpose'            => 'required',
+            'branch_id'          => 'required',
+            'type'               => 'required',
+            'equipment_type'     => 'required',
+            'pop_id'             => 'required_if:type,pop',
+            'client_no'          => 'required_if:type,client',
+            'fr_no'              => 'required_if:type,client',
+            'link_no'            => 'required_if:type,client,equipment_type,Link',
         ];
     }
 
@@ -25,9 +34,7 @@ class ScmChallanRequest extends FormRequest
      */
     public function messages()
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     /**

@@ -18,13 +18,14 @@ use Modules\SCM\Entities\ScmChallan;
 use Modules\SCM\Entities\ScmMrrLine;
 use Modules\SCM\Entities\StockLedger;
 use Modules\Sales\Entities\SaleDetail;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmRequisitionDetail;
-use Spatie\Permission\Traits\HasRoles;
+use Modules\SCM\Http\Requests\ScmChallanRequest;
 
 class ScmChallanController extends Controller
 {
@@ -65,9 +66,10 @@ class ScmChallanController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(ScmChallanRequest $request)
     {
         try {
+            dd(request()->all());
             DB::beginTransaction();
             $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_no', 'pop_id', 'fr_composite_key', 'link_no', 'fr_no', 'equipment_type');
             $challan_data['challan_no'] =  $this->ChallanNo;
@@ -187,7 +189,7 @@ class ScmChallanController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, ScmChallan $challan)
+    public function update(ScmChallanRequest $request, ScmChallan $challan)
     {
         try {
             DB::beginTransaction();

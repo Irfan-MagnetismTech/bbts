@@ -397,7 +397,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-prs-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+             [
                 'name' => 'scm-requisition-view',
                 'guard_name' => 'web',
             ],
@@ -412,7 +413,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-requisition-delete',
                 'guard_name' => 'web',
-            ], [
+            ], 
+            [
                 'name' => 'scm-wcr-view',
                 'guard_name' => 'web',
             ],
@@ -427,7 +429,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-wcr-delete',
                 'guard_name' => 'web',
-            ], [
+            ], 
+            [
                 'name' => 'scm-wcrr-view',
                 'guard_name' => 'web',
             ],
@@ -442,7 +445,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-wcrr-delete',
                 'guard_name' => 'web',
-            ], [
+            ], 
+            [
                 'name' => 'supplier-view',
                 'guard_name' => 'web',
             ],
@@ -457,7 +461,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'supplier-delete',
                 'guard_name' => 'web',
-            ], [
+            ], 
+            [
                 'name' => 'unit-view',
                 'guard_name' => 'web',
             ],
