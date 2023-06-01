@@ -473,6 +473,22 @@ class PermissionSeeder extends Seeder
                 'name' => 'unit-delete',
                 'guard_name' => 'web',
             ],
+            [
+                'name' => 'scm-mrr-view',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'scm-mrr-create',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'scm-mrr-edit',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'scm-mrr-delete',
+                'guard_name' => 'web',
+            ],
 
 
         ];

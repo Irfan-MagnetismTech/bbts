@@ -80,7 +80,16 @@ class MrrRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'branch_id' => 'required',
+            'date' => 'required',
+            'purchase_order_id' => 'required',
+            'supplier_id' => 'required',
+            'total_amount' => 'required',
+            'material_id.*' => 'required',
+            'brand_id.*' => 'required',
+            'model.*' => 'required',
+            'quantity.*' => 'required',
+            'amount.*' => 'required'
         ];
     }
 
@@ -92,7 +101,10 @@ class MrrRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'branch_id.required' => 'Brand is Required',
+            'purchase_order_id.required' => 'Po No is Required',
+            'supplier_id.required' => 'Supplier is Required',
+            'material_id.*.required' => 'Material is required'
         ];
     }
 
@@ -105,13 +117,5 @@ class MrrRequest extends FormRequest
     {
         return true;
     }
-
-    // public function old($key = null, $default = null)
-    // {
-    //     $oldInput = array_merge(parent::old(),['irfans_try' => 'asi re vai asi']);
-
-    //     Session::flashInput($oldInput);
-    //     return array_merge(parent::old(),['irfans_try' => 'asi re vai asi']);
-    // }
 
 }

@@ -31,7 +31,7 @@
             </li>
         </ul>
     </li>
-
+    @can('scm-requisition-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['requisitions.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -51,7 +51,8 @@
             </li>
         </ul>
     </li>
-
+    @endcan
+    @can('scm-prs-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['purchase-requisitions.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -71,6 +72,7 @@
             </li>
         </ul>
     </li>
+    @endcan
     @can('scm-comparative-statement-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['cs.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
@@ -134,6 +136,7 @@
             </ul>
         </li>
     @endcan
+    @can('scm-mrr-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['material-receives.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -153,6 +156,7 @@
             </li>
         </ul>
     </li>
+    @endcan
     @can('scm-mir-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['material-issues.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">

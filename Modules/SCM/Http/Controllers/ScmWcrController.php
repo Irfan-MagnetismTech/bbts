@@ -61,25 +61,6 @@ class ScmWcrController extends Controller
     public function store(Request $request)
     {
         try {
-
-            // $tableName = (new ScmWcr())->getTable();
-            // $autoIncrementValue = Schema::getConnection()
-            //     ->getDoctrineSchemaManager()
-            //     ->listTableDetails($tableName)
-            //     ->getAutoincrement();
-            // return $autoIncrementValue;
-            // $query = "SELECT `AUTO_INCREMENT`
-            //   FROM  INFORMATION_SCHEMA.TABLES
-            //   WHERE TABLE_SCHEMA = DATABASE()
-            //   AND   TABLE_NAME   = '{$tableName}'";
-
-            // $result = DB::select(DB::raw($query));
-
-            // $autoIncrementValue = $result[0]->AUTO_INCREMENT;
-
-            // return $autoIncrementValue;
-            // dd(ScmWcr::latest()->first()->getIncreamenting());
-
             DB::beginTransaction();
             $scm_wcr = $request->only('type', 'date', 'supplier_id', 'branch_id', 'client_no');
             $scm_wcr['wcr_no'] = $this->wcrNo;

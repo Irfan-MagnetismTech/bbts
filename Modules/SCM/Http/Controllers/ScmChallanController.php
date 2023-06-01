@@ -123,51 +123,61 @@ class ScmChallanController extends Controller
         $serial_codes = [];
         $branch_stock = [];
         $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, $challan, &$branch_stock) {
-            $materials[$key] = Stockledger::with('material')->where([
-                'receiveable_id' => $item->receiveable_id,
-                'receiveable_type' => $item->receiveable_type
-            ])->get()
-                ->unique('material_id')
-                ->values();
-            $brands[$key] = Stockledger::with('brand')->where([
-                'receiveable_id' => $item->receiveable_id,
-                'receiveable_type' => $item->receiveable_type,
-                'material_id' => $item->material_id
-            ])
-                ->get()
-                ->unique('brand_id')
-                ->values();
+            // $materials[$key] = Stockledger::with('material')->where([
+            //     'receiveable_id' => $item->receiveable_id,
+            //     'receiveable_type' => $item->receiveable_type
+            // ])->get()
+            //     ->unique('material_id')
+            //     ->values();
+            // $brands[$key] = Stockledger::with('brand')->where([
+            //     'receiveable_id' => $item->receiveable_id,
+            //     'receiveable_type' => $item->receiveable_type,
+            //     'material_id' => $item->material_id
+            // ])
+            //     ->get()
+            //     ->unique('brand_id')
+            //     ->values();
 
-            $models[$key] = StockLedger::query()->where([
-                'receiveable_id' => $item->receiveable_id,
-                'receiveable_type' => $item->receiveable_type,
-                'material_id' => $item->material_id,
-                'brand_id' => $item->brand_id
-            ])
-                ->get()
-                ->unique('model')
-                ->values();
+            // $models[$key] = StockLedger::query()->where([
+            //     'receiveable_id' => $item->receiveable_id,
+            //     'receiveable_type' => $item->receiveable_type,
+            //     'material_id' => $item->material_id,
+            //     'brand_id' => $item->brand_id
+            // ])
+            //     ->get()
+            //     ->unique('model')
+            //     ->values();
 
-            $serial_codes[$key] = StockLedger::query()->where([
-                'receiveable_id' => $item->receiveable_id,
-                'receiveable_type' => $item->receiveable_type,
-                'material_id' => $item->material_id,
-                'brand_id' => $item->brand_id,
-                'model' => $item->model,
-            ])
-                ->get()
-                ->unique('serial_code')
-                ->values();;
-            $branch_stock[] = StockLedger::query()
-                ->where([
-                    'material_id' => $item->material_id,
-                    'received_type' => $item->received_type,
-                    'receiveable_id' => $item->receiveable_id,
-                    'branch_id' => $challan->branch_id,
-                ])
-                ->sum('quantity');
+            // $serial_codes[$key] = StockLedger::query()->where([
+            //     'receiveable_id' => $item->receiveable_id,
+            //     'receiveable_type' => $item->receiveable_type,
+            //     'material_id' => $item->material_id,
+            //     'brand_id' => $item->brand_id,
+            //     'model' => $item->model,
+            // ])
+            //     ->get()
+            //     ->unique('serial_code')
+            //     ->values();;
+
+            $materials[$key] = Stockledger::with('material')->dropdownDataListForChallan('material_id', $material = false, $brand = false, $modal = false, $item);
+
+            $brands[$key] = Stockledger::with('brand')->dropdownDataListForChallan('brand_id', $material = true, $brand = false, $modal = false, $item);
+
+            $models[$key] = Stockledger::dropdownDataListForChallan('model', $material = true, $brand = true, $modal = false, $item);
+
+            $serial_codes[$key] = Stockledger::dropdownDataListForChallan('serial_code', $material = true, $brand = true, $modal = true, $item);
+
+            // $branch_stock[] = StockLedger::query()
+            //     ->where([
+            //         'material_id' => $item->material_id,
+            //         'received_type' => $item->received_type,
+            //         'receiveable_id' => $item->receiveable_id,
+            //         'branch_id' => $challan->branch_id,
+            //     ])
+            //     ->sum('quantity');
+
+            $branch_stock[] = StockLedger::query()->branchStockForChallan($challan->branch_id, $item);
         });
-        // dd($brands);
         return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes', 'branch_stock', 'fr_no_list'));
     }
 
