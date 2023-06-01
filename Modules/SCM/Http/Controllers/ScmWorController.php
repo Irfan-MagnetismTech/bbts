@@ -3,16 +3,27 @@
 namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\SCM\Entities\ScmWor;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
+use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\ScmChallan;
 use Modules\SCM\Entities\StockLedger;
-use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Modules\SCM\Entities\PurchaseOrderLine;
+use Illuminate\Contracts\Support\Renderable;
 
 class ScmWorController extends Controller
 {
+    private $worNo;
+
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->worNo = $globalService->generateUniqueId(ScmWor::class, 'WOR');
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -40,7 +51,29 @@ class ScmWorController extends Controller
      */
     public function store(Request $request)
     {
-        
+        dd($request->all());
+        try {
+            DB::beginTransaction();
+            $scm_wor = $request->only('date', 'branch_id');
+            $scm_wor['wor_no'] = $this->worNo;
+            $scm_wor['created_by'] = auth()->user()->id;
+            $wcrr = ScmWor::create($scm_wor);
+            $stock = [];
+            $wor_lines = [];
+            foreach ($request->material_name as $key => $val) {
+                if (isset($request->status[$key]) && $request->status[$key]) {
+                    $wor_lines[] = $this->getLineData($request, $key, $wcrr->id);
+                    $stock[] = $this->getStockData($request, $key, $wcrr->id);
+                }
+            };
+            $wcrr->lines()->createMany($wor_lines);
+            $wcrr->stockable()->createMany($stock);
+            DB::commit();
+            return redirect()->route('work-order-receives.index')->with('message', 'Data has been created successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($err->getMessage());
+        }
     }
 
     /**
@@ -69,9 +102,35 @@ class ScmWorController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ScmWor $scm_wor)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->only('date', 'branch_id');
+            $wcrr = ScmWor::create($data);
+            $scm_wor->update($data);
+
+            $stock = [];
+            $wor_lines = [];
+            foreach ($request->material_name as $key => $val) {
+                if (isset($request->status[$key]) && $request->status[$key]) {
+                    $wor_lines[] = $this->getLineData($request, $key, $wcrr->id);
+                    $stock[] = $this->getStockData($request, $key, $wcrr->id);
+                }
+            };
+            $scm_wor->lines()->delete();
+            $scm_wor->stockable()->delete();
+            $scm_wor->lines()->createMany($wor_lines);
+            $scm_wor->stockable()->createMany($stock);
+
+            $wcrr->lines()->createMany($wor_lines);
+            $wcrr->stockable()->createMany($stock);
+            DB::commit();
+            return redirect()->route('work-order-receives.index')->with('message', 'Data has been created successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($err->getMessage());
+        }
     }
 
     /**
@@ -122,5 +181,35 @@ class ScmWorController extends Controller
                 'item_type' => $item->material->type,
             ]);
         return response()->json($items);
+    }
+
+    private function getLineData($req, $ke, $id)
+    {
+        return [
+            'material_id'               => $req->material_id[$ke] ?? null,
+            'item_code'                 => $req->description[$ke] ?? null,
+            'model'                     => $req->model[$ke]  ?? null,
+            'serial_code'               => $req->serial_code[$ke] ?? null,
+            'brand_id'                  => $req->brand_id[$ke] ?? null,
+        ];
+    }
+
+    private function getStockData($req, $ke, $id)
+    {
+        return [
+            'received_type'     => 'WOR',
+            'receiveable_id'    => $id,
+            'receiveable_type'  => ScmWor::class,
+            'material_id'       => $req->material_id[$ke] ?? null,
+            'stockable_type'    => ScmWor::class,
+            'stockable_id'      => $id ?? null,
+            'brand_id'          => $req->brand_id[$ke] ?? null,
+            'branch_id'         => $req->branch_id ?? null,
+            'model'             => $req->model[$ke] ?? null,
+            'quantity'          => 1,
+            'item_code'         => $req->item_code[$ke] ?? null,
+            'serial_code'       => $req->serial_code[$ke] ?? null,
+            'unit'              => $req->unit[$ke] ?? null,
+        ];
     }
 }

@@ -107,18 +107,6 @@
                 name="supplier_name" value="{{ $supplier_name }}" placeholder="Supplier Name" readonly>
             <input type="hidden" name="supplier_id" id="supplier_id" value="{{ $supplier_id }}">
         </div>
-
-        <div class="form-group col-3 challan_no">
-            <label for="challan_no">Chalan No:</label>
-            <input type="text" class="form-control" id="challan_no" aria-describedby="challan_no" name="challan_no"
-                value="{{ $challan_no }}" placeholder="Type Chalan No">
-        </div>
-
-        <div class="form-group col-3">
-            <label for="date">Chalan Date:</label>
-            <input class="form-control challan_date" name="challan_date" aria-describedby="challan_date" id="challan_date"
-                value="{{ $challan_date }}" placeholder="Select a Date" readonly>
-        </div>
     </div>
 
     <table class="table table-bordered" id="material_requisition">

@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('scm_wor_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scm_wor_id')->constrained('scm_wors', 'id')->cascadeOnDelete();
-            $table->string('received_type')->nullable();
             $table->unsignedBigInteger('material_id');
             $table->string('item_code')->nullable();
             $table->string('serial_code')->nullable();
