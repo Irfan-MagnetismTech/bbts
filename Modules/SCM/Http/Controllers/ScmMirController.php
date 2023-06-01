@@ -19,6 +19,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Http\Requests\ScmMirRequest;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Spatie\Permission\Traits\HasRoles;
 
 class ScmMirController extends Controller
 {
@@ -27,6 +28,10 @@ class ScmMirController extends Controller
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->mirNo = $globalService->generateUniqueId(ScmMir::class, 'MIR');
+        $this->middleware('permission:scm-mir-view|scm-mir-create|scm-mir-edit|scm-mir-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-mir-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-mir-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-mir-delete', ['only' => ['destroy']]);
     }
 
     /**

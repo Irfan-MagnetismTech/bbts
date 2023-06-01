@@ -20,15 +20,22 @@ use Modules\SCM\Entities\IndentLine;
 use Modules\SCM\Entities\PoMaterial;
 use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
 use Modules\SCM\Http\Requests\PurchaseOrderRequest;
+use Spatie\Permission\Traits\HasRoles;
+
 
 use function Termwind\render;
 
 class PurchaseOrderController extends Controller
 {
+    use HasRoles;
     private $purchaseOrderNo;
 
     public function __construct(BbtsGlobalService $globalService)
     {
+        $this->middleware('permission:scm-purchase-order-view|scm-purchase-order-create|scm-purchase-order-edit|scm-purchase-order-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-purchase-order-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-purchase-order-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-purchase-order-delete', ['only' => ['destroy']]);
         $this->purchaseOrderNo = $globalService->generateUniqueId(PurchaseOrder::class, 'PO');
     }
     /**
@@ -171,7 +178,7 @@ class PurchaseOrderController extends Controller
             $oldpoMaterials->each->forceDelete();
             $purchaseOrder->purchaseOrderLines()->delete();
             $purchaseOrder->purchaseOrderLines()->createMany($finalData['purchaseOrderLinesData']);
-            $purchaseOrder->poTermsAndConditions()->delete();            
+            $purchaseOrder->poTermsAndConditions()->delete();
             if ($finalData['poTermsAndConditions'] != null) {
                 $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
             }
@@ -180,7 +187,7 @@ class PurchaseOrderController extends Controller
             DB::commit();
             return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Updated Successfully'], 200);
         } catch (QueryException $e) {
-            DB::rollBack();            
+            DB::rollBack();
             return redirect()->route('requisitions.index')->withInput()->withErrors($e->getMessage());
         }
     }

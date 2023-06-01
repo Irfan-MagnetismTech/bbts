@@ -17,6 +17,7 @@ use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmMrrSerialCodeLine;
+use Illuminate\Support\Facades\Schema;
 
 class ScmWcrController extends Controller
 {
@@ -25,6 +26,10 @@ class ScmWcrController extends Controller
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->wcrNo = $globalService->generateUniqueId(ScmWcr::class, 'WCR');
+        $this->middleware('permission:scm-wcr-view|scm-wcr-create|scm-wcr-edit|scm-wcr-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-wcr-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-wcr-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-wcr-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.
@@ -56,6 +61,25 @@ class ScmWcrController extends Controller
     public function store(Request $request)
     {
         try {
+
+            // $tableName = (new ScmWcr())->getTable();
+            // $autoIncrementValue = Schema::getConnection()
+            //     ->getDoctrineSchemaManager()
+            //     ->listTableDetails($tableName)
+            //     ->getAutoincrement();
+            // return $autoIncrementValue;
+            // $query = "SELECT `AUTO_INCREMENT`
+            //   FROM  INFORMATION_SCHEMA.TABLES
+            //   WHERE TABLE_SCHEMA = DATABASE()
+            //   AND   TABLE_NAME   = '{$tableName}'";
+
+            // $result = DB::select(DB::raw($query));
+
+            // $autoIncrementValue = $result[0]->AUTO_INCREMENT;
+
+            // return $autoIncrementValue;
+            // dd(ScmWcr::latest()->first()->getIncreamenting());
+
             DB::beginTransaction();
             $scm_wcr = $request->only('type', 'date', 'supplier_id', 'branch_id', 'client_no');
             $scm_wcr['wcr_no'] = $this->wcrNo;
@@ -150,6 +174,24 @@ class ScmWcrController extends Controller
             return redirect()->route('warranty-claims.index')->withInput()->withErrors($err->getMessage());
         }
     }
+
+    public function sentToSupplier(ScmWcr $wcr)
+    {
+        try {
+            DB::beginTransaction();
+            $wcr->update([
+                'sent_by' => auth()->user()->id,
+                'sending_date' => request()->date,
+                'Status'    => 'sent'
+            ]);
+            DB::commit();
+            return redirect()->route('warranty-claims.index')->with('message', 'Product has been sent successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->route('warranty-claims.index')->withInput()->withErrors($err->getMessage());
+        }
+    }
+
 
     private function getLineData($req, $ke, $id)
     {

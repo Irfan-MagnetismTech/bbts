@@ -14,10 +14,10 @@ class SupplierController extends Controller
     use HasRoles;
     function __construct()
     {
-        // $this->middleware('permission:supplier-view|supplier-create|supplier-edit|supplier-delete', ['only' => ['index','show']]);
-        // $this->middleware('permission:supplier-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:supplier-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:supplier-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:supplier-view|supplier-create|supplier-edit|supplier-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:supplier-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:supplier-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:supplier-delete', ['only' => ['destroy']]);
     }
     public function index()
     {
@@ -44,14 +44,14 @@ class SupplierController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */ 
+     */
     public function store(SupplierRequest $request)
     {
-        try{
+        try {
             $data = $request->all();
             Supplier::create($data);
             return redirect()->route('suppliers.index')->with('message', 'Data has been inserted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('suppliers.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -77,7 +77,7 @@ class SupplierController extends Controller
     {
         $formType = "edit";
         $suppliers = Supplier::latest()->get();
-        
+
         return view('scm::suppliers.create', compact('supplier', 'suppliers', 'formType'));
     }
 
@@ -90,11 +90,11 @@ class SupplierController extends Controller
      */
     public function update(SupplierRequest $request, Supplier $supplier)
     {
-        try{
+        try {
             $data = $request->all();
             $supplier->update($data);
             return redirect()->route('suppliers.index')->with('message', 'Data has been updated successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('suppliers.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -107,10 +107,10 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier)
     {
-        try{
+        try {
             $supplier->delete();
             return redirect()->route('suppliers.index')->with('message', 'Data has been deleted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('suppliers.index')->withErrors($e->getMessage());
         }
     }

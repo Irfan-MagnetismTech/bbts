@@ -1,4 +1,4 @@
-0.@extends('layouts.backend-layout')
+@extends('layouts.backend-layout')
 @section('title', 'Warranty Claim')
 @php
     $is_old = old('type') ? true : false;
@@ -250,6 +250,7 @@
     </div>
     {!! Form::close() !!}
     </div>
+      
 @endsection
 
 @section('script')
@@ -260,7 +261,7 @@
             autoclose: true,
             todayHighlight: true,
             showOtherMonths: true
-        }).datepicker("setDate", new Date());;
+        }).datepicker("setDate", new Date());
         
         /* Append row */
         $(document).ready(function() {
@@ -423,199 +424,7 @@
                     }
                 });
             });
-        
-
-        // function getMaterials(event_this) {
-
-        //     let scm_requisition_id = $('#scm_requisition_id').val();
-        //     let received_type = event_this.find('.received_type').val().toUpperCase();
-        //     let receiveable_id = event_this.find('.type_id').val();
-        //     let material_name = event_this.find('.material_name');
-        //     populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
-        //         scm_requisition_id: scm_requisition_id,
-        //         received_type: received_type,
-        //         receiveable_id: receiveable_id,
-        //         from_branch: $('#branch_id').val(),
-        //         to_branch: $('#branch_id').val(),
-        //     }, material_name, 'value', 'label', {
-        //         'data-type': 'type',
-        //         'data-unit': 'unit',
-        //         'data-code': 'code',
-        //     })
-        // }
-
-        // $(document).on('change', '.material_name', function() {
-        //     checkUniqueMaterial(this);
-        //     var event_this = $(this).closest('tr');
-        //     ClearNext($(this));
-        //     let material_id = $(this).val();
-        //     let scm_requisition_id = $('#scm_requisition_id').val();
-        //     let received_type = event_this.find('.received_type').val().toUpperCase();
-        //     let receiveable_id = event_this.find('.type_id').val();
-        //     let brand = $(this).closest('tr').find('.brand');
-
-        //     event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected').data(
-        //         'unit'));
-        //     event_this.find('.item_code').val($(this).closest('tr').find('.material_name').find(':selected').data(
-        //         'code'));
-        //     event_this.find('.material_type').val($(this).closest('tr').find('.material_name').find(':selected')
-        //         .data('type'));
-
-        //     populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
-        //         material_id: material_id,
-        //         received_type: received_type,
-        //         receiveable_id: receiveable_id,
-        //         from_branch_id: $('#branch_id').val(),
-        //     }, brand, 'value', 'label');
-        // })
-
-        // $(document).on('change', '.brand', function() {
-        //     checkUniqueMaterial(this);
-        //     var event_this = $(this).closest('tr');
-        //     ClearNext($(this));
-        //     let brand_id = $(this).val();
-        //     let material_id = event_this.find('.material_name').val();
-        //     let scm_requisition_id = $('#scm_requisition_id').val();
-        //     let received_type = event_this.find('.received_type').val().toUpperCase();
-        //     let receiveable_id = event_this.find('.type_id').val();
-        //     let model = $(this).closest('tr').find('.model');
-
-        //     populateDropdownByAjax("{{ route('brandWiseModels') }}", {
-        //         brand_id: brand_id,
-        //         material_id: material_id,
-        //         received_type: received_type,
-        //         receiveable_id: receiveable_id,
-        //         from_branch_id: $('#branch_id').val(),
-        //     }, model, 'value', 'label');
-        // });
-
-        // $(document).on('change', '.model', function() {
-        //     checkUniqueMaterial(this);
-        //     var event_this = $(this).closest('tr');
-        //     ClearNext($(this));
-        //     let model = $(this).val();
-        //     let material_id = event_this.find('.material_name').val();
-        //     let scm_requisition_id = $('#scm_requisition_id').val();
-        //     let received_type = event_this.find('.received_type').val().toUpperCase();
-        //     let receiveable_id = event_this.find('.type_id').val();
-        //     let brand_id = event_this.find('.brand').val();
-        //     let serial_code = $(this).closest('tr').find('.serial_code');
-        //     let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
-        //         'type');
-
-        //     populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
-        //         model: model,
-        //         material_id: material_id,
-        //         brand_id: brand_id,
-        //         received_type: received_type,
-        //         receiveable_id: receiveable_id,
-        //         from_branch_id: $('#branch_id').val(),
-        //     }, serial_code, 'value', 'label', null, false);
-        // });
-
-        // $(document).on('change', '.serial_code', function() {
-        //     let material_type = $(this).closest('tr').find('.material_name').find(':selected').data('type');
-        //     if (material_type == 'Item') {
-        //         $(this).closest('tr').find('.quantity').val($(this).val().length);
-        //     }
-        // })
-
-        // function checkUniqueMaterial(currentValue) {
-        //     var current_selector = $(currentValue);
-        //     var current_material = $(currentValue).closest('tr').find('.material_name').val();
-        //     var current_value_brand = $(currentValue).closest('tr').find('.brand').val();
-        //     var current_value_model = $(currentValue).closest('tr').find('.model').val();
-        //     var current_key = `${current_material}_${current_value_brand}_${current_value_model}`;
-        //     console.log(current_key);
-        //     var count_row = $('#challan tbody tr').length;
-        //     var thisMaterial = $(currentValue).closest('tr').find('.material_name');
-        //     let material_list = $('.material_name').not($(thisMaterial));
-
-        //     material_list.each(function() {
-        //         var material_name = $(this).val();
-        //         var brand = $(this).closest('tr').find('.brand').val();
-        //         var model = $(this).closest('tr').find('.model').val();
-        //         var key = `${material_name}_${brand}_${model}`;
-        //         console.log(key);
-        //         if (key === current_key && count_row > 1) {
-        //             swal.fire({
-        //                 title: "Material Already Selected",
-        //                 type: "warning",
-        //             }).then(function() {
-        //                 $(current_selector).val($(current_selector).find('option:first').val())
-        //                     .trigger('change.select2');
-        //             });
-        //             return false;
-        //         }
-        //     });
-        // }
-
-        // $(document).on('change', '.serial_code', function() {
-        //     let elemmtn = $(this).closest('tr');
-        //     let material_type = (elemmtn).find('.material_name').find(':selected').data(
-        //         'type');
-        //     if (material_type == 'Item') {
-        //         (elemmtn).find('.quantity').attr('readonly', true);
-        //         (elemmtn).find('.quantity').val($(this).val().length);
-        //     } else {
-        //         (elemmtn).find('.quantity').attr('readonly', false);
-        //     }
-        // });
-
-      
-
-        // $(document).on('change', '.model, .material_name, .brand', function() {
-        //     var elemmtn = $(this);
-        //     $.ajax({
-        //         url: "{{ route('getMaterialStock') }}",
-        //         type: 'get',
-        //         dataType: "json",
-        //         data: {
-        //             material_id: (elemmtn).closest('tr').find('.material_name').val(),
-        //             brand_id: (elemmtn).closest('tr').find('.brand').val(),
-        //             model: (elemmtn).closest('tr').find('.model').val(),
-        //             received_type: (elemmtn).closest('tr').find('.received_type').val()
-        //                 .toUpperCase(),
-        //             receiveable_id: (elemmtn).closest('tr').find('.type_id').val(),
-        //             from_branch_id: $('#branch_id').val(),
-        //             to_branch_id: null
-        //         },
-        //         success: function(data) {
-        //             (elemmtn).closest('tr').find('.available_quantity').val(data
-        //                 .from_branch_balance);
-        //         }
-        //     })
-        // })
-
-        //issued quantity cannot be greater than avaiable_quantity
-        // $(document).on('keyup', '.quantity', function() {
-        //     let elemmtn = $(this).closest('tr');
-        //     let avaiable_quantity = parseFloat((elemmtn).find('.available_quantity').val());
-        //     let quantity = parseFloat((elemmtn).find('.quantity').val());
-        //     if (quantity > avaiable_quantity) {
-        //         swal.fire({
-        //             title: "Issued Quantity Cannot Be Greater Than Avaiable Quantity",
-        //             type: "warning",
-        //         }).then(function() {
-        //             (elemmtn).find('.quantity').val(avaiable_quantity);
-        //         });
-        //     }
-        // });        
-
-        // $(document).on('keyup', '.type_no', function() {
-        //     $.ajax({
-        //         url: "{{ route('searchSerialForWcr') }}",
-        //         type: 'get',
-        //         dataType: "json",
-        //         data: {
-        //             sl_no: $(this).val(),
-        //             supplier_id : $('#supplier_id').val()
-        //         },
-        //         success: function(data) {
-        //             console.log(data);
-        //         }
-        //     })
-        // });     
+           
         
         $(document).on('keyup', '.material_name', function() {
             var event_this = $(this).closest('tr');

@@ -13,6 +13,7 @@ use Illuminate\Database\QueryException;
 use Modules\SCM\Http\Requests\CsRequest;
 use Illuminate\Contracts\Support\Renderable;
 use Termwind\Components\Dd;
+use Spatie\Permission\Traits\HasRoles;
 
 class CsController extends Controller
 {
@@ -27,10 +28,10 @@ class CsController extends Controller
     {
         $this->csNo = $globalService->generateUniqueId(Cs::class, 'CS');
 
-        // $this->middleware('permission:comparative-statement-view|comparative-statement-create|comparative-statement-edit|comparative-statement-delete', ['only' => ['index','show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
-        // $this->middleware('permission:comparative-statement-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:comparative-statement-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:comparative-statement-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:scm-comparative-statement-view|scm-comparative-statement-create|scm-comparative-statement-edit|scm-comparative-statement-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-comparative-statement-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-comparative-statement-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-comparative-statement-delete', ['only' => ['destroy']]);
     }
 
     /**

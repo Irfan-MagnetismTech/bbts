@@ -20,6 +20,7 @@ use Modules\SCM\Entities\ScmChallanLine;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Spatie\Permission\Traits\HasRoles;
 
 class ScmMurController extends Controller
 {
@@ -28,6 +29,10 @@ class ScmMurController extends Controller
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->murNo = $globalService->generateUniqueId(ScmMur::class, 'MUR');
+        $this->middleware('permission:scm-mur-view|scm-mur-create|scm-mur-edit|scm-mur-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-mur-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-mur-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-mur-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.

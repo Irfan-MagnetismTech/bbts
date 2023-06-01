@@ -25,11 +25,11 @@ class ScmPurchaseRequisitionController extends Controller
     function __construct(BbtsGlobalService $globalService)
     {
         $this->purchaseRequisitionNo = $globalService->generateUniqueId(ScmPurchaseRequisition::class, 'PRS');
-        
-        // $this->middleware('permission:requisition-view|requisition-create|requisition-edit|requisition-delete', ['only' => ['index','show']]);
-        // $this->middleware('permission:requisition-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:requisition-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:requisition-delete', ['only' => ['destroy']]);
+
+        $this->middleware('permission:scm-prs-view|scm-prs-create|scm-prs-edit|scm-prs-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-prs-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-prs-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-prs-delete', ['only' => ['destroy']]);
     }
     public function index()
     {
@@ -126,7 +126,7 @@ class ScmPurchaseRequisitionController extends Controller
         $clients = Client::latest()->get();
         $fr_nos = Client::with('saleDetails')->where('client_no', $purchaseRequisition->client_no)->first()?->saleDetails ?? [];
         $client_links = Client::with('saleLinkDetails')->where('client_no', $purchaseRequisition->client_no)->first()?->saleLinkDetails ?? [];
-        
+
         return view('scm::purchase-requisitions.create', compact('purchaseRequisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs'));
     }
 

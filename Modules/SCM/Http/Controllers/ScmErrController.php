@@ -21,6 +21,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\ScmErrLine;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Spatie\Permission\Traits\HasRoles;
 
 class ScmErrController extends Controller
 {
@@ -29,6 +30,10 @@ class ScmErrController extends Controller
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->errNo = $globalService->generateUniqueId(ScmErr::class, 'Err');
+        $this->middleware('permission:scm-err-view|scm-err-create|scm-err-edit|scm-err-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-err-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-err-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-err-delete', ['only' => ['destroy']]);
     }
 
     /**
