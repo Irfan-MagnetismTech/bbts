@@ -234,8 +234,8 @@ class ScmMurController extends Controller
             'client_ownership'  => $req->client_ownership[$ke] ?? null,
             'bbts_ownership'    => $req->bbts_ownership[$ke] ?? null,
             'remarks'           => $req->remarks[$ke] ?? null,
-            'receiveable_id'    => $req->receiveable_id[$ke] ?? null,
-            'receiveable_type'    => $req->receiveable_type[$ke] ?? null
+            'receivable_id'    => $req->receiveable_id[$ke] ?? null,
+            'receivable_type'    => $req->receiveable_type[$ke] ?? null
         ];
     }
 

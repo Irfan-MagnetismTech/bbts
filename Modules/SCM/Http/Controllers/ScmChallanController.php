@@ -70,7 +70,6 @@ class ScmChallanController extends Controller
     public function store(ScmChallanRequest $request)
     {
         try {
-            dd(request()->all());
             DB::beginTransaction();
             $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_no', 'pop_id', 'fr_composite_key', 'link_no', 'fr_no', 'equipment_type');
             $challan_data['challan_no'] =  $this->ChallanNo;

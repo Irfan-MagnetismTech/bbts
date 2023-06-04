@@ -32,15 +32,7 @@
     ]) !!}
 
     <div class="row">
-        @if (!empty($gate_pass->id))
-            <div class="form-group col-3">
-                <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="name">gate_pass No <span class="text-danger">*</span></label>
-                    <input class="form-control" id="gate_pass_no" name="gate_pass_no" aria-describedby="gate_pass_no"
-                        value="{{ old('gate_pass_no') ?? ($gate_pass->gate_pass_no ?? '') }}" readonly placeholder="gate_pass No">
-                </div>
-            </div>
-        @endif
+       
         <div class="col-md-12">
             <div class="typeSection mt-2 mb-4">
                 <div class="form-check-inline">
@@ -59,6 +51,15 @@
                 </div>
             </div>
         </div>
+        @if (!empty($gate_pass->id))
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <label class="input-group-addon" for="name">Gate Pass No <span class="text-danger">*</span></label>
+                <input class="form-control" id="gate_pass_no" name="gate_pass_no" aria-describedby="gate_pass_no"
+                    value="{{ old('gate_pass_no') ?? ($gate_pass->gate_pass_no ?? '') }}" readonly placeholder="gate_pass No">
+            </div>
+        </div>
+        @endif
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <label class="input-group-addon" for="date">Date <span class="text-danger">*</span></label>
@@ -184,6 +185,7 @@
 
                 function uiList(item) {
                     event_this_challan.find('.challan_id').val(item.id);
+                    event_this_challan.find('.challan_no').val(item.value);
                     return false;
                 }
                 
