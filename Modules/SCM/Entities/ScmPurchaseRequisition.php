@@ -24,7 +24,7 @@ class ScmPurchaseRequisition extends Model
         'requisition_by',
         'branch_id',
     ];
-    
+
     /**
      * @param $input
      */

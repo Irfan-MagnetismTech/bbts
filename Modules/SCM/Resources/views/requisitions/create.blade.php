@@ -81,26 +81,43 @@
                 </select>
             </div>
 
+            
             <div class="form-group col-3 client_name">
                 <label for="client_name">Client Name:</label>
                 <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                    name="client_name" value="{{ old('client_name') ?? (@$requisition->client->name ?? '') }}"
-                    placeholder="Search...">
-                <input type="hidden" name="client_id" id="client_id"
-                    value="{{ old('client_id') ?? @$requisition?->client->id }}">
+                    name="client_name" value="{{ old('client_name') ?? ($client_name ?? '') }}" placeholder="Search...">
             </div>
-            <div class="form-group col-3 client_links">
-                <label for="select2">Client Links</label>
-                <select class="form-control select2" id="client_links" name="client_links">
-                    <option value="" readonly selected>Select Client Link</option>
+
+            <div class="form-group col-3 fr_no">
+                <label for="select2">FR No</label>
+                <select class="form-control select2" id="fr_no" name="fr_no">
+                    <option value="" readonly selected>Select FR No</option>
                     @if ($formType == 'create')
-                        <option value="{{ old('client_links') }}" selected>{{ old('client_links') }}</option>
+                        <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
+                    @elseif($formType == 'edit')
+                        @forelse ($fr_nos as $key => $value)
+                            <option value="{{ $value->fr_no }}" @if ($fr_no == $value->fr_no) selected @endif>
+                                {{ $value->fr_no }}
+                            </option>
+                        @empty
+                        @endforelse
                     @endif
-                    @if ($formType == 'edit')
-                        @foreach ($clientInfos as $clientInfo)
-                            <option value="{{ $clientInfo->link_name }}" @selected($clientInfo->fr_composite_key == @$requisition->fr_composite_key)>
-                                {{ $clientInfo->link_name }}</option>
-                        @endforeach
+                </select>
+            </div>
+
+            <div class="form-group col-3 link_no">
+                <label for="link_no">Link No:</label>
+                <select class="form-control select2" id="link_no" name="link_no">
+                    <option value="" readonly selected>Select Link No</option>
+                    @if ($formType == 'create')
+                        <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
+                    @elseif($formType == 'edit')
+                        @forelse ($client_links as $key => $value)
+                            <option value="{{ $value->link_no }}" @if ($client_link_no == $value->link_no) selected @endif>
+                                {{ $value->link_no }}
+                            </option>
+                        @empty
+                        @endforelse
                     @endif
                 </select>
             </div>
@@ -108,21 +125,14 @@
             <div class="form-group col-3 client_no">
                 <label for="client_no">Client No:</label>
                 <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                    readonly value="{{ old('client_no') ?? (@$requisition->client->client_no ?? '') }}">
-
+                    readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
             </div>
 
-            <div class="form-group col-3 address">
-                <label for="address">Address:</label>
-                <input type="text" class="form-control" id="address" name="address" aria-describedby="address" readonly
-                    value="{{ old('address') ?? (@$requisition->address ?? '') }}">
-            </div>
-            <div class="form-group col-3 fr_id">
-                <label for="fr_id">FR ID:</label>
-                <input type="text" class="form-control" id="fr_id" name="fr_id" aria-describedby="fr_id"
-                    value="{{ old('fr_id') ?? @$requisition->clientDetailsWithCompositeKey->fr_id }}" readonly>
-                <input type="hidden" name="fr_composite_key" id="fr_composite_key"
-                    value="{{ old('fr_composite_key') ?? @$requisition->fr_composite_key }}">
+            <div class="form-group col-3 client_address">
+                <label for="client_address">Client Address:</label>
+                <input type="text" class="form-control" id="client_address" name="client_address"
+                    aria-describedby="client_address" readonly
+                    value="{{ old('client_address') ?? (@$client_address ?? '') }}">
             </div>
 
             <div class="form-group col-3">
@@ -236,6 +246,7 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('js/search-client.js') }}"></script>
     <script>
         $('#date').datepicker({
             format: "dd-mm-yyyy",
@@ -309,40 +320,7 @@
         @if ($formType === 'edit')
             client_details = {!! collect($clientInfos) !!}
         @endif
-        $(document).on('keyup focus', '#client_name', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-client') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $('#client_name').val(ui.item.label);
-                    $('#client_id').val(ui.item.value);
-                    $('#client_no').val(ui.item.client_no);
-
-                    $('#client_links').html('');
-                    var link_options = '<option value="">Select link</option>';
-
-                    ui.item.details.forEach(function(element) {
-                        link_options +=
-                            `<option value="${element.link_name}">${element.link_name}</option>`;
-                    });
-                    client_details = ui.item.details;
-                    $('#client_links').html(link_options);
-
-                    return false;
-                }
-            });
-        });
+    
 
         //Select FR key based on link name
         $('#client_links').on('change', function() {
@@ -358,6 +336,7 @@
 
         //Search Material
         $(document).on('keyup focus', '.material_name', function() {
+            let branch_id = $('#branch_id').find(':selected').val();
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -365,7 +344,8 @@
                         type: 'get',
                         dataType: "json",
                         data: {
-                            search: request.term
+                            search: request.term,
+                            branch_id
                         },
                         success: function(data) {
                             response(data);
@@ -377,6 +357,7 @@
                     $(this).closest('tr').find('.material_id').val(ui.item.value);
                     $(this).closest('tr').find('.item_code').val(ui.item.item_code);
                     $(this).closest('tr').find('.unit').val(ui.item.unit);
+                    $(this).closest('tr').find('.current_stock').val(ui.item.stock_data);
                     return false;
                 }
             });
@@ -402,28 +383,28 @@
             var radioValue = $("input[name='type']:checked").val();
             if (radioValue == 'client') {
                 $('.pop_id').hide('slow');
-                $('.fr_id').show('slow');
-                $('.address').show('slow');
-                $('.client_name').show('slow');
-                $('.client_no').show('slow');
+                $('.client_address').show('slow')
+                $('.client_no').show('slow')
+                $('.link_no').show('slow')
+                $('.fr_no').show('slow')
+                $('.client_name').show('slow')
                 $('.current_stock').hide('slow');
-                $('.client_links').show('slow');
             } else if (radioValue == 'warehouse') {
                 $('.pop_id').hide('slow');
-                $('.fr_id').hide('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.client_no').hide('slow');
+                $('.client_address').show('slow')
+                $('.client_no').show('slow')
+                $('.link_no').show('slow')
+                $('.fr_no').show('slow')
+                $('.client_name').show('slow')
                 $('.current_stock').show('slow');
-                $('.client_links').hide('slow');
             } else if (radioValue == 'pop') {
                 $('.pop_id').show('slow');
-                $('.fr_id').hide('slow');
-                $('.address').hide('slow');
-                $('.client_name').hide('slow');
-                $('.client_no').hide('slow');
+                $('.client_address').show('slow')
+                $('.client_no').show('slow')
+                $('.link_no').show('slow')
+                $('.fr_no').show('slow')
+                $('.client_name').show('slow')
                 $('.current_stock').show('slow');
-                $('.client_links').hide('slow');
             }
         }
     </script>

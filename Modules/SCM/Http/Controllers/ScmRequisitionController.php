@@ -59,7 +59,7 @@ class ScmRequisitionController extends Controller
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'fr_composite_key');
+                $requestData = $request->only('type', 'client_no', 'fr_no', 'link_no', 'date', 'branch_id');
             } elseif (request()->type == 'warehouse') {
                 $requestData = $request->only('type', 'date', 'branch_id');
             } else {
@@ -128,12 +128,12 @@ class ScmRequisitionController extends Controller
         $branchs = Branch::latest()->get();
         $pops = Pop::latest()->get();
         $clients = Client::latest()->get();
-        $clientDetails = ClientDetail::latest()->get();
-        $clientInfos = ClientDetail::where('client_id', $requisition->client_id)->get();
+        $fr_nos = Client::with('saleDetails')->where('client_no', $requisition->client_no)->first()?->saleDetails ?? [];
+        $client_links = Client::with('saleLinkDetails')->where('client_no', $requisition->client_no)->first()?->saleLinkDetails ?? [];
         // $branchwisePops = ScmRequisition::with('pop')->where('id', $requisition->id)->get();
         $branchwisePops = Pop::where('branch_id', $requisition->branch_id)->get();
         // $fr_composite_key = $requisition->fr_composite_key;
-        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfos', 'branchs', 'branchwisePops'));
+        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs', 'branchwisePops'));
     }
 
     /**
@@ -149,7 +149,7 @@ class ScmRequisitionController extends Controller
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'client_id', 'date', 'branch_id', 'fr_composite_key');
+                $requestData = $request->only('type', 'date', 'branch_id', 'client_no', 'fr_no', 'link_no',);
             } elseif (request()->type == 'warehouse') {
                 $requestData = $request->only('type', 'date', 'branch_id');
             } else {

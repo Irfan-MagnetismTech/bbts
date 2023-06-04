@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use Modules\SCM\Entities\Cs;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\User;
+use Modules\SCM\Entities\Indent;
 use Modules\Admin\Entities\Brand;
 use App\Models\Dataencoding\Thana;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\Supplier;
+use Modules\SCM\Entities\CsSupplier;
 use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Employee;
+use Modules\SCM\Entities\StockLedger;
 use App\Models\Dataencoding\Department;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Ticketing\Entities\SupportTeam;
-use Modules\SCM\Entities\ScmPurchaseRequisition;
-use Modules\SCM\Entities\Cs;
-use Modules\SCM\Entities\CsSupplier;
-use Modules\SCM\Entities\Indent;
 use Modules\Ticketing\Entities\SupportTicket;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 
 class CommonApiController extends Controller
 {
@@ -46,7 +47,7 @@ class CommonApiController extends Controller
 
     public function getLinkNo()
     {
-         $data['options'] = SaleLinkDetail::query()
+        $data['options'] = SaleLinkDetail::query()
             ->where(['fr_no' => request()->fr_no])
             ->get()
             ->map(fn ($item) => [
@@ -101,13 +102,22 @@ class CommonApiController extends Controller
             ->orWhere('code', 'LIKE', '%' . request('search') . '%')
             ->limit(15)
             ->get()
-            ->map(fn ($item) => [
-                'value' => $item->id,
-                'material_id' => $item->id,
-                'label' => $item->name . ' - ' . $item->code,
-                'unit' => $item->unit,
-                'item_code' => $item->code,
-            ]);
+            ->map(function ($item) {
+                if (request('branch_id')) {
+                    $stockData = StockLedger::where('material_id', $item->id)
+                        ->where('branch_id', request('branch_id'))
+                        ->sum('quantity');
+                }
+
+                return [
+                    'value' => $item->id,
+                    'material_id' => $item->id,
+                    'label' => $item->name . ' - ' . $item->code,
+                    'unit' => $item->unit,
+                    'item_code' => $item->code,
+                    'stock_data' => $stockData ?? 0
+                ];
+            });
 
         return response()->json($results);
     }
