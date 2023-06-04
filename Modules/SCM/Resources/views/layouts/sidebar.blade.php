@@ -14,16 +14,20 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Units</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
+            @can('material-view')
             <li class="{{ request()->routeIs('materials.*') ? 'active' : null }}">
                 <a href="{{ route('materials.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Materials</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
+            @endcan
+            @can('supplier-view')
             <li class="{{ request()->routeIs('suppliers.*') ? 'active' : null }}">
                 <a href="{{ route('suppliers.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Suppliers</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
+            @endcan
             <li class="{{ request()->routeIs('couriers.*') ? 'active' : null }}">
                 <a href="{{ route('couriers.create') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Couriers</span><span

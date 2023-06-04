@@ -259,7 +259,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'courier-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+            [
                 'name' => 'scm-comparative-statement-view',
                 'guard_name' => 'web',
             ],
@@ -274,7 +275,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-comparative-statement-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+            [
                 'name' => 'scm-purchase-order-view',
                 'guard_name' => 'web',
             ],
@@ -289,7 +291,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-purchase-order-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+            [
                 'name' => 'scm-indent-view',
                 'guard_name' => 'web',
             ],
@@ -304,7 +307,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-indent-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+            [
                 'name' => 'scm-challan-view',
                 'guard_name' => 'web',
             ],
@@ -397,7 +401,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-prs-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+            [
                 'name' => 'scm-requisition-view',
                 'guard_name' => 'web',
             ],
@@ -412,7 +417,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-requisition-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+            [
                 'name' => 'scm-wcr-view',
                 'guard_name' => 'web',
             ],
@@ -427,7 +433,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-wcr-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+            [
                 'name' => 'scm-wcrr-view',
                 'guard_name' => 'web',
             ],
@@ -442,7 +449,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'scm-wcrr-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+            [
                 'name' => 'supplier-view',
                 'guard_name' => 'web',
             ],
@@ -457,7 +465,8 @@ class PermissionSeeder extends Seeder
             [
                 'name' => 'supplier-delete',
                 'guard_name' => 'web',
-            ], [
+            ],
+            [
                 'name' => 'unit-view',
                 'guard_name' => 'web',
             ],
@@ -487,6 +496,22 @@ class PermissionSeeder extends Seeder
             ],
             [
                 'name' => 'scm-mrr-delete',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'material-view',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'material-create',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'material-edit',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'material-delete',
                 'guard_name' => 'web',
             ],
 

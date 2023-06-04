@@ -16,9 +16,12 @@ use Modules\SCM\Entities\StockLedger;
 use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\ScmErr;
 use Modules\SCM\Http\Requests\ScmMirRequest;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\SCM\Entities\ScmWcrr;
+use Modules\SCM\Entities\ScmWor;
 use Spatie\Permission\Traits\HasRoles;
 
 class ScmMirController extends Controller
@@ -220,7 +223,7 @@ class ScmMirController extends Controller
     {
         return [
             'receiveable_id' => $request->type_id[$key1],
-            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : NULL)),
+            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : (($request->received_type[$key1] == 'WOR') ? ScmWor::class : NULL))),
             'received_type' => $request->received_type[$key1],
             'branch_id' => $branch_id,
             'material_id' => $request->material_name[$key1],
@@ -246,7 +249,7 @@ class ScmMirController extends Controller
             'material_id'   => $request->material_name[$key1],
             'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : '[]',
             'receiveable_id' => $request->type_id[$key1],
-            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : null)),
+            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : (($request->received_type[$key1] == 'WOR') ? ScmWor::class : null))),
             'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
             'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
             'quantity' => $request->issued_qty[$key1],
@@ -279,24 +282,29 @@ class ScmMirController extends Controller
                     $query2->where('mrr_no', 'like', '%' . request()->search . '%');
                 });
             })
-            ->when(request()->type == 'ERR', function ($query) {
-                $query->whereHasMorph('receiveable', ScmPurchaseRequisition::class, function ($query) {
+            ->when(request()->customQueryFields['type'] == 'ERR', function ($query) {
+                $query->whereHasMorph('receiveable', ScmErr::class, function ($query) {
                     $query->where('err_no', 'like', '%' . request()->search . '%');
                 });
             })
-            ->when(request()->type == 'WCR', function ($query) {
-                $query->whereHasMorph('receiveable', ScmPurchaseRequisition::class, function ($query) {
+            ->when(request()->customQueryFields['type'] == 'WCR', function ($query) {
+                $query->whereHasMorph('receiveable', ScmWcrr::class, function ($query) {
                     $query->where('wcr_no', 'like', '%' . request()->search . '%');
+                });
+            })
+            ->when(request()->customQueryFields['type'] == 'WOR', function ($query) {
+                $query->whereHasMorph('receiveable', ScmWor::class, function ($query) {
+                    $query->where('wor_no', 'like', '%' . request()->search . '%');
                 });
             })
             ->get()
             ->unique(function ($item) {
-                return $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no;
+                return $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no;
             })
             ->take(10)
             ->map(fn ($item) => [
-                'value' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no,
-                'label' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no,
+                'value' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no,
+                'label' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no,
                 'id'    => $item->receiveable->id,
             ])
             ->values()

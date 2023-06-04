@@ -20,6 +20,7 @@ use Modules\SCM\Entities\ScmChallanLine;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\ScmWor;
 use Spatie\Permission\Traits\HasRoles;
 
 class ScmMurController extends Controller
@@ -74,7 +75,7 @@ class ScmMurController extends Controller
                         'brand_id'          => $value->brand_id,
                         'brand_name'        => $value->brand->name,
                         'model'             => $value->model,
-                        'receiveable_type'  => ($value->receiveable_type == get_class(new ScmMrr())) ? 'MRR' : (($value->receiveable_type == get_class(new ScmWcr())) ? 'WCR' : (($value->receiveable_type == get_class(new ScmErr())) ? 'ERR' : NULL)),
+                        'receiveable_type'  => ($value->receiveable_type == get_class(new ScmMrr())) ? 'MRR' : (($value->receiveable_type == get_class(new ScmWcr())) ? 'WCR' : (($value->receiveable_type == get_class(new ScmErr())) ? 'ERR' : (($value->receiveable_type == get_class(new ScmWor())) ? 'WOR' : NULL))),
                         'receiveable_id'   => $value->receiveable_id,
                         'serial_code'   => $value1,
                         'quantity'      => ($value->material->type == 'Drum') ? $value->quantity : 1,
@@ -90,7 +91,7 @@ class ScmMurController extends Controller
                     'brand_id'          => $value->brand_id,
                     'brand_name'        => $value->brand->name,
                     'model'             => $value->model,
-                    'receiveable_type'  => ($value->receiveable_type == get_class(new ScmMrr())) ? 'MRR' : (($value->receiveable_type == get_class(new ScmWcr())) ? 'WCR' : (($value->receiveable_type == get_class(new ScmErr())) ? 'ERR' : NULL)),
+                    'receiveable_type'  => ($value->receiveable_type == get_class(new ScmMrr())) ? 'MRR' : (($value->receiveable_type == get_class(new ScmWcr())) ? 'WCR' : (($value->receiveable_type == get_class(new ScmErr())) ? 'ERR' : (($value->receiveable_type == get_class(new ScmWor())) ? 'WOR' : NULL))),
                     'receiveable_id'   => $value->receiveable_id,
                     'serial_code'   => '',
                     'quantity'      => $value->quantity,
@@ -244,7 +245,7 @@ class ScmMurController extends Controller
         return [
             'received_type'     => $req->receiveable_type[$ke] ?? NULL,
             'receiveable_id'    => $req->receiveable_id[$ke] ?? NULL,
-            'receiveable_type'  => ($req->receiveable_type[$ke] == 'MRR') ? ScmMrr::class : (($req->receiveable_type[$ke] == 'WCR') ? ScmWcr::class : (($req->receiveable_type[$ke] == 'ERR') ? ScmErr::class : NULL)),
+            'receiveable_type'  => ($req->receiveable_type[$ke] == 'MRR') ? ScmMrr::class : (($req->receiveable_type[$ke] == 'WCR') ? ScmWcr::class : (($req->receiveable_type[$ke] == 'ERR') ? ScmErr::class : (($req->receiveable_type[$ke] == 'WOR') ? ScmWor::class : NULL))),
             'material_id'       => $req->material_id[$ke] ?? null,
             'stockable_type'    => ScmMur::class ?? null,
             'stockable_id'      => $id ?? null,
