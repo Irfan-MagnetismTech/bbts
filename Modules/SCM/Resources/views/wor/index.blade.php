@@ -11,12 +11,12 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('material-receives.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
+    <a href="{{ route('work-order-receives.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
             class="fa fa-plus"></i></a>
 @endsection
 
 @section('sub-title')
-    Total: {{ count($mrrs) }}
+    Total: {{ count($worData) }}
 @endsection
 
 @section('content')
@@ -26,11 +26,10 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>#MRR No.</th>
+                    <th>WOR No.</th>
                     <th>#PO No.</th>
-                    <th>#PO Date.</th>
                     <th>Supplier Name</th>
-                    <th>Challan No</th>
+                    <th>Branch Name</th>
                     <th>Submitted By</th>
                     <th>Action</th>
                 </tr>
@@ -38,34 +37,32 @@
             <tfoot>
                 <tr>
                     <th>SL</th>
-                    <th>#MRR No.</th>
+                    <th>WOR No.</th>
                     <th>#PO No.</th>
-                    <th>#PO Date.</th>
                     <th>Supplier Name</th>
-                    <th>Challan No</th>
+                    <th>Branch Name</th>
                     <th>Submitted By</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($mrrs as $key => $mrr)
+                @foreach ($worData as $key => $wor)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                         <td><strong>#{{ $mrr->mrr_no }}</strong></td>
-                        <td>{{ $mrr->purchaseOrder->po_no }}</td>
-                        <td>{{ $mrr->purchaseOrder->date }}</td>
-                        <td>{{ $mrr->supplier->name }}</td>
-                        <td>{{ $mrr->challan_no }}</td>
-                        <td>{{ $mrr->createdBy->name }}</td>
+                        <td>{{ $wor->wor_no }}</td>
+                        <td>{{ $wor->purchaseOrder->po_no }}</td>
+                        <td>{{ $wor->supplier->name }}</td>
+                        <td>{{ $wor->branch->name }}</td>
+                        <td>{{ $wor->user->name }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('material-receives.show', $mrr->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('work-order-receives.show', $wor->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('material-receives.edit', $mrr->id) }}" data-toggle="tooltip"
+                                    <a href="{{ route('work-order-receives.edit', $wor->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     {!! Form::open([
-                                        'url' => route('material-receives.destroy', $mrr->id),
+                                        'url' => route('work-order-receives.destroy', $wor->id),
                                         'method' => 'delete',
                                         'class' => 'd-inline',
                                         'data-toggle' => 'tooltip',
