@@ -14,10 +14,10 @@ class MaterialController extends Controller
     use HasRoles;
     function __construct()
     {
-        // $this->middleware('permission:material-view|material-create|material-edit|material-delete', ['only' => ['index','show']]);
-        // $this->middleware('permission:material-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:material-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:material-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:material-view|material-create|material-edit|material-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:material-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:material-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:material-delete', ['only' => ['destroy']]);
     }
     public function index()
     {
@@ -46,14 +46,14 @@ class MaterialController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */ 
+     */
     public function store(MaterialRequest $request)
     {
-        try{
+        try {
             $data = $request->all();
             Material::create($data);
             return redirect()->route('materials.index')->with('message', 'Data has been inserted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('materials.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -94,11 +94,11 @@ class MaterialController extends Controller
      */
     public function update(MaterialRequest $request, Material $material)
     {
-        try{
+        try {
             $data = $request->all();
             $material->update($data);
             return redirect()->route('materials.index')->with('message', 'Data has been updated successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('materials.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -111,10 +111,10 @@ class MaterialController extends Controller
      */
     public function destroy(Material $material)
     {
-        try{
+        try {
             $material->delete();
             return redirect()->route('materials.index')->with('message', 'Data has been deleted successfully');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->route('materials.index')->withErrors($e->getMessage());
         }
     }

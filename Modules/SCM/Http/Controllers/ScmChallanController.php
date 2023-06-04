@@ -25,6 +25,7 @@ use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmRequisitionDetail;
+use Modules\SCM\Entities\ScmWor;
 use Modules\SCM\Http\Requests\ScmChallanRequest;
 
 class ScmChallanController extends Controller
@@ -244,7 +245,7 @@ class ScmChallanController extends Controller
         return [
             'branch_id' => $req->branch_id,
             'material_id' => $req->material_name[$key1],
-            'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : NULL)),
+            'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : (($req->received_type[$key1] == 'WOR') ? ScmWor::class : Null))),
             'received_type' => $req->received_type[$key1],
             'receiveable_id' => $req->type_id[$key1],
             'item_code' => $req->item_code[$key1],
@@ -259,7 +260,7 @@ class ScmChallanController extends Controller
     public function GetMrrDetails($req, $key1)
     {
         return  [
-            'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : NULL)),
+            'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : (($req->received_type[$key1] == 'WOR') ? ScmWor::class : NULL))),
             'receiveable_id' => $req->type_id[$key1],
             'item_code' => $req->item_code[$key1],
             'material_id'   => $req->material_name[$key1],

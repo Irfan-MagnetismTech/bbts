@@ -18,6 +18,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmMrrSerialCodeLine;
 use Illuminate\Support\Facades\Schema;
+use Modules\SCM\Entities\ScmWor;
 
 class ScmWcrController extends Controller
 {
@@ -198,7 +199,7 @@ class ScmWcrController extends Controller
         return [
             'received_type'     => strtoupper($req->received_type[$ke]) ?? NULL,
             'receiveable_id'    => $req->receiveable_id[$ke] ?? NULL,
-            'receiveable_type'  => (strtoupper($req->received_type[$ke]) == 'MRR') ? ScmMrr::class : ((strtoupper($req->received_type[$ke]) == 'WCR') ? ScmWcr::class : ((strtoupper($req->received_type[$ke]) == 'ERR') ? ScmErr::class : NULL)),
+            'receiveable_type'  => (strtoupper($req->received_type[$ke]) == 'MRR') ? ScmMrr::class : ((strtoupper($req->received_type[$ke]) == 'WCR') ? ScmWcr::class : ((strtoupper($req->received_type[$ke]) == 'ERR') ? ScmErr::class : ((strtoupper($req->received_type[$ke]) == 'WOR') ? ScmWor::class : NULL))),
             'material_id'       => $req->material_id[$ke] ?? null,
             'stockable_type'    => ScmWcr::class,
             'stockable_id'      => $id ?? null,
@@ -222,7 +223,7 @@ class ScmWcrController extends Controller
             ->where('quantity', '<=', 1)
             ->pluck('serial_code')
             ->toArray();
-        $receive_type = ($request->customQueryFields['type'] == 'MRR') ? ScmMrr::class : (($request->customQueryFields['type'] == 'WCR') ? ScmWcr::class : (($request->customQueryFields['type'] == 'ERR') ? ScmErr::class : NULL));
+        $receive_type = ($request->customQueryFields['type'] == 'MRR') ? ScmMrr::class : (($request->customQueryFields['type'] == 'WCR') ? ScmWcr::class : (($request->customQueryFields['type'] == 'ERR') ? ScmErr::class : (($request->customQueryFields['type'] == 'WOR') ? ScmWor::class : NULL)));
         $items = StockLedger::query()
             ->with(['material', 'brand'])
             ->whereIn('serial_code', $data)
