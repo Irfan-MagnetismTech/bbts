@@ -6,7 +6,7 @@
     $form_url = !empty($warranty_claim) ? route('warranty-claims.update', $warranty_claim->id) : route('warranty-claims.store');
     $form_method = !empty($warranty_claim) ? 'PUT' : 'POST';
     
-    $date = old('date', !empty($warranty_claim) ? $warranty_claim->date : null);
+    $date = old('date', !empty($warranty_claim) ? $warranty_claim->date : today()->format('d-m-Y'));
     $type = old('type', !empty($warranty_claim) ? $warranty_claim->type : null);
     $wcr_no = old('wcr_no', !empty($warranty_claim) ? $warranty_claim->wcr_no : null);
     $supplier_id = old('supplier_id', !empty($warranty_claim) ? $warranty_claim->supplier_id : null);
@@ -85,7 +85,7 @@
         <div class="form-group col-3 date">
             <label for="date">Applied Date:</label>
             <input class="form-control" id="date" name="date" aria-describedby="date"
-                value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
+                value="{{ old('date') ?? (@$date) }}" readonly placeholder="Select a Date">
         </div>
         <div class="form-group col-3 supplier_name">
             <label for="select2">Supplier Name</label>
@@ -186,11 +186,11 @@
                     <td>
                         <select name="received_type[]" class="form-control received_type" autocomplete="off">
                             <option value="" disabled>Select Out From</option>
-                            @if(in_array($type, ['MRR', 'WCR'])) 
-                            <option value="mrr" @selected($type == 'MRR')>{{ strToUpper('mrr') }}</option>
-                            <option value="wcr" @selected($type == 'WCR')>{{ strToUpper('wcr') }}</option>
+                            @if(in_array($received_type[$key], ['MRR', 'WCR'])) 
+                            <option value="mrr" @selected($received_type[$key] == 'MRR')>{{ strToUpper('mrr') }}</option>
+                            <option value="wcr" @selected($received_type[$key] == 'WCR')>{{ strToUpper('wcr') }}</option>
                             @else
-                            <option value="err" @selected($type == 'ERR')>{{ strToUpper('err') }}</option>
+                            <option value="err" @selected($received_type[$key] == 'ERR')>{{ strToUpper('err') }}</option>
                             @endif 
                         </select>
                     </td>
@@ -260,8 +260,8 @@
             format: "dd-mm-yyyy",
             autoclose: true,
             todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());
+            showOtherMonths: true,
+        });
         
         /* Append row */
         $(document).ready(function() {
@@ -435,6 +435,9 @@
                 type : $("input[name='type']:checked").val(),
                 branch_id : $('#branch_id').find(':selected').val(),
                 type : event_this.find('.received_type').find(':selected').text(),
+                @if (!empty($warranty_claim))
+                wcr_id: {{$warranty_claim->id}}
+                @endif  
             }
             jquaryUiAjax(this, "{{ route('searchSerialForWcr') }}", uiList, myObject);
 

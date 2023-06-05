@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('scm_wcr_id')->constrained('scm_wcrs', 'id')->cascadeOnDelete();
             $table->string('received_type')->nullable();
+            $table->unsignedBigInteger('receiveable_id')->nullable();
             $table->unsignedBigInteger('material_id');
             $table->string('item_code')->nullable();
             $table->string('serial_code')->nullable();

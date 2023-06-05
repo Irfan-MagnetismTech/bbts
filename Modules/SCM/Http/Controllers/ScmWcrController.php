@@ -18,6 +18,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmMrrSerialCodeLine;
 use Illuminate\Support\Facades\Schema;
+use Modules\SCM\Entities\ScmWcrLine;
 use Modules\SCM\Entities\ScmWor;
 
 class ScmWcrController extends Controller
@@ -218,47 +219,70 @@ class ScmWcrController extends Controller
         $data = StockLedger::whereHas('material', function ($item) use ($request) {
             $item->where('name', 'like', '%' . $request->search . '%');
         })->whereHasMorph('stockable', [ScmMrr::class], function ($item) use ($request) {
-            return $item->where('supplier_id', request()->customQueryFields['supplier_id']);
+            $item->where('supplier_id', $request->customQueryFields['supplier_id']);
         })
             ->where('quantity', '<=', 1)
             ->pluck('serial_code')
             ->toArray();
-        $receive_type = ($request->customQueryFields['type'] == 'MRR') ? ScmMrr::class : (($request->customQueryFields['type'] == 'WCR') ? ScmWcr::class : (($request->customQueryFields['type'] == 'ERR') ? ScmErr::class : (($request->customQueryFields['type'] == 'WOR') ? ScmWor::class : NULL)));
+
+        $receiveType = match ($request->customQueryFields['type']) {
+            'MRR' => ScmMrr::class,
+            'WCR' => ScmWcr::class,
+            'ERR' => ScmErr::class,
+            'WOR' => ScmWor::class,
+            default => null,
+        };
+
         $items = StockLedger::query()
             ->with(['material', 'brand'])
             ->whereIn('serial_code', $data)
-            ->where('branch_id', request()->customQueryFields['branch_id'])
-            ->when(request()->customQueryFields['type'] == 'client', function ($qr) use ($request) {
+            ->where('branch_id', $request->customQueryFields['branch_id'])
+            ->when($request->customQueryFields['type'] == 'client', function ($qr) use ($request) {
                 $qr->whereHasMorph('stockable', [ScmErr::class], function ($item) use ($request) {
-                    return $item->where('client_no', request()->customQueryFields['client_no']);
+                    $item->where('client_no', $request->customQueryFields['client_no']);
                 });
             })
             ->get()
-            ->groupBy(['serial_code'])
-            ->map(function ($group) {
-                return $group->last();
+            ->groupBy('serial_code')
+            ->map(function ($group) use ($request) {
+                if ($group->last()->stockable_type == ScmWcr::class && isset($request->customQueryFields['wcr_id'])) {
+                    return $group->slice(-2, 1)->last();
+                } else {
+                    return $group->last();
+                }
             })
-            ->filter(function ($item) use ($receive_type) {
-                return $item->stockable_type == $receive_type;
+            ->filter(function ($item) use ($receiveType) {
+                return $item->stockable_type == $receiveType;
             })
             ->flatten()
-            ->map(fn ($item) => [
-                'value' => $item->material->name,
-                'label' => $item->material->name . ' - ' . $item->serial_code . ' - ' . $item->brand->name . ' - ' . $item->model,
-                'material_id' => $item->material_id,
-                'serial_code' => $item->serial_code,
-                'brand_id' => $item->brand_id,
-                'brand_name' => $item->brand->name,
-                'model' => $item->model,
-                'unit' => $item->material->unit,
-                'item_code' => $item->material->code,
-                'item_type' => $item->material->type,
-                'receiving_date' => ScmMrrSerialCodeLine::where('serial_or_drum_code', $item->serial_code)->get()->first()->scmMrrLines->scmMrr->date,
-                'warranty_period' => ScmMrrSerialCodeLine::where('serial_or_drum_code', $item->serial_code)->get()->first()->scmMrrLines->warranty_period,
-                'remaining_days' => (((ScmMrrSerialCodeLine::where('serial_or_drum_code', $item->serial_code)->get()->first()->scmMrrLines->warranty_period) - (Carbon::now()->diffInDays(Carbon::parse(ScmMrrSerialCodeLine::where('serial_or_drum_code', $item->serial_code)->get()->first()->scmMrrLines->scmMrr->date)))) > 0) ? ((ScmMrrSerialCodeLine::where('serial_or_drum_code', $item->serial_code)->get()->first()->scmMrrLines->warranty_period) - (Carbon::now()->diffInDays(Carbon::parse(ScmMrrSerialCodeLine::where('serial_or_drum_code', $item->serial_code)->get()->first()->scmMrrLines->scmMrr->date))))  : 0,
-                'challan_no' => ScmMrrSerialCodeLine::where('serial_or_drum_code', $item->serial_code)->get()->first()->scmMrrLines->scmMrr->challan_no,
-                'receiveable_id' => $item->receiveable_id
-            ]);
+            ->map(function ($item) {
+                $serialCodeLine = ScmMrrSerialCodeLine::where('serial_or_drum_code', $item->serial_code)->first();
+                $mrrLines = $serialCodeLine->scmMrrLines;
+                $mrr = $mrrLines->scmMrr;
+
+                $receivingDate = $mrr->date;
+                $warrantyPeriod = $mrrLines->warranty_period;
+                $remainingDays = max(0, $warrantyPeriod - Carbon::parse($receivingDate)->diffInDays(Carbon::now()));
+
+                return [
+                    'value' => $item->material->name,
+                    'label' => $item->material->name . ' - ' . $item->serial_code . ' - ' . $item->brand->name . ' - ' . $item->model,
+                    'material_id' => $item->material_id,
+                    'serial_code' => $item->serial_code,
+                    'brand_id' => $item->brand_id,
+                    'brand_name' => $item->brand->name,
+                    'model' => $item->model,
+                    'unit' => $item->material->unit,
+                    'item_code' => $item->material->code,
+                    'item_type' => $item->material->type,
+                    'receiving_date' => $receivingDate,
+                    'warranty_period' => $warrantyPeriod,
+                    'remaining_days' => $remainingDays,
+                    'challan_no' => $mrr->challan_no,
+                    'receiveable_id' => $item->receiveable_id,
+                ];
+            });
+
         return response()->json($items);
     }
 }
