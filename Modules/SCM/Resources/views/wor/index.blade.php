@@ -68,6 +68,8 @@
                                         'data-toggle' => 'tooltip',
                                         'title' => 'Delete',
                                     ]) !!}
+                                    @csrf
+                                    @method('DELETE')
                                     {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
                                     {!! Form::close() !!}
                                 </nobr>

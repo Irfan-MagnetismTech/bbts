@@ -8,7 +8,7 @@
     $form_method = !empty($work_order_receife) ? 'PUT' : 'POST';
     
     $branch_id = old('branch_id', !empty($work_order_receife) ? $work_order_receife->branch_id : null);
-    $applied_date = old('date', !empty($work_order_receife) ? $work_order_receife->date : null);
+    $applied_date = old('date', !empty($work_order_receife) ? $work_order_receife->date : today()->format('d-m-Y'));
     $po_no = old('po_no', !empty($work_order_receife) ? $work_order_receife->purchaseOrder->po_no : null);
     $po_id = old('purchase_order_id', !empty($work_order_receife) ? $work_order_receife->purchase_order_id : null);
     $po_date = old('po_date', !empty($work_order_receife) ? $work_order_receife->purchaseOrder->date : null);
@@ -106,7 +106,7 @@
         </div>
     </div>
 
-    <table class="table table-bordered" id="material_requisition">
+    <table class="table table-bordered" id="wor_table">
         <thead>
             <tr>
                 <th>Material Name</th>
@@ -114,15 +114,17 @@
                 <th>Brand</th>
                 <th>Serial Code</th>
                 <th>Unit</th>
-                <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
+                <th><i class="btn btn-primary btn-sm fa fa-plus add-wor-row"></i></th>
             </tr>
         </thead>
         <tbody>
             @php
                 $lines = old('material_id', !empty($work_order_receife) ? $work_order_receife->lines->pluck('material_id') : []);
                 $material_name = old('material_name', !empty($work_order_receife) ? $work_order_receife->lines->pluck('material.name') : []);
+                $item_code = old('item_code', !empty($work_order_receife) ? $work_order_receife->lines->pluck('material.code') : []);
                 $model = old('model', !empty($work_order_receife) ? $work_order_receife->lines->pluck('model') : []);
                 $brand = old('brand', !empty($work_order_receife) ? $work_order_receife->lines->pluck('brand.name') : []);
+                $brand_id = old('brand_id', !empty($work_order_receife) ? $work_order_receife->lines->pluck('brand_id') : []);
                 $serial_code = old('serial_code', !empty($work_order_receife) ? $work_order_receife->lines->pluck('serial_code') : []);
                 $unit = old('unit', !empty($work_order_receife) ? $work_order_receife->lines->pluck('material.unit') : []);
             @endphp
@@ -134,6 +136,8 @@
                             value="{{ $material_name[$loop->index] ?? '' }}" placeholder="Material Name">
                         <input type="hidden" class="form-control material_id" id="material_id" name="material_id[]"
                             value="{{ $lines[$loop->index] }}" placeholder="Material Name" readonly>
+                        <input type="hidden" class="form-control item_code" id="item_code" name="item_code[]"
+                            value="{{ $item_code[$loop->index] ?? '' }}" placeholder="Item Code" readonly>
                     </td>
                     <td>
                         <input type="text" class="form-control model" id="model" name="model[]"
@@ -142,6 +146,8 @@
                     <td>
                         <input type="text" class="form-control brand" id="brand" name="brand[]"
                             value="{{ $brand[$loop->index] ?? '' }}" placeholder="Brand" readonly>
+                        <input type="hidden" class="form-control brand_id" id="brand_id" name="brand_id[]"
+                            value="{{ $brand_id[$loop->index] ?? '' }}" placeholder="Brand" readonly>
                     </td>
                     <td>
                         <input type="text" class="form-control serial_code" id="serial_code" name="serial_code[]"
@@ -152,7 +158,7 @@
                             value="{{ $unit[$loop->index] ?? '' }}" placeholder="Unit" readonly>
                     </td>
                     <td>
-                        <i class="btn btn-danger btn-sm fa fa-trash remove-requisition-row"></i>
+                        <i class="btn btn-danger btn-sm fa fa-trash remove-wor-row"></i>
                     </td>
                 </tr>
             @endforeach
@@ -173,9 +179,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
 
     <script>
-        /*****/
-        const CSRF_TOKEN = "{{ csrf_token() }}";
-
         $(document).ready(function() {
             $("#po_no").autocomplete({
                 source: function(request, response) {
@@ -202,31 +205,21 @@
                 }
             })
 
-            $('.select2').select2({
-                maximumSelectionLength: 1
-            });
-
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
             //using form custom function js file
-            $('#challan_date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            }).datepicker("setDate", new Date());
+
             $('#applied_date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
-            }).datepicker("setDate", new Date());
+            });
 
             @if (empty($work_order_receife) && empty(old('material_id')))
-                appendCalculationRow();
+                appendDataRow();
             @endif
-            function appendCalculationRow() {
-
+            function appendDataRow() {
                 let row = `<tr>
                             <td>
                                 <input type="text" name="material_name[]" class="form-control material_name" autocomplete="off">
@@ -249,19 +242,18 @@
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-wor-row"></i>
                             </td>
                         </tr>
                     `;
-                $('#material_requisition tbody').append(row);
-
+                $('#wor_table tbody').append(row);
             }
             /* Adds and removes quantity row on click */
-            $("#material_requisition")
-                .on('click', '.add-requisition-row', () => {
-                    appendCalculationRow();
+            $("#wor_table")
+                .on('click', '.add-wor-row', () => {
+                    appendDataRow();
                 })
-                .on('click', '.remove-requisition-row', function() {
+                .on('click', '.remove-wor-row', function() {
                     $(this).closest('tr').remove();
                 });
         });
@@ -270,6 +262,9 @@
             var event_this = $(this).closest('tr');
             let myObject = {
                 po_id: $('#purchase_order_id').val(),
+                @if (!empty($work_order_receife))
+                    wor_id: {{ $work_order_receife->id }},
+                @endif
             }
             jquaryUiAjax(this, "{{ route('searchSerialForWor') }}", uiList, myObject);
 

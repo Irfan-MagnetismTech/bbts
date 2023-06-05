@@ -105,31 +105,26 @@ class ScmWorController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, ScmWor $scm_wor)
+    public function update(Request $request, ScmWor $work_order_receife)
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('date', 'branch_id');
-            $wcrr = ScmWor::create($data);
-            $scm_wor->update($data);
+
+            $work_order_receife->update($request->all());
+            $work_order_receife->lines()->delete();
+            $work_order_receife->stockable()->delete();
 
             $stock = [];
             $wor_lines = [];
-            foreach ($request->material_name as $key => $val) {
-                if (isset($request->status[$key]) && $request->status[$key]) {
-                    $wor_lines[] = $this->getLineData($request, $key, $wcrr->id);
-                    $stock[] = $this->getStockData($request, $key, $wcrr->id);
-                }
+            foreach ($request->material_id as $key => $val) {
+                $wor_lines[] = $this->getLineData($request, $key, $work_order_receife->id);
+                $stock[] = $this->getStockData($request, $key, $work_order_receife->id);
             };
-            $scm_wor->lines()->delete();
-            $scm_wor->stockable()->delete();
-            $scm_wor->lines()->createMany($wor_lines);
-            $scm_wor->stockable()->createMany($stock);
 
-            $wcrr->lines()->createMany($wor_lines);
-            $wcrr->stockable()->createMany($stock);
+            $work_order_receife->lines()->createMany($wor_lines);
+            $work_order_receife->stockable()->createMany($stock);
             DB::commit();
-            return redirect()->route('work-order-receives.index')->with('message', 'Data has been created successfully');
+            return redirect()->route('work-order-receives.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $err) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($err->getMessage());
@@ -141,9 +136,20 @@ class ScmWorController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ScmWor $work_order_receife)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $work_order_receife->delete();
+            $work_order_receife->lines()->delete();
+            $work_order_receife->stockable()->delete();
+
+            DB::commit();
+            return redirect()->route('work-order-receives.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($err->getMessage());
+        }
     }
 
     public function searchSerialForWor()
@@ -165,7 +171,11 @@ class ScmWorController extends Controller
             ->get()
             ->groupBy(['serial_code'])
             ->map(function ($group) {
-                return $group->last();
+                if ($group->last()->stockable_type == ScmWor::class && isset(request()->customQueryFields['wor_id'])) {
+                    return $group->slice(-2, 1)->last();
+                } else {
+                    return $group->last();
+                }
             })
             ->filter(function ($item) {
                 return $item->stockable_type == ScmMur::class;
