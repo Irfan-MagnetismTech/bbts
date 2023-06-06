@@ -19,10 +19,8 @@ trait StockLedgerTrait
 
     public function isDeleteable()
     {
-        return $this->stockable->filter(function ($item) {
+        return $this->stockable->contains(function ($item) {
             return $item->receiveable()->exists();
-        })->map(function ($item) {
-            return $item->receiveable()->exists();
-        })->first();
+        });
     }
 }
