@@ -49,6 +49,7 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
+                                    @if (!$ScmData->isDeleteable())
                                     <a href="{{ route('warranty-claims-receives.edit', $ScmData->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
@@ -59,6 +60,7 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
+                                    @endif
                                 </nobr>
                             </div>
                         </td>

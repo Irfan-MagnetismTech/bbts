@@ -52,6 +52,7 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
+                                    @if (!$ScmData->isDeleteable())
                                     <a href="{{ route('warranty-claims.edit', $ScmData->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
@@ -63,6 +64,7 @@
                                                 class="fas fa-trash"></i></button>
                                     </form>
                                     <button type="button" class="btn btn-primary btn-outline-primary waves-effect md-trigger" onclick="trig({{$ScmData->id}})">Sent To Supplier</button>
+                                    @endif
                                     {{-- @if(in_array($ScmData->type, ['client', 'pop']))
                                     <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-secondary">MUR</a>
