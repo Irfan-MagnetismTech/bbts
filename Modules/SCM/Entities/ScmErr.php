@@ -9,9 +9,11 @@ use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\ScmErrLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmErr extends Model
 {
+    use StockLedgerTrait;
     protected $guarded = [];
 
     public function getDateAttribute($input)
@@ -54,10 +56,5 @@ class ScmErr extends Model
     public function pop()
     {
         return $this->belongsTo(Pop::class);
-    }
-
-    public function stockable()
-    {
-        return $this->morphMany(StockLedger::class, 'stockable');
     }
 }

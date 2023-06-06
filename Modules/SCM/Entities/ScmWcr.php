@@ -8,9 +8,11 @@ use Modules\SCM\Entities\ScmWcrLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\Client;
+use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmWcr extends Model
 {
+    use StockLedgerTrait;
     protected $guarded = [];
 
     public function lines()
@@ -37,11 +39,6 @@ class ScmWcr extends Model
     public function setSendingDateAttribute($input)
     {
         $this->attributes['sending_date'] = !empty($input) ? Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
-    }
-
-    public function stockable()
-    {
-        return $this->morphMany(StockLedger::class, 'stockable');
     }
 
     public function branch()

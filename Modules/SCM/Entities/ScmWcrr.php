@@ -7,9 +7,11 @@ use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\ScmWcrrLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmWcrr extends Model
 {
+    use StockLedgerTrait;
     protected $guarded = [];
 
     public function lines()
@@ -25,11 +27,6 @@ class ScmWcrr extends Model
     public function setDateAttribute($input)
     {
         $this->attributes['date'] = !empty($input) ? Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
-    }
-
-    public function stockable()
-    {
-        return $this->morphMany(StockLedger::class, 'stockable');
     }
 
     public function branch()

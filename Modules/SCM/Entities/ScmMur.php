@@ -9,9 +9,11 @@ use Modules\SCM\Entities\ScmChallan;
 use Modules\SCM\Entities\ScmMurLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
+use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmMur extends Model
 {
+    use StockLedgerTrait;
     protected $fillable = [
         'type',
         'purpose',
@@ -29,11 +31,6 @@ class ScmMur extends Model
     public function lines()
     {
         return $this->hasMany(ScmMurLine::class, 'scm_mur_id', 'id');
-    }
-
-    public function stockable()
-    {
-        return $this->morphMany(StockLedger::class, 'stockable');
     }
 
     public function challan()

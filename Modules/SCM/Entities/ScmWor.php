@@ -10,9 +10,11 @@ use Modules\SCM\Entities\ScmWorLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\PurchaseOrder;
+use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmWor extends Model
 {
+    use StockLedgerTrait;
     protected $fillable = [
         'wor_no', 'supplier_id', 'purchase_order_id', 'date', 'branch_id', 'status', 'created_by'
     ];
@@ -31,11 +33,6 @@ class ScmWor extends Model
     public function lines()
     {
         return $this->hasMany(ScmWorLine::class, 'scm_wor_id', 'id');
-    }
-
-    public function stockable()
-    {
-        return $this->morphMany(StockLedger::class, 'stockable');
     }
 
     public function purchaseOrder()
