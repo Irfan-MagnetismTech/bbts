@@ -57,21 +57,24 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('work-order-receives.show', $wor->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('work-order-receives.show', $wor->id) }}" data-toggle="tooltip"
+                                        title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('work-order-receives.edit', $wor->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    {!! Form::open([
-                                        'url' => route('work-order-receives.destroy', $wor->id),
-                                        'method' => 'delete',
-                                        'class' => 'd-inline',
-                                        'data-toggle' => 'tooltip',
-                                        'title' => 'Delete',
-                                    ]) !!}
-                                    @csrf
-                                    @method('DELETE')
-                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
-                                    {!! Form::close() !!}
+                                    @if (!$scmMur->isDeleteable())
+                                        <a href="{{ route('work-order-receives.edit', $wor->id) }}" data-toggle="tooltip"
+                                            title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                        {!! Form::open([
+                                            'url' => route('work-order-receives.destroy', $wor->id),
+                                            'method' => 'delete',
+                                            'class' => 'd-inline',
+                                            'data-toggle' => 'tooltip',
+                                            'title' => 'Delete',
+                                        ]) !!}
+                                        @csrf
+                                        @method('DELETE')
+                                        {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
+                                        {!! Form::close() !!}
+                                    @endif
                                 </nobr>
                             </div>
                         </td>

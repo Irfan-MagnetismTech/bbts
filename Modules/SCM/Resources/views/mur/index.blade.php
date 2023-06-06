@@ -14,7 +14,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    
+
 @endsection
 @section('sub-title')
     Total: {{ count($scmMurs) }}
@@ -58,16 +58,19 @@
                                     <a href="{{ url("scm/material-utilizations/$scmMur->id") }}" data-toggle="tooltip"
                                         title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('material-utilizations.edit', $scmMur->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    @if (!$scmMur->isDeleteable())
+                                        <a href="{{ route('material-utilizations.edit', $scmMur->id) }}"
+                                            data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
+                                                class="fas fa-pen"></i></a>
 
-                                    <form action="{{ url("scm/material-utilizations/$scmMur->id") }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
+                                        <form action="{{ url("scm/material-utilizations/$scmMur->id") }}" method="POST"
+                                            data-toggle="tooltip" title="Delete" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                    @endif
                                 </nobr>
                             </div>
                         </td>
@@ -79,6 +82,5 @@
 @endsection
 
 @section('script')
-    <script>
-    </script>
+    <script></script>
 @endsection

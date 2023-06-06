@@ -11,8 +11,7 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('errs.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
-            class="fa fa-plus"></i></a>
+    <a href="{{ route('errs.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
 @endsection
 
 @section('sub-title')
@@ -48,18 +47,19 @@
                                 <nobr>
                                     <a href="{{ route('errs.show', $err->id) }}" data-toggle="tooltip" title="Show"
                                         class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-
-                                    <a href="{{ route('errs.edit', $err->id) }}" data-toggle="tooltip" title="Edit"
-                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    {!! Form::open([
-                                        'url' => route('errs.destroy', $err->id),
-                                        'method' => 'delete',
-                                        'class' => 'd-inline',
-                                        'data-toggle' => 'tooltip',
-                                        'title' => 'Delete',
-                                    ]) !!}
-                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
-                                    {!! Form::close() !!}
+                                    @if (!$scmMur->isDeleteable())
+                                        <a href="{{ route('errs.edit', $err->id) }}" data-toggle="tooltip" title="Edit"
+                                            class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                        {!! Form::open([
+                                            'url' => route('errs.destroy', $err->id),
+                                            'method' => 'delete',
+                                            'class' => 'd-inline',
+                                            'data-toggle' => 'tooltip',
+                                            'title' => 'Delete',
+                                        ]) !!}
+                                        {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
+                                        {!! Form::close() !!}
+                                    @endif
                                 </nobr>
                             </div>
                         </td>
