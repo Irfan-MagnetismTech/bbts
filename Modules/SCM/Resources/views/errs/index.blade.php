@@ -16,7 +16,7 @@
 
 @section('sub-title')
     Total: {{ count($errs) }} 
-    <x:warning-paragraph />
+    <x-warning-paragraph name="ERR" />
 @endsection
 
 @section('content')

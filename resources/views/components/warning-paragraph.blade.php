@@ -1,1 +1,3 @@
-<p class="text-danger text-center">** Delete and Edit option is disabled if ERR have any receiveable type **</p>
+@props(["name"])
+
+<p class="text-danger text-center">** Delete and Edit option is disabled if {{ $name }} have any receiveable type **</p>

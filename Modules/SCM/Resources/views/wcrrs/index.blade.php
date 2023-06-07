@@ -17,7 +17,7 @@
 @endsection
 @section('sub-title')
     Total: {{ count($ScmDatas) }}
-    <x:warning-paragraph />
+    <x-warning-paragraph name="WCRR" />
 @endsection
 
 @section('content')

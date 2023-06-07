@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Material Receive Report')
+@section('title', 'Material Issue Report')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
@@ -17,7 +17,7 @@
 
 @section('sub-title')
     Total: {{ count($mirs) }}
-    <x:warning-paragraph />
+    <x-warning-paragraph name="MIR" />
 @endsection
 
 @section('content')

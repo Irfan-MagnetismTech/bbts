@@ -17,7 +17,7 @@
 
 @section('sub-title')
     Total: {{ count($mrrs) }}
-    <x:warning-paragraph />
+    <x-warning-paragraph name="MRR" />
 @endsection
 
 @section('content')
