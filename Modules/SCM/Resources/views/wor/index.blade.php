@@ -17,6 +17,7 @@
 
 @section('sub-title')
     Total: {{ count($worData) }}
+    <x:warning-paragraph />
 @endsection
 
 @section('content')

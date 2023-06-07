@@ -3,7 +3,7 @@
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{asset('css/component.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/component.css') }}">
 @endsection
 
 @section('breadcrumb-title')
@@ -12,10 +12,12 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('warranty-claims-receives.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('warranty-claims-receives.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
     Total: {{ count($ScmDatas) }}
+    <x:warning-paragraph />
 @endsection
 
 @section('content')
@@ -50,16 +52,17 @@
                             <div class="icon-btn">
                                 <nobr>
                                     @if (!$ScmData->isDeleteable())
-                                    <a href="{{ route('warranty-claims-receives.edit', $ScmData->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                        <a href="{{ route('warranty-claims-receives.edit', $ScmData->id) }}"
+                                            data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
+                                                class="fas fa-pen"></i></a>
 
-                                    <form action="{{ url("scm/warranty-claims-receives/$ScmData->id") }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
+                                        <form action="{{ url("scm/warranty-claims-receives/$ScmData->id") }}" method="POST"
+                                            data-toggle="tooltip" title="Delete" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
                                     @endif
                                 </nobr>
                             </div>
@@ -69,7 +72,7 @@
             </tbody>
         </table>
     </div>
-    
+
 @endsection
 
 @section('script')

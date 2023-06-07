@@ -3,7 +3,7 @@
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{asset('css/component.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/component.css') }}">
 @endsection
 
 @section('breadcrumb-title')
@@ -12,10 +12,12 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('warranty-claims.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('warranty-claims.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
     Total: {{ count($ScmDatas) }}
+    <x:warning-paragraph />
 @endsection
 
 @section('content')
@@ -53,19 +55,21 @@
                             <div class="icon-btn">
                                 <nobr>
                                     @if (!$ScmData->isDeleteable())
-                                    <a href="{{ route('warranty-claims.edit', $ScmData->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                        <a href="{{ route('warranty-claims.edit', $ScmData->id) }}" data-toggle="tooltip"
+                                            title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ url("scm/warranty-claims/$ScmData->id") }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
-                                    <button type="button" class="btn btn-primary btn-outline-primary waves-effect md-trigger" onclick="trig({{$ScmData->id}})">Sent To Supplier</button>
+                                        <form action="{{ url("scm/warranty-claims/$ScmData->id") }}" method="POST"
+                                            data-toggle="tooltip" title="Delete" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                        <button type="button"
+                                            class="btn btn-primary btn-outline-primary waves-effect md-trigger"
+                                            onclick="trig({{ $ScmData->id }})">Sent To Supplier</button>
                                     @endif
-                                    {{-- @if(in_array($ScmData->type, ['client', 'pop']))
+                                    {{-- @if (in_array($ScmData->type, ['client', 'pop']))
                                     <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-secondary">MUR</a>
                                     @endif --}}
@@ -81,21 +85,21 @@
     <div class="md-modal md-effect-13" id="modal-13">
         <div class="md-content">
             {!! Form::open([
-                'url' => route('sentToSupplier',0),
+                'url' => route('sentToSupplier', 0),
                 'method' => 'post',
                 'encType' => 'multipart/form-data',
                 'class' => 'custom-form',
-                'id' => 'modal-form'
+                'id' => 'modal-form',
             ]) !!}
             <h3>Sent To Supplier</h3>
             <div>
                 <p></p>
-                    <li>
-                            <label for="client_address">Client Address:</label>
-                            
-                         <input type="text" class="form-control date" id="client_name" aria-describedby="date" name="date"
+                <li>
+                    <label for="client_address">Client Address:</label>
+
+                    <input type="text" class="form-control date" id="client_name" aria-describedby="date" name="date"
                         value="{{ old('date') ?? (@$date ?? '') }}" placeholder="Search...">
-                    </li>
+                </li>
                 <div class="row">
                     <div class="offset-md-4 col-md-4 mt-2">
                         <div class="input-group input-group-sm ">
@@ -107,26 +111,27 @@
             </div>
         </div>
     </div>
-       <!--animation modal  Dialogs ends -->
-       <div class="md-overlay"></div>
+    <!--animation modal  Dialogs ends -->
+    <div class="md-overlay"></div>
 @endsection
 
 @section('script')
-<script src="{{asset('js/classie.js')}}"></script>
-{{-- <script  src="{{asset('js/modalEffects.js')}}"></script> --}}
-<!-- Custom js -->
-<script  src="{{asset('js/script.js')}}"></script>
+    <script src="{{ asset('js/classie.js') }}"></script>
+    {{-- <script  src="{{asset('js/modalEffects.js')}}"></script> --}}
+    <!-- Custom js -->
+    <script src="{{ asset('js/script.js') }}"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             $('.date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
             }).datepicker("setDate", new Date());
-            
+
         });
-        function trig(id){
+
+        function trig(id) {
             var form = $('#modal-form')
             var actionUrl = form.attr('action');
 
@@ -135,7 +140,7 @@
             form.attr('action', updatedUrl);
             $('#modal-13').addClass('md-show');
         }
-        $(document).on('click','.md-overlay' ,function(event) {
+        $(document).on('click', '.md-overlay', function(event) {
             $('#modal-13').removeClass('md-show');
         });
     </script>

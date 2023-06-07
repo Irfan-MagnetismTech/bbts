@@ -17,6 +17,7 @@
 
 @section('sub-title')
     Total: {{ count($mirs) }}
+    <x:warning-paragraph />
 @endsection
 
 @section('content')

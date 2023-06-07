@@ -18,6 +18,7 @@
 @endsection
 @section('sub-title')
     Total: {{ count($scmMurs) }}
+    <x:warning-paragraph />
 @endsection
 
 

@@ -18,6 +18,7 @@
 @endsection
 @section('sub-title')
     Total: {{ count($challans) }}
+    <x:warning-paragraph />
 @endsection
 
 @section('content')

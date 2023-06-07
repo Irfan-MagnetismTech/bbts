@@ -1,0 +1,1 @@
+<p class="text-danger text-center">** Delete and Edit option is disabled if ERR have any receiveable type **</p>
