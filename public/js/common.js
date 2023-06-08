@@ -65,10 +65,18 @@ window.onload = function() {
     }
 };
 
-$(".form-item input").on("keyup", function() {
+$(".form-item input").on("keyup change", function() {
     if ($(this).val().trim() !== "") {
         $(this).attr('value',$(this).val());
     } else {
         $(this).attr('value',$(this).val());
+    }
+});
+
+$(document).on('change', '.form-item input', function() {
+    if ($(this).val().trim() !== "") {
+        $(this).attr('value', $(this).val());
+    } else {
+        $(this).attr('value', $(this).val());
     }
 });
