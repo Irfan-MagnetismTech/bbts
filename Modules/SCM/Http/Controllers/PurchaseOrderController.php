@@ -20,15 +20,22 @@ use Modules\SCM\Entities\IndentLine;
 use Modules\SCM\Entities\PoMaterial;
 use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
 use Modules\SCM\Http\Requests\PurchaseOrderRequest;
+use Spatie\Permission\Traits\HasRoles;
+
 
 use function Termwind\render;
 
 class PurchaseOrderController extends Controller
 {
+    use HasRoles;
     private $purchaseOrderNo;
 
     public function __construct(BbtsGlobalService $globalService)
     {
+        $this->middleware('permission:scm-purchase-order-view|scm-purchase-order-create|scm-purchase-order-edit|scm-purchase-order-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-purchase-order-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-purchase-order-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-purchase-order-delete', ['only' => ['destroy']]);
         $this->purchaseOrderNo = $globalService->generateUniqueId(PurchaseOrder::class, 'PO');
     }
     /**
@@ -73,6 +80,7 @@ class PurchaseOrderController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $validatedRequest = $this->checkValidation($request);
         if (!empty($validatedRequest->original)) {
             return response()->json($validatedRequest->original);
@@ -97,6 +105,7 @@ class PurchaseOrderController extends Controller
             return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Created Successfully'], 200);
         } catch (QueryException $e) {
             DB::rollBack();
+
             return response()->json($e->getMessage(), 500);
         }
     }
@@ -127,10 +136,11 @@ class PurchaseOrderController extends Controller
             ->where('indent_id', $purchaseOrder->indent_id)
             ->get()
             ->map(
-                fn ($item) =>
-                [
-                    $item->scmPurchaseRequisition->id => $item->scmPurchaseRequisition->prs_no
-                ]
+                function ($item) {
+                    return [
+                        $item->scmPurchaseRequisition->id => $item->scmPurchaseRequisition->prs_no
+                    ];
+                }
             );
 
         foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
@@ -164,11 +174,10 @@ class PurchaseOrderController extends Controller
 
             $oldPoCompositeKeys = $purchaseOrder->purchaseOrderLines()->pluck('po_composit_key')->unique();
             $oldpoMaterials = PoMaterial::whereIn('po_composit_key', $oldPoCompositeKeys)->get();
-            $oldpoMaterials->each->forceDelete();
 
+            $oldpoMaterials->each->forceDelete();
             $purchaseOrder->purchaseOrderLines()->delete();
             $purchaseOrder->purchaseOrderLines()->createMany($finalData['purchaseOrderLinesData']);
-
             $purchaseOrder->poTermsAndConditions()->delete();
             if ($finalData['poTermsAndConditions'] != null) {
                 $purchaseOrder->poTermsAndConditions()->createMany($finalData['poTermsAndConditions']);
@@ -242,6 +251,7 @@ class PurchaseOrderController extends Controller
     private function checkValidation($request)
     {
         $customValidations = Validator::make($request->all(), [
+            'po_type' => 'required',
             'date' => 'required',
             'supplier_id' => 'required',
             'indent_id' => 'required',
@@ -250,6 +260,7 @@ class PurchaseOrderController extends Controller
             'matterial_name.*' => 'required',
             'material_id.*' => 'required',
         ], [
+            'po_type.required' => 'PO Type is required',
             'date.required' => 'Date is required',
             'supplier_id.required' => 'Supplier is required',
             'indent_id.required' => 'Indent is required',

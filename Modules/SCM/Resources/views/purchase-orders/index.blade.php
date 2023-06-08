@@ -27,6 +27,7 @@
                 <tr>
                     <th>SL</th>
                     <th>#Po No.</th>
+                    <th>PO type</th>
                     <th>Supplier Name</th>
                     <th>Purchaased Date</th>
                     <th>Submitted By</th>
@@ -38,6 +39,7 @@
                 <tr>
                     <th>SL</th>
                     <th>#Po No.</th>
+                    <th>PO type</th>
                     <th>Supplier Name</th>
                     <th>Purchaased Date</th>
                     <th>Submitted By</th>
@@ -49,7 +51,8 @@
                 @foreach ($all_pos as $key => $po)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                         <td><strong>#{{ $po->po_no }}</strong></td>
+                        <td><strong>#{{ $po->po_no }}</strong></td>
+                        <td>{{ $po->po_type }}</td>
                         <td>{{ $po->supplier->name }}</td>
                         <td>{{ $po->date }}</td>
                         <td>{{ $po->createdBy->name }}</td>
@@ -68,31 +71,48 @@
                             <div class="icon-btn">
                                 <nobr>
                                     {{-- @php
-                                        $approval = \App\Approval\ApprovalLayerDetails::whereHas('approvalLayer', function ($q) use ($cs){
-                                            $q->where([['name','CS'],['department_id',$cs->appliedBy->department_id]]);
-                                        })->whereDoesntHave('approvals',function ($q) use($cs){
-                                            $q->where('approvable_id',$cs->id)->where('approvable_type',\App\Procurement\Cs::class);
-                                        })->orderBy('order_by','asc')->first();
+                                        $approval = \App\Approval\ApprovalLayerDetails::whereHas('approvalLayer', function ($q) use ($cs) {
+                                            $q->where([['name', 'CS'], ['department_id', $cs->appliedBy->department_id]]);
+                                        })
+                                            ->whereDoesntHave('approvals', function ($q) use ($cs) {
+                                                $q->where('approvable_id', $cs->id)->where('approvable_type', \App\Procurement\Cs::class);
+                                            })
+                                            ->orderBy('order_by', 'asc')
+                                            ->first();
                                     @endphp
-                                    @if ((!empty($approval) && $approval->designation_id == auth()->user()->designation?->id && $approval->department_id == auth()->user()->department_id) ||
-    (!empty($approval) &&
-        auth()->user()->hasAnyRole(['admin', 'super-admin'])))
-                                        <a href="{{ url("cs/approved/$cs->id/1") }}" data-toggle="tooltip" title="Approve CS" class="btn btn-success"><i class="fa fa-check" aria-hidden="true"></i></a>
+                                    @if (
+                                        (!empty($approval) &&
+                                            $approval->designation_id == auth()->user()->designation?->id &&
+                                            $approval->department_id == auth()->user()->department_id) ||
+                                            (!empty($approval) &&
+                                                auth()->user()->hasAnyRole(['admin', 'super-admin'])))
+                                        <a href="{{ url("cs/approved/$cs->id/1") }}" data-toggle="tooltip"
+                                            title="Approve CS" class="btn btn-success"><i class="fa fa-check"
+                                                aria-hidden="true"></i></a>
                                     @endif
-                                    @if ($cs->approval()->doesntExist() ||
-    auth()->user()->hasAnyRole(['admin', 'super-admin']))
-                                        <a href="{{ route("cs.edit", $cs->id) }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    @if (
+                                        $cs->approval()->doesntExist() ||
+                                            auth()->user()->hasAnyRole(['admin', 'super-admin']))
+                                        <a href="{{ route('cs.edit', $cs->id) }}" data-toggle="tooltip" title="Edit"
+                                            class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                         @if ($cs->approval()->doesntExist())
-                                        {!! Form::open(array('url' => route("cs.destroy", $cs->id),'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
-                                        {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
-                                        {!! Form::close() !!}
+                                            {!! Form::open([
+                                                'url' => route('cs.destroy', $cs->id),
+                                                'method' => 'delete',
+                                                'class' => 'd-inline',
+                                                'data-toggle' => 'tooltip',
+                                                'title' => 'Delete',
+                                            ]) !!}
+                                            {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
+                                            {!! Form::close() !!}
                                         @endif
-                                    @endif() --}}
+                                    @endif --}}
 
                                     {{-- <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
 
                                     <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
-                                    <a href="{{ route('purchase-orders.show', $po->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('purchase-orders.show', $po->id) }}" data-toggle="tooltip"
+                                        title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
                                     <a href="{{ route('purchase-orders.edit', $po->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>

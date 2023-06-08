@@ -9,9 +9,11 @@ use Modules\SCM\Entities\ScmMrrLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\PurchaseOrder;
+use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmMrr extends Model
 {
+    use StockLedgerTrait;
     protected $guarded = [];
     public function getDateAttribute($input)
     {
@@ -56,14 +58,5 @@ class ScmMrr extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'branch_id');
-    }
-    public function stockable()
-    {
-        return $this->morphMany(StockLedger::class, 'stockable');
-    }
-
-    public function receiveable()
-    {
-        return $this->morphMany(StockLedger::class, 'receiveable');
     }
 }

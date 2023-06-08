@@ -17,8 +17,9 @@ class ScmRequisitionRequest extends FormRequest
             'type' => 'required',
             'date' => 'required|date',
             'branch_id' => 'required|integer|exists:branches,id',
-            'client_id' => 'required_if:type,client',
-            'fr_id' => 'required_if:type,client',
+            'client_no' => 'required_if:type,client',
+            'fr_no' => 'required_if:type,client',
+            'link_no' => 'required_if:type,client',
             'material_id.*' => 'required',
             'brand_id.*' => 'required',
         ];

@@ -17,4 +17,9 @@ class ScmMrrLine extends Model
     {
         return $this->belongsTo(Material::class);
     }
+
+    public function scmMrr()
+    {
+        return $this->belongsTo(ScmMrr::class);
+    }
 }

@@ -3,12 +3,16 @@
 namespace App\Http\Controllers\Dataencoding;
 
 use Illuminate\Http\Request;
+use App\Models\Dataencoding\Thana;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Dataencoding\District;
+use App\Models\Dataencoding\Division;
 use App\Models\Dataencoding\Employee;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Dataencoding\Department;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Session;
 use App\Models\Dataencoding\Designation;
 
 class EmployeeController extends Controller

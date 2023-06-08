@@ -5,6 +5,7 @@ namespace Modules\SCM\Entities;
 use Carbon\Carbon;
 use Modules\SCM\Entities\Cs;
 use Modules\SCM\Entities\Indent;
+use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\Supplier;
 use Modules\SCM\Entities\PoMaterial;
@@ -62,5 +63,10 @@ class PurchaseOrderLine extends Model
     public function poMaterial()
     {
         return $this->belongsTo(PoMaterial::class, 'po_composit_key', 'po_composit_key');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\SCM\Entities;
+namespace Modules\Admin\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WarrentyToSupplier extends Model
+class ConnectivityLink extends Model
 {
     protected $guarded = [];
 }

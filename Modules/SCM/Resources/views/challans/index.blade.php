@@ -18,6 +18,7 @@
 @endsection
 @section('sub-title')
     Total: {{ count($challans) }}
+    <x-warning-paragraph name="Challan" />
 @endsection
 
 @section('content')
@@ -49,7 +50,7 @@
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $challan->challan_no }}</td>
                         <td class="text-center">{{ ucfirst($challan->type) }}</td>
-                        <td class="text-center">{{ ucfirst($challan->branch->name) }}</td>
+                        <td class="text-center">{{ ucfirst($challan?->branch?->name ?? '') }}</td>
                         <td class="text-center">{{ $challan->date }}</td>
                         <td>
                             <div class="icon-btn">

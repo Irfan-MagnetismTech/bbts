@@ -24,6 +24,11 @@
                         </tr>
 
                         <tr>
+                            <td> <strong>PO Type</strong> </td>
+                            <td> {{ $purchaseOrder->po_type }}</td>
+                        </tr>
+
+                        <tr>
                             <td> <strong>Purchase Date</strong> </td>
                             <td> {{ $purchaseOrder->date }}</td>
                         </tr>

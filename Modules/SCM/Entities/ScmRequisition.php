@@ -31,31 +31,33 @@ class ScmRequisition extends Model
         !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
     }
 
-    public function scmRequisitiondetails(){
+    public function scmRequisitiondetails()
+    {
         return $this->hasMany(ScmRequisitionDetail::class);
     }
 
-    public function scmRequisitiondetailsWithMaterial(){
+    public function scmRequisitiondetailsWithMaterial()
+    {
         return $this->hasMany(ScmRequisitionDetail::class)->with('material', 'brand');
     }
 
-    public function client(){
-        return $this->belongsTo(Client::class);
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 
-    public function branch(){
+    public function branch()
+    {
         return $this->belongsTo(Branch::class);
     }
 
-    public function pop(){
+    public function pop()
+    {
         return $this->belongsTo(Pop::class);
     }
 
-    public function requisitionBy(){
+    public function requisitionBy()
+    {
         return $this->belongsTo(User::class, 'requisition_by');
-    }
-
-    public function clientDetailsWithCompositeKey(){
-        return $this->belongsTo(ClientDetail::class, 'fr_composite_key', 'fr_composite_key');
     }
 }

@@ -9,9 +9,11 @@ use Modules\SCM\Entities\ScmMirLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Admin\Entities\Pop;
+use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmMir extends Model
 {
+    use StockLedgerTrait;
     protected $fillable = [
         'mir_no',
         'scm_requisition_id',
@@ -68,10 +70,5 @@ class ScmMir extends Model
     public function scmRequisition()
     {
         return $this->belongsTo(ScmRequisition::class, 'scm_requisition_id')->withDefault();
-    }
-
-    public function stockable()
-    {
-        return $this->morphMany(StockLedger::class, 'stockable');
     }
 }

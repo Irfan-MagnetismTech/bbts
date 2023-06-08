@@ -17,6 +17,7 @@
 
 @section('sub-title')
     Total: {{ count($mrrs) }}
+    <x-warning-paragraph name="MRR" />
 @endsection
 
 @section('content')
@@ -51,7 +52,7 @@
                 @foreach ($mrrs as $key => $mrr)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                         <td><strong>#{{ $mrr->mrr_no }}</strong></td>
+                        <td><strong>#{{ $mrr->mrr_no }}</strong></td>
                         <td>{{ $mrr->purchaseOrder->po_no }}</td>
                         <td>{{ $mrr->purchaseOrder->date }}</td>
                         <td>{{ $mrr->supplier->name }}</td>
@@ -60,19 +61,31 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('material-receives.show', $mrr->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('material-receives.show', $mrr->id) }}" data-toggle="tooltip"
+                                        title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('material-receives.edit', $mrr->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    {!! Form::open([
-                                        'url' => route('material-receives.destroy', $mrr->id),
-                                        'method' => 'delete',
-                                        'class' => 'd-inline',
-                                        'data-toggle' => 'tooltip',
-                                        'title' => 'Delete',
-                                    ]) !!}
-                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
-                                    {!! Form::close() !!}
+                                    @if (!$mrr->isDeleteable())
+                                        <a href="{{ route('material-receives.edit', $mrr->id) }}" data-toggle="tooltip"
+                                            title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                        {!! Form::open([
+                                            'url' => route('material-receives.destroy', $mrr->id),
+                                            'method' => 'delete',
+                                            'class' => 'd-inline',
+                                            'data-toggle' => 'tooltip',
+                                            'title' => 'Delete',
+                                        ]) !!}
+                                        {{-- {!! Form::button('<i class="fa fa-trash"></i>', [
+                                            'type' => 'submit',
+                                            'class' => 'btn btn-outline-danger btn-sm delete',
+                                        'onClick' => ($mrr->isDeleteable()) ? 'checkParent(event)' : null,
+                                        ]) !!} --}}
+                                        {!! Form::button('<i class="fa fa-trash"></i>', [
+                                            'type' => 'submit',
+                                            'class' => 'btn btn-outline-danger btn-sm delete',
+                                        ]) !!}
+
+                                        {!! Form::close() !!}
+                                    @endif
                                 </nobr>
                             </div>
                         </td>
@@ -85,6 +98,14 @@
 
 @section('script')
     <script>
-        $(document).ready(function() {});
+        $(document).ready(function() {
+
+        });
+        //     function checkParent(e) {
+        //     e.preventDefault();
+        //     alert("Please delete parent first");
+        //     e.stopImmediatePropagation();
+        //     return false;
+        // }
     </script>
 @endsection

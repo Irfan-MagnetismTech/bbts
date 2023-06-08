@@ -283,7 +283,8 @@
                         dataType: "json",
                         data: {
                             _token: CSRF_TOKEN,
-                            search: request.term
+                            search: request.term,
+                            po_type: "Purchase Order"
                         },
                         success: function(data) {
                             response(data);

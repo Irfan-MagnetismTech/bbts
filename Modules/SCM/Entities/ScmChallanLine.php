@@ -25,6 +25,8 @@ class ScmChallanLine extends Model
                 return 'ERR';
             case ScmWcr::class:
                 return 'WCR';
+            case ScmWor::class:
+                return 'WOR';
             default:
                 return '';
         }
@@ -39,6 +41,8 @@ class ScmChallanLine extends Model
                 return 'ERR';
             case ScmWcr::class:
                 return 'WCR';
+            case ScmWor::class:
+                return 'WOR';
             default:
                 return '';
         }

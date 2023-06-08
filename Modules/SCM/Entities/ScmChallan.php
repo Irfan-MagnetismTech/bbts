@@ -11,9 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmChallanLine;
 use Modules\SCM\Entities\ScmRequisition;
+use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmChallan extends Model
 {
+    use StockLedgerTrait;
     protected $guarded = [];
 
     public function getDateAttribute($input)
@@ -34,7 +36,7 @@ class ScmChallan extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 
     public function branch()
@@ -45,10 +47,6 @@ class ScmChallan extends Model
     public function pop()
     {
         return $this->belongsTo(Pop::class);
-    }
-    public function stockable()
-    {
-        return $this->morphMany(StockLedger::class, 'stockable');
     }
 
     public function scmRequisition()

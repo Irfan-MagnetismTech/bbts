@@ -12,8 +12,19 @@ use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
 
 class ScmPurchaseRequisition extends Model
 {
-    protected $guarded = [];
-    
+    protected $fillable = [
+        'prs_no',
+        'prs_type',
+        'type',
+        'date',
+        'client_no',
+        'fr_no',
+        'link_no',
+        'assessment_no',
+        'requisition_by',
+        'branch_id',
+    ];
+
     /**
      * @param $input
      */
@@ -47,11 +58,6 @@ class ScmPurchaseRequisition extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class);
-    }
-
-    public function clientDetailsWithCompositeKey()
-    {
-        return $this->belongsTo(ClientDetail::class, 'fr_composite_key', 'fr_composite_key');
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 }

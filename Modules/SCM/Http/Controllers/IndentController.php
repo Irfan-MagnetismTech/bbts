@@ -7,8 +7,10 @@ use Modules\SCM\Entities\Indent;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\BbtsGlobalService;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Http\Requests\IndentRequest;
+use Spatie\Permission\Traits\HasRoles;
 
 class IndentController extends Controller
 {
@@ -17,6 +19,10 @@ class IndentController extends Controller
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->indentNo = $globalService->generateUniqueId(Indent::class, 'IND');
+        $this->middleware('permission:scm-indent-view|scm-indent-create|scm-indent-edit|scm-indent-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-indent-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-indent-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-indent-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.

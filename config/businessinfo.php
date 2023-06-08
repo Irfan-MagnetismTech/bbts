@@ -35,7 +35,8 @@ return [
     'receivedTypes' => [
         'MRR' => 'MRR',
         'ERR' => 'ERR',
-        'WCR' => 'WCR'
+        'WCR' => 'WCR',
+        'WOR' => 'WOR'
     ],
 
     //Tax or VAT

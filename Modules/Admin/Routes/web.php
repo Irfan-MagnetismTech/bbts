@@ -1,12 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Admin\Entities\ConnectivityLink;
 use Modules\Admin\Http\Controllers\PopController;
 use Modules\Admin\Http\Controllers\AuthController;
 use Modules\Admin\Http\Controllers\RoleController;
 use Modules\Admin\Http\Controllers\UserController;
 use Modules\Admin\Http\Controllers\BrandController;
 use Modules\Admin\Http\Controllers\BranchController;
+use Modules\Admin\Http\Controllers\ConnectivityLinkController;
 use Modules\Admin\Http\Controllers\PermissionController;
 
 /*
@@ -34,6 +36,7 @@ Route::prefix('admin')->group(function () {
             'brands'        => BrandController::class,
             'branchs'       => BranchController::class,
             'pops'          => PopController::class,
+            'connectivity'  => ConnectivityLinkController::class,
         ]);
     });
 

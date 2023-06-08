@@ -8,22 +8,28 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
+use App\Services\BbtsGlobalService;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
-use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\SCM\Http\Requests\SupplierRequest;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\SCM\Http\Requests\ScmPurchaseRequisitionRequest;
 
 class ScmPurchaseRequisitionController extends Controller
 {
     use HasRoles;
-    function __construct()
+
+    private $purchaseRequisitionNo;
+
+    function __construct(BbtsGlobalService $globalService)
     {
-        // $this->middleware('permission:requisition-view|requisition-create|requisition-edit|requisition-delete', ['only' => ['index','show']]);
-        // $this->middleware('permission:requisition-create', ['only' => ['create','store']]);
-        // $this->middleware('permission:requisition-edit', ['only' => ['edit','update']]);
-        // $this->middleware('permission:requisition-delete', ['only' => ['destroy']]);
+        $this->purchaseRequisitionNo = $globalService->generateUniqueId(ScmPurchaseRequisition::class, 'PRS');
+
+        $this->middleware('permission:scm-prs-view|scm-prs-create|scm-prs-edit|scm-prs-delete', ['only' => ['index', 'show', 'getCsPdf', 'getAllDetails', 'getMaterialSuppliersDetails', 'csApproved']]);
+        $this->middleware('permission:scm-prs-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-prs-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-prs-delete', ['only' => ['destroy']]);
     }
     public function index()
     {
@@ -55,9 +61,9 @@ class ScmPurchaseRequisitionController extends Controller
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'client_id', 'date', 'fr_composite_key', 'assessment_no');
+                $requestData = $request->only('type', 'prs_type', 'client_no', 'date', 'fr_no', 'link_no', 'assessment_no');
             } else {
-                $requestData = $request->only('type', 'date');
+                $requestData = $request->only('type', 'prs_type', 'date');
             }
 
             $lastMRSId = ScmPurchaseRequisition::latest()->first();
@@ -118,9 +124,10 @@ class ScmPurchaseRequisitionController extends Controller
         $branchs = Branch::latest()->get();
         $pops = Pop::latest()->get();
         $clients = Client::latest()->get();
-        $clientDetails = ClientDetail::latest()->get();
-        $clientInfos = ClientDetail::where('client_id', $purchaseRequisition->client_id)->get();
-        return view('scm::purchase-requisitions.create', compact('purchaseRequisition', 'formType', 'brands', 'pops', 'clients', 'clientDetails', 'clientInfos', 'branchs'));
+        $fr_nos = Client::with('saleDetails')->where('client_no', $purchaseRequisition->client_no)->first()?->saleDetails ?? [];
+        $client_links = Client::with('saleLinkDetails')->where('client_no', $purchaseRequisition->client_no)->first()?->saleLinkDetails ?? [];
+
+        return view('scm::purchase-requisitions.create', compact('purchaseRequisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs'));
     }
 
     /**
@@ -135,9 +142,9 @@ class ScmPurchaseRequisitionController extends Controller
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'client_id', 'date', 'fr_composite_key', 'assessment_no');
+                $requestData = $request->only('type', 'prs_type', 'client_no', 'date', 'fr_no', 'link_no', 'assessment_no');
             } else {
-                $requestData = $request->only('type', 'date');
+                $requestData = $request->only('type', 'prs_type', 'date');
             }
             $requestData['requisition_by'] = auth()->id();
 

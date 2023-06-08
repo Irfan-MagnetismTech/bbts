@@ -6,16 +6,18 @@ use Carbon\Carbon;
 use Modules\SCM\Entities\Cs;
 use Modules\Admin\Entities\User;
 use Modules\SCM\Entities\Indent;
-use Modules\SCM\Entities\Supplier;
-use Illuminate\Database\Eloquent\Model;
 use Modules\Admin\Entities\Branch;
+use Modules\SCM\Entities\Supplier;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\PurchaseOrderLine;
 use Modules\SCM\Entities\PoTermsAndCondition;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
 
 class PurchaseOrder extends Model
 {
-	protected $fillable = ['po_no', 'date', 'supplier_id', 'indent_id', 'remarks', 'delivery_location', 'created_by', 'branch_id'];
+	use HasRoles;
+	protected $fillable = ['po_no', 'po_type', 'date', 'supplier_id', 'indent_id', 'remarks', 'delivery_location', 'created_by', 'branch_id'];
 
 	public function getDateAttribute($input)
 	{

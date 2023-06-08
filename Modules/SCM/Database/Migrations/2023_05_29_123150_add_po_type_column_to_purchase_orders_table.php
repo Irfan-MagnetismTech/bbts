@@ -13,10 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('warrenty_from_supplier_lines', function (Blueprint $table) {
-            $table->id();
-
-            $table->timestamps();
+        Schema::table('purchase_orders', function (Blueprint $table) {
+            $table->string('po_type')->after('po_no');
         });
     }
 
@@ -27,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('warrenty_from_supplier_lines');
+        Schema::table('purchase_orders', function (Blueprint $table) {
+            $table->dropColumn('po_type');
+        });
     }
 };

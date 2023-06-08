@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dataencoding;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Dataencoding\Department;
+use Illuminate\Database\QueryException;
 
 class DepartmentController extends Controller
 {
@@ -15,7 +16,11 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::latest()->paginate();
+        $departments = Department::query()
+            ->withCount('employees')
+            ->latest()
+            ->paginate();
+
         return view('departments.create', compact('departments'));
     }
 
@@ -26,8 +31,8 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        $departments = Department::latest()->paginate();
-        return view('departments.create', compact('departments'));
+        // $departments = Department::latest()->paginate();
+        // return view('departments.create', compact('departments'));
     }
 
     /**
@@ -38,11 +43,11 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             $data = $request->all();
             Department::create($data);
-            return redirect()->route('departments.create')->with('message', 'Data has been inserted successfully');
-        }catch(QueryException $e){
+            return redirect()->route('dataencoding.departments.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
@@ -66,8 +71,9 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
+        $formType = "edit";
         $departments = Department::latest()->paginate();
-        return view('departments.create', compact('department', 'departments'));
+        return view('departments.create', compact('department', 'departments', 'formType'));
     }
 
     /**
@@ -79,13 +85,13 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try{
-            $department=Department::findOrFail($id);
+        try {
+            $department = Department::findOrFail($id);
             $data = $request->all();
             $department->update($data);
-            return redirect()->route('departments.create')->with('message', 'Data has been updated successfully');
-        }catch(QueryException $e){
-            return redirect()->route('departments.create')->withInput()->withErrors($e->getMessage());
+            return redirect()->route('dataencoding.departments.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -97,16 +103,16 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        try{
+        try {
             // if($department->employees->isNotEmpty()){
             //     return back()->withErrors(["There are some Employees who belongs this Department. Please remove them first."]);
             // }
 
-            $department=Department::findOrFail($id);
+            $department = Department::findOrFail($id);
             $department->delete();
-            return redirect()->route('departments.create')->with('message', 'Data has been deleted successfully');
-        }catch(QueryException $e){
-            return redirect()->route('departments.create')->withErrors($e->getMessage());
+            return redirect()->route('dataencoding.departments.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
+            return redirect()->back()->withErrors($e->getMessage());
         }
     }
 }

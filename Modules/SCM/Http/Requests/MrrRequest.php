@@ -31,11 +31,17 @@ class MrrRequest extends FormRequest
         $values = $this->input('sl_code', []);
         $uniqueValues = array_unique(array_map('trim', $values));
         $combined = array_merge($values);
-        // dd(array_diff_key($combined, array_unique($combined)));
-        // if (array_diff_key($combined, array_unique($combined))) {
-        //     throw ValidationException::withMessages(['sl_code' => 'The input contains duplicate values.'])
-        //         ->redirectTo($this->getRedirectUrl());
-        // } //need check later
+        $diff = array_diff_key($combined, array_unique($combined));
+        $diffWithoutNull = array_filter($diff, function ($value) {
+            return !is_null($value);
+        });
+
+
+        if ($diffWithoutNull) {
+            throw ValidationException::withMessages(['sl_code' => 'The input contains duplicate values.'])
+                ->redirectTo($this->getRedirectUrl());
+        }
+
         $cities = [];
         foreach ($uniqueValues as $item) {
             $cities = array_merge($cities, explode(',', $item));
@@ -74,7 +80,16 @@ class MrrRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'branch_id' => 'required',
+            'date' => 'required',
+            'purchase_order_id' => 'required',
+            'supplier_id' => 'required',
+            'total_amount' => 'required',
+            'material_id.*' => 'required',
+            'brand_id.*' => 'required',
+            'model.*' => 'required',
+            'quantity.*' => 'required',
+            'amount.*' => 'required'
         ];
     }
 
@@ -86,7 +101,10 @@ class MrrRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'branch_id.required' => 'Brand is Required',
+            'purchase_order_id.required' => 'Po No is Required',
+            'supplier_id.required' => 'Supplier is Required',
+            'material_id.*.required' => 'Material is required'
         ];
     }
 
@@ -99,13 +117,5 @@ class MrrRequest extends FormRequest
     {
         return true;
     }
-
-    // public function old($key = null, $default = null)
-    // {
-    //     $oldInput = array_merge(parent::old(),['irfans_try' => 'asi re vai asi']);
-
-    //     Session::flashInput($oldInput);
-    //     return array_merge(parent::old(),['irfans_try' => 'asi re vai asi']);
-    // }
 
 }

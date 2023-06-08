@@ -32,15 +32,7 @@
     ]) !!}
 
     <div class="row">
-        @if (!empty($gate_pass->id))
-            <div class="form-group col-3">
-                <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="name">gate_pass No <span class="text-danger">*</span></label>
-                    <input class="form-control" id="gate_pass_no" name="gate_pass_no" aria-describedby="gate_pass_no"
-                        value="{{ old('gate_pass_no') ?? ($gate_pass->gate_pass_no ?? '') }}" readonly placeholder="gate_pass No">
-                </div>
-            </div>
-        @endif
+       
         <div class="col-md-12">
             <div class="typeSection mt-2 mb-4">
                 <div class="form-check-inline">
@@ -59,6 +51,15 @@
                 </div>
             </div>
         </div>
+        @if (!empty($gate_pass->id))
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <label class="input-group-addon" for="name">Gate Pass No <span class="text-danger">*</span></label>
+                <input class="form-control" id="gate_pass_no" name="gate_pass_no" aria-describedby="gate_pass_no"
+                    value="{{ old('gate_pass_no') ?? ($gate_pass->gate_pass_no ?? '') }}" readonly placeholder="gate_pass No">
+            </div>
+        </div>
+        @endif
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <label class="input-group-addon" for="date">Date <span class="text-danger">*</span></label>
@@ -73,13 +74,13 @@
                     value="{{ old('carrier_name') ?? ($gate_pass->carrier ?? '') }}" placeholder="Carrier Name">
             </div>
         </div>
-        <table class="table table-bordered" id="material_requisition">
+        <table class="table table-bordered" id="gate_pass">
             <thead>
                 <tr>
                     <th class="challan" style="display: none"> Challan No.</th>
                     <th class="mir" style="display: none"> MIR No.</th>
                     <th> Remarks</th>
-                    <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
+                    <th><i class="btn btn-primary btn-sm fa fa-plus add-gate-pass"></i></th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -105,8 +106,8 @@
                             <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off" readonly
                                 value="{{ $remarks[$key] }}">
                         </td>
-                        <td>
-                            <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                        <td class="text-center">
+                            <i class="btn btn-danger btn-sm fa fa-minus remove-gate-pass"></i>
                         </td>
                     </tr>
                 @endforeach
@@ -157,21 +158,19 @@
                                 <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-gate-pass"></i>
                             </td>
                     </tr>`;
-            $('#material_requisition tbody').append(row);
+            $('#gate_pass tbody').append(row);
         }
 
         /* Adds and removes quantity row on click */
-        $("#material_requisition")
-            .on('click', '.add-requisition-row', () => {
+        $("#gate_pass")
+            .on('click', '.add-gate-pass', () => {
                 appendCalculationRow();
             })
-            .on('click', '.remove-calculation-row', function() {
-                if ($('#material_requisition tbody tr').length == 1) {
-                    return;
-                }
+            .on('click', '.remove-gate-pass', function() {
+                
                 $(this).closest('tr').remove();
             });
             $(document).on('keyup','.challan_no',function(){
@@ -184,6 +183,7 @@
 
                 function uiList(item) {
                     event_this_challan.find('.challan_id').val(item.id);
+                    event_this_challan.find('.challan_no').val(item.value);
                     return false;
                 }
                 

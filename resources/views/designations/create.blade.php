@@ -11,11 +11,11 @@
     {{--<span class="text-danger">*</span> Marked are required.--}}
 @endsection
 @section('content')
-    @can('designation-create')
+    {{-- @can('designation-create') --}}
         @if($formType == 'edit')
-            {!! Form::open(array('url' => "designations/$designation->id",'method' => 'PUT')) !!}
+            {!! Form::open(array('url' => "dataencoding/designations/$designation->id",'method' => 'PUT')) !!}
         @else
-            {!! Form::open(array('url' => "designations",'method' => 'POST')) !!}
+            {!! Form::open(array('url' => "dataencoding/designations",'method' => 'POST')) !!}
         @endif
         <div class="row">
             <div class="col-md-5 pr-md-1 my-1 my-md-0">
@@ -29,7 +29,7 @@
         </div><!-- end form row -->
 
         {!! Form::close() !!}
-    @endcan
+    {{-- @endcan --}}
         <hr class="my-2 bg-success">
         <div class="table-responsive">
             <table id="dataTable" class="table table-striped table-bordered">
@@ -55,13 +55,13 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    @can('designation-edit')
-                                        <a href="{{ url("designations/$data->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    @endcan
-                                    @can('designation-delete')
-                                        {!! Form::open(array('url' => "designations/$data->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
+                                    {{-- @can('designation-edit') --}}
+                                        <a href="{{ url("dataencoding/designations/$data->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    {{-- @endcan --}}
+                                    {{-- @can('designation-delete') --}}
+                                        {!! Form::open(array('url' => "dataencoding/designations/$data->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
                                         {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
-                                    @endcan
+                                    {{-- @endcan --}}
                                         {!! Form::close() !!}
                                 </nobr>
                             </div>

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('warrenty_to_suppliers', function (Blueprint $table) {
+        Schema::create('connectivity_links', function (Blueprint $table) {
             $table->id();
 
             $table->timestamps();
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('warrenty_to_suppliers');
+        Schema::dropIfExists('connectivity_links');
     }
 };

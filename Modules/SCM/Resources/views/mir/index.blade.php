@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Material Receive Report')
+@section('title', 'Material Issue Report')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
@@ -17,6 +17,7 @@
 
 @section('sub-title')
     Total: {{ count($mirs) }}
+    <x-warning-paragraph name="MIR" />
 @endsection
 
 @section('content')
@@ -66,6 +67,7 @@
                                     <a href="{{ route('material-issues.show', $mir->id) }}" data-toggle="tooltip"
                                         title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
+                                @if (!$mir->isDeleteable())
                                     <a href="{{ route('material-issues.edit', $mir->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     {!! Form::open([
@@ -77,6 +79,7 @@
                                     ]) !!}
                                     {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
                                     {!! Form::close() !!}
+                                @endif
                                 </nobr>
                             </div>
                         </td>
