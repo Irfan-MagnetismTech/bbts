@@ -514,7 +514,22 @@ class PermissionSeeder extends Seeder
                 'name' => 'material-delete',
                 'guard_name' => 'web',
             ],
-
+            [
+                'name' => 'scm-wor-view',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'scm-wor-create',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'scm-wor-edit',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'scm-wor-delete',
+                'guard_name' => 'web',
+            ]
 
         ];
 

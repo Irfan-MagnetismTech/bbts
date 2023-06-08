@@ -23,6 +23,10 @@ class ScmWorController extends Controller
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->worNo = $globalService->generateUniqueId(ScmWor::class, 'WOR');
+        $this->middleware('permission:scm-wor-view|scm-wor-create|scm-wor-edit|scm-wor-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:scm-wor-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:scm-wor-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:scm-wor-delete', ['only' => ['destroy']]);
     }
 
     /**
