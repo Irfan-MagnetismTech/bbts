@@ -61,4 +61,14 @@ return [
         'Shifting Client' => 'Shifting Client',
         'Method Change' => 'Method Change',
     ],
+
+    //pop type
+    'popType' => [
+        'POP' => 'POP',
+        'NOC' => 'NOC',
+        'Office' => 'Office',
+        'DC' => 'DC',
+        'DR' => 'DR',
+        'Co-Loc' => 'Co-Loc',
+    ],
 ];
