@@ -47,4 +47,9 @@ class FeasibilityRequirementDetail extends Model
     {
         return $this->belongsTo(Survey::class, 'fr_no', 'fr_no');
     }
+
+    public function planning()
+    {
+        return $this->belongsTo(Planning::class, 'fr_no', 'fr_no');
+    }
 }

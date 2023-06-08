@@ -157,7 +157,12 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                @if (!empty($item->survey))
+                                                @if (!empty($item->planning))
+                                                    <div class="input-group input-group-sm input-group-success">
+                                                        <a href="{{ route('add-costing', $item->id) }}"
+                                                            class="btn btn-sm btn-success">Add Costing</a>
+                                                    </div>
+                                                @elseif (!empty($item->survey))
                                                     <div class="input-group input-group-sm input-group-success">
                                                         <a href="{{ route('add-planning', $item->id) }}"
                                                             class="btn btn-sm btn-success">Add Planning</a>

@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('service_plans', function (Blueprint $table) {
+        Schema::create('plan_links', function (Blueprint $table) {
             $table->id();
             $table->integer('planning_id')->nullable();
-            $table->integer('connectivity_requirement_product_details_id')->nullable();
-            $table->integer('plan')->nullable();
-            $table->string('remarks')->nullable();
+            $table->string(('link_type'))->nullable();
+            $table->string('option')->nullable();
+            $table->integer('existing_capacity')->nullable();
+            $table->integer('new_capacity')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('service_plans');
+        Schema::dropIfExists('plan_links');
     }
 };
