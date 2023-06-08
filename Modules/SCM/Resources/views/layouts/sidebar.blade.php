@@ -305,6 +305,7 @@
             </ul>
         </li>
     @endcan
+    @can('scm-wor-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['work-orders.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
@@ -324,5 +325,6 @@
             </li>
         </ul>
     </li>
+    @endcan
     {{-- @endhasanyrole --}}
 </ul>
