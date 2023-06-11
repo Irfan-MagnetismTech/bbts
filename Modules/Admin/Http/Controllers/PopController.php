@@ -3,8 +3,11 @@
 namespace Modules\Admin\Http\Controllers;
 
 use Modules\Admin\Entities\Pop;
+use App\Models\Dataencoding\Thana;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Branch;
+use App\Models\Dataencoding\District;
+use App\Models\Dataencoding\Division;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Admin\Http\Requests\PopRequest;
@@ -36,7 +39,11 @@ class PopController extends Controller
         $formType = "create";
         $pops = Pop::latest()->get();
         $branches = Branch::latest()->get();
-        return view('admin::pops.create', compact('formType', 'branches', 'pops'));
+        $divisions = Division::latest()->get();
+        $districts = District::latest()->get();
+        $thanas = Thana::latest()->get();
+        
+        return view('admin::pops.create', compact('formType', 'branches', 'pops', 'divisions', 'districts', 'thanas'));
     }
 
     /**

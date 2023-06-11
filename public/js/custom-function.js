@@ -109,7 +109,6 @@ function select2Ajax(route, element, ...customQueryFields) {
             },
         },
         minimumInputLength: 1,
-        placeholder: "Search",
         cache: true,
     });
 }
