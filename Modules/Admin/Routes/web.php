@@ -42,6 +42,7 @@ Route::prefix('admin')->group(function () {
 
     Route::get('get_districts', [BranchController::class, 'getDistricts'])->name('get_districts');
     Route::get('get_thanas', [BranchController::class, 'getThanas'])->name('get_thanas');
+    Route::get('get_vendors', [ConnectivityLinkController::class, 'getVendors'])->name('get_vendors');
 });
 
 Route::middleware(['guest'])->group(function () {
