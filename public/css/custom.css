@@ -368,11 +368,21 @@ select {
 .form-item input[value]:not([value=""])+label,
 .form-item select:valid+label {
     font-size: 11px;
-    top: -8px
+    top: -8px;
+}
+
+.form-item input:focus::placeholder,
+.form-item input[value]:not([value=""])::placeholder,
+.form-item select:valid::placeholder {
+    color: grey;
 }
 
 .form-item input:focus+label {
     color: blue
+}
+
+.form-item input::placeholder {
+    color: white;
 }
 
 .custom_table th {
