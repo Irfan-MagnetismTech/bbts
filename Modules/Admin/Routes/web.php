@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Admin\Entities\ConnectivityLink;
 use Modules\Admin\Http\Controllers\PopController;
 use Modules\Admin\Http\Controllers\AuthController;
+use Modules\Admin\Http\Controllers\BankController;
 use Modules\Admin\Http\Controllers\RoleController;
 use Modules\Admin\Http\Controllers\UserController;
 use Modules\Admin\Http\Controllers\BrandController;
@@ -39,6 +40,7 @@ Route::prefix('admin')->group(function () {
             'pops'          => PopController::class,
             'connectivity'  => ConnectivityLinkController::class,
             'particulars'   => ParticularController::class,
+            'banks'         => BankController::class,
         ]);
     });
 
