@@ -48,8 +48,8 @@
                     </div>
                     <div class="row">
                         <div class="col-1"></div>
-                        <div class="col-6">From Info :</div>
-                        <div class="col-3">To Info :</div>
+                        <div class="col-6 mb-4 display-6">From Info :</div>
+                        <div class="col-3 mb-4 display-6">To Info :</div>
                     </div>
                     <div class="row">
                         <div class="col-1"></div>

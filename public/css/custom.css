@@ -386,3 +386,15 @@ select {
     background-color: #fdfeff !important;
     opacity: 1;
 }
+
+.display-5 {
+    font-size: 2.5rem;
+    font-weight: 200;
+    line-height: 0.8;
+}
+
+.display-6 {
+    font-size: 1.5rem;
+    font-weight: 100;
+    line-height: 0.5;
+}
