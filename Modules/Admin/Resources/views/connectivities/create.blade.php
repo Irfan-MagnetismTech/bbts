@@ -212,10 +212,21 @@
         $(document).ready(function(){
             associativeDropdown("{{ route('get-districts') }}", 'division_id', '#division_id', '#district_id', 'get', null)
             associativeDropdown("{{ route('get-thanas') }}", 'district_id', '#district_id', '#thana_id', 'get', null)
-                $('#vendor').on('keyup', function() {
+            $('#vendor').on('keyup', function() {
                     let myObject = { 
                     }
                     jquaryUiAjax(this, "{{ route('get_vendors') }}", uiList, myObject);
+
+                    function uiList(item) {
+                        $('#vendor').val(item.label);
+                        $('#vendor_id').val(item.id);
+                        return false;
+                    }
+                });
+                $('#from_location').on('keyup', function() {
+                    let myObject = { 
+                    }
+                    jquaryUiAjax(this, "{{ route('get_location_info_for_link') }}", uiList, myObject);
 
                     function uiList(item) {
                         $('#vendor').val(item.label);
@@ -258,6 +269,7 @@
                 $('#total').attr('value',total);
                }
             }
+            
           
     </script>
 @endsection
