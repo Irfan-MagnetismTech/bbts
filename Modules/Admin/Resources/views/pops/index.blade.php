@@ -1,3 +1,20 @@
+@extends('layouts.backend-layout')
+@section('title', 'POPs')
+
+@section('breadcrumb-title')
+   List of  POPs
+@endsection
+
+@section('style')
+    <style>
+    </style>
+@endsection
+@section('breadcrumb-button')
+    <a href="{{ route('pops.create')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+@endsection
+
+@section('content')
+
 <div class="table-responsive">
     <table id="dataTable" class="table table-striped table-bordered">
         <thead>
@@ -40,3 +57,4 @@
         </tbody>
     </table>
 </div>
+@endsection

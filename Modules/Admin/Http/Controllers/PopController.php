@@ -7,6 +7,7 @@ use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\Bank;
 use App\Models\Dataencoding\Thana;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Division;
@@ -14,6 +15,7 @@ use Modules\Admin\Entities\Particular;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Admin\Http\Requests\PopRequest;
+use Termwind\Components\Dd;
 
 class PopController extends Controller
 {
@@ -29,7 +31,7 @@ class PopController extends Controller
     {
         $pops = Pop::with('branch')->latest()->get();
         $formType = "create";
-        return view('admin::pops.create', compact('pops', 'formType'));
+        return view('admin::pops.index', compact('pops', 'formType'));
     }
 
     /**
@@ -59,8 +61,8 @@ class PopController extends Controller
     {
         $requestData = $request->all();
         $requestData['attached_file'] = $this->uploadFile->handleFile($request->attached_file, 'admin/pop');
-
         try {
+            DB::beginTransaction();
             $pop = Pop::create($requestData);
 
             $popLines = [];
@@ -68,9 +70,11 @@ class PopController extends Controller
                 $popLines[] = $this->getPopLines($request, $key);
             }
             $pop->popLines()->createMany($popLines);
+            DB::commit();
 
-            return redirect()->route('pops.create')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('pops.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
+            DB::rollBack();
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
@@ -95,8 +99,15 @@ class PopController extends Controller
     public function edit(Pop $pop)
     {
         $formType = "edit";
+        $branches = Branch::latest()->get();
+        $divisions = Division::latest()->get();
+        $districts = District::latest()->get();
+        $thanas = Thana::latest()->get();
+        $particulars = Particular::get();
+        $banks = Bank::latest()->get();
+
         $pops = Pop::latest()->get();
-        return view('admin::pops.create', compact('pop', 'pops', 'formType'));
+        return view('admin::pops.create', compact('pop', 'pops', 'formType', 'branches', 'divisions', 'particulars', 'banks', 'districts', 'thanas'));
     }
 
     /**
@@ -108,12 +119,32 @@ class PopController extends Controller
      */
     public function update(PopRequest $request, Pop $pop)
     {
+        $requestData = $request->all();
+        $requestData['amount'] = array_map('intval', $request->amount);
+        if ($request->hasFile('attached_file')) {
+            $requestData['attached_file'] = $this->uploadFile->handleFile($request->attached_file, 'admin/pop', $pop->attached_file);
+        } else {
+            $requestData['attached_file'] = $pop->attached_file;
+        }
+        
         try {
-            $data = $request->all();
-            $pop->update($data);
-            return redirect()->route('pops.create')->with('message', 'Data has been updated successfully');
+            DB::beginTransaction();
+            $pop->update($requestData);
+
+            $pop->popLines()->delete();
+            $popLines = [];
+            foreach ($requestData['amount'] as $key => $val) {
+                $popLines[] = $this->getPopLines($requestData, $key);
+            }
+
+            $pop->popLines()->createMany($popLines);
+            DB::commit();
+
+            return redirect()->route('pops.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
-            return redirect()->route('pops.create')->withInput()->withErrors($e->getMessage());
+            DB::rollBack();
+            dd($e->getMessage());
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -126,20 +157,28 @@ class PopController extends Controller
     public function destroy(Pop $pop)
     {
         try {
+            DB::beginTransaction();
+            $this->uploadFile->deleteFile($pop->attached_file);
             $pop->delete();
-            return redirect()->route('pops.create')->with('message', 'Data has been deleted successfully');
+            $pop->popLines()->delete();
+            DB::commit();
+
+            return redirect()->route('pops.index')->with('message', 'Data has been deleted successfully');
         } catch (QueryException $e) {
+            DB::rollBack();
             return redirect()->route('pops.create')->withErrors($e->getMessage());
         }
     }
 
-
-
-    private function getPopLines($request, $key1)
+    /**
+     * Get pop lines
+     *   
+     */
+    private function getPopLines($requestData, $key1)
     {
         return  [
-            'particular_id'   => $request->particular_id[$key1],
-            'amount'          => $request->amount[$key1],
+            'particular_id'   => $requestData['particular_id'][$key1],
+            'amount'          => $requestData['amount'][$key1],
         ];
     }
 }

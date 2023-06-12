@@ -25,20 +25,23 @@ class Pop extends Model
 
     private $dateAttributes = ['approval_date', 'btrc_approval_date', 'commissioning_date', 'termination_date', 'website_published_date', 'payment_date'];
 
-    public function __get($attribute)
+    public function setAttribute($key, $value)
     {
-        if (in_array($attribute, $this->dateAttributes)) {
-            $input = $this->attributes[$attribute] ?? null;
-            return $input ? Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y') : null;
+        if (in_array($key, $this->dateAttributes)) {
+            $value = !empty($value) ? Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d') : null;
         }
 
-        return null;
+        parent::setAttribute($key, $value);
     }
 
-    public function __set($attribute, $value)
+    public function getAttribute($key)
     {
-        if (in_array($attribute, $this->dateAttributes)) {
-            $this->attributes[$attribute] = $value ? Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d') : null;
+        $value = parent::getAttribute($key);
+
+        if (in_array($key, $this->dateAttributes)) {
+            $value = !empty($value) ? Carbon::createFromFormat('Y-m-d', $value)->format('d-m-Y') : null;
         }
+
+        return $value;
     }
 }

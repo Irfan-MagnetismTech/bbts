@@ -1,6 +1,19 @@
 @extends('layouts.backend-layout')
 @section('title', 'POP')
 
+<style>
+    .previous-image {
+        width: 272px;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+
+    .previous-image img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+</style>
+
 @php
     
     $is_old = old('supplier_name') ? true : false;
@@ -45,7 +58,7 @@
 @endphp
 
 @section('breadcrumb-title')
-    {{ $form_heading }} new POP
+    {{ $form_heading }} POP
 @endsection
 @section('style')
     <style>
@@ -92,8 +105,7 @@
                 <select class="form-control" id="division_id" name="division_id" required>
                     <option value="">Select division</option>
                     @foreach (@$divisions as $division)
-                        <option value="{{ $division->id }}"
-                            {{ (old('division_id') ?? ($branch->division_id ?? '')) == $division->id ? 'selected' : '' }}>
+                        <option value="{{ $division->id }}" {{ $division_id == $division->id ? 'selected' : '' }}>
                             {{ $division->name }}
                         </option>
                     @endforeach
@@ -107,8 +119,7 @@
                     <option value="">Select district</option>
                     @if ($formType == 'edit')
                         @foreach (@$districts as $district)
-                            <option value="{{ $district->id }}"
-                                {{ (old('district_id') ?? ($branch->district_id ?? '')) == $district->id ? 'selected' : '' }}>
+                            <option value="{{ $district->id }}" {{ $district_id == $district->id ? 'selected' : '' }}>
                                 {{ $district->name }}
                             </option>
                         @endforeach
@@ -123,8 +134,7 @@
                     <option value="">Select thana</option>
                     @if ($formType == 'edit')
                         @foreach (@$thanas as $thana)
-                            <option value="{{ $thana->id }}"
-                                {{ (old('thana_id') ?? ($branch->thana_id ?? '')) == $thana->id ? 'selected' : '' }}>
+                            <option value="{{ $thana->id }}" {{ $thana_id == $thana->id ? 'selected' : '' }}>
                                 {{ $thana->name }}
                             </option>
                         @endforeach
@@ -138,6 +148,11 @@
         <div class="form-group col-3">
             <select name="branch_id" id="branch_id" class="form-control select2">
                 <option value="" selected disabled>Search Branch</option>
+                @foreach ($branches as $branch)
+                    <option value="{{ $branch->id }}" {{ $branch_id == $branch->id ? 'selected' : '' }}>
+                        {{ $branch->name }}
+                    </option>
+                @endforeach
             </select>
         </div>
 
@@ -183,10 +198,13 @@
     </div>
     <p class="text-center h5">Billing Information</p>
     <div class="row mb-2">
-        <x-input-box colGrid="3" type="number" name="advance_amount" value="{{ $advance_amount }}" label="Advance Amount" />
+        <x-input-box colGrid="3" type="number" name="advance_amount" value="{{ $advance_amount }}"
+            label="Advance Amount" />
         <x-input-box colGrid="3" type="number" name="rent" value="{{ $rent }}" label="Rent" />
-        <x-input-box colGrid="3" type="number" name="advance_reduce" value="{{ $advance_reduce }}" label="Advance Reduce" />
-        <x-input-box colGrid="3" type="number" name="monthly_rent" value="{{ $monthly_rent }}" label="Monthly Rent" />
+        <x-input-box colGrid="3" type="number" name="advance_reduce" value="{{ $advance_reduce }}"
+            label="Advance Reduce" />
+        <x-input-box colGrid="3" type="number" name="monthly_rent" value="{{ $monthly_rent }}"
+            label="Monthly Rent" />
         <x-input-box colGrid="3" name="paymet_method" value="{{ $paymet_method }}" label="Paymet Method" />
         <div class="col-md-3">
             <select class="form-control bankList" id="bank_id" name="bank_id" required>
@@ -203,7 +221,17 @@
             label="Payment Date" />
         <x-input-box colGrid="3" name="routing_no" value="{{ $routing_no }}" label="Routing No" />
         <x-input-box colGrid="6" name="remarks" value="{{ $remarks }}" label="Remarks" />
-        <x-input-box colGrid="3" type="file" name="attached_file" value="{{ $attached_file }}" label="Attached File" />
+        <x-input-box colGrid="3" type="file" name="attached_file" value="{{ $attached_file }}"
+            label="Attached File" />
+        {{-- <div class="offset-md-9 col-md-3">
+            <div class="previous-image">
+                @if (!empty($pop->attached_file))
+                    <img src="{{ asset($pop->attached_file) }}" alt="Previous Image" />
+                @else
+                    <p>No previous image available</p>
+                @endif
+            </div>
+        </div> --}}
     </div>
 
     <div class="row">
@@ -223,7 +251,7 @@
                                 <input type="hidden" name="particular_id[]" value="{{ $particular->id }}">
                             </td>
                             <td><input type="number" class="form-control form-control-sm"
-                                    value="{{ isset($amounts[$particular->id]) ? $amounts[$particular->id]->amount : 0 }}"
+                                    value="{{ isset($amounts[$particular->id]) ? $amounts[$particular->id][0]->amount : 0 }}"
                                     name="amount[]">
                             </td>
                         </tr>
