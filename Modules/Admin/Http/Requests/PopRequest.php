@@ -14,7 +14,8 @@ class PopRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required',
+            'type' => 'required',
         ];
     }
 
@@ -26,7 +27,8 @@ class PopRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'name.required' => 'Name is required',
+            'type.required' => 'Type is required',
         ];
     }
 

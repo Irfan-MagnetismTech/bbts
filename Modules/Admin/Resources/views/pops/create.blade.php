@@ -8,23 +8,25 @@
     $form_url = !empty($pop) ? route('pops.update', $pop->id) : route('pops.store');
     $form_method = !empty($pop) ? 'PUT' : 'POST';
     
+    $name = old('name', !empty($pop) ? $pop->name : null);
+    $type = old('type', !empty($pop) ? $pop->type : null);
+    $division_id = old('division_id', !empty($pop) ? $pop->division_id : null);
+    $district_id = old('district_id', !empty($pop) ? $pop->district_id : null);
+    $thana_id = old('thana_id', !empty($pop) ? $pop->thana_id : null);
+    $address = old('address', !empty($pop) ? $pop->address : null);
     $branch_id = old('branch_id', !empty($pop) ? $pop->branch_id : null);
-    $applied_date = old('date', !empty($pop) ? $pop->date : today()->format('d-m-Y'));
-    $name = old('name', !empty($pop) ? $pop->purchaseOrder->name : null);
-    $type = old('type', !empty($pop) ? $pop->purchaseOrder->type : null);
-    $address = old('address', !empty($pop) ? $pop->purchaseOrder->address : null);
-    $latLong = old('lat_long', !empty($pop) ? $pop->purchaseOrder->lat_long : null);
-    $owners_name = old('owners_name', !empty($pop) ? $pop->purchaseOrder->owners_name : null);
-    $contact_person = old('contact_person', !empty($pop) ? $pop->purchaseOrder->contact_person : null);
-    $designation = old('designation', !empty($pop) ? $pop->purchaseOrder->designation : null);
-    $contact_no = old('contact_no', !empty($pop) ? $pop->purchaseOrder->contact_no : null);
-    $email = old('email', !empty($pop) ? $pop->purchaseOrder->email : null);
-    $description = old('description', !empty($pop) ? $pop->purchaseOrder->description : null);
-    $approval_date = old('approval_date', !empty($pop) ? $pop->approval_date : null);
-    $btrc_approval_date = old('btrc_approval_date', !empty($pop) ? $pop->btrc_approval_date : null);
-    $commissioning_date = old('commissioning_date', !empty($pop) ? $pop->commissioning_date : null);
-    $termination_date = old('termination_date', !empty($pop) ? $pop->termination_date : null);
-    $website_published_date = old('website_published_date', !empty($pop) ? $pop->website_published_date : null);
+    $latLong = old('lat_long', !empty($pop) ? $pop->lat_long : null);
+    $owners_name = old('owners_name', !empty($pop) ? $pop->owners_name : null);
+    $contact_person = old('contact_person', !empty($pop) ? $pop->contact_person : null);
+    $designation = old('designation', !empty($pop) ? $pop->designation : null);
+    $contact_no = old('contact_no', !empty($pop) ? $pop->contact_no : null);
+    $email = old('email', !empty($pop) ? $pop->email : null);
+    $description = old('description', !empty($pop) ? $pop->description : null);
+    $approval_date = old('approval_date', !empty($pop) ? $pop->approval_date : today()->format('d-m-Y'));
+    $btrc_approval_date = old('btrc_approval_date', !empty($pop) ? $pop->btrc_approval_date : today()->format('d-m-Y'));
+    $commissioning_date = old('commissioning_date', !empty($pop) ? $pop->commissioning_date : today()->format('d-m-Y'));
+    $termination_date = old('termination_date', !empty($pop) ? $pop->termination_date : today()->format('d-m-Y'));
+    $website_published_date = old('website_published_date', !empty($pop) ? $pop->website_published_date : today()->format('d-m-Y'));
     $signboard = old('signboard', !empty($pop) ? $pop->signboard : null);
     $advance_amount = old('advance_amount', !empty($pop) ? $pop->advance_amount : null);
     $rent = old('rent', !empty($pop) ? $pop->rent : null);
@@ -33,7 +35,7 @@
     $paymet_method = old('paymet_method', !empty($pop) ? $pop->paymet_method : null);
     $bank_id = old('bank_id', !empty($pop) ? $pop->bank_id : null);
     $account_no = old('account_no', !empty($pop) ? $pop->account_no : null);
-    $payment_date = old('payment_date', !empty($pop) ? $pop->payment_date : null);
+    $payment_date = old('payment_date', !empty($pop) ? $pop->payment_date : today()->format('d-m-Y'));
     $routing_no = old('routing_no', !empty($pop) ? $pop->routing_no : null);
     $remarks = old('remarks', !empty($pop) ? $pop->remarks : null);
     $attached_file = old('attached_file', !empty($pop) ? $pop->attached_file : null);
@@ -143,7 +145,7 @@
         <x-input-box colGrid="3" name="owners_name" value="{{ $owners_name }}" label="Owners Name" />
         <x-input-box colGrid="3" name="contact_person" value="{{ $contact_person }}" label="Contact Person" />
         <x-input-box colGrid="3" name="designation" value="{{ $designation }}" label="Designation" />
-        <x-input-box colGrid="3" name="contact_no" value="{{ $contact_no }}" label="Contact No." />
+        <x-input-box colGrid="3" type="number" name="contact_no" value="{{ $contact_no }}" label="Contact No." />
         <x-input-box colGrid="3" name="email" value="{{ $email }}" label="Email Address" />
         <x-input-box colGrid="3" name="description" value="{{ $description }}" label="Description" />
         <x-input-box colGrid="3" name="approval_date" class="date" value="{{ $approval_date }}"
@@ -181,10 +183,10 @@
     </div>
     <p class="text-center h5">Billing Information</p>
     <div class="row mb-2">
-        <x-input-box colGrid="3" name="advance_amount" value="{{ $advance_amount }}" label="Advance Amount" />
-        <x-input-box colGrid="3" name="rent" value="{{ $rent }}" label="Rent" />
-        <x-input-box colGrid="3" name="advance_reduce" value="{{ $advance_reduce }}" label="Advance Reduce" />
-        <x-input-box colGrid="3" name="monthly_rent" value="{{ $monthly_rent }}" label="Monthly Rent" />
+        <x-input-box colGrid="3" type="number" name="advance_amount" value="{{ $advance_amount }}" label="Advance Amount" />
+        <x-input-box colGrid="3" type="number" name="rent" value="{{ $rent }}" label="Rent" />
+        <x-input-box colGrid="3" type="number" name="advance_reduce" value="{{ $advance_reduce }}" label="Advance Reduce" />
+        <x-input-box colGrid="3" type="number" name="monthly_rent" value="{{ $monthly_rent }}" label="Monthly Rent" />
         <x-input-box colGrid="3" name="paymet_method" value="{{ $paymet_method }}" label="Paymet Method" />
         <div class="col-md-3">
             <select class="form-control bankList" id="bank_id" name="bank_id" required>
@@ -201,7 +203,7 @@
             label="Payment Date" />
         <x-input-box colGrid="3" name="routing_no" value="{{ $routing_no }}" label="Routing No" />
         <x-input-box colGrid="6" name="remarks" value="{{ $remarks }}" label="Remarks" />
-        <x-input-box colGrid="3" name="attached_file" value="{{ $attached_file }}" label="Attached File" />
+        <x-input-box colGrid="3" type="file" name="attached_file" value="{{ $attached_file }}" label="Attached File" />
     </div>
 
     <div class="row">
@@ -241,23 +243,5 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/custom-function.js') }}"></script>
-    <script>
-        // get data by associative dropdown
-        associativeDropdown("{{ route('get-districts') }}", 'division_id', '#division_id', '#district_id', 'get', null)
-        associativeDropdown("{{ route('get-thanas') }}", 'district_id', '#district_id', '#thana_id', 'get', null)
-
-        select2Ajax("{{ route('searchBranch') }}", '#branch_id')
-
-        $('.date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        });
-
-        $('.bankList').select2({
-            placeholder: 'Select an option'
-        });
-    </script>
+    @include('admin::pops.js')
 @endsection

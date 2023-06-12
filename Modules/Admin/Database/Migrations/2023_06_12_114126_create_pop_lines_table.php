@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pops', function (Blueprint $table) {
+        Schema::create('pop_lines', function (Blueprint $table) {
             $table->id();
-            $table->integer('branch_id')->nullable();
-            $table->string('name')->nullable();
-            $table->string('address')->nullable();
+            $table->integer('pop_id');
+            $table->integer('particular_id');
+            $table->double('amount', 8, 2);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pops');
+        Schema::dropIfExists('pop_lines');
     }
 };
