@@ -142,13 +142,14 @@ class ConnectivityLinkController extends Controller
                     'activation_date'       => $item->activation_date,
                     'remarks'               => $item->remarks,
                     'capacity_type'         => $item->capacity_type,
-                    'existing_capacity'     => $item->xisting_capacity,
+                    'existing_capacity'     => $item->existing_capacity,
                     'new_capacity'          => $item->new_capacity,
                     'terrif_per_month'      => $item->terrif_per_month,
                     'amount'                => $item->amount,
                     'vat_percent'           => $item->vat_percent,
                     'vat'                   => $item->vat,
                     'total'                 => $item->total,
+                    'increament_type'       => $item->increament_type,
                 ];
             });
         return response()->json($vendors);

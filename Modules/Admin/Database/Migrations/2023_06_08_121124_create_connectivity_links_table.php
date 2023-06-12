@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('connectivity_links', function (Blueprint $table) {
             $table->id();
+            $table->string('increament_type')->nullable();
             $table->string('reference')->nullable();
             $table->string('link_type')->nullable();
             $table->string('link_name')->nullable();

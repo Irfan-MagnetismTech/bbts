@@ -168,13 +168,13 @@
                         <div class="col-1"></div>
                         <div class="col-2">
                             <label>
-                                <input type="radio" name="mail_domain" value="Yes">
+                                <input type="radio" name="increament_type" value="increase" id="increase">
                                 <i class="helper"></i>Increase
                             </label>
                         </div>
                         <div class="col-2">
                             <label>
-                                <input type="radio" name="mail_domain" value="No">
+                                <input type="radio" name="increament_type" value="decrease" id="decrease">
                                 <i class="helper"></i>Decrease
                             </label>
                         </div>
@@ -229,8 +229,33 @@
                     jquaryUiAjax(this, "{{ route('get_location_info_for_link') }}", uiList, myObject);
 
                     function uiList(item) {
-                        $('#vendor').val(item.label);
-                        $('#vendor_id').val(item.id);
+                        console.log(item);
+                        $('#division_id').val(item.division_id);
+                        $('#from_location').val(item.from_location).attr('value',item.from_location);
+                        $('#from_site').val(item.from_site).attr('value',item.from_site);
+                        $('#district_id').val(item.district_id).attr('value',item.district_id);
+                        $('#thana_id').val(item.thana_id).attr('value',item.thana_id);
+                        $('#teck_type').val(item.teck_type).attr('value',item.teck_type);
+                        $('#vendor_link_id').val(item.vendor_link_id).attr('value',item.vendor_link_id);
+                        $('#vendor_vlan').val(item.vendor_vlan).attr('value',item.vendor_vlan);
+                        $('#port').val(item.port).attr('value',item.port);
+                        $('#date_of_commissioning').val(item.date_of_commissioning).attr('value',item.date_of_commissioning);
+                        $('#date_of_termination').val(item.date_of_termination).attr('value',item.date_of_termination);
+                        $('#activation_date').val(item.activation_date).attr('value',item.activation_date);
+                        $('#remarks').val(item.remarks).attr('value',item.remarks);
+                        $('#capacity_type').val(item.capacity_type).attr('value',item.capacity_type);
+                        $('#existing_capacity').val(item.existing_capacity).attr('value',item.existing_capacity);
+                        $('#new_capacity').val(item.new_capacity).attr('value',item.new_capacity);
+                        $('#terrif_per_month').val(item.terrif_per_month).attr('value',item.terrif_per_month);
+                        $('#amount').val(item.amount).attr('value',item.amount);
+                        $('#vat_percent').val(item.vat_percent).attr('value',item.vat_percent);
+                        $('#vat').val(item.vat).attr('value',item.vat);
+                        $('#total').val(item.total).attr('value',item.total);
+                        if(item.increament_type == 'increase'){
+                            $('#increase').attr('checkoed',true);
+                        }else{
+                            $('#decrease').attr('checkoed',true);
+                        }
                         return false;
                     }
                 })
@@ -255,19 +280,19 @@
                 $('#amount').attr('value',0);
                 $('#total').val(0);
                 $('#total').attr('value',0);
-               let new_capacity = $('#new_capacity').val() ?? 0;
-               let existing_capacity = $('#existing_capacity').val() ?? 0;
-               let used_capacity = new_capacity - existing_capacity;
-               let terrif_per_month = $('#terrif_per_month').val() ?? 0;
-               let vat = $('#vat').val() ?? 0;
-               if(used_capacity){
-                let amount = used_capacity * terrif_per_month;
-                let total = Number(amount) + Number(vat);
-                $('#amount').val(amount);
-                $('#amount').attr('value',amount);
-                $('#total').val(total);
-                $('#total').attr('value',total);
-               }
+                let new_capacity = $('#new_capacity').val() ?? 0;
+                let existing_capacity = $('#existing_capacity').val() ?? 0;
+                let used_capacity = new_capacity - existing_capacity;
+                let terrif_per_month = $('#terrif_per_month').val() ?? 0;
+                let vat = $('#vat').val() ?? 0;
+                if(used_capacity){
+                    let amount = used_capacity * terrif_per_month;
+                    let total = Number(amount) + Number(vat);
+                    $('#amount').val(amount);
+                    $('#amount').attr('value',amount);
+                    $('#total').val(total);
+                    $('#total').attr('value',total);
+                }
             }
             
           
