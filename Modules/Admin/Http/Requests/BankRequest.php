@@ -4,7 +4,7 @@ namespace Modules\Admin\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PopRequest extends FormRequest
+class BankRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,8 +14,7 @@ class PopRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'type' => 'required',
+            'name' => 'required|unique:brands,name'
         ];
     }
 
@@ -28,7 +27,7 @@ class PopRequest extends FormRequest
     {
         return [
             'name.required' => 'Name is required',
-            'type.required' => 'Type is required',
+            'name.unique' => 'Name already exists'
         ];
     }
 

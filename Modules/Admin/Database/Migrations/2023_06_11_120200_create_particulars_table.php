@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pops', function (Blueprint $table) {
+        Schema::create('particulars', function (Blueprint $table) {
             $table->id();
-            $table->integer('branch_id')->nullable();
-            $table->string('name')->nullable();
-            $table->string('address')->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pops');
+        Schema::dropIfExists('particulars');
     }
 };
