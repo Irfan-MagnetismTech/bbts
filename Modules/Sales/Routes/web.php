@@ -28,6 +28,7 @@ use Modules\Sales\Http\Controllers\CostingController;
 */
 
 Route::prefix('sales')->group(function () {
+    require __DIR__ . '/jaber.php';
     Route::resources([
         'lead-generation' => LeadGenerationController::class,
         'meeting' => MeetingController::class,
