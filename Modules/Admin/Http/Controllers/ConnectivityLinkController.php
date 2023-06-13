@@ -10,6 +10,7 @@ use App\Models\Dataencoding\Division;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Admin\Entities\ConnectivityLink;
+use Modules\Admin\Entities\Pop;
 
 class ConnectivityLinkController extends Controller
 {
@@ -42,7 +43,7 @@ class ConnectivityLinkController extends Controller
     {
         try {
             DB::beginTransaction();
-            $connectivity_link = $request->only('division_id', 'from_location', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total');
+            $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total');
             ConnectivityLink::create($connectivity_link);
             DB::commit();
             dd('done');
@@ -109,11 +110,40 @@ class ConnectivityLinkController extends Controller
             });
         return response()->json($vendors);
     }
+    public function getPop(Request $request)
+    {
+        $vendors = Pop::query()
+            ->where('name', 'like', '%' . $request->search . '%')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'value' => $item->name,
+                    'label' => $item->name,
+                    'id'    => $item->id,
+                ];
+            });
+        return response()->json($vendors);
+    }
+
+    public function getLinkSite(Request $request)
+    {
+        $vendors = ConnectivityLink::query()
+            ->where('from_site', 'like', '%' . $request->search . '%')
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'value' => $item->from_site,
+                    'label' => $item->from_site,
+                    'id'    => $item->id,
+                ];
+            });
+        return response()->json($vendors);
+    }
 
     public function getLocationInfoForLink(Request $request)
     {
         $vendors = ConnectivityLink::query()
-            ->where('from_location', 'like', '%' . $request->search . '%')
+            ->where('link_name', 'like', '%' . $request->search . '%')
             ->get()
             ->map(function ($item) {
                 return [
@@ -124,6 +154,7 @@ class ConnectivityLinkController extends Controller
                     'from_location'         => $item->from_location,
                     'bbts_link_id'          => $item->bbts_link_id,
                     'vendor_id'             => $item->vendor_id,
+                    'vendor_name'           => $item->vendor->name,
                     'link_name'             => $item->link_name,
                     'link_type'             => $item->link_type,
                     'reference'             => $item->reference,
