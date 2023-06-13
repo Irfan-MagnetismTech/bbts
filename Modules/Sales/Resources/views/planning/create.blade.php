@@ -121,19 +121,23 @@
                                             <tr class="particular_row">
                                                 <td style="width:30%">
                                                     <input type="hidden" name="detail_id[]" id="detail_id"
-                                                        class="form-control" value="{{ $detail->id ?? '' }}">
-                                                    <span class="form-control">{{ $detail->product->name ?? '' }}</span>
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $detail->id ?? '' }}">
+                                                    <span
+                                                        class="form-control form-control-sm">{{ $detail->product->name ?? '' }}</span>
 
                                                 </td>
                                                 <td>
-                                                    <span class="form-control">{{ $detail->capacity ?? '' }}</span>
+                                                    <span
+                                                        class="form-control form-control-sm">{{ $detail->capacity ?? '' }}</span>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="plan[]" id="plan" class="form-control"
-                                                        value="">
+                                                    <input type="text" name="plan[]" id="plan"
+                                                        class="form-control form-control-sm" value="">
                                                 </td>
                                                 <td style="width:30%">
-                                                    <span class="form-control">{{ $detail->remarks ?? '' }}</span>
+                                                    <span
+                                                        class="form-control form-control-sm">{{ $detail->remarks ?? '' }}</span>
                                                 </td>
                                                 <td>
                                                     <button type="button"
@@ -167,19 +171,19 @@
                                         <tr class="equipment_row">
                                             <td>
                                                 <input type="text" name="equipment_name[]" id="equipment_name"
-                                                    class="form-control" value="">
+                                                    class="form-control form-control-sm" value="">
                                             </td>
                                             <td>
-                                                <input type="text" name="quantity[]" id="quantity" class="form-control"
-                                                    value="">
+                                                <input type="text" name="quantity[]" id="quantity"
+                                                    class="form-control form-control-sm" value="">
                                             </td>
                                             <td>
-                                                <input type="text" name="unit[]" id="unit" class="form-control"
-                                                    value="">
+                                                <input type="text" name="unit[]" id="unit"
+                                                    class="form-control form-control-sm" value="">
                                             </td>
                                             <td>
                                                 <input type="text" name="equipment_remarks[]" id="equipment_remarks"
-                                                    class="form-control" value="">
+                                                    class="form-control form-control-sm" value="">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
@@ -209,7 +213,7 @@
                             <div class="row">
                                 <div class="md-col-3 col-3">
                                     <div class="form-item">
-                                        <select name="link_type_1" class="form-control link_type">
+                                        <select name="link_type_1" class="form-control form-control-sm link_type">
                                             <option value="">Select Type</option>
                                             <option value="Primary">Primary</option>
                                             <option value="Secondary">Secondary</option>
@@ -220,8 +224,8 @@
                                 </div>
                                 <div class="md-col-3 col-3">
                                     <div class="form-item">
-                                        <select name="option_1" id="option" class="form-control option"
-                                            onchange="optionChange(event)">
+                                        <select name="option_1" id="option"
+                                            class="form-control form-control-sm option" onchange="optionChange(event)">
                                             <option value="">Select Option</option>
                                             <option value="Option 1">Option 1</option>
                                             <option value="Option 2">Option 2</option>
@@ -231,18 +235,62 @@
                                         <label for="type">Option <span class="text-danger">*</span></label>
                                     </div>
                                 </div>
-                                <div class="md-col-3 col-3">
+                                <div class="col-3 col-md-3">
                                     <div class="form-item">
-                                        <input type="text" name="existing_capacity_1" id="existing_capacity"
-                                            class="form-control existing_capacity" value="" required>
-                                        <label for="type">Existing Capacity</label>
+                                        <select name="existing_infrastructure_1" id="existing_infrastructure"
+                                            class="form-control form-control-sm existing_infrastructure">
+                                            <option value="">Select Status</option>
+                                            <option value="Existing">Existing</option>
+                                            <option value="New">New</option>
+                                        </select>
+                                        <label for="type">Link Status</label>
                                     </div>
                                 </div>
                                 <div class="md-col-3 col-3">
                                     <div class="form-item">
-                                        <input type="text" name="new_capacity_1" id="new_capacity"
-                                            class="form-control new_capacity" value="" required>
-                                        <label for="type">New Capacity</label>
+                                        <input type="text" name="existing_transmission_capacity_1"
+                                            id="existing_transmission_capacity"
+                                            class="form-control form-control-sm existing_transmission_capacity"
+                                            value="" required>
+                                        <label for="type">Existing Transmission Capacity</label>
+                                    </div>
+                                </div>
+
+                                <div class="md-col-3 col-3 mt-3">
+                                    <div class="form-item">
+                                        <input type="text" name="increase_capacity_1" id="increase_capacity"
+                                            class="form-control form-control-sm increase_capacity" value=""
+                                            required>
+                                        <label for="type">Increase Capacity</label>
+                                    </div>
+                                </div>
+
+                                <div class="md-col-3 col-3  mt-3">
+                                    <div class="form-item">
+                                        <select name="link_availability_status_1" id="link_availability_status"
+                                            class="form-control form-control-sm link_availability_status">
+                                            <option value="">Select Status</option>
+                                            <option value="Available">Available</option>
+                                            <option value="Not Available">Not Available</option>
+                                        </select>
+                                        <label for="type">New Transmission Link</label>
+                                    </div>
+                                </div>
+
+                                <div class="md-col-3 col-3  mt-3">
+                                    <div class="form-item">
+                                        <input type="text" name="new_transmission_capacity_1"
+                                            id="new_transmission_capacity" class="form-control form-control-sm"
+                                            value="" required>
+                                        <label for="type">New Transmission Capacity</label>
+                                    </div>
+                                </div>
+
+                                <div class="md-col-3 col-3  mt-3">
+                                    <div class="form-item">
+                                        <input type="text" name="link_remarks_1" id="link_remarks"
+                                            class="form-control form-control-sm" value="">
+                                        <label for="type">Remarks</label>
                                     </div>
                                 </div>
                             </div>
@@ -256,7 +304,8 @@
                                             <th>Link Vendor</th>
                                             <td class="link_vendor" style="width:30%">
                                                 <input type="text" name="link_vendor_1" id="link_vendor"
-                                                    class="form-control link_vendor_1" value="">
+                                                    class="form-control form-control-sm link_vendor_1" value=""
+                                                    style="height: 25px !important">
                                             </td>
                                             <th>Connecting POP Running Vendor</th>
                                             <td class="running_vendor_pop" style="width:30%"></td>
@@ -265,8 +314,9 @@
                                             <th>Link Availability Status</th>
                                             <td class="availability_status" style="width:30%">
                                                 <input type="text" name="availability_status_1"
-                                                    id="availability_status" class="form-control availability_status_1"
-                                                    value="">
+                                                    id="availability_status"
+                                                    class="form-control form-control-sm availability_status_1"
+                                                    style="height: 25px !important" value="">
                                             </td>
                                             <th>Connecting POP Running Vendor Capacity</th>
                                             <td class="running_vendor_capacity" style="width:30%"></td>
@@ -275,8 +325,9 @@
                                             <th>Link Connectivity POP</th>
                                             <td class="link_connecting_pop" style="width:30%">
                                                 <input type="text" name="link_connecting_pop_1"
-                                                    id="link_connecting_pop" class="form-control link_connecting_pop_1"
-                                                    value="">
+                                                    id="link_connecting_pop"
+                                                    class="form-control form-control-sm link_connecting_pop_1"
+                                                    style="height: 25px !important" value="">
                                             </td>
                                             <th>Zone Area Running NTTN Vendor</th>
                                             <td class="nttn_vendor_zone" style="width:30%"></td>
@@ -286,7 +337,8 @@
                                             <td class="last_mile_connectivity_method" style="width:30%">
                                                 <input type="text" name="last_mile_connectivity_method_1"
                                                     id="last_mile_connectivity_method"
-                                                    class="form-control last_mile_connectivity_method_1" value="">
+                                                    class="form-control form-control-sm last_mile_connectivity_method_1"
+                                                    style="height: 25px !important" value="">
                                             </td>
                                             <th>Zone Area Running NTTN BW</th>
                                             <td class="running_nttn_bw" style="width:30%"></td>
@@ -296,7 +348,8 @@
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="connectivity_lat_long_1"
                                                     id="connectivity_lat_long"
-                                                    class="form-control connectivity_lat_long_1" value="">
+                                                    class="form-control form-control-sm connectivity_lat_long_1"
+                                                    style="height: 25px !important" value="">
                                             </td>
                                             <th>Connectivity Route</th>
                                             <td class="connectivity_route" style="width:30%"></td>
@@ -331,19 +384,19 @@
                                             <tr>
                                                 <td>
                                                     <input type="text" name="material_name_1[]" id="material_name"
-                                                        class="form-control" value="">
+                                                        class="form-control form-control-sm" value="">
                                                 </td>
                                                 <td>
                                                     <input type="text" name="quantity_1[]" id="quantity"
-                                                        class="form-control" value="">
+                                                        class="form-control form-control-sm" value="">
                                                 </td>
                                                 <td>
                                                     <input type="text" name="unit_1[]" id="unit"
-                                                        class="form-control" value="">
+                                                        class="form-control form-control-sm" value="">
                                                 </td>
                                                 <td>
                                                     <input type="text" name="remarks_1[]" id="remarks"
-                                                        class="form-control" value="">
+                                                        class="form-control form-control-sm" value="">
                                                 </td>
                                                 <td>
                                                     <button type="button"

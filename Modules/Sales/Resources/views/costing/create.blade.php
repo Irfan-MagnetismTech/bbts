@@ -32,7 +32,7 @@
     {{-- Comparative Statement --}}
     <div class="card">
         <div class="tableHeading">
-            <h5> <span> &#10070; </span> Survey <span>&#10070;</span> </h5>
+            <h5> <span> &#10070; </span> Costing Sheet <span>&#10070;</span> </h5>
         </div>
         <div class="card-body">
             <div class="row">
@@ -74,9 +74,9 @@
                 <div class="col-xl-3 col-md-3">
                     <div>
                         <div class="form-item">
-                            <input type="text" name="link_name" id="link_name" class="form-control form-control-sm"
-                                placeholder="" value="{{ $location }}" required>
-                            <label for="link_name">Name of the link</label>
+                            <input type="text" name="connectivity_point_name" id="connectivity_point_name"
+                                class="form-control form-control-sm" placeholder="" value="{{ $location }}" required>
+                            <label for="connectivity_point_name">Name of the link</label>
                         </div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
                                     <tr class="product_details_row">
                                         <td>
                                             <span>
-                                                <input type="text" name="product" id="product"
+                                                <input type="text" name="product[]" id="product"
                                                     class="form-control form-control-sm input" placeholder="Product"
                                                     value="{{ $service_plan->connectivityProductRequirementDetails->product->name }}"
                                                     readonly>
@@ -121,21 +121,21 @@
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="product_quantity"
+                                                <input type="number" name="product_quantity[]"
                                                     class="form-control form-control-sm input product_quantity"
                                                     placeholder="Quantity" value="{{ $service_plan->plan }}" readonly>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="product_rate"
+                                                <input type="number" name="product_rate[]"
                                                     class="form-control form-control-sm input product_rate"
                                                     placeholder="Rate" value="">
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="text" name="product_unit"
+                                                <input type="text" name="product_unit[]"
                                                     class="form-control form-control-sm input product_unit"
                                                     value="{{ $service_plan->connectivityProductRequirementDetails->product->unit }}"
                                                     readonly>
@@ -143,35 +143,35 @@
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="product_price"
+                                                <input type="number" name="product_price[]"
                                                     class="form-control form-control-sm input product_price"
                                                     placeholder="Amount" value="" readonly>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="product_operation_cost"
+                                                <input type="number" name="product_operation_cost[]"
                                                     class="form-control form-control-sm input product_operation_cost"
                                                     placeholder="Total" value="">
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="product_operation_cost_total"
+                                                <input type="number" name="product_operation_cost_total[]"
                                                     class="form-control form-control-sm input product_operation_cost_total"
                                                     placeholder="Operation Cost" value="" readonly>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="offer_price"
+                                                <input type="number" name="offer_price[]"
                                                     class="form-control form-control-sm input offer_price"
                                                     placeholder="Margin Price" value="" readonly>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="product_offer_total"
+                                                <input type="number" name="product_offer_total[]"
                                                     class="form-control form-control-sm input product_offer_total"
                                                     placeholder="Total Price" value="" readonly>
                                             </span>
@@ -239,14 +239,14 @@
                                     <tr class="connectivity_details_row">
                                         <td>
                                             <span>
-                                                <input type="text" name="link_type" id="link_type"
+                                                <input type="text" name="material_id[]" id="material_id "
                                                     class="form-control form-control-sm input" placeholder="Link Type"
                                                     value="{{ $equipment_plan->material_name }}" readonly>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="equipment_quantity"
+                                                <input type="number" name="equipment_quantity[]"
                                                     class="form-control form-control-sm input equipment_quantity"
                                                     placeholder="Quantity" value="{{ $equipment_plan->quantity }}"
                                                     readonly>
@@ -254,26 +254,26 @@
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="text" name="equipment_unit"
+                                                <input type="text" name="equipment_unit[]"
                                                     class="form-control form-control-sm input equipment_unit"
                                                     placeholder="Unit" value="{{ $equipment_plan->unit }}" readonly>
                                             </span>
                                         </td>
                                         <td>
-                                            <select name="equipment_ownership"
+                                            <select name="equipment_ownership[]"
                                                 class="form-control form-control-sm input equipment_ownership">
                                                 <option value="BBTCL">BBTCL</option>
                                                 <option value="Client">Client</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="number" name="equipment_rate"
+                                            <input type="number" name="equipment_rate[]"
                                                 class="form-control form-control-sm input equipment_rate"
                                                 placeholder="Rate">
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="equipment_total"
+                                                <input type="number" name="equipment_total[]"
                                                     class="form-control form-control-sm input equipment_total"
                                                     placeholder="Total">
                                             </span>
@@ -281,8 +281,29 @@
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="5" class="text-right" style="font-size: 14px;">Total Product wise
-                                        Equipment</td>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Equipment Total</td>
+                                    <td>
+                                        <span>
+                                            <input type="number" name="equipment_wise_total" id="equipment_wise_total"
+                                                class="form-control form-control-sm input" placeholder="Total Amount"
+                                                value="" readonly>
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Client Equipment Total
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <input type="number" name="client_equipment_total"
+                                                id="client_equipment_total" class="form-control form-control-sm input"
+                                                placeholder="Total Amount" value="" readonly>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Partial Total</td>
                                     <td>
                                         <span>
                                             <input type="number" name="equipment_partial_total"
@@ -291,11 +312,12 @@
                                         </span>
                                     </td>
                                 </tr>
+
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">Deployment Cost</td>
                                     <td>
                                         <span>
-                                            <input type="number" name="equipment_deployment_cost"
+                                            <input type="number" name="equipment_partial_total"
                                                 id="equipment_deployment_cost" class="form-control form-control-sm input"
                                                 placeholder="Deployment Cost" value="">
                                         </span>
@@ -371,14 +393,15 @@
                 <h5> <span> &#10070; </span> Link Details <span>&#10070;</span> </h5>
             </div>
             <hr />
-            @foreach ($planning->PlanLinks as $plan_link)
+            @foreach ($planning->PlanLinks as $key => $plan_link)
+                @php $row_no = $key + 1; @endphp
                 <div class="PlanLinkMainRow">
                     <div class="row">
                         <div class="col-1 col-md-1">
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="link_no" class="input plan_link_no"
-                                        value="{{ $plan_link->finalSurveyDetails->link_no }}">
+                                    <input type="checkbox" name="link_no_{{ $row_no }}[]"
+                                        class="input plan_link_no" value="{{ $plan_link->finalSurveyDetails->link_no }}">
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -387,15 +410,15 @@
                         </div>
                         <div class="col-2 col-md-2">
                             <div class="form-item">
-                                <input type="text" name="link_type[]"
+                                <input type="text" name="link_type_{{ $row_no }}[]"
                                     class="form-control form-control-sm link_type input" placeholder="Link Name"
-                                    value="{{ $plan_link->link_type }}" readonly>
+                                    value="{{ $plan_link->existing_infrastructure }}" readonly>
                                 <label for="link_type">Link Type</label>
                             </div>
                         </div>
                         <div class="col-2 col-md-2">
                             <div class="form-item">
-                                <input type="text" name="option[]"
+                                <input type="text" name="option_{{ $row_no }}[]"
                                     class="form-control form-control-sm  plan_link_option input" placeholder="Link Type"
                                     value="{{ $plan_link->option }}" readonly>
                                 <label for="plan_link_option">Option</label>
@@ -403,15 +426,16 @@
                         </div>
                         <div class="col-2 col-md-2">
                             <div class="form-item">
-                                <input type="text" name="capacity"
+                                <input type="text" name="capacity_{{ $row_no }}[]"
                                     class="form-control form-control-sm  plan_link_capacity input" placeholder="Capacity"
-                                    value="{{ $plan_link->new_capacity }}" readonly>
+                                    value="{{ $plan_link->existing_transmission_capacity ?? $plan_link->new_transmission_capacity }}"
+                                    readonly>
                                 <label for="plan_link_capacity">Capacity</label>
                             </div>
                         </div>
                         <div class="col-2 col-md-2">
                             <div class="form-item">
-                                <input type="text" name="quantity"
+                                <input type="text" name="quantity_{{ $row_no }}[]"
                                     class="form-control form-control-sm  plan_link_quantity input" placeholder="Quantity"
                                     value="">
                                 <label for="plan_link_quantity">Quantity</label>
@@ -419,7 +443,7 @@
                         </div>
                         <div class="col-1 col-md-1">
                             <div class="form-item">
-                                <input type="text" name="rate"
+                                <input type="text" name="rate_{{ $row_no }}[]"
                                     class="form-control form-control-sm  plan_link_rate input" placeholder="Rate"
                                     value="">
                                 <label for="plan_link_rate">Rate</label>
@@ -427,7 +451,7 @@
                         </div>
                         <div class="col-2 col-md-2">
                             <div class="form-item">
-                                <input type="text" name="link_total"
+                                <input type="text" name="link_total_{{ $row_no }}[]"
                                     class="form-control form-control-sm  plan_link_total input" placeholder="Total"
                                     value="" readonly>
                                 <label for="plan_link_total">Total</label>
@@ -456,7 +480,8 @@
                                             <span>
                                                 <input type="text"
                                                     class="form-control form-control-sm plan_equipment_material_name input"
-                                                    placeholder="Material" name="plan_equipment_material_name"
+                                                    placeholder="Material"
+                                                    name="plan_equipment_material_name_{{ $row_no }}[]"
                                                     value="{{ $plan_link_equipment->material_name }}">
                                             </span>
                                         </td>
@@ -464,13 +489,14 @@
                                             <span>
                                                 <input type="text"
                                                     class="form-control form-control-sm plan_equipment_unit input"
-                                                    placeholder="Unit" name="plan_equipment_uni"
+                                                    placeholder="Unit" name="plan_equipment_unit_{{ $row_no }}[]"
                                                     value="{{ $plan_link_equipment->unit }}">
                                             </span>
                                         </td>
                                         <td>
                                             <span>
-                                                <select name="ownership" class="form-control form-control-sm input">
+                                                <select name="ownership_{{ $row_no }}[]"
+                                                    class="form-control form-control-sm input plan_equipment_ownership">
                                                     <option value="BBTS">BBTS</option>
                                                     <option value="Client">Client</option>
                                                 </select>
@@ -480,7 +506,8 @@
                                             <span>
                                                 <input type="number"
                                                     class="form-control form-control-sm plan_equipment_quantity input"
-                                                    placeholder="Quantity" name="plan_equipment_quantity"
+                                                    placeholder="Quantity"
+                                                    name="plan_equipment_quantity_{{ $row_no }}[]"
                                                     value="{{ $plan_link_equipment->quantity }}">
                                             </span>
                                         </td>
@@ -488,24 +515,52 @@
                                             <span>
                                                 <input type="number"
                                                     class="form-control form-control-sm plan_equipment_rate input"
-                                                    name="plan_equipment_rate" placeholder="Rate" value="">
+                                                    name="plan_equipment_rate_{{ $row_no }}[]" placeholder="Rate"
+                                                    value="">
                                             </span>
                                         </td>
                                         <td>
                                             <span>
                                                 <input type="number"
                                                     class="form-control form-control-sm plan_equipment_total input"
-                                                    name="plan_equipment_total" placeholder="Total" value="">
+                                                    name="plan_equipment_total_{{ $row_no }}[]" placeholder="Total"
+                                                    value="">
                                             </span>
                                         </td>
                                     </tr>
                                 @endforeach
                                 <tr>
+                                    <td colspan="5" class="text-right" style="font-size:14px;">Plan Equipment Total
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <input type="number" name="plan_all_equipment_total_{{ $row_no }}[]"
+                                                id="plan_all_equipment_total"
+                                                class="form-control form-control-sm plan_all_equipment_total input"
+                                                placeholder="Total" value="">
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size:14px;">Client Equipment Total
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <input type="number"
+                                                name="plan_client_equipment_total_{{ $row_no }}[]"
+                                                id="plan_client_equipment_total"
+                                                class="form-control form-control-sm plan_client_equipment_total input"
+                                                placeholder="Total" value="">
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td colspan="5" class="text-right" style="font-size:14px;">Total
                                     </td>
                                     <td>
                                         <span>
-                                            <input type="number" name="plan_equipment_partial_total"
+                                            <input type="number"
+                                                name="plan_equipment_partial_total_{{ $row_no }}[]"
                                                 id="plan_equipment_partial_total"
                                                 class="form-control form-control-sm plan_equipment_partial_total input"
                                                 placeholder="Total" value="">
@@ -517,7 +572,8 @@
                                         <span style="font-size: 14px;">OTC</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_otc" id="plan_equipment_otc"
+                                        <input type="number" name="plan_equipment_otc_{{ $row_no }}[]"
+                                            id="plan_equipment_otc"
                                             class="form-control form-control-sm plan_equipment_otc input"
                                             placeholder="OTC" value="">
                                     </td>
@@ -525,7 +581,7 @@
                                         <span style="font-size: 14px;">Deployment Cost</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_deployment_cost"
+                                        <input type="number" name="plan_equipment_deployment_cost_{{ $row_no }}[]"
                                             id="plan_equipment_deployment_cost"
                                             class="form-control form-control-sm plan_equipment_deployment_cost input"
                                             placeholder="Deployment Cost" value="">
@@ -536,7 +592,8 @@
                                         <span style="font-size: 14px;">ROI</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_roi" id="plan_equipment_roi"
+                                        <input type="number" name="plan_equipment_roi_{{ $row_no }}[]"
+                                            id="plan_equipment_roi"
                                             class="form-control form-control-sm plan_equipment_roi input"
                                             placeholder="ROI" value="">
                                     </td>
@@ -544,7 +601,8 @@
                                         <span style="font-size: 14px;">Interest</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_interest" id="plan_equipment_interest"
+                                        <input type="number" name="plan_equipment_interest_{{ $row_no }}[]"
+                                            id="plan_equipment_interest"
                                             class="form-control form-control-sm plan_equipment_interest input"
                                             placeholder="Interest" value="">
                                     </td>
@@ -554,7 +612,8 @@
                                         <span style="font-size: 14px;">Capacity</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_capacity" id="plan_equipment_capacity"
+                                        <input type="number" name="plan_equipment_capacity_{{ $row_no }}[]"
+                                            id="plan_equipment_capacity"
                                             class="form-control form-control-sm plan_equipment_capacity input"
                                             placeholder="Capacity" value="">
                                     </td>
@@ -562,7 +621,7 @@
                                         <span style="font-size: 14px;">Total</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_grand_total"
+                                        <input type="number" name="plan_equipment_grand_total_{{ $row_no }}[]"
                                             id="plan_equipment_grand_total"
                                             class="form-control form-control-sm plan_equipment_grand_total input"
                                             placeholder="Total" value="">
@@ -573,7 +632,7 @@
                                         <span style="font-size: 14px;">Operation Cost</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipement_operation_cost"
+                                        <input type="number" name="plan_equipement_operation_cost_{{ $row_no }}[]"
                                             id="plan_equipement_operation_cost"
                                             class="form-control form-control-sm plan_equipement_operation_cost input"
                                             placeholder="Operation Cost" value="">
@@ -582,7 +641,8 @@
                                         <span style="font-size: 14px;">VAT</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_vat" id="plan_equipment_vat"
+                                        <input type="number" name="plan_equipment_vat_{{ $row_no }}[]"
+                                            id="plan_equipment_vat"
                                             class="form-control form-control-sm plan_equipment_vat input"
                                             placeholder="VAT" value="">
                                     </td>
@@ -592,7 +652,7 @@
                                         <span style="font-size: 14px;">Total MRC</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_total_mrc"
+                                        <input type="number" name="plan_equipment_total_mrc_{{ $row_no }}[]"
                                             id="plan_equipment_total_mrc"
                                             class="form-control form-control-sm plan_equipment_total_mrc input"
                                             placeholder="Total MRC" value="">
@@ -601,7 +661,8 @@
                                         <span style="font-size: 14px;">Tax</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_tax" id="plan_equipment_tax"
+                                        <input type="number" name="plan_equipment_tax_{{ $row_no }}[]"
+                                            id="plan_equipment_tax"
                                             class="form-control form-control-sm plan_equipment_tax input"
                                             placeholder="Tax" value="">
                                     </td>
@@ -611,7 +672,7 @@
                                         <span style="font-size: 14px;">Total Inv</span>
                                     </td>
                                     <td>
-                                        <input type="number" name="plan_equipment_total_inv"
+                                        <input type="number" name="plan_equipment_total_inv_{{ $row_no }}[]"
                                             id="plan_equipment_total_inv"
                                             class="form-control form-control-sm plan_equipment_total_inv input"
                                             placeholder="Total Inv" value="">
@@ -719,9 +780,10 @@
                                                 <span style="font-size:14px;">Total OTC</span>
                                             </td>
                                             <td colspan="2">
-                                                <input type="number" name="total_otc_with_client_equipment" id="total_otc_with_client_equipment "
+                                                <input type="number" name="total_otc_with_client_equipment"
+                                                    id="total_otc_with_client_equipment"
                                                     class="form-control form-control-sm text-center total_otc_with_client_equipment input"
-                                                    placeholder="Total OTC" value="">
+                                                    placeholder="Total OTC" value="" readonly>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -807,20 +869,30 @@
 
         function equipmentPartialTotal() {
             var equipment_total = 0;
+            var client_equipment_total = 0;
 
             $('.equipment_total').each(function() {
                 var value = parseInt($(this).val());
                 if (!isNaN(value)) {
                     equipment_total += value;
                 }
+                var ownership = $(this).closest('tr').find('.equipment_ownership').val();
+                console.log('ownership', ownership)
+                if (ownership == 'Client' && !isNaN(value)) {
+                    client_equipment_total += value;
+
+                }
             });
 
-            $('#equipment_partial_total').val(equipment_total);
+            $('#equipment_wise_total').val(equipment_total);
+            $('#client_equipment_total').val(client_equipment_total);
+            var partial_total = equipment_total - client_equipment_total;
+            $('#equipment_partial_total').val(equipment_total - client_equipment_total);
             var development_cost = $('#equipment_deployment_cost').val() ? $('#equipment_deployment_cost').val() : 0;
             var interest = $('#equipment_interest').val() ? $('#equipment_interest').val() : 0;
             var vat = $('#equipment_vat').val() ? $('#equipment_vat').val() : 0;
             var tax = $('#equipment_tax').val() ? $('#equipment_tax').val() : 0;
-            var total = parseInt(equipment_total) + parseInt(development_cost) + parseInt(interest) + parseInt(
+            var total = parseInt(partial_total) + parseInt(development_cost) + parseInt(interest) + parseInt(
                 vat) + parseInt(tax);
             $('#equipement_grand_total').val(total);
         }
@@ -842,20 +914,27 @@
         });
 
         $('.plan_equipment_rate').on('keyup', function() {
-            plan_equipment_partial_total = 0;
             var plan_equipment_rate = $(this).val();
+            var plan_all_equipment_total = 0;
+            var plan_client_equipment_total = 0;
             var plan_equipment_quantity = $(this).closest('tr').find(
                 '.plan_equipment_quantity').val();
-            var plan_equipment_total = parseInt(plan_equipment_quantity) * parseInt(plan_equipment_rate);
-            $(this).closest('tr').find('.plan_equipment_total').val(plan_equipment_total);
+            var equipment_total = parseInt(plan_equipment_quantity) * parseInt(plan_equipment_rate);
+            $(this).closest('tr').find('.plan_equipment_total').val(equipment_total);
             $('.plan_equipment_total').each(function() {
                 var value = parseInt($(this).val());
                 if (!isNaN(value)) {
-                    plan_equipment_partial_total += value;
+                    plan_all_equipment_total += value;
+                }
+                var ownership = $(this).closest('tr').find('.plan_equipment_ownership').val();
+                if (ownership == 'Client' && !isNaN(value)) {
+                    plan_client_equipment_total += value;
                 }
             });
-
-
+            var plan_equipment_partial_total = plan_all_equipment_total - plan_client_equipment_total;
+            $('#plan_all_equipment_total').val(plan_all_equipment_total);
+            $('#plan_client_equipment_total').val(plan_client_equipment_total);
+            $('#plan_equipment_partial_total').val(plan_equipment_partial_total);
             $(this).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total').val(
                 plan_equipment_partial_total);
             planEquipmentPartialTotal();
@@ -987,10 +1066,28 @@
                 .reduce(function(sum, el) {
                     return sum + parseFloat(el.value);
                 }, 0);
+            const client_equipment_total = parseFloat($('#client_equipment_total').val());
+
+            //client equipment total
+
+            var plan_client_equipment_total = 0;
+            $('.plan_client_equipment_total').each(function() {
+                plan_client_equipment_total += parseFloat($(this).val()) ?? 0;
+            });
+            let equipment_price_for_client = client_equipment_total + plan_client_equipment_total;
+            $('#equipment_price_for_client').val(equipment_price_for_client.toFixed(2));
+
+            //total equipment otc 
+            let equipment_otc = parseFloat($('#equipment_otc').val());
+            let plan_equipment_otc = $('.plan_equipment_otc').get().reduce(function(sum, el) {
+                return sum + parseFloat(el.value);
+            }, 0);
+            let total_equipment_otc = equipment_otc + plan_equipment_otc + equipment_price_for_client
+            console.log('total_equipment_otc', total_equipment_otc);
+            $('#total_otc_with_client_equipment').val(total_equipment_otc);
+            console.log($('#total_otc_with_client_equipment').val());
             $('#product_grand_total').val(product_grand_total.toFixed(2));
         });
-
-
 
         //This is button function for add new row in plan link
 

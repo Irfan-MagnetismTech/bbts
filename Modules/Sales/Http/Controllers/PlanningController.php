@@ -80,10 +80,13 @@ class PlanningController extends Controller
 
         if ($request->total_key > 0) {
             for ($i = 1; $i <= $request->total_key; $i++) {
-                $plan_link_data['link_type'] = request("link_type_{$i}");
+                $plan_link_data['existing_infrastructure'] = request("existing_infrastructure_{$i}");
                 $plan_link_data['option'] = request("option_{$i}");
-                $plan_link_data['existing_capacity'] = request("existing_capacity_{$i}");
-                $plan_link_data['new_capacity'] = request("new_capacity_{$i}");
+                $plan_link_data['existing_transmission_capacity'] = request("existing_transmission_capacity_{$i}");
+                $plan_link_data['increase_capacity'] = request("increase_capacity_{$i}");
+                $plan_link_data['link_availability_status'] = request("link_availability_status_{$i}");
+                $plan_link_data['new_transmission_capacity'] = request("new_transmission_capacity_{$i}");
+                $plan_link_data['link_remarks'] = request("link_remarks_{$i}");
                 $plan_link_data['planning_id'] = $plan->id;
                 $plan_link =  PlanLink::create($plan_link_data);
                 $survey = Survey::where('fr_no', $request->fr_no)->where('client_no', $request->client_no)->first();
