@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('plannings', function (Blueprint $table) {
             $table->id();
             $table->string('client_no');
-            $table->string('fr_no');
-            $table->string('link_type')->nullable()->comment('Option 1, Option 2, Option 3');
-            $table->string('option')->nullable()->comment('Option 1, Option 2, Option 3');
+            $table->string('mq_no')->nullable();
+            $table->string('fr_no')->nullable();
+            $table->date('date')->nullable();
             $table->integer('user_id')->nullable();
             $table->integer('branch_id')->nullable();
             $table->timestamps();
