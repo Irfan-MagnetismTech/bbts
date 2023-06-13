@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('quantity');
             $table->decimal('rate', 8, 2);
             $table->decimal('total', 10, 2);
+            $table->decimal('plan_all_equipment_total', 10, 2);
+            $table->decimal('plan_client_equipment_total', 10, 2);
             $table->decimal('partial_total', 10, 2);
             $table->decimal('deployment_cost', 10, 2);
             $table->decimal('interest', 10, 2);
