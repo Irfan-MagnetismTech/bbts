@@ -252,9 +252,9 @@
                         $('#vat').val(item.vat).attr('value',item.vat);
                         $('#total').val(item.total).attr('value',item.total);
                         if(item.increament_type == 'increase'){
-                            $('#increase').attr('checkoed',true);
+                            $('#increase').attr('checked',true);
                         }else{
-                            $('#decrease').attr('checkoed',true);
+                            $('#decrease').attr('checked',true);
                         }
                         return false;
                     }
@@ -265,21 +265,17 @@
                 Calculatetotal();
             })
             function Calculatevat(){
-                $('#vat').val(0);
-                   $('#vat').attr('value',0);
+                $('#vat').val(0).attr('value',0);
                let amount = $('#amount').val() ?? 0;
                let vat_percent = $('#vat_percent').val() ?? 0;
                if(amount && vat_percent){
                    let vat = Number(amount) / Number(vat_percent);
-                   $('#vat').val(vat);
-                   $('#vat').attr('value',total);
+                   $('#vat').val(vat).attr('value',total);
                }
             }
             function Calculatetotal(){
-                $('#amount').val(0);
-                $('#amount').attr('value',0);
-                $('#total').val(0);
-                $('#total').attr('value',0);
+                $('#amount').val(0).attr('value',0);
+                $('#total').val(0).attr('value',0);
                 let new_capacity = $('#new_capacity').val() ?? 0;
                 let existing_capacity = $('#existing_capacity').val() ?? 0;
                 let used_capacity = new_capacity - existing_capacity;
@@ -288,13 +284,9 @@
                 if(used_capacity){
                     let amount = used_capacity * terrif_per_month;
                     let total = Number(amount) + Number(vat);
-                    $('#amount').val(amount);
-                    $('#amount').attr('value',amount);
-                    $('#total').val(total);
-                    $('#total').attr('value',total);
+                    $('#amount').val(amount).attr('value',amount);
+                    $('#total').val(total).attr('value',total);
                 }
             }
-            
-          
     </script>
 @endsection
