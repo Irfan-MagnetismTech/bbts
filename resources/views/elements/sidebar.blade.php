@@ -25,26 +25,6 @@
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Permission</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
-                    <li class="{{ request()->routeIs('brands.*') ? 'active' : null }}">
-                        <a href="{{ route('brands.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Brands</span><span
-                                class="pcoded-mcaret"></span></a>
-                    </li>
-                    <li class="{{ request()->routeIs('branchs.*') ? 'active' : null }}">
-                        <a href="{{ route('branchs.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Branches</span><span
-                                class="pcoded-mcaret"></span></a>
-                    </li>
-                    <li class="{{ request()->routeIs('pops.*') ? 'active' : null }}">
-                        <a href="{{ route('pops.create') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">POP</span><span
-                                class="pcoded-mcaret"></span></a>
-                    </li>
-                    <li class="{{ request()->routeIs('particulars.*') ? 'active' : null }}">
-                        <a href="{{ route('particulars.create') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Particulars</span><span
-                                class="pcoded-mcaret"></span></a>
-                    </li>
                 </ul>
             </li>
             <li
@@ -75,6 +55,31 @@
                             <span class="pcoded-mtext"> Employee </span>
                             <span class="pcoded-mcaret"></span>
                         </a>
+                    </li>
+                    <li class="{{ request()->routeIs('brands.*') ? 'active' : null }}">
+                        <a href="{{ route('brands.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Brands</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('branchs.*') ? 'active' : null }}">
+                        <a href="{{ route('branchs.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Branches</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('pops.*') ? 'active' : null }}">
+                        <a href="{{ route('pops.create') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">POP</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('particulars.*') ? 'active' : null }}">
+                        <a href="{{ route('particulars.create') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Particulars</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('connectivity.*') ? 'active' : null }}">
+                        <a href="{{ route('connectivity.create') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Link</span><span
+                                class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>
             </li>
