@@ -3,8 +3,12 @@
 namespace Modules\Admin\Entities;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use Modules\Admin\Entities\Pop;
+use App\Models\Dataencoding\Thana;
 use Modules\Sales\Entities\Vendor;
+use App\Models\Dataencoding\District;
+use App\Models\Dataencoding\Division;
+use Illuminate\Database\Eloquent\Model;
 
 class ConnectivityLink extends Model
 {
@@ -43,5 +47,20 @@ class ConnectivityLink extends Model
     public function toPop()
     {
         return $this->belongsTo(Pop::class, 'id', 'to_pop_id');
+    }
+
+    public function division()
+    {
+        return $this->belongsTo(Division::class, 'division_id');
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
+
+    public function thana()
+    {
+        return $this->belongsTo(Thana::class, 'thana_id');
     }
 }

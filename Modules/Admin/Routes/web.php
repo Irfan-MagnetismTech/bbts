@@ -12,6 +12,7 @@ use Modules\Admin\Http\Controllers\BranchController;
 use Modules\Admin\Http\Controllers\ParticularController;
 use Modules\Admin\Http\Controllers\PermissionController;
 use Modules\Admin\Http\Controllers\ConnectivityLinkController;
+use Modules\Admin\Http\Controllers\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,7 @@ Route::prefix('admin')->group(function () {
             'connectivity'  => ConnectivityLinkController::class,
             'particulars'   => ParticularController::class,
             'banks'         => BankController::class,
+            'services'      => ServiceController::class,
         ]);
     });
 
@@ -50,6 +52,8 @@ Route::prefix('admin')->group(function () {
     Route::get('get_pops', [ConnectivityLinkController::class, 'getPop'])->name('get_pops');
     Route::get('get_link_sites', [ConnectivityLinkController::class, 'getLinkSite'])->name('get_link_sites');
     Route::get('get_location_info_for_link', [ConnectivityLinkController::class, 'getLocationInfoForLink'])->name('get_location_info_for_link');
+
+    Route::get('get-bbts-link-id', [ServiceController::class, 'get_bbts_link_id'])->name('get_bbts_link_id');
 });
 
 Route::middleware(['guest'])->group(function () {
