@@ -250,7 +250,6 @@
                             $('#bbts_link_id').val(item.bbts_link_id).attr('value',item.bbts_link_id);
                             $('#from_location').val(item.from_location).attr('value',item.from_location);
                             $('#from_site').val(item.from_site).attr('value',item.from_site);
-                            $('#teck_type').val(item.teck_type).attr('value',item.teck_type);
                             $('#vendor_link_id').val(item.vendor_link_id).attr('value',item.vendor_link_id);
                             $('#vendor_vlan').val(item.vendor_vlan).attr('value',item.vendor_vlan);
                             $('#port').val(item.port).attr('value',item.port);
@@ -270,6 +269,13 @@
                                 $('#increase').attr('checked',true);
                             }else{
                                 $('#decrease').attr('checked',true);
+                            }
+                            
+                            $('#teck_type').val(item.teck_type).attr('value',item.teck_type);
+                            if(item.teck_type == 'link'){
+                                $('#link').attr('checked',true);
+                            }else{
+                                $('#backbone').attr('checked',true);
                             }
                             $('#district_id').on('DOMNodeInserted', function() {
                                 $('#district_id').val(item.district_id).trigger('change');
