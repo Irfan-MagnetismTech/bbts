@@ -44,4 +44,18 @@ class ConnectivityLink extends Model
     {
         return $this->belongsTo(Pop::class, 'id', 'to_pop_id');
     }
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
+
+    public function thana()
+    {
+        return $this->belongsTo(Thana::class);
+    }
 }

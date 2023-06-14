@@ -2,10 +2,45 @@
 @section('title', 'link')
 
 @php
-    $is_old = old('client_id') ? true : false;
-    $form_heading = !empty($survey->id) ? 'Update' : 'Add';
-    $form_url = !empty($survey->id) ? route('connectivity.update', $survey->id) : route('connectivity.store');
-    $form_method = !empty($survey->id) ? 'PUT' : 'POST';
+    $is_old = old('link_name') ? true : false;
+    $form_heading = !empty($connectivity->id) ? 'Update' : 'Add';
+    $form_url = !empty($connectivity->id) ? route('connectivity.update', $connectivity->id) : route('connectivity.store');
+    $form_method = !empty($connectivity->id) ? 'PUT' : 'POST';
+
+    $reference = old('reference', !empty($connectivity) ? $connectivity->reference : null);
+
+    $increament_type = old('increament_type', !empty($connectivity) ? $connectivity->increament_type : null);
+    $link_type = old('link_type', !empty($connectivity) ? $connectivity->link_type : null);
+    $link_name = old('link_name', !empty($connectivity) ? $connectivity->link_name : null);
+    $vendor_id = old('vendor_id', !empty($connectivity) ? $connectivity->vendor_id : null);
+    $vendor_name = old('vendor', !empty($connectivity) ? $connectivity->vendor->name : null);
+    $bbts_link_id = old('bbts_link_id', !empty($connectivity) ? $connectivity->bbts_link_id : null);
+    $from_location = old('from_location', !empty($connectivity) ? $connectivity->from_location : null);
+    $from_pop_id = old('from_pop_id', !empty($connectivity) ? $connectivity->from_pop_id : null);
+    $to_location = old('to_location', !empty($connectivity) ? $connectivity->to_location : null);
+    $to_pop_id = old('to_pop_id', !empty($connectivity) ? $connectivity->to_pop_id : null);
+    $from_site = old('from_site', !empty($connectivity) ? $connectivity->from_site : null);
+    $division_id = old('division_id', !empty($connectivity) ? $connectivity->division_id : null);
+    $district_id = old('district_id', !empty($connectivity) ? $connectivity->district_id : null);
+    $to_site = old('to_site', !empty($connectivity) ? $connectivity->to_site : null);
+    $thana_id = old('thana_id', !empty($connectivity) ? $connectivity->thana_id : null);
+    $gps = old('gps', !empty($connectivity) ? $connectivity->gps : null);
+    $teck_type = old('teck_type', !empty($connectivity) ? $connectivity->teck_type : null);
+    $vendor_link_id = old('vendor_link_id', !empty($connectivity) ? $connectivity->vendor_link_id : null);
+    $vendor_vlan = old('vendor_vlan', !empty($connectivity) ? $connectivity->vendor_vlan : null);
+    $port = old('port', !empty($connectivity) ? $connectivity->port : null);
+    $date_of_commissioning = old('date_of_commissioning', !empty($connectivity) ? $connectivity->date_of_commissioning : today()->format('d-m-Y'));
+    $date_of_termination = old('date_of_termination', !empty($connectivity) ? $connectivity->date_of_termination :  today()->format('d-m-Y'));
+    $activation_date = old('activation_date', !empty($connectivity) ? $connectivity->activation_date : today()->format('d-m-Y'));
+    $remarks = old('remarks', !empty($connectivity) ? $connectivity->remarks : null);
+    $capacity_type = old('capacity_type', !empty($connectivity) ? $connectivity->capacity_type : null);
+    $existing_capacity = old('existing_capacity', !empty($connectivity) ? $connectivity->existing_capacity : null);
+    $new_capacity = old('new_capacity', !empty($connectivity) ? $connectivity->new_capacity : null);
+    $terrif_per_month = old('terrif_per_month', !empty($connectivity) ? $connectivity->terrif_per_month : null);
+    $amount = old('amount', !empty($connectivity) ? $connectivity->amount : null);
+    $vat = old('vat', !empty($connectivity) ? $connectivity->vat : null);
+    $vat_percent = old('vat_percent', !empty($connectivity) ? $connectivity->vat_percent : null);
+    $total = old('total', !empty($connectivity) ? $connectivity->total : null);
 @endphp
 
 @section('breadcrumb-title')
@@ -39,30 +74,30 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-1"></div>
-                        <x-input-box colGrid="2" name="reference" label="Reference" value=""/>
+                        <x-input-box colGrid="2" name="reference" label="Reference" value="{{$reference}}"/>
                         <div class="col-2">
                                 <div class="mt-2 mb-4">
                                     {{-- <label class="mr-2" for="yes">Signboard</label> --}}
                                     <div class="form-check-inline">
                                         <label class="form-check-label" for="new">
                                             <input type="radio" class="form-check-input link_type" id="new" name="link_type"
-                                                value="new" @checked(@$signboard == 'new' || ($form_method == 'POST' && !old()))>
+                                                value="new" @checked(@$link_type == 'new' || ($form_method == 'POST' && !old()))>
                                             New
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label" for="existing">
                                             <input type="radio" class="form-check-input link_type" id="existing" name="link_type"
-                                                value="existing" @checked(@$signboard == 'existing')>
+                                                value="existing" @checked(@$link_type == 'existing')>
                                             Existing
                                         </label>
                                     </div>
                                 </div>
                         </div>
-                        <x-input-box colGrid="2" name="link_name" label="Link Name" value=""/>
-                        <x-input-box colGrid="2" name="vendor" label="Vendor" value=""/>
-                        <input type="hidden" id="vendor_id" name="vendor_id">
-                        <x-input-box colGrid="2" name="bbts_link_id" label="BBTS Link Id" value=""/>
+                        <x-input-box colGrid="2" name="link_name" label="Link Name" value="{{$link_name}}"/>
+                        <x-input-box colGrid="2" name="vendor" label="Vendor" value="{{$vendor_name}}"/>
+                        <input type="hidden" id="vendor_id" name="vendor_id" value="{{$vendor_id}}">
+                        <x-input-box colGrid="2" name="bbts_link_id" label="BBTS Link Id" value="{{$bbts_link_id}}"/>
                         <div class="col-1"></div>
                     </div>
                     <div class="row">
@@ -72,8 +107,8 @@
                     </div>
                     <div class="row">
                         <div class="col-1"></div>
-                        <x-input-box colGrid="2" name="from_location" label="From Location" value="" placeholder="POP"/>
-                        <input type="hidden" id="from_pop_id" name="from_pop_id">
+                        <x-input-box colGrid="2" name="from_location" label="From Location" value="{{$from_location}}" placeholder="POP"/>
+                        <input type="hidden" id="from_pop_id" name="from_pop_id" value="{{$from_pop_id}}">
                         <div class="col-2"></div>
                         <div class="col-2">
                             <div class="mt-2 mb-4">
@@ -81,14 +116,14 @@
                                     <div class="form-check-inline">
                                         <label class="form-check-label" for="link">
                                             <input type="radio" class="form-check-input link_type" id="link" name="link_type"
-                                                value="link" @checked(@$signboard == 'link' || ($form_method == 'POST' && !old()))>
+                                                value="link" @checked(@$teck_type == 'link' || ($form_method == 'POST' && !old()))>
                                             Link
                                         </label>
                                     </div>
                                     <div class="form-check-inline">
                                         <label class="form-check-label" for="backbone">
                                             <input type="radio" class="form-check-input link_type" id="backbone" name="link_type"
-                                                value="backbone" @checked(@$signboard == 'backbone')>
+                                                value="backbone" @checked(@$teck_type == 'backbone')>
                                                 Backbone
                                         </label>
                                     </div>
@@ -100,36 +135,28 @@
                                     <option value="">Select division</option>
                                     @foreach (@$divisions as $division)
                                         <option value="{{ $division->id }}"
-                                            {{ (old('division_id') ?? ($branch->division_id ?? '')) == $division->id ? 'selected' : '' }}>
+                                            {{ (old('division_id') ?? ($division_id ?? '')) == $division->id ? 'selected' : '' }}>
                                             {{ $division->name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <x-input-box colGrid="2" name="to_location" label="To Location" value=""/>
+                        <x-input-box colGrid="2" name="to_location" label="To Location" value="{{$to_location}}"/>
                         <input type="hidden" id="to_pop_id" name="to_pop_id">
                     </div>
                     <div class="row">
                         <div class="col-1"></div>
-                        <x-input-box colGrid="2" name="from_site" label="From Site" value="" placeholder="LDP"/>
+                        <x-input-box colGrid="2" name="from_site" label="From Site" value="{{$from_site}}" placeholder="LDP"/>
                         <div class="col-4"></div>
                         <div class="form-group col-2">
                             <div class="input-group input-group-sm input-group-primary">
                                 <select class="form-control" id="district_id" name="district_id" required>
                                     <option value="">Select district</option>
-                                    @if ($formType == 'edit')
-                                        @foreach (@$districts as $district)
-                                            <option value="{{ $district->id }}"
-                                                {{ (old('district_id') ?? ($branch->district_id ?? '')) == $district->id ? 'selected' : '' }}>
-                                                {{ $district->name }}
-                                            </option>
-                                        @endforeach
-                                    @endif
                                 </select>
                             </div>
                         </div>
-                        <x-input-box colGrid="2" name="to_site" label="To Site" value="" placeholder="LDP/POC"/>
+                        <x-input-box colGrid="2" name="to_site" label="To Site" value="{{$to_site}}" placeholder="LDP/POC"/>
                     </div>
                     <div class="row">
                         <div class="col-2"></div>
@@ -139,18 +166,10 @@
                             <div class="input-group input-group-sm input-group-primary">
                                 <select class="form-control" id="thana_id" name="thana_id" required>
                                     <option value="">Select thana</option>
-                                    @if ($formType == 'edit')
-                                        @foreach (@$thanas as $thana)
-                                            <option value="{{ $thana->id }}"
-                                                {{ (old('thana_id') ?? ($branch->thana_id ?? '')) == $thana->id ? 'selected' : '' }}>
-                                                {{ $thana->name }}
-                                            </option>
-                                        @endforeach
-                                    @endif
                                 </select>
                             </div>
                         </div>
-                        <x-input-box colGrid="2" name="gps" label="GPS" value="" placeholder="Lat/Long"/>
+                        <x-input-box colGrid="2" name="gps" label="GPS" value="{{$gps}}" placeholder="Lat/Long"/>
                     </div>
                 </div>
             </div>
@@ -162,16 +181,16 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-1"></div>
-                        <x-input-box colGrid="2" name="vendor_link_id" label="Vendor Link Id" value=""/>
-                        <x-input-box colGrid="2" name="vendor_vlan" label="Vendor VLAN" value=""/>
-                        <x-input-box colGrid="2" name="port" label="Port" value=""/>
-                        <x-input-box colGrid="2" name="date_of_commissioning" label="Date Of Commissioning" value="" class="date"/>
-                        <x-input-box colGrid="2" name="date_of_termination" label="Date Of Termination" value="" class="date"/>
+                        <x-input-box colGrid="2" name="vendor_link_id" label="Vendor Link Id" value="{{$vendor_link_id}}"/>
+                        <x-input-box colGrid="2" name="vendor_vlan" label="Vendor VLAN" value="{{$vendor_vlan}}"/>
+                        <x-input-box colGrid="2" name="port" label="Port" value="{{$port}}"/>
+                        <x-input-box colGrid="2" name="date_of_commissioning" label="Date Of Commissioning" value="{{$date_of_commissioning}}" class="date"/>
+                        <x-input-box colGrid="2" name="date_of_termination" label="Date Of Termination" value="{{$date_of_termination}}" class="date"/>
                     </div>
                     <div class="row">
                         <div class="col-1"></div>
-                        <x-input-box colGrid="2" name="activation_date" label="Activation Date" value="" class="date"/>
-                        <x-input-box colGrid="4" name="remarks" label="Remarks" value=""/>
+                        <x-input-box colGrid="2" name="activation_date" label="Activation Date" value="{{$activation_date}}" class="date"/>
+                        <x-input-box colGrid="4" name="remarks" label="Remarks" value="{{$remarks}}"/>
                     </div>
                 </div>
             </div>
@@ -183,37 +202,46 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-1"></div>
-                        <x-input-box colGrid="3" name="capacity_type" label="Capacity Type" value=""/>
-                        <x-input-box colGrid="2" name="existing_capacity" label="Existing Capacity" value=""/>
-                        <x-input-box colGrid="2" name="new_capacity" label="New Capacity" value=""/>
-                        <x-input-box colGrid="3" name="terrif_per_month" label="Terrif Per Month" value=""/>
+                        <div class="col-3">
+                            <select name="capacity_type" id="capacity_type" class="form-control">
+                                <option value="">Select Capacity Type</option>
+                                <option value="mpls" @if($capacity_type =='mpls' ) selected @endif>MPLS</option>
+                                <option value="e1" @if($capacity_type =='e1' ) selected @endif>E1</option>
+                                <option value="stm1" @if($capacity_type =='stm1' ) selected @endif>STM-1</option>
+                                <option value="core" @if($capacity_type =='core' ) selected @endif>Core</option>
+                                <option value="stm2" @if($capacity_type =='stm2' ) selected @endif>STM-2</option>
+                            </select>
+                        </div>
+                        <x-input-box colGrid="2" name="existing_capacity" label="Existing Capacity" value="{{$existing_capacity}}"/>
+                        <x-input-box colGrid="2" name="new_capacity" label="New Capacity" value="{{$new_capacity}}"/>
+                        <x-input-box colGrid="3" name="terrif_per_month" label="Terrif Per Month" value="{{$terrif_per_month}}"/>
                         <div class="col-1"></div>
                     </div>
                     <div class="row">
                         <div class="col-1"></div>
                         <div class="col-2">
                             <label>
-                                <input type="radio" name="increament_type" value="increase" id="increase">
+                                <input type="radio" name="increament_type" value="increase" id="increase" @checked(@$increament_type == 'increase')>
                                 <i class="helper"></i>Increase
                             </label>
                         </div>
                         <div class="col-2">
                             <label>
-                                <input type="radio" name="increament_type" value="decrease" id="decrease">
+                                <input type="radio" name="increament_type" value="decrease" id="decrease" @checked(@$increament_type == 'decrease')>
                                 <i class="helper"></i>Decrease
                             </label>
                         </div>
                         <div class="col-3"></div>
-                        <x-input-box colGrid="3" name="amount" label="Amount" value=""/>
+                        <x-input-box colGrid="3" name="amount" label="Amount" value="{{$amount}}"/>
                     </div>
                     <div class="row">
                         <div class="col-6"></div>
-                        <x-input-box colGrid="2" name="vat_percent" label="VAT (%)" value=""/>
-                        <x-input-box colGrid="3" name="vat" label="VAT" value=""/>
+                        <x-input-box colGrid="2" name="vat_percent" label="VAT (%)" value="{{$vat_percent}}"/>
+                        <x-input-box colGrid="3" name="vat" label="VAT" value="{{$vat}}"/>
                     </div>
                     <div class="row">
                         <div class="col-8"></div>
-                        <x-input-box colGrid="3" name="total" label="Total" value="" attr="readonly"/>
+                        <x-input-box colGrid="3" name="total" label="Total" value="{{$total}}" attr="readonly"/>
                     </div>
                 </div>
             </div>
