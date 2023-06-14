@@ -20,7 +20,8 @@ class ConnectivityLinkController extends Controller
      */
     public function index()
     {
-        return view('admin::index');
+        $datas = ConnectivityLink::all();
+        return view('admin::connectivities.index', compact('datas'));
     }
 
     /**
@@ -46,10 +47,8 @@ class ConnectivityLinkController extends Controller
             $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total');
             ConnectivityLink::create($connectivity_link);
             DB::commit();
-            dd('done');
-            return redirect()->route('warranty-claims.index')->with('message', 'Data has been updated successfully');
+            return redirect()->route('connectivity.index')->with('message', 'Data has been created successfully');
         } catch (QueryException $err) {
-            dd($err->getMessage());
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($err->getMessage());
         }
@@ -70,9 +69,11 @@ class ConnectivityLinkController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(ConnectivityLink $connectivity)
     {
-        return view('admin::edit');
+        $formType = "edit";
+        $divisions = Division::latest()->get();
+        return view('admin::connectivities.create', compact('formType', 'divisions', 'connectivity'));
     }
 
     /**
@@ -81,9 +82,18 @@ class ConnectivityLinkController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, ConnectivityLink $connectivity)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total');
+            $connectivity->update($connectivity_link);
+            DB::commit();
+            return redirect()->route('connectivity.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($err->getMessage());
+        }
     }
 
     /**

@@ -78,7 +78,12 @@
                     </li>
                     <li class="{{ request()->routeIs('connectivity.*') ? 'active' : null }}">
                         <a href="{{ route('connectivity.create') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Link</span><span
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Add Link</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('connectivity.*') ? 'active' : null }}">
+                        <a href="{{ route('connectivity.index') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Link List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>
