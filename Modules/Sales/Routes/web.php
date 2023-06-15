@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Sales\Entities\ConnectivityRequirement;
+use Modules\Sales\Entities\Offer;
 use Modules\Sales\Http\Controllers\LeadGenerationController;
 use Modules\Sales\Http\Controllers\MeetingController;
 use Modules\Sales\Http\Controllers\FollowUpController;
@@ -15,6 +16,7 @@ use Modules\Sales\Http\Controllers\PlanningController;
 use Modules\Sales\Http\Controllers\SalesController;
 use Modules\Sales\Http\Controllers\ClientProfileController;
 use Modules\Sales\Http\Controllers\CostingController;
+use Modules\Sales\Http\Controllers\OfferController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,4 +62,5 @@ Route::prefix('sales')->group(function () {
     Route::get('meeting-status-update/{id}', [MeetingController::class, 'updateStatus'])->name('meeting.status.update');
     Route::get('add-planning/{id}', [PlanningController::class, 'create'])->name('add-planning');
     Route::get('add-costing/{id}', [CostingController::class, 'create'])->name('add-costing');
+    Route::get('client-wise-mq/{id}', [OfferController::class, 'clientWiseMq'])->name('client-wise-mq');
 });

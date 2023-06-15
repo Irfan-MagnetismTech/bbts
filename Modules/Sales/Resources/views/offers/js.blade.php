@@ -9,4 +9,5 @@
     $('.bankList').select2({
         placeholder: 'Select an option'
     });
+
 </script>
