@@ -71,4 +71,16 @@ return [
         'DR' => 'DR',
         'Co-Loc' => 'Co-Loc',
     ],
+
+    //link status
+    'linkStatus' => [
+        'Active' => 'Active',
+        'Inactive' => 'Inactive',
+        'Increase' => 'Increase',
+        'Decrease' => 'Decrease',
+        'Pending' => 'Pending',
+        'Under Process' => 'Under Process',
+        'Under Notice' => 'Under Notice',
+        'Terminated' => 'Terminated',
+    ],
 ];
