@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('service_lines', function (Blueprint $table) {
             $table->id();
-            $table->string('reference')->nullable();
-            $table->string('bbts_link_id');
-            $table->string('service_type')->comment('new, existing');
-            $table->string('service_status')->comment('active, inactive, increase, decrease');
-            $table->string('total')->nullable();
+            $table->string('service_id');
+            $table->string('product_id')->nullable();
+            $table->string('quantity')->nullable();
+            $table->string('rate')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('services');
+        Schema::dropIfExists('service_lines');
     }
 };

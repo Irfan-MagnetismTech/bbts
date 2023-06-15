@@ -4,10 +4,15 @@ namespace Modules\Admin\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Admin\Entities\Service;
 use Modules\Sales\Entities\Product;
 use App\Models\Dataencoding\Division;
+use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Admin\Entities\ConnectivityLink;
+use Modules\Admin\Http\Requests\ServiceRequest;
+use Termwind\Components\Dd;
 
 class ServiceController extends Controller
 {
@@ -38,9 +43,25 @@ class ServiceController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(ServiceRequest $request)
     {
-        //
+        $requestData = $request->all();
+        try {
+            DB::beginTransaction();
+            $service = Service::create($requestData);
+
+            $serviceLines = [];
+            foreach ($request->service_id as $key => $val) {
+                $serviceLines[] = $this->getServiceLines($request, $key);
+            }
+            $service->serviceLines()->createMany($serviceLines);
+            DB::commit();
+
+            return redirect()->route('services.index')->with('message', 'Data has been inserted successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -111,5 +132,21 @@ class ServiceController extends Controller
                 ];
             });
         return response()->json($vendors);
+    }
+
+    /**
+     * Get product details
+     * @param Request $requestData
+     * @param int $key1
+     * @return array
+     */
+    private function getServiceLines($requestData, $key1)
+    {
+        return  [
+            'product_id'        => $requestData->service_id[$key1],
+            'quantity'          => $requestData->quantity[$key1],
+            'rate'              => $requestData->rate[$key1],
+            'remarks'           => $requestData->remarks[$key1],
+        ];
     }
 }

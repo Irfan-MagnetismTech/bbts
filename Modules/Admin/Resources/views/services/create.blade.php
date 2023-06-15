@@ -13,8 +13,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('services.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-database"></i></a>
+    <a href="{{ route('services.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -32,17 +31,36 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="text-center mt-4">
+                <div class="tableHeading">
                     <h5> <span> &#10070; </span> New Service <span>&#10070;</span> </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <x-input-box colGrid="2" name="reference" label="Reference" value="" />
-                        <x-input-box colGrid="2" name="bbts_link_id" id="bbts_link_id" label="BBTS Link Id" value="" attr="required" />
-                        <x-input-box colGrid="2" name="link_type" label="Link Type" value="" attr="readonly" />
+                        <x-input-box colGrid="2" name="bbts_link_id" id="bbts_link_id" label="BBTS Link Id"
+                            value="" attr="required" />
+                        <div class="col-2">
+                            <div class="mt-2 mb-4">
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="new">
+                                        <input type="radio" class="form-check-input service_type" id="new"
+                                            name="service_type" value="new" @checked(@$signboard == 'new' || ($form_method == 'POST' && !old()))>
+                                        New
+                                    </label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="existing">
+                                        <input type="radio" class="form-check-input service_type" id="existing"
+                                            name="service_type" value="existing" @checked(@$signboard == 'existing')>
+                                        Existing
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         <x-input-box colGrid="2" name="link_name" label="Link Name" value="" attr="readonly" />
                         <x-input-box colGrid="2" name="vendor" label="Vendor" value="" attr="readonly" />
-                        <x-input-box colGrid="2" id="vendor_id" name="vendor_id" label="Vendor Link ID" value="" attr="readonly" />
+                        <x-input-box colGrid="2" id="vendor_id" name="vendor_id" label="Vendor Link ID" value=""
+                            attr="readonly" />
                     </div>
                     <div class="row">
                         <div class="col-1"></div>
@@ -64,11 +82,13 @@
                     </div>
                     <div class="row">
                         <div class="col-1"></div>
-                        <x-input-box colGrid="2" name="from_site" label="From Site" value="" placeholder="LDP" attr="readonly" />
+                        <x-input-box colGrid="2" name="from_site" label="From Site" value="" placeholder="LDP"
+                            attr="readonly" />
                         <div class="col-4"></div>
                         <x-input-box colGrid="2" name="district_id" label="District" value=""
                             placeholder="District name" attr="readonly" />
-                        <x-input-box colGrid="2" name="to_site" label="To Site" value="" placeholder="LDP/POC" attr="readonly" />
+                        <x-input-box colGrid="2" name="to_site" label="To Site" value="" placeholder="LDP/POC"
+                            attr="readonly" />
                     </div>
                     <div class="row">
                         <div class="col-2"></div>
@@ -76,14 +96,16 @@
                         <div class="col-2"></div>
                         <x-input-box colGrid="2" name="thana_id" label="Thana" value=""
                             placeholder="Thana name" attr="readonly" />
-                        <x-input-box colGrid="2" name="gps" label="GPS" value="" placeholder="Lat/Long" attr="readonly" />
+                        <x-input-box colGrid="2" name="gps" label="GPS" value="" placeholder="Lat/Long"
+                            attr="readonly" />
                     </div>
                     <div class="row">
                         <div class="col-3">
-                            <select class="form-control" id="status" name="status" required>
+                            <select class="form-control" id="service_status" name="service_status" required>
                                 <option value="" selected disabled>Select Status</option>
                                 <option value="Increase">Increase</option>
                                 <option value="Decrease">Decrease</option>
+                                <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
                         </div>
@@ -93,7 +115,7 @@
             </div>
 
             <div class="row">
-                <div class="offset-md-4 col-md-4 mt-1">
+                <div class="offset-md-3 col-md-6 mt-1">
                     <table class="table table-bordered" id="service_table">
                         <thead>
                             <tr>
@@ -108,27 +130,26 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <select class="form-control select2" id="service_id" name="service_id" required>
-                                        <option value="" selected disabled>Select Service</option>
+                                    <select class="form-control select2 service_id" name="service_id[]" required>
+                                        <option value="0" selected disabled>Select Service</option>
                                         @foreach (@$products as $product)
-                                            <option value="{{ $product->id }}"
-                                                {{ (old('service_id') ?? ($product->id ?? '')) == $product->id ? 'selected' : '' }}>
+                                            <option value="{{ $product->id }}">
                                                 {{ $product->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" id="quantity" name="quantity" required>
+                                    <input type="number" class="form-control quantity" name="quantity[]" required>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" id="rate" name="rate" required>
+                                    <input type="number" class="form-control rate" name="rate[]" required>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" id="amount" name="amount" required>
+                                    <input type="number" class="form-control amount" name="amount[]" required>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" id="remarks" name="remarks" required>
+                                    <input type="text" class="form-control remarks" name="remarks[]" required>
                                 </td>
                                 <td>
                                     <button type="button"
@@ -136,95 +157,24 @@
                                 </td>
                             </tr>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3 text-right" style="text-align: right;">Total Amout</td>
+                                <td>
+                                    <input type="number" class="form-control total" name="total" required>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
-            <button class="py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
+            <button class="py-2 btn btn-success ">{{ !empty($service->id) ? 'Update' : 'Save' }}</button>
         </div>
     </div>
-    </div>
+
     {!! Form::close() !!}
 @endsection
 
-@section('script')
-    <script>
-        $('.date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        });
-
-        /* Adds and removes quantity row on click */
-        $("#service_table").on('click', '.add-service-row', () => {
-            appendServiceRow();
-        }).on('click', '.remove-requisition-row', function() {
-            if ($('#service_table tbody tr').length == 1) {
-                return false;
-            }
-            $(this).closest('tr').remove();
-        });
-
-
-        function appendServiceRow() {
-            let row = `<tr>
-                        <td>
-                            <select class="form-control select2" id="service_id" name="service_id" required>
-                                <option value="" selected disabled>Select Service</option>
-                                @foreach (@$products as $product)
-                                    <option value="{{ $product->id }}"
-                                        {{ (old('service_id') ?? ($product->id ?? '')) == $product->id ? 'selected' : '' }}>
-                                        {{ $product->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" id="quantity" name="quantity" required>
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" id="rate" name="rate" required>
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" id="amount" name="amount" required>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" id="remarks" name="remarks" required>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></button>
-                        </td>
-                    </tr>`;
-            $('#service_table tbody').append(row);
-        }
-
-        $('#bbts_link_id').on('keyup', function() {
-            let myObject = {}
-            jquaryUiAjax(this, "{{ route('get_bbts_link_id') }}", uiList, myObject);
-
-            function uiList(item) {
-                $('#bbts_link_id').val(item.label).attr('value', item.label);
-                $('#division_id').val(item.division_id).trigger('change');
-                $('#link_name').val(item.link_name).attr('value', item.link_name);
-                $('#link_type').val(item.link_type).attr('value', item.link_type);
-                $('#vendor_id').val(item.vendor_id).attr('value', item.vendor_id);
-                $('#vendor').val(item.vendor_name).attr('value', item.vendor_name);
-                $('#from_location').val(item.from_location).attr('value', item.from_location);
-                $('#to_location').val(item.to_location).attr('value', item.to_location);
-                $('#from_site').val(item.from_site).attr('value', item.from_site);
-                $('#to_site').val(item.to_site).attr('value', item.to_site);
-                $('#gps').val(item.gps).attr('value', item.gps);
-                $('#vendor_link_id').val(item.vendor_link_id).attr('value', item.vendor_link_id);
-                $('#remarks').val(item.remarks).attr('value', item.remarks);        
-                $('#district_id').val(item.district_id).trigger('change');
-                $('#thana_id').val(item.thana_id).trigger('change');
-                return false;
-            }
-        })
-
-
-        $('.select2').select2({
-            placeholder: 'Select an option'
-        });
-    </script>
-@endsection
+@include('admin::services.js')
