@@ -5,6 +5,8 @@ namespace Modules\Sales\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\LeadGeneration;
 
 class OfferController extends Controller
 {
@@ -23,7 +25,8 @@ class OfferController extends Controller
      */
     public function create()
     {
-        return view('sales::offers.create');
+        $client_no_list = LeadGeneration::where('status', '!=', 'offer')->pluck('client_no', 'id');
+        return view('sales::offers.create', compact('client_no_list')); 
     }
 
     /**
@@ -75,5 +78,12 @@ class OfferController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function clientWiseMq(Request $request)
+    {
+        $client_id = $request->client_id;
+        $mq = FeasibilityRequirement::where('client_id', $client_id)->pluck('mq_no');
+        return $mq;
     }
 }

@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Survey List')
+@section('title', 'Costing List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Survey List
+    Costing List
 @endsection
 
 @section('style')
@@ -29,9 +29,10 @@
                 <tr>
                     <th>#SL</th>
                     <th>Client Name</th>
-                    <th>Client id</th>
+                    <th>Client No</th>
                     <th>MQ No</th>
                     <th>FR No</th>
+
                     <th>Action</th>
                 </tr>
             </thead>

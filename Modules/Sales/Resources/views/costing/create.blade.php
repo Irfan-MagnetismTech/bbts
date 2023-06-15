@@ -37,23 +37,11 @@
         <div class="card-body">
             <div class="row">
                 @php
-                    if (!empty($survey)) {
-                        $link_types = $survey->surveyDetails->pluck('link_type')->toArray();
-                        $options = $survey->surveyDetails->pluck('option')->toArray();
-                        $statuses = $survey->surveyDetails->pluck('status')->toArray();
-                        $methods = $survey->surveyDetails->pluck('method')->toArray();
-                        $vendors = $survey->surveyDetails->pluck('vendor')->toArray();
-                        $bts_pop_ldps = $survey->surveyDetails->pluck('bts_pop_ldp')->toArray();
-                        $gps = $survey->surveyDetails->pluck('gps')->toArray();
-                        $distances = $survey->surveyDetails->pluck('distance')->toArray();
-                        $current_capacities = $survey->surveyDetails->pluck('current_capacity')->toArray();
-                        $remarks = $survey->surveyDetails->pluck('remarks')->toArray();
-                        $details_ids = $survey->surveyDetails->pluck('id')->toArray();
-                    }
-                    $client_name = $is_old ? old('client_name') : $survey->lead_generation->client_name ?? $planning->feasibilityRequirementDetail->feasibilityRequirement->lead_generation->client_name;
-                    $client_no = $is_old ? old('client_no') : $survey->lead_generation->client_no ?? $planning->feasibilityRequirementDetail->feasibilityRequirement->lead_generation->client_no;
-                    $location = $is_old ? old('location') : $survey->lead_generation->location ?? $planning->feasibilityRequirementDetail->link_name;
-                    $month = $is_old ? old('month') : $survey->lead_generation->month ?? '';
+                    $client_name = $is_old ? old('client_name') : $planning->feasibilityRequirementDetail->feasibilityRequirement->lead_generation->client_name;
+                    $client_no = $is_old ? old('client_no') : $planning->feasibilityRequirementDetail->feasibilityRequirement->lead_generation->client_no;
+                    $location = $is_old ? old('location') : $planning->feasibilityRequirementDetail->link_name;
+                    $fr_no = $is_old ? old('fr_no') : $planning->feasibilityRequirementDetail->fr_no;
+                    $fr_id = $is_old ? old('fr_id') : $planning->feasibilityRequirementDetail->id;
                     
                 @endphp
                 {{-- exiting or new radio button --}}
@@ -87,6 +75,8 @@
                         <label for="mone">Month</label>
                     </div>
                 </div>
+                <input type="hidden" name="fr_id" value="{{ $fr_id }}">
+                <input type="hidden" name="fr_no" value="{{ $fr_no }}">
             </div>
             <div class="row">
                 <div class="md-col-12 col-12">

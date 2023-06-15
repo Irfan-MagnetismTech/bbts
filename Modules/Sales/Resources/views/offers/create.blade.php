@@ -47,11 +47,20 @@
                             $date = $is_old ? old('date') : $feasibility_requirement->date ?? today()->format('d-m-Y');
                             $offer_validity = $is_old ? old('offer_validity') : $feasibility_requirement->offer_validity ?? today()->format('d-m-Y');
                         @endphp
-                        <x-input-box colGrid="3" name="date" class="date" value="{{ $date }}"
-                            label="Date" />
-                        <x-input-box colGrid="3" name="client_no" value="{{ $client_no }}"
-                            label="
-                        Client No" attr="required" />
+                        <div class="col-md-3 col-3">
+                            <select class="form-control bankList" name="client_no" id="client_no" required>
+                                <option value="">Select Client No</option>
+                                @foreach ($client_no_list as $client)
+                                    <option value="{{ $client }}" {{ $client == $client_no ? 'selected' : '' }}>
+                                        {{ $client }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-3">
+                            <select class="form-control" name="mq_no" id="mq_no" required>
+                                <option value="">Select MQ No</option>
+                            </select>
+                        </div>
                         <x-input-box colGrid="3" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <x-input-box colGrid="3" name="offer_validity" class="date" value="{{ $offer_validity }}"
                             label="Offer Validity" />
