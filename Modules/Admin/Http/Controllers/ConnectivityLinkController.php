@@ -20,7 +20,9 @@ class ConnectivityLinkController extends Controller
      */
     public function index()
     {
-        $datas = ConnectivityLink::all();
+        $datas = ConnectivityLink::get()->groupBy('bbts_link_id')->map(function ($item) {
+            return $item->last();
+        })->flatten();
         return view('admin::connectivities.index', compact('datas'));
     }
 
@@ -44,7 +46,7 @@ class ConnectivityLinkController extends Controller
     {
         try {
             DB::beginTransaction();
-            $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total');
+            $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total', 'status', 'link_from');
             ConnectivityLink::create($connectivity_link);
             DB::commit();
             return redirect()->route('connectivity.index')->with('message', 'Data has been created successfully');
@@ -86,7 +88,7 @@ class ConnectivityLinkController extends Controller
     {
         try {
             DB::beginTransaction();
-            $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total');
+            $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total', 'status', 'link_from');
             $connectivity->update($connectivity_link);
             DB::commit();
             return redirect()->route('connectivity.index')->with('message', 'Data has been updated successfully');

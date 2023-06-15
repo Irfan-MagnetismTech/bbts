@@ -1,5 +1,34 @@
 @extends('layouts.backend-layout')
 @section('title', 'link')
+<style>
+   fieldset {
+  display: block!important;
+  margin-left: 2px!important;
+  margin-right: 2px!important;
+  padding-left: 0.75em!important;
+  padding-bottom: 0%!important;
+  padding-right: 0.75em!important;
+  border: #eeeeee 2px silid;
+  border: 2px black (internal value)!important;
+}
+fieldset {
+  background-color: #eeeeee!important;
+}
+
+legend {
+  color: white!important;
+  display: block!important;
+  width: 90%!important;
+  max-width: 100%!important;
+  font-size: 0.5rem!important;
+  line-height: inherit!important;
+  color: inherit!important;
+  white-space: normal!important;
+  margin-bottom:0%!important; 
+}
+
+
+</style>
 
 @php
     $is_old = old('link_name') ? true : false;
@@ -26,6 +55,7 @@
     $thana_id = old('thana_id', !empty($connectivity) ? $connectivity->thana_id : null);
     $gps = old('gps', !empty($connectivity) ? $connectivity->gps : null);
     $teck_type = old('teck_type', !empty($connectivity) ? $connectivity->teck_type : null);
+    $link_from = old('link_from', !empty($connectivity) ? $connectivity->link_from : null);
     $vendor_link_id = old('vendor_link_id', !empty($connectivity) ? $connectivity->vendor_link_id : null);
     $vendor_vlan = old('vendor_vlan', !empty($connectivity) ? $connectivity->vendor_vlan : null);
     $port = old('port', !empty($connectivity) ? $connectivity->port : null);
@@ -68,31 +98,33 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="text-center mt-4">
-                    <h5> <span> &#10070; </span> Connectivity / Link Information <span>&#10070;</span> </h5>
+                <div class="text-center mt-4 bg-info pt-2 pb-2">
+                    <h5 class="text-dark"> <span> &#10070; </span> Connectivity / Link Information <span>&#10070;</span> </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-1"></div>
                         <x-input-box colGrid="2" name="reference" label="Reference" value="{{$reference}}"/>
                         <div class="col-2">
-                                <div class="mt-2 mb-4">
+                                    <fieldset>
+                                        <legend>Link Type</legend>
+                                   
                                     {{-- <label class="mr-2" for="yes">Signboard</label> --}}
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label" for="new">
-                                            <input type="radio" class="form-check-input link_type" id="new" name="link_type"
-                                                value="new" @checked(@$link_type == 'new' || ($form_method == 'POST' && !old()))>
-                                            New
-                                        </label>
-                                    </div>
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label" for="existing">
-                                            <input type="radio" class="form-check-input link_type" id="existing" name="link_type"
-                                                value="existing" @checked(@$link_type == 'existing')>
-                                            Existing
-                                        </label>
-                                    </div>
-                                </div>
+                                        <div class="form-check-inline pt-0 mt-0">
+                                            <label class="form-check-label" for="new">
+                                                <input type="radio" class="form-check-input link_type" id="new" name="link_type"
+                                                    value="new" @checked(@$link_type == 'new' || ($form_method == 'POST' && !old()))>
+                                                NEW
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline mt-0 pt-0">
+                                            <label class="form-check-label" for="existing">
+                                                <input type="radio" class="form-check-input link_type" id="existing" name="link_type"
+                                                    value="existing" @checked(@$link_type == 'existing')>
+                                                EXISTING
+                                            </label>
+                                        </div>
+                                    </fieldset>
                         </div>
                         <x-input-box colGrid="2" name="link_name" label="Link Name" value="{{$link_name}}"/>
                         <x-input-box colGrid="2" name="vendor" label="Vendor" value="{{$vendor_name}}"/>
@@ -111,23 +143,23 @@
                         <input type="hidden" id="from_pop_id" name="from_pop_id" value="{{$from_pop_id}}">
                         <div class="col-2"></div>
                         <div class="col-2">
-                            <div class="mt-2 mb-4">
-                                    {{-- <label class="mr-2" for="yes">Signboard</label> --}}
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label" for="link">
-                                            <input type="radio" class="form-check-input link_type" id="link" name="link_type"
-                                                value="link" @checked(@$teck_type == 'link' || ($form_method == 'POST' && !old()))>
-                                            Link
-                                        </label>
-                                    </div>
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label" for="backbone">
-                                            <input type="radio" class="form-check-input link_type" id="backbone" name="link_type"
-                                                value="backbone" @checked(@$teck_type == 'backbone')>
-                                                Backbone
-                                        </label>
-                                    </div>
+                            <fieldset>
+                                <legend>Teck Type</legend>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="link">
+                                        <input type="radio" class="form-check-input teck_type" id="link" name="teck_type"
+                                            value="link" @checked(@$teck_type == 'link' || ($form_method == 'POST' && !old()))>
+                                        LINK
+                                    </label>
                                 </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="backbone">
+                                        <input type="radio" class="form-check-input teck_type" id="backbone" name="teck_type"
+                                            value="backbone" @checked(@$teck_type == 'backbone')>
+                                            BACKBONE
+                                    </label>
+                                </div>
+                            </fieldset>
                         </div>
                         <div class="form-group col-2">
                             <div class="input-group input-group-sm input-group-primary">
@@ -148,7 +180,26 @@
                     <div class="row">
                         <div class="col-1"></div>
                         <x-input-box colGrid="2" name="from_site" label="From Site" value="{{$from_site}}" placeholder="LDP"/>
-                        <div class="col-4"></div>
+                        <div class="col-2"></div>
+                        <div class="col-2">
+                            <fieldset>
+                                <legend>Link From</legend>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="bbts">
+                                        <input type="radio" class="form-check-input link_from" id="bbts" name="link_from"
+                                            value="bbts" @checked(@$link_from == 'bbts' || ($form_method == 'POST' && !old()))>
+                                        BBTS
+                                    </label>
+                                </div>
+                                <div class="form-check-inline">
+                                    <label class="form-check-label" for="vendor">
+                                        <input type="radio" class="form-check-input link_from" id="vendor" name="link_from"
+                                            value="vendor" @checked(@$link_from == 'vendor')>
+                                            VENDOR
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </div>
                         <div class="form-group col-2">
                             <div class="input-group input-group-sm input-group-primary">
                                 <select class="form-control" id="district_id" name="district_id" required>
@@ -175,8 +226,8 @@
             </div>
             <hr class="text-danger"/>
             <div class="card">
-                <div class="text-center mt-4">
-                    <h5> <span> &#10070; </span> Technical Information <span>&#10070;</span> </h5>
+                <div class="text-center mt-4 bg-info pt-2 pb-2">
+                    <h5 class="text-dark"> <span> &#10070; </span> Technical Information <span>&#10070;</span> </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -196,8 +247,8 @@
             </div>
             <hr class="text-danger"/>
             <div class="card">
-                <div class="text-center mt-4">
-                    <h5> <span> &#10070; </span> Billing Information <span>&#10070;</span> </h5>
+                <div class="text-center mt-4 bg-info pt-2 pb-2">
+                    <h5 class="text-dark"> <span> &#10070; </span> Billing Information <span>&#10070;</span> </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -220,18 +271,15 @@
                     <div class="row">
                         <div class="col-1"></div>
                         <div class="col-2">
-                            <label>
-                                <input type="radio" name="increament_type" value="increase" id="increase" @checked(@$increament_type == 'increase')>
-                                <i class="helper"></i>Increase
-                            </label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="">SELECT STATUS</option>
+                                @foreach (config('businessinfo.linkStatus') as $typeKey => $typevalue)
+                                    <option value="{{ $typevalue }}">
+                                    {{ strToUpper($typevalue) }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="col-2">
-                            <label>
-                                <input type="radio" name="increament_type" value="decrease" id="decrease" @checked(@$increament_type == 'decrease')>
-                                <i class="helper"></i>Decrease
-                            </label>
-                        </div>
-                        <div class="col-3"></div>
+                        <div class="col-5"></div>
                         <x-input-box colGrid="3" name="amount" label="Amount" value="{{$amount}}"/>
                     </div>
                     <div class="row">
@@ -366,6 +414,13 @@
             })
             $('#link_type').on('change',function(){
                 emptyField();
+            })
+            $('.link_from').on('change',function(){
+                if($('input[name="link_from"]:checked').val() === 'bbts'){
+
+                }else{
+
+                }
             })
             function emptyField(){
                             $('#division_id').val(null);
