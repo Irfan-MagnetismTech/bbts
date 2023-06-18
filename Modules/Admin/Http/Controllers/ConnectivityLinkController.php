@@ -103,9 +103,10 @@ class ConnectivityLinkController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ConnectivityLink $connectivity)
     {
-        //
+        $connectivity->delete();
+        return redirect()->back()->with('success', 'Data has been updated successfully');
     }
 
     public function getVendors(Request $request)
