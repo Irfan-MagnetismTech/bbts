@@ -31,6 +31,7 @@ use Modules\Sales\Http\Controllers\OfferController;
 
 Route::prefix('sales')->group(function () {
     require __DIR__ . '/jaber.php';
+    require __DIR__ . '/irfan.php';
     Route::resources([
         'lead-generation' => LeadGenerationController::class,
         'meeting' => MeetingController::class,
