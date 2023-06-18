@@ -5,6 +5,7 @@ namespace Modules\Sales\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\LeadGeneration;
 
@@ -21,12 +22,12 @@ class OfferController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     * @return Renderable
+     * @return Renderable                                                                  
      */
-    public function create()
+    public function create($mq_no = null)
     {
-        $client_no_list = LeadGeneration::where('status', '!=', 'offer')->pluck('client_no', 'id');
-        return view('sales::offers.create', compact('client_no_list')); 
+        $costing = Costing::where('mq_no', $mq_no)->first();
+
     }
 
     /**

@@ -44,6 +44,7 @@ Route::prefix('sales')->group(function () {
         'planning' => PlanningController::class,
         'client-profile' => ClientProfileController::class,
         'costing' => CostingController::class,
+        'offer' => OfferController::class,
     ]);
     Route::get('followup/create/{meeting_id?}', [FollowUpController::class, 'create'])->name('followup.create');
     Route::get('get-client', [LeadGenerationController::class, 'getClient'])->name('get-client');
@@ -63,4 +64,5 @@ Route::prefix('sales')->group(function () {
     Route::get('add-planning/{id}', [PlanningController::class, 'create'])->name('add-planning');
     Route::get('add-costing/{id}', [CostingController::class, 'create'])->name('add-costing');
     Route::get('client-wise-mq/{id}', [OfferController::class, 'clientWiseMq'])->name('client-wise-mq');
+    Route::get('add-offer/{id}', [OfferController::class, 'create'])->name('add-offer');
 });

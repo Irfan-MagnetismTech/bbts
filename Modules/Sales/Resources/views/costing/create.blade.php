@@ -42,6 +42,7 @@
                     $location = $is_old ? old('location') : $planning->feasibilityRequirementDetail->link_name;
                     $fr_no = $is_old ? old('fr_no') : $planning->feasibilityRequirementDetail->fr_no;
                     $fr_id = $is_old ? old('fr_id') : $planning->feasibilityRequirementDetail->id;
+                    $mq_no = $is_old ? old('mq_no') : $planning->feasibilityRequirementDetail->feasibilityRequirement->mq_no;
                     
                 @endphp
                 {{-- exiting or new radio button --}}
@@ -77,6 +78,7 @@
                 </div>
                 <input type="hidden" name="fr_id" value="{{ $fr_id }}">
                 <input type="hidden" name="fr_no" value="{{ $fr_no }}">
+                <input type="hidden" name="mq_no" value="{{ $mq_no }}">
             </div>
             <div class="row">
                 <div class="md-col-12 col-12">

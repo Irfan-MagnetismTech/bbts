@@ -44,7 +44,7 @@
                     <th>Client No</th>
                     <th>MQ No</th>
                     <th>Total FR </th>
-                    <th>Survey/Planing</th>
+                    <th>Survey/Planing/Costing</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -57,7 +57,10 @@
                         <td>{{ $feasibility_requirement->client_no }}</td>
                         <td>{{ $feasibility_requirement->mq_no }}</td>
                         <td>{{ $feasibility_requirement->feasibilityRequirementDetails->count() }}</td>
-                        <td>{{ $feasibility_requirement->feasibilityRequirementDetails[0]->surveySum->count() ?? '' }}/0
+                        <td>{{ $feasibility_requirement->feasibilityRequirementDetails[0]->surveySum->count() ?? '' }}/
+                            {{ $feasibility_requirement->feasibilityRequirementDetails[0]->planningSum->count() ?? '' }} /
+                            {{ $feasibility_requirement->feasibilityRequirementDetails[0]->costingSum->count() ?? '' }}
+                        </td>
                         </td>
                         <td>{{ $feasibility_requirement->is_existing }}</td>
                         <td>
@@ -79,6 +82,11 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
+                                    {{-- add offer  --}}
+                                    <a href="{{ route('add-offer', $feasibility_requirement->mq_no) }}"
+                                        data-toggle="tooltip" title="Add Offer" class="btn btn-outline-success"><i
+                                            class="fas fa-plus"></i></a>
+                                    {{-- add survey  --}}
                                 </nobr>
                             </div>
                         </td>

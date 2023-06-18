@@ -43,6 +43,16 @@ class FeasibilityRequirementDetail extends Model
         return $this->hasMany(Survey::class, 'fr_no', 'fr_no');
     }
 
+    public function planningSum()
+    {
+        return $this->hasMany(Planning::class, 'fr_no', 'fr_no');
+    }
+
+    public function costingSum()
+    {
+        return $this->hasMany(Costing::class, 'fr_no', 'fr_no');
+    }
+
     public function survey()
     {
         return $this->belongsTo(Survey::class, 'fr_no', 'fr_no');
