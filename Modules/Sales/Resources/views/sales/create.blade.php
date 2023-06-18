@@ -94,6 +94,8 @@
                                             <th>Offer MRC</th>
                                             <th>Billing Information</th>
                                             <th>Collection Information</th>
+                                            <th>Prepaid / Postpaid</th>
+                                            <th>Bill Payment Date</th>
                                             <th>Remarks</th>
                                         </thead>
                                         <tbody>
@@ -138,6 +140,28 @@
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <input type="text" name="client_equipment[]" class="form-control"
                                                             id="client_equipment" readonly>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-check-inline">
+                                                        <label class="form-check-label" for="bbts">
+                                                            <input type="radio" class="form-check-input link_from" id="bbts" name="link_from"
+                                                                value="bbts" @checked(@$link_from == 'bbts' || ($form_method == 'POST' && !old()))>
+                                                            BBTS
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check-inline">
+                                                        <label class="form-check-label" for="vendor">
+                                                            <input type="radio" class="form-check-input link_from" id="vendor" name="link_from"
+                                                                value="vendor" @checked(@$link_from == 'vendor')>
+                                                                VENDOR
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <input type="text" name="payment_date[]" class="form-control date"
+                                                            id="payment_date" readonly>
                                                     </div>
                                                 </td>
                                                 <td>

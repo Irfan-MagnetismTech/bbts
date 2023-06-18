@@ -1,21 +1,21 @@
 @extends('layouts.backend-layout')
-@section('title', 'Meeting List')
+@section('title', 'Sales List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Meeting List
+    Sales List
 @endsection
 
 @section('style')
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('meeting.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('sales.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    Total: {{ count($meetings) }}
+    Total: {{ count($sales) }}
 @endsection
 
 
@@ -36,35 +36,33 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($meetings as $meeting)
+                @foreach ($sales as $sale)
                     <tr>
-                        <td>{{ $meeting->client->client_name ?? '' }}</td>
-                        <td>{{ $meeting->visit_date }}</td>
-                        <td>{{ $meeting->meeting_start_time }}</td>
-                        <td>{{ $meeting->meeting_end_time }}</td>
-                        <td>{{ $meeting->client->contact_person ?? '' }}</td>
-                        <td>{{ $meeting->client->contact_no ?? '' }}</td>
-                        <td>{{ $meeting->purpose }}</td>
-                        <td>{{ $meeting->status }}</td>
+                        <td>{{ $sale->id ?? '' }}</td>
+                        <td>{{ $sale->id }}</td>
+                        <td>{{ $sale->id }}</td>
+                        <td>{{ $sale->id }}</td>
+                        <td>{{ $sale->id ?? '' }}</td>
+                        <td>{{ $sale->id ?? '' }}</td>
+                        <td>{{ $sale->id }}</td>
+                        <td>{{ $sale->id }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('meeting.show', $meeting->id) }}" data-toggle="tooltip"
+                                    <a href="{{ route('sales.show', $sale->id) }}" data-toggle="tooltip"
                                         title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('meeting.edit', $meeting->id) }}" data-toggle="tooltip"
+                                    <a href="{{ route('sales.edit', $sale->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ route('meeting.destroy', $meeting->id) }}" method="POST"
+                                    <form action="{{ route('sales.destroy', $sale->id) }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
-                                    <!-- add followup button -->
-                                    <a href="{{ route('followup.create', $meeting->id) }}" data-toggle="tooltip"
-                                        title="Add Followup" class="btn btn-outline-success"><i class="fas fa-plus"></i></a>
+                                    
                                 </nobr>
                             </div>
                         </td>
