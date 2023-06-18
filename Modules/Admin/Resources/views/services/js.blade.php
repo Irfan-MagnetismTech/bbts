@@ -13,14 +13,18 @@
             $('.select2').select2({
                 placeholder: 'Select an option'
             });
+            totalAmount();
         }).on('click', '.remove-requisition-row', function() {
             if ($('#service_table tbody tr').length == 1) {
                 return false;
             }
             $(this).closest('tr').remove();
+            totalAmount();
         });
 
         function appendServiceRow() {
+            let row_index = $("#service_table tr:last").prop('rowIndex');
+            //table last row index  
             let row = `<tr>
                         <td>
                             <select class="form-control select2 service_id" name="service_id[]" required>
@@ -39,14 +43,19 @@
                             <input type="number" class="form-control rate" name="rate[]" required>
                         </td>
                         <td>
-                            <input type="number" class="form-control amount" name="amount[]" required>
+                            <input type="number" class="form-control amount" name="amount[]" readonly>
                         </td>
                         <td>
                             <input type="text" class="form-control remarks" name="remarks[]" required>
                         </td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></button>
-                        </td>
+                        ${(row_index > 1) ? 
+                            `<td>
+                                <button type="button" class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></button>
+                            </td>`:
+                            `<td>
+                                <button type="button" class="btn btn-success btn-sm fa fa-plus add-service-row"></button>
+                            </td>`
+                        }
                     </tr>`;
             $('#service_table tbody').append(row);
         }
@@ -81,7 +90,7 @@
                 $('#division_id').val(item.division_id).trigger('change');
                 $('#link_name').val(item.link_name).attr('value', item.link_name);
                 $('#link_type').val(item.link_type).attr('value', item.link_type);
-                $('#vendor_id').val(item.vendor_id).attr('value', item.vendor_id);
+                $('#vendor_link_id').val(item.vendor_link_id).attr('value', item.vendor_link_id);
                 $('#vendor').val(item.vendor_name).attr('value', item.vendor_name);
                 $('#from_location').val(item.from_location).attr('value', item.from_location);
                 $('#to_location').val(item.to_location).attr('value', item.to_location);
@@ -106,12 +115,23 @@
             let amount = quantity * rate;
             $(this).closest('tr').find('.amount').val(amount);
 
+            totalAmount();
+        });
+
+        function totalAmount() {
             let total = 0;
             $('#service_table tbody tr').each(function() {
                 let amount = $(this).find('.amount').val() - 0;
                 total += amount;
             });
             $('.total').val(total);
+        }
+        $(document).ready(function() {
+            @if ($form_method == 'POST')
+                appendServiceRow();
+            @endif
         });
+
+        
     </script>
 @endsection
