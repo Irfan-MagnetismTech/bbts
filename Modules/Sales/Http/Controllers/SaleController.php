@@ -23,7 +23,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-        return view('sales::create');
+        return view('sales::sales.create');
     }
 
     /**
