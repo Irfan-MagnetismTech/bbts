@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('$LOWER_NAME$')->group(function() {
-    Route::get('/', '$STUDLY_NAME$Controller@index');
+Route::prefix('networking')->group(function () {
+    Route::get('/', 'NetworkingController@index');
+
+    require __DIR__ . '/irfan.php';
 });
