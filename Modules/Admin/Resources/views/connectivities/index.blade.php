@@ -44,6 +44,7 @@
                 <td>
                     <div class="icon-btn">
                         <nobr>
+                            <a href="{{ url("admin/get_connectivity_link_log/$data->link_name") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a>
                             <a href="{{ url("admin/connectivity/$data->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                             {!! Form::open(array('url' => "admin/connectivity/$data->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
                             {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
