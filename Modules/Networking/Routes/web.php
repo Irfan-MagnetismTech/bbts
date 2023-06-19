@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +13,8 @@
 |
 */
 
-Route::prefix('networking')->group(function() {
+Route::prefix('networking')->group(function () {
     Route::get('/', 'NetworkingController@index');
+
+    require __DIR__ . '/irfan.php';
 });

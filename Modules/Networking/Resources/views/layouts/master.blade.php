@@ -7,13 +7,13 @@
         <title>Module Networking</title>
 
        {{-- Laravel Vite - CSS File --}}
-       {{-- {{ module_vite('build-networking', 'Resources/assets/sass/app.scss') }} --}}
+       {{-- {{ module_vite('build-networkings', 'Resources/assets/sass/app.scss') }} --}}
 
     </head>
     <body>
         @yield('content')
 
         {{-- Laravel Vite - JS File --}}
-        {{-- {{ module_vite('build-networking', 'Resources/assets/js/app.js') }} --}}
+        {{-- {{ module_vite('build-networkings', 'Resources/assets/js/app.js') }} --}}
     </body>
 </html>

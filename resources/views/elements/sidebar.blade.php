@@ -92,6 +92,7 @@
         @include('scm::layouts.sidebar')
         @include('ticketing::layouts.sidebar')
         @include('sales::layouts.sidebar')
+        @include('networking::layouts.sidebar')
         <div class="p-5"></div>
     </div>
 </nav>
