@@ -163,6 +163,7 @@ class ScmMurController extends Controller
     public function update(Request $request, ScmMur $material_utilization)
     {
         try {
+            dd($request->all());
             DB::beginTransaction();
             $mur_data = $request->all();
             $material_utilization->update($mur_data);

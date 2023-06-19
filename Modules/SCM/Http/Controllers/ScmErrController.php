@@ -21,6 +21,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\ScmErrLine;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\SCM\Http\Requests\ScmErrRequest;
 use Spatie\Permission\Traits\HasRoles;
 
 class ScmErrController extends Controller
@@ -62,7 +63,7 @@ class ScmErrController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(ScmErrRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -120,7 +121,7 @@ class ScmErrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, ScmErr $err)
+    public function update(ScmErrRequest $request, ScmErr $err)
     {
         try {
             DB::beginTransaction();
