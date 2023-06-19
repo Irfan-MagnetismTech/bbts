@@ -72,8 +72,8 @@
                         <x-input-box colGrid="4" name="contract_duration" value="{{ $contract_duration }}" label="Contract Duration" />
                         <x-input-box colGrid="4" name="effective_date" class="date" value="{{ $effective_date }}" label="Effective Date" />
                         <x-input-box colGrid="4" name="work_order" value="{{ $work_order }}" label="Work Order" />
-                        <x-input-box colGrid="4" name="sla" value="{{ $sla }}" label="SLA" />
-                        <x-input-box colGrid="4" name="wo_no" value="{{ $wo_no }}" label="WO No" />
+                        <x-input-box colGrid="4" type="file" name="sla" label="SLA" value=""/>
+                        <x-input-box colGrid="4" type="file" name="wo_no" label="WO No" value=""/>
 
                         
                     </div>
@@ -106,11 +106,54 @@
                                                             id="link_type" readonly>
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="existing_or_new[]" class="form-control"
-                                                            id="existingOrNew" readonly>
-                                                    </div>
+                                                <td width="10px">
+                                                   <ol>
+                                                        <li>
+                                                            <div class="form-group row">
+                                                                    <div class="col-sm-10">
+                                                                        <div class="checkbox-fade fade-in-primary">
+                                                                            <label>
+                                                                                <input type="checkbox" id="checkbox" name="Language" value="Primary">
+                                                                                <span class="cr">
+                                                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                                                </span>
+                                                                                <span>Primary</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="form-group row">
+                                                                    <div class="col-sm-10">
+                                                                        <div class="checkbox-fade fade-in-primary">
+                                                                            <label>
+                                                                                <input type="checkbox" id="checkbox" name="Language" value="Secondary">
+                                                                                <span class="cr">
+                                                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                                                </span>
+                                                                                <span>Secondary</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="form-group row">
+                                                                    <div class="col-sm-10">
+                                                                        <div class="checkbox-fade fade-in-primary">
+                                                                            <label>
+                                                                                <input type="checkbox" id="checkbox" name="Language" value="Tersiary">
+                                                                                <span class="cr">
+                                                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                                                </span>
+                                                                                <span>Tersiary</span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                            </div>
+                                                        </li>
+                                                   </ol>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
@@ -147,14 +190,14 @@
                                                         <label class="form-check-label" for="bbts">
                                                             <input type="radio" class="form-check-input link_from" id="bbts" name="link_from"
                                                                 value="bbts" @checked(@$link_from == 'bbts' || ($form_method == 'POST' && !old()))>
-                                                            BBTS
+                                                            Prepaid
                                                         </label>
                                                     </div>
                                                     <div class="form-check-inline">
                                                         <label class="form-check-label" for="vendor">
                                                             <input type="radio" class="form-check-input link_from" id="vendor" name="link_from"
                                                                 value="vendor" @checked(@$link_from == 'vendor')>
-                                                                VENDOR
+                                                                Postpaid
                                                         </label>
                                                     </div>
                                                 </td>
@@ -188,6 +231,8 @@
                                                         id="total_mrc" readonly>
                                                 </div>
                                             </td>
+                                            <td></td>
+                                            <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
