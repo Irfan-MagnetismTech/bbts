@@ -28,7 +28,7 @@
                 </ul>
             </li>
             <li
-                class="pcoded-hasmenu {{ request()->routeIs(['branches.*', 'apsections.*', 'teams.*', 'departments.*', 'designations.*', 'employees.*', 'sellCollectionHeads.*']) ? 'active pcoded-trigger' : null }}">
+                class="pcoded-hasmenu {{ request()->routeIs(['branches.*', 'apsections.*', 'teams.*', 'departments.*', 'designations.*', 'employees.*', 'sellCollectionHeads.*', 'services.*']) ? 'active pcoded-trigger' : null }}">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="ti-settings"></i><b>P</b></span>
                     <span class="pcoded-mtext">Configurations</span>
@@ -84,6 +84,11 @@
                     <li class="{{ request()->routeIs('connectivity.*') ? 'active' : null }}">
                         <a href="{{ route('connectivity.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Link List</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('services.*') ? 'active' : null }}">
+                        <a href="{{ route('services.create') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Services</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>

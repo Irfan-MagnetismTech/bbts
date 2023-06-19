@@ -55,6 +55,7 @@ Route::prefix('admin')->group(function () {
     Route::get('get_connectivity_link_log/{link_name}', [ConnectivityLinkController::class, 'getConnectivityLinkLog'])->name('get_connectivity_link_log');
 
     Route::get('get-bbts-link-id', [ServiceController::class, 'get_bbts_link_id'])->name('get_bbts_link_id');
+    Route::get('get-existing-services', [ServiceController::class, 'existingServices'])->name('existingServices');
 });
 
 Route::middleware(['guest'])->group(function () {
