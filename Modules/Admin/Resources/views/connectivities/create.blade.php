@@ -20,11 +20,13 @@ legend {
   display: block!important;
   width: 90%!important;
   max-width: 100%!important;
-  font-size: 0.5rem!important;
+  font-size: 0.7rem!important;
   line-height: inherit!important;
+  font-weight: 100!important;
   color: inherit!important;
   white-space: normal!important;
   margin-bottom:0%!important; 
+  padding-bottom:0%!important; 
 }
 
 
