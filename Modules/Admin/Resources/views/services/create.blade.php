@@ -197,7 +197,13 @@
                     </table>
                 </div>
             </div>
-            <button class="py-2 btn btn-success ">{{ !empty($service->id) ? 'Update' : 'Save' }}</button>
+            <div class="row">
+                <div class="col-md-12 mt-2">
+            <div class="card">                
+                        <button class="py-2 btn btn-primary ">{{ !empty($service->id) ? 'Update' : 'Save' }}</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

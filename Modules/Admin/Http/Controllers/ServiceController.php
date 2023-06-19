@@ -76,7 +76,7 @@ class ServiceController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show()
     {
         abort(404);
     }
@@ -199,6 +199,7 @@ class ServiceController extends Controller
         return response()->json(Service::query()
             ->with('serviceLines.product')
             ->where('bbts_link_id', request('bbts_link_id'))
-            ->last());
+            ->latest()
+            ->first());
     }
 }
