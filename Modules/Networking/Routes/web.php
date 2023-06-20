@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('networking')->group(function () {
+Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('/', 'NetworkingController@index');
 
     require __DIR__ . '/irfan.php';
