@@ -49,7 +49,7 @@
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="client_id">Client ID<span
                                         class="text-danger">*</span></label>
-                                <span class="form-control">{{ $feasibility_requirement->client_id }}</span>
+                                <span class="form-control">{{ $feasibility_requirement->client_no }}</span>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">

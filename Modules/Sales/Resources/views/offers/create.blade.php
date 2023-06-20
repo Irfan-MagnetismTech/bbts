@@ -42,29 +42,25 @@
                     <div class="row">
                         @php
                             $client_name = $is_old ? old('client_name') : $feasibility_requirement->lead_generation->client_name ?? null;
-                            $client_no = $is_old ? old('client_no') : $feasibility_requirement->client_no ?? null;
-                            $is_existing = $is_old ? old('is_existing') : $feasibility_requirement->is_existing ?? null;
-                            $date = $is_old ? old('date') : $feasibility_requirement->date ?? today()->format('d-m-Y');
-                            $offer_validity = $is_old ? old('offer_validity') : $feasibility_requirement->offer_validity ?? today()->format('d-m-Y');
+                            $client_no = $is_old ? old('client_name') : $feasibility_requirement->client_no ?? null;
+                            $mq_no = $is_old ? old('mq_no') : $feasibility_requirement->mq_no ?? null;
+                            
                         @endphp
                         <div class="col-md-3 col-3">
-                            <select class="form-control bankList" name="client_no" id="client_no" required>
-                                <option value="">Select Client No</option>
-                                @foreach ($client_no_list as $client)
-                                    <option value="{{ $client }}" {{ $client == $client_no ? 'selected' : '' }}>
-                                        {{ $client }}</option>
-                                @endforeach
-                            </select>
+                            <input type="text" name="client_no" id="client_no" class="form-control"
+                                value="{{ $client_no }}" placeholder="Client No" readonly>
                         </div>
                         <div class="col-md-3 col-3">
-                            <select class="form-control" name="mq_no" id="mq_no" required>
-                                <option value="">Select MQ No</option>
-                            </select>
+                            <input type="text" name="mq_no" id="mq_no" class="form-control"
+                                value="{{ $mq_no }}" placeholder="MQ No" readonly>
                         </div>
                         <x-input-box colGrid="3" name="client_name" value="{{ $client_name }}" label="Client Name" />
-                        <x-input-box colGrid="3" name="offer_validity" class="date" value="{{ $offer_validity }}"
-                            label="Offer Validity" />
+                        <div class="col-md-3 col-3">
+                            <input type="date" name="offer_validity" id="offer_validity" class="form-control date"
+                                value="{{ $is_old ? old('offer_validity') : $costing->offer_validity ?? null }}"
+                                placeholder="Offer Validity" required>
 
+                        </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="tableHeading">
@@ -88,130 +84,157 @@
                                             <th>Offer <br> MRC</th>
                                         </thead>
                                         <tbody>
-                                            <tr class="offer_details_row">
-                                                <td>
-                                                    <div class="checkbox-fade fade-in-primary"
-                                                        style="margin-top: 6px;margin-left: 5px;margin-right: 0px;">
-                                                        <label>
-                                                            <input type="checkbox" name="device[]" value="Router"
-                                                                class="form-control">
-                                                            <span class="cr">
-                                                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                                            </span>
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="link_type[]" class="form-control"
-                                                            id="link_type" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="existing_or_new[]" class="form-control"
-                                                            id="existingOrNew" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="method[]" class="form-control"
-                                                            id="method" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="vendor[]" class="form-control"
-                                                            id="vendor" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="bbts_or_pop_or_ldp[]"
-                                                            class="form-control" id="bbtsOrPopOrLdp" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="distance[]" class="form-control"
-                                                            id="distance" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="client_equipment[]" class="form-control"
-                                                            id="client_equipment" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="otc[]" class="form-control"
-                                                            id="otc" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="mo_cost[]" class="form-control"
-                                                            id="mo_cost" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="offer_otc[]" class="form-control"
-                                                            id="offer_otc">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="total_cost[]" class="form-control"
-                                                            id="total_cost" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="offer_mrc[]" class="form-control"
-                                                            id="offer_mrc">
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                            @foreach ($feasibility_requirement->feasibilityRequirementDetails as $details)
+                                                @if ($details->costing)
+                                                    @foreach ($details->costing->costingLinks as $key => $link)
+                                                        <tr class="offer_details_row">
+                                                            <td>
+                                                                <div class="checkbox-fade fade-in-primary"
+                                                                    style="margin-top: 6px;margin-left: 5px;margin-right: 0px;">
+                                                                    <label>
+                                                                        <input type="checkbox" name="link_no[]"
+                                                                            value="Router" class="form-control">
+                                                                        <span class="cr">
+                                                                            <i
+                                                                                class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                                        </span>
+                                                                    </label>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="link_type[]"
+                                                                        class="form-control" id="link_type"
+                                                                        value="{{ $link->link_type }}" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="existing_or_new[]"
+                                                                        class="form-control"
+                                                                        value="{{ $link->finalSurveyDetails->planLinks->existing_infrastructure }}"
+                                                                        id="existingOrNew" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="method[]"
+                                                                        class="form-control"
+                                                                        value="{{ $link->finalSurveyDetails->method }}"
+                                                                        id="method" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="vendor[]"
+                                                                        class="form-control"
+                                                                        value="{{ $link->finalSurveyDetails->vendor }}"
+                                                                        id="vendor" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="bbts_pop_ldp[]"
+                                                                        value="{{ $link->finalSurveyDetails->bbts_pop_ldp }}"
+                                                                        class="form-control" id="bbtsOrPopOrLdp" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="distance[]"
+                                                                        class="form-control"
+                                                                        value="{{ $link->finalSurveyDetails->distance }}"
+                                                                        id="distance" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="client_equipment[]"
+                                                                        value="{{ $link->plan_client_equipment_total }}"
+                                                                        class="form-control" id="client_equipment" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="otc[]"
+                                                                        value="{{ $link->otc }}" class="form-control"
+                                                                        id="otc" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="mo_cost[]"
+                                                                        value="{{ $link->roi }}" class="form-control"
+                                                                        id="mo_cost" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div
+                                                                    class="input-group input-group-sm input-group-primary offer_otc">
+                                                                    <input type="text" name="offer_otc[]"
+                                                                        class="form-control" id="offer_otc">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div
+                                                                    class="input-group input-group-sm input-group-primary total_cost">
+                                                                    <input type="text" name="total_cost[]"
+                                                                        class="form-control" id="total_cost" readonly>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div
+                                                                    class="input-group input-group-sm input-group-primary offer_mrc">
+                                                                    <input type="text" name="offer_mrc[]"
+                                                                        class="form-control" id="offer_mrc">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+                                            @endforeach
                                         </tbody>
 
                                         <tr>
                                             <td colspan="7" style="text-align: right;">Link wise Total</td>
                                             <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                <div
+                                                    class="input-group input-group-sm input-group-primary client_equipment_total">
+                                                    <input type="text" name="client_equipment_total[]"
+                                                        class="form-control" id="client_equipment_total" readonly>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                <div class="input-group input-group-sm input-group-primary total_otc">
+                                                    <input type="text" name="total_otc[]" class="form-control"
+                                                        id="total_otc[]" readonly>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                <div class="input-group input-group-sm input-group-primary total_roi">
+                                                    <input type="text" name="total_roi" class="form-control"
+                                                        id="total_roi" readonly>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                <div
+                                                    class="input-group input-group-sm input-group-primary total_offer_otc">
+                                                    <input type="text" name="total_offer_otc" class="form-control"
+                                                        id="total_offer_otc" readonly>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                <div
+                                                    class="input-group input-group-sm input-group-primary grand_total_otc">
+                                                    <input type="text" name="grand_total_otc" class="form-control"
+                                                        id="grand_total_otc" readonly>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                <div
+                                                    class="input-group input-group-sm input-group-primary total_offer_mrc">
+                                                    <input type="text" name="total_offer_mrc" class="form-control"
+                                                        id="total_offer_mrc" readonly>
                                                 </div>
                                             </td>
                                         </tr>
@@ -219,39 +242,40 @@
                                         <tr>
                                             <td colspan="7" style="text-align: right;">Product Equipment</td>
                                             <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                <div
+                                                    class="input-group input-group-sm input-group-primary product_equipment_price">
+                                                    <input type="text" name="product_equipment_price"
+                                                        class="form-control" id="product_equipment_price" readonly>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="equipment_otc" class="form-control"
+                                                        id="equipment_otc" readonly>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="equipment_roi" class="form-control"
+                                                        id="equipment_roi" readonly>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="equipment_offer_price"
+                                                        class="form-control" id="equipment_offer_price" readonly>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="equipment_total_otc" class="form-control"
+                                                        id="equipment_total_otc" readonly>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="equipment_total_mrc" class="form-control"
+                                                        id="equipment_total_mrc" readonly>
                                                 </div>
                                             </td>
                                         </tr>

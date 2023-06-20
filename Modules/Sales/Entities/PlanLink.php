@@ -22,4 +22,5 @@ class PlanLink extends Model
     {
         return $this->hasOne(FinalSurveyDetail::class, 'plan_link_id', 'id');
     }
+
 }

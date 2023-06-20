@@ -87,6 +87,7 @@ class CostingController extends Controller
             for ($rowNo = 1; $rowNo <= request('total_key'); $rowNo++) {
                 $costingLinkData = [
                     'costing_id' => $costing->id,
+                    'link_status' => request('plan_link_status_' . $rowNo) ?? 0,
                     'link_no' => request('link_no_' . $rowNo),
                     'link_type' => request('link_type_' . $rowNo),
                     'option' => request('option_' . $rowNo),

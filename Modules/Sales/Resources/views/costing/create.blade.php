@@ -393,19 +393,22 @@
                         <div class="col-1 col-md-1">
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="link_no_{{ $row_no }}" class="input plan_link_no"
-                                        value="{{ $plan_link->finalSurveyDetails->link_no }}">
+                                    <input type="checkbox" name="plan_link_status_{{ $row_no }}"
+                                        class="input plan_link_status" value="1">
+
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
                                 </label>
                             </div>
                         </div>
+                        <input type="hidden" name="link_no_{{ $row_no }}"
+                            value="{{ $plan_link->finalSurveyDetails->link_no }}">
                         <div class="col-2 col-md-2">
                             <div class="form-item">
                                 <input type="text" name="link_type_{{ $row_no }}"
                                     class="form-control form-control-sm link_type input" placeholder="Link Name"
-                                    value="{{ $plan_link->existing_infrastructure }}" readonly>
+                                    value="{{ $plan_link->link_type }}" readonly>
                                 <label for="link_type">Link Type</label>
                             </div>
                         </div>
@@ -671,122 +674,118 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <hr />
-                        <div class="text-center">
-                            <h5>FR Wise Cost Calculation</h5>
-                        </div>
-                        <hr />
-                        <div class="row p-0 m-0">
-                            <div class="col-3 col-md-3">
-                            </div>
-                            <div class="col-6 col-md-6">
-                                <table class="table table-bordered w-full">
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="2">
-                                                <span style="font-size:14px;">Total Investment</span>
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="number" name="total_investment" id="total_investment"
-                                                    class="form-control form-control-sm text-center plan_fr_total_investment input"
-                                                    placeholder="Total Investment" value="">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <span style="font-size:14px;">Total OTC</span>
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="number" name="total_otc" id="total_otc"
-                                                    class="form-control form-control-sm text-center total_otc input"
-                                                    placeholder="Total OTC" value="">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <span style="font-size:14px;">Total Product Cost</span>
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="number" name="total_product_cost" id="total_product_cost"
-                                                    class="form-control form-control-sm text-center total_product_cost input"
-                                                    placeholder="Total Product Cost" value="">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <span style="font-size:14px;">Total Service Cost</span>
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="number" name="total_service_cost" id="total_service_cost"
-                                                    class="form-control form-control-sm text-center total_service_cost input"
-                                                    placeholder="Total Service Cost" value="">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <span style="font-size:14px;">Total MRC</span>
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="number" name="total_mrc" id="total_mrc"
-                                                    class="form-control form-control-sm text-center total_mrc input"
-                                                    placeholder="Total MRC" value="" readonly>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span style="font-size:14px;">Margin</span>
-                                            </td>
-                                            <td>
-                                                <input type="number" name="management_perchantage"
-                                                    id="management_perchantage"
-                                                    class="form-control form-control-sm text-center margin input"
-                                                    placeholder="Margin" value="">
-                                            </td>
-                                            <td>
-                                                <input type="number" name="management_cost_amount"
-                                                    id="management_cost_amount"
-                                                    class="form-control form-control-sm text-center management_cost_amount input"
-                                                    placeholder="Margin Amount" value="" readonly>
-                                            </td>
-                                            <td>
-                                                <input type="number" name="management_cost_total"
-                                                    id="management_cost_total"
-                                                    class="form-control form-control-sm text-center management_cost_total input"
-                                                    placeholder="Margin Amount" value="" readonly>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <span style="font-size:14px;">Equipment Price for Client</span>
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="number" name="equipment_price_for_client"
-                                                    id="equipment_price_for_client"
-                                                    class="form-control form-control-sm text-center equipment_price_for_client input"
-                                                    placeholder="Equipment Price for Client" value="" readonly>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <span style="font-size:14px;">Total OTC</span>
-                                            </td>
-                                            <td colspan="2">
-                                                <input type="number" name="total_otc_with_client_equipment"
-                                                    id="total_otc_with_client_equipment"
-                                                    class="form-control form-control-sm text-center total_otc_with_client_equipment input"
-                                                    placeholder="Total OTC" value="" readonly>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-3 col-md-3">
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             @endforeach
+            <hr />
+            <div class="text-center">
+                <h5>FR Wise Cost Calculation</h5>
+            </div>
+            <hr />
+            <div class="row p-0 m-0">
+                <div class="col-3 col-md-3">
+                </div>
+                <div class="col-6 col-md-6">
+                    <table class="table table-bordered w-full">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total Investment</span>
+                                </td>
+                                <td colspan="2">
+                                    <input type="number" name="total_investment" id="total_investment"
+                                        class="form-control form-control-sm text-center plan_fr_total_investment input"
+                                        placeholder="Total Investment" value="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total OTC</span>
+                                </td>
+                                <td colspan="2">
+                                    <input type="number" name="total_otc" id="total_otc"
+                                        class="form-control form-control-sm text-center total_otc input"
+                                        placeholder="Total OTC" value="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total Product Cost</span>
+                                </td>
+                                <td colspan="2">
+                                    <input type="number" name="total_product_cost" id="total_product_cost"
+                                        class="form-control form-control-sm text-center total_product_cost input"
+                                        placeholder="Total Product Cost" value="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total Service Cost</span>
+                                </td>
+                                <td colspan="2">
+                                    <input type="number" name="total_service_cost" id="total_service_cost"
+                                        class="form-control form-control-sm text-center total_service_cost input"
+                                        placeholder="Total Service Cost" value="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total MRC</span>
+                                </td>
+                                <td colspan="2">
+                                    <input type="number" name="total_mrc" id="total_mrc"
+                                        class="form-control form-control-sm text-center total_mrc input"
+                                        placeholder="Total MRC" value="" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span style="font-size:14px;">Margin</span>
+                                </td>
+                                <td>
+                                    <input type="number" name="management_perchantage" id="management_perchantage"
+                                        class="form-control form-control-sm text-center margin input" placeholder="Margin"
+                                        value="">
+                                </td>
+                                <td>
+                                    <input type="number" name="management_cost_amount" id="management_cost_amount"
+                                        class="form-control form-control-sm text-center management_cost_amount input"
+                                        placeholder="Margin Amount" value="" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" name="management_cost_total" id="management_cost_total"
+                                        class="form-control form-control-sm text-center management_cost_total input"
+                                        placeholder="Margin Amount" value="" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Equipment Price for Client</span>
+                                </td>
+                                <td colspan="2">
+                                    <input type="number" name="equipment_price_for_client"
+                                        id="equipment_price_for_client"
+                                        class="form-control form-control-sm text-center equipment_price_for_client input"
+                                        placeholder="Equipment Price for Client" value="" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total OTC</span>
+                                </td>
+                                <td colspan="2">
+                                    <input type="number" name="total_otc_with_client_equipment"
+                                        id="total_otc_with_client_equipment"
+                                        class="form-control form-control-sm text-center total_otc_with_client_equipment input"
+                                        placeholder="Total OTC" value="" readonly>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-3 col-md-3">
+                </div>
+            </div>
         </div>
     </div>
     <button class="py-2 btn btn-success ">{{ !empty($costing->id) ? 'Update' : 'Save' }}</button>
@@ -923,9 +922,11 @@
                 }
             });
             var plan_equipment_partial_total = plan_all_equipment_total - plan_client_equipment_total;
-            $('#plan_all_equipment_total').val(plan_all_equipment_total);
-            $('#plan_client_equipment_total').val(plan_client_equipment_total);
-            $('#plan_equipment_partial_total').val(plan_equipment_partial_total);
+            $(this).closest('.PlanLinkMainRow').find('.plan_all_equipment_total').val(plan_all_equipment_total);
+            $(this).closest('.PlanLinkMainRow').find('.plan_client_equipment_total').val(
+                plan_client_equipment_total);
+            $(this).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total').val(
+                plan_equipment_partial_total);
             $(this).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total').val(
                 plan_equipment_partial_total);
             planEquipmentPartialTotal();
@@ -995,36 +996,34 @@
             $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_mrc').val(plan_equipment_total);
         }
 
-        $('.plan_link_no').click(function(event) {
+        $('.plan_link_status').click(function(event) {
             let total_mrc = 0;
             let total_otc = 0;
+            let total_equipment_investment = 0;
+            let total_plan_equipment_otc = 0;
             const $planLinkMainRows = $('.PlanLinkMainRow');
 
-            $('.plan_link_no:checked').each(function() {
+            $('.plan_link_status:checked').each(function() {
                 const $this = $(this);
                 const plan_link_total_mrc = parseInt($this.closest('.PlanLinkMainRow').find(
                     '.plan_equipment_total_mrc').val()) || 0;
                 total_mrc += plan_link_total_mrc;
+
+                total_equipment_investment += parseInt($this.closest('.PlanLinkMainRow').find(
+                    '.plan_equipment_total_inv').val()) || 0;
+
+                total_plan_equipment_otc = parseInt($this.closest('.PlanLinkMainRow').find(
+                    '.plan_equipment_otc').val()) || 0;
+
             });
 
             $('#total_mrc').val(total_mrc);
-
             const equipment_grand_total = parseInt($('#equipment_grand_total').val());
-            const total_equipment_investment = $('.plan_equipment_total_inv').map(function() {
-                return parseInt($(this).val()) || 0;
-            }).get().reduce((acc, val) => acc + val, 0);
             const total_investment = equipment_grand_total + total_equipment_investment;
-
             $('#total_investment').val(total_investment);
-
-            const total_plan_equipment_otc = $('.plan_equipment_otc').map(function() {
-                return parseInt($(this).val()) || 0;
-            }).get().reduce((acc, val) => acc + val, 0);
             const total_equipment_otc = parseInt($('#equipment_otc').val()) || 0;
             total_otc = total_plan_equipment_otc + total_equipment_otc;
-
             $('#total_otc').val(total_otc);
-
             const equipment_roi = parseInt($('#equipment_roi').val()) || 0;
             const total_service_cost = total_mrc + equipment_roi;
             $('#total_service_cost').val(total_service_cost);
@@ -1060,23 +1059,24 @@
             const client_equipment_total = parseFloat($('#client_equipment_total').val());
 
             //client equipment total
+            let plan_client_equipment_total = 0;
+            let plan_equipment_otc = 0;
 
-            var plan_client_equipment_total = 0;
-            $('.plan_client_equipment_total').each(function() {
-                plan_client_equipment_total += parseFloat($(this).val()) ?? 0;
+            $('.plan_link_status').each(function() {
+                if ($(this).is(':checked')) {
+                    plan_client_equipment_total += parseFloat($(this).closest('.PlanLinkMainRow').find(
+                        '.plan_client_equipment_total').val()) ?? 0;
+                    plan_equipment_otc += parseFloat($(this).closest('.PlanLinkMainRow').find(
+                        '.plan_equipment_otc').val()) ?? 0;
+                }
             });
+
             let equipment_price_for_client = client_equipment_total + plan_client_equipment_total;
             $('#equipment_price_for_client').val(equipment_price_for_client.toFixed(2));
 
-            //total equipment otc 
             let equipment_otc = parseFloat($('#equipment_otc').val());
-            let plan_equipment_otc = $('.plan_equipment_otc').get().reduce(function(sum, el) {
-                return sum + parseFloat(el.value);
-            }, 0);
             let total_equipment_otc = equipment_otc + plan_equipment_otc + equipment_price_for_client
-            console.log('total_equipment_otc', total_equipment_otc);
             $('#total_otc_with_client_equipment').val(total_equipment_otc);
-            console.log($('#total_otc_with_client_equipment').val());
             $('#product_grand_total').val(product_grand_total.toFixed(2));
         });
 

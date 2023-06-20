@@ -63,7 +63,7 @@ class PlanningController extends Controller
         $plan = Planning::create($plan_data);
 
         foreach ($request->detail_id as $key => $detail_id) {
-            $service_plan_data['connectivity_requirement_product_details_id'] = $request->detail_id[$key];
+            $service_plan_data['connectivity_product_requirement_details_id'] = $request->detail_id[$key];
             $service_plan_data['plan'] = $request->plan[$key];
             $service_plan_data['planning_id'] = $plan->id;
             ServicePlan::create($service_plan_data);
@@ -80,6 +80,7 @@ class PlanningController extends Controller
 
         if ($request->total_key > 0) {
             for ($i = 1; $i <= $request->total_key; $i++) {
+                $plan_link_data['link_type'] = request("link_type_{$i}");
                 $plan_link_data['existing_infrastructure'] = request("existing_infrastructure_{$i}");
                 $plan_link_data['option'] = request("option_{$i}");
                 $plan_link_data['existing_transmission_capacity'] = request("existing_transmission_capacity_{$i}");
@@ -90,23 +91,26 @@ class PlanningController extends Controller
                 $plan_link_data['planning_id'] = $plan->id;
                 $plan_link =  PlanLink::create($plan_link_data);
                 $survey = Survey::where('fr_no', $request->fr_no)->where('client_no', $request->client_no)->first();
-                $final_survey_data['link_no'] = $survey->link_no;
+                $survey_details = SurveyDetail::where('survey_id', $survey->id)->where('link_type', request("link_type_{$i}"))->where('option', request("option_{$i}"))->first();
+                $final_survey_data['link_no'] = $survey_details->link_no;
                 $final_survey_data['vendor'] = request("vendor_{$i}");
                 $final_survey_data['link_type'] = request("link_type_{$i}");
                 $final_survey_data['option'] = request("option_{$i}");
                 $final_survey_data['status'] = request("status_{$i}");
                 $final_survey_data['bts_pop_ldp'] = request("bts_pop_ldp_{$i}");
                 $final_survey_data['gps'] = request("connectivity_lat_long_{$i}");
-                $final_survey_data['survey_id'] = $request->survey_id;
+                $final_survey_data['distance'] = $survey_details->distance;
+                $final_survey_data['current_capacity'] = $survey_details->current_capacity;
+                $final_survey_data['survey_id'] = $survey_details->id;
                 $final_survey_data['planning_id'] = $plan->id;
                 $final_survey_data['plan_link_id'] = $plan_link->id;
                 $final_survey = FinalSurveyDetail::create($final_survey_data);
                 $materials = request("material_name_$i");
                 foreach ($materials as $key => $material_name) {
                     $plan_link_equipment['material_name'] = $material_name;
-                    $plan_link_equipment['quantity'] = request("quantity_$i");
-                    $plan_link_equipment['unit'] = request("unit_$i");
-                    $plan_link_equipment['remarks'] = request("remarks_$i");
+                    $plan_link_equipment['quantity'] = request("quantity_$i")[$key];
+                    $plan_link_equipment['unit'] = request("unit_$i")[$key];
+                    $plan_link_equipment['remarks'] = request("remarks_$i")[$key];
                     $plan_link_equipment['final_survey_id'] = $final_survey->id;
                     $plan_link_equipment['planning_id'] = $plan->id;
                     $plan_link_equipment['plan_link_id'] = $plan_link->id;

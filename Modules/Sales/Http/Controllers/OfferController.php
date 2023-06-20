@@ -26,8 +26,10 @@ class OfferController extends Controller
      */
     public function create($mq_no = null)
     {
-        $costing = Costing::where('mq_no', $mq_no)->first();
-
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')->where('mq_no', $mq_no)->first();
+        // dd($feasibility_requirement);
+        // $costing = Costing::with('costingProducts', 'costingProductEquipments', 'costingLinks', 'costingLinks.costingLinkEquipments', 'lead_generation')->where('mq_no', $mq_no)->first();
+        return view('sales::offers.create', compact('feasibility_requirement'));
     }
 
     /**

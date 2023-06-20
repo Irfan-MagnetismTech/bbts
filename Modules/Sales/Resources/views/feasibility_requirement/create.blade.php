@@ -43,7 +43,7 @@
                     <div class="row">
                         @php
                             $client_name = $is_old ? old('client_name') : $feasibility_requirement->lead_generation->client_name ?? null;
-                            $client_id = $is_old ? old('client_id') : $feasibility_requirement->client_id ?? null;
+                            $client_id = $is_old ? old('client_id') : $feasibility_requirement->client_no ?? null;
                             $is_existing = $is_old ? old('is_existing') : $feasibility_requirement->is_existing ?? null;
                             $date = $is_old ? old('date') : $feasibility_requirement->date ?? null;
                         @endphp

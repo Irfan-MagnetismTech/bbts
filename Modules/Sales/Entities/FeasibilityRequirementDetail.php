@@ -62,4 +62,9 @@ class FeasibilityRequirementDetail extends Model
     {
         return $this->belongsTo(Planning::class, 'fr_no', 'fr_no');
     }
+
+    public function costing()
+    {
+        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no');
+    } 
 }

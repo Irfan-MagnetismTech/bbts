@@ -12,4 +12,9 @@ class CostingLink extends Model
     {
         return $this->hasMany(CostingLinkEquipment::class);
     }
+
+    public function finalSurveyDetails()
+    {
+        return $this->hasOne(FinalSurveyDetail::class, 'link_no', 'link_no');
+    }
 }

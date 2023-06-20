@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Dataencoding\Division;
+use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Http\Requests\FeasibilityRequirementRequest;
@@ -39,55 +40,61 @@ class FeasibilityRequirementController extends Controller
      * @param Request $request
      * @return Renderable
      */
+
+
     public function store(FeasibilityRequirementRequest $request)
     {
-        // dd($request->all());
-        $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id');
+        DB::beginTransaction();
 
-        $data['user_id'] = auth()->user()->id;
-        $data['branch_id'] = auth()->user()->branch_id ?? '1';
+        try {
+            $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id');
+            $data['user_id'] = auth()->user()->id;
+            $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
-        $max_mq_no = FeasibilityRequirement::where('client_no', $data['client_no'])->max('mq_no');
-        if ($max_mq_no == null) {
-            $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . '1';
-        } else {
-            $mq_array = explode('-', $max_mq_no);
-            $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($mq_array[2] + 1);
-        }
-
-        $feasibilityRequirement = FeasibilityRequirement::create($data);
-        $feasibility_details = $request->only('link_name', 'division_id', 'district_id', 'thana_id', 'location', 'lat_long', 'contact_name', 'contact_designation', 'contact_number', 'contact_email');
-
-
-        foreach (array_keys($request['link_name']) as $feasibility_key) {
-            $fr_no = FeasibilityRequirementDetail::where('feasibility_requirement_id', $feasibilityRequirement->id)->max('fr_no');
-            if ($fr_no == null) {
-                $fr_no = 'fr' . '-' . $feasibilityRequirement->client_no . '-' . '1';
+            $max_mq_no = FeasibilityRequirement::where('client_no', $data['client_no'])->max('mq_no');
+            if ($max_mq_no == null) {
+                $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . '1';
             } else {
-                $fr_array = explode('-', $fr_no);
-                $fr_no = 'fr' . '-' . $feasibilityRequirement->client_no . '-' . ($fr_array[2] + 1);
+                $mq_array = explode('-', $max_mq_no);
+                $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($mq_array[3] + 1);
             }
-            $feasibility_detail[] = [
-                'link_name' => $request['link_name'][$feasibility_key],
-                'aggregation_type' => $request['aggregation_type'][$feasibility_key],
-                'fr_no' => $fr_no,
-                'division_id' => $request['division_id'][$feasibility_key],
-                'district_id' => $request['district_id'][$feasibility_key],
-                'thana_id' => $request['thana_id'][$feasibility_key],
-                'location' => $request['location'][$feasibility_key],
-                'lat_long' => $request['lat_long'][$feasibility_key],
-                'contact_name' => $request['contact_name'][$feasibility_key],
-                'contact_designation' => $request['contact_designation'][$feasibility_key],
-                'contact_number' => $request['contact_number'][$feasibility_key],
-                'contact_email' => $request['contact_email'][$feasibility_key],
-            ];
+
+            $feasibilityRequirement = FeasibilityRequirement::create($data);
+            $feasibility_details = $request->only('link_name', 'division_id', 'district_id', 'thana_id', 'location', 'lat_long', 'contact_name', 'contact_designation', 'contact_number', 'contact_email');
+
+            $feasibility_detail = [];
+            foreach (array_keys($request['link_name']) as $key => $feasibility_key) {
+                $no = $key + 1;
+                $fr_no = 'fr' . '-' . $feasibilityRequirement->client_no . '-' . $no;
+                $feasibility_detail[] = [
+                    'link_name' => $request['link_name'][$feasibility_key],
+                    'aggregation_type' => $request['aggregation_type'][$feasibility_key],
+                    'fr_no' => $fr_no,
+                    'division_id' => $request['division_id'][$feasibility_key],
+                    'district_id' => $request['district_id'][$feasibility_key],
+                    'thana_id' => $request['thana_id'][$feasibility_key],
+                    'location' => $request['location'][$feasibility_key],
+                    'lat_long' => $request['lat_long'][$feasibility_key],
+                    'contact_name' => $request['contact_name'][$feasibility_key],
+                    'contact_designation' => $request['contact_designation'][$feasibility_key],
+                    'contact_number' => $request['contact_number'][$feasibility_key],
+                    'contact_email' => $request['contact_email'][$feasibility_key],
+                ];
+            }
+
+            $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibility_detail);
+
+            DB::commit();
+
+            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            // Handle the exception or display an error message
+            return back()->with('error', 'An error occurred while creating the Feasibility Requirement.');
         }
-
-
-        // dd($feasibility_detail);
-        $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibility_detail);
-        return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
     }
+
 
     /**
      * Show the specified resource.
@@ -122,9 +129,7 @@ class FeasibilityRequirementController extends Controller
      */
     public function update(FeasibilityRequirement $feasibility_requirement, FeasibilityRequirementRequest $request)
     {
-        // dd($request->all());
         $data = $request->only('client_id', 'is_existing', 'date');
-
         $data['user_id'] = auth()->user()->id;
         $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
