@@ -63,17 +63,17 @@
                             $sla = $is_old ? old('sla') : $feasibility_requirement->sla ?? null;
                             $wo_no = $is_old ? old('wo_no') : $feasibility_requirement->wo_no ?? null;
                         @endphp
-                        <x-input-box colGrid="4" name="client_no" value="{{ $client_no }}" label="Client Id" />
                         <x-input-box colGrid="4" name="client_name" value="{{ $client_name }}" label="Client Name" />
+                        <x-input-box colGrid="4" name="client_no" value="{{ $client_no }}" label="Client Id" />
                         <x-input-box colGrid="4" name="account_holder" value="{{ $account_holder }}" label="Account Holder" />
                         <x-input-box colGrid="4" name="offer_id" value="{{ $offer_id }}" label="Offer Id" />
                         <x-input-box colGrid="4" name="remarks" value="{{ $remarks }}" label="Remarks" />
                         <x-input-box colGrid="4" name="mq_id" value="{{ $mq_id }}" label="MQ Id" />
                         <x-input-box colGrid="4" name="contract_duration" value="{{ $contract_duration }}" label="Contract Duration" />
                         <x-input-box colGrid="4" name="effective_date" class="date" value="{{ $effective_date }}" label="Effective Date" />
-                        <x-input-box colGrid="4" name="work_order" value="{{ $work_order }}" label="Work Order" />
+                        <x-input-box colGrid="4" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
                         <x-input-box colGrid="4" type="file" name="sla" label="SLA" value=""/>
-                        <x-input-box colGrid="4" type="file" name="wo_no" label="WO No" value=""/>
+                        <x-input-box colGrid="4" type="file" name="work_order" label="Work Order" value=""/>
 
                         
                     </div>
@@ -196,7 +196,7 @@
                                                     <div class="form-check-inline">
                                                         <label class="form-check-label" for="vendor">
                                                             <input type="radio" class="form-check-input link_from" id="vendor" name="link_from"
-                                                                value="vendor" @checked(@$link_from == 'vendor')>
+                                                                value=" " @checked(@$link_from == 'vendor')>
                                                                 Postpaid
                                                         </label>
                                                     </div>
@@ -255,5 +255,5 @@
 
 @endsection
 @section('script')
-    @include('sales::offers.js')
+    @include('sales::sales.js')
 @endsection

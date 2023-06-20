@@ -2,10 +2,12 @@
 
 namespace Modules\Sales\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\Sale;
+use Modules\SCM\Entities\ScmMur;
+use Modules\Sales\Entities\Offer;
+use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
 
 class SaleController extends Controller
 {
@@ -78,5 +80,23 @@ class SaleController extends Controller
     {
         $sales->delete();
         return redirect()->route('sales.index')->with('success', 'Sales Deleted Successfully');
+    }
+
+    public function getClientInfoForSales()
+    {
+        $items = Offer::query()
+            ->with(['client'])
+            ->whereHas('client', function ($qr) {
+                return $qr->where('client_name', 'like', '%' . request()->search . '%');
+            })
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->client->client_name,
+                'label' => $item->client->client_name,
+                'client_no' => $item->client_no,
+                'offer_id' => $item->id,
+                'mq_no' => $item->mq_no
+            ]);
+        return response()->json($items);
     }
 }
