@@ -103,9 +103,21 @@ class ConnectivityLinkController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(ConnectivityLink $connectivity)
     {
-        //
+        $connectivity->delete();
+        return redirect()->back()->with('success', 'Data has been updated successfully');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     * @param int $id
+     * @return Renderable
+     */
+    public function getConnectivityLinkLog($link_name)
+    {
+        $datas = ConnectivityLink::query()->where('link_name', $link_name)->get();
+        return view('admin::connectivities.log', compact('datas'));
     }
 
     public function getVendors(Request $request)

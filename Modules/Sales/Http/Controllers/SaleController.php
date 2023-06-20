@@ -5,6 +5,7 @@ namespace Modules\Sales\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Sales\Entities\Sale;
 
 class SaleController extends Controller
 {
@@ -14,7 +15,8 @@ class SaleController extends Controller
      */
     public function index()
     {
-        return view('sales::index');
+        $sales = Sale::all();
+        return view('sales::sales.index', compact('sales'));
     }
 
     /**
@@ -23,7 +25,7 @@ class SaleController extends Controller
      */
     public function create()
     {
-        return view('sales::create');
+        return view('sales::sales.create');
     }
 
     /**
@@ -41,17 +43,17 @@ class SaleController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(Sale $sales)
     {
         return view('sales::show');
     }
 
     /**
      * Show the form for editing the specified resource.
-     * @param int $id
+     * @param Sale $sales
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Sale $sales)
     {
         return view('sales::edit');
     }
@@ -59,21 +61,22 @@ class SaleController extends Controller
     /**
      * Update the specified resource in storage.
      * @param Request $request
-     * @param int $id
+     * @param Sale $sales Object
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Sale $sales)
     {
         //
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
+     * @param Sale $sales
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Sale $sales)
     {
-        //
+        $sales->delete();
+        return redirect()->route('sales.index')->with('success', 'Sales Deleted Successfully');
     }
 }

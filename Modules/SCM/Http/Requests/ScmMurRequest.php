@@ -14,7 +14,16 @@ class ScmMurRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'date'               => 'required',
+            'challan_id'         => 'required',
+            'purpose'            => 'required',
+            'branch_id'          => 'required',
+            'type'               => 'required',
+            'equipment_type'     => 'required',
+            'pop_id'             => 'required_if:type,pop',
+            'client_no'          => 'required_if:type,client',
+            'fr_no'              => 'required_if:type,client',
+            'link_no'            => 'required_if:type,client,equipment_type,Link',
         ];
     }
 

@@ -83,4 +83,12 @@ return [
         'Under Notice' => 'Under Notice',
         'Terminated' => 'Terminated',
     ],
+
+    //services status
+    'serviceStatus' => [
+        'Active' => 'Active',
+        'Inactive' => 'Inactive',
+        'Increase' => 'Increase',
+        'Decrease' => 'Decrease',
+    ],
 ];

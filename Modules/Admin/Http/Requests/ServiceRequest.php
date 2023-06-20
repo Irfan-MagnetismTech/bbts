@@ -14,7 +14,9 @@ class ServiceRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'bbts_link_id' => 'required',
+            'service_type' => 'required',
+            'service_status' => 'required',
         ];
     }
 
@@ -26,7 +28,9 @@ class ServiceRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'bbts_link_id.required' => 'BBTS Link ID is required',
+            'service_type.required' => 'Service Type is required',
+            'service_status.required' => 'Service Status is required',
         ];
     }
 

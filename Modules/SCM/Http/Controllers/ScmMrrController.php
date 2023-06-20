@@ -17,6 +17,7 @@ use Modules\SCM\Entities\PurchaseOrderLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\PoMaterial;
+use Modules\SCM\Http\Requests\ScmMrrRequest;
 
 class ScmMrrController extends Controller
 {
@@ -57,7 +58,7 @@ class ScmMrrController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(MrrRequest $request)
+    public function store(ScmMrrRequest $request)
     {
         $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
         try {
@@ -167,7 +168,7 @@ class ScmMrrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(MrrRequest $request, ScmMrr $materialReceive)
+    public function update(ScmMrrRequest $request, ScmMrr $materialReceive)
     {
         $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
         try {
