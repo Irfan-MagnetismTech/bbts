@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Modules\Admin\Entities\ConnectivityLink;
 use Modules\Admin\Http\Controllers\PopController;
@@ -7,12 +8,13 @@ use Modules\Admin\Http\Controllers\AuthController;
 use Modules\Admin\Http\Controllers\BankController;
 use Modules\Admin\Http\Controllers\RoleController;
 use Modules\Admin\Http\Controllers\UserController;
+use Modules\Admin\Http\Controllers\ZoneController;
 use Modules\Admin\Http\Controllers\BrandController;
 use Modules\Admin\Http\Controllers\BranchController;
+use Modules\Admin\Http\Controllers\ServiceController;
 use Modules\Admin\Http\Controllers\ParticularController;
 use Modules\Admin\Http\Controllers\PermissionController;
 use Modules\Admin\Http\Controllers\ConnectivityLinkController;
-use Modules\Admin\Http\Controllers\ServiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +45,7 @@ Route::prefix('admin')->group(function () {
             'particulars'   => ParticularController::class,
             'banks'         => BankController::class,
             'services'      => ServiceController::class,
+            'zones'         => ZoneController::class,
         ]);
     });
 
