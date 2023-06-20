@@ -4,7 +4,7 @@ namespace Modules\Networking\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PopEquipmentRequest extends FormRequest
+class NetPopEquipmentRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.

@@ -2,11 +2,13 @@
 
 namespace Modules\Networking\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Networking\Entities\NetPopEquipment;
+use Modules\Networking\Http\Requests\NetPopEquipmentRequest;
 
-class PopEquipmentController extends Controller
+class NetPopEquipmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +16,7 @@ class PopEquipmentController extends Controller
      */
     public function index()
     {
-        return view('networking::index');
+        return view('networking::pop-equipment.index');
     }
 
     /**
@@ -23,7 +25,7 @@ class PopEquipmentController extends Controller
      */
     public function create()
     {
-        return view('networking::create');
+        return view('networking::pop-equipment.create');
     }
 
     /**
@@ -31,7 +33,7 @@ class PopEquipmentController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(NetPopEquipmentRequest $request)
     {
         //
     }
@@ -41,8 +43,9 @@ class PopEquipmentController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(NetPopEquipment $pop_equipment)
     {
+        abort(404);
         return view('networking::show');
     }
 
@@ -51,9 +54,9 @@ class PopEquipmentController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(NetPopEquipment $pop_equipment)
     {
-        return view('networking::edit');
+        return view('networking::pop-equipment.create');
     }
 
     /**
@@ -62,7 +65,7 @@ class PopEquipmentController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(NetPopEquipmentRequest $request, NetPopEquipment $pop_equipment)
     {
         //
     }
