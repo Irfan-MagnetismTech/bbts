@@ -52,7 +52,8 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('pop-equipments.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('pop-equipments.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -68,23 +69,21 @@
         'encType' => 'multipart/form-data',
         'class' => 'custom-form',
     ]) !!}
-     <div class="row">
+    <div class="row">
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="pop_id" name="pop_id" required>
                     <option value="">Select pop</option>
-                    
                 </select>
             </div>
         </div>
     </div>
     <div class="row">
-       
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="equipment_id" name="equipment_id" required>
                     <option value="">Select Equipment</option>
-                    
+
                 </select>
             </div>
         </div>
@@ -94,46 +93,54 @@
     </div>
 
     <div class="row">
-      
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="equipment_type" name="equipment_type" required>
                     <option value="">Equipment Type</option>
-                    <option value="network">Network</option>
-                    <option value="power">Power</option>
-                    <option value="tower">Tower</option>
-                    <option value="wireless">WireLess</option>
-                    
+                    @foreach (config('businessinfo.equipmentType') as $key => $value)
+                        <option value="{{ $key }}" {{ $equipment_type == $key ? 'selected' : '' }}>
+                            {{ $value }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
-        <x-input-box colGrid="3" name="ip_address" value="{{ $wo_no }}" label="IP Address" />
+
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="ip_id" name="ip_id" required>
+                    <option value="" selected disabled>Select Ip Address</option>
+
+                </select>
+            </div>
+        </div>
+
         <x-input-box colGrid="3" name="subnet_mask" value="{{ $wo_no }}" label="Subnet Mask" />
         <x-input-box colGrid="3" name="gateway" value="{{ $wo_no }}" label="Gate Way" />
     </div>
     <div class="row">
-        
+
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="tower_type" name="tower_type" required>
                     <option value="">Tower Type</option>
                     <option value="leg_4">4 Leg</option>
                     <option value="leg_3">3 Leg </option>
-                    
                 </select>
             </div>
         </div>
         <x-input-box colGrid="3" name="tower_height" value="{{ $wo_no }}" label="Tower Height" />
         <x-input-box colGrid="3" name="made_by" value="{{ $wo_no }}" label="Made By" />
-        <x-input-box colGrid="3" name="maintenance_date" value="{{ $wo_no }}" label="Maintenance Date" class="date"/>
+        <x-input-box colGrid="3" name="maintenance_date" value="{{ $wo_no }}" label="Maintenance Date"
+            class="date" />
     </div>
 
     <div class="row">
-        
-        
+
+
         <x-input-box colGrid="3" name="capacity" value="{{ $wo_no }}" label="Capacity" />
         <x-input-box colGrid="3" name="port_no" value="{{ $wo_no }}" label="Port No" />
-        <x-input-box colGrid="3" name="installation_date" value="{{ $wo_no }}" label="Installation Date" class="date"/>
+        <x-input-box colGrid="3" name="installation_date" value="{{ $wo_no }}" label="Installation Date"
+            class="date" />
         <x-input-box colGrid="3" name="remarks" value="{{ $wo_no }}" label="Remarks" />
     </div>
 
@@ -149,71 +156,15 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/search-client.js') }}"></script>
     <script>
-        @if ($form_method == 'POST')
-            $('.date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            }).datepicker("setDate", new Date());;
-        @else
-            $('.date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            });
-        @endif
+        $('.date').datepicker()
 
-        $(function() {
+        $('.select2').select2();
 
-            $('.select2').select2({
-                maximumSelectionLength: 5,
-                scrollAfterSelect: true
-            });
-
-            //using form custom function js file
-            fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-
-         
-            $("#pop_name").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ route('searchPop') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $(this).val(ui.item.label);
-                    $('#pop_id').val(ui.item.id);
-                    $('#pop_address').val(ui.item.address);
-                    $('#pop_id').trigger('change');
-
-                    return false;
-                }
-            })
-        });
-
-        
-
-        @if ($form_method == 'PUT')
-            $(document).on('DOMNodeInserted', '#branch_id', function() {
-                let selectedValue = "{{ $branch_id }}"
-                $('#branch_id').val(selectedValue)
-            });
-        @endif
-
-        
-       
+        //using form custom function js file
+        fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
+        fillSelect2Options("{{ route('searchPop') }}", '#pop_id');
+        fillSelect2Options("{{ route('searchIp') }}", '#ip_id');
     </script>
 
 @endsection

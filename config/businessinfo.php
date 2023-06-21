@@ -99,4 +99,12 @@ return [
         'Data' => 'Data',
         'Management' => 'Management',
     ],
+
+    //equipment type
+    'equipmentType' => [
+        'Network' => 'Network',
+        'Power' => 'Power',
+        'Tower' => 'Tower',
+        'WireLess' => 'WireLess'
+    ],
 ];

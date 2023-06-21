@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Modules\SCM\Entities\Cs;
+use Modules\Admin\Entities\Ip;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\User;
 use Modules\SCM\Entities\Indent;
@@ -361,6 +362,22 @@ class CommonApiController extends Controller
                 'text' => $item->ticket_no,
                 'value' => $item->id,
                 'label' => $item->ticket_no,
+            ]);
+
+        return response()->json($results);
+    }
+
+    public function searchIp()
+    {
+        $results = Ip::query()
+            ->where('address', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'text' => $item->address,
+                'value' => $item->id,
+                'label' => $item->address,
             ]);
 
         return response()->json($results);

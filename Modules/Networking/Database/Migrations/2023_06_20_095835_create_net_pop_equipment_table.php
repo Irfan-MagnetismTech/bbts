@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('net_pop_equipment', function (Blueprint $table) {
             $table->id();
-
+            $table->integer('pop_id')->unsigned();
+            $table->string('equipment_name');
             $table->timestamps();
         });
     }
