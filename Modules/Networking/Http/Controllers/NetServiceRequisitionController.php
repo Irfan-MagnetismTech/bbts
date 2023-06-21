@@ -2,9 +2,11 @@
 
 namespace Modules\Networking\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Sales\Entities\Product;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Networking\Http\Requests\NetServiceRequisitionRequest;
 
 class NetServiceRequisitionController extends Controller
 {
@@ -14,7 +16,7 @@ class NetServiceRequisitionController extends Controller
      */
     public function index()
     {
-        return view('networking::index');
+        return view('networking::service-requisition.index');
     }
 
     /**
@@ -23,17 +25,18 @@ class NetServiceRequisitionController extends Controller
      */
     public function create()
     {
-        return view('networking::create');
+        $products = Product::latest()->get();
+        return view('networking::service-requisition.create', compact('products'));
     }
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
+     * @param NetServiceRequisitionRequest $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(NetServiceRequisitionRequest $request)
     {
-        //
+        dd($request->all());
     }
 
     /**
@@ -43,7 +46,8 @@ class NetServiceRequisitionController extends Controller
      */
     public function show($id)
     {
-        return view('networking::show');
+        abort(404);
+        return view('networking::service-requisition.show');
     }
 
     /**
@@ -58,11 +62,11 @@ class NetServiceRequisitionController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
+     * @param NetServiceRequisitionRequest $request
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(NetServiceRequisitionRequest $request, $id)
     {
         //
     }

@@ -375,7 +375,7 @@ legend {
                     let selector = this;
                     let myObject = { 
                                 }
-                        jquaryUiAjax(this, "{{ route('get_pops') }}", uiList, myObject);
+                        jquaryUiAjax(this, "{{ route('get_pop') }}", uiList, myObject);
                        
                         function uiList(item) {
                             $(selector).val(item.label).attr('value',item.label);
@@ -481,5 +481,6 @@ legend {
                 $('#amount').val(amount).attr('value',amount);
                 $('#total').val(total).attr('value',total);
             }
+
     </script>
 @endsection
