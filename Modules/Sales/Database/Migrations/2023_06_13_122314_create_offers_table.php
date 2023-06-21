@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
-
+            $table->string('client_no')->nullable();
+            $table->string('mq_no')->nullable();
+            $table->date('offer_validity')->nullable();
+         
             $table->timestamps();
         });
     }
