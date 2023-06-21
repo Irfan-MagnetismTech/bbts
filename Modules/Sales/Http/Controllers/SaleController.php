@@ -95,8 +95,7 @@ class SaleController extends Controller
                 'label' => $item->client->client_name,
                 'client_no' => $item->client_no,
                 'offer_id' => $item->id,
-                'mq_no' => $item->mq_no,
-                'fr_data' => 
+                'mq_no' => $item->mq_no
             ]);
         return response()->json($items);
     }
