@@ -2,9 +2,13 @@
 
 namespace Modules\Admin\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\Ip;
+use Modules\Admin\Entities\Zone;
 use Illuminate\Routing\Controller;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Admin\Http\Requests\IpRequest;
 
 class IpController extends Controller
 {
@@ -14,7 +18,8 @@ class IpController extends Controller
      */
     public function index()
     {
-        return view('admin::index');
+        $ips = Ip::with('zone')->latest()->get();
+        return view('admin::ips.index', compact('ips'));
     }
 
     /**
@@ -23,7 +28,9 @@ class IpController extends Controller
      */
     public function create()
     {
-        return view('admin::create');
+        $formType = "create";
+        $zones = Zone::latest()->get();
+        return view('admin::ips.create', compact('formType', 'zones'));
     }
 
     /**
@@ -31,9 +38,14 @@ class IpController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(IpRequest $request)
     {
-        //
+        try {
+            Ip::create($request->all());
+            return redirect()->route('ips.index')->with('message', 'Data has been inserted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('ips.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -41,9 +53,9 @@ class IpController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show()
     {
-        return view('admin::show');
+        abort(404);
     }
 
     /**
@@ -51,9 +63,11 @@ class IpController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Ip $ip)
     {
-        return view('admin::edit');
+        $formType = "edit";
+        $zones = Zone::latest()->get();
+        return view('admin::ips.create', compact('formType', 'zones', 'ip'));
     }
 
     /**
@@ -62,9 +76,14 @@ class IpController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Ip $ip, IpRequest $request)
     {
-        //
+        try {
+            $ip->update($request->all());
+            return redirect()->route('ips.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('ips.edit', $ip->id)->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -72,8 +91,13 @@ class IpController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Ip $ip)
     {
-        //
+        try {
+            $ip->delete();
+            return redirect()->route('ips.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('ips.index')->withInput()->withErrors($e->getMessage());
+        }
     }
 }

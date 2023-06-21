@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Branch')
+@section('title', 'Ip')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of Branch Info
+    List of Ip Info
 @endsection
 
 @section('style')
@@ -14,10 +14,10 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('branchs.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('ips.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    {{-- Total: {{ @count($branchs) }} --}}
+    {{-- Total: {{ @count($ips) }} --}}
 @endsection
 
 
@@ -27,40 +27,40 @@
             <thead>
                 <tr>
                     <th>#SL</th>
-                    <th>Name</th>
-                    <th>Division</th>
-                    <th>District</th>
-                    <th>Thana</th>
-                    <th>Location</th>
+                    <th>Address</th>
+                    <th>Type</th>
+                    <th>Purpose</th>
+                    <th>Vlan Id</th>
+                    <th>Zone</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
                     <th>#SL</th>
-                    <th>Name</th>
-                    <th>Division</th>
-                    <th>District</th>
-                    <th>Thana</th>
-                    <th>Location</th>
+                    <th>Address</th>
+                    <th>Type</th>
+                    <th>Purpose</th>
+                    <th>Vlan Id</th>
+                    <th>Zone</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($branchs as $key => $branch)
+                @foreach ($ips as $key => $ip)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $branch->name }}</td>
-                        <td class="text-center">{{ $branch->division->name }}</td>
-                        <td class="text-center">{{ $branch->district->name }}</td>
-                        <td class="text-center">{{ $branch->thana->name }}</td> 
-                        <td class="text-center">{{ $branch->location }}</td> 
+                        <td class="text-center">{{ $ip->address }}</td>
+                        <td class="text-center">{{ $ip->type }}</td>
+                        <td class="text-center">{{ $ip->purpose }}</td>
+                        <td class="text-center">{{ $ip->vlan_id }}</td> 
+                        <td class="text-center">{{ $ip->zone->name }}</td> 
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('branchs.edit', $branch->id) }}" data-toggle="tooltip" title="Edit"
+                                    <a href="{{ route('ips.edit', $ip->id) }}" data-toggle="tooltip" title="Edit"
                                         class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    <form action="{{ url("admin/branchs/$branch->id") }}" method="POST"
+                                    <form action="{{ url("admin/ips/$ip->id") }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')

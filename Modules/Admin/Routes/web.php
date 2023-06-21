@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Modules\Admin\Entities\ConnectivityLink;
+use Modules\Admin\Http\Controllers\IpController;
 use Modules\Admin\Http\Controllers\PopController;
 use Modules\Admin\Http\Controllers\AuthController;
 use Modules\Admin\Http\Controllers\BankController;
@@ -46,6 +47,7 @@ Route::prefix('admin')->group(function () {
             'banks'         => BankController::class,
             'services'      => ServiceController::class,
             'zones'         => ZoneController::class,
+            'ips'           => IpController::class,
         ]);
     });
 

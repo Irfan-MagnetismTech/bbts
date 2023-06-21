@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('address')->unique();
             $table->string('type')->comment('link, internet, data, management');
-            $table->string('parpose')->nullable();
-            $table->integer('vlan_id')->nullable();
-            $table->integer('zone_id')->nullable();            
+            $table->string('purpose')->nullable();
+            $table->string('vlan_id')->nullable();
+            $table->integer('zone_id')->nullable();
             $table->timestamps();
         });
     }

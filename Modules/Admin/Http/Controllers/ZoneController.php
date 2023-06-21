@@ -9,7 +9,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\DB;
-use Nette\Utils\Json;
 
 class ZoneController extends Controller
 {
@@ -43,19 +42,19 @@ class ZoneController extends Controller
     {
         try {
             DB::beginTransaction();
-            $zone = $zone->create(request()->all());
 
+            $zone->create(request()->all());
             $thana_ids = [];
             foreach (request()->thana_ids as $thana_id) {
                 $thana_ids[] = ['thana_id' => $thana_id];
             }
-
             $zone->zoneLines()->createMany($thana_ids);
             DB::commit();
 
             return redirect()->route('zones.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
             DB::rollBack();
+
             return redirect()->route('zones.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -93,13 +92,12 @@ class ZoneController extends Controller
     {
         try {
             DB::beginTransaction();
-            $zone->update(request()->all());
 
+            $zone->update(request()->all());
             $thana_ids = [];
             foreach (request()->thana_ids as $thana_id) {
                 $thana_ids[] = ['thana_id' => $thana_id];
             }
-
             $zone->zoneLines()->delete();
             $zone->zoneLines()->createMany($thana_ids);
             DB::commit();
@@ -107,6 +105,7 @@ class ZoneController extends Controller
             return redirect()->route('zones.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
             DB::rollBack();
+
             return redirect()->route('zones.create', $zone->id)->withInput()->withErrors($e->getMessage());
         }
     }

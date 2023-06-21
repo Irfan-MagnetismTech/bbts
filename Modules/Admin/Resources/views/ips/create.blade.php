@@ -43,73 +43,64 @@
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="name">Ip Name <span
+                        <label class="input-group-addon" for="address">Ip Address <span
                                 class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="name" name="name"
-                            placeholder="Enter ip name" value="{{ old('name') ?? ($ip->name ?? '') }}" required>
+                        <input type="text" class="form-control" id="address" name="address"
+                            placeholder="Enter ip address" value="{{ old('address') ?? ($ip->address ?? '') }}" required>
                     </div>
                 </div>
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="division_id">division <span
+                        <label class="input-group-addon" for="type">Type <span
                                 class="text-danger">*</span></label>
-                        <select class="form-control" id="division_id" name="division_id" required>
-                            <option value="">Select division</option>
-                            @foreach (@$divisions as $division)
-                                <option value="{{ $division->id }}"
-                                    {{ (old('division_id') ?? ($ip->division_id ?? '')) == $division->id ? 'selected' : '' }}>
-                                    {{ $division->name }}
+                        <select class="form-control" id="type" name="type" required>
+                            <option value="">Select type</option>
+                            @foreach (config('businessinfo.ipAddressType') as $type)
+                                <option value="{{ $type }}"
+                                    {{ (old('type') ?? ($ip->type ?? '')) == $type ? 'selected' : '' }}>
+                                    {{ $type }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-
+                
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="district_id">district <span
+                        <label class="input-group-addon" for="purpose">Purpose <span
                                 class="text-danger">*</span></label>
-                        <select class="form-control" id="district_id" name="district_id" required>
-                            <option value="">Select district</option>
-                            @if ($formType == 'edit')
-                                @foreach (@$districts as $district)
-                                    <option value="{{ $district->id }}"
-                                        {{ (old('district_id') ?? ($ip->district_id ?? '')) == $district->id ? 'selected' : '' }}>
-                                        {{ $district->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
+                        <input type="text" class="form-control" id="purpose" name="purpose"
+                            placeholder="Enter purpose" value="{{ old('purpose') ?? ($ip->purpose ?? '') }}" required>
                     </div>
                 </div>
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="district_id">thana <span class="text-danger">*</span></label>
-                        <select class="form-control" id="thana_id" name="thana_id" required>
-                            <option value="">Select thana</option>
-                            @if ($formType == 'edit')
-                                @foreach (@$thanas as $thana)
-                                    <option value="{{ $thana->id }}"
-                                        {{ (old('thana_id') ?? ($ip->thana_id ?? '')) == $thana->id ? 'selected' : '' }}>
-                                        {{ $thana->name }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="location">Location <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="location" name="location"
-                            placeholder="Enter ip location" value="{{ old('location') ?? ($ip->location ?? '') }}"
+                        <label class="input-group-addon" for="vlan_id">Vlan ID <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="vlan_id" name="vlan_id"
+                            placeholder="Enter Vlan id" value="{{ old('vlan_id') ?? ($ip->vlan_id ?? '') }}"
                             required>
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="zone_id">Zone <span class="text-danger">*</span></label>
+                        <select class="form-control select2" id="zone_id" name="zone_id" required>
+                            <option value="" selected disabled>Select zone</option>
+                            @foreach ($zones as $zone)
+                                <option value="{{ $zone->id }}"
+                                    {{ (old('zone_id') ?? ($ip->zone_id ?? '')) == $zone->id ? 'selected' : '' }}>
+                                    {{ $zone->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>            
 
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
@@ -123,11 +114,7 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/custom-function.js') }}"></script>
     <script>
-        // get data by associative dropdown
-        associativeDropdown("{{ route('get-districts') }}", 'division_id', '#division_id', '#district_id', 'get', null)
-        associativeDropdown("{{ route('get-thanas') }}", 'district_id', '#district_id', '#thana_id', 'get', null)
-        
+        $('.select2').select2();
     </script>
 @endsection

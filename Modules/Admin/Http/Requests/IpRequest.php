@@ -2,6 +2,7 @@
 
 namespace Modules\Admin\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IpRequest extends FormRequest
@@ -14,7 +15,11 @@ class IpRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'address' => ['required', Rule::unique('ips')->ignore($this->ip, 'address')],
+            'type' => 'required',
+            'purpose' => 'nullable',
+            'vlan_id' => 'nullable',
+            'zone_id' => 'nullable',
         ];
     }
 
@@ -26,7 +31,9 @@ class IpRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'address.required' => 'IP Address is required',
+            'address.unique' => 'IP Address already exists',
+            'type.required' => 'IP Type is required',
         ];
     }
 
