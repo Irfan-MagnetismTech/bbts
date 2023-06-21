@@ -3,7 +3,7 @@
 @php
     $is_old = old('type') ? true : false;
     $form_heading = !empty($err) ? 'Update' : 'Add';
-    $form_url = !empty($err) ? route('pop-equipment.update', $err->id) : route('pop-equipment.store');
+    $form_url = !empty($err) ? route('pop-equipments.update', $err->id) : route('pop-equipments.store');
     $form_method = !empty($err) ? 'PUT' : 'POST';
     
     $date = old('date', !empty($err) ? $err->date : null);
@@ -52,7 +52,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('errs.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('pop-equipments.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -69,33 +69,72 @@
         'class' => 'custom-form',
     ]) !!}
      <div class="row">
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="pop_id" name="pop_id" required>
+                    <option value="">Select pop</option>
+                    
+                </select>
+            </div>
+        </div>
     </div>
     <div class="row">
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
+       
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="equipment_id" name="equipment_id" required>
+                    <option value="">Select Equipment</option>
+                    
+                </select>
+            </div>
+        </div>
+        <x-input-box colGrid="3" name="eq_description" value="{{ $wo_no }}" label="Equipment Description" />
+        <x-input-box colGrid="3" name="brand" value="{{ $wo_no }}" label="Brand" />
+        <x-input-box colGrid="3" name="model" value="{{ $wo_no }}" label="Model" />
     </div>
 
     <div class="row">
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
+      
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="equipment_type" name="equipment_type" required>
+                    <option value="">Equipment Type</option>
+                    <option value="network">Network</option>
+                    <option value="power">Power</option>
+                    <option value="tower">Tower</option>
+                    <option value="wireless">WireLess</option>
+                    
+                </select>
+            </div>
+        </div>
+        <x-input-box colGrid="3" name="ip_address" value="{{ $wo_no }}" label="IP Address" />
+        <x-input-box colGrid="3" name="subnet_mask" value="{{ $wo_no }}" label="Subnet Mask" />
+        <x-input-box colGrid="3" name="gateway" value="{{ $wo_no }}" label="Gate Way" />
     </div>
     <div class="row">
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
+        
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="tower_type" name="tower_type" required>
+                    <option value="">Tower Type</option>
+                    <option value="leg_4">4 Leg</option>
+                    <option value="leg_3">3 Leg </option>
+                    
+                </select>
+            </div>
+        </div>
+        <x-input-box colGrid="3" name="tower_height" value="{{ $wo_no }}" label="Tower Height" />
+        <x-input-box colGrid="3" name="made_by" value="{{ $wo_no }}" label="Made By" />
+        <x-input-box colGrid="3" name="maintenance_date" value="{{ $wo_no }}" label="Maintenance Date" class="date"/>
     </div>
 
     <div class="row">
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
-        <x-input-box colGrid="3" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
+        
+        
+        <x-input-box colGrid="3" name="capacity" value="{{ $wo_no }}" label="Capacity" />
+        <x-input-box colGrid="3" name="port_no" value="{{ $wo_no }}" label="Port No" />
+        <x-input-box colGrid="3" name="installation_date" value="{{ $wo_no }}" label="Installation Date" class="date"/>
+        <x-input-box colGrid="3" name="remarks" value="{{ $wo_no }}" label="Remarks" />
     </div>
 
     <div class="row">
