@@ -148,10 +148,12 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text" name="client_equipment[]"
+                                                                <div
+                                                                    class="input-group input-group-sm input-group-primary client_equipment_amount">
+                                                                    <input type="text" name="client_equipment_amount[]"
                                                                         value="{{ $link->plan_client_equipment_total }}"
-                                                                        class="form-control" id="client_equipment" readonly>
+                                                                        class="form-control" id="client_equipment_amount"
+                                                                        readonly>
                                                                 </div>
                                                             </td>
                                                             <td>
@@ -286,16 +288,16 @@
                                             <td></td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="product_amount" class="form-control"
+                                                        id="product_price" readonly>
                                                 </div>
                                             </td>
                                             <td></td>
                                             <td></td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="offer_product_amount"
+                                                        class="form-control" id="offer_product_amount" readonly>
                                                 </div>
                                             </td>
                                         </tr>
@@ -306,16 +308,16 @@
                                             <td></td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="management_cost" class="form-control"
+                                                        id="management_cost" readonly>
                                                 </div>
                                             </td>
                                             <td></td>
                                             <td></td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="offer_management_cost"
+                                                        class="form-control" id="offer_management_cost" readonly>
                                                 </div>
                                             </td>
                                         </tr>
@@ -329,8 +331,8 @@
                                             <td></td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
+                                                    <input type="text" name="grand_total" class="form-control"
+                                                        id="grand_total" readonly>
                                                 </div>
                                             </td>
                                         </tr>
