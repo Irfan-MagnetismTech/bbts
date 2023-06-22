@@ -54,7 +54,7 @@
     $date = old('date', !empty($err) ? $err?->date : today()->format('d-m-Y'));
     $vendor = old('vendor', !empty($err) ? $err?->vendor->name : null);
     $vendor_id = old('vendor_id', !empty($err) ? $err?->vendor_id : null);
-    $remarks = old('remarks', !empty($err) ? $err?->remarks : null);
+    $remark = old('remark', !empty($err) ? $err?->remark : null);
 @endphp
 
 @section('breadcrumb-title')
