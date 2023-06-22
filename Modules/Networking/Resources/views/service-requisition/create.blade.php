@@ -31,30 +31,30 @@
  </style>
 @php
     $is_old = old('type') ? true : false;
-    $form_heading = !empty($err) ? 'Update' : 'Add';
-    $form_url = !empty($err) ? route('service-requisitions.update', $err->id) : route('service-requisitions.store');
-    $form_method = !empty($err) ? 'PUT' : 'POST';
+    $form_heading = !empty($service_requisition) ? 'Update' : 'Add';
+    $form_url = !empty($service_requisition) ? route('service-requisitions.update', $service_requisition->id) : route('service-requisitions.store');
+    $form_method = !empty($service_requisition) ? 'PUT' : 'POST';
     
-    $type = old('type', !empty($err) ? $err->type : null);
-    $from = old('from', !empty($err) ? $err->from : null);
-    $to = old('to', !empty($err) ? $err->to : null);
-    $from_pop_id = old('from_pop_id', !empty($err) ? $err->from_pop_id : null);
-    $to_pop_id = old('to_pop_id', !empty($err) ? $err->to_pop_id : null);
-    $capacity_type = old('capacity_type', !empty($err) ? $err->capacity_type : null);
-    $capacity = old('capacity', !empty($err) ? $err->capacity : null);
-    $client_name = old('client_name', !empty($err) ? $err->client_name : null);
-    $fr_no = old('fr_no', !empty($err) ? $err->fr_no : null);
-    $reason_of_inactive = old('reason_of_inactive', !empty($err) ? $err->reason_of_inactive : null);
-    $equipment_type = old('equipment_type', !empty($err) ? $err?->equipment_type : null);
-    $client_id = old('client_id', !empty($err) ? $err->client_id : null);
-    $fr_no = old('fr_no', !empty($err) ? $err->fr_no : null);
-    $client_name = old('client_name', !empty($err) ? $err?->client?->client_name : null);
-    $client_no = old('client_no', !empty($err) ? $err?->client_no : null);
-    $required_date = old('required_date', !empty($err) ? $err?->required_date : today()->format('d-m-Y'));
-    $date = old('date', !empty($err) ? $err?->date : today()->format('d-m-Y'));
-    $vendor = old('vendor', !empty($err) ? $err?->vendor->name : null);
-    $vendor_id = old('vendor_id', !empty($err) ? $err?->vendor_id : null);
-    $remark = old('remark', !empty($err) ? $err?->remark : null);
+    $type = old('type', !empty($service_requisition) ? $service_requisition->type : null);
+    $from = old('from', !empty($service_requisition) ? $service_requisition->fromPop->name : null);
+    $to = old('to', !empty($service_requisition) ? $service_requisition->toPop->name : null);
+    $from_pop_id = old('from_pop_id', !empty($service_requisition) ? $service_requisition->from_pop_id : null);
+    $to_pop_id = old('to_pop_id', !empty($service_requisition) ? $service_requisition->to_pop_id : null);
+    $capacity_type = old('capacity_type', !empty($service_requisition) ? $service_requisition->capacity_type : null);
+    $capacity = old('capacity', !empty($service_requisition) ? $service_requisition->capacity : null);
+    $client_name = old('client_name', !empty($service_requisition) ? $service_requisition->client_name : null);
+    $fr_no = old('fr_no', !empty($service_requisition) ? $service_requisition->fr_no : null);
+    $reason_of_inactive = old('reason_of_inactive', !empty($service_requisition) ? $service_requisition->reason_of_inactive : null);
+    $equipment_type = old('equipment_type', !empty($service_requisition) ? $service_requisition?->equipment_type : null);
+    $client_id = old('client_id', !empty($service_requisition) ? $service_requisition->client_id : null);
+    $fr_no = old('fr_no', !empty($service_requisition) ? $service_requisition->fr_no : null);
+    $client_name = old('client_name', !empty($service_requisition) ? $service_requisition?->client?->client_name : null);
+    $client_no = old('client_no', !empty($service_requisition) ? $service_requisition?->client_no : null);
+    $required_date = old('required_date', !empty($service_requisition) ? $service_requisition?->required_date : today()->format('d-m-Y'));
+    $date = old('date', !empty($service_requisition) ? $service_requisition?->date : today()->format('d-m-Y'));
+    $vendor = old('vendor', !empty($service_requisition) ? $service_requisition?->vendor->name : null);
+    $vendor_id = old('vendor_id', !empty($service_requisition) ? $service_requisition?->vendor_id : null);
+    $remark = old('remark', !empty($service_requisition) ? $service_requisition?->remark : null);
 @endphp
 
 @section('breadcrumb-title')
@@ -171,14 +171,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!empty($service->id))
-                        @foreach ($service->servicelines as $key => $item)
+                    @if (!empty($service_requisition))
+                        @foreach ($service_requisition->lines as $key => $item)
                             <tr>
                                 <td>
                                     <select class="form-control select2 service_id" name="service_id[]" required>
                                         <option value="" selected disabled>Select Service</option>
                                         @foreach ($products as $key => $value)
-                                            <option value="{{ $value->id }}" @selected($value->id == $item->product_id)>
+                                            <option value="{{ $value->id }}" @selected($value->id == $item->service_id)>
                                                 {{ $value->name }}</option>
                                         @endforeach
                                     </select>
@@ -271,15 +271,6 @@
                 }
             })
         });
-
-        
-
-        @if ($form_method == 'PUT')
-            $(document).on('DOMNodeInserted', '#branch_id', function() {
-                let selectedValue = "{{ $branch_id }}"
-                $('#branch_id').val(selectedValue)
-            });
-        @endif
 
         $('#from,#to').on('keyup', function(event) {
             let selector = this;

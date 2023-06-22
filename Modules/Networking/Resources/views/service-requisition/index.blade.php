@@ -15,7 +15,7 @@
 @endsection
 
 @section('sub-title')
-    Total: {{ count($errs) }} 
+    Total: {{ count($datas) }} 
     <x-warning-paragraph name="ERR" />
 @endsection
 
@@ -26,33 +26,38 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>#ERR No.</th>
                     <th>Type</th>
-                    <th>Applied Date</th>
-                    <th>Purpose</th>
-                    <th>Inactive Date</th>
+                    <th>From Pop</th>
+                    <th>To Pop</th>
+                    <th>Capacity Type</th>
+                    <th>Capacity</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Required Date</th>
+                    <th>Vendor</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($errs as $key => $err)
+                @foreach ($datas as $key => $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><strong>{{ $err->err_no }}</strong></td>
-                        <td>{{ $err->type }}</td>
-                        <td>{{ $err->date }}</td>
-                        <td>{{ $err->purpose }}</td>
-                        <td>{{ $err->inactive_date }}</td>
+                        <td>{{ $item->type }}</td>
+                        <td>{{ $item->fromPop->name }}</td>
+                        <td>{{ $item->toPop->name }}</td>
+                        <td>{{ $item->capacity_type }}</td>
+                        <td>{{ $item->capacity }}</td>
+                        <td>{{ $item->client->client_name }}</td>
+                        <td>{{ $item->date }}</td>
+                        <td>{{ $item->required_date }}</td>
+                        <td>{{ $item->vendor->name }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('errs.show', $err->id) }}" data-toggle="tooltip" title="Show"
-                                        class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    @if (!$scmMur->isDeleteable())
-                                        <a href="{{ route('errs.edit', $err->id) }}" data-toggle="tooltip" title="Edit"
+                                        <a href="{{ route('service-requisitions.edit', $item->id) }}" data-toggle="tooltip" title="Edit"
                                             class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                         {!! Form::open([
-                                            'url' => route('errs.destroy', $err->id),
+                                            'url' => route('service-requisitions.destroy', $item->id),
                                             'method' => 'delete',
                                             'class' => 'd-inline',
                                             'data-toggle' => 'tooltip',
@@ -60,7 +65,6 @@
                                         ]) !!}
                                         {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
                                         {!! Form::close() !!}
-                                    @endif
                                 </nobr>
                             </div>
                         </td>

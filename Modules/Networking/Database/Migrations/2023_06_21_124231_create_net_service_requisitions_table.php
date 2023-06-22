@@ -15,7 +15,16 @@ return new class extends Migration
     {
         Schema::create('net_service_requisitions', function (Blueprint $table) {
             $table->id();
-
+            $table->string('type');
+            $table->integer('from_pop_id');
+            $table->integer('to_pop_id');
+            $table->string('capacity_type');
+            $table->string('capacity');
+            $table->string('client_no');
+            $table->date('date');
+            $table->date('required_date');
+            $table->integer('vendor_id');
+            $table->string('remark');
             $table->timestamps();
         });
     }
