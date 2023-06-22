@@ -16,7 +16,21 @@ return new class extends Migration
         Schema::create('net_pop_equipment', function (Blueprint $table) {
             $table->id();
             $table->integer('pop_id')->unsigned();
-            $table->string('equipment_name');
+            $table->integer('material_id')->nullable();
+            $table->string('serial_code')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('model')->nullable();
+            $table->string('equipment_type')->nullable();
+            $table->interger('ip_id')->nullable();
+            $table->string('subnet_mask')->nullable();
+            $table->string('tower_type')->nullable();
+            $table->string('tower_height')->nullable();
+            $table->string('made_by')->nullable();
+            $table->date('maintenance_date')->nullable();
+            $table->string('capacity')->nullable();
+            $table->string('port_no')->nullable();
+            $table->date('installation_date')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

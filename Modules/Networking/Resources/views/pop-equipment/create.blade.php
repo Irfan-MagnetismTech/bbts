@@ -76,18 +76,18 @@
                     <option value="">Select pop</option>
                 </select>
             </div>
-        </div>
+        </div>        
     </div>
+
     <div class="row">
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
-                <select class="form-control" id="equipment_id" name="equipment_id" required>
+                <select class="form-control" id="material_id" name="material_id" required>
                     <option value="">Select Equipment</option>
-
                 </select>
             </div>
         </div>
-        <x-input-box colGrid="3" name="eq_description" value="{{ $wo_no }}" label="Equipment Description" />
+        <x-input-box colGrid="3" name="serial_code" value="{{ $wo_no }}" label="Serial Code" />
         <x-input-box colGrid="3" name="brand" value="{{ $wo_no }}" label="Brand" />
         <x-input-box colGrid="3" name="model" value="{{ $wo_no }}" label="Model" />
     </div>
@@ -109,7 +109,6 @@
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="ip_id" name="ip_id" required>
                     <option value="" selected disabled>Select Ip Address</option>
-
                 </select>
             </div>
         </div>
@@ -117,8 +116,8 @@
         <x-input-box colGrid="3" name="subnet_mask" value="{{ $wo_no }}" label="Subnet Mask" />
         <x-input-box colGrid="3" name="gateway" value="{{ $wo_no }}" label="Gate Way" />
     </div>
-    <div class="row">
 
+    <div class="row">
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="tower_type" name="tower_type" required>
@@ -135,8 +134,6 @@
     </div>
 
     <div class="row">
-
-
         <x-input-box colGrid="3" name="capacity" value="{{ $wo_no }}" label="Capacity" />
         <x-input-box colGrid="3" name="port_no" value="{{ $wo_no }}" label="Port No" />
         <x-input-box colGrid="3" name="installation_date" value="{{ $wo_no }}" label="Installation Date"
@@ -158,13 +155,57 @@
 @section('script')
     <script>
         $('.date').datepicker()
-
         $('.select2').select2();
 
         //using form custom function js file
-        fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
         fillSelect2Options("{{ route('searchPop') }}", '#pop_id');
         fillSelect2Options("{{ route('searchIp') }}", '#ip_id');
+
+        $('#pop_id').on('change', function() {
+            getEquipment()
+        })
+
+        function getEquipment() {
+            let pop_id = $('#pop_id').val();
+
+            $.ajax({
+                url: "{{ route('getPopEquipments') }}",
+                type: 'get',
+                dataType: "json",
+                data: {
+                    pop_id: pop_id
+                },
+                success: function(data) {
+                    let dropdown;
+
+                    dropdown = $('#material_id');
+                    dropdown.empty();
+                    dropdown.append('<option selected disabled>Select Material</option>');
+                    dropdown.prop('selectedIndex', 0);
+                    data.map(function(item) {
+                        dropdown.append($('<option></option>')
+                            .attr('value', item.material_id)
+                            .attr('data-material_name', item.material)
+                            .attr('data-brand', item.brand)
+                            .attr('data-model', item.model)
+                            .attr('data-serial_code', item.serial_code)
+                            .text(item.label)
+                        )
+                    });
+                    dropdown.select2()
+                }
+            })
+        }
+
+        $('#material_id').on('change', function() {
+            let brand = $(this).find(':selected').data('brand');
+            let model = $(this).find(':selected').data('model');
+            let serial_code = $(this).find(':selected').data('serial_code');
+
+            $('#brand').val(brand).attr('value', brand);
+            $('#model').val(model).attr('value', model);
+            $('#serial_code').val(serial_code).attr('value', serial_code);
+        })
     </script>
 
 @endsection

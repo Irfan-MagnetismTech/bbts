@@ -9,6 +9,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Networking\Entities\NetPopEquipment;
 use Modules\Networking\Http\Requests\NetPopEquipmentRequest;
+use Modules\SCM\Entities\ScmMur;
 
 class NetPopEquipmentController extends Controller
 {
@@ -90,16 +91,33 @@ class NetPopEquipmentController extends Controller
 
     public function getPopEquipments()
     {
-        $pop_equipments = NetPopEquipment::with('pop')->latest()->get();
-        return datatables()->of($pop_equipments)
-            ->addColumn('action', function ($pop_equipment) {
-                return view('networking::pop-equipment.action', compact('pop_equipment'))->render();
-            })
-            ->addColumn('pop_name', function ($pop_equipment) {
-                return $pop_equipment->pop->pop_name;
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+        $data = [];
+        ScmMur::query()
+            ->where('pop_id', request()->pop_id)
+            ->with(['lines.material', 'lines.brand'])
+            ->get()->map(function ($item) use (&$data) {
+                $item->lines->map(function ($line) use (&$data) {
+                    $data[] = [
+                        'label' => $line->material->name . ' - ' . $line->brand->name . ' - ' . $line->model . ' - ' . $line->serial_code,
+                        'value' => $line->material_id,
+                        'material_id' => $line->material_id,
+                        'brand_id' => $line->brand_id,
+                        'model' => $line->model,
+                        'serial_code' => $line->serial_code,
+                        'quantity' => $line->quantity,
+                        'unit_price' => $line->unit_price,
+                        'total_price' => $line->total_price,
+                        'remarks' => $line->remarks,
+                        'created_at' => $line->created_at,
+                        'updated_at' => $line->updated_at,
+                        'material' => $line->material->name,
+                        'brand' => $line->brand->name,
+                    ];
+                    return $data;
+                });
+            });
+
+        return response()->json($data);
     }
 
     /**

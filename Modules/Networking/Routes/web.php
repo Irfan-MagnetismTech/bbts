@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Networking\Http\Controllers\NetPopEquipmentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('/', 'NetworkingController@index');
-
+    Route::get('get-pop-equipments', [NetPopEquipmentController::class, 'getPopEquipments'])->name('getPopEquipments');
     require __DIR__ . '/irfan.php';
 });
