@@ -1,7 +1,7 @@
 <div class="pcoded-navigation-label text-uppercase bg-primary">Networking</div>
 <ul class="pcoded-item pcoded-left-item">
     {{-- @hasanyrole('super-admin|admin') --}}
-    <li class="pcoded-hasmenu {{ request()->routeIs(['pop-equipments.*']) || request()->routeIs(['product.*']) ? 'active pcoded-trigger' : null }}">
+    <li class="pcoded-hasmenu {{ request()->routeIs(['pop-equipments.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
             <span class="pcoded-mtext">Pop Wise Equipment</span>
@@ -20,7 +20,7 @@
             </li>
         </ul>
     </li>
-    <li class="pcoded-hasmenu {{ request()->routeIs(['service-requisitions.*']) || request()->routeIs(['product.*']) ? 'active pcoded-trigger' : null }}">
+    <li class="pcoded-hasmenu {{ request()->routeIs(['service-requisitions.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
             <span class="pcoded-mtext">Service Requisition</span>

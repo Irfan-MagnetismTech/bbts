@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('capacity_type');
             $table->string('capacity');
             $table->string('client_no');
+            $table->string('fr_no');
             $table->date('date');
             $table->date('required_date');
             $table->integer('vendor_id');

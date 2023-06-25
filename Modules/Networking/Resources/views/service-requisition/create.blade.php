@@ -47,7 +47,6 @@
     $reason_of_inactive = old('reason_of_inactive', !empty($service_requisition) ? $service_requisition->reason_of_inactive : null);
     $equipment_type = old('equipment_type', !empty($service_requisition) ? $service_requisition?->equipment_type : null);
     $client_id = old('client_id', !empty($service_requisition) ? $service_requisition->client_id : null);
-    $fr_no = old('fr_no', !empty($service_requisition) ? $service_requisition->fr_no : null);
     $client_name = old('client_name', !empty($service_requisition) ? $service_requisition?->client?->client_name : null);
     $client_no = old('client_no', !empty($service_requisition) ? $service_requisition?->client_no : null);
     $required_date = old('required_date', !empty($service_requisition) ? $service_requisition?->required_date : today()->format('d-m-Y'));

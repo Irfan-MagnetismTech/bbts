@@ -43,7 +43,7 @@ class NetServiceRequisitionController extends Controller
     {
         try {
             DB::beginTransaction();
-            $datas = $request->only('type', 'from_pop_id', 'to_pop_id', 'capacity_type', 'capacity', 'client_no', 'date', 'required_date', 'vendor_id', 'remark');
+            $datas = $request->only('type', 'fr_no', 'from_pop_id', 'to_pop_id', 'capacity_type', 'capacity', 'client_no', 'date', 'required_date', 'vendor_id', 'remark');
             $dataList = [];
             foreach ($request->service_id as $key => $value) {
                 $dataList[] = [
@@ -95,7 +95,7 @@ class NetServiceRequisitionController extends Controller
     {
         try {
             DB::beginTransaction();
-            $datas = $request->only('type', 'from_pop_id', 'to_pop_id', 'capacity_type', 'capacity', 'client_no', 'date', 'required_date', 'vendor_id', 'remark');
+            $datas = $request->only('type', 'fr_no', 'from_pop_id', 'to_pop_id', 'capacity_type', 'capacity', 'client_no', 'date', 'required_date', 'vendor_id', 'remark');
             $dataList = [];
             foreach ($request->service_id as $key => $value) {
                 $dataList[] = [
