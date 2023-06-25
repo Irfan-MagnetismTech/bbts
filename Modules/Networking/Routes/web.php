@@ -18,4 +18,5 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('/', 'NetworkingController@index');
     Route::get('get-pop-equipments', [NetPopEquipmentController::class, 'getPopEquipments'])->name('getPopEquipments');
     require __DIR__ . '/irfan.php';
+    require __DIR__ . '/jaber.php';
 });
