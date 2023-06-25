@@ -22,7 +22,7 @@
                 $('#offer_id').val(item.offer_id).attr('value', item.offer_id);
                 var appendedData = '';
                 item.details.forEach(element => {
-                    var percentage = (element.costing.total_mrc / element.costing.product_total_cost) * 1 - 1; 
+                    var percentage = (element.total_offer_mrc / element.costing.product_total_cost) - 1; 
                     appendedData += ` <div class="card">
                         <div class="card-body">
                                 <div class="row">
@@ -57,8 +57,8 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <x-input-box colGrid="3" name="mrc" value="${element.costing.total_mrc}" label="MRC" />
-                                            <x-input-box colGrid="3" name="otc" value="${element.costing.total_otc}" label="OTC" />
+                                            <x-input-box colGrid="3" name="mrc" value="${element.total_offer_mrc}" label="MRC" />
+                                            <x-input-box colGrid="3" name="otc" value="${element.total_offer_otc}" label="OTC" />
                                         </div>
                                         <div>
 
@@ -105,13 +105,13 @@
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text" name="bbts_or_pop_or_ldp[]"
-                                                                    class="form-control" id="bbtsOrPopOrLdp" readonly value="${percentage * itm.rate}">
+                                                                    class="form-control" id="bbtsOrPopOrLdp" readonly value="${(Number(percentage) * Number(itm.rate)) + Number(itm.rate)}">
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text" name="bbts_or_pop_or_ldp[]"
-                                                                    class="form-control" id="bbtsOrPopOrLdp" readonly value="${percentage * itm.rate * itm.quantity}">
+                                                                    class="form-control" id="bbtsOrPopOrLdp" readonly value="${((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity)}">
                                                             </div>
                                                         </td>
                                                     </tr>
