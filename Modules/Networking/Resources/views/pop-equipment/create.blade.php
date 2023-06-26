@@ -76,7 +76,7 @@
                     <option value="">Select pop</option>
                 </select>
             </div>
-        </div>        
+        </div>
     </div>
 
     <div class="row">
@@ -99,7 +99,8 @@
                     <option value="">Equipment Type</option>
                     @foreach (config('businessinfo.equipmentType') as $key => $value)
                         <option value="{{ $key }}" {{ $equipment_type == $key ? 'selected' : '' }}>
-                            {{ $value }}</option>
+                            {{ $value }}
+                        </option>
                     @endforeach
                 </select>
             </div>

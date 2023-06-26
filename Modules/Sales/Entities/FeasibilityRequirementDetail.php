@@ -2,11 +2,16 @@
 
 namespace Modules\Sales\Entities;
 
-use Illuminate\Database\Eloquent\Model;
-use Modules\Sales\Entities\FeasibilityRequirement;
-use App\Models\Dataencoding\Division;
-use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Thana;
+use Modules\Sales\Entities\Survey;
+use Modules\Sales\Entities\Costing;
+use Modules\Sales\Entities\Planning;
+use App\Models\Dataencoding\District;
+use App\Models\Dataencoding\Division;
+use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\SurveyDetail;
+use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\ConnectivityRequirement;
 
 
 class FeasibilityRequirementDetail extends Model
@@ -66,5 +71,5 @@ class FeasibilityRequirementDetail extends Model
     public function costing()
     {
         return $this->belongsTo(Costing::class, 'fr_no', 'fr_no');
-    } 
+    }    
 }

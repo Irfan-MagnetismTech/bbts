@@ -5,6 +5,7 @@ namespace Modules\Networking\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Sales\Entities\Planning;
 
 class PhysicalConnectivityController extends Controller
 {
@@ -75,5 +76,15 @@ class PhysicalConnectivityController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getNetworkInfoByFr()
+    {
+        $networkInfo = Planning::query()
+            ->with('finalSurveyDetail')
+            ->where('fr_no', request('fr_no'))
+            ->get();
+
+        return response()->json($networkInfo);
     }
 }

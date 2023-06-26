@@ -67,4 +67,9 @@ class Client extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function feasibility_requirement_details()
+    {
+        return $this->hasMany(FeasibilityRequirementDetail::class, 'client_no', 'client_no');
+    }
 }

@@ -23,6 +23,7 @@ use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Ticketing\Entities\SupportTeam;
 use Modules\Ticketing\Entities\SupportTicket;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class CommonApiController extends Controller
 {
@@ -40,6 +41,10 @@ class CommonApiController extends Controller
                 'text' => $item->client_name,
                 'client_no' => $item->client_no,
                 'address' => $item->location,
+                'contact_person' => $item->contact_person,
+                'contact_no' => $item->contact_no,
+                'email' => $item->email,
+                'client_type' => $item->client_type,
                 'saleDetails' => $item->saleDetails,
             ]);
 
@@ -379,6 +384,36 @@ class CommonApiController extends Controller
                 'value' => $item->id,
                 'label' => $item->address,
             ]);
+
+        return response()->json($results);
+    }
+
+    public function searchClientWithFrDetails()
+    {
+        $results = Client::query()
+            ->with('feasibility_requirement_details')
+            ->where('client_name', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->id,
+                'id' => $item->id,
+                'label' => $item->client_name,
+                'text' => $item->client_name,
+                'client_no' => $item->client_no,
+                'client_type' => $item->client_type,
+                'frDetails' => $item->feasibility_requirement_details,
+            ]);
+
+        return response()->json($results);
+    }
+
+    public function getFrDetailsData()
+    {
+        $results = FeasibilityRequirementDetail::query()
+            ->with('planning.finalSurveyDetails')
+            ->where('fr_no', request('connectivity_point'))
+            ->first();
 
         return response()->json($results);
     }

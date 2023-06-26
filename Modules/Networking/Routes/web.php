@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Networking\Http\Controllers\NetPopEquipmentController;
+use Modules\Networking\Http\Controllers\PhysicalConnectivityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,7 @@ use Modules\Networking\Http\Controllers\NetPopEquipmentController;
 Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('/', 'NetworkingController@index');
     Route::get('get-pop-equipments', [NetPopEquipmentController::class, 'getPopEquipments'])->name('getPopEquipments');
+    Route::get('get-network-info-by-fr', [PhysicalConnectivityController::class, 'getNetworkInfoByFr'])->name('getNetworkInfoByFr');
     require __DIR__ . '/irfan.php';
     require __DIR__ . '/jaber.php';
 });

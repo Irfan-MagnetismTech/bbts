@@ -8,7 +8,7 @@
     $form_method = !empty($purchaseRequisition) ? 'PUT' : 'POST';
     
     $client_id = old('client_id', !empty($purchaseRequisition) ? $purchaseRequisition->client_id : null);
-    $fr_no = old('fr_no', !empty($purchaseRequisition) ? $purchaseRequisition->fr_no : null);
+    $connectivity_point = old('connectivity_point', !empty($purchaseRequisition) ? $purchaseRequisition->fr_no : null);
     $client_name = old('client_name', !empty($purchaseRequisition) ? $purchaseRequisition?->client?->client_name : null);
     $client_no = old('client_no', !empty($purchaseRequisition) ? $purchaseRequisition?->client_no : null);
     $client_link_no = old('client_link_no', !empty($purchaseRequisition) ? $purchaseRequisition?->link_no : null);
@@ -57,19 +57,37 @@
             @csrf
 
             <div class="row">
-                <div class="form-group col-3">
-                    <label for="prs_type">Client Type <span class="text-danger">*</span></label>
-                    <select class="form-control" name="prs_type" id="prs_type" required>
-                        <option value="" disabled selected>Select PRS Type</option>
-                        <option value="Purchase Order" @selected('Purchase Order' == @$purchaseRequisition->prs_type)>Purchase Order</option>
-                        <option value="Work Order" @selected('Work Order' == @$purchaseRequisition->prs_type)>Work Order</option>
-                    </select>
-                </div>
-
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
                         name="client_name" value="{{ old('client_name') ?? ($client_name ?? '') }}" placeholder="Search...">
+                    <input type="hidden" name="client_no" id="client_no"
+                        value="{{ old('client_no') ?? ($client_no ?? '') }}">
+                </div>
+
+                <div class="form-group col-3 client_type">
+                    <label for="client_type">Client Type:</label>
+                    <input type="text" class="form-control" id="client_type" name="client_type"
+                        aria-describedby="client_type" readonly value="{{ old('client_type') ?? (@$client_type ?? '') }}">
+                </div>
+
+                <div class="form-group col-3 connectivity_point">
+                    <label for="select2">Connectivity Point</label>
+                    <select class="form-control select2" id="connectivity_point" name="connectivity_point">
+                        <option value="" readonly selected>Select FR No</option>
+                        @if ($form_method == 'POST')
+                            <option value="{{ old('connectivity_point') }}" selected>{{ old('connectivity_point') }}
+                            </option>
+                        @elseif($form_method == 'PUT')
+                            @forelse ($connectivity_points as $key => $value)
+                                <option value="{{ $value->connectivity_point }}"
+                                    @if ($connectivity_point == $value->connectivity_point) selected @endif>
+                                    {{ $value->connectivity_point }}
+                                </option>
+                            @empty
+                            @endforelse
+                        @endif
+                    </select>
                 </div>
 
                 <div class="form-group col-3 contact_person">
@@ -77,40 +95,6 @@
                     <input type="text" class="form-control" id="contact_person" name="contact_person"
                         aria-describedby="contact_person" readonly
                         value="{{ old('contact_person') ?? (@$contact_person ?? '') }}">
-                </div>
-
-                <div class="form-group col-3 fr_no">
-                    <label for="select2">Connectivity Point</label>
-                    <select class="form-control select2" id="fr_no" name="fr_no">
-                        <option value="" readonly selected>Select FR No</option>
-                        @if ($form_method == 'POST')
-                            <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
-                        @elseif($form_method == 'PUT')
-                            @forelse ($fr_nos as $key => $value)
-                                <option value="{{ $value->fr_no }}" @if ($fr_no == $value->fr_no) selected @endif>
-                                    {{ $value->fr_no }}
-                                </option>
-                            @empty
-                            @endforelse
-                        @endif
-                    </select>
-                </div>
-
-                <div class="form-group col-3 link_no">
-                    <label for="link_no">FR ID:</label>
-                    <select class="form-control select2" id="link_no" name="link_no">
-                        <option value="" readonly selected>Select Link No</option>
-                        @if ($form_method == 'POST')
-                            <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
-                        @elseif($form_method == 'PUT')
-                            @forelse ($client_links as $key => $value)
-                                <option value="{{ $value->link_no }}" @if ($client_link_no == $value->link_no) selected @endif>
-                                    {{ $value->link_no }}
-                                </option>
-                            @empty
-                            @endforelse
-                        @endif
-                    </select>
                 </div>
 
                 <div class="form-group col-3 contact_number">
@@ -130,6 +114,12 @@
                     <input type="text" class="form-control" id="contact_address" name="contact_address"
                         aria-describedby="contact_address" readonly
                         value="{{ old('contact_address') ?? (@$contact_address ?? '') }}">
+                </div>
+
+                <div class="form-group col-3 lat_long">
+                    <label for="lat_long">Lat. Long:</label>
+                    <input type="text" class="form-control" id="lat_long" name="lat_long" aria-describedby="lat_long"
+                        readonly value="{{ old('lat_long') ?? (@$lat_long ?? '') }}">
                 </div>
 
                 <div class="form-group col-3 remarks">
@@ -230,8 +220,86 @@
 @endsection
 
 @section('script')
-    <script src="{{ asset('js/search-client.js') }}"></script>
     <script>
+        $(document).on("keyup focus", "#client_name", function() {
+            $(this).autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ route('searchClientWithFrDetails') }}",
+                        type: "get",
+                        dataType: "json",
+                        data: {
+                            search: request.term,
+                        },
+                        success: function(data) {
+                            response(data);
+                        },
+                    });
+                },
+                select: function(event, ui) {
+                    $("#client_name").val(ui.item.label);
+                    $("#client_no").val(ui.item.client_no);
+                    $('#client_type').val(ui.item.client_type);
+
+                    $("#connectivity_point").html("");
+                    var link_options = '<option value="">Select Option</option>';
+
+                    ui.item.frDetails.forEach(function(element) {
+                        console.log(element)
+                        link_options +=
+                            `<option value="${element.fr_no}">${element.connectivity_point + '-' + element.fr_no}</option>`;
+                    });
+
+                    $("#connectivity_point").html(link_options);
+
+                    return false;
+                },
+            });
+        });
+
+        $("#connectivity_point").on("change", function() {
+            let connectivity_point = $(this).val();
+
+            $.ajax({
+                url: "{{ route('getFrDetailsData') }}",
+                type: "get",
+                dataType: "json",
+                data: {
+                    connectivity_point: connectivity_point,
+                },
+                success: function(data) {
+                    $("#fr_no").val(data.fr_no);
+                    $("#contact_person").val(data.contact_name);
+                    $("#contact_number").val(data.contact_number);
+                    $("#email").val(data.contact_email);
+                    $("#contact_address").val(data.location);
+                    $("#lat_long").val(data.lat_long);
+
+                    appendNetworkInfoRow(data.planning.final_survey_details);
+                },
+            });
+        });
+
+        function appendNetworkInfoRow(data) {
+            //loop through the data
+            data.forEach(function(element) {
+                let row = `<tr>
+                            <td>
+                                <input type="text" name="link_type[]" class="form-control link_type" required
+                                    autocomplete="off" value="${element.link_type}">
+                            </td>
+                            <td>
+                                <input type="text" name="method[]" class="form-control method"
+                                    autocomplete="off" value="${element.method}">
+                            </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-network-info-row"></i>
+                            </td>
+                        </tr>`;
+                $("#material_requisition tbody").append(row);
+            }); //end of loop
+        }
+
         $(document).on('keyup', '.unit_price, .quantity', function() {
             var unit_price = $(this).closest('tr').find('.unit_price').val();
             var quantity = $(this).closest('tr').find('.quantity').val();
@@ -302,32 +370,6 @@
             .on('click', '.remove-calculation-row', function() {
                 $(this).closest('tr').remove();
             });
-
-        //Search Material
-        $(document).on('keyup focus', '.material_name', function() {
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ url('search-material') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            search: request.term
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $(this).closest('tr').find('.material_name').val(ui.item.label);
-                    $(this).closest('tr').find('.material_id').val(ui.item.value);
-                    $(this).closest('tr').find('.item_code').val(ui.item.item_code);
-                    $(this).closest('tr').find('.unit').val(ui.item.unit);
-                    return false;
-                }
-            });
-        });
 
         $(function() {
             $('.select2').select2();

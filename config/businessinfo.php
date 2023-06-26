@@ -107,4 +107,10 @@ return [
         'Tower' => 'Tower',
         'WireLess' => 'WireLess'
     ],
+
+    //client type
+    'clientType' => [
+        'Corporate' => 'Corporate',
+        'Individual' => 'Individual',
+    ],
 ];
