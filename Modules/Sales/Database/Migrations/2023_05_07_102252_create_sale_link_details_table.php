@@ -16,12 +16,14 @@ return new class extends Migration
         Schema::create('sale_link_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sale_id')->nullable();
-            $table->string('client_no')->nullable();
-            $table->string('fr_no')->nullable();
-            $table->unsignedBigInteger('sale_details_id')->nullable();
-            $table->string('link_no')->nullable();
-            $table->float('otc', 8, 2)->nullable();
-            $table->float('mrc', 8, 2)->nullable();
+            $table->unsignedBigInteger('sale_detail_id')->nullable();
+            $table->integer('service_id')->nullable();
+            $table->string('service_name')->nullable();
+            $table->string('quantity')->nullable();
+            $table->string('unit')->nullable();
+            $table->string('rate')->nullable();
+            $table->string('price')->nullable();
+            $table->string('total_price')->nullable();
             $table->timestamps();
         });
     }

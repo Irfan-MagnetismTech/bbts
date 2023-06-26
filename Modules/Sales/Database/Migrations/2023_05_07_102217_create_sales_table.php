@@ -17,15 +17,15 @@ return new class extends Migration
             $table->id();
             $table->string('client_no')->nullable();
             $table->string('account_holder')->nullable();
-            $table->string('contact_duration')->nullable();
-            $table->date('effective_date')->nullable();
-            $table->string('work_order')->nullable();
-            $table->string('wo_no')->nullable();
             $table->integer('offer_id')->nullable();
+            $table->string('contract_duration')->nullable();
+            $table->date('effective_date')->nullable();
+            $table->string('remarks')->nullable();
+            $table->string('wo_no')->nullable();
             $table->string('mq_no')->nullable();
-            $table->string('sla')->nullable();
-            $table->float('otc', 8, 2)->nullable();
-            $table->float('mrc', 8, 2)->nullable();
+            $table->float('grand_total', 8, 2)->nullable();
+            $table->string('work_order')->nullable()->comment('file_path');
+            $table->string('sla')->nullable()->comment('file_path');
             $table->timestamps();
         });
     }
