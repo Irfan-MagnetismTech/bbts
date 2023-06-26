@@ -82,6 +82,23 @@
             <div id='fr_details'>
 
             </div>
+            <div>
+                <div class="card">
+                    <div class="card-body">
+                            <div class="row">
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                                <div class="col-3 text-right">Grand Total MRC</div>
+                                <div class="col-3">
+                                    <div class="input-group input-group-sm input-group-primary float-right" style="width:82%;">
+                                        <input type="text" name="g_total_mrc[]" class="form-control text-right"
+                                            id="g_total_mrc" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     {!! Form::close() !!}

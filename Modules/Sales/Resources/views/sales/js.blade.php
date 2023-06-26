@@ -29,7 +29,7 @@
                                     <div class="col-md-12">
                                         <div class="checkbox-fade fade-in-primary">
                                             <label>
-                                                <input type="checkbox" id="checkbox" name="Language" value="Primary">
+                                                <input type="checkbox" class="checkbox" name="Language" value="Primary">
                                                 <span class="cr">
                                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                 </span>
@@ -70,52 +70,54 @@
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
                                                     <th>Price</th>
-                                                    <th>${percentage}</th>
+                                                    <th>Total Price</th>
                                                 </thead>
                                                 <tbody>
                                                 `
+                                                let total = 0;
                                                 
                                                 element.costing.costing_products.forEach(itm => {
 
-                                                    appendedData += `<tr class="offer_details_row">
+                                                    appendedData += `<tr>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="link_type[]" class="form-control"
+                                                                <input type="text" name="link_type[]" class="form-control text-center"
                                                                     id="link_type" readonly value="${itm.product_id}">
                                                             </div>
                                                         </td>
-                                                        <td>
+                                                        <td> 
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="vendor[]" class="form-control"
+                                                                <input type="text" name="vendor[]" class="form-control text-right"
                                                                     id="vendor" readonly value="${itm.quantity}">
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="vendor[]" class="form-control"
+                                                                <input type="text" name="vendor[]" class="form-control text-center"
                                                                     id="vendor" readonly value="${itm.unit}">
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text" name="bbts_or_pop_or_ldp[]"
-                                                                    class="form-control" id="bbtsOrPopOrLdp" readonly value="${itm.rate}">
+                                                                    class="form-control text-right" id="bbtsOrPopOrLdp" readonly value="${itm.rate}">
+                                                            </div>
+                                                        </td>
+                                                        <td class="d-none">
+                                                            <div class="input-group input-group-sm input-group-primary">
+                                                                <input type="text" name="bbts_or_pop_or_ldp[]"
+                                                                    class="form-control text-right" readonly value="${(Number(percentage) * Number(itm.rate)) + Number(itm.rate)}">
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text" name="bbts_or_pop_or_ldp[]"
-                                                                    class="form-control" id="bbtsOrPopOrLdp" readonly value="${(Number(percentage) * Number(itm.rate)) + Number(itm.rate)}">
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="bbts_or_pop_or_ldp[]"
-                                                                    class="form-control" id="bbtsOrPopOrLdp" readonly value="${((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity)}">
+                                                                    class="form-control text-right" id="bbtsOrPopOrLdp" readonly value="${((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity)}">
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     `
+                                                    total += ((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity);
                                                 })
                                                 
                                                 appendedData += `
@@ -126,8 +128,7 @@
                                                         <td style="text-align: center;">Total MRC</td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="total_mrc" class="form-control"
-                                                                    id="total_mrc" readonly>
+                                                                <input type="text" name="total_mrc" class="form-control text-right total_mrc" readonly value="${total}">
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -164,6 +165,17 @@
                 $('#client_no').val(item.client_no).attr('value',item.client_no);
                 return false;
             }
+        })
+        $(document).on('change','.checkbox',function(item){
+            var vvall = 0;
+            $('.checkbox').each((score) => { 
+                if ($(this).is(':checked')) {
+                    var totalMRCValue = Number($(this).parent().parent().parent().find('.total_mrc').val());
+                    vvall += totalMRCValue;
+                }
+
+            });
+            $('#g_total_mrc').val(vvall);
         })
 
 
