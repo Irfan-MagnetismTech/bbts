@@ -65,7 +65,13 @@ class FeasibilityRequirementController extends Controller
             $feasibility_detail = [];
             foreach (array_keys($request['link_name']) as $key => $feasibility_key) {
                 $no = $key + 1;
-                $fr_no = 'fr' . '-' . $feasibilityRequirement->client_no . '-' . $no;
+                $max_fr_no = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
+                if ($max_fr_no == null) {
+                    $fr_no = 'fr' . '-' . $data['client_no'] . '-' . '1';
+                } else {
+                    $fr_array = explode('-', $max_fr_no);
+                    $fr_no = 'fr' . '-' . $data['client_no'] . '-' . ($fr_array[3] + 1);
+                }
                 $feasibility_detail[] = [
                     'link_name' => $request['link_name'][$feasibility_key],
                     'aggregation_type' => $request['aggregation_type'][$feasibility_key],
@@ -129,7 +135,7 @@ class FeasibilityRequirementController extends Controller
      */
     public function update(FeasibilityRequirement $feasibility_requirement, FeasibilityRequirementRequest $request)
     {
-        $data = $request->only('client_id', 'is_existing', 'date');
+        $data = $request->only('client_no', 'is_existing', 'date');
         $data['user_id'] = auth()->user()->id;
         $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
@@ -152,7 +158,15 @@ class FeasibilityRequirementController extends Controller
                     'contact_email' => $request['contact_email'][$key],
                 ]);
             } else {
+                $max_fr_no = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
+                if ($max_fr_no == null) {
+                    $fr_no = 'fr' . '-' . $data['client_no'] . '-' . '1';
+                } else {
+                    $fr_array = explode('-', $max_fr_no);
+                    $fr_no = 'fr' . '-' . $data['client_no'] . '-' . ($fr_array[3] + 1);
+                }
                 $feasibility_requirement->feasibilityRequirementDetails()->create([
+                    'fr_no' => $fr_no,
                     'link_name' => $request['link_name'][$key],
                     'division_id' => $request['division_id'][$key],
                     'district_id' => $request['district_id'][$key],

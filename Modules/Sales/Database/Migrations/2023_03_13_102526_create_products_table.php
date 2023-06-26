@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('code', 100);
             $table->string('unit', 100);
+            $table->double('vat', 8, 2);
             $table->timestamps();
         });
     }

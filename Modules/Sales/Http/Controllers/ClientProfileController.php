@@ -75,9 +75,9 @@ class ClientProfileController extends Controller
 
         DB::transaction(function () use ($client_profile_data, $client_billing_info, $client_collection_info) {
             $client_profile = Client::create($client_profile_data);
-            $client_billing_info['client_profile_id'] = $client_profile->id;
+            $client_billing_info['client_id'] = $client_profile->id;
             $client_billing_info['client_no'] = $client_profile_data['client_no'];
-            $client_collection_info['client_profile_id'] = $client_profile->id;
+            $client_collection_info['client_id'] = $client_profile->id;
             $client_collection_info['client_no'] = $client_profile_data['client_no'];
             BillingAddress::create($this->formatBillingAddress($client_billing_info));
             CollectionAddress::create($this->formateCollectionAddress($client_collection_info));
@@ -153,12 +153,12 @@ class ClientProfileController extends Controller
         DB::transaction(function () use ($client_profile_data, $client_billing_info, $client_collection_info, $id) {
             $client_profile = Client::find($id);
             $client_profile->update($client_profile_data);
-            $client_billing_info['client_profile_id'] = $client_profile->id;
+            $client_billing_info['client_id'] = $client_profile->id;
             $client_billing_info['client_no'] = $client_profile_data['client_no'];
-            $client_collection_info['client_profile_id'] = $client_profile->id;
+            $client_collection_info['client_id'] = $client_profile->id;
             $client_collection_info['client_no'] = $client_profile_data['client_no'];
-            BillingAddress::where('client_profile_id', $client_profile->id)->update($this->formatBillingAddress($client_billing_info));
-            CollectionAddress::where('client_profile_id', $client_profile->id)->update($this->formateCollectionAddress($client_collection_info));
+            BillingAddress::where('client_id', $client_profile->id)->update($this->formatBillingAddress($client_billing_info));
+            CollectionAddress::where('client_id', $client_profile->id)->update($this->formateCollectionAddress($client_collection_info));
         });
         return redirect()->route('client-profile.index')->with('success', 'Client Profile Updated Successfully');
     }
@@ -193,7 +193,7 @@ class ClientProfileController extends Controller
             'email' => $information['billing_email'],
             'submission_by' => $information['submitted_user_id'],
             'submission_date' => $information['bill_submission_date'],
-            'client_profile_id' => $information['client_profile_id'],
+            'client_id' => $information['client_id'],
             'client_no' => $information['client_no'],
         ];
         return $client_billing_info;
@@ -212,7 +212,7 @@ class ClientProfileController extends Controller
             'email' => $information['collection_email'],
             'payment_method' => $information['payment_method'],
             'payment_date' => $information['approximate_payment_date'],
-            'client_profile_id' => $information['client_profile_id'],
+            'client_id' => $information['client_id'],
             'client_no' => $information['client_no'],
         ];
         return $client_collection_info;

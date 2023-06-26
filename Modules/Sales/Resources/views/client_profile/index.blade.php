@@ -56,7 +56,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $client_profile->created_at->format('d-m-Y') }}</td>
-                        <td>{{ $client_profile->client_id }}</td>
+                        <td>{{ $client_profile->client_no }}</td>
                         <td>{{ $client_profile->client_name }}</td>
                         <td>{{ $client_profile->contact_person }}</td>
                         <td>{{ $client_profile->designation }}</td>

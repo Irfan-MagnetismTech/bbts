@@ -66,4 +66,6 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('add-costing/{id}', [CostingController::class, 'create'])->name('add-costing');
     Route::get('client-wise-mq/{id}', [OfferController::class, 'clientWiseMq'])->name('client-wise-mq');
     Route::get('add-offer/{id}', [OfferController::class, 'create'])->name('add-offer');
+    Route::get('pnl-summary/{id?}', [OfferController::class, 'pnlSummary'])->name('pnl-summary');
+    Route::get('pnl-details/{id?}', [OfferController::class, 'pnlDetails'])->name('pnl-details');
 });

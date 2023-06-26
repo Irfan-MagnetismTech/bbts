@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Meeting List')
+@section('title', 'Offer List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Meeting List
+    Offer List
 @endsection
 
 @section('style')
@@ -15,7 +15,7 @@
     <a href="{{ route('meeting.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    Total: {{ count($meetings) }}
+    Total: {{ count($offers) }}
 @endsection
 
 
@@ -24,47 +24,36 @@
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th>Client No</th>
                     <th>Client Name</th>
-                    <th>Visit Date</th>
-                    <th>Time of Work Started</th>
-                    <th>Time of Work Ended</th>
-                    <th>Contact Person</th>
-                    <th>Phone</th>
-                    <th>Purpose</th>
-                    <th>Status</th>
+                    <th>MQ No</th>
+                    <th>Validity Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($meetings as $meeting)
+                @foreach ($offers as $offer)
                     <tr>
-                        <td>{{ $meeting->client->client_name ?? '' }}</td>
-                        <td>{{ $meeting->visit_date }}</td>
-                        <td>{{ $meeting->meeting_start_time }}</td>
-                        <td>{{ $meeting->meeting_end_time }}</td>
-                        <td>{{ $meeting->client->contact_person ?? '' }}</td>
-                        <td>{{ $meeting->client->contact_no ?? '' }}</td>
-                        <td>{{ $meeting->purpose }}</td>
-                        <td>{{ $meeting->status }}</td>
+                        <td>{{ $offer->lead_generation->client_no }}</td>
+                        <td>{{ $offer->lead_generation->client_name }}</td>
+                        <td>{{ $offer->mq_no }}</td>
+                        <td>{{ $offer->offer_validity }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('meeting.show', $meeting->id) }}" data-toggle="tooltip"
-                                        title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('offer.show', $offer->id) }}" data-toggle="tooltip" title="Details"
+                                        class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('meeting.edit', $meeting->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <a href="{{ route('offer.edit', $offer->id) }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ route('meeting.destroy', $meeting->id) }}" method="POST"
+                                    <form action="{{ route('offer.destroy', $offer->id) }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
-                                    <!-- add followup button -->
-                                    <a href="{{ route('followup.create', $meeting->id) }}" data-toggle="tooltip"
-                                        title="Add Followup" class="btn btn-outline-success"><i class="fas fa-plus"></i></a>
                                 </nobr>
                             </div>
                         </td>
@@ -73,14 +62,10 @@
             </tbody>
             <tfoot>
                 <tr>
+                    <th>Client No</th>
                     <th>Client Name</th>
-                    <th>Visit Date</th>
-                    <th>Time of Work Started</th>
-                    <th>Time of Work Ended</th>
-                    <th>Contact Person</th>
-                    <th>Phone</th>
-                    <th>Purpose</th>
-                    <th>Status</th>
+                    <th>MQ No</th>
+                    <th>Validity Date</th>
                     <th>Action</th>
                 </tr>
             </tfoot>

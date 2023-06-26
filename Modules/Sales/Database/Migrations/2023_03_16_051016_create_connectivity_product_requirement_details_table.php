@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('category_id')->nullable();
             $table->integer('product_id')->nullable();
             $table->string('capacity')->nullable();
-            $table->string('sla')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
         });

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->time('work_start_time')->nullable();
             $table->time('work_end_time')->nullable();
             $table->string('work_nature_type')->nullable();
+            $table->string('client_type')->nullable();
             $table->string('sales_type')->nullable();
             $table->string('client_no')->nullable();
             $table->float('potentility_amount')->nullable();

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('plan_link_equipment', function (Blueprint $table) {
             $table->id();
             $table->integer('planning_id')->nullable();
+            $table->integer('final_survey_id')->nullable();
             $table->integer('plan_link_id')->nullable();
             $table->string('material_name')->nullable();
             $table->integer('quantity')->nullable();

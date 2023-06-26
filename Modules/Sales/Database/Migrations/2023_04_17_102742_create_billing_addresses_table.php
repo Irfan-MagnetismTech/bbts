@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('billing_addresses', function (Blueprint $table) {
             $table->id();
             $table->integer('client_no')->nullable();
-            $table->string('client_profile_id')->nullable();
+            $table->string('client_id')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('designation')->nullable();
             $table->string('phone')->nullable();

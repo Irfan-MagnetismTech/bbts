@@ -118,7 +118,7 @@
                                                     <div class="form-group row">
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
-                                                                <input type="text" id="client_id" name="client_id"
+                                                                <input type="text" id="client_no" name="client_no"
                                                                     class="form-control" autocomplete="off"
                                                                     value="{{ $client_id }}" required>
                                                                 <label for="client_id">Client ID</label>
@@ -680,7 +680,7 @@
                     });
                 });
 
-                $('#client_id').on('input', function() {
+                $('#client_no').on('input', function() {
                     var client_id = $(this).val();
                     console.log(client_id)
                     $(this).autocomplete({

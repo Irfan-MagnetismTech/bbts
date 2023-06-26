@@ -14,14 +14,14 @@
 @endsection
 @section('content')
     <div class="row">
-        <div class="col-md-3 pr-md-1 my-1 my-md-0">
+        <div class="col-md-2 pr-md-1 my-1 my-md-0">
             {{ Form::text('name', old('name') ? old('name') : (!empty($product->name) ? $product->name : null), ['class' => 'form-control form-control-sm', 'id' => 'name', 'placeholder' => 'Enter Product Name', 'autocomplete' => 'off']) }}
             <input type="hidden" name="id" value="">
         </div>
-        <div class="col-md-3 pr-md-1 my-1 my-md-0">
+        <div class="col-md-2 pr-md-1 my-1 my-md-0">
             {{ Form::text('code', old('code') ? old('code') : (!empty($product->code) ? $product->code : null), ['class' => 'form-control form-control-sm', 'id' => 'code', 'placeholder' => 'Enter Product Code', 'autocomplete' => 'off']) }}
         </div>
-        <div class="col-md-3 pr-md-1 my-1 my-md-0">
+        <div class="col-md-2 pr-md-1 my-1 my-md-0">
             <select name="category_id" id="category_id" class="form-control form-control-sm">
                 <option value="">Select Category</option>
                 @foreach ($categories as $category)
@@ -29,7 +29,7 @@
                 @endforeach
             </select>
         </div>
-        <div class="col-md-3 pr-md-1 my-1 my-md-0">
+        <div class="col-md-2 pr-md-1 my-1 my-md-0">
             <select name="unit" id="unit" class="form-control form-control-sm">
                 <option value="">Select Unit</option>
                 @foreach ($units as $unit)
@@ -37,14 +37,15 @@
                 @endforeach
             </select>
         </div>
-    </div><!-- end form row -->
-    <div class="row justify-content-end">
-        <div class="col-md-2 mt-3 ">
+        <div class="col-md-2 pr-md-1 my-1 my-md-0">
+            {{ Form::text('vat', old('vat') ? old('vat') : (!empty($product->vat) ? $product->vat : null), ['class' => 'form-control form-control-sm', 'id' => 'vat', 'placeholder' => 'Enter Vat (%)', 'autocomplete' => 'off']) }}
+        </div>
+        <div class="col-md-2 pr-md-1 my-1 my-md-0">
             <div class="input-group input-group-sm">
                 <button class="btn btn-success btn-sm btn-block" onclick="CreateOrUpdateProduct()">Submit</button>
             </div>
         </div>
-    </div>
+    </div><!-- end form row -->
 
     {!! Form::close() !!}
     <hr class="my-2 bg-success">
@@ -57,6 +58,7 @@
                     <th>Code</th>
                     <th>Category</th>
                     <th>Unit</th>
+                    <th>Vat</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -67,6 +69,7 @@
                     <th>Code</th>
                     <th>Category</th>
                     <th>Unit</th>
+                    <th>Vat</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -78,6 +81,7 @@
                         <td class="text-center">{{ $data->code }}</td>
                         <td class="text-center">{{ $data->category->name }}</td>
                         <td class="text-center">{{ $data->unit }}</td>
+                        <td class="text-center">{{ $data->vat }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
@@ -122,12 +126,14 @@
             var code = $('input[name="code"]').val();
             var category_id = $('select[name="category_id"]').val();
             var unit = $('select[name="unit"]').val();
+            var vat = $('input[name="vat"]').val();
 
             var data = {
                 name: name,
                 code: code,
                 category_id: category_id,
                 unit: unit,
+                vat: vat
             };
             fetch(url, {
                     method: method,
@@ -154,6 +160,7 @@
                             <td class="text-center">${data.product.code ? data.product.code : '' }</td>
                             <td class="text-center">${data.product.category.name ? data.product.category.name : ''}</td>
                             <td class="text-center">${data.product.unit ? data.product.unit : ''}</td>
+                            <td class="text-center">${data.product.vat ? data.product.vat : ''}</td>  
                             <td>
                                 <div class="icon-btn">
                                     <nobr>
@@ -173,6 +180,7 @@
                                 code: data.product.code,
                                 category: data.product.category.name,
                                 unit: data.product.unit,
+                                vat: data.product.vat
                             };
                             setTimeout(() => {
                                 location.reload()
@@ -248,6 +256,7 @@
             //select category
             $('select[name="category_id"]').val(product.category_id);
             $('select[name="unit"]').val(product.unit);
+            $('input[name="vat"]').val(product.vat);
         }
 
         $(window).scroll(function() {

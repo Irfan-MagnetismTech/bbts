@@ -39,6 +39,7 @@ return new class extends Migration
             $table->string('remarks')->nullable();
             $table->string('status')->nullable()->default('Pending');
             $table->string('created_by')->nullable();
+            $table->string('comment')->nullable();
             $table->timestamps();
         });
     }

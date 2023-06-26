@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('feasibility_requirement_details', function (Blueprint $table) {
             $table->id();
             $table->string('feasibility_requirement_id');
+            $table->string('client_no');
             $table->string('fr_no')->nullable();
-            $table->string('link_name')->nullable();
+            $table->string('connectivity_point')->nullable();
             $table->string('agreegation_type')->nullable();
             $table->integer('division_id')->nullable();
             $table->integer('district_id')->nullable();

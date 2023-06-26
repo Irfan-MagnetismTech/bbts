@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('final_survey_details', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('survey_id')->nullable();
+            $table->bigInteger('planning_id')->nullable();
+            $table->bigInteger('plan_link_id')->nullable();
             $table->string('link_type')->nullable();
             $table->string('link_no')->nullable();
             $table->string('option')->nullable();
