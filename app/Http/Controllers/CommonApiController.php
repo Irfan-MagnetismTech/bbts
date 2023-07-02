@@ -30,7 +30,6 @@ class CommonApiController extends Controller
     public function searchClient()
     {
         $results = Client::query()
-            ->with('saleDetails')
             ->where('client_name', 'LIKE', '%' . request('search') . '%')
             ->limit(15)
             ->get()
@@ -44,8 +43,7 @@ class CommonApiController extends Controller
                 'contact_person' => $item->contact_person,
                 'contact_no' => $item->contact_no,
                 'email' => $item->email,
-                'client_type' => $item->client_type,
-                'saleDetails' => $item->saleDetails,
+                'client_type' => $item->client_type
             ]);
 
         return response()->json($results);

@@ -21,7 +21,7 @@
     @else
         Create
     @endif
-    Pyhsical Connectivity
+    Physical Connectivity
 @endsection
 
 @section('style')
@@ -129,12 +129,13 @@
                 </div>
             </div>
 
-            <table class="table table-bordered" id="material_requisition">
+            <table class="table table-bordered" id="physical_connectivity">
                 <thead>
                     <tr>
                         <th> Link Type</th>
                         <th> Method</th>
                         <th> POP</th>
+                        <th>LDP</th>
                         <th> Link ID </th>
                         <th> Device IP </th>
                         <th> PORT </th>
@@ -143,11 +144,9 @@
                         <th> Connectivity Details </th>
                         <th> Backbone </th>
                         <th> Comment </th>
-                        <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
                     </tr>
                 </thead>
-                <tbody></tbody>
-                <tfoot>
+                <tbody>
                     @php
                         $material_name_with_code = old('material_name', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
                         $material_id = old('material_id', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material_id') : []);
@@ -205,7 +204,7 @@
                             </td>
                         </tr>
                     @endforeach
-                </tfoot>
+                </tbody>
             </table>
 
             <div class="row">
@@ -249,7 +248,6 @@
                         link_options +=
                             `<option value="${element.fr_no}">${element.connectivity_point + '-' + element.fr_no}</option>`;
                     });
-
                     $("#connectivity_point").html(link_options);
 
                     return false;
@@ -275,37 +273,71 @@
                     $("#contact_address").val(data.location);
                     $("#lat_long").val(data.lat_long);
 
+                    $("#physical_connectivity tbody").html("");
                     appendNetworkInfoRow(data.planning.final_survey_details);
+                    console.log(data.planning.final_survey_details);
                 },
             });
         });
 
         function appendNetworkInfoRow(data) {
-            //loop through the data
             data.forEach(function(element) {
                 let row = `<tr>
                             <td>
-                                <input type="text" name="link_type[]" class="form-control link_type" required
-                                    autocomplete="off" value="${element.link_type}">
+                                <input type="text" name="link_type[]" class="form-control link_type"
+                                    autocomplete="off" value="${element.link_type}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="method[]" class="form-control method"
-                                    autocomplete="off" value="${element.method}">
+                                    autocomplete="off" value="${element.method}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="pop[]" class="form-control pop"
+                                    autocomplete="off" value="${element.method}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="ldp[]" class="form-control ldp"
+                                    autocomplete="off" value="">
+                            </td>
+                            <td>
+                                <input type="text" name="link_id[]" class="form-control link_id"
+                                    autocomplete="off" value="">
+                            </td>
+                            <td>
+                                <input type="text" name="device_ip[]" class="form-control device_ip"
+                                    autocomplete="off" value="">
+                            </td>
+                            <td>
+                                <input type="text" name="port[]" class="form-control port"
+                                    autocomplete="off" value="">
+                            </td>
+                            <td>
+                                <input type="text" name="vlan[]" class="form-control vlan"
+                                    autocomplete="off" value="">
+                            </td>
+                            <td>
+                                <input type="text" name="distance[]" class="form-control distance"
+                                    autocomplete="off" value="${element.distance}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="connectivity_details[]" class="form-control connectivity_details"
+                                    autocomplete="off" value="">
+                            </td>
+                            <td>
+                                <input type="text" name="backbone[]" class="form-control backbone"
+                                    autocomplete="off" value="${element.method}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="comment[]" class="form-control comment"
+                                    autocomplete="off" value="">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-network-info-row"></i>
                             </td>
                         </tr>`;
-                $("#material_requisition tbody").append(row);
-            }); //end of loop
+                $("#physical_connectivity tbody").append(row);
+            });
         }
-
-        $(document).on('keyup', '.unit_price, .quantity', function() {
-            var unit_price = $(this).closest('tr').find('.unit_price').val();
-            var quantity = $(this).closest('tr').find('.quantity').val();
-            var total_amount = unit_price * quantity;
-            $(this).closest('tr').find('.total_amount').val(total_amount);
-        });
 
         $('#date').datepicker({
             format: "dd-mm-yyyy",
@@ -313,61 +345,10 @@
             todayHighlight: true,
             showOtherMonths: true
         }).datepicker("setDate", new Date());
-        /* Append row */
-        @if (empty($purchaseRequisition) && empty(old('material_name')))
-            appendCalculationRow();
-        @endif
-        function appendCalculationRow() {
-            var type = $("input[name=type]:checked").val()
-            let row = `<tr>
-                            <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
-                                <input type="hidden" name="material_id[]" class="form-control material_id">
-                                <input type="hidden" name="item_code[]" class="form-control item_code">
-                            </td>                            
-                            <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off">
-                            </td>
-                            <td>
-                                <input name="total_amount[]" class="form-control total_amount" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
-                            </td>
-                        </tr>`;
-            $('#material_requisition tbody').append(row);
-        }
 
         /* Adds and removes quantity row on click */
-        $("#material_requisition")
-            .on('click', '.add-requisition-row', () => {
-                appendCalculationRow();
-            })
-            .on('click', '.remove-calculation-row', function() {
+        $("#physical_connectivity")
+            .on('click', '.remove-network-info-row', function() {
                 $(this).closest('tr').remove();
             });
 
