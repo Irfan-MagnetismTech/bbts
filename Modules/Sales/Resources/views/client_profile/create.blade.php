@@ -363,12 +363,9 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
-                                                            <div class="form-item">
-                                                                <input type="text" id="billing_address"
-                                                                    name="billing_address" class="form-control"
-                                                                    autocomplete="off" value="{{ $billing_address }}"
-                                                                    required>
-                                                                <label for="billing_address">Address</label>
+                                                            <div class="input-group input-group-sm">
+                                                                <span class="input-group-addon" id="basic-addon8">%</span>
+                                                                <input type="text" class="form-control" placeholder="input-group-sm">
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">

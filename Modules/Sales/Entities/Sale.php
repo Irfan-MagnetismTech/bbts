@@ -7,6 +7,7 @@ use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\OfferDetail;
+use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sale extends Model
@@ -42,5 +43,10 @@ class Sale extends Model
     public function offerDetails(): HasMany
     {
         return $this->hasMany(OfferDetail::class, 'offer_id', 'id');
+    }
+
+    public function saleLinkDetails()
+    {
+        return $this->hasMany(SaleLinkDetail::class, 'sale_id', 'id');
     }
 }
