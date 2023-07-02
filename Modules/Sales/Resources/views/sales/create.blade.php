@@ -3,13 +3,13 @@
 
 @php
     $is_old = old('client_no') ? true : false;
-    $form_heading = !empty($feasibility_requirement->id) ? 'Update' : 'Add';
-    $form_url = !empty($feasibility_requirement->id) ? route('sales.update', $feasibility_requirement->id) : route('sales.store');
-    $form_method = !empty($feasibility_requirement->id) ? 'PUT' : 'POST';
+    $form_heading = !empty($sale->id) ? 'Update' : 'Add';
+    $form_url = !empty($sale->id) ? route('sales.update', $sale->id) : route('sales.store');
+    $form_method = !empty($sale->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
-    {{ ucfirst($form_heading) }} Sales
+    {{ ucfirst($form_heading) }} sale
 @endsection
 
 @section('breadcrumb-button')
@@ -46,29 +46,30 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="tableHeading">
-                    <h5> <span> &#10070; </span> Sales <span>&#10070;</span> </h5>
+                    <h5> <span> &#10070; </span> sale <span>&#10070;</span> </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         @php
-                            $client_name = $is_old ? old('client_name') : $feasibility_requirement->client_name ?? null;
-                            $client_no = $is_old ? old('client_no') : $feasibility_requirement->client_no ?? null;
-                            $effective_date = $is_old ? old('effective_date') : $feasibility_requirement->effective_date ?? today()->format('d-m-Y');
-                            $account_holder = $is_old ? old('account_holder') : $feasibility_requirement->account_holder ?? null;
-                            $offer_id = $is_old ? old('offer_id') : $feasibility_requirement->offer_id ?? null;
-                            $remarks = $is_old ? old('remarks') : $feasibility_requirement->remarks ?? null;
-                            $mq_id = $is_old ? old('mq_id') : $feasibility_requirement->mq_id ?? null;
-                            $contract_duration = $is_old ? old('contract_duration') : $feasibility_requirement->contract_duration ?? null;
-                            $work_order = $is_old ? old('work_order') : $feasibility_requirement->work_order ?? null;
-                            $sla = $is_old ? old('sla') : $feasibility_requirement->sla ?? null;
-                            $wo_no = $is_old ? old('wo_no') : $feasibility_requirement->wo_no ?? null;
+                            $client_name = $is_old ? old('client_name') : $sale->client->client_name ?? null;
+                            $client_no = $is_old ? old('client_no') : $sale->client_no ?? null;
+                            $effective_date = $is_old ? old('effective_date') : $sale->effective_date ?? today()->format('d-m-Y');
+                            $account_holder = $is_old ? old('account_holder') : $sale->account_holder ?? null;
+                            $offer_id = $is_old ? old('offer_id') : $sale->offer_id ?? null;
+                            $remarks = $is_old ? old('remarks') : $sale->remarks ?? null;
+                            $mq_no = $is_old ? old('mq_no') : $sale->mq_no ?? null;
+                            $contract_duration = $is_old ? old('contract_duration') : $sale->contract_duration ?? null;
+                            $work_order = $is_old ? old('work_order') : $sale->work_order ?? null;
+                            $sla = $is_old ? old('sla') : $sale->sla ?? null;
+                            $wo_no = $is_old ? old('wo_no') : $sale->wo_no ?? null;
+                            $grand_total = $is_old ? old('grand_total') : $sale->grand_total ?? null;
                         @endphp
                         <x-input-box colGrid="4" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <x-input-box colGrid="4" name="client_no" value="{{ $client_no }}" label="Client Id" />
                         <x-input-box colGrid="4" name="account_holder" value="{{ $account_holder }}" label="Account Holder" />
                         <x-input-box colGrid="4" name="offer_id" value="{{ $offer_id }}" label="Offer Id" />
                         <x-input-box colGrid="4" name="remarks" value="{{ $remarks }}" label="Remarks" />
-                        <x-input-box colGrid="4" name="mq_id" value="{{ $mq_id }}" label="MQ Id" />
+                        <x-input-box colGrid="4" name="mq_no" value="{{ $mq_no }}" label="MQ No" />
                         <x-input-box colGrid="4" name="contract_duration" value="{{ $contract_duration }}" label="Contract Duration" />
                         <x-input-box colGrid="4" name="effective_date" class="date" value="{{ $effective_date }}" label="Effective Date" />
                         <x-input-box colGrid="4" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
@@ -80,6 +81,123 @@
                 </div>
             </div>
             <div id='fr_details'>
+                @if(isset($sale) && count($sale->saleDetails))
+                    @foreach($sale->saleDetails as $key => $value)
+                        @php
+                            $percent =  ($value->offerDetails->total_offer_mrc / $value->offerDetails->costing->product_total_cost) - 1;
+                        @endphp
+                        <div class="card">
+                            <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="checkbox-fade fade-in-primary">
+                                                <label>
+                                                    <input type="checkbox" class="checkbox" value="Primary" name="checked[{{$key}}]">
+                                                    <span class="cr">
+                                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                    </span>
+                                                    <span>{{$value->frDetails->connectivity_point}}</span>
+                                                    <input type="hidden" class="fr_no" name="fr_no[{{$key}}]" value="{{$value->fr_no}}">
+                                                </label>
+                                            </div>
+                                            <div class="row">
+                                                <x-input-box colGrid="3" name="delivery_date[{{$key}}]" value="{{ $value->delivery_date ?? '' }}" label="Delivery Date" class="date"/>
+                                                <x-input-box colGrid="3" name="billing_address[{{$key}}]" value="{{ $value->billing_address ?? '' }}" label="Billing Address" />
+                                                <x-input-box colGrid="3" name="collection_address[{{$key}}]" value="{{ $value->collection_address ?? '' }}" label="Collection Address" />
+                                                <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
+                                                <div class="col-3">
+                                                    <div class="form-check-inline">
+                                                        <label class="form-check-label" for="prepaid">
+                                                            <input type="radio" class="form-check-input payment_status" id="prepaid" name="payment_status[{{$key}}]"
+                                                                value="prepaid" @checked(@$value->payment_status == 'prepaid' || ($form_method == 'POST' && !old()))>
+                                                            Prepaid
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check-inline">
+                                                        <label class="form-check-label" for="postpaid">
+                                                            <input type="radio" class="form-check-input payment_status" id="postpaid" name="payment_status[{{$key}}]"
+                                                                value="postpaid" @checked(@$value->payment_status == 'postpaid')>
+                                                                Postpaid
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <x-input-box colGrid="3" name="mrc[{{$key}}]" value="{{$value->mrc}}" label="MRC" />
+                                                <x-input-box colGrid="3" name="otc[{{$key}}]" value="{{$value->otc}}" label="OTC" />
+                                            </div>
+                                            <div>
+
+                                            </div>
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <th>Product/Service</th>
+                                                        <th>Quantity</th>
+                                                        <th>Unit</th>
+                                                        <th>Price</th>
+                                                        <th>Total Price</th>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach ($value->saleLinkDetails as $key1 => $val)
+                                                        <tr>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="service[{{$key}}][]" class="form-control text-center"
+                                                                        id="service" readonly value="${itm.product_id}">
+                                                                </div>
+                                                            </td>
+                                                            <td> 
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="quantity[{{$key}}][]" class="form-control text-right"
+                                                                        id="quantity" readonly value="{{$val->quantity}}">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="unit[{{$key}}][]" class="form-control text-center"
+                                                                        id="unit" readonly value="{{$val->unit}}">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="rate[{{$key}}][]"
+                                                                        class="form-control text-right" readonly value="{{$val->rate}}">
+                                                                </div>
+                                                            </td>
+                                                            <td class="d-none">
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="price[{{$key}}][]"
+                                                                        class="form-control text-right" readonly value="{{($percent * $val->rate) + $val->rate}}">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="total_price[{{$key}}][]"
+                                                                        class="form-control text-right" readonly value="{{((($percent * $val->rate) + $val->rate) * $val->quantity)}}">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="3" style="text-align: left;"></td>
+                                                            <td style="text-align: center;">Total MRC</td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="total_mrc[{{$key}}]" class="form-control text-right total_mrc" readonly value="{{$value->total_mrc}}">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    
+                @endif
 
             </div>
             <div>
@@ -91,8 +209,8 @@
                                 <div class="col-3 text-right">Grand Total MRC</div>
                                 <div class="col-3">
                                     <div class="input-group input-group-sm input-group-primary float-right" style="width:82%;">
-                                        <input type="text" name="g_total_mrc" class="form-control text-right"
-                                            id="g_total_mrc" readonly>
+                                        <input type="text" name="grand_total" class="form-control text-right"
+                                            id="grand_total" readonly>
                                     </div>
                                 </div>
                             </div>

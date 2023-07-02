@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('sale_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sale_id')->nullable();
+            $table->string('client_no')->nullable();
             $table->string('billing_address')->nullable();
             $table->string('collection_address')->nullable();
             $table->string('fr_no')->nullable();

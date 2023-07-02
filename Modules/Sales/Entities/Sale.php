@@ -3,8 +3,11 @@
 namespace Modules\Sales\Entities;
 
 use Carbon\Carbon;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\OfferDetail;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sale extends Model
 {
@@ -28,6 +31,16 @@ class Sale extends Model
 
     public function saleDetails()
     {
-        return $this->hasMany(SaleDetail::class);
+        return $this->hasMany(SaleDetail::class, 'sale_id', 'id');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
+
+    public function offerDetails(): HasMany
+    {
+        return $this->hasMany(OfferDetail::class, 'offer_id', 'id');
     }
 }
