@@ -170,7 +170,7 @@
                 return false;
             }
         })
-        $(document).on('change','.checkbox',function(item){
+        $(document).on('change','.checkbox',function(){
             var vvall = 0;
             $('.checkbox').each((score) => { 
                 if ($(this).is(':checked')) {
@@ -179,8 +179,11 @@
                 }
 
             });
-            $('#g_total_mrc').val(vvall);
+            $('#grand_total').val(vvall);
         })
 
+    $(document).on('click','.add_billing',function(){
+
+    })
 
 </script>

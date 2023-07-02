@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Entities;
 
+use Carbon\Carbon;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\OfferLink;
@@ -13,9 +14,9 @@ class Offer extends Model
 {
     protected $guarded = [];
 
-    public function client(): BelongsTo
+    public function client()
     {
-        return Carbon::createFromFormat('Y-m-d', $input)->format('d/m/Y');
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 
     /**

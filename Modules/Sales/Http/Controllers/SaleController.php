@@ -4,16 +4,20 @@ namespace Modules\Sales\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
+use App\Services\UploadService;
 use Modules\Sales\Entities\Sale;
 use Modules\SCM\Entities\ScmMur;
 use Modules\Sales\Entities\Offer;
 use Illuminate\Routing\Controller;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\SaleLinkDetail;
+use Illuminate\Contracts\Support\Renderable;
 
 class SaleController extends Controller
 {
+    function __construct(private UploadService $uploadFile)
+    {
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -43,15 +47,18 @@ class SaleController extends Controller
         try {
             DB::beginTransaction();
             $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no');
+            $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale');
+            $data['work_order'] = $this->uploadFile->handleFile($request->work_order, 'sales/sale');
             $sale = Sale::create($data);
             $detailsData = $this->makeRow($request->all());
             $saleDetail = $sale->saleDetails()->createMany($detailsData);
             $saleLink = $this->makeServiceRow($request->all(), $saleDetail);
             SaleLinkDetail::insert($saleLink);
             DB::commit();
+            return redirect()->route('sales.index')->with('success', 'Sales Created Successfully');
         } catch (Exception $err) {
             DB::rollBack();
-            dd($err->getMessage());
+            return redirect()->back()->with('error', $err->getMessage())->withInput();
         }
     }
 
@@ -81,9 +88,35 @@ class SaleController extends Controller
      * @param Sale $sales Object
      * @return Renderable
      */
-    public function update(Request $request, Sale $sales)
+    public function update(Request $request, Sale $sale)
     {
-        //
+        $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no');
+        if ($request->hasFile('sla')) {
+            $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale', $sale->sla);
+        } else {
+            $data['sla'] = $sale->sla;
+        }
+        if ($request->hasFile('work_order')) {
+            $data['work_order'] = $this->uploadFile->handleFile($request->work_order, 'sales/sale', $sale->work_order);
+        } else {
+            $data['work_order'] = $sale->work_order;
+        }
+
+        try {
+            DB::beginTransaction();
+            $sale->update($data);
+            $detailsData = $this->makeRow($request->all());
+            $sale->saleDetails()->delete();
+            $saleDetail = $sale->saleDetails()->createMany($detailsData);
+            $saleLink = $this->makeServiceRow($request->all(), $saleDetail);
+            $sale->saleLinkDetails()->delete();
+            SaleLinkDetail::insert($saleLink);
+            DB::commit();
+            return redirect()->route('sales.index')->with('success', 'Sales Updated Successfully');
+        } catch (Exception $err) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $err->getMessage())->withInput();
+        }
     }
 
     /**
@@ -91,9 +124,11 @@ class SaleController extends Controller
      * @param Sale $sales
      * @return Renderable
      */
-    public function destroy(Sale $sales)
+    public function destroy(Sale $sale)
     {
-        $sales->delete();
+        $this->uploadFile->deleteFile($sale->sla);
+        $this->uploadFile->deleteFile($sale->work_order);
+        $sale->delete();
         return redirect()->route('sales.index')->with('success', 'Sales Deleted Successfully');
     }
 
@@ -134,7 +169,8 @@ class SaleController extends Controller
                     'total_price'   => $raw['total_price'][$key][$key1],
                     'sale_id' => $saleDetail[$key]['sale_id'],
                     'sale_detail_id' => $saleDetail[$key]['id'],
-                    'created_at' => now()
+                    'created_at' => now(),
+                    'updated_at'  => now()
                 ];
             }
         }
