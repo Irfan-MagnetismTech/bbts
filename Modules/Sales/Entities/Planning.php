@@ -29,8 +29,8 @@ class Planning extends Model
     }
 
 
-    public function finalSurveyDetail()
+    public function finalSurveyDetails()
     {
-        return $this->hasOne(FinalSurveyDetail::class, 'planning_id', 'id');
+        return $this->hasMany(FinalSurveyDetail::class, 'planning_id', 'id');
     }
 }

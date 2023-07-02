@@ -15,8 +15,8 @@
     $challan_id = $is_old ? old('challan_id') : (!empty($material_utilization) ? $material_utilization?->challan_id : (!empty($challanData) ? $challanData->id: null));
     $challan_date = $is_old ? old('challan_date') : (!empty($material_utilization) ? $material_utilization?->challan?->date : (!empty($challanData) ? $challanData->date: null));
     $equipment_type = $is_old ? old('equipment_type') : (!empty($material_utilization) ? $material_utilization->equipment_type : (!empty($challanData) ? $challanData->equipment_type : null));
-    $client_name = $is_old ? old('client_name') : (!empty($material_utilization) ? $material_utilization?->client?->client_name : (!empty($challanData) ? $challanData->client->client_name : null));
-    $client_no = $is_old ? old('client_no') : (!empty($material_utilization) ? $material_utilization?->client?->client_no : (!empty($challanData) ? $challanData->client->client_no : null));
+    $client_name = $is_old ? old('client_name') : (!empty($material_utilization) ? $material_utilization?->client?->client_name : (!empty($challanData) ? $challanData?->client?->client_name : null));
+    $client_no = $is_old ? old('client_no') : (!empty($material_utilization) ? $material_utilization?->client?->client_no : (!empty($challanData) ? $challanData?->client?->client_no : null));
     $client_address = $is_old ? old('client_address') : (!empty($material_utilization) ? $material_utilization?->client?->location : (!empty($challanData) ? $challanData?->client?->location : null));
     $link_no = $is_old ? old('link_no') : (!empty($material_utilization) ? $material_utilization->link_no : (!empty($challanData) ? $challanData->link_no : null));
     $fr_no = $is_old ? old('fr_no') : (!empty($material_utilization) ? $material_utilization->fr_no : (!empty($challanData) ? $challanData->fr_no : null));
@@ -417,16 +417,12 @@
         });
 
         $(function() {
-
             $('.select2').select2();
 
             //using form custom function js file
             // fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
             // associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_name', 'get', null)
-
-            
-
-
+        
             $("#mrs_no").autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -454,25 +450,12 @@
                         $(this).val('');
                         return false;
                     }
-
                     $('#scm_requisition_id').val(ui.item.scm_requisition_id);
                     $('#mrs_no').val(ui.item.label);
-
                     return false;
                 }
-            })
-          
-
+            })                      
         });
-
-
-
-
-
-
-
-
-
 
         $(document).on('change keyup', '.type_no', function() {
                 var event_this = $(this).closest('tr');

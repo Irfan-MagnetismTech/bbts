@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('thana_id')->nullable();
             $table->string('location', 255)->nullable();
             $table->string('lat_long')->nullable();
+            $table->string('client_no')->nullable();
             $table->string('contact_name')->nullable();
             $table->string('contact_designation')->nullable();
             $table->string('contact_number')->nullable();
