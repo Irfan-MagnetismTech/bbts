@@ -3,16 +3,17 @@
 namespace Modules\Sales\Entities;
 
 use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\Costing;
+use Modules\Sales\Entities\OfferLink;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Offer extends Model
 {
     protected $guarded = [];
 
-    protected $fillable = ['client_no', 'mq_no', 'offer_validity'];
-
-    public function getOfferValidityAttribute($input)
+    public function client(): BelongsTo
     {
         return Carbon::createFromFormat('Y-m-d', $input)->format('d/m/Y');
     }
@@ -30,13 +31,17 @@ class Offer extends Model
         return $this->belongsTo(LeadGeneration::class, 'client_no', 'client_no');
     }
 
-    // public function offerLinks()
-    // {
-    //     return $this->hasMany(offerLinks::Class, 'client_no', 'client_no');
-    // }
-
-    public function offerDetails()
+    public function offerLinks(): HasMany
     {
-        return $this->hasMany(OfferDetail::class);
+        return $this->hasMany(OfferLink::class, 'offer_id', 'id');
+    }
+    public function offerDetails(): HasMany
+    {
+        return $this->hasMany(OfferDetail::class, 'offer_id', 'id');
+    }
+
+    public function costing(): BelongsTo
+    {
+        return $this->belongsTo(Costing::class, 'mq_no', 'mq_no');
     }
 }

@@ -31,7 +31,7 @@
 #dv{
     background-color: #f6f9f9!important;
     color: #191818!important;
-    height: 100vh!important;
+    height: 100%!important;
 }
 </style>
 
@@ -79,175 +79,25 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
-                
-                <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
-                                        <thead>
-                                            <th>FR</th>
-                                            <th>Link Info</th>
-                                            <th>Delvery Date</th>
-                                            <th>Offer OTC</th>
-                                            <th>Offer MRC</th>
-                                            <th>Billing Information</th>
-                                            <th>Collection Information</th>
-                                            <th>Prepaid / Postpaid</th>
-                                            <th>Bill Payment Date</th>
-                                            <th>Remarks</th>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="offer_details_row">
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="link_type[]" class="form-control"
-                                                            id="link_type" readonly>
-                                                    </div>
-                                                </td>
-                                                <td width="10px">
-                                                   <ol>
-                                                        <li>
-                                                            <div class="form-group row">
-                                                                    <div class="col-sm-10">
-                                                                        <div class="checkbox-fade fade-in-primary">
-                                                                            <label>
-                                                                                <input type="checkbox" id="checkbox" name="Language" value="Primary">
-                                                                                <span class="cr">
-                                                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                                                                </span>
-                                                                                <span>Primary</span>
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="form-group row">
-                                                                    <div class="col-sm-10">
-                                                                        <div class="checkbox-fade fade-in-primary">
-                                                                            <label>
-                                                                                <input type="checkbox" id="checkbox" name="Language" value="Secondary">
-                                                                                <span class="cr">
-                                                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                                                                </span>
-                                                                                <span>Secondary</span>
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="form-group row">
-                                                                    <div class="col-sm-10">
-                                                                        <div class="checkbox-fade fade-in-primary">
-                                                                            <label>
-                                                                                <input type="checkbox" id="checkbox" name="Language" value="Tersiary">
-                                                                                <span class="cr">
-                                                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                                                                </span>
-                                                                                <span>Tersiary</span>
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                            </div>
-                                                        </li>
-                                                   </ol>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="method[]" class="form-control"
-                                                            id="method" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="vendor[]" class="form-control"
-                                                            id="vendor" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="bbts_or_pop_or_ldp[]"
-                                                            class="form-control" id="bbtsOrPopOrLdp" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="distance[]" class="form-control"
-                                                            id="distance" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="client_equipment[]" class="form-control"
-                                                            id="client_equipment" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-check-inline">
-                                                        <label class="form-check-label" for="bbts">
-                                                            <input type="radio" class="form-check-input link_from" id="bbts" name="link_from"
-                                                                value="bbts" @checked(@$link_from == 'bbts' || ($form_method == 'POST' && !old()))>
-                                                            Prepaid
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check-inline">
-                                                        <label class="form-check-label" for="vendor">
-                                                            <input type="radio" class="form-check-input link_from" id="vendor" name="link_from"
-                                                                value=" " @checked(@$link_from == 'vendor')>
-                                                                Postpaid
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="payment_date[]" class="form-control date"
-                                                            id="payment_date" readonly>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="otc[]" class="form-control"
-                                                            id="otc" readonly>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
+            <div id='fr_details'>
 
-                                        <tr>
-                                            <td colspan="2" style="text-align: left;"></td>
-                                            <td style="text-align: center;">Total</td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control"
-                                                        id="total_mrc" readonly>
-                                                </div>
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                    </table>
+            </div>
+            <div>
+                <div class="card">
+                    <div class="card-body">
+                            <div class="row">
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                                <div class="col-3 text-right">Grand Total MRC</div>
+                                <div class="col-3">
+                                    <div class="input-group input-group-sm input-group-primary float-right" style="width:82%;">
+                                        <input type="text" name="g_total_mrc[]" class="form-control text-right"
+                                            id="g_total_mrc" readonly>
+                                    </div>
                                 </div>
-                                <button class="py-2 btn btn-success">
-                                    {{ !empty($lead_generation->id) ? 'Update' : 'Save' }}
-                                </button>
                             </div>
-
-                        </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>

@@ -3,7 +3,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Networking\Http\Controllers\NetPopEquipmentController;
+use Modules\Networking\Http\Controllers\NetServiceRequisitionController;
 
 Route::resources([
-    'pop-equipment'          => NetPopEquipmentController::class,
+    'pop-equipments'          => NetPopEquipmentController::class,
+    'service-requisitions'     => NetServiceRequisitionController::class,
 ]);

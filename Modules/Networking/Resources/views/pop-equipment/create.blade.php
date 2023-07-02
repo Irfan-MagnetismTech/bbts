@@ -3,7 +3,7 @@
 @php
     $is_old = old('type') ? true : false;
     $form_heading = !empty($err) ? 'Update' : 'Add';
-    $form_url = !empty($err) ? route('pop-equipment.update', $err->id) : route('pop-equipment.store');
+    $form_url = !empty($err) ? route('pop-equipments.update', $err->id) : route('pop-equipments.store');
     $form_method = !empty($err) ? 'PUT' : 'POST';
     
     $date = old('date', !empty($err) ? $err->date : null);
@@ -22,6 +22,7 @@
     $branch_name = old('branch_id', !empty($err) ? $err?->branch?->name : null);
     $pop_id = old('pop_id', !empty($err) ? $err->pop_id : null);
     $pop_name = old('pop_name', !empty($err) ? $err?->pop?->name : null);
+    $wo_no = old('wo_no', !empty($err) ? $err?->wo_no : null);
     $pop_address = old('pop_address', !empty($err) ? $err?->pop?->address : null);
     $inactive_date = old('inactive_date', !empty($err) ? $err->inactive_date : null);
 @endphp
@@ -51,7 +52,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('errs.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('pop-equipments.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -67,127 +68,73 @@
         'encType' => 'multipart/form-data',
         'class' => 'custom-form',
     ]) !!}
+     <div class="row">
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="pop_id" name="pop_id" required>
+                    <option value="">Select pop</option>
+                    
+                </select>
+            </div>
+        </div>
+    </div>
     <div class="row">
+       
         <div class="form-group col-3">
-            <label for="date">Applied Date:</label>
-            <input class="form-control date" id="date" name="date" aria-describedby="date"
-                value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="equipment_id" name="equipment_id" required>
+                    <option value="">Select Equipment</option>
+                    
+                </select>
+            </div>
         </div>
-
-        <div class="form-group col-3">
-            <label for="select2">Purpose</label>
-            <select class="form-control select2" id="purpose" name="purpose">
-                <option value="" selected>Select Purpose</option>
-                @foreach (config('businessinfo.errReturnFor') as $key => $value)
-                    <option value="{{ $value }}" {{ old('purpose', @$purpose) == $value ? 'selected' : '' }}>
-                        {{ $value }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="form-group col-3">
-            <label for="select2">From Branch</label>
-            <select class="form-control select2" id="branch_id" name="branch_id">
-                <option value="" selected>Select Branch</option>
-            </select>
-        </div>
-
-        <div class="form-group col-3 assigned_person">
-            <label for="assigned_person">Assigned Person:</label>
-            <input type="text" class="form-control" id="assigned_person" aria-describedby="assigned_person"
-                name="assigned_person" value="{{ old('assigned_person') ?? (@$assigned_person ?? '') }}">
-        </div>
-
-        <div class="form-group col-3 reason_of_inactive">
-            <label for="reason_of_inactive">Reason of Inactive:</label>
-            <input type="text" class="form-control" id="reason_of_inactive" aria-describedby="reason_of_inactive"
-                name="reason_of_inactive" value="{{ old('reason_of_inactive') ?? (@$reason_of_inactive ?? '') }}">
-        </div>
-
-        {{-- @dd($inactive_date) --}}
-        <div class="form-group col-3 inactive_date">
-            <label for="inactive_date">Permanently Inactive Date:</label>
-            <input class="form-control date" id="inactive_date" name="inactive_date" aria-describedby="inactive_date"
-                value="{{ old('inactive_date') ?? (@$inactive_date ?? '') }}" readonly placeholder="Select a Date">
-        </div>
+        <x-input-box colGrid="3" name="eq_description" value="{{ $wo_no }}" label="Equipment Description" />
+        <x-input-box colGrid="3" name="brand" value="{{ $wo_no }}" label="Brand" />
+        <x-input-box colGrid="3" name="model" value="{{ $wo_no }}" label="Model" />
     </div>
 
     <div class="row">
-        <div class="form-group col-3 pop_name">
-            <label for="select2">Pop Name</label>
-            <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
-                value="{{ old('pop_name') ?? (@$pop_name ?? '') }}" placeholder="Search a POP Name">
-            <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
-                value="{{ old('pop_id') ?? (@$pop_id ?? '') }}">
+      
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="equipment_type" name="equipment_type" required>
+                    <option value="">Equipment Type</option>
+                    <option value="network">Network</option>
+                    <option value="power">Power</option>
+                    <option value="tower">Tower</option>
+                    <option value="wireless">WireLess</option>
+                    
+                </select>
+            </div>
         </div>
-        <div class="form-group col-3 pop_address">
-            <label for="select2">Pop Address</label>
-            <input class="form-control" id="pop_address" name="pop_address" aria-describedby="pop_address"
-                value="{{ old('pop_address') ?? (@$pop_address ?? '') }}" readonly placeholder="Select a POP Address">
+        <x-input-box colGrid="3" name="ip_address" value="{{ $wo_no }}" label="IP Address" />
+        <x-input-box colGrid="3" name="subnet_mask" value="{{ $wo_no }}" label="Subnet Mask" />
+        <x-input-box colGrid="3" name="gateway" value="{{ $wo_no }}" label="Gate Way" />
+    </div>
+    <div class="row">
+        
+        <div class="form-group col-3">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="tower_type" name="tower_type" required>
+                    <option value="">Tower Type</option>
+                    <option value="leg_4">4 Leg</option>
+                    <option value="leg_3">3 Leg </option>
+                    
+                </select>
+            </div>
         </div>
-        <div class="form-group col-3 equipment_type">
-            <label for="equipment_type">Type:</label>
-            <select class="form-control select2" id="equipment_type" name="equipment_type">
-                <option value="Service Equipment" @if ($equipment_type == 'Service Equipment') selected @endif>Service Equipment
-                </option>
-                <option value="Link" @if ($equipment_type == 'Link') selected @endif>Link</option>
-            </select>
+        <x-input-box colGrid="3" name="tower_height" value="{{ $wo_no }}" label="Tower Height" />
+        <x-input-box colGrid="3" name="made_by" value="{{ $wo_no }}" label="Made By" />
+        <x-input-box colGrid="3" name="maintenance_date" value="{{ $wo_no }}" label="Maintenance Date" class="date"/>
+    </div>
 
-        </div>
-        <div class="form-group col-3 client_name">
-            <label for="client_name">Client Name:</label>
-            <input type="text" class="form-control" id="client_name"
-                aria-describedby="client_name" name="client_name"
-                value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
-        </div>
-
-        <div class="form-group col-3 fr_no">
-            <label for="select2">FR No</label>
-            <select class="form-control select2" id="fr_no" name="fr_no">
-                <option value="" readonly selected>Select FR No</option>
-                @if ($form_method == 'POST')
-                    <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
-                @elseif($form_method == 'PUT')
-                    @forelse ($fr_nos as $key => $value)
-                        <option value="{{ $value->fr_no }}" @if ($fr_no == $value->fr_no) selected @endif>
-                            {{ $value->fr_no }}
-                        </option>
-                    @empty
-                    @endforelse
-                @endif
-            </select>
-        </div>
-
-        <div class="form-group col-3 link_no">
-            <label for="link_no">Link No:</label>
-            <select class="form-control select2" id="link_no" name="link_no">
-                <option value="" readonly selected>Select Link No</option>
-                @if ($form_method == 'POST')
-                    <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
-                @elseif($form_method == 'PUT')
-                    @forelse ($client_links as $key => $value)
-                        <option value="{{ $value->link_no }}" @if ($client_link_no == $value->link_no) selected @endif>
-                            {{ $value->link_no }}
-                        </option>
-                    @empty
-                    @endforelse
-                @endif
-            </select>
-        </div>
-
-        <div class="form-group col-3 client_no">
-            <label for="client_no">Client No:</label>
-            <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
-        </div>
-
-        <div class="form-group col-3 client_address">
-            <label for="client_address">Client Address:</label>
-            <input type="text" class="form-control" id="client_address" name="client_address"
-                aria-describedby="client_address" readonly
-                value="{{ old('client_address') ?? (@$client_address ?? '') }}">
-        </div>
+    <div class="row">
+        
+        
+        <x-input-box colGrid="3" name="capacity" value="{{ $wo_no }}" label="Capacity" />
+        <x-input-box colGrid="3" name="port_no" value="{{ $wo_no }}" label="Port No" />
+        <x-input-box colGrid="3" name="installation_date" value="{{ $wo_no }}" label="Installation Date" class="date"/>
+        <x-input-box colGrid="3" name="remarks" value="{{ $wo_no }}" label="Remarks" />
     </div>
 
     <div class="row">

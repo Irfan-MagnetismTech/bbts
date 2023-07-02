@@ -85,18 +85,40 @@ class SaleController extends Controller
     public function getClientInfoForSales()
     {
         $items = Offer::query()
-            ->with(['client'])
+            ->with(['client', 'offerDetails.costing.costingProducts', 'offerDetails.frDetails'])
             ->whereHas('client', function ($qr) {
                 return $qr->where('client_name', 'like', '%' . request()->search . '%');
             })
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->client->client_name,
-                'label' => $item->client->client_name,
+                'label' => $item->client->client_name . ' ( ' . ($item?->mq_no ?? '') . ')',
                 'client_no' => $item->client_no,
                 'offer_id' => $item->id,
-                'mq_no' => $item->mq_no
+                'mq_no' => $item->mq_no,
+                'details' => $item->offerDetails
             ]);
         return response()->json($items);
+    }
+
+    public function getFrsBasedOnMq()
+    {
+        $items = Offer::query()
+            ->with(['client'])
+            ->where('mq_no', 'like', '%' . request()->search . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value'        => $item->mq_no,
+                'label'        => $item->mq_no . '(' . ($item?->client?->client_name ?? '') . ')',
+                'client_no'    => $item->client_no,
+                'client_name'  => $item?->client?->client_name,
+                'offer_id'     => $item->id,
+                'mq_no'        => $item->mq_no
+            ]);
+        return response()->json($items);
+    }
+
+    private function getFrData()
+    {
     }
 }

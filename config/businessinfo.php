@@ -91,4 +91,12 @@ return [
         'Increase' => 'Increase',
         'Decrease' => 'Decrease',
     ],
+
+    //ip address type
+    'ipAddressType' => [
+        'Link' => 'Link',
+        'Internet' => 'Internet',
+        'Data' => 'Data',
+        'Management' => 'Management',
+    ],
 ];

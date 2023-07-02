@@ -133,5 +133,24 @@
             </li>
         </ul>
     </li>
+    <li class="pcoded-hasmenu {{ request()->routeIs(['sales.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-mtext">Sales</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('sales.index') ? 'active' : null }}">
+                <a href="{{ route('sales.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+            <li class="{{ request()->routeIs('sales.create') ? 'active' : null }}">
+                <a href="{{ route('sales.create') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
     {{-- @endhasanyrole --}}
 </ul>
