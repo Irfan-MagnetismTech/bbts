@@ -171,9 +171,9 @@ class ClientProfileController extends Controller
     public function destroy($id)
     {
         $client_profile = Client::find($id);
-        CommonService::deleteFile('uploads/client_profile/trade_license/' . $client_profile->trade_license);
-        CommonService::deleteFile('uploads/client_profile/nid/' . $client_profile->nid);
-        CommonService::deleteFile('uploads/client_profile/photo/' . $client_profile->photo);
+        $client_profile->trade_license ? CommonService::deleteFile('uploads/client_profile/trade_license/' . $client_profile->trade_license) : '';
+        $client_profile->nid ? CommonService::deleteFile('uploads/client_profile/nid/' . $client_profile->nid) : '';
+        $client_profile->photo ? CommonService::deleteFile('uploads/client_profile/photo/' . $client_profile->photo) : '';
         $client_profile->delete();
         $client_profile->billingAddress()->delete();
         $client_profile->collectionAddress()->delete();

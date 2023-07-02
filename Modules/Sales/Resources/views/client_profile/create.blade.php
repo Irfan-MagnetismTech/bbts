@@ -699,7 +699,7 @@
                             });
                         },
                         select: function(event, ui) {
-                            $('#client_id').val(ui.item.label);
+                            $('#client_no').val(ui.item.label);
                             $('#client_name').val(ui.item.value);
                             $('#client_type').val(ui.item.client_type);
                             $('#business_type').val(ui.item.business_type);

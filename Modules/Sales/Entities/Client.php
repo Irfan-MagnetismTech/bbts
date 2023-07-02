@@ -40,12 +40,12 @@ class Client extends Model
 
     public function billingAddress()
     {
-        return $this->hasOne(BillingAddress::class, 'client_profile_id', 'id');
+        return $this->hasOne(BillingAddress::class, 'client_id', 'id');
     }
 
     public function collectionAddress()
     {
-        return $this->hasOne(CollectionAddress::class, 'client_profile_id', 'id');
+        return $this->hasOne(CollectionAddress::class, 'client_id', 'id');
     }
 
     public function division()
