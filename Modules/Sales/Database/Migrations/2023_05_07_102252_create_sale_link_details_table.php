@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('service_name')->nullable();
             $table->string('quantity')->nullable();
             $table->string('unit')->nullable();
+            $table->string('fr_no')->nullable();
             $table->string('rate')->nullable();
             $table->string('price')->nullable();
             $table->string('total_price')->nullable();
