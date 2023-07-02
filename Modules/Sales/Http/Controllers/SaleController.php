@@ -125,6 +125,7 @@ class SaleController extends Controller
             foreach ($raw['service'][$key] as $key1 => $value) {
                 $data[] = [
                     'service_name' => $raw['service'][$key][$key1],
+                    'fr_no'   => $raw['fr_no'][$key],
                     'service_name' => $raw['service'][$key][$key1],
                     'quantity'   => $raw['quantity'][$key][$key1],
                     'unit'   => $raw['unit'][$key][$key1],

@@ -3,7 +3,9 @@
 namespace Modules\Sales\Entities;
 
 use Carbon\Carbon;
+use Modules\Sales\Entities\Client;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\OfferDetail;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
@@ -36,6 +38,11 @@ class SaleDetail extends Model
     public function frDetails(): BelongsTo
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
+    }
+
+    public function offerDetails(): BelongsTo
+    {
+        return $this->belongsTo(OfferDetail::class, 'fr_no', 'fr_no');
     }
 
     public function client()
