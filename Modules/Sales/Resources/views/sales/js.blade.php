@@ -1,25 +1,36 @@
 <script>
-    $('.date').datepicker({
-        format: "dd-mm-yyyy",
-        autoclose: true,
-        todayHighlight: true,
-        showOtherMonths: true
-    });
+    
+    function initializeDate(){
+            $('.date').datepicker({
+            format: "dd-mm-yyyy",
+            autoclose: true,
+            todayHighlight: true,
+            showOtherMonths: true
+        });
+    }
 
-    $('.bankList').select2({
+    initializeDate();
+
+    function selectTwo(){
+        $('.bankList').select2({
         placeholder: 'Select an option'
-    });
+        });
+    }
+   
+    selectTwo();
 
     $('#client_name').on('keyup', function() {
             let myObject = {}
             jquaryUiAjax(this, "{{ route('get_client_info_for_sales') }}", uiList, myObject);
 
             function uiList(item) {
-                console.log(item);
                 $('#client_name').val(item.value).attr('value', item.value);
                 $('#client_no').val(item.client_no).attr('value', item.client_no);
                 $('#mq_id').val(item.mq_no).attr('value', item.mq_no);
                 $('#offer_id').val(item.offer_id).attr('value', item.offer_id);
+                console.log(item);
+                var indx = $('.checkbox').length;
+                $('#fr_details').empty();
                 var appendedData = '';
                 item.details.forEach(element => {
                     var percentage = (element.total_offer_mrc / element.costing.product_total_cost) - 1; 
@@ -29,36 +40,37 @@
                                     <div class="col-md-12">
                                         <div class="checkbox-fade fade-in-primary">
                                             <label>
-                                                <input type="checkbox" class="checkbox" name="Language" value="Primary">
+                                                <input type="checkbox" class="checkbox" value="Primary" name="checked[${indx}]">
                                                 <span class="cr">
                                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                 </span>
-                                                <span>${element.fr_details.link_name}</span>
+                                                <span>${element.fr_details.connectivity_point}</span>
+                                                <input type="hidden" class="fr_no" name="fr_no[${indx}]" value="${element.fr_no}">
                                             </label>
                                         </div>
                                         <div class="row">
-                                            <x-input-box colGrid="3" name="delivery_date" value="{{ $delivery_date ?? '' }}" label="Delivery Date" class="date"/>
-                                            <x-input-box colGrid="3" name="billing_address" value="{{ $billing_address ?? '' }}" label="Billing Address" />
-                                            <x-input-box colGrid="3" name="collection_address" value="{{ $collection_address ?? '' }}" label="Collection Address" />
-                                            <x-input-box colGrid="3" name="bill_payment_date" value="{{ $bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
+                                            <x-input-box colGrid="3" name="delivery_date[${indx}]" value="{{ $delivery_date ?? '' }}" label="Delivery Date" class="date"/>
+                                            <x-input-box colGrid="3" name="billing_address[${indx}]" value="{{ $billing_address ?? '' }}" label="Billing Address" />
+                                            <x-input-box colGrid="3" name="collection_address[${indx}]" value="{{ $collection_address ?? '' }}" label="Collection Address" />
+                                            <x-input-box colGrid="3" name="bill_payment_date[${indx}]" value="{{ $bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
                                             <div class="col-3">
                                                 <div class="form-check-inline">
-                                                    <label class="form-check-label" for="bbts">
-                                                        <input type="radio" class="form-check-input link_from" id="bbts" name="link_from"
-                                                            value="bbts" @checked(@$link_from == 'bbts' || ($form_method == 'POST' && !old()))>
+                                                    <label class="form-check-label" for="prepaid">
+                                                        <input type="radio" class="form-check-input payment_status" id="prepaid" name="payment_status[${indx}]"
+                                                            value="prepaid" @checked(@$payment_status == 'prepaid' || ($form_method == 'POST' && !old()))>
                                                         Prepaid
                                                     </label>
                                                 </div>
                                                 <div class="form-check-inline">
-                                                    <label class="form-check-label" for="vendor">
-                                                        <input type="radio" class="form-check-input link_from" id="vendor" name="link_from"
-                                                            value=" " @checked(@$link_from == 'vendor')>
+                                                    <label class="form-check-label" for="postpaid">
+                                                        <input type="radio" class="form-check-input payment_status" id="postpaid" name="payment_status[${indx}]"
+                                                            value="postpaid" @checked(@$payment_status == 'postpaid')>
                                                             Postpaid
                                                     </label>
                                                 </div>
                                             </div>
-                                            <x-input-box colGrid="3" name="mrc" value="${element.total_offer_mrc}" label="MRC" />
-                                            <x-input-box colGrid="3" name="otc" value="${element.total_offer_otc}" label="OTC" />
+                                            <x-input-box colGrid="3" name="mrc[${indx}]" value="${element.total_offer_mrc}" label="MRC" />
+                                            <x-input-box colGrid="3" name="otc[${indx}]" value="${element.total_offer_otc}" label="OTC" />
                                         </div>
                                         <div>
 
@@ -81,38 +93,38 @@
                                                     appendedData += `<tr>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="link_type[]" class="form-control text-center"
-                                                                    id="link_type" readonly value="${itm.product_id}">
+                                                                <input type="text" name="service[${indx}][]" class="form-control text-center"
+                                                                    id="service" readonly value="${itm.product_id}">
                                                             </div>
                                                         </td>
                                                         <td> 
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="vendor[]" class="form-control text-right"
-                                                                    id="vendor" readonly value="${itm.quantity}">
+                                                                <input type="text" name="quantity[${indx}][]" class="form-control text-right"
+                                                                    id="quantity" readonly value="${itm.quantity}">
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="vendor[]" class="form-control text-center"
-                                                                    id="vendor" readonly value="${itm.unit}">
+                                                                <input type="text" name="unit[${indx}][]" class="form-control text-center"
+                                                                    id="unit" readonly value="${itm.unit}">
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="bbts_or_pop_or_ldp[]"
-                                                                    class="form-control text-right" id="bbtsOrPopOrLdp" readonly value="${itm.rate}">
+                                                                <input type="text" name="rate[${indx}][]"
+                                                                    class="form-control text-right" readonly value="${itm.rate}">
                                                             </div>
                                                         </td>
                                                         <td class="d-none">
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="bbts_or_pop_or_ldp[]"
+                                                                <input type="text" name="price[${indx}][]"
                                                                     class="form-control text-right" readonly value="${(Number(percentage) * Number(itm.rate)) + Number(itm.rate)}">
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="bbts_or_pop_or_ldp[]"
-                                                                    class="form-control text-right" id="bbtsOrPopOrLdp" readonly value="${((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity)}">
+                                                                <input type="text" name="total_price[${indx}][]"
+                                                                    class="form-control text-right" readonly value="${((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity)}">
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -128,17 +140,7 @@
                                                         <td style="text-align: center;">Total MRC</td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="total_mrc" class="form-control text-right total_mrc" readonly value="${total}">
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="3" style="text-align: left;"></td>
-                                                        <td style="text-align: center;">Total OTC</td>
-                                                        <td>
-                                                            <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="total_otc" class="form-control"
-                                                                    id="total_otc" readonly>
+                                                                <input type="text" name="total_mrc[${indx}]" class="form-control text-right total_mrc" readonly value="${total}">
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -152,6 +154,8 @@
                 `
                 });
                 $('#fr_details').append(appendedData);
+                initializeDate();
+                selectTwo();
                 return false;
             }
         })

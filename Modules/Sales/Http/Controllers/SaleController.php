@@ -2,12 +2,15 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
 use Modules\Sales\Entities\Sale;
 use Modules\SCM\Entities\ScmMur;
 use Modules\Sales\Entities\Offer;
 use Illuminate\Routing\Controller;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\SaleLinkDetail;
 
 class SaleController extends Controller
 {
@@ -37,7 +40,19 @@ class SaleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no');
+            $sale = Sale::create($data);
+            $detailsData = $this->makeRow($request->all());
+            $saleDetail = $sale->saleDetails()->createMany($detailsData);
+            $saleLink = $this->makeServiceRow($request->all(), $saleDetail);
+            SaleLinkDetail::insert($saleLink);
+            DB::commit();
+        } catch (Exception $err) {
+            DB::rollBack();
+            dd($err->getMessage());
+        }
     }
 
     /**
@@ -55,9 +70,9 @@ class SaleController extends Controller
      * @param Sale $sales
      * @return Renderable
      */
-    public function edit(Sale $sales)
+    public function edit(Sale $sale)
     {
-        return view('sales::edit');
+        return view('sales::sales.create', compact('sale'));
     }
 
     /**
@@ -80,6 +95,49 @@ class SaleController extends Controller
     {
         $sales->delete();
         return redirect()->route('sales.index')->with('success', 'Sales Deleted Successfully');
+    }
+
+    private function makeRow($raw)
+    {
+        $data = [];
+        foreach ($raw['fr_no'] as $key => $value) {
+            $data[] = [
+                'checked' => $raw['checked'][$key] ? 1 : 0,
+                'fr_no'   => $raw['fr_no'][$key],
+                'client_no'   => $raw['client_no'],
+                'delivery_date'   => $raw['delivery_date'][$key],
+                'billing_address'   => $raw['billing_address'][$key],
+                'collection_address'   => $raw['collection_address'][$key],
+                'bill_payment_date'   => $raw['bill_payment_date'][$key],
+                'payment_status'   => $raw['payment_status'][$key],
+                'mrc'   => $raw['mrc'][$key],
+                'otc'   => $raw['otc'][$key],
+                'total_mrc'   => $raw['total_mrc'][$key],
+            ];
+        }
+        return $data;
+    }
+
+    private function makeServiceRow($raw, $saleDetail)
+    {
+        $data = [];
+        foreach ($raw['fr_no'] as $key => $value) {
+            foreach ($raw['service'][$key] as $key1 => $value) {
+                $data[] = [
+                    'service_name' => $raw['service'][$key][$key1],
+                    'service_name' => $raw['service'][$key][$key1],
+                    'quantity'   => $raw['quantity'][$key][$key1],
+                    'unit'   => $raw['unit'][$key][$key1],
+                    'rate'   => $raw['rate'][$key][$key1],
+                    'price'   => $raw['price'][$key][$key1],
+                    'total_price'   => $raw['total_price'][$key][$key1],
+                    'sale_id' => $saleDetail[$key]['sale_id'],
+                    'sale_detail_id' => $saleDetail[$key]['id'],
+                    'created_at' => now()
+                ];
+            }
+        }
+        return $data;
     }
 
     public function getClientInfoForSales()

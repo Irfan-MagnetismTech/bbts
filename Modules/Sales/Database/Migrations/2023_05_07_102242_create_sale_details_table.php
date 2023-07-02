@@ -17,9 +17,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('sale_id')->nullable();
             $table->string('client_no')->nullable();
+            $table->string('billing_address')->nullable();
+            $table->string('collection_address')->nullable();
             $table->string('fr_no')->nullable();
+            $table->string('billpayment_date')->nullable();
+            $table->string('payment_status')->nullable();
             $table->float('otc', 8, 2)->nullable();
             $table->float('mrc', 8, 2)->nullable();
+            $table->float('total', 8, 2)->nullable();
             $table->date('delivery_date')->nullable();
             $table->timestamps();
         });

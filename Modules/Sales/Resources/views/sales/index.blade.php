@@ -25,27 +25,23 @@
             <thead>
                 <tr>
                     <th>Client Name</th>
-                    <th>Visit Date</th>
-                    <th>Time of Work Started</th>
-                    <th>Time of Work Ended</th>
-                    <th>Contact Person</th>
-                    <th>Phone</th>
-                    <th>Purpose</th>
-                    <th>Status</th>
+                    <th>Account Holder</th>
+                    <th>Contract Duration</th>
+                    <th>Effective Date</th>
+                    <th>Work Order No</th>
+                    <th>MQ No</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($sales as $sale)
                     <tr>
-                        <td>{{ $sale->id ?? '' }}</td>
-                        <td>{{ $sale->id }}</td>
-                        <td>{{ $sale->id }}</td>
-                        <td>{{ $sale->id }}</td>
-                        <td>{{ $sale->id ?? '' }}</td>
-                        <td>{{ $sale->id ?? '' }}</td>
-                        <td>{{ $sale->id }}</td>
-                        <td>{{ $sale->id }}</td>
+                        <td>{{ $sale->client->client_name ?? '' }}</td>
+                        <td>{{ $sale->account_holder }}</td>
+                        <td>{{ $sale->contract_duration }}</td>
+                        <td>{{ $sale->effective_date }}</td>
+                        <td>{{ $sale->wo_no ?? '' }}</td>
+                        <td>{{ $sale->mq_no ?? '' }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
@@ -72,13 +68,11 @@
             <tfoot>
                 <tr>
                     <th>Client Name</th>
-                    <th>Visit Date</th>
-                    <th>Time of Work Started</th>
-                    <th>Time of Work Ended</th>
-                    <th>Contact Person</th>
-                    <th>Phone</th>
-                    <th>Purpose</th>
-                    <th>Status</th>
+                    <th>Account Holder</th>
+                    <th>Contract Duration</th>
+                    <th>Effective Date</th>
+                    <th>Work Order No</th>
+                    <th>MQ No</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
