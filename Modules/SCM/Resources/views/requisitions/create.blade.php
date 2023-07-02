@@ -320,7 +320,6 @@
         @if ($formType === 'edit')
             client_details = {!! collect($clientInfos) !!}
         @endif
-    
 
         //Select FR key based on link name
         $('#client_links').on('change', function() {
