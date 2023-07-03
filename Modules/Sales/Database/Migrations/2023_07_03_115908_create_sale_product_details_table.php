@@ -13,12 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sale_link_details', function (Blueprint $table) {
+        Schema::create('sale_product_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sale_id')->nullable();
             $table->unsignedBigInteger('sale_detail_id')->nullable();
+            $table->integer('service_id')->nullable();
+            $table->string('service_name')->nullable();
+            $table->string('quantity')->nullable();
+            $table->string('unit')->nullable();
             $table->string('fr_no')->nullable();
-            $table->string('link_no')->nullable();
+            $table->string('rate')->nullable();
+            $table->string('price')->nullable();
+            $table->string('total_price')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sale_link_details');
+        Schema::dropIfExists('sale_product_details');
     }
 };

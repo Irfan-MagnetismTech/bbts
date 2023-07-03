@@ -88,11 +88,11 @@
                         @endphp
                         <div class="card">
                             <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
                                             <div class="checkbox-fade fade-in-primary">
                                                 <label>
-                                                    <input type="checkbox" class="checkbox" value="Primary" name="checked[{{$key}}]">
+                                                    <input type="checkbox" class="checkbox" value="Primary" name="checked[{{$key}}]" @if($value->checked == 1)
+                                                        checked=True
+                                                    @endif>
                                                     <span class="cr">
                                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                     </span>
@@ -102,8 +102,10 @@
                                             </div>
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[{{$key}}]" value="{{ $value->delivery_date ?? '' }}" label="Delivery Date" class="date"/>
-                                                <x-input-box colGrid="3" name="billing_address[{{$key}}]" value="{{ $value->billing_address ?? '' }}" label="Billing Address" />
-                                                <x-input-box colGrid="3" name="collection_address[{{$key}}]" value="{{ $value->collection_address ?? '' }}" label="Collection Address" />
+                                                <x-input-box colGrid="2" name="billing_address[{{$key}}]" value="{{ $value->billing_address ?? '' }}" label="Billing Address" />
+                                                <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add"></i></span>
+                                                <x-input-box colGrid="2" name="collection_address[{{$key}}]" value="{{ $value->collection_address ?? '' }}" label="Collection Address" />
+                                                <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add"></i></span>
                                                 <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
                                                 <div class="col-3">
                                                     <div class="form-check-inline">
@@ -142,7 +144,7 @@
                                                             <td>
                                                                 <div class="input-group input-group-sm input-group-primary">
                                                                     <input type="text" name="service[{{$key}}][]" class="form-control text-center"
-                                                                        id="service" readonly value="${itm.product_id}">
+                                                                        id="service" readonly value="{{$val->service_name}}">
                                                                 </div>
                                                             </td>
                                                             <td> 
@@ -191,10 +193,8 @@
                                                     </tfoot>
                                                 </table>
                                             </div>
-                                        </div>
-                                    </div>
-                            </div>
                         </div>
+                    </div>
                     @endforeach
                     
                 @endif
@@ -210,16 +210,15 @@
                                 <div class="col-3">
                                     <div class="input-group input-group-sm input-group-primary float-right" style="width:82%;">
                                         <input type="text" name="grand_total" class="form-control text-right"
-                                            id="grand_total" readonly>
+                                            id="grand_total" readonly value="{{$grand_total}}">
                                     </div>
                                 </div>
                             </div>
                     </div>
-                </div>
             </div>
             <div class="card">
                 <button class="py-2 btn btn-success">
-                    {{ !empty($lead_generation->id) ? 'Update' : 'Save' }}
+                    {{ !empty($sale->id) ? 'Update' : 'Save' }}
                 </button>
             </div>
         </div>

@@ -3,8 +3,9 @@
 namespace Modules\Sales\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Sales\Entities\OfferDetail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OfferLink extends Model
 {
@@ -12,9 +13,9 @@ class OfferLink extends Model
 
     protected $fillable = ['offer_id', 'offer_details_id', 'link_id', 'link_type', 'option', 'connectivity_status', 'method', 'vendor', 'bts_pop_ldp', 'distance', 'client_equipment_amount', 'otc', 'mo_cost', 'offer_otc', 'total_cost', 'offer_mrc'];
 
-    public function offerDetails(): HasMany
+    public function offerDetails(): BelongsTo
     {
-        return $this->hasMany(OfferDetail::class, 'offer_details_id', 'id');
+        return $this->belongsTo(OfferDetail::class, 'id', 'offer_detail_id');
     }
 
     public function offer(): BelongsTo
