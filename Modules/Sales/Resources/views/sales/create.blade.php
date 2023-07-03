@@ -88,8 +88,6 @@
                         @endphp
                         <div class="card">
                             <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
                                             <div class="checkbox-fade fade-in-primary">
                                                 <label>
                                                     <input type="checkbox" class="checkbox" value="Primary" name="checked[{{$key}}]" @if($value->checked == 1)
@@ -105,7 +103,7 @@
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[{{$key}}]" value="{{ $value->delivery_date ?? '' }}" label="Delivery Date" class="date"/>
                                                 <x-input-box colGrid="2" name="billing_address[{{$key}}]" value="{{ $value->billing_address ?? '' }}" label="Billing Address" />
-                                                 <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add"></i></span>
+                                                <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add"></i></span>
                                                 <x-input-box colGrid="2" name="collection_address[{{$key}}]" value="{{ $value->collection_address ?? '' }}" label="Collection Address" />
                                                 <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add"></i></span>
                                                 <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
@@ -195,10 +193,8 @@
                                                     </tfoot>
                                                 </table>
                                             </div>
-                                        </div>
-                                    </div>
-                            </div>
                         </div>
+                    </div>
                     @endforeach
                     
                 @endif
@@ -219,7 +215,6 @@
                                 </div>
                             </div>
                     </div>
-                </div>
             </div>
             <div class="card">
                 <button class="py-2 btn btn-success">

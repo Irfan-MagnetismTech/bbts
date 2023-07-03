@@ -12,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\SaleProductDetail;
 
 class SaleController extends Controller
 {
@@ -52,8 +53,10 @@ class SaleController extends Controller
             $sale = Sale::create($data);
             $detailsData = $this->makeRow($request->all());
             $saleDetail = $sale->saleDetails()->createMany($detailsData);
-            $saleLink = $this->makeServiceRow($request->all(), $saleDetail);
+            $saleService = $this->makeServiceRow($request->all(), $saleDetail);
+            $saleLink = $this->makeLinkRow($request->all(), $saleDetail);
             SaleLinkDetail::insert($saleLink);
+            SaleProductDetail::insert($saleService);
             DB::commit();
             return redirect()->route('sales.index')->with('success', 'Sales Created Successfully');
         } catch (Exception $err) {
@@ -108,9 +111,12 @@ class SaleController extends Controller
             $detailsData = $this->makeRow($request->all());
             $sale->saleDetails()->delete();
             $saleDetail = $sale->saleDetails()->createMany($detailsData);
-            $saleLink = $this->makeServiceRow($request->all(), $saleDetail);
+            $saleService = $this->makeServiceRow($request->all(), $saleDetail);
             $sale->saleLinkDetails()->delete();
+            $sale->saleProductDetails()->delete();
+            $saleLink = $this->makeLinkRow($request->all(), $saleDetail);
             SaleLinkDetail::insert($saleLink);
+            SaleProductDetail::insert($saleService);
             DB::commit();
             return redirect()->route('sales.index')->with('success', 'Sales Updated Successfully');
         } catch (Exception $err) {
@@ -128,6 +134,8 @@ class SaleController extends Controller
     {
         $this->uploadFile->deleteFile($sale->sla);
         $this->uploadFile->deleteFile($sale->work_order);
+        $sale->saleDetails()->delete();
+        $sale->saleLinkDetails()->delete();
         $sale->delete();
         return redirect()->route('sales.index')->with('success', 'Sales Deleted Successfully');
     }
@@ -177,10 +185,29 @@ class SaleController extends Controller
         return $data;
     }
 
+
+    private function makeLinkRow($raw, $saleDetail)
+    {
+        $data = [];
+        foreach ($raw['fr_no'] as $key => $value) {
+            foreach ($raw['link_no'][$key] as $key1 => $value) {
+                $data[] = [
+                    'link_no' => $raw['link_no'][$key][$key1],
+                    'fr_no'   => $raw['fr_no'][$key],
+                    'sale_id' => $saleDetail[$key]['sale_id'],
+                    'sale_detail_id' => $saleDetail[$key]['id'],
+                    'created_at' => now(),
+                    'updated_at'  => now()
+                ];
+            }
+        }
+        return $data;
+    }
+
     public function getClientInfoForSales()
     {
         $items = Offer::query()
-            ->with(['client', 'offerDetails.costing.costingProducts', 'offerDetails.frDetails'])
+            ->with(['client', 'offerDetails.costing.costingProducts', 'offerDetails.frDetails', 'offerDetails.offerLink'])
             ->whereHas('client', function ($qr) {
                 return $qr->where('client_name', 'like', '%' . request()->search . '%');
             })
