@@ -217,3 +217,5 @@
         </form>
     </div>
 @endsection
+
+@include('networking::physical-connectivities.js')
