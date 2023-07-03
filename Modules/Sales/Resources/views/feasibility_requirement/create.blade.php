@@ -100,7 +100,7 @@
                                     <tr>
                                         <th rowspan="2">Name of the Link</th>
                                         <th rowspan="2">Agreegation Type</th>
-                                        <th colspan="5">Connectivity Address</th>
+                                        <th colspan="6">Connectivity Address</th>
                                         <th colspan="5">Local Contact Details</th>
                                     </tr>
                                     <tr>
@@ -108,7 +108,8 @@
                                         <th>District</th>
                                         <th>Thana</th>
                                         <th>Location</th>
-                                        <th>LatLong</th>
+                                        <th>Latitue</th>
+                                        <th>Longitude</th>
                                         <th>Name</th>
                                         <th>Designation</th>
                                         <th>Con. No.</th>
@@ -127,9 +128,9 @@
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <input type="hidden" name="detail_id[]"
                                                             value="{{ $item->id }}">
-                                                        <input type="text" name="link_name[]" class="form-control"
-                                                            value="{{ $item->link_name }}" autocomplete="off"
-                                                            placeholder="Link name">
+                                                        <input type="text" name="connectivity_point[]"
+                                                            class="form-control" value="{{ $item->connectivity_point }}"
+                                                            autocomplete="off" placeholder="Connectivity Point">
                                                     </div>
                                                 </td>
                                                 <td>
@@ -203,9 +204,16 @@
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="lat_long[]" class="form-control"
-                                                            value="{{ $item->lat_long }}" autocomplete="off"
-                                                            placeholder="LatLong">
+                                                        <input type="text" name="lat[]" class="form-control"
+                                                            value="{{ $item->lat }}" autocomplete="off"
+                                                            placeholder="Latitue">
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <input type="text" name="long[]" class="form-control"
+                                                            value="{{ $item->long }}" autocomplete="off"
+                                                            placeholder="Longitude">
                                                     </div>
                                                 </td>
                                                 <td>
@@ -247,8 +255,9 @@
                                         <tr class="feasibility_details_row">
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="link_name[]" class="form-control"
-                                                        id="link_name" autocomplete="off" placeholder="Link Name">
+                                                    <input type="text" name="connectivity_point[]"
+                                                        class="form-control" id="connectivity_point" autocomplete="off"
+                                                        placeholder="Connectivity Point">
                                                 </div>
                                             </td>
                                             <td>
@@ -299,8 +308,14 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="lat_long[]" class="form-control"
-                                                        id="latlong" autocomplete="off" placeholder="LatLong">
+                                                    <input type="text" name="lat[]" class="form-control"
+                                                        id="latlong" autocomplete="off" placeholder="Latitute">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="long[]" class="form-control"
+                                                        id="latlong" autocomplete="off" placeholder="Longitute">
                                                 </div>
                                             </td>
                                             <td>
@@ -408,7 +423,24 @@
                     function addRow() {
                         $('.feasibility_details_row').first().clone().appendTo('tbody');
                         $('.feasibility_details_row').last().find('input').val('');
+                        $('.feasibility_details_row').last().find('select').val('');
                     };
+
+                    $(document).keydown(function(event) {
+                        if (event.ctrlKey && event.key === 'Insert') {
+                            event.preventDefault();
+                            addRow();
+                        }
+                    });
+
+                    $(document).keydown(function(event) {
+                        if (event.ctrlKey && event.key === 'Delete') {
+                            event.preventDefault();
+                            if ($('.feasibility_details_row').length > 1) {
+                                $('.feasibility_details_row').last().remove();
+                            }
+                        }
+                    });
 
                     $(document).on('click', '.removeRow', function() {
                         let count = $('.feasibility_details_row').length;
@@ -449,9 +481,10 @@
                                 });
                             },
                             select: function(event, ui) {
-                                $('#client_id').val(ui.item.label);
-                                $('#client_name').val(ui.item.value);
-                                $('#lead_generation_id').val(ui.item.lead_generation_id);
+                                $('#client_id').val(ui.item.label).attr('value', ui.item.label);
+                                $('#client_name').val(ui.item.value).attr('value', ui.item.value);
+                                $('#lead_generation_id').val(ui.item.lead_generation_id).attr('value', ui.item
+                                    .lead_generation_id);
                                 return false;
                             }
                         });

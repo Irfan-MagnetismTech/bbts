@@ -50,7 +50,7 @@
                             $category_data = $category_data ?? [];
                             $aggregation_type = $connectivity_requirement->aggregation_type ?? null;
                             $from_location = $connectivity_requirement->fromLocation->fr_no ?? null;
-                            $link_name = $connectivity_requirement->fromLocation->link_name;
+                            $connectivity_point = $connectivity_requirement->fromLocation->connectivity_point ?? null;
                             $fr_no = $connectivity_requirement->fr_no;
                             $product_id = $product_id ?? null;
                             $capacity = $capacity ?? null;
@@ -97,8 +97,8 @@
                         </div>
                         <div class="md-col-4 col-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="fr_id">Link Name</label>
-                                <span class="form-control">{{ $link_name }}</span>
+                                <label class="input-group-addon" for="fr_id">Connectivity Point</label>
+                                <span class="form-control">{{ $connectivity_point }}</span>
                             </div>
                         </div>
                     </div>

@@ -32,7 +32,7 @@
                     <th>Client No</th>
                     <th>MQ No</th>
                     <th>Total FR </th>
-                    <th>Survey/Planing</th>
+                    <th>Survey/Planing/Costing</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -57,9 +57,13 @@
                         <td>{{ $feasibility_requirement->client_no }}</td>
                         <td>{{ $feasibility_requirement->mq_no }}</td>
                         <td>{{ $feasibility_requirement->feasibilityRequirementDetails->count() }}</td>
-                        <td>{{ $feasibility_requirement->feasibilityRequirementDetails[0]->surveySum->count() ?? '' }}/
-                            {{ $feasibility_requirement->feasibilityRequirementDetails[0]->planningSum->count() ?? '' }} /
-                            {{ $feasibility_requirement->feasibilityRequirementDetails[0]->costingSum->count() ?? '' }}
+                        <td>
+                            @if ($feasibility_requirement->feasibilityRequirementDetails->count() > 0)
+                                {{ $feasibility_requirement->feasibilityRequirementDetails[0]->surveySum->count() ?? '' }}/
+                                {{ $feasibility_requirement->feasibilityRequirementDetails[0]->planningSum->count() ?? '' }}
+                                /
+                                {{ $feasibility_requirement->feasibilityRequirementDetails[0]->costingSum->count() ?? '' }}
+                            @endif
                         </td>
                         </td>
                         <td>{{ $feasibility_requirement->is_existing }}</td>

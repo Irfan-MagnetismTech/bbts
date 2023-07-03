@@ -60,19 +60,25 @@
                                 </tr>
                                 <tr>
                                     <th>Lat-Long</th>
-                                    <td>{{ $lead_generation->lat_long }}</td>
+                                    <td>{{ $lead_generation->lat }}</td>
+                                    <th>Lat-Long</th>
+                                    <td>{{ $lead_generation->long }}</td>
+
+                                </tr>
+                                <tr>
                                     <th>Contact Person</th>
                                     <td>{{ $lead_generation->contact_person }}</td>
-                                </tr>
-                                <tr>
                                     <th>Contact No</th>
                                     <td>{{ $lead_generation->contact_no }}</td>
-                                    <th>Email</th>
-                                    <td>{{ $lead_generation->email }}</td>
+
                                 </tr>
                                 <tr>
+                                    <th>Email</th>
+                                    <td>{{ $lead_generation->email }}</td>
                                     <th>Website</th>
                                     <td>{{ $lead_generation->website }}</td>
+                                </tr>
+                                <tr>
                                     <th>Document</th>
                                     <td>
                                         @if ($lead_generation->document)

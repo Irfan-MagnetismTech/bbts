@@ -22,7 +22,8 @@ return new class extends Migration
             $table->integer('district_id')->nullable();
             $table->integer('thana_id')->nullable();
             $table->string('landmark')->nullable();
-            $table->string('lat_long')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('long')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('designation')->nullable();
             $table->string('contact_no')->nullable();

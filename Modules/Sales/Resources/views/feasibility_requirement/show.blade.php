@@ -81,7 +81,7 @@
                                 <tr>
                                     <th rowspan="2">FR No</th>
                                     <th rowspan="2">Name of the Link</th>
-                                    <th colspan="5">Connectivity Address</th>
+                                    <th colspan="6">Connectivity Address</th>
                                     <th colspan="5">Local Contact Details</th>
                                 </tr>
                                 <tr>
@@ -89,7 +89,8 @@
                                     <th>District</th>
                                     <th>Thana</th>
                                     <th>Location</th>
-                                    <th>LatLong</th>
+                                    <th>Latitude</th>
+                                    <th>Longitude</th>
                                     <th>Name</th>
                                     <th>Designation</th>
                                     <th>Con. No.</th>
@@ -108,7 +109,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->link_name }}</span>
+                                                    <span class="form-control">{{ $item->connectivity_point }}</span>
                                                 </div>
                                             </td>
                                             <td>
@@ -133,7 +134,12 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->lat_long }}</span>
+                                                    <span class="form-control">{{ $item->lat }}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <span class="form-control">{{ $item->long }}</span>
                                                 </div>
                                             </td>
                                             <td>
@@ -157,12 +163,12 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                @if (!empty($item->planning))
+                                                @if (!empty($item->planning) && !empty($item->survey) && !empty($item->connectivityRequirement))
                                                     <div class="input-group input-group-sm input-group-success">
                                                         <a href="{{ route('add-costing', $item->id) }}"
                                                             class="btn btn-sm btn-success">Add Costing</a>
                                                     </div>
-                                                @elseif (!empty($item->survey))
+                                                @elseif (!empty($item->survey && $item->connectivityRequirement))
                                                     <div class="input-group input-group-sm input-group-success">
                                                         <a href="{{ route('add-planning', $item->id) }}"
                                                             class="btn btn-sm btn-success">Add Planning</a>
