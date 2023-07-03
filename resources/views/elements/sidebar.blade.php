@@ -50,7 +50,7 @@
                         </a>
                     </li>
                     <li class="{{ request()->routeIs('dataencoding.employees.*') ? 'active' : null }}">
-                        <a href="javascript:void(0)">
+                        <a href="{{ route('dataencoding.employees.index') }}">
                             <span class="pcoded-micon"><i class="icon-pie-chart"></i></span>
                             <span class="pcoded-mtext"> Employee </span>
                             <span class="pcoded-mcaret"></span>

@@ -10,7 +10,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ url('employees') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ url('dataencoding/employees') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')

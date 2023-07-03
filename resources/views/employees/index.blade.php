@@ -11,7 +11,7 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ url('employees/create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
+    <a href="{{ url('dataencoding/employees/create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
 @endsection
 
 @section('sub-title')
@@ -81,10 +81,6 @@
         };
         window.onload = init;
 
-        $(document).ready(function () {
-            $('#dataTable').DataTable({
-                stateSave: true
-            });
-        });
+       
     </script>
 @endsection
