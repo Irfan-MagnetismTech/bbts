@@ -245,4 +245,4 @@
     </form>
 @endsection
 
-
+@include('scm::requisitions.js')
