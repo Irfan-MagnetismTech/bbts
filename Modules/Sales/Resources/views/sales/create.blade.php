@@ -9,7 +9,7 @@
 @endphp
 
 @section('breadcrumb-title')
-    {{ ucfirst($form_heading) }} sale
+    {{ ucfirst($form_heading) }} Sale
 @endsection
 
 @section('breadcrumb-button')
@@ -33,6 +33,14 @@
     color: #191818!important;
     height: 100%!important;
 }
+.btn.btn-icon {
+    border-radius: 50%!important;
+    width: 25px!important;
+    line-height: 20px!important;
+    height: 25px!important;
+    padding: 3px!important;
+    text-align: center!important;
+}
 </style>
 
     {!! Form::open([
@@ -46,7 +54,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="tableHeading">
-                    <h5> <span> &#10070; </span> sale <span>&#10070;</span> </h5>
+                    <h5> <span> &#10070; </span> Sale <span>&#10070;</span> </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">

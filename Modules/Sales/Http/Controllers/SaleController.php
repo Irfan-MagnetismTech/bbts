@@ -136,6 +136,7 @@ class SaleController extends Controller
         $this->uploadFile->deleteFile($sale->work_order);
         $sale->saleDetails()->delete();
         $sale->saleLinkDetails()->delete();
+        $sale->saleProductDetails()->delete();
         $sale->delete();
         return redirect()->route('sales.index')->with('success', 'Sales Deleted Successfully');
     }
@@ -145,17 +146,17 @@ class SaleController extends Controller
         $data = [];
         foreach ($raw['fr_no'] as $key => $value) {
             $data[] = [
-                'checked' => $raw['checked'][$key] ? 1 : 0,
-                'fr_no'   => $raw['fr_no'][$key],
-                'client_no'   => $raw['client_no'],
-                'delivery_date'   => $raw['delivery_date'][$key],
-                'billing_address'   => $raw['billing_address'][$key],
-                'collection_address'   => $raw['collection_address'][$key],
-                'bill_payment_date'   => $raw['bill_payment_date'][$key],
-                'payment_status'   => $raw['payment_status'][$key],
-                'mrc'   => $raw['mrc'][$key],
-                'otc'   => $raw['otc'][$key],
-                'total_mrc'   => $raw['total_mrc'][$key],
+                'checked'               => $raw['checked'][$key] ? 1 : 0,
+                'fr_no'                 => $raw['fr_no'][$key],
+                'client_no'             => $raw['client_no'],
+                'delivery_date'         => $raw['delivery_date'][$key],
+                'billing_address'       => $raw['billing_address'][$key],
+                'collection_address'    => $raw['collection_address'][$key],
+                'bill_payment_date'     => $raw['bill_payment_date'][$key],
+                'payment_status'        => $raw['payment_status'][$key],
+                'mrc'                   => $raw['mrc'][$key],
+                'otc'                   => $raw['otc'][$key],
+                'total_mrc'             => $raw['total_mrc'][$key],
             ];
         }
         return $data;
@@ -167,18 +168,18 @@ class SaleController extends Controller
         foreach ($raw['fr_no'] as $key => $value) {
             foreach ($raw['service'][$key] as $key1 => $value) {
                 $data[] = [
-                    'service_name' => $raw['service'][$key][$key1],
-                    'fr_no'   => $raw['fr_no'][$key],
-                    'service_name' => $raw['service'][$key][$key1],
-                    'quantity'   => $raw['quantity'][$key][$key1],
-                    'unit'   => $raw['unit'][$key][$key1],
-                    'rate'   => $raw['rate'][$key][$key1],
-                    'price'   => $raw['price'][$key][$key1],
-                    'total_price'   => $raw['total_price'][$key][$key1],
-                    'sale_id' => $saleDetail[$key]['sale_id'],
-                    'sale_detail_id' => $saleDetail[$key]['id'],
-                    'created_at' => now(),
-                    'updated_at'  => now()
+                    'service_name'      => $raw['service'][$key][$key1],
+                    'fr_no'             => $raw['fr_no'][$key],
+                    'service_name'      => $raw['service'][$key][$key1],
+                    'quantity'          => $raw['quantity'][$key][$key1],
+                    'unit'              => $raw['unit'][$key][$key1],
+                    'rate'              => $raw['rate'][$key][$key1],
+                    'price'             => $raw['price'][$key][$key1],
+                    'total_price'       => $raw['total_price'][$key][$key1],
+                    'sale_id'           => $saleDetail[$key]['sale_id'],
+                    'sale_detail_id'    => $saleDetail[$key]['id'],
+                    'created_at'        => now(),
+                    'updated_at'        => now()
                 ];
             }
         }
@@ -192,12 +193,13 @@ class SaleController extends Controller
         foreach ($raw['fr_no'] as $key => $value) {
             foreach ($raw['link_no'][$key] as $key1 => $value) {
                 $data[] = [
-                    'link_no' => $raw['link_no'][$key][$key1],
-                    'fr_no'   => $raw['fr_no'][$key],
-                    'sale_id' => $saleDetail[$key]['sale_id'],
-                    'sale_detail_id' => $saleDetail[$key]['id'],
-                    'created_at' => now(),
-                    'updated_at'  => now()
+                    'link_no'           => $raw['link_no'][$key][$key1],
+                    'link_type'         => $raw['link_type'][$key][$key1],
+                    'fr_no'             => $raw['fr_no'][$key],
+                    'sale_id'           => $saleDetail[$key]['sale_id'],
+                    'sale_detail_id'    => $saleDetail[$key]['id'],
+                    'created_at'        => now(),
+                    'updated_at'        => now()
                 ];
             }
         }
@@ -213,12 +215,12 @@ class SaleController extends Controller
             })
             ->get()
             ->map(fn ($item) => [
-                'value' => $item->client->client_name,
-                'label' => $item->client->client_name . ' ( ' . ($item?->mq_no ?? '') . ')',
-                'client_no' => $item->client_no,
-                'offer_id' => $item->id,
-                'mq_no' => $item->mq_no,
-                'details' => $item->offerDetails
+                'value'         => $item->client->client_name,
+                'label'         => $item->client->client_name . ' ( ' . ($item?->mq_no ?? '') . ' )',
+                'client_no'     => $item->client_no,
+                'offer_id'      => $item->id,
+                'mq_no'         => $item->mq_no,
+                'details'       => $item->offerDetails
             ]);
         return response()->json($items);
     }
@@ -231,7 +233,7 @@ class SaleController extends Controller
             ->get()
             ->map(fn ($item) => [
                 'value'        => $item->mq_no,
-                'label'        => $item->mq_no . '(' . ($item?->client?->client_name ?? '') . ')',
+                'label'        => $item->mq_no . '( ' . ($item?->client?->client_name ?? '') . ' )',
                 'client_no'    => $item->client_no,
                 'client_name'  => $item?->client?->client_name,
                 'offer_id'     => $item->id,
