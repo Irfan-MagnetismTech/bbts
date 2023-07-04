@@ -231,7 +231,24 @@
             </div>
         </div>
     </div>
+    
     {!! Form::close() !!}
+    <div class="md-modal md-effect-13" id="modal-13">
+        <div class="md-content">
+            <h3>Modal Dialog</h3>
+            <div>
+                <p>This is a modal window. You can do the following things with it:</p>
+                <ul>
+                    <li><input type="text"/></li>
+                    <li><input type="text"/></li>
+                    <li><input type="text"/></li>
+                </ul>
+                <button type="button" class="btn btn-primary waves-effect" onClick="HideModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    <div class="md-overlay"></div>
+    <button type="button" class="btn btn-primary btn-outline-primary waves-effect" onClick="ShowModal()">3D Slit</button>
 
 @endsection
 @section('script')

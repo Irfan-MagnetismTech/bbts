@@ -12,6 +12,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\BillingAddress;
+use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 
 class SaleController extends Controller
@@ -215,12 +217,14 @@ class SaleController extends Controller
             })
             ->get()
             ->map(fn ($item) => [
-                'value'         => $item->client->client_name,
-                'label'         => $item->client->client_name . ' ( ' . ($item?->mq_no ?? '') . ' )',
-                'client_no'     => $item->client_no,
-                'offer_id'      => $item->id,
-                'mq_no'         => $item->mq_no,
-                'details'       => $item->offerDetails
+                'value'                 => $item->client->client_name,
+                'label'                 => $item->client->client_name . ' ( ' . ($item?->mq_no ?? '') . ' )',
+                'client_no'             => $item->client_no,
+                'offer_id'              => $item->id,
+                'mq_no'                 => $item->mq_no,
+                'billing_address'       => BillingAddress::where('client_no', $item->client_no)->get()->latest(),
+                'collection_address'    => CollectionAddress::where('client_no', $item->client_no)->get()->latest(),
+                'details'               => $item->offerDetails
             ]);
         return response()->json($items);
     }
@@ -242,7 +246,10 @@ class SaleController extends Controller
         return response()->json($items);
     }
 
-    private function getFrData()
+    public function testTestTest()
     {
+        info(request()->client_no);
+        $lists = BillingAddress::where('client_no', request()->client_no)->get()->latest();
+        $lists = CollectionAddress::where('client_no', request()->client_no)->get()->latest();
     }
 }

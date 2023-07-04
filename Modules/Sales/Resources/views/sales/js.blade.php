@@ -59,9 +59,21 @@
                                         </div>
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[${indx}]" value="{{ $delivery_date ?? '' }}" label="Delivery Date" class="date"/>
-                                                <x-input-box colGrid="3" name="billing_address[${indx}]" value="{{ $billing_address ?? '' }}" label="Billing Address" />
+                                                <div class="col-3">
+                                                    <select>`
+                                                item.billing_address.forEach(ele => {
+                                                    appendedData +=`<option ele="${ele.id}">${ele.address}</option>`
+                                                })
+                                                    `</select>
+                                                </div>
                                                 <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add"></i></span>
-                                                <x-input-box colGrid="3" name="collection_address[${indx}]" value="{{ $collection_address ?? '' }}" label="Collection Address" />
+                                                <div class="col-3">
+                                                    <select>`
+                                                item.collection_address.forEach(ele => {
+                                                    appendedData +=`<option ele="${ele.id}">${ele.address}</option>`
+                                                })
+                                                    `</select>
+                                                </div>
                                                 <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add"></i></span>
                                                 <x-input-box colGrid="3" name="bill_payment_date[${indx}]" value="{{ $bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
                                                 <div class="col-3">
@@ -84,7 +96,6 @@
                                                 <x-input-box colGrid="3" name="otc[${indx}]" value="${element.total_offer_otc}" label="OTC" />
                                             </div>
                                         <div>
-
                                         </div>
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-striped">
@@ -98,9 +109,7 @@
                                                 <tbody>
                                                 `
                                                 let total = 0;
-                                                
                                                 element.costing.costing_products.forEach(itm => {
-
                                                     appendedData += `<tr>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
@@ -142,7 +151,6 @@
                                                     `
                                                     total += ((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity);
                                                 })
-                                                
                                                 appendedData += `
                                                 </tbody>
                                                 <tfoot>
@@ -194,5 +202,27 @@
     $(document).on('click','.add_billing',function(){
 
     })
+    function ShowModal(){
+        $("#modal-13").modal("show");
+        $("#modal-13").addClass("md-show");
+        let myObject = {
+        'client_no': $('#client_no').val();
+    };
+
+    function successcallback(dataa) {
+        console.log(dataa);
+    }
+
+    function failcallback() {
+        console.log('error');
+    }
+
+    jquaryAjaxCall("{{ route('test_test_test') }}", myObject, successcallback);
+    }
+
+    function HideModal(){
+        $("#modal-13").modal("hide");
+        $("#modal-13").removeClass("md-show");
+    }
 
 </script>
