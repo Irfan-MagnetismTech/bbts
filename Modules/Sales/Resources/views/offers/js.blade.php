@@ -10,26 +10,23 @@
     });
 
     $('.offer_otc').on('input', function() {
-        calculateOtc($(this));
+        // calculateOtc($(this));
+        var offer_otc = $(this).val();
+        var client_equipment_amount = $(this).closest('tr').find('.client_equipment_amount').val();
+        var total_amount = parseFloat(offer_otc) + parseFloat(client_equipment_amount);
+        $(this).closest('tr').find('.total_cost_otc').val(total_amount);
+        $(this).val(offer_otc);
+        calculateTotalOtc($(this));
     });
 
-    function calculateOtc(event) {
-        var offer_otc = event.val();
-        var client_equipment_amount = event.closest('tr').find('.client_equipment_amount').val();
-        var total_amount = parseFloat(offer_otc) + parseFloat(client_equipment_amount);
-        event.closest('tr').find('.total_cost_otc').val(total_amount);
-        event.val(offer_otc);
-        calculateTotalOtc(event);
-    }
+
 
     function calculateTotalOtc(event) {
         var total_otc = 0;
         var total_cost_otc = 0;
 
         //otc calculation
-        event.closest('tr').find('.offer_otc').each(function() {
-            total_otc += parseFloat($(this).val());
-        });
+        var total_otc =  event.closest('tr').find('.offer_otc').val();
         event.closest('.mainRow').find('.total_offer_otc').val(total_otc);
 
         //total cost calculation

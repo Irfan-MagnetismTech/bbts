@@ -42,55 +42,64 @@ class FeasibilityRequirementController extends Controller
      */
 
 
-     public function store(FeasibilityRequirementRequest $request)
-     {
-         DB::beginTransaction();
-     
-         try {
-             $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id');
-             $data['user_id'] = auth()->user()->id;
-             $data['branch_id'] = auth()->user()->branch_id ?? '1';
-     
-             $maxMqNo = FeasibilityRequirement::where('client_no', $data['client_no'])->max('mq_no');
-             $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($maxMqNo ? (explode('-', $maxMqNo)[3] + 1) : '1');
-     
-             $feasibilityRequirement = FeasibilityRequirement::create($data);
-     
-             $feasibilityDetails = [];
-             foreach ($request['connectivity_point'] as $key => $connectivityPoint) {
-                 $no = $key + 1;
-                 $frNo = 'fr' . '-' . $data['client_no'] . '-' . $no;
-     
-                 $feasibilityDetails[] = [
-                     'connectivity_point' => $connectivityPoint,
-                     'aggregation_type' => $request['aggregation_type'][$key],
-                     'fr_no' => $frNo,
-                     'division_id' => $request['division_id'][$key],
-                     'district_id' => $request['district_id'][$key],
-                     'thana_id' => $request['thana_id'][$key],
-                     'location' => $request['location'][$key],
-                     'lat' => $request['lat'][$key],
-                     'long' => $request['long'][$key],
-                     'contact_name' => $request['contact_name'][$key],
-                     'contact_designation' => $request['contact_designation'][$key],
-                     'contact_number' => $request['contact_number'][$key],
-                     'contact_email' => $request['contact_email'][$key],
-                 ];
-             }
-     
-             $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
-     
-             DB::commit();
-     
-             return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
-         } catch (\Exception $e) {
-             DB::rollback();
-     
-             // Handle the exception or display an error message
-             return back()->with('error', $e->getMessage());
-         }
-     }
-     
+    public function store(FeasibilityRequirementRequest $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id');
+            $data['user_id'] = auth()->user()->id;
+            $data['branch_id'] = auth()->user()->branch_id ?? '1';
+
+            $maxMqNo = FeasibilityRequirement::where('client_no', $data['client_no'])->max('mq_no');
+            $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($maxMqNo ? (explode('-', $maxMqNo)[3] + 1) : '1');
+
+            $feasibilityRequirement = FeasibilityRequirement::create($data);
+
+            $feasibilityDetails = [];
+            foreach ($request['connectivity_point'] as $key => $connectivityPoint) {
+                $frNo = 'fr' . '-' . $data['client_no'] . '-';
+                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
+
+                if ($maxFrNo) {
+                    $frArray = explode('-', $maxFrNo);
+                    $frSerial = $frArray[3] + 1;
+                    $frNo .= $frSerial;
+                } else {
+                    $frNo .= '1';
+                }
+
+                $feasibilityDetails[] = [
+                    'connectivity_point' => $connectivityPoint,
+                    'aggregation_type' => $request['aggregation_type'][$key],
+                    'client_no' => $data['client_no'],
+                    'fr_no' => $frNo,
+                    'division_id' => $request['division_id'][$key],
+                    'district_id' => $request['district_id'][$key],
+                    'thana_id' => $request['thana_id'][$key],
+                    'location' => $request['location'][$key],
+                    'lat' => $request['lat'][$key],
+                    'long' => $request['long'][$key],
+                    'contact_name' => $request['contact_name'][$key],
+                    'contact_designation' => $request['contact_designation'][$key],
+                    'contact_number' => $request['contact_number'][$key],
+                    'contact_email' => $request['contact_email'][$key],
+                ];
+            }
+
+            $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
+
+            DB::commit();
+
+            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            // Handle the exception or display an error message
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
 
     /**
      * Show the specified resource.

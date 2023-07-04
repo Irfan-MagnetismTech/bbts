@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery-ui.min.css') }}">
     @yield('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.mCustomScrollbar.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/component.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/select2.min.css') }}">

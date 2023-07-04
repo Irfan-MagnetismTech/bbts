@@ -219,3 +219,31 @@ function populateDropdownByAjax(
         },
     });
 }
+
+
+/**
+ * Ajax autocomplete with jquery ui
+ *
+ * @param {*} triggerElement
+ * @param {*} route
+ * @param {*} callback
+ * @param {any} customQueryFields
+ */
+function jquaryAjaxCall(route,customQueryFields, successcallback, failcallback = null) {
+    $.ajax({
+        url: route,
+        type: "get",
+        dataType: "json",
+        data: customQueryFields,
+        success: function (data) {
+            if (data.length > 0) {
+                successcallback(data);
+            }else{
+                if (failcallback && typeof failcallback === "function") {
+                    failcallback();
+                }
+            }
+            return false;
+        }
+    });
+}

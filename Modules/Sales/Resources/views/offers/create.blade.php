@@ -429,14 +429,15 @@
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <button class="py-2 btn btn-success">
-                                            {{ !empty($lead_generation->id) ? 'Update' : 'Save' }}
-                                        </button>
+
                                     </div>
 
                                 </div>
                             @endif
                         @endforeach
+                        <button class="py-2 btn btn-success">
+                            {{ !empty($lead_generation->id) ? 'Update' : 'Save' }}
+                        </button>
                     </div>
                 </div>
             </div>
