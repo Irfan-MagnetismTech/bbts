@@ -49,44 +49,46 @@ class ConnectivityRequirementController extends Controller
      * @return Renderable
      */
     public function store(ConnectivityRequirementRequest $request)
-    {
-        $connectivity_requirement_data = $request->only('date', 'client_no', 'from_location', 'aggregation_type', 'fr_no');
-        $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
-        $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
-        $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
-        $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_no', $connectivity_requirement_data['client_no'])->first()->mq_no;
-        if ($request->hasFile('document')) {
-            $file_name = CommonService::fileUpload($request->file('document'), 'uploads/connectivity_details');
-            $connectivity_requirement_data['document'] = $file_name;
+{
+    $data = $request->only('date', 'client_no', 'from_location', 'aggregation_type', 'fr_no');
+    $data['user_id'] = auth()->id() ?: '';
+    $data['branch_id'] = auth()->user()->branch_id ?: '';
+    $data['date'] = date('Y-m-d', strtotime($request->date));
+    $data['mq_no'] = optional(FeasibilityRequirement::where('client_no', $data['client_no'])->first())->mq_no;
+
+    DB::beginTransaction();
+    try {
+        $requirement = ConnectivityRequirement::create($data);
+
+        foreach ($request->category_id as $key => $category_id) {
+            ConnectivityProductRequirementDetail::create([
+                'connectivity_requirement_id' => $requirement->id,
+                'category_id' => $category_id,
+                'product_id' => $request->product_id[$key],
+                'capacity' => $request->capacity[$key],
+                'remarks' => $request->remarks[$key],
+            ]);
         }
 
-        DB::beginTransaction();
-        try {
-            $connectivity_requirement = ConnectivityRequirement::create($connectivity_requirement_data);
-            foreach ($request->category_id as $key => $category_id) {
-                $connectivity_requirement_details['connectivity_requirement_id'] = $connectivity_requirement->id;
-                $connectivity_requirement_details['category_id'] = $category_id;
-                $connectivity_requirement_details['product_id'] = $request->product_id[$key];
-                $connectivity_requirement_details['capacity'] = $request->capacity[$key];
-                $connectivity_requirement_details['remarks'] = $request->remarks[$key];
-                ConnectivityProductRequirementDetail::create($connectivity_requirement_details);
-            }
-            foreach ($request->link_type as $key => $link_type) {
-                $connectivity_product_requirement_details['connectivity_requirement_id'] = $connectivity_requirement->id;
-                $connectivity_product_requirement_details['link_type'] = $link_type;
-                $connectivity_product_requirement_details['method'] = $request->method[$key];
-                $connectivity_product_requirement_details['connectivity_capacity'] = $request->connectivity_capacity[$key];
-                $connectivity_product_requirement_details['sla'] = $request->uptime_req[$key];
-                $connectivity_product_requirement_details['vendor_id'] = $request->vendor_id[$key];
-                ConnectivityRequirementDetail::create($connectivity_product_requirement_details);
-            }
-            DB::commit();
-            return redirect()->route('connectivity-requirement.index')->with('success', 'Connectivity Requirement Created Successfully');
-        } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->back()->with('error', $e->getMessage())->withInput();
+        foreach ($request->link_type as $key => $link_type) {
+            ConnectivityRequirementDetail::create([
+                'connectivity_requirement_id' => $requirement->id,
+                'link_type' => $link_type,
+                'method' => $request->method[$key],
+                'connectivity_capacity' => $request->connectivity_capacity[$key],
+                'sla' => $request->uptime_req[$key],
+                'vendor_id' => $request->vendor_id[$key],
+            ]);
         }
+
+        DB::commit();
+        return redirect()->route('connectivity-requirement.index')->with('success', 'Connectivity Requirement Created Successfully');
+    } catch (\Exception $e) {
+        DB::rollback();
+        return redirect()->back()->with('error', $e->getMessage())->withInput();
     }
+}
+
 
     /**
      * Show the specified resource.

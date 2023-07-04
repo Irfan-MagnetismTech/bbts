@@ -21,9 +21,11 @@ return new class extends Migration
             $table->string('option')->nullable();
             $table->string('status')->nullable();
             $table->string('method')->nullable();
-            $table->string('vendor')->nullable();
-            $table->string('bts_pop_ldp')->nullable();
-            $table->string('gps')->nullable();
+            $table->string('vendor_id')->nullable();
+            $table->string('pop_id')->nullable();
+            $table->string('ldp')->nullable();
+            $table->string('lat')->nullable();
+            $table->string('long')->nullable();
             $table->string('distance')->nullable();
             $table->string('current_capacity')->nullable();
             $table->string('remarks')->nullable();

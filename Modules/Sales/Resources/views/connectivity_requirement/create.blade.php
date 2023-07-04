@@ -62,7 +62,7 @@
                             $category_data = $is_old ? old('category_id') : $category_data ?? [];
                             $aggregation_type = $is_old ? old('aggregation_type') : $connectivity_requirement->aggregation_type ?? null;
                             $from_location = $is_old ? old('from_location') : $connectivity_requirement->from_location ?? null;
-                            $link_name = $is_old ? old('link_name') : $connectivity_requirement->fromLocation->link_name ?? $fr_detail->link_name;
+                            $connectivity_point = $is_old ? old('connectivity_point') : $connectivity_requirement->fromLocation->connectivity_point ?? $fr_detail->connectivity_point;
                             $fr_no = $is_old ? old('fr_no') : $connectivity_requirement->fr_no ?? $fr_detail->fr_no;
                             $product_id = $is_old ? old('product_id') : $product_id ?? null;
                             $capacity = $is_old ? old('capacity') : $capacity ?? null;
@@ -123,9 +123,10 @@
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="link_name" id="link_name" class="form-control"
-                                    value="{{ $link_name }}" readonly>
-                                <label for="link_name">Link Name <span class="text-danger">*</span></label>
+                                <input type="text" name="connectivity_point" id="connectivity_point" class="form-control"
+                                    value="{{ $connectivity_point }}" readonly>
+                                <label for="connectivity_point">Connectivity Point <span
+                                        class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">

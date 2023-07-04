@@ -62,7 +62,8 @@
                             $single_district = $is_old ? old('district') : $lead_generation->district_id ?? null;
                             $single_thana = $is_old ? old('thana') : $lead_generation->thana_id ?? null;
                             $landmark = $is_old ? old('landmark') : $lead_generation->landmark ?? null;
-                            $lat_long = $is_old ? old('lat_long') : $lead_generation->lat_long ?? null;
+                            $lat = $is_old ? old('lat') : $lead_generation->lat ?? null;
+                            $long = $is_old ? old('long') : $lead_generation->long ?? null;
                             $contact_person = $is_old ? old('contact_person') : $lead_generation->contact_person ?? null;
                             $designation = $is_old ? old('designation') : $lead_generation->designation ?? null;
                             $contact_no = $is_old ? old('contact_no') : $lead_generation->contact_no ?? null;
@@ -144,9 +145,16 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="form-item">
-                                <input type="text" id="lat_long" name="lat_long" class="form-control" autocomplete="off"
-                                    value="{{ $lat_long }}" required>
-                                <label for="lat_long">Lat Long</label>
+                                <input type="text" id="lat" name="lat" class="form-control" autocomplete="off"
+                                    value="{{ $lat }}" required>
+                                <label for="lat">Latitude</label>
+                            </div>
+                        </div>
+                        <div class="mt-1 col-xl-4 col-md-4">
+                            <div class="form-item">
+                                <input type="text" id="long" name="long" class="form-control" autocomplete="off"
+                                    value="{{ $long }}" required>
+                                <label for="long">Longitude</label>
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
@@ -172,8 +180,8 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="form-item">
-                                <input type="text" id="email" name="email" class="form-control" autocomplete="off"
-                                    value="{{ $email }}" required>
+                                <input type="text" id="email" name="email" class="form-control"
+                                    autocomplete="off" value="{{ $email }}" required>
                                 <label for="email">Email</label>
                             </div>
                         </div>
