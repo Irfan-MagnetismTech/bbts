@@ -6,6 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\Planning;
+use Modules\SCM\Entities\ScmChallan;
 
 class PhysicalConnectivityController extends Controller
 {
@@ -86,5 +87,25 @@ class PhysicalConnectivityController extends Controller
             ->get();
 
         return response()->json($networkInfo);
+    }
+
+    public function getChallanInfoByLinkNo()
+    {
+        $challanInfo = ScmChallan::query()
+            ->with('scmChallanLines')
+            ->where('link_no', request('link_no'))
+            ->get();
+
+        return response()->json($challanInfo);
+    }
+
+    public function getChallanInfoByChallanNo()
+    {
+        $challanInfo = ScmChallan::query()
+            ->with('scmChallanLines')
+            ->where('challan_no', request('challan_no'))
+            ->get();
+
+        return response()->json($challanInfo);
     }
 }
