@@ -45,8 +45,9 @@
                                 $options = $survey->surveyDetails->pluck('option')->toArray();
                                 $statuses = $survey->surveyDetails->pluck('status')->toArray();
                                 $methods = $survey->surveyDetails->pluck('method')->toArray();
-                                $vendors = $survey->surveyDetails->pluck('vendor')->toArray();
-                                $bts_pop_ldps = $survey->surveyDetails->pluck('bts_pop_ldp')->toArray();
+                                $selected_vendors = $survey->surveyDetails->pluck('vendor')->toArray();
+                                $selected_pops = $survey->surveyDetails->pluck('pop')->toArray();
+                                $ldps = $survey->surveyDetails->pluck('ldp')->toArray();
                                 $lat = $survey->surveyDetails->pluck('lat')->toArray();
                                 $long = $survey->surveyDetails->pluck('long')->toArray();
                                 $distances = $survey->surveyDetails->pluck('distance')->toArray();
@@ -54,6 +55,7 @@
                                 $remarks = $survey->surveyDetails->pluck('remarks')->toArray();
                                 $details_ids = $survey->surveyDetails->pluck('id')->toArray();
                             }
+                            
                             $client_name = $is_old ? old('client_name') : $survey->lead_generation->client_name ?? $fr_detail->feasibilityRequirement->lead_generation->client_name;
                             $client_no = $is_old ? old('client_no') : $survey->lead_generation->client_no ?? $fr_detail->feasibilityRequirement->lead_generation->client_no;
                             $date = $is_old ? old('date') : $survey->date ?? null;
@@ -68,7 +70,7 @@
                             $district = $is_old ? old('district') : $survey->feasibilityRequirementDetails->district ?? $fr_detail->district;
                             $thana = $is_old ? old('upazila') : $survey->feasibilityRequirementDetails->thana ?? $fr_detail->thana;
                             $location = $is_old ? old('location') : $survey->feasibilityRequirementDetails->location ?? $fr_detail->location;
-                            $contact_person = $is_old ? old('contact_person') : $survey->feasibilityRequirementDetails->contact_person ?? $fr_detail->contact_name;
+                            $contact_person = $is_old ? old('contact_person') : $survey->feasibilityRequirementDetails->contact_name ?? $fr_detail->contact_name;
                             $contact_number = $is_old ? old('contact_number') : $survey->feasibilityRequirementDetails->contact_number ?? $fr_detail->contact_number;
                             $contact_email = $is_old ? old('contact_email') : $survey->feasibilityRequirementDetails->contact_email ?? $fr_detail->contact_email;
                             $contact_designation = $is_old ? old('contact_designation') : $survey->feasibilityRequirementDetails->contact_designation ?? $fr_detail->contact_designation;
@@ -76,8 +78,9 @@
                             // dd($client_name);
                             $statuses = $is_old ? old('status') : $statuses ?? [];
                             $methods = $is_old ? old('method') : $methods ?? [];
-                            $vendors = $is_old ? old('vendor') : $vendors ?? [];
-                            $bts_pop_ldps = $is_old ? old('bts_pop_ldp') : $bts_pop_ldps ?? [];
+                            $selected_vendors = $is_old ? old('vendor') : $selected_vendors ?? [];
+                            $selected_pops = $is_old ? old('bts_pop_ldp') : $selected_pops ?? [];
+                            $ldps = $is_old ? old('ldp') : $ldps ?? [];
                             $lat = $is_old ? old('gps') : $lat ?? [];
                             $long = $is_old ? old('gps') : $long ?? [];
                             $distances = $is_old ? old('distance') : $distances ?? [];
@@ -405,7 +408,7 @@
                                                         <option value="">Select POP</option>
                                                         @foreach ($pops as $pop)
                                                             <option value="{{ $pop->id }}"
-                                                                {{ $pops[$key] == $pop->id ? 'selected' : '' }}>
+                                                                {{ $selected_pops[$key] == $pop->id ? 'selected' : '' }}>
                                                                 {{ $pop->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -424,7 +427,7 @@
                                                         <option value="">Select Vendor</option>
                                                         @foreach ($vendors as $vendor)
                                                             <option value="{{ $vendor->id }}"
-                                                                {{ $vendors[$key] == $vendor->id ? 'selected' : '' }}>
+                                                                {{ $selected_vendors[$key] == $vendor->id ? 'selected' : '' }}>
                                                                 {{ $vendor->name }}</option>
                                                         @endforeach
                                                     </select>

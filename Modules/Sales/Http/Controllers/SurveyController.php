@@ -53,7 +53,7 @@ class SurveyController extends Controller
      */
     public function store(Request $request)
     {
-        $connectivity_requirement_data = $request->only('date', 'client_no', 'fr_no', 'connectivity_remarks');
+        $connectivity_requirement_data = $request->only('date', 'client_no', 'fr_no', 'survey_remarks');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
         $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
@@ -114,7 +114,9 @@ class SurveyController extends Controller
     {
         $survey = Survey::with('surveyDetails', 'lead_generation', 'feasibilityRequirementDetails')->find($id);
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $survey->fr_no)->first();
-        return view('sales::survey.create', compact('survey', 'connectivity_requirement'));
+        $pops = Pop::get();
+        $vendors = Vendor::get();
+        return view('sales::survey.create', compact('survey', 'connectivity_requirement', 'pops', 'vendors'));
     }
 
     /**
@@ -125,12 +127,12 @@ class SurveyController extends Controller
      */
     public function update(Request $request, Survey $survey)
     {
-        $survey_data = $request->only('date', 'client_id', 'fr_no', 'connectivity_remarks');
+        $survey_data = $request->only('date', 'client_no', 'fr_no', 'survey_remarks');
         $survey_data['user_id'] = auth()->user()->id ?? '';
         $survey_data['branch_id'] = auth()->user()->branch_id ?? '';
         $survey_data['date'] = date('Y-m-d', strtotime($request->date));
-        $survey_data['mq_no'] = FeasibilityRequirement::where('client_id', $survey_data['client_id'])->first()->mq_no;
-        $survey_data['lead_generation_id'] = LeadGeneration::where('client_id', $survey_data['client_id'])->first()->id;
+        $survey_data['mq_no'] = FeasibilityRequirement::where('client_no', $survey_data['client_no'])->first()->mq_no;
+        $survey_data['lead_generation_id'] = LeadGeneration::where('client_no', $survey_data['client_no'])->first()->id;
         $survey_data['feasibility_requirement_details_id'] = FeasibilityRequirementDetail::where('fr_no', $survey_data['fr_no'])->first()->id;
         if ($request->hasFile('document')) {
             $remove_old_file = CommonService::deleteFile('uploads/survey/' . $survey->document);
@@ -158,7 +160,6 @@ class SurveyController extends Controller
                 $survey_details['current_capacity'] = $request->current_capacity[$key];
                 $survey_details['remarks'] = $request->remarks[$key];
                 SurveyDetail::create($survey_details);
-                FinalSurveyDetail::create($survey_details);
             }
             DB::commit();
             return redirect()->route('survey.index')->with('success', 'Survey Updated Successfully');
@@ -184,7 +185,7 @@ class SurveyController extends Controller
     {
         $survey = Survey::where('client_no', $request->client_id)->where('fr_no', $request->fr_no)->first();
         if ($survey) {
-            $surveyDetails = SurveyDetail::where('survey_id', $survey->id)->where('link_type', $request->link_type)->where('option', $request->option)->first();
+            $surveyDetails = SurveyDetail::with('vendor', 'pop')->where('survey_id', $survey->id)->where('link_type', $request->link_type)->where('option', $request->option)->first();
             return response()->json($surveyDetails);
         }
         return response()->json(['message' => 'No Survey Found']);

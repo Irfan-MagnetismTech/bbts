@@ -97,7 +97,7 @@
                     <hr />
                     {{-- create a responsive table --}}
                     <div class="row ">
-                        <div class="md-col-6 col-6">
+                        <div class="md-col-5 col-5">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <thead>
@@ -149,17 +149,19 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="md-col-6 col-6">
+                        <div class="md-col-7 col-7">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th colspan="5">Equipment Plan for product</th>
+                                            <th colspan="7">Equipment Plan for product</th>
                                         </tr>
                                         <tr>
                                             <th>Equipment Name</th>
                                             <th>Quantity</th>
                                             <th>Unit</th>
+                                            <th>Brand</th>
+                                            <th>Model</th>
                                             <th>Remarks</th>
                                             <th>
                                                 <button type="button" class="btn btn-sm btn-success"
@@ -170,8 +172,14 @@
                                     <tbody id="equipment_body">
                                         <tr class="equipment_row">
                                             <td>
-                                                <input type="text" name="equipment_name[]" id="equipment_name"
-                                                    class="form-control form-control-sm" value="">
+                                                <select name="equipment_id[]" id="equipment_id"
+                                                    class="form-control form-control-sm equipment_id">
+                                                    <option value="">Select Equipment</option>
+                                                    @foreach ($materials as $material)
+                                                        <option value="{{ $material->id }}">
+                                                            {{ $material->name }}</option>
+                                                    @endforeach
+                                                </select>
                                             </td>
                                             <td>
                                                 <input type="text" name="quantity[]" id="quantity"
@@ -179,11 +187,25 @@
                                             </td>
                                             <td>
                                                 <input type="text" name="unit[]" id="unit"
-                                                    class="form-control form-control-sm" value="">
+                                                    class="form-control form-control-sm unit" value="">
+                                            </td>
+                                            <td>
+                                                <select name="brand_id[]" id="brand_id"
+                                                    class="form-control form-control-sm brand_id">
+                                                    <option value="">Select Brand</option>
+                                                    @foreach ($brands as $brand)
+                                                        <option value="{{ $brand->id }}">
+                                                            {{ $brand->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="model[]" id="model"
+                                                    class="form-control form-control-sm model" value="">
                                             </td>
                                             <td>
                                                 <input type="text" name="equipment_remarks[]" id="equipment_remarks"
-                                                    class="form-control form-control-sm" value="">
+                                                    class="form-control form-control-sm equipment_remarks" value="">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
@@ -306,6 +328,8 @@
                                                 <input type="text" name="link_vendor_1" id="link_vendor"
                                                     class="form-control form-control-sm link_vendor_1" value=""
                                                     style="height: 25px !important">
+                                                <input type="hidden" name="link_vender_id_1" id="link_vendor_id"
+                                                    class="form-control form-control-sm link_vender_id_1" value="">
                                             </td>
                                             <th>Connecting POP Running Vendor</th>
                                             <td class="running_vendor_pop" style="width:30%"></td>
@@ -328,6 +352,8 @@
                                                     id="link_connecting_pop"
                                                     class="form-control form-control-sm link_connecting_pop_1"
                                                     style="height: 25px !important" value="">
+                                                <input type="hidden" name="link_connecting_pop_id_1"
+                                                    id="link_connecting_pop_id" class="link_connecting_pop_id_1">
                                             </td>
                                             <th>Zone Area Running NTTN Vendor</th>
                                             <td class="nttn_vendor_zone" style="width:30%"></td>
@@ -344,15 +370,24 @@
                                             <td class="running_nttn_bw" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Last Connectivity Point Lat/Lon</th>
+                                            <th>Last Connectivity Point Latitute</th>
                                             <td class="connectivity_lat_long" style="width:30%">
-                                                <input type="text" name="connectivity_lat_long_1"
+                                                <input type="text" name="connectivity_lat_1"
                                                     id="connectivity_lat_long"
-                                                    class="form-control form-control-sm connectivity_lat_long_1"
+                                                    class="form-control form-control-sm connectivity_lat_1"
                                                     style="height: 25px !important" value="">
                                             </td>
                                             <th>Connectivity Route</th>
                                             <td class="connectivity_route" style="width:30%"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Last Connectivity Point Longitute</th>
+                                            <td class="connectivity_lat_long" style="width:30%">
+                                                <input type="text" name="connectivity_long_1"
+                                                    id="connectivity_lat_long"
+                                                    class="form-control form-control-sm connectivity_long_1"
+                                                    style="height: 25px !important" value="">
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -370,6 +405,9 @@
                                                 <th>Equipment Name</th>
                                                 <th>Quantity</th>
                                                 <th>Unit</th>
+                                                <th>Brand</th>
+                                                <th>Model</th>
+                                                <th>Description</th>
                                                 <th>Remarks</th>
                                                 <th>
                                                     <button type="button"
@@ -383,20 +421,45 @@
                                         <tbody class="link_equipment_table">
                                             <tr>
                                                 <td>
-                                                    <input type="text" name="material_name_1[]" id="material_name"
-                                                        class="form-control form-control-sm" value="">
+                                                    <select name="material_id_1[]" id="material_id"
+                                                        class="form-control form-control-sm link_material_id">
+                                                        <option value="">Select Equipment</option>
+                                                        @foreach ($materials as $material)
+                                                            <option value="{{ $material->id }}">
+                                                                {{ $material->name }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </td>
                                                 <td>
                                                     <input type="text" name="quantity_1[]" id="quantity"
-                                                        class="form-control form-control-sm" value="">
+                                                        class="form-control form-control-sm link_quantity" value="">
                                                 </td>
                                                 <td>
                                                     <input type="text" name="unit_1[]" id="unit"
-                                                        class="form-control form-control-sm" value="">
+                                                        class="form-control form-control-sm link_unit" value="">
+                                                </td>
+                                                <td>
+                                                    <select name="brand_id_1[]" id="brand"
+                                                        class="form-control form-control-sm link_brand">
+                                                        <option value="">Select Brand</option>
+                                                        @foreach ($brands as $brand)
+                                                            <option value="{{ $brand->id }}">
+                                                                {{ $brand->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="model_1[]" id="model"
+                                                        class="form-control form-control-sm link_model" value="">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="description_1[]" id="description"
+                                                        class="form-control form-control-sm link_description"
+                                                        value="">
                                                 </td>
                                                 <td>
                                                     <input type="text" name="remarks_1[]" id="remarks"
-                                                        class="form-control form-control-sm" value="">
+                                                        class="form-control form-control-sm link_remarks" value="">
                                                 </td>
                                                 <td>
                                                     <button type="button"
@@ -520,16 +583,24 @@
                     },
                     success: function(data) {
                         console.log(data);
-                        $(event.target).closest('.main_link').find('input[name^="link_vendor_"]').val(data.vendor);
+                        $(event.target).closest('.main_link').find('input[name^="link_vendor_"]').val(data.vendor
+                            .name);
+                        $(event.target).closest('.main_link').find('input[name^="link_vendor_id_"]').val(data.vendor
+                            .id);
                         $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(data
                             .status);
                         $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_"]').val(data
-                            .bts_pop_ldp);
+                            .pop.name);
+                        $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val(
+                            data.pop
+                            .id);
                         $(event.target).closest('.main_link').find('input[name^="last_mile_connectivity_method_"]')
                             .val(data
                                 .method);
-                        $(event.target).closest('.main_link').find('input[name^="connectivity_lat_long_"]').val(data
-                            .gps);
+                        $(event.target).closest('.main_link').find('input[name^="connectivity_long_"]').val(data
+                            .long);
+                        $(event.target).closest('.main_link').find('input[name^="connectivity_lat_"]').val(data
+                            .lat);
                         $(event.target).closest('.main_link').find('input[name^="distance_"]').val(data.distance);
                         $(event.target).closest('.main_link').find('input[name^="gps_"]').val(data.gps);
                         $(event.target).closest('.main_link').find('input[name^="connectivity_point_"]').val(data
@@ -551,6 +622,7 @@
                 var $table = $(event).closest('.table-bordered');
                 var $clone = $table.find('tbody tr:first').clone();
                 $clone.find('input').val('');
+                $clone.find('select').val('');
                 $table.find('tbody').append($clone);
             }
 
@@ -593,5 +665,21 @@
                     clonedRow.find('.link_equipment_table tr').not(':first').remove();
                 }
             }
+
+            $(document).on('change', '.equipment_id', function() {
+                var equipment_id = $(this).val();
+                var equiments = {!! json_encode($materials) !!};
+                var find_equipment = equiments.find(x => x.id == equipment_id);
+                console.log(find_equipment);
+                $(this).closest('tr').find('.unit').val(find_equipment.unit);
+            });
+
+            $(document).on('change', '.link_material_id', function() {
+                var material_id = $(this).val();
+                var materials = {!! json_encode($materials) !!};
+                var find_material = materials.find(x => x.id == material_id);
+                console.log(find_material);
+                $(this).closest('tr').find('.link_unit').val(find_material.unit);
+            });
         </script>
     @endsection
