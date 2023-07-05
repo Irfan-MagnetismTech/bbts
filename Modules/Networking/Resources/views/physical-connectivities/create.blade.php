@@ -3,20 +3,20 @@
 
 @php
     $is_old = old('type') ? true : false;
-    $form_heading = !empty($purchaseRequisition) ? 'Update' : 'Add';
-    $form_url = !empty($purchaseRequisition) ? route('errs.update', $purchaseRequisition->id) : route('errs.store');
-    $form_method = !empty($purchaseRequisition) ? 'PUT' : 'POST';
+    $form_heading = !empty($physicalConnectivity) ? 'Update' : 'Add';
+    $form_url = !empty($physicalConnectivity) ? route('errs.update', $physicalConnectivity->id) : route('errs.store');
+    $form_method = !empty($physicalConnectivity) ? 'PUT' : 'POST';
     
-    $client_id = old('client_id', !empty($purchaseRequisition) ? $purchaseRequisition->client_id : null);
-    $connectivity_point = old('connectivity_point', !empty($purchaseRequisition) ? $purchaseRequisition->fr_no : null);
-    $client_name = old('client_name', !empty($purchaseRequisition) ? $purchaseRequisition?->client?->client_name : null);
-    $client_no = old('client_no', !empty($purchaseRequisition) ? $purchaseRequisition?->client_no : null);
-    $client_link_no = old('client_link_no', !empty($purchaseRequisition) ? $purchaseRequisition?->link_no : null);
-    $contact_person = old('contact_person', !empty($purchaseRequisition) ? $purchaseRequisition?->client?->location : null);
+    $client_id = old('client_id', !empty($physicalConnectivity) ? $physicalConnectivity->client_id : null);
+    $connectivity_point = old('connectivity_point', !empty($physicalConnectivity) ? $physicalConnectivity->fr_no : null);
+    $client_name = old('client_name', !empty($physicalConnectivity) ? $physicalConnectivity?->client?->client_name : null);
+    $client_no = old('client_no', !empty($physicalConnectivity) ? $physicalConnectivity?->client_no : null);
+    $client_link_no = old('client_link_no', !empty($physicalConnectivity) ? $physicalConnectivity?->link_no : null);
+    $contact_person = old('contact_person', !empty($physicalConnectivity) ? $physicalConnectivity?->client?->location : null);
 @endphp
 
 @section('breadcrumb-title')
-    @if (!empty($purchaseRequisition))
+    @if (!empty($physicalConnectivity))
         Edit
     @else
         Create
@@ -37,7 +37,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('purchase-requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('physical-connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -50,9 +50,9 @@
 @section('content')
     <div class="">
         <form
-            action="{{ !empty($purchaseRequisition) ? route('purchase-requisitions.update', @$purchaseRequisition->id) : route('purchase-requisitions.store') }}"
+            action="{{ !empty($physicalConnectivity) ? route('physical-connectivities.update', @$physicalConnectivity->id) : route('physical-connectivities.store') }}"
             method="post" class="custom-form">
-            @if (!empty($purchaseRequisition))
+            @if (!empty($physicalConnectivity))
                 @method('PUT')
             @endif
             @csrf
@@ -61,7 +61,7 @@
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ old('client_name') ?? ($client_name ?? '') }}" placeholder="Search...">
+                        name="client_name" value="{{ $client_name }}" placeholder="Search...">
                     <input type="hidden" name="client_no" id="client_no"
                         value="{{ old('client_no') ?? ($client_no ?? '') }}">
                 </div>
@@ -74,16 +74,16 @@
 
                 <div class="form-group col-3 connectivity_point1">
                     <label for="select2">Connectivity Point</label>
-                    <select class="form-control select2" id="connectivity_point" name="connectivity_point">
+                    <select class="form-control select2" id="connectivity_point" name="fr_no">
                         <option value="" readonly selected>Select FR No</option>
                         @if ($form_method == 'POST')
                             <option value="{{ old('connectivity_point') }}" selected>{{ old('connectivity_point') }}
                             </option>
                         @elseif($form_method == 'PUT')
                             @forelse ($connectivity_points as $key => $value)
-                                <option value="{{ $value->connectivity_point }}"
-                                    @if ($connectivity_point == $value->connectivity_point) selected @endif>
-                                    {{ $value->connectivity_point }}
+                                <option value="{{ $value->fr_no }}"
+                                    @if ($connectivity_point == $value->fr_no) selected @endif>
+                                    {{ $value->connectivity_point . '-' . $value->fr_no }}
                                 </option>
                             @empty
                             @endforelse
@@ -118,13 +118,13 @@
                 </div>
 
                 <div class="form-group col-3 lat">
-                    <label for="lat">Lat. Long:</label>
-                    <input type="text" class="form-control" id="lat" name="lat" aria-describedby="lat"
-                        readonly value="{{ old('lat') ?? (@$lat ?? '') }}">
+                    <label for="lat">Latitude:</label>
+                    <input type="text" class="form-control" id="lat" name="lat" aria-describedby="lat" readonly
+                        value="{{ old('lat') ?? (@$lat ?? '') }}">
                 </div>
 
                 <div class="form-group col-3 long">
-                    <label for="long">Lat. Long:</label>
+                    <label for="long">Longitude:</label>
                     <input type="text" class="form-control" id="long" name="long" aria-describedby="long"
                         readonly value="{{ old('long') ?? (@$long ?? '') }}">
                 </div>
@@ -149,24 +149,14 @@
                         <th> VLAN </th>
                         <th> Distance </th>
                         <th> Connectivity Details </th>
-                        <th> Backbone </th>
                         <th> Comment </th>
                     </tr>
                 </thead>
                 <tbody>
                     @php
-                        $material_name_with_code = old('material_name', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
-                        $material_id = old('material_id', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material_id') : []);
-                        $item_code = old('item_code', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.code') : []);
-                        $unit = old('unit', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('material.unit') : []);
-                        $brand_id = old('brand_id', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('brand_id') : []);
-                        $quantity = old('quantity', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('quantity') : []);
-                        $unit_price = old('unit_price', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('unit_price') : []);
-                        $total_amount = old('total_amount', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('total_amount') : []);
-                        $model = old('model', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('model') : []);
-                        $purpose = old('purpose', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('purpose') : []);
+                        
                     @endphp
-                    @foreach ($material_name_with_code as $key => $requisitionDetail)
+                    {{-- @foreach ($material_name_with_code as $key => $requisitionDetail)
                         <tr>
                             <td>
                                 <input type="text" name="material_name[]" class="form-control material_name" required
@@ -210,21 +200,23 @@
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
                             </td>
                         </tr>
-                    @endforeach
+                    @endforeach --}}
                 </tbody>
             </table>
 
-            <h6>Material Utilizations</h6>
-            {{-- @forelse (@$challans as $challan)
-                <button type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#challan{{ $challan->id }}">
-                    {{ $challan->challan_no }}
-                </button>
-            @empty
-            @endforelse --}}
-            <div id="challans">
+            @if (!empty($physicalConnectivity))
+                <h6>Material Utilizations</h6>
+                @forelse (@$challanInfo as $challan)
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#challan{{ $challan->id }}">
+                        {{ $challan->challan_no }}
+                    </button>
+                @empty
+                @endforelse
+            @endif
+            {{-- <div id="challans">
 
-            </div>
+            </div> --}}
 
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
@@ -236,14 +228,14 @@
         </form>
     </div>
 
-    <div class="modal fade" id="challaModal" tabindex="-1" role="dialog" aria-labelledby="challaModalLabel"
+    {{-- <div class="modal fade" id="challaModal" tabindex="-1" role="dialog" aria-labelledby="challaModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content" id="challanModalContent">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            {{-- <h5 class="text-center">Challan No: {{ @$challan->challan_no }}</h5> --}}
+                            <h5 class="text-center">Challan No: {{ @$challan->challan_no }}</h5>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -252,7 +244,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach (@$challan->scmChallanDetails as $challanDetail)
+                                    @foreach (@$challan->scmChallanDetails as $challanDetail)
                                         <tr>
                                             <td>{{ $challanDetail->material->materialNameWithCode }}</td>
                                             <td>{{ $challanDetail->brand->name }}</td>
@@ -262,7 +254,7 @@
                                             <td>{{ $challanDetail->unit_price }}</td>
                                             <td>{{ $challanDetail->total_amount }}</td>
                                         </tr>
-                                    @endforeach --}}
+                                    @endforeach
                                 </tbody>
                             </table>
                             <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
@@ -271,60 +263,60 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @endsection
 @section('script')
     <script>
-        $('#connectivity_point').on('change', function() {
-            var connectivity_point = $(this).val();
+        // $('#connectivity_point').on('change', function() {
+        //     var connectivity_point = $(this).val();
 
-            $.ajax({
-                url: "{{ route('getChallanInfoByLinkNo') }}",
-                type: 'GET',
-                data: {
-                    link_no: "fr-2023-03-1-P1"
-                },
-                success: function(data) {
-                    console.log(data);
-                    //foreach data and append to challans div
-                    var html = '';
-                    $.each(data, function(key, value) {
-                        html +=
-                            '<button type="button" class="btn btn-primary challanButton" data-toggle="modal" data-target="#challaModal" >' +
-                            value.challan_no + '</button>';
-                    });
-                    $('#challans').html(html);
-                }
-            });
-        });
+        //     $.ajax({
+        //         url: "{{ route('getChallanInfoByLinkNo') }}",
+        //         type: 'GET',
+        //         data: {
+        //             link_no: "fr-2023-03-1-P1"
+        //         },
+        //         success: function(data) {
+        //             console.log(data);
+        //             //foreach data and append to challans div
+        //             var html = '';
+        //             $.each(data, function(key, value) {
+        //                 html +=
+        //                     '<button type="button" class="btn btn-primary challanButton" data-toggle="modal" data-target="#challaModal" >' +
+        //                     value.challan_no + '</button>';
+        //             });
+        //             $('#challans').html(html);
+        //         }
+        //     });
+        // });
         //on click modal button get challan info
-        $('#challans').on('click', '.challanButton', function() {
-            var challan_no = $(this).text();
-            $.ajax({
-                url: "{{ route('getChallanInfoByChallanNo') }}",
-                type: 'GET',
-                data: {
-                    challan_no: challan_no
-                },
-                success: function(data) {
-                    console.log(data);
-                    //foreach data and append to challans div
-                    var html = '';
-                    $.each(data, function(key, value) {
-                        html +=
-                            '<tr><td>' + value.fr_no + '</td><td>' + value
-                            .purpose + '</td>';
-                    });
-                    $('#challanModalContent tbody').html(html);
-                }
-            });
-        });
+        // $('#challans').on('click', '.challanButton', function() {
+        //     var challan_no = $(this).text();
+        //     $.ajax({
+        //         url: "{{ route('getChallanInfoByChallanNo') }}",
+        //         type: 'GET',
+        //         data: {
+        //             challan_no: challan_no
+        //         },
+        //         success: function(data) {
+        //             console.log(data);
+        //             //foreach data and append to challans div
+        //             var html = '';
+        //             $.each(data, function(key, value) {
+        //                 html +=
+        //                     '<tr><td>' + value.fr_no + '</td><td>' + value
+        //                     .purpose + '</td>';
+        //             });
+        //             $('#challanModalContent tbody').html(html);
+        //         }
+        //     });
+        // });
 
         //open modal for challan
-        function openChallanModal(id) {
-            $('#challaModal').modal('show');
-        }
+        // function openChallanModal(id) {
+        //     $('#challaModal').modal('show');
+        // }
     </script>
 
     @include('networking::physical-connectivities.js')

@@ -411,7 +411,7 @@ class CommonApiController extends Controller
     public function getFrDetailsData()
     {
         $results = FeasibilityRequirementDetail::query()
-            ->with('planning.finalSurveyDetails')
+            ->with('planning.finalSurveyDetails.pop')
             ->where('fr_no', request('connectivity_point'))
             ->first();
 

@@ -74,7 +74,7 @@
                             </td>
                             <td>
                                 <input type="text" name="pop[]" class="form-control pop"
-                                    autocomplete="off" value="${element.method}" readonly>
+                                    autocomplete="off" value="${element.pop.name}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="ldp[]" class="form-control ldp"
@@ -103,10 +103,6 @@
                             <td>
                                 <input type="text" name="connectivity_details[]" class="form-control connectivity_details"
                                     autocomplete="off" value="">
-                            </td>
-                            <td>
-                                <input type="text" name="backbone[]" class="form-control backbone"
-                                    autocomplete="off" value="${element.method}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="comment[]" class="form-control comment"
