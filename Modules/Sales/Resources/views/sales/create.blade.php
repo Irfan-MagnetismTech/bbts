@@ -60,6 +60,7 @@
                     <div class="row">
                         @php
                             $client_name = $is_old ? old('client_name') : $sale->client->client_name ?? null;
+                            $client_id = $is_old ? old('client_id') : $sale->client->id ?? null;
                             $client_no = $is_old ? old('client_no') : $sale->client_no ?? null;
                             $effective_date = $is_old ? old('effective_date') : $sale->effective_date ?? today()->format('d-m-Y');
                             $account_holder = $is_old ? old('account_holder') : $sale->account_holder ?? null;
@@ -70,7 +71,7 @@
                             $work_order = $is_old ? old('work_order') : $sale->work_order ?? null;
                             $sla = $is_old ? old('sla') : $sale->sla ?? null;
                             $wo_no = $is_old ? old('wo_no') : $sale->wo_no ?? null;
-                            $grand_total = $is_old ? old('grand_total') : $sale->grand_total ?? null;
+                            $grand_total = $is_old ? old('grand_total') : $sale->grand_total ?? 0;
                         @endphp
                         <x-input-box colGrid="4" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <x-input-box colGrid="4" name="client_no" value="{{ $client_no }}" label="Client Id" />
@@ -111,9 +112,9 @@
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[{{$key}}]" value="{{ $value->delivery_date ?? '' }}" label="Delivery Date" class="date"/>
                                                 <x-input-box colGrid="2" name="billing_address[{{$key}}]" value="{{ $value->billing_address ?? '' }}" label="Billing Address" />
-                                                <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add"></i></span>
+                                                <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing" onClick="ShowModal()"><i class="icofont icofont-ui-add"></i></span>
                                                 <x-input-box colGrid="2" name="collection_address[{{$key}}]" value="{{ $value->collection_address ?? '' }}" label="Collection Address" />
-                                                <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add"></i></span>
+                                                <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection" onClick="ShowModal()"><i class="icofont icofont-ui-add"></i></span>
                                                 <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
                                                 <div class="col-3">
                                                     <div class="form-check-inline">
@@ -235,20 +236,104 @@
     {!! Form::close() !!}
     <div class="md-modal md-effect-13" id="modal-13">
         <div class="md-content">
-            <h3>Modal Dialog</h3>
+            <h3 id="title"></h3>
             <div>
-                <p>This is a modal window. You can do the following things with it:</p>
-                <ul>
-                    <li><input type="text"/></li>
-                    <li><input type="text"/></li>
-                    <li><input type="text"/></li>
-                </ul>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>Client No</td>
+                            <td><input type="text" id="client_no_add" name="client_no_add" value="{{ $client_no }}" readonly class="modal_data"/></td>
+                            <input type="hidden" name="client_id" id="client_id" value="{{$client_id}}" class="modal_data">
+                            <input type="hidden" name="update_type" id="update_type" class="modal_data">
+                        </tr>
+                        <tr>
+                            <td>Contact Person</td>
+                            <td>
+                                <input type="text" id="contact_person_add" name="contact_person_add" class="modal_data"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Designation</td>
+                            <td>
+                                <input type="text" id="designation_add" name="designation_add" class="modal_data"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Phone</td>
+                            <td>
+                                <input type="text" id="phone_add" name="phone_add"  class="modal_data"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>
+                                <input type="text" id="email_add" name="email_add" class="modal_data"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Division</td>
+                            <td>
+                                <div class="input-group input-group-sm input-group-primary">
+                                    <select class="form-control modal_data" id="division_id" name="division_id" required>
+                                        <option value="">Select division</option>
+                                        @foreach (@$divisions as $division)
+                                            <option value="{{ $division->id }}">
+                                                {{ $division->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>District</td>
+                            <td>
+                                <div class="input-group input-group-sm input-group-primary">
+                                    <select class="form-control modal_data" id="district_id" name="district_id" required>
+                                        <option value="">Select district</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Thana</td>
+                            <td>
+                                <div class="input-group input-group-sm input-group-primary">
+                                    <select class="form-control  modal_data" id="thana_id" name="thana_id" required>
+                                        <option value="">Select thana</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Address</td>
+                            <td>
+                                <input type="text" id="address_add" name="address_add" class="modal_data"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Payment Method</td>
+                            <td>
+                                <input type="text" id="payment_method_add" name="payment_method_add" class="modal_data"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Payment Date</td>
+                            <td>
+                                <input type="text" id="payment_date_add" name="payment_date_add" class="modal_data"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary waves-effect" onClick="updateAddress()">Add</button>
                 <button type="button" class="btn btn-primary waves-effect" onClick="HideModal()">Close</button>
             </div>
         </div>
     </div>
     <div class="md-overlay"></div>
-    <button type="button" class="btn btn-primary btn-outline-primary waves-effect" onClick="ShowModal()">3D Slit</button>
 
 @endsection
 @section('script')
