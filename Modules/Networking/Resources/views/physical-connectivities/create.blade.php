@@ -7,12 +7,23 @@
     $form_url = !empty($physicalConnectivity) ? route('errs.update', $physicalConnectivity->id) : route('errs.store');
     $form_method = !empty($physicalConnectivity) ? 'PUT' : 'POST';
     
-    $client_id = old('client_id', !empty($physicalConnectivity) ? $physicalConnectivity->client_id : null);
-    $connectivity_point = old('connectivity_point', !empty($physicalConnectivity) ? $physicalConnectivity->fr_no : null);
     $client_name = old('client_name', !empty($physicalConnectivity) ? $physicalConnectivity?->client?->client_name : null);
+    
     $client_no = old('client_no', !empty($physicalConnectivity) ? $physicalConnectivity?->client_no : null);
+    
+    $client_type = old('client_type', !empty($physicalConnectivity) ? $physicalConnectivity?->client?->client_type : null);
+    
     $client_link_no = old('client_link_no', !empty($physicalConnectivity) ? $physicalConnectivity?->link_no : null);
-    $contact_person = old('contact_person', !empty($physicalConnectivity) ? $physicalConnectivity?->client?->location : null);
+    
+    $connectivity_point = old('connectivity_point', !empty($physicalConnectivity) ? $physicalConnectivity->fr_no : null);
+    
+    $contact_person = old('contact_person', !empty($physicalConnectivity) ? $clientInfo->contact_name : null);
+    $contact_number = old('contact_number', !empty($physicalConnectivity) ? $clientInfo->contact_number : null);
+    $email = old('email', !empty($physicalConnectivity) ? $clientInfo->contact_email : null);
+    $contact_address = old('contact_address', !empty($physicalConnectivity) ? $clientInfo->location : null);
+    $lat = old('lat', !empty($physicalConnectivity) ? $clientInfo->lat : null);
+    $long = old('long', !empty($physicalConnectivity) ? $clientInfo->long : null);
+    $remarks = old('remarks', !empty($physicalConnectivity) ? $physicalConnectivity->remarks : null);
 @endphp
 
 @section('breadcrumb-title')
@@ -62,14 +73,13 @@
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
                         name="client_name" value="{{ $client_name }}" placeholder="Search...">
-                    <input type="hidden" name="client_no" id="client_no"
-                        value="{{ old('client_no') ?? ($client_no ?? '') }}">
+                    <input type="hidden" name="client_no" id="client_no" value="{{ $client_no }}">
                 </div>
 
                 <div class="form-group col-3 client_type">
                     <label for="client_type">Client Type:</label>
                     <input type="text" class="form-control" id="client_type" name="client_type"
-                        aria-describedby="client_type" readonly value="{{ old('client_type') ?? (@$client_type ?? '') }}">
+                        aria-describedby="client_type" readonly value="{{ $client_type }}">
                 </div>
 
                 <div class="form-group col-3 connectivity_point1">
@@ -81,8 +91,7 @@
                             </option>
                         @elseif($form_method == 'PUT')
                             @forelse ($connectivity_points as $key => $value)
-                                <option value="{{ $value->fr_no }}"
-                                    @if ($connectivity_point == $value->fr_no) selected @endif>
+                                <option value="{{ $value->fr_no }}" @if ($connectivity_point == $value->fr_no) selected @endif>
                                     {{ $value->connectivity_point . '-' . $value->fr_no }}
                                 </option>
                             @empty
@@ -94,45 +103,43 @@
                 <div class="form-group col-3 contact_person">
                     <label for="contact_person">Contact Person:</label>
                     <input type="text" class="form-control" id="contact_person" name="contact_person"
-                        aria-describedby="contact_person" readonly
-                        value="{{ old('contact_person') ?? (@$contact_person ?? '') }}">
+                        aria-describedby="contact_person" readonly value="{{ $contact_person }}">
                 </div>
 
                 <div class="form-group col-3 contact_number">
                     <label for="contact_number">Contact Number:</label>
                     <input type="text" class="form-control" id="contact_number" aria-describedby="contact_number"
-                        name="contact_number" readonly value="{{ old('contact_number') ?? (@$contact_number ?? '') }}">
+                        name="contact_number" readonly value="{{ $contact_number }}">
                 </div>
 
                 <div class="form-group col-3 email">
                     <label for="email">Email:</label>
                     <input type="text" class="form-control" id="email" name="email" aria-describedby="email"
-                        readonly value="{{ old('email') ?? (@$email ?? '') }}">
+                        readonly value="{{ $email }}">
                 </div>
 
                 <div class="form-group col-3 contact_address">
                     <label for="contact_address">Contact Address:</label>
                     <input type="text" class="form-control" id="contact_address" name="contact_address"
-                        aria-describedby="contact_address" readonly
-                        value="{{ old('contact_address') ?? (@$contact_address ?? '') }}">
+                        aria-describedby="contact_address" readonly value="{{ $contact_address }}">
                 </div>
 
                 <div class="form-group col-3 lat">
                     <label for="lat">Latitude:</label>
                     <input type="text" class="form-control" id="lat" name="lat" aria-describedby="lat" readonly
-                        value="{{ old('lat') ?? (@$lat ?? '') }}">
+                        value="{{ $lat }}">
                 </div>
 
                 <div class="form-group col-3 long">
                     <label for="long">Longitude:</label>
                     <input type="text" class="form-control" id="long" name="long" aria-describedby="long"
-                        readonly value="{{ old('long') ?? (@$long ?? '') }}">
+                        readonly value="{{ $long }}">
                 </div>
 
                 <div class="form-group col-3 remarks">
                     <label for="remarks">Remarks:</label>
                     <input type="text" class="form-control" id="remarks" name="remarks" aria-describedby="remarks"
-                        value="{{ old('remarks') ?? (@$remarks ?? '') }}">
+                        value="{{ $remarks }}">
                 </div>
             </div>
 
@@ -153,64 +160,64 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @php
-                        
-                    @endphp
-                    {{-- @foreach ($material_name_with_code as $key => $requisitionDetail)
+                    @foreach ($physicalConnectivity->lines as $key => $physicalConnectivityLine)
                         <tr>
                             <td>
-                                <input type="text" name="material_name[]" class="form-control material_name" required
-                                    autocomplete="off" value="{{ $material_name_with_code[$key] }}">
-                                <input type="hidden" name="material_id[]" class="form-control material_id"
-                                    value="{{ $material_id[$key] }}">
-                                <input type="hidden" name="item_code[]" class="form-control item_code"
-                                    value="{{ $item_code[$key] }}">
+                                <input type="text" name="link_type[]" class="form-control link_type" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->link_type }}" readonly>
                             </td>
                             <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                    readonly value="{{ $unit[$key] }}" id="unit">
+                                <input type="text" name="method[]" class="form-control method" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->method }}" readonly>
                             </td>
                             <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                    <option value="">Select Brand</option>
-
-                                </select>
+                                <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->pop }}" readonly>
                             </td>
                             <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                                    value="{{ $model[$key] }}">
+                                <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->ldp }}" readonly>
                             </td>
                             <td>
-                                <input type="number" name="unit_price[]" class="form-control unit_price"
-                                    autocomplete="off" value="{{ $unit_price[$key] }}">
+                                <input type="text" name="link_id[]" class="form-control link_id" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->link_id }}" readonly>
                             </td>
                             <td>
-                                <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off"
-                                    value="{{ $quantity[$key] }}">
+                                <input type="text" name="device_ip[]" class="form-control device_ip"
+                                    autocomplete="off" value="{{ $physicalConnectivityLine->device_ip }}" readonly>
                             </td>
                             <td>
-                                <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
-                                    value="{{ $total_amount[$key] }}" readonly>
+                                <input type="text" name="port[]" class="form-control port" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->port }}" readonly>
                             </td>
                             <td>
-                                <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
-                                    value="{{ $purpose[$key] }}">
+                                <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->vlan }}" readonly>
                             </td>
                             <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                                <input type="text" name="distance[]" class="form-control distance" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->distance }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="connectivity_details[]"
+                                    class="form-control connectivity_details" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->connectivity_details }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="comment[]" class="form-control comment" autocomplete="off"
+                                    value="{{ $physicalConnectivityLine->comment }}" readonly>
                             </td>
                         </tr>
-                    @endforeach --}}
+                    @endforeach
                 </tbody>
             </table>
 
             @if (!empty($physicalConnectivity))
                 <h6>Material Utilizations</h6>
                 @forelse (@$challanInfo as $challan)
-                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                        data-target="#challan{{ $challan->id }}">
-                        {{ $challan->challan_no }}
-                    </button>
+                    <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}"
+                        data-toggle="tooltip" title="Edit"
+                        class="btn btn-primary">{{ $challan->challan_no }}</a>
                 @empty
                 @endforelse
             @endif

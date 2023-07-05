@@ -4,10 +4,11 @@ namespace Modules\Networking\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Planning;
 use Modules\SCM\Entities\ScmChallan;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Support\Facades\DB;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
@@ -88,12 +89,16 @@ class PhysicalConnectivityController extends Controller
         $challanInfo = ScmChallan::query()
             ->where('fr_no', $physicalConnectivity->fr_no)
             ->get();
-        dd($challanInfo);
+
         $connectivity_points = FeasibilityRequirementDetail::query()
             ->where('client_no', $physicalConnectivity->client_no)
             ->get();
-            
-        return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'challanInfo', 'connectivity_points'));
+
+        $clientInfo = FeasibilityRequirementDetail::query()
+            ->where('fr_no', $physicalConnectivity->fr_no)
+            ->first();        
+
+        return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
 
     /**

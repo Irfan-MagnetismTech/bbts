@@ -8,20 +8,22 @@ use Modules\SCM\Entities\ScmErr;
 use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmMur;
 use Modules\SCM\Entities\ScmWcr;
+use Modules\SCM\Entities\ScmWor;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use App\Services\BbtsGlobalService;
+use Illuminate\Support\Facades\URL;
 use Modules\SCM\Entities\ScmChallan;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Redirect;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmChallanLine;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\SCM\Entities\ScmWor;
-use Spatie\Permission\Traits\HasRoles;
 
 class ScmMurController extends Controller
 {
@@ -50,7 +52,7 @@ class ScmMurController extends Controller
      * @return Renderable
      */
     public function create()
-    {
+    {               
         $challanData = ScmChallan::find(request()->challan_id);
         if ($challanData) {
             $challanData->load('scmRequisition', 'client', 'scmChallanLines');
@@ -109,6 +111,12 @@ class ScmMurController extends Controller
      */
     public function store(Request $request)
     {
+        $preprevious = session('url.intended');
+        $previous = url()->previous();
+        return Redirect::intended($preprevious->back());
+
+        return redirect()->back(fn() => back());
+        
         try {
             DB::beginTransaction();
             $challan_data = ScmChallan::find($request->challan_id);
