@@ -45,12 +45,14 @@
                 connectivity_point: connectivity_point,
             },
             success: function(data) {
+                console.log(data);
                 $("#fr_no").val(data.fr_no);
                 $("#contact_person").val(data.contact_name);
                 $("#contact_number").val(data.contact_number);
                 $("#email").val(data.contact_email);
                 $("#contact_address").val(data.location);
-                $("#lat_long").val(data.lat_long);
+                $("#lat").val(data.lat);
+                $("#long").val(data.long);
 
                 $("#physical_connectivity tbody").html("");
                 appendNetworkInfoRow(data.planning.final_survey_details);

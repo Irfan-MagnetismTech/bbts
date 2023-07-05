@@ -117,10 +117,16 @@
                         value="{{ old('contact_address') ?? (@$contact_address ?? '') }}">
                 </div>
 
-                <div class="form-group col-3 lat_long">
-                    <label for="lat_long">Lat. Long:</label>
-                    <input type="text" class="form-control" id="lat_long" name="lat_long" aria-describedby="lat_long"
-                        readonly value="{{ old('lat_long') ?? (@$lat_long ?? '') }}">
+                <div class="form-group col-3 lat">
+                    <label for="lat">Lat. Long:</label>
+                    <input type="text" class="form-control" id="lat" name="lat" aria-describedby="lat"
+                        readonly value="{{ old('lat') ?? (@$lat ?? '') }}">
+                </div>
+
+                <div class="form-group col-3 long">
+                    <label for="long">Lat. Long:</label>
+                    <input type="text" class="form-control" id="long" name="long" aria-describedby="long"
+                        readonly value="{{ old('long') ?? (@$long ?? '') }}">
                 </div>
 
                 <div class="form-group col-3 remarks">
@@ -269,9 +275,6 @@
 
 @endsection
 @section('script')
-
-    {{-- @include('networking::physical-connectivities.js') --}}
-
     <script>
         $('#connectivity_point').on('change', function() {
             var connectivity_point = $(this).val();
@@ -323,4 +326,6 @@
             $('#challaModal').modal('show');
         }
     </script>
+
+    @include('networking::physical-connectivities.js')
 @endsection
