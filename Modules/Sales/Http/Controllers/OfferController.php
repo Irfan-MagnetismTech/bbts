@@ -42,6 +42,7 @@ class OfferController extends Controller
     {
         $data = $request->all();
         try {
+
             $offer = $this->createOffer($data);
             return redirect()->route('offers.index')->with('success', 'Offer created successfully.');
         } catch (\Exception $e) {
@@ -112,8 +113,8 @@ class OfferController extends Controller
             DB::beginTransaction();
 
             $offer = Offer::create($requestData);
-
             $offerDetails = $this->createOfferDetails($offer, $requestData);
+
             $details = $offer->offerDetails()->createMany($offerDetails)->each(function ($offerDetail, $key) use ($offerDetails) {
                 $offerDetail->offerLinks()->createMany($offerDetails[$key]['offerLinks']);
             });
@@ -135,7 +136,6 @@ class OfferController extends Controller
 
             $offer = Offer::find($id);
             $offer->update($requestData);
-
             $offerDetails = $this->createOfferDetails($offer, $requestData);
             $details = $offer->offerDetails()->delete();
             $details = $offer->offerDetails()->createMany($offerDetails)->each(function ($offerDetail, $key) use ($offerDetails) {
@@ -177,6 +177,8 @@ class OfferController extends Controller
                 'offer_management_cost' => $requestData['offer_management_cost_' . $i],
                 'grand_total' => $requestData['grand_total_' . $i],
             ];
+
+
 
             $offerLinks = $this->createOfferLinks($offer, $requestData, $i);
             $offerDetails[$i - 1]['offerLinks'] = $offerLinks;

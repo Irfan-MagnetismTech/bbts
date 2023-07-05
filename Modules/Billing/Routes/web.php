@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +13,13 @@
 |
 */
 
-Route::prefix('billing')->group(function() {
-    Route::get('/', 'BillingController@index');
+Route::prefix('billing')->middleware(['auth'])->group(function () {
+        Route::get('/', 'BillingController@index');
+    
+    Route::resources([
+        'monthly-bills' => MonthlyBillController::class,
+    ]);
+    
 });
+
+

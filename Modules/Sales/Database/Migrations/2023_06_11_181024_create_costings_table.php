@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('fr_no');
             $table->unsignedBigInteger('mq_no');
             $table->unsignedBigInteger('client_no');
-            $table->string('connectivity_point_name');
+            $table->string('connectivity_point');
             $table->string('month');
             $table->decimal('product_total_cost', 10, 2);
             $table->decimal('total_operation_cost', 10, 2);

@@ -14,6 +14,8 @@ class Offer extends Model
 {
     protected $guarded = [];
 
+    protected $fillable = ['client_no', 'mq_no', 'offer_validity'];
+
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');

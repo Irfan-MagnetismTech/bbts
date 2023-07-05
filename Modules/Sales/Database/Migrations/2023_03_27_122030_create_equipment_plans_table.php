@@ -16,8 +16,11 @@ return new class extends Migration
         Schema::create('equipment_plans', function (Blueprint $table) {
             $table->id();
             $table->integer('planning_id')->nullable();
-            $table->string('material_name')->nullable();
+            $table->integer('material_id')->nullable();
+            $table->integer('brand_id')->nullable();
             $table->integer('quantity')->nullable();
+            $table->string(('model'))->nullable();
+            $table->string('description')->nullable();
             $table->string(('unit'))->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();

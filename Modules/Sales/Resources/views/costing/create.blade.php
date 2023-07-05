@@ -39,7 +39,7 @@
                 @php
                     $client_name = $is_old ? old('client_name') : $planning->feasibilityRequirementDetail->feasibilityRequirement->lead_generation->client_name;
                     $client_no = $is_old ? old('client_no') : $planning->feasibilityRequirementDetail->feasibilityRequirement->lead_generation->client_no;
-                    $location = $is_old ? old('location') : $planning->feasibilityRequirementDetail->link_name;
+                    $location = $is_old ? old('location') : $planning->feasibilityRequirementDetail->connectivity_point;
                     $fr_no = $is_old ? old('fr_no') : $planning->feasibilityRequirementDetail->fr_no;
                     $fr_id = $is_old ? old('fr_id') : $planning->feasibilityRequirementDetail->id;
                     $mq_no = $is_old ? old('mq_no') : $planning->feasibilityRequirementDetail->feasibilityRequirement->mq_no;
@@ -63,9 +63,9 @@
                 <div class="col-xl-3 col-md-3">
                     <div>
                         <div class="form-item">
-                            <input type="text" name="connectivity_point_name" id="connectivity_point_name"
+                            <input type="text" name="connectivity_point" id="connectivity_point"
                                 class="form-control form-control-sm" placeholder="" value="{{ $location }}" required>
-                            <label for="connectivity_point_name">Name of the link</label>
+                            <label for="connectivity_point">Connectivity Point</label>
                         </div>
                     </div>
                 </div>
@@ -233,7 +233,7 @@
                                             <span>
                                                 <input type="text" name="material_id[]" id="material_id "
                                                     class="form-control form-control-sm input" placeholder="Link Type"
-                                                    value="{{ $equipment_plan->material_name }}" readonly>
+                                                    value="{{ $equipment_plan->material->name }}" readonly>
                                             </span>
                                         </td>
                                         <td>
@@ -477,8 +477,11 @@
                                                 <input type="text"
                                                     class="form-control form-control-sm plan_equipment_material_name input"
                                                     placeholder="Material"
+                                                    name="plan_equipment_material_name_{{ $row_no }}[]"
+                                                    value="{{ $plan_link_equipment->material->name }}">
+                                                <input type="hidden"
                                                     name="plan_equipment_material_id_{{ $row_no }}[]"
-                                                    value="{{ $plan_link_equipment->material_name }}">
+                                                    value="{{ $plan_link_equipment->material->id }}">
                                             </span>
                                         </td>
                                         <td>
