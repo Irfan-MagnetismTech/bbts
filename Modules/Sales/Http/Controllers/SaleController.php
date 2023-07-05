@@ -10,9 +10,10 @@ use Modules\SCM\Entities\ScmMur;
 use Modules\Sales\Entities\Offer;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Models\Dataencoding\Division;
+use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 
@@ -37,7 +38,8 @@ class SaleController extends Controller
      */
     public function create()
     {
-        return view('sales::sales.create');
+        $divisions = Division::latest()->get();
+        return view('sales::sales.create', compact('divisions'));
     }
 
     /**
@@ -84,7 +86,8 @@ class SaleController extends Controller
      */
     public function edit(Sale $sale)
     {
-        return view('sales::sales.create', compact('sale'));
+        $divisions = Division::latest()->get();
+        return view('sales::sales.create', compact('sale', 'divisions'));
     }
 
     /**
@@ -220,10 +223,11 @@ class SaleController extends Controller
                 'value'                 => $item->client->client_name,
                 'label'                 => $item->client->client_name . ' ( ' . ($item?->mq_no ?? '') . ' )',
                 'client_no'             => $item->client_no,
+                'client_id'             => $item->client->id,
                 'offer_id'              => $item->id,
                 'mq_no'                 => $item->mq_no,
-                'billing_address'       => BillingAddress::where('client_no', $item->client_no)->get()->latest(),
-                'collection_address'    => CollectionAddress::where('client_no', $item->client_no)->get()->latest(),
+                'billing_address'       => BillingAddress::where('client_no', $item->client_no)->get(),
+                'collection_address'    => CollectionAddress::where('client_no', $item->client_no)->get(),
                 'details'               => $item->offerDetails
             ]);
         return response()->json($items);

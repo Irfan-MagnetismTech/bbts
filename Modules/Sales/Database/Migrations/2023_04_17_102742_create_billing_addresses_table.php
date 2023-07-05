@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('district_id')->nullable();
             $table->integer('thana_id')->nullable();
             $table->string('address')->nullable();
+            $table->string('fr_no')->nullable();
             $table->integer('submission_by')->nullable();
             $table->string('submission_date')->nullable();
             $table->timestamps();
