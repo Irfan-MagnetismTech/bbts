@@ -179,7 +179,8 @@
         <button class="btn btn-primary">Details</button>
         <button class="btn btn-primary">Approval Finance</button>
         <button class="btn btn-primary">Approval CMO</button>
-</div>@endsection
+</div>
+@endsection
 
 @section('script')
     <script>
