@@ -114,7 +114,6 @@ class OfferController extends Controller
 
             $offer = Offer::create($requestData);
             $offerDetails = $this->createOfferDetails($offer, $requestData);
-
             $details = $offer->offerDetails()->createMany($offerDetails)->each(function ($offerDetail, $key) use ($offerDetails) {
                 $offerDetail->offerLinks()->createMany($offerDetails[$key]['offerLinks']);
             });
@@ -137,6 +136,7 @@ class OfferController extends Controller
             $offer = Offer::find($id);
             $offer->update($requestData);
             $offerDetails = $this->createOfferDetails($offer, $requestData);
+
             $details = $offer->offerDetails()->delete();
             $details = $offer->offerDetails()->createMany($offerDetails)->each(function ($offerDetail, $key) use ($offerDetails) {
                 $offerDetail->offerLinks()->delete();
@@ -178,8 +178,6 @@ class OfferController extends Controller
                 'grand_total' => $requestData['grand_total_' . $i],
             ];
 
-
-
             $offerLinks = $this->createOfferLinks($offer, $requestData, $i);
             $offerDetails[$i - 1]['offerLinks'] = $offerLinks;
         }
@@ -193,13 +191,14 @@ class OfferController extends Controller
         $linkStatuses = $requestData['link_status' . "_" . $index] ?? [];
 
         foreach ($requestData['link_no' . '_' . $index] as $key => $linkNo) {
+
             $linkStatus = $linkStatuses[$key] ?? 0;
 
             $offerLinks[] = [
                 'offer_id' => $offer->id,
-                'link_no' => $linkNo,
+                'link_no' => $requestData['link_no' . '_' . $index][$key] ?? '',
                 'link_type' => $requestData['link_type' . "_" . $index][$key] ?? '',
-                'link_status' => $linkStatus,
+                'link_status' => $requestData['link_status' . "_" . $index][$key] ?? '0',
                 'option' => $requestData['option' . "_" . $index][$key] ?? '',
                 'connectivity_status' => $requestData['connectivity_status' . "_" . $index][$key] ?? '',
                 'method' => $requestData['method' . "_" . $index][$key] ?? '',
@@ -218,12 +217,13 @@ class OfferController extends Controller
         return $offerLinks;
     }
 
-    public function pnlSummary($id = null)
+    public function pnlSummary($mq_no = null)
     {
-        return view('sales::pnl.pnl_summary');
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')->where('mq_no', $mq_no)->first();
+        return view('sales::pnl.pnl_summary', compact('feasibility_requirement'));
     }
 
-    public function pnlDetails($id = null)
+    public function pnlDetails($mq_no = null)
     {
         return view('sales::pnl.pnl_details');
     }

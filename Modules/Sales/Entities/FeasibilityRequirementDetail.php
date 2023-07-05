@@ -71,5 +71,10 @@ class FeasibilityRequirementDetail extends Model
     public function costing()
     {
         return $this->belongsTo(Costing::class, 'fr_no', 'fr_no');
-    }    
+    }
+
+    public function offerDetail()
+    {
+        return $this->hasOne(OfferDetail::class, 'fr_no', 'fr_no');
+    }
 }

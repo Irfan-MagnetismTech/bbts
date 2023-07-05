@@ -91,8 +91,9 @@
                                                     <th>Total <br> OTC</th>
                                                     <th>Offer <br> MRC</th>
                                                 </thead>
-                                                <tbody class="mainRow">
-                                                    @foreach ($details->costing->costingLinks as $key => $link)
+
+                                                @foreach ($details->costing->costingLinks as $key => $link)
+                                                    <tbody class="mainRow">
                                                         <tr class="offer_details_row">
                                                             <td>
                                                                 <div class="checkbox-fade fade-in-primary"
@@ -425,8 +426,9 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
-                                                    @endforeach
-                                                </tbody>
+                                                    </tbody>
+                                                @endforeach
+
                                             </table>
                                         </div>
 
