@@ -17,4 +17,9 @@ class CostingLink extends Model
     {
         return $this->hasOne(FinalSurveyDetail::class, 'link_no', 'link_no');
     }
+
+    public function offerLink()
+    {
+        return $this->hasOne(OfferLink::class, 'link_no', 'link_no');
+    }
 }

@@ -33,4 +33,9 @@ class Costing extends Model
     {
         return $this->hasOne(Planning::class, 'fr_no', 'fr_no');
     }
+
+    public function saleDetail()
+    {
+        return $this->hasOne(SaleDetail::class, 'fr_no', 'fr_no');
+    }
 }
