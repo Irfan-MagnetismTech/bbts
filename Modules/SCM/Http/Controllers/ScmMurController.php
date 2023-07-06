@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\URL;
 use Modules\SCM\Entities\ScmChallan;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmChallanLine;
@@ -43,6 +44,7 @@ class ScmMurController extends Controller
      */
     public function index()
     {
+        session()->forget('physicalConnectivityEditUrl');
         $scmMurs = ScmMur::latest()->get();
         return view('scm::mur.index', compact('scmMurs'));
     }
@@ -52,7 +54,7 @@ class ScmMurController extends Controller
      * @return Renderable
      */
     public function create()
-    {               
+    {
         $challanData = ScmChallan::find(request()->challan_id);
         if ($challanData) {
             $challanData->load('scmRequisition', 'client', 'scmChallanLines');
@@ -111,12 +113,6 @@ class ScmMurController extends Controller
      */
     public function store(Request $request)
     {
-        $preprevious = session('url.intended');
-        $previous = url()->previous();
-        return Redirect::intended($preprevious->back());
-
-        return redirect()->back(fn() => back());
-        
         try {
             DB::beginTransaction();
             $challan_data = ScmChallan::find($request->challan_id);
@@ -134,6 +130,10 @@ class ScmMurController extends Controller
             $challan_data->stockable()->delete();
             $mur->stockable()->createMany($stock);
             DB::commit();
+
+            if (session()->has('physicalConnectivityEditUrl')) {
+                return redirect(session()->get('physicalConnectivityEditUrl'));
+            }
             return redirect()->route('material-utilizations.index')->with('message', 'Data has been created successfully');
         } catch (Exception $err) {
             DB::rollBack();

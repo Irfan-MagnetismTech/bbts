@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Planning;
 use Modules\SCM\Entities\ScmChallan;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Termwind\Components\Dd;
 
 class PhysicalConnectivityController extends Controller
 {
@@ -62,6 +64,7 @@ class PhysicalConnectivityController extends Controller
             $physicalConnectivity->lines()->createMany($dataList);
 
             DB::commit();
+
             return redirect()->route('physical-connectivities.edit', $physicalConnectivity->id);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -86,6 +89,8 @@ class PhysicalConnectivityController extends Controller
      */
     public function edit(PhysicalConnectivity $physicalConnectivity)
     {
+        Session::put('physicalConnectivityEditUrl', url()->current());
+
         $challanInfo = ScmChallan::query()
             ->where('fr_no', $physicalConnectivity->fr_no)
             ->get();
@@ -96,7 +101,7 @@ class PhysicalConnectivityController extends Controller
 
         $clientInfo = FeasibilityRequirementDetail::query()
             ->where('fr_no', $physicalConnectivity->fr_no)
-            ->first();        
+            ->first();
 
         return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
@@ -107,9 +112,9 @@ class PhysicalConnectivityController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, PhysicalConnectivity $physicalConnectivity)
     {
-        //
+        
     }
 
     /**
