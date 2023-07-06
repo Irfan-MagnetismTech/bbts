@@ -160,58 +160,60 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($physicalConnectivity->lines as $key => $physicalConnectivityLine)
-                        <tr>
-                            <td>
-                                <input type="text" name="link_type[]" class="form-control link_type" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->link_type }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="method[]" class="form-control method" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->method }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->pop }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->ldp }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="link_id[]" class="form-control link_id" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->link_id }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="device_ip[]" class="form-control device_ip"
-                                    autocomplete="off" value="{{ $physicalConnectivityLine->device_ip }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="port[]" class="form-control port" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->port }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->vlan }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="distance[]" class="form-control distance" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->distance }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="connectivity_details[]"
-                                    class="form-control connectivity_details" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->connectivity_details }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="comment[]" class="form-control comment" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->comment }}" readonly>
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-network-info-row"></i>
-                            </td>
-                        </tr>
-                    @endforeach
+                    @if (!empty($physicalConnectivity))
+                        @foreach ($physicalConnectivity->lines as $key => $physicalConnectivityLine)
+                            <tr>
+                                <td>
+                                    <input type="text" name="link_type[]" class="form-control link_type"
+                                        autocomplete="off" value="{{ $physicalConnectivityLine->link_type }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="method[]" class="form-control method" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->method }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->pop }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->ldp }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="link_id[]" class="form-control link_id"
+                                        autocomplete="off" value="{{ $physicalConnectivityLine->link_id }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="device_ip[]" class="form-control device_ip"
+                                        autocomplete="off" value="{{ $physicalConnectivityLine->device_ip }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="port[]" class="form-control port" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->port }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->vlan }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="distance[]" class="form-control distance"
+                                        autocomplete="off" value="{{ $physicalConnectivityLine->distance }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="connectivity_details[]"
+                                        class="form-control connectivity_details" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->connectivity_details }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="comment[]" class="form-control comment"
+                                        autocomplete="off" value="{{ $physicalConnectivityLine->comment }}" readonly>
+                                </td>
+                                <td>
+                                    <i class="btn btn-danger btn-sm fa fa-minus remove-network-info-row"></i>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
 
@@ -219,7 +221,7 @@
                 <h6>Material Utilizations</h6>
                 @forelse (@$challanInfo as $challan)
                     <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}"
-                        data-toggle="tooltip" title="Edit" class="btn btn-primary">{{ $challan->challan_no }}</a>
+                        data-toggle="tooltip" title="Challan" class="btn btn-primary">{{ $challan->challan_no }}</a>
                 @empty
                 @endforelse
             @endif

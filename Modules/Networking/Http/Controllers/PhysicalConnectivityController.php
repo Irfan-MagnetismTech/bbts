@@ -22,7 +22,11 @@ class PhysicalConnectivityController extends Controller
      */
     public function index()
     {
-        return view('networking::index');
+        $physicalConnectivities = PhysicalConnectivity::query()
+            ->with('lines')
+            ->latest()
+            ->get();
+        return view('networking::physical-connectivities.index', compact('physicalConnectivities'));
     }
 
     /**
