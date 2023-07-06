@@ -77,7 +77,7 @@ class PhysicalConnectivityController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show()
     {
         abort(404);
     }
@@ -153,7 +153,19 @@ class PhysicalConnectivityController extends Controller
      */
     public function destroy(PhysicalConnectivity $physicalConnectivity)
     {
-        
+        try {
+            DB::beginTransaction();
+
+            $physicalConnectivity->lines()->delete();
+            $physicalConnectivity->delete();
+
+            DB::commit();
+
+            return redirect()->route('physical-connectivities.index')->with('message', 'Physical Connectivity Deleted Successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     public function getNetworkInfoByFr()

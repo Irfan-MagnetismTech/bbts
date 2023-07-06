@@ -223,9 +223,6 @@
                 @empty
                 @endforelse
             @endif
-            {{-- <div id="challans">
-
-            </div> --}}
 
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
@@ -237,96 +234,7 @@
         </form>
     </div>
 
-    {{-- <div class="modal fade" id="challaModal" tabindex="-1" role="dialog" aria-labelledby="challaModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content" id="challanModalContent">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h5 class="text-center">Challan No: {{ @$challan->challan_no }}</h5>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>FR No</th>
-                                        <th>Purpose</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (@$challan->scmChallanDetails as $challanDetail)
-                                        <tr>
-                                            <td>{{ $challanDetail->material->materialNameWithCode }}</td>
-                                            <td>{{ $challanDetail->brand->name }}</td>
-                                            <td>{{ $challanDetail->model }}</td>
-                                            <td>{{ $challanDetail->material->unit }}</td>
-                                            <td>{{ $challanDetail->quantity }}</td>
-                                            <td>{{ $challanDetail->unit_price }}</td>
-                                            <td>{{ $challanDetail->total_amount }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
 @endsection
 @section('script')
-    <script>
-        // $('#connectivity_point').on('change', function() {
-        //     var connectivity_point = $(this).val();
-
-        //     $.ajax({
-        //         url: "{{ route('getChallanInfoByLinkNo') }}",
-        //         type: 'GET',
-        //         data: {
-        //             link_no: "fr-2023-03-1-P1"
-        //         },
-        //         success: function(data) {
-        //             console.log(data);
-        //             //foreach data and append to challans div
-        //             var html = '';
-        //             $.each(data, function(key, value) {
-        //                 html +=
-        //                     '<button type="button" class="btn btn-primary challanButton" data-toggle="modal" data-target="#challaModal" >' +
-        //                     value.challan_no + '</button>';
-        //             });
-        //             $('#challans').html(html);
-        //         }
-        //     });
-        // });
-        //on click modal button get challan info
-        // $('#challans').on('click', '.challanButton', function() {
-        //     var challan_no = $(this).text();
-        //     $.ajax({
-        //         url: "{{ route('getChallanInfoByChallanNo') }}",
-        //         type: 'GET',
-        //         data: {
-        //             challan_no: challan_no
-        //         },
-        //         success: function(data) {
-        //             console.log(data);
-        //             //foreach data and append to challans div
-        //             var html = '';
-        //             $.each(data, function(key, value) {
-        //                 html +=
-        //                     '<tr><td>' + value.fr_no + '</td><td>' + value
-        //                     .purpose + '</td>';
-        //             });
-        //             $('#challanModalContent tbody').html(html);
-        //         }
-        //     });
-        // });
-
-        //open modal for challan
-        // function openChallanModal(id) {
-        //     $('#challaModal').modal('show');
-        // }
-    </script>
-
     @include('networking::physical-connectivities.js')
 @endsection
