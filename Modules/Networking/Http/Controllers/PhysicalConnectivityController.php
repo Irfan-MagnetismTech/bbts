@@ -2,10 +2,17 @@
 
 namespace Modules\Networking\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Planning;
+use Modules\SCM\Entities\ScmChallan;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Networking\Entities\PhysicalConnectivity;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Termwind\Components\Dd;
 
 class PhysicalConnectivityController extends Controller
 {
@@ -15,7 +22,11 @@ class PhysicalConnectivityController extends Controller
      */
     public function index()
     {
-        return view('networking::index');
+        $physicalConnectivities = PhysicalConnectivity::query()
+            ->with('lines')
+            ->latest()
+            ->get();
+        return view('networking::physical-connectivities.index', compact('physicalConnectivities'));
     }
 
     /**
@@ -34,7 +45,35 @@ class PhysicalConnectivityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $dataList = [];
+            foreach ($request->link_type as $key => $value) {
+                $dataList[] = [
+                    'link_type' => $value,
+                    'method' => $request->method[$key],
+                    'pop' => $request->pop[$key],
+                    'ldp' => $request->ldp[$key],
+                    'link_id' => $request->link_id[$key],
+                    'device_ip' => $request->device_ip[$key],
+                    'port' => $request->port[$key],
+                    'vlan' => $request->vlan[$key],
+                    'distance' => $request->distance[$key],
+                    'connectivity_details' => $request->connectivity_details[$key],
+                    'comment' => $request->comment[$key],
+                ];
+            }
+            $physicalConnectivity = PhysicalConnectivity::create($request->all());
+            $physicalConnectivity->lines()->createMany($dataList);
+
+            DB::commit();
+
+            return redirect()->route('physical-connectivities.edit', $physicalConnectivity->id);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -42,9 +81,9 @@ class PhysicalConnectivityController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show()
     {
-        return view('networking::show');
+        abort(404);
     }
 
     /**
@@ -52,9 +91,23 @@ class PhysicalConnectivityController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(PhysicalConnectivity $physicalConnectivity)
     {
-        return view('networking::edit');
+        Session::put('physicalConnectivityEditUrl', url()->current());
+
+        $challanInfo = ScmChallan::query()
+            ->where('fr_no', $physicalConnectivity->fr_no)
+            ->get();
+
+        $connectivity_points = FeasibilityRequirementDetail::query()
+            ->where('client_no', $physicalConnectivity->client_no)
+            ->get();
+
+        $clientInfo = FeasibilityRequirementDetail::query()
+            ->where('fr_no', $physicalConnectivity->fr_no)
+            ->first();
+
+        return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
 
     /**
@@ -63,9 +116,38 @@ class PhysicalConnectivityController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, PhysicalConnectivity $physicalConnectivity)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $dataList = [];
+            foreach ($request->link_type as $key => $value) {
+                $dataList[] = [
+                    'link_type' => $value,
+                    'method' => $request->method[$key],
+                    'pop' => $request->pop[$key],
+                    'ldp' => $request->ldp[$key],
+                    'link_id' => $request->link_id[$key],
+                    'device_ip' => $request->device_ip[$key],
+                    'port' => $request->port[$key],
+                    'vlan' => $request->vlan[$key],
+                    'distance' => $request->distance[$key],
+                    'connectivity_details' => $request->connectivity_details[$key],
+                    'comment' => $request->comment[$key],
+                ];
+            }
+            $physicalConnectivity->update($request->all());
+            $physicalConnectivity->lines()->delete();
+            $physicalConnectivity->lines()->createMany($dataList);
+
+            DB::commit();
+
+            return redirect()->route('physical-connectivities.index')->with('message', 'Physical Connectivity Updated Successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -73,9 +155,21 @@ class PhysicalConnectivityController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(PhysicalConnectivity $physicalConnectivity)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $physicalConnectivity->lines()->delete();
+            $physicalConnectivity->delete();
+
+            DB::commit();
+
+            return redirect()->route('physical-connectivities.index')->with('message', 'Physical Connectivity Deleted Successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     public function getNetworkInfoByFr()
@@ -86,5 +180,25 @@ class PhysicalConnectivityController extends Controller
             ->get();
 
         return response()->json($networkInfo);
+    }
+
+    public function getChallanInfoByLinkNo()
+    {
+        $challanInfo = ScmChallan::query()
+            ->with('scmChallanLines')
+            ->where('link_no', request('link_no'))
+            ->get();
+
+        return response()->json($challanInfo);
+    }
+
+    public function getChallanInfoByChallanNo()
+    {
+        $challanInfo = ScmChallan::query()
+            ->with('scmChallanLines')
+            ->where('challan_no', request('challan_no'))
+            ->get();
+
+        return response()->json($challanInfo);
     }
 }
