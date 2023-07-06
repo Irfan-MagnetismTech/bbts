@@ -207,6 +207,9 @@
                                 <input type="text" name="comment[]" class="form-control comment" autocomplete="off"
                                     value="{{ $physicalConnectivityLine->comment }}" readonly>
                             </td>
+                            <td>
+                                <i class="btn btn-danger btn-sm fa fa-minus remove-network-info-row"></i>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -216,8 +219,7 @@
                 <h6>Material Utilizations</h6>
                 @forelse (@$challanInfo as $challan)
                     <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}"
-                        data-toggle="tooltip" title="Edit"
-                        class="btn btn-primary">{{ $challan->challan_no }}</a>
+                        data-toggle="tooltip" title="Edit" class="btn btn-primary">{{ $challan->challan_no }}</a>
                 @empty
                 @endforelse
             @endif

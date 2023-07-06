@@ -114,7 +114,36 @@ class PhysicalConnectivityController extends Controller
      */
     public function update(Request $request, PhysicalConnectivity $physicalConnectivity)
     {
-        
+        try {
+            DB::beginTransaction();
+
+            $dataList = [];
+            foreach ($request->link_type as $key => $value) {
+                $dataList[] = [
+                    'link_type' => $value,
+                    'method' => $request->method[$key],
+                    'pop' => $request->pop[$key],
+                    'ldp' => $request->ldp[$key],
+                    'link_id' => $request->link_id[$key],
+                    'device_ip' => $request->device_ip[$key],
+                    'port' => $request->port[$key],
+                    'vlan' => $request->vlan[$key],
+                    'distance' => $request->distance[$key],
+                    'connectivity_details' => $request->connectivity_details[$key],
+                    'comment' => $request->comment[$key],
+                ];
+            }
+            $physicalConnectivity->update($request->all());
+            $physicalConnectivity->lines()->delete();
+            $physicalConnectivity->lines()->createMany($dataList);
+
+            DB::commit();
+
+            return redirect()->route('physical-connectivities.index')->with('message', 'Physical Connectivity Updated Successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -122,9 +151,9 @@ class PhysicalConnectivityController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(PhysicalConnectivity $physicalConnectivity)
     {
-        //
+        
     }
 
     public function getNetworkInfoByFr()
