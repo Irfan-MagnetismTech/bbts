@@ -90,11 +90,6 @@
                                     <a href="{{ route('add-offer', $feasibility_requirement->mq_no) }}"
                                         data-toggle="tooltip" title="Add Offer" class="btn btn-outline-success"><i
                                             class="fas fa-plus"></i></a>
-                                    {{-- add survey  --}}
-                                    <a href="{{ route('pnl-summary', $feasibility_requirement->mq_no) }}"
-                                        data-toggle="tooltip" title="Add Survey" class="btn btn-outline-success"><i
-                                            class="fas fa-plus"></i></a>
-                                    {{-- add planning  --}}
                                 </nobr>
                             </div>
                         </td>

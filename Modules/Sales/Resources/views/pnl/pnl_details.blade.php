@@ -32,82 +32,62 @@
         'class' => 'custom-form',
     ]) !!}
 
-    <div class="row mb-1">
-        <div class="col-2 image-margin">
-            <img src="{{ asset('images/bbts_logo_big.png') }}" alt="logo" style="height: 60px; width: 60px;">
-        </div>
-        <div class="col-8 text-center">
-            <h2>Broad Band Telecom Services Limited</h2>
-            <h4>Ispahani Building (5th Floor) Argrabad, Chittagong.</h4>
-        </div>
-        <div class="col-2">
-            <p style="font-size: 15px;"><span style="text-bold">Client No:</span> 2023-08 </p>
-            <p style="font-size: 15px;"><span style="text-bold">Client Name:</span> Jahirul Islam </p>
-            <p style="font-size: 15px;"><span style="text-bold">Month:</span> 12 </p>
-        </div>
-    </div>
-    <div class="row mb-1">
-        <div class="col-12 text-center">
-            <h2>Profit and Loss Statement</h2>
-            <hr />
-        </div>
-    </div>
     <div>
-        <table>
-            <thead>
-                <tr class="text-center">
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                    <th>Rate</th>
-                    <th>Amount</th>
-                    <th>Operation Cost</th>
-                    <th>Total Amount</th>
-                    <th>Price</th>
-                    <th>Total Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Product One</td>
-                    <td>10000</td>
-                    <td>mbps</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                </tr>
-                <tr>
-                    <td>Product Two</td>
-                    <td>10000</td>
-                    <td>mbps</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                </tr>
-            <tfoot>
-                <tr>
-                    <td colspan="3" class="text-right">Total</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
-                    <td>10000</td>
+        @foreach ($feasibility_requirement->feasibilityRequirementDetails as $details)
+            @if ($details->costing)
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th colspan="9" class="text-center">{{ $details->connectivity_point . '-' . $details->fr_no }}
+                            </th>
+                        </tr>
+                        <tr class="text-center">
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Operation Cost</th>
+                            <th>Total Amount</th>
+                            <th>Price</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($details->costing->costingProducts as $product)
+                            <tr>
+                                <td>{{ $product->product->name }}</td>
+                                <td>{{ $product->quantity }}</td>
+                                <td>{{ $product->unit }}</td>
+                                <td>{{ $product->rate }}</td>
+                                <td>{{ $product->sub_total }}</td>
+                                <td>{{ $product->operation_cost }}</td>
+                                <td>{{ $product->operation_cost_total }}</td>
+                                <td>{{ number_format($product?->sale_product?->price, 2) ?? '' }}</td>
+                                <td>{{ number_format($product?->sale_product?->total_price, 2) ?? '' }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-right">Total</td>
+                            <td>10000</td>
+                            <td>10000</td>
+                            <td>10000</td>
+                            <td>10000</td>
+                            <td>10000</td>
 
-                </tr>
-            </tfoot>
-        </table>
+                        </tr>
+                    </tfoot>
+                </table>
+            @endif
+        @endforeach
     </div>
     <div class="row" style="margin-top: 25px;">
-        <table>
+        <table class="table table-bordered">
             <thead>
                 <tr class="text-center">
-                    <th>Link Name</th>
+                    <th>Particulars</th>
                     <th>Equipment Cost</th>
                     <th>Interest</th>
                     <th>VAT</th>
@@ -122,8 +102,8 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Link 1</td>
-                    <td>10000</td>
+                    <td>Product Equipment</td>
+                    <td>{{ $details->costing }}</td>
                     <td>10000</td>
                     <td>10000</td>
                     <td>10000</td>
@@ -175,11 +155,7 @@
             </tfoot>
         </table>
     </div>
-    <div class="d-flex justify-content-evenly" style="margin-top: 20px;">
-        <button class="btn btn-primary">Details</button>
-        <button class="btn btn-primary">Approval Finance</button>
-        <button class="btn btn-primary">Approval CMO</button>
-</div>
+
 @endsection
 
 @section('script')

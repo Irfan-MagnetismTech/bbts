@@ -208,6 +208,7 @@ class CostingController extends Controller
             $productData = [
                 'costing_id' => $costing->id,
                 'product_id' => $product,
+                'fr_no' => $request->fr_no,
                 'quantity' => $request->product_quantity[$key],
                 'rate' => $request->product_rate[$key],
                 'unit' => $request->product_unit[$key],

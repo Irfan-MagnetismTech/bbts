@@ -45,8 +45,8 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('sales.edit', $sale->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <a href="{{ route('sales.edit', $sale->id) }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
                                     <form action="{{ route('sales.destroy', $sale->id) }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
@@ -55,7 +55,8 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
-                                    
+                                    <a href="{{ route('pnl-summary', $sale->mq_no) }}" data-toggle="tooltip"
+                                        title="Add Survey" class="btn btn-outline-success">PNL</a>
                                 </nobr>
                             </div>
                         </td>

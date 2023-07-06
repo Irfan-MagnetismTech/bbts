@@ -10,6 +10,8 @@ use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\Offer;
+use Modules\Sales\Entities\Product;
+use Modules\Sales\Entities\SaleProductDetail;
 
 class OfferController extends Controller
 {
@@ -220,11 +222,22 @@ class OfferController extends Controller
     public function pnlSummary($mq_no = null)
     {
         $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')->where('mq_no', $mq_no)->first();
-        return view('sales::pnl.pnl_summary', compact('feasibility_requirement'));
+        return view('sales::pnl.pnl_summary', compact('feasibility_requirement', 'mq_no'));
     }
 
     public function pnlDetails($mq_no = null)
     {
-        return view('sales::pnl.pnl_details');
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing.costingProducts')
+            ->where('mq_no', $mq_no)->first();
+        if ($feasibility_requirement) {
+            $feasibility_requirement->feasibilityRequirementDetails->map(function ($item) {
+                $item->costing->costingProducts->map(function ($item) {
+                    $item->sale_product = SaleProductDetail::where('product_id', $item->product_id)->where('fr_no', $item->fr_no)->first();
+                    return $item;
+                });
+                return $item;
+            });
+        }
+        return view('sales::pnl.pnl_details', compact('feasibility_requirement', 'mq_no'));
     }
 }

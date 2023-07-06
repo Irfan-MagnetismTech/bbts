@@ -77,4 +77,9 @@ class FeasibilityRequirementDetail extends Model
     {
         return $this->hasOne(OfferDetail::class, 'fr_no', 'fr_no');
     }
+
+    public function saleProductDetails()
+    {
+        return $this->hasMany(SaleProductDetail::class, 'fr_no', 'fr_no');
+    }
 }

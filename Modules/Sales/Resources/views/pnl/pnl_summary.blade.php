@@ -73,23 +73,26 @@
                             $total_monthly_pnl += $details->offerDetail->grand_total - $details->costing->management_cost_amount;
                             $total_pnl += ($details->offerDetail->grand_total - $details->costing->management_cost_amount) * $details->costing->month;
                         @endphp
-                        <tr>
-                            <td>{{ $details->fr_no }}</td>
-                            <td>{{ $details->costing->total_investment }}</td>
-                            <td>{{ $details->costing->total_otc }}</td>
-                            <td>{{ $details->costing->equipment_price_for_client }}</td>
-                            <td>{{ $details->costing->total_otc_with_client_equipment }}</td>
-                            <td>{{ $details->costing->product_total_cost }}</td>
-                            <td>{{ $details->costing->total_service_cost }}</td>
-                            <td>{{ $details->costing->management_cost_amount }}</td>
-                            <td>{{ $details->costing->management_cost_total }}</td>
-                            <td>{{ $details->costing->management_cost_total * $details->costing->month }}</td>
-                            <td>{{ $details->offerDetail->grand_total }}</td>
-                            <td>{{ $details->offerDetail->grand_total * $details->costing->month }}</td>
-                            <td>{{ $details->offerDetail->grand_total - $details->costing->management_cost_amount }}</td>
-                            <td>{{ ($details->offerDetail->grand_total - $details->costing->management_cost_amount) * $details->costing->month }}
-                            </td>
-                        </tr>
+                        @foreach ($details->costing->costingProducts as $product)
+                            <tr>
+                                <td>{{ $details->fr_no }}</td>
+                                <td>{{ $details->costing->total_investment }}</td>
+                                <td>{{ $details->costing->total_otc }}</td>
+                                <td>{{ $details->costing->equipment_price_for_client }}</td>
+                                <td>{{ $details->costing->total_otc_with_client_equipment }}</td>
+                                <td>{{ $details->costing->product_total_cost }}</td>
+                                <td>{{ $details->costing->total_service_cost }}</td>
+                                <td>{{ $details->costing->management_cost_amount }}</td>
+                                <td>{{ $details->costing->management_cost_total }}</td>
+                                <td>{{ $details->costing->management_cost_total * $details->costing->month }}</td>
+                                <td>{{ $details->offerDetail->grand_total }}</td>
+                                <td>{{ $details->offerDetail->grand_total * $details->costing->month }}</td>
+                                <td>{{ $details->offerDetail->grand_total - $details->costing->management_cost_amount }}
+                                </td>
+                                <td>{{ ($details->offerDetail->grand_total - $details->costing->management_cost_amount) * $details->costing->month }}
+                                </td>
+                            </tr>
+                        @endforeach
                     @endif
                 @endforeach
             </tbody>
@@ -111,9 +114,9 @@
         </table>
     </div>
     <div class="d-flex" style="margin-top: 20px; justify-content: space-around">
-        <button class="btn btn-primary">Details</button>
-        <button class="btn btn-primary">Approval Finance</button>
-        <button class="btn btn-primary">Approval CMO</button>
+        <a class="btn btn-outline-success" style="transition: 0.5s" href="{{ route('pnl-details', $mq_no) }}">Details</a>
+        <a class="btn btn-outline-primary" style="transition: 0.5s">Approval Finance</a>
+        <a class="btn btn-outline-primary" style="transition: 0.5s">Approval CMO</a>
     </div>
 @endsection
 
