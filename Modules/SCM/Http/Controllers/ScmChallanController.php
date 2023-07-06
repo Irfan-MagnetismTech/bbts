@@ -46,6 +46,7 @@ class ScmChallanController extends Controller
      */
     public function index()
     {
+        session()->forget('physicalConnectivityEditUrl');
         $challans = ScmChallan::with('scmChallanLines')->latest()->get();
         return view('scm::challans.index', compact('challans'));
     }
