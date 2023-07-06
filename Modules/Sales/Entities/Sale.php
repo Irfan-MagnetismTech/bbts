@@ -55,4 +55,13 @@ class Sale extends Model
     {
         return $this->hasMany(SaleProductDetail::class, 'sale_id', 'id');
     }
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Sale $sale) {
+            $sale->saleDetails()->delete();
+            $sale->saleLinkDetails()->delete();
+            $sale->saleProductDetails()->delete();
+        });
+    }
 }
