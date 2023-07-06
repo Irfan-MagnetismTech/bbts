@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('sale_id')->nullable();
             $table->unsignedBigInteger('sale_detail_id')->nullable();
-            $table->integer('service_id')->nullable();
-            $table->string('service_name')->nullable();
+            $table->integer('product_id')->nullable();
+            $table->string('product_name')->nullable();
             $table->string('quantity')->nullable();
             $table->string('unit')->nullable();
             $table->string('fr_no')->nullable();

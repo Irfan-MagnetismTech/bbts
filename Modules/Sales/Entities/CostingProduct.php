@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Entities;
 
+use Modules\Sales\Entities\Product;
 use Illuminate\Database\Eloquent\Model;
 
 class CostingProduct extends Model
@@ -10,11 +11,11 @@ class CostingProduct extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     public function saleProduct()
     {
-        return $this->belongsTo(SaleProduct::class , 'product_id', 'id');
+        return $this->belongsTo(SaleProduct::class, 'product_id', 'id');
     }
 }

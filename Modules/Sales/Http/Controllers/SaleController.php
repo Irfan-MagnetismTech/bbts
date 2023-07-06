@@ -11,6 +11,7 @@ use Modules\Sales\Entities\Offer;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\Dataencoding\Division;
+use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
@@ -139,9 +140,6 @@ class SaleController extends Controller
     {
         $this->uploadFile->deleteFile($sale->sla);
         $this->uploadFile->deleteFile($sale->work_order);
-        $sale->saleDetails()->delete();
-        $sale->saleLinkDetails()->delete();
-        $sale->saleProductDetails()->delete();
         $sale->delete();
         return redirect()->route('sales.index')->with('success', 'Sales Deleted Successfully');
     }
@@ -151,7 +149,7 @@ class SaleController extends Controller
         $data = [];
         foreach ($raw['fr_no'] as $key => $value) {
             $data[] = [
-                'checked'               => $raw['checked'][$key] ? 1 : 0,
+                'checked'               => (isset($raw['checked']) && isset($raw['checked'][$key])) ? 1 : 0,
                 'fr_no'                 => $raw['fr_no'][$key],
                 'client_no'             => $raw['client_no'],
                 'delivery_date'         => $raw['delivery_date'][$key],
@@ -171,11 +169,11 @@ class SaleController extends Controller
     {
         $data = [];
         foreach ($raw['fr_no'] as $key => $value) {
-            foreach ($raw['service'][$key] as $key1 => $value) {
+            foreach ($raw['product_name'][$key] as $key1 => $value) {
                 $data[] = [
-                    'service_name'      => $raw['service'][$key][$key1],
+                    'product_name'      => $raw['product_name'][$key][$key1],
                     'fr_no'             => $raw['fr_no'][$key],
-                    'service_name'      => $raw['service'][$key][$key1],
+                    'product_id'        => $raw['product_id'][$key][$key1],
                     'quantity'          => $raw['quantity'][$key][$key1],
                     'unit'              => $raw['unit'][$key][$key1],
                     'rate'              => $raw['rate'][$key][$key1],
@@ -214,7 +212,7 @@ class SaleController extends Controller
     public function getClientInfoForSales()
     {
         $items = Offer::query()
-            ->with(['client', 'offerDetails.costing.costingProducts', 'offerDetails.frDetails', 'offerDetails.offerLink'])
+            ->with(['client', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])
             ->whereHas('client', function ($qr) {
                 return $qr->where('client_name', 'like', '%' . request()->search . '%');
             })
@@ -255,5 +253,39 @@ class SaleController extends Controller
         info(request()->client_no);
         $lists = BillingAddress::where('client_no', request()->client_no)->get()->latest();
         $lists = CollectionAddress::where('client_no', request()->client_no)->get()->latest();
+    }
+
+    public function updateAddress(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data['address'] = $request->address_add;
+            $data['client_id'] = $request->client_id;
+            $data['client_no'] = $request->client_no_add;
+            $data['contact_person'] = $request->contact_person_add;
+            $data['designation'] = $request->designation_add;
+            $data['phone'] = $request->phone_add;
+            $data['email'] = $request->email_add;
+            $data['division_id'] = $request->division_id;
+            $data['district_id'] = $request->district_id;
+            $data['thana_id'] = $request->thana_id;
+            $data['fr_no'] = $request->fr_no;
+            if ($request->update_type == 'billing') {
+                $data['submission_date'] = $request->submission_date_add;
+                $data['submission_by'] = $request->submission_by_add;
+                BillingAddress::create($data);
+                $listData = BillingAddress::all();
+            } else {
+                $data['payment_method'] = $request->payment_method_add;
+                $data['payment_date'] = $request->payment_date_add;
+                CollectionAddress::create($data);
+                $listData = CollectionAddress::all();
+            }
+            DB::commit();
+            return response()->json(['status' => 'success', 'listdata' => $listData, 'messsage' => 'Address Added Successfully'], 200);
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return response()->json($e->getMessage(), 500);
+        }
     }
 }
