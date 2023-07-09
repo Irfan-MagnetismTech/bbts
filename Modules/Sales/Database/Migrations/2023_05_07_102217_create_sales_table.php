@@ -27,6 +27,12 @@ return new class extends Migration
             $table->float('grand_total', 8, 2)->nullable();
             $table->string('work_order')->nullable()->comment('file_path');
             $table->string('sla')->nullable()->comment('file_path');
+            $table->string('finance_approval')->nullable();
+            $table->string('management_approval')->nullable();
+            $table->string('cmo_approval')->nullable();
+            $table->integer('finance_approved_by')->nullable();
+            $table->integer('management_approved_by')->nullable();
+            $table->integer('cmo_approved_by')->nullable();
             $table->timestamps();
         });
     }

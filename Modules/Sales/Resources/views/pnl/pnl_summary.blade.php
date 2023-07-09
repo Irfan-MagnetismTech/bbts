@@ -1,37 +1,17 @@
 @extends('layouts.backend-layout')
 @section('title', 'PNL')
 
-@php
-    $is_old = old() ? true : false;
-    $form_heading = !empty($planning->id) ? 'Edit' : 'Create';
-    $form_url = !empty($planning->id) ? route('planning.update', $planning->id) : route('planning.store');
-    $form_method = !empty($planning->id) ? 'PUT' : 'POST';
-@endphp
-
 @section('breadcrumb-title')
-    {{ ucfirst($form_heading) }} PNL Summary
-@endsection
-
-@section('breadcrumb-button')
-    <a href="{{ route('planning.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-list"></i></a>
+    PNL Summary
 @endsection
 
 @section('sub-title')
     <span class="text-danger">*</span> Marked are required.
 @endsection
 
-
-
 @section('content-grid', null)
 
 @section('content')
-
-    {!! Form::open([
-        'url' => $form_url,
-        'method' => $form_method,
-        'class' => 'custom-form',
-    ]) !!}
-
     <div class="row mb-1">
         <div class="col-12 text-center">
             <h2>Profit and Loss Statement</h2>
@@ -115,12 +95,29 @@
     </div>
     <div class="d-flex" style="margin-top: 20px; justify-content: space-around">
         <a class="btn btn-outline-success" style="transition: 0.5s" href="{{ route('pnl-details', $mq_no) }}">Details</a>
-        <a class="btn btn-outline-primary" style="transition: 0.5s">Approval Finance</a>
-        <a class="btn btn-outline-primary" style="transition: 0.5s">Approval CMO</a>
+        <a class="btn btn-outline-success"
+            @if ($sale->finance_approval == 'Not Approved') href="{{ route('pnl-approve-by-finance', $mq_no) }}" @else href="#" title="Approved By {{ $sale?->financeApprovedBy?->name }}" @endif
+            style="transition: 0.5s">Finance {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
+        <a class="btn btn-outline-success"
+            @if ($sale->cmo_approval == 'Not Approved') href="{{ route('pnl-approve-by-cmo', $mq_no) }}" @else href="#" title="Approved By {{ $sale?->cmoApprovedBy?->name }}" @endif
+            style="transition: 0.5s" href="{{ route('pnl-approve-by-cmo', $mq_no) }}">CMO
+            {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
+        <a class="btn btn-outline-success"
+            @if ($sale->management_approval == 'Not Approved') href="{{ route('pnl-approve-by-management', $mq_no) }}" @else href="#" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @endif
+            style="transition: 0.5s" href="{{ route('pnl-approve-by-management', $mq_no) }}">Management
+            {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
     </div>
 @endsection
 
 @section('script')
+    @if (Session::has('success'))
+        <script type="text/javascript">
+            Toast.fire({
+                icon: 'success',
+                title: '{!! Session::get('success') !!}',
+            })
+        </script>
+    @endif
     <script>
         $('#addEquipmentRow').on('click', function() {
             addEquipmentRow();
