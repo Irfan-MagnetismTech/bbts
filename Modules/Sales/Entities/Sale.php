@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Entities;
 
+use Modules\Admin\Entities\User;
 use Carbon\Carbon;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\SaleDetail;
@@ -63,5 +64,20 @@ class Sale extends Model
             $sale->saleLinkDetails()->delete();
             $sale->saleProductDetails()->delete();
         });
+    }
+
+    public function financeApprovedBy()
+    {
+        return $this->belongsTo(User::class, 'finance_approved_by', 'id');
+    }
+
+    public function managementApprovedBy()
+    {
+        return $this->belongsTo(User::class, 'management_approved_by', 'id');
+    }
+
+    public function cmoApprovedBy()
+    {
+        return $this->belongsTo(User::class, 'cmo_approved_by', 'id');
     }
 }

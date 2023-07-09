@@ -17,6 +17,7 @@ use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
+use Modules\Sales\Entities\FeasibilityRequirement;
 
 class SaleController extends Controller
 {
@@ -287,5 +288,58 @@ class SaleController extends Controller
             DB::rollBack();
             return response()->json($e->getMessage(), 500);
         }
+    }
+
+    public function pnlSummary($mq_no = null)
+    {
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')->where('mq_no', $mq_no)->first();
+        $sale = Sale::where('mq_no', $mq_no)->first();
+        return view('sales::pnl.pnl_summary', compact('feasibility_requirement', 'mq_no', 'sale'));
+    }
+
+    public function pnlDetails($mq_no = null)
+    {
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing.costingProducts')
+            ->where('mq_no', $mq_no)->first();
+        if ($feasibility_requirement) {
+            $feasibility_requirement->feasibilityRequirementDetails->map(function ($item) {
+                $item->costing->costingProducts->map(function ($item) {
+                    $item->sale_product = SaleProductDetail::where('product_id', $item->product_id)->where('fr_no', $item->fr_no)->first();
+                    return $item;
+                });
+                return $item;
+            });
+        }
+        return view('sales::pnl.pnl_details', compact('feasibility_requirement', 'mq_no'));
+    }
+
+    public function pnlApproveByFinance($mq_no = null)
+    {
+        $sales = Sale::where('mq_no', $mq_no)->first();
+        $sales->update([
+            'finance_approval' => 'Approved',
+            'finance_approved_by' => auth()->user()->id
+        ]);
+        return redirect()->back()->with('success', 'Approved Successfully');
+    }
+
+    public function pnlApproveByManagement($mq_no = null)
+    {
+        $sales = Sale::where('mq_no', $mq_no)->first();
+        $sales->update([
+            'management_approval' => 'Approved',
+            'management_approved_by' => auth()->user()->id
+        ]);
+        return redirect()->back()->with('success', 'Approved Successfully');
+    }
+
+    public function pnlApproveByCmo($mq_no = null)
+    {
+        $sales = Sale::where('mq_no', $mq_no)->first();
+        $sales->update([
+            'cmo_approval' => 'Approved',
+            'cmo_approved_by' => auth()->user()->id
+        ]);
+        return redirect()->back()->with('success', 'Approved Successfully');
     }
 }
