@@ -64,6 +64,7 @@
                             $client_no = $is_old ? old('client_no') : $sale->client_no ?? null;
                             $effective_date = $is_old ? old('effective_date') : $sale->effective_date ?? today()->format('d-m-Y');
                             $account_holder = $is_old ? old('account_holder') : $sale->account_holder ?? null;
+                            $employee_id = $is_old ? old('employee_id') : $sale->employee_id ?? null;
                             $offer_id = $is_old ? old('offer_id') : $sale->offer_id ?? null;
                             $remarks = $is_old ? old('remarks') : $sale->remarks ?? null;
                             $mq_no = $is_old ? old('mq_no') : $sale->mq_no ?? null;
@@ -76,6 +77,7 @@
                         <x-input-box colGrid="4" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <x-input-box colGrid="4" name="client_no" value="{{ $client_no }}" label="Client Id" />
                         <x-input-box colGrid="4" name="account_holder" value="{{ $account_holder }}" label="Account Holder" />
+                        <input type="hidden" id="employee_id" name="employee_id" value="{{ $employee_id }}">
                         <x-input-box colGrid="4" name="offer_id" value="{{ $offer_id }}" label="Offer Id" />
                         <x-input-box colGrid="4" name="remarks" value="{{ $remarks }}" label="Remarks" />
                         <x-input-box colGrid="4" name="mq_no" value="{{ $mq_no }}" label="MQ No" />
@@ -97,6 +99,8 @@
                         @endphp
                         <div class="card">
                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
                                             <div class="checkbox-fade fade-in-primary">
                                                 <label>
                                                     <input type="checkbox" class="checkbox" value="Primary" name="checked[{{$key}}]" @if($value->checked == 1)
@@ -105,16 +109,37 @@
                                                     <span class="cr">
                                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                     </span>
-                                                    <span>{{$value->frDetails->connectivity_point}}</span>
+                                                    <span>{{$value->frDetails->connectivity_point}} ( {{$value->fr_no}} )</span>
                                                     <input type="hidden" class="fr_no" name="fr_no[{{$key}}]" value="{{$value->fr_no}}">
                                                 </label>
                                             </div>
+                                        </div>
+                                        <div class="col-9">
+                                                @foreach($value->saleLinkDetails as $link_key => $link_value)
+                                                <span>{{$link_value->link_type}}</span>
+                                                <input type="hidden" name="link_no[{{$key}}][]"value="{{$link_value->link_no}}">
+                                                <input type="hidden" name="link_type[{{$key}}][]"value="{{$link_value->link_type}}">
+                                                @endforeach
+                                        </div>
+                                    </div>
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[{{$key}}]" value="{{ $value->delivery_date ?? '' }}" label="Delivery Date" class="date"/>
-                                                <x-input-box colGrid="2" name="billing_address[{{$key}}]" value="{{ $value->billing_address ?? '' }}" label="Billing Address" />
-                                                <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing" onClick="ShowModal()"><i class="icofont icofont-ui-add"></i></span>
-                                                <x-input-box colGrid="2" name="collection_address[{{$key}}]" value="{{ $value->collection_address ?? '' }}" label="Collection Address" />
-                                                <span class="btn btn-inverse btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection" onClick="ShowModal()"><i class="icofont icofont-ui-add"></i></span>
+                                                    <div class="col-2">
+                                                        <select name="billing_address_id[{{$key}}]">
+                                                        @foreach ($billing_address as $bil_key => $bil_val)
+                                                            <option value="{{$bil_val->id}}" @if($bil_val->id == $value->billing_address_id)  selected  @endif>{{$bil_val->address}}</option>
+                                                        @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add" onClick="ShowModal('billing','{{$value->fr_no}}',this)"></i></span>
+                                                    <div class="col-2">
+                                                    <select name="collection_address_id[{{$key}}]">
+                                                        @foreach ($collection_address as $col_key => $col_val)
+                                                            <option value="{{$col_val->id}}" @if($col_val->id == $value->collection_address_id)  selected  @endif>{{$col_val->address}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    </div>
+                                                    <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','{{$value->fr_no}}',this)"></i></span>
                                                 <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
                                                 <div class="col-3">
                                                     <div class="form-check-inline">
@@ -148,12 +173,14 @@
                                                         <th>Total Price</th>
                                                     </thead>
                                                     <tbody>
-                                                    @foreach ($value->saleLinkDetails as $key1 => $val)
+                                                    @foreach ($value->saleProductDetails as $key1 => $val)
                                                         <tr>
                                                             <td>
                                                                 <div class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text" name="service[{{$key}}][]" class="form-control text-center"
-                                                                        id="service" readonly value="{{$val->service_name}}">
+                                                                    <input type="text" name="product_name[{{$key}}][]" class="form-control text-center"
+                                                                        id="service_name" readonly value="{{$val->product_name}}">
+                                                                    <input type="hidden" name="product_id[{{$key}}][]" class="form-control text-center"
+                                                                        id="service" readonly value="{{$val->product_id}}">
                                                                 </div>
                                                             </td>
                                                             <td> 
@@ -245,7 +272,7 @@
                             <td><input type="text" id="client_no_add" name="client_no_add" value="{{ $client_no }}" class="modal_data form-control"/></td>
                             <input type="hidden" name="client_id" id="client_id" value="{{$client_id}}" class="modal_data">
                             <input type="hidden" name="update_type" id="update_type" class="modal_data">
-                            <input type="hidden" name="fr_no" id="fr" class="modal_data">
+                            <input type="hidden" name="fr" id="fr" class="modal_data">
                         </tr>
                         <tr>
                             <td>Contact Person</td>

@@ -35,6 +35,11 @@ class SaleDetail extends Model
         return $this->hasMany(SaleLinkDetail::class, 'sale_detail_id', 'id');
     }
 
+    public function saleProductDetails()
+    {
+        return $this->hasMany(SaleProductDetail::class, 'sale_detail_id', 'id');
+    }
+
     public function frDetails(): BelongsTo
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');

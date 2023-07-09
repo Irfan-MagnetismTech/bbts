@@ -11,6 +11,7 @@ use Modules\Sales\Entities\Offer;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\Dataencoding\Division;
+use App\Models\Dataencoding\Employee;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
@@ -52,7 +53,7 @@ class SaleController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no');
+            $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
             $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale');
             $data['work_order'] = $this->uploadFile->handleFile($request->work_order, 'sales/sale');
             $sale = Sale::create($data);
@@ -88,7 +89,9 @@ class SaleController extends Controller
     public function edit(Sale $sale)
     {
         $divisions = Division::latest()->get();
-        return view('sales::sales.create', compact('sale', 'divisions'));
+        $billing_address = BillingAddress::where('client_no', $sale->client_no)->get();
+        $collection_address = CollectionAddress::where('client_no', $sale->client_no)->get();
+        return view('sales::sales.create', compact('sale', 'divisions', 'billing_address', 'collection_address'));
     }
 
     /**
@@ -99,7 +102,7 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {
-        $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no');
+        $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
         if ($request->hasFile('sla')) {
             $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale', $sale->sla);
         } else {
@@ -153,8 +156,8 @@ class SaleController extends Controller
                 'fr_no'                 => $raw['fr_no'][$key],
                 'client_no'             => $raw['client_no'],
                 'delivery_date'         => $raw['delivery_date'][$key],
-                'billing_address'       => $raw['billing_address'][$key],
-                'collection_address'    => $raw['collection_address'][$key],
+                'billing_address_id'    => $raw['billing_address_id'][$key],
+                'collection_address_id' => $raw['collection_address_id'][$key],
                 'bill_payment_date'     => $raw['bill_payment_date'][$key],
                 'payment_status'        => $raw['payment_status'][$key],
                 'mrc'                   => $raw['mrc'][$key],
@@ -250,9 +253,21 @@ class SaleController extends Controller
 
     public function testTestTest()
     {
-        info(request()->client_no);
         $lists = BillingAddress::where('client_no', request()->client_no)->get()->latest();
         $lists = CollectionAddress::where('client_no', request()->client_no)->get()->latest();
+    }
+
+
+    public function getEmployees()
+    {
+        $items = Employee::where('name', 'like', '%' . request()->search . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value'        => $item->name,
+                'label'        => $item->name,
+                'id'           => $item->id
+            ]);
+        return response()->json($items);
     }
 
     public function updateAddress(Request $request)
@@ -269,7 +284,7 @@ class SaleController extends Controller
             $data['division_id'] = $request->division_id;
             $data['district_id'] = $request->district_id;
             $data['thana_id'] = $request->thana_id;
-            $data['fr_no'] = $request->fr_no;
+            $data['fr_no'] = $request->fr;
             if ($request->update_type == 'billing') {
                 $data['submission_date'] = $request->submission_date_add;
                 $data['submission_by'] = $request->submission_by_add;

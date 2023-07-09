@@ -29,7 +29,7 @@
                 $('#client_name').val(item.value).attr('value', item.value);
                 $('#client_no').val(item.client_no).attr('value', item.client_no);
                 $('#client_id').val(item.client_id).attr('value', item.client_id);
-                $('#mq_id').val(item.mq_no).attr('value', item.mq_no);
+                $('#mq_no').val(item.mq_no).attr('value', item.mq_no);
                 $('#offer_id').val(item.offer_id).attr('value', item.offer_id);
                 var indx = $('.checkbox').length;
                 $('#fr_details').empty();
@@ -63,7 +63,7 @@
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[${indx}]" value="{{ $delivery_date ?? '' }}" label="Delivery Date" class="date"/>
                                                 <div class="col-2">
-                                                    <select name="billing_address[${indx}]">`
+                                                    <select name="billing_address_id[${indx}]">`
                     item.billing_address.forEach(ele => {
                         appendedData +=`<option ele="${ele.id}">${ele.address}</option>`
                     })
@@ -71,7 +71,7 @@
                                                 </div>
                                                 <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add" onClick="ShowModal('billing','${element.fr_no}',this)"></i></span>
                                                 <div class="col-2">
-                                        <select name="collection_address[${indx}]">`
+                                        <select name="collection_address_id[${indx}]">`
                     item.collection_address.forEach(ele => {
                         appendedData +=`<option ele="${ele.id}">${ele.address}</option>`
                     })
@@ -191,6 +191,18 @@
                 return false;
             }
         })
+
+        $('#account_holder').on('keyup', function() {
+            let myObject = {}
+            jquaryUiAjax(this, "{{ route('get_employees') }}", uiList, myObject);
+
+            function uiList(item) {
+                $('#account_holder').val(item.label).attr('value',item.label);
+                $('#employee_id').val(item.id).attr('value',item.id);
+                return false;
+            }
+        })
+
         $(document).on('change','.checkbox',function(){
             var vvall = 0;
             $('.checkbox').each((index, element) => { 
@@ -252,7 +264,6 @@
     }
     function ShowModal(a,b,ds){
         select_selector = $(ds).parent().prev().find('select');
-        console.log(select_selector.html());
         $("#modal-13").modal("show");
         $("#modal-13").addClass("md-show");
         $("#client_no_add").val($('#client_no').val());

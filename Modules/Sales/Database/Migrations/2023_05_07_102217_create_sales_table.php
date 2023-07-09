@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('client_no')->nullable();
             $table->string('account_holder')->nullable();
+            $table->integer('employee_id')->nullable();
             $table->integer('offer_id')->nullable();
             $table->string('contract_duration')->nullable();
             $table->date('effective_date')->nullable();
