@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
-class LogicalConnectivityController extends Controller
+class LogicalConnectivityDataController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +23,10 @@ class LogicalConnectivityController extends Controller
      */
     public function create()
     {
-        return view('networking::index');
+        $clientDetails = PhysicalConnectivity::query()
+            ->with('lines')
+            ->latest()
+            ->get();
     }
 
     /**
