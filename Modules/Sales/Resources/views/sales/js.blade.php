@@ -77,7 +77,7 @@
                     })
                     appendedData +=   `</select>
                                                 </div>
-                                                <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection" onClick="ShowModal('collection','${element.fr_no}',this)"><i class="icofont icofont-ui-add"></i></span>
+                                                <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','${element.fr_no}',this)"></i></span>
                                                 <x-input-box colGrid="3" name="bill_payment_date[${indx}]" value="{{ $bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
                                                 <div class="col-3">
                                                     <div class="form-check-inline">
@@ -230,7 +230,7 @@
                 .then(function(data) {
                      // handle success response
                      if (data.status == 'success') {
-                        opt = `<option></option>`;
+                        opt = ``;
                             data.listdata.forEach(function(itm) {
                                 opt += `<option value="${itm.id}">${itm.address}</option>`;
                         });
@@ -252,7 +252,7 @@
     }
     function ShowModal(a,b,ds){
         select_selector = $(ds).parent().prev().find('select');
-        console.log(select_selector);
+        console.log(select_selector.html());
         $("#modal-13").modal("show");
         $("#modal-13").addClass("md-show");
         $("#client_no_add").val($('#client_no').val());
