@@ -19,15 +19,14 @@
 @endsection
 
 @section('content')
-    <!-- put search form here.. -->
+    <!-- put search form here -->
     <div class="table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th>SL</th>
                     <th>FR No</th>
-                    <th>Client Name</th>
-                    <th>Remarks</th>
+                    <th>Client Name</th>                    
                     <th>Action</th>
                 </tr>
             </thead>
@@ -37,7 +36,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $physicalConnectivitie->fr_no }}</td>
                         <td>{{ $physicalConnectivitie->client->client_name }}</td>
-                        <td>{{ $physicalConnectivitie->remarks }}</td>
+                        
                         <td>
                             <div class="icon-btn">
                                 <nobr>

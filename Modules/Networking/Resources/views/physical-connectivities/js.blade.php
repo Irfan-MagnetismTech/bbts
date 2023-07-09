@@ -23,9 +23,8 @@
                 var link_options = '<option value="">Select Option</option>';
 
                 ui.item.frDetails.forEach(function(element) {
-                    console.log(element)
                     link_options +=
-                        `<option value="${element.fr_no}">${element.connectivity_point + '-' + element.fr_no}</option>`;
+                        `<option value="${element.connectivity_point + '_' + element.fr_no}">${element.connectivity_point + '_' + element.fr_no}</option>`;
                 });
                 $("#connectivity_point").html(link_options);
 
@@ -35,7 +34,7 @@
     });
 
     $("#connectivity_point").on("change", function() {
-        let connectivity_point = $(this).val();
+        let connectivity_point = $(this).val().split("_")[1];
 
         $.ajax({
             url: "{{ route('getFrDetailsData') }}",
@@ -56,7 +55,6 @@
 
                 $("#physical_connectivity tbody").html("");
                 appendNetworkInfoRow(data.planning.final_survey_details);
-                console.log(data.planning.final_survey_details);
             },
         });
     });
@@ -95,10 +93,6 @@
                             <td>
                                 <input type="text" name="vlan[]" class="form-control vlan"
                                     autocomplete="off" value="">
-                            </td>
-                            <td>
-                                <input type="text" name="distance[]" class="form-control distance"
-                                    autocomplete="off" value="${element.distance}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="connectivity_details[]" class="form-control connectivity_details"
