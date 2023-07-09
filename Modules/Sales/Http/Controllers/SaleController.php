@@ -19,6 +19,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\Planning;
 
 class SaleController extends Controller
 {
@@ -340,6 +341,8 @@ class SaleController extends Controller
 
     public function pnlApproveByManagement($mq_no = null)
     {
+        $data = Planning::with('equipmentPlans', 'planLinks.PlanLinkEquipments')->where('mq_no', $mq_no)->get();
+        dd($data);
         $sales = Sale::where('mq_no', $mq_no)->first();
         $sales->update([
             'management_approval' => 'Approved',
