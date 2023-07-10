@@ -203,6 +203,7 @@ class SaleController extends Controller
             foreach ($raw['link_no'][$key] as $key1 => $value) {
                 $data[] = [
                     'link_no'           => $raw['link_no'][$key][$key1],
+                    'client_no'         => $raw['client_no'],
                     'link_type'         => $raw['link_type'][$key][$key1],
                     'fr_no'             => $raw['fr_no'][$key],
                     'sale_id'           => $saleDetail[$key]['sale_id'],
@@ -348,39 +349,39 @@ class SaleController extends Controller
         $material_array = [];
         foreach ($datas as $key => $values) {
             $material_array[$key]['parent']['main'] = [
-                "client_no" => $values->client_no,
-                "fr_no" => $values->fr_no,
-                "type" => 'client',
-                "requisition_by" => auth()->id(),
-                "branch_id" => 1,
-                "date" => now()->format('d-m-Y'),
+                "client_no"         => $values->client_no,
+                "fr_no"             => $values->fr_no,
+                "type"              => 'client',
+                "requisition_by"    => auth()->id(),
+                "branch_id"         => 1,
+                "date"              => now()->format('d-m-Y'),
             ];
             foreach ($values->equipmentPlans as $key2 => $values2) {
                 $material_array[$key]['parent']['child'][] = [
-                    "material_id" => $values2->material_id,
-                    "item_code" => $values2->material->code,
-                    "brand_id" => $values2->brand_id,
-                    "quantity" => $values2->quantity,
-                    "model" => $values2->model,
+                    "material_id"   => $values2->material_id,
+                    "item_code"     => $values2->material->code,
+                    "brand_id"      => $values2->brand_id,
+                    "quantity"      => $values2->quantity,
+                    "model"         => $values2->model,
                 ];
             }
             foreach ($values->planLinks as $key2 => $values2) {
                 $material_array[$key]['link'][$key2]['main'] = [
-                    "client_no" => $values->client_no,
-                    "fr_no" => $values->fr_no,
-                    "link_no" => $values2->link_no,
-                    "type" => 'client',
-                    "requisition_by" => auth()->id(),
-                    "branch_id" => 1,
-                    "date" => now()->format('d-m-Y'),
+                    "client_no"         => $values->client_no,
+                    "fr_no"             => $values->fr_no,
+                    "link_no"           => $values2->link_no,
+                    "type"              => 'client',
+                    "requisition_by"    => auth()->id(),
+                    "branch_id"         => 1,
+                    "date"              => now()->format('d-m-Y'),
                 ];
                 foreach ($values2->PlanLinkEquipments as $key3 => $values3) {
                     $material_array[$key]['link'][$key2]['child'][] = [
-                        "material_id" => $values3->material_id,
-                        "item_code" => $values3->material->code,
-                        "brand_id" => $values3->brand_id,
-                        "quantity" => $values3->quantity,
-                        "model" => $values3->model,
+                        "material_id"   => $values3->material_id,
+                        "item_code"     => $values3->material->code,
+                        "brand_id"      => $values3->brand_id,
+                        "quantity"      => $values3->quantity,
+                        "model"         => $values3->model,
                     ];
                 }
             }
