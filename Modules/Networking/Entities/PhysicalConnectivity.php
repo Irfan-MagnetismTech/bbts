@@ -9,7 +9,7 @@ use Modules\Networking\Entities\PhysicalConnectivityLines;
 class PhysicalConnectivity extends Model
 {
     protected $fillable = [
-        'fr_no', 'connectivity_point', 'client_no', 'remarks',
+        'fr_no', 'connectivity_point', 'client_no', 'client_name', 'client_type', 'contact_person', 'contact_number', 'email', 'contact_address', 'remarks',
     ];
 
     public function lines()

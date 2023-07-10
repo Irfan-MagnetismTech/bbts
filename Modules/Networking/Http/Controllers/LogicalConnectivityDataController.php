@@ -23,10 +23,7 @@ class LogicalConnectivityDataController extends Controller
      */
     public function create()
     {
-        $clientDetails = PhysicalConnectivity::query()
-            ->with('lines')
-            ->latest()
-            ->get();
+        return view('networking::index');
     }
 
     /**
