@@ -2,9 +2,10 @@
 
 namespace Modules\Networking\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Networking\Entities\PhysicalConnectivity;
 
 class LogicalConnectivityDataController extends Controller
 {
@@ -23,7 +24,12 @@ class LogicalConnectivityDataController extends Controller
      */
     public function create()
     {
-        return view('networking::index');
+        $physicalConnectivityData = PhysicalConnectivity::query()
+            ->where('id', request()->get('physical_connectivity_id'))
+            ->with('lines')
+            ->first();
+
+        return view('networking::logical-data-connectivities.create', compact('physicalConnectivityData'));
     }
 
     /**
