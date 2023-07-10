@@ -96,7 +96,7 @@
                         <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
                     @elseif($formType == 'edit')
                         @forelse ($fr_nos as $key => $value)
-                            <option value="{{ $value->fr_no }}" @if ($fr_no == $value->fr_no) selected @endif>
+                            <option value="{{ $value->fr_no }}" @if (@$requisition->fr_no == $value->fr_no) selected @endif>
                                 {{ $value->fr_no }}
                             </option>
                         @empty
