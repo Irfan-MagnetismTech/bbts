@@ -8,6 +8,11 @@ class Planning extends Model
 {
     protected $guarded = [];
 
+    public function lead_generation()
+    {
+        return $this->hasOne(LeadGeneration::class, 'client_no', 'client_no');
+    }
+
     public function feasibilityRequirementDetail()
     {
         return $this->hasOne(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');

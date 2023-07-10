@@ -6,19 +6,15 @@
 @endsection
 
 @section('breadcrumb-title')
-    Connectivity Requirement List
+    Planning List
 @endsection
 
-@section('style')
-    <style>
-    </style>
-@endsection
 @section('breadcrumb-button')
     {{-- <a href="{{ route('connectivity-requirement.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-plus"></i></a> --}}
 @endsection
 @section('sub-title')
-    Total: {{ count($connectivity_requirements) }}
+    Total: {{ count($plans) }}
 @endsection
 
 
@@ -32,7 +28,10 @@
                     <th>Client id</th>
                     <th>MQ No</th>
                     <th>FR No</th>
-                    <th>Location</th>
+                    <th>Connectivity Point</th>
+                    <th>Method</th>
+                    <th>Type</th>
+                    <th>Option</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -43,30 +42,54 @@
                     <th>Client id</th>
                     <th>MQ No</th>
                     <th>FR No</th>
-                    <th>Location</th>
+                    <th>Connectivity Point</th>
+                    <th>Method</th>
+                    <th>Type</th>
+                    <th>Option</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($connectivity_requirements as $key => $connectivity_requirement)
+                @foreach ($plans as $key => $plan)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $connectivity_requirement->lead_generation->client_name }}</td>
-                        <td>{{ $connectivity_requirement->client_id }}</td>
-                        <td>{{ $connectivity_requirement->mq_no }}</td>
-                        <td>{{ $connectivity_requirement->fr_no }}</td>
-                        <td>{{ $connectivity_requirement->fromLocation->location }}</td>
+                        <td>{{ $plan->lead_generation->client_name }}</td>
+                        <td>{{ $plan->client_no }}</td>
+                        <td>{{ $plan->mq_no }}</td>
+                        <td>{{ $plan->fr_no }}</td>
+                        <td>{{ $plan->feasibilityRequirementDetail->connectivity_point }}</td>
                         <td>
-                            <a href="{{ route('connectivity-requirement.edit', $connectivity_requirement->id) }}"
-                                class="btn btn-sm btn-primary" style="padding: 6px 7px;"><i class="fas fa-edit"></i></a>
-                            <a href="{{ route('connectivity-requirement.show', $connectivity_requirement->id) }}"
-                                class="btn btn-sm btn-success" style="padding: 6px 7px;"><i class="fas fa-eye"></i></a>
-                            <form action="{{ route('connectivity-requirement.destroy', $connectivity_requirement->id) }}"
-                                method="POST" class="d-inline-block" id="deleteFeasibility">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                            </form>
+                            @foreach ($plan->planLinks as $link)
+                                {{ $link->method }}<br>
+                            @endforeach
+                        </td>
+                        <td>
+                            @foreach ($plan->planLinks as $link)
+                                {{ $link->link_type }}<br>
+                            @endforeach
+                        </td>
+                        <td>
+                            @foreach ($plan->planLinks as $link)
+                                {{ $link->option }}<br>
+                            @endforeach
+                        </td>
+                        <td>
+                            <div class="icon-btn">
+                                <nobr>
+                                    <a href="{{ route('planning.show', $plan->id) }}" data-toggle="tooltip" title="Details"
+                                        class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('planning.edit', $plan->id) }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+
+                                    <form action="{{ route('planning.destroy', $plan->id) }}" method="POST"
+                                        data-toggle="tooltip" title="Delete" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                </nobr>
+                            </div>
                         </td>
                     </tr>
                 @endforeach
