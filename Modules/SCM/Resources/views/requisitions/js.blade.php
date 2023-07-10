@@ -71,7 +71,7 @@
         //Search Client
         var client_details = [];
         @if ($formType === 'edit')
-            client_details = {!! collect($clientInfos) !!}
+            client_details = {!! collect($clientInfos ?? []) !!}
         @endif
 
         //Select FR key based on link name

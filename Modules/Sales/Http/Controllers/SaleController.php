@@ -19,6 +19,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\Planning;
+use Modules\SCM\Entities\ScmRequisition;
 
 class SaleController extends Controller
 {
@@ -201,6 +203,7 @@ class SaleController extends Controller
             foreach ($raw['link_no'][$key] as $key1 => $value) {
                 $data[] = [
                     'link_no'           => $raw['link_no'][$key][$key1],
+                    'client_no'         => $raw['client_no'],
                     'link_type'         => $raw['link_type'][$key][$key1],
                     'fr_no'             => $raw['fr_no'][$key],
                     'sale_id'           => $saleDetail[$key]['sale_id'],
@@ -340,12 +343,75 @@ class SaleController extends Controller
 
     public function pnlApproveByManagement($mq_no = null)
     {
-        $sales = Sale::where('mq_no', $mq_no)->first();
-        $sales->update([
-            'management_approval' => 'Approved',
-            'management_approved_by' => auth()->user()->id
-        ]);
-        return redirect()->back()->with('success', 'Approved Successfully');
+        $datas = Planning::with('equipmentPlans.material', 'planLinks.PlanLinkEquipments.material')
+            ->where('mq_no', $mq_no)
+            ->get();
+        $material_array = [];
+        foreach ($datas as $key => $values) {
+            $material_array[$key]['parent']['main'] = [
+                "client_no"         => $values->client_no,
+                "fr_no"             => $values->fr_no,
+                "type"              => 'client',
+                "requisition_by"    => auth()->id(),
+                "branch_id"         => 1,
+                "date"              => now()->format('d-m-Y'),
+            ];
+            foreach ($values->equipmentPlans as $key2 => $values2) {
+                $material_array[$key]['parent']['child'][] = [
+                    "material_id"   => $values2->material_id,
+                    "item_code"     => $values2->material->code,
+                    "brand_id"      => $values2->brand_id,
+                    "quantity"      => $values2->quantity,
+                    "model"         => $values2->model,
+                ];
+            }
+            foreach ($values->planLinks as $key2 => $values2) {
+                $material_array[$key]['link'][$key2]['main'] = [
+                    "client_no"         => $values->client_no,
+                    "fr_no"             => $values->fr_no,
+                    "link_no"           => $values2->link_no,
+                    "type"              => 'client',
+                    "requisition_by"    => auth()->id(),
+                    "branch_id"         => 1,
+                    "date"              => now()->format('d-m-Y'),
+                ];
+                foreach ($values2->PlanLinkEquipments as $key3 => $values3) {
+                    $material_array[$key]['link'][$key2]['child'][] = [
+                        "material_id"   => $values3->material_id,
+                        "item_code"     => $values3->material->code,
+                        "brand_id"      => $values3->brand_id,
+                        "quantity"      => $values3->quantity,
+                        "model"         => $values3->model,
+                    ];
+                }
+            }
+        }
+        $lastMRSId = ScmRequisition::latest()->first();
+        $currentYear = now()->format('Y');
+        $mrsNoCounter = $lastMRSId ? $lastMRSId->id + 1 : 1;
+        foreach ($material_array as $key => $value) {
+            $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
+            $mrsNoCounter++;
+            $value['parent']['main']['mrs_no'] = $mrsNo;
+            $reqq = ScmRequisition::create($value['parent']['main']);
+            $reqChildItems = collect($value['parent']['child'])->map(function ($child) use ($reqq) {
+                $child['req_key'] = $reqq->id . '-' . $child['item_code'];
+                return $child;
+            });
+            $reqq->scmRequisitiondetails()->createMany($reqChildItems);
+            foreach ($value['link'] as $key1 => $value1) {
+                $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
+                $mrsNoCounter++;
+                $value1['main']['mrs_no'] = $mrsNo;
+                $reqq = ScmRequisition::create($value1['main']);
+                $reqChildItems = collect($value1['child'])->map(function ($child) use ($reqq) {
+                    $child['req_key'] = $reqq->id . '-' . $child['item_code'];
+                    return $child;
+                });
+                $reqq->scmRequisitiondetails()->createMany($reqChildItems);
+            }
+        }
+        return redirect()->route('pnl-summary', $mq_no)->with('success', 'Approved Successfully');
     }
 
     public function pnlApproveByCmo($mq_no = null)

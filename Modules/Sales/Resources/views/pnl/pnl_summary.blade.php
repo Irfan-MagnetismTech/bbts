@@ -99,7 +99,7 @@
             style="transition: 0.5s" href="{{ route('pnl-approve-by-cmo', $mq_no) }}">CMO
             {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
         <a class="btn btn-outline-success"
-            @if ($sale->management_approval == 'Not Approved') href="{{ route('pnl-approve-by-management', $mq_no) }}" @else href="#" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @endif
+            @if ($sale->management_approval == 'Not Approved') href="{{ route('pnl-approve-by-management', $mq_no) }}" @else href="{{ route('pnl-approve-by-management', $mq_no) }}" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @endif
             style="transition: 0.5s" href="{{ route('pnl-approve-by-management', $mq_no) }}">Management
             {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
     </div>

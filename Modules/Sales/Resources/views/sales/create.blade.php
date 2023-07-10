@@ -157,8 +157,8 @@
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <x-input-box colGrid="3" name="mrc[{{$key}}]" value="{{$value->mrc}}" label="MRC" />
-                                                <x-input-box colGrid="3" name="otc[{{$key}}]" value="{{$value->otc}}" label="OTC" />
+                                                <x-input-box colGrid="3" name="mrc[{{$key}}]" value="{{$value->mrc}}" label="MRC" attr="readonly"/>
+                                                <x-input-box colGrid="3" name="otc[{{$key}}]" value="{{$value->otc}}" label="OTC" attr="readonly"/>
                                             </div>
                                             <div>
 

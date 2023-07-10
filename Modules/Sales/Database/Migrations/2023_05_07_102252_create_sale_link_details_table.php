@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('sale_id')->nullable();
             $table->unsignedBigInteger('sale_detail_id')->nullable();
             $table->string('fr_no')->nullable();
+            $table->string('client_no')->nullable();
             $table->string('link_no')->nullable();
             $table->string('link_type')->nullable();
             $table->timestamps();
