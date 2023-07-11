@@ -64,7 +64,17 @@
                         <td>{{ $lead_generation->designation }}</td>
                         <td>{{ $lead_generation->contact_no }}</td>
                         <td>{{ $lead_generation->createdBy->name }}</td>
-                        <td>{{ $lead_generation->status }}</td>
+                        <td>
+                            @if ($lead_generation->status == 'Review')
+                                <span class="badge badge-pill badge-info">{{ $lead_generation->status }}</span>
+                            @elseif ($lead_generation->status == 'Pending')
+                                <span class="badge badge-pill badge-warning">{{ $lead_generation->status }}</span>
+                            @elseif($lead_generation->status == 'Accept')
+                                <span class="badge badge-pill badge-success">{{ $lead_generation->status }}</span>
+                            @elseif($lead_generation->status == 'Cancel')
+                                <span class="badge badge-pill badge-danger">{{ $lead_generation->status }}</span>
+                            @endif
+                        </td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

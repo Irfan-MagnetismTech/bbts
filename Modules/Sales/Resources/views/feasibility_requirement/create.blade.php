@@ -379,7 +379,7 @@
                     //get districts by last class selected division
                     $(document).on('change', '.division', function() {
                         var division_id = $(this).val();
-                        var row = $(this).closest('tr').find('select[name="district_id[]"]');
+                        var row = $(this).closest('tr').find('select[name="district_id[]"]').val('');
                         $.ajax({
                             url: "{{ route('get-districts') }}",
                             data: {
@@ -387,6 +387,8 @@
                                 _token: "{{ csrf_token() }}"
                             },
                             success: function(data) {
+                                row.empty();
+                                row.append('<option value="">Select District</option>');
                                 data.forEach(element => {
                                     row.append('<option value="' + element.id + '">' + element.text +
                                         '</option>');
@@ -406,6 +408,8 @@
                                 _token: "{{ csrf_token() }}"
                             },
                             success: function(data) {
+                                row.empty();
+                                row.append('<option value="">Select District</option>');
                                 data.forEach(element => {
                                     row.append('<option value="' + element.id + '">' + element.text +
                                         '</option>');

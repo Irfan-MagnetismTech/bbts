@@ -92,7 +92,7 @@
                         </div>
                         <div class="d-flex justify-content-around mt-4">
                             <button type="submit" value="Accept" class="btn btn-outline-success status">Accept</button>
-                            <button type="button" value="Deny" class="btn btn-outline-danger status">Deny</button>
+                            <button type="button" value="Pending" class="btn btn-outline-danger status">Pending</button>
                             <button type="button" value="Review" class="btn btn-outline-warning status">Review</button>
                             <button type="submit" value="Cancel" class="btn btn-outline-info status">Cancel</button>
                         </div>

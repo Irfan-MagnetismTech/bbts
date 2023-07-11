@@ -54,4 +54,14 @@ class SaleDetail extends Model
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
+
+    public function feasibilityRequirementDetails()
+    {
+        return $this->hasOne(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
+    }
+
+    public function costing()
+    {
+        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no');
+    }
 }

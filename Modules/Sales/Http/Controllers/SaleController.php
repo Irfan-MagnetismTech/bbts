@@ -480,4 +480,10 @@ class SaleController extends Controller
         ]);
         return redirect()->back()->with('success', 'Approved Successfully');
     }
+
+    public function clientOffer($mq_no = null)
+    {
+        $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
+        return view('sales::sales.client_offer', compact('sale', 'mq_no'));
+    }
 }

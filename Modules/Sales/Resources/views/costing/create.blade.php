@@ -86,7 +86,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th colspan="9">Product Costing</th>
+                                    <th colspan="11">Product Costing</th>
                                 </tr>
                                 <tr>
                                     <th>Product</th>
@@ -94,6 +94,8 @@
                                     <th>Rate</th>
                                     <th>Unit</th>
                                     <th>Amount</th>
+                                    <th>Vat(%)</th>
+                                    <th>Vat Amount</th>
                                     <th>Operation Cost</th>
                                     <th>Total Amount</th>
                                     <th>Price </th>
@@ -142,6 +144,20 @@
                                         </td>
                                         <td>
                                             <span>
+                                                <input type="number" name="product_vat[]"
+                                                    class="form-control form-control-sm input product_vat" placeholder="Vat"
+                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->vat }}">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <input type="number" name="product_vat_amount[]"
+                                                    class="form-control form-control-sm input product_vat_amount"
+                                                    placeholder="Vat Amount" value="" readonly>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
                                                 <input type="number" name="product_operation_cost[]"
                                                     class="form-control form-control-sm input product_operation_cost"
                                                     placeholder="Total" value="">
@@ -179,6 +195,8 @@
                                                 value="" readonly>
                                         </span>
                                     </td>
+                                    <td></td>
+                                    <td></td>
                                     <td>
                                         <span>
                                             <input type="number" name="total_operation_cost" id="total_operation_cost"
@@ -810,13 +828,17 @@
             var product_quantity = $(this).closest('tr').find('.product_quantity').val();
             var product_total = product_rate * product_quantity;
             $(this).closest('tr').find('.product_price').val(product_total);
+            var vat_perchant = $(this).closest('tr').find('.product_vat').val();
+            var vat_amount = (product_total * vat_perchant) / 100;
+            $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
             productPartialTotal();
         });
 
         $('.product_operation_cost').on('keyup', function() {
             var product_operation_cost = $(this).val();
             var product_price = $(this).closest('tr').find('.product_price').val();
-            var product_total = parseInt(product_operation_cost) + parseInt(product_price);
+            var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
+            var product_total = parseInt(product_operation_cost) + parseInt(product_price) + parseInt(vat_amount);
             $(this).closest('tr').find('.product_operation_cost_total').val(product_total);
             productPartialTotal();
         });

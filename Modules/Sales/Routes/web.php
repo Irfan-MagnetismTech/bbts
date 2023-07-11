@@ -71,4 +71,5 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('pnl-approve-by-finance/{mq_no}', [SaleController::class, 'pnlApproveByFinance'])->name('pnl-approve-by-finance');
     Route::get('pnl-approve-by-cmo/{mq_no}', [SaleController::class, 'pnlApproveByCmo'])->name('pnl-approve-by-cmo');
     Route::get('pnl-approve-by-management/{mq_no}', [SaleController::class, 'pnlApproveByManagement'])->name('pnl-approve-by-management');
+    Route::get('client-offer/{mq_no}', [SaleController::class, 'clientOffer'])->name('client-offer');
 });

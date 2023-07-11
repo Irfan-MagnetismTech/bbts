@@ -21,6 +21,8 @@ return new class extends Migration
             $table->decimal('rate', 8, 2);
             $table->string('unit');
             $table->decimal('sub_total', 10, 2);
+            $table->decimal('product_vat', 10, 2);
+            $table->decimal('product_vat_amount', 10, 2);
             $table->decimal('operation_cost', 10, 2);
             $table->decimal('operation_cost_total', 10, 2);
             $table->decimal('offer_price', 10, 2);
