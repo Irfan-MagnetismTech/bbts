@@ -11,6 +11,6 @@ class CostingLinkEquipment extends Model
 
     public function costing()
     {
-        return $this->hasMany(Costing::class, 'id', 'costing_link_id');
+        return $this->hasMany(Costing::class, 'id', 'costing_id');
     }
 }

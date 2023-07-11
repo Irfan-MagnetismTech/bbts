@@ -3,6 +3,7 @@
 namespace Modules\Sales\Http\Controllers;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\UploadService;
 use Modules\Sales\Entities\Sale;
@@ -10,20 +11,22 @@ use Modules\SCM\Entities\ScmMur;
 use Modules\Sales\Entities\Offer;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\Costing;
+use Modules\Sales\Entities\Planning;
 use App\Models\Dataencoding\Division;
 use App\Models\Dataencoding\Employee;
+use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\QueryException;
+use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Billing\Entities\BillingOtcBill;
 use Modules\Sales\Entities\CollectionAddress;
-use Modules\Sales\Entities\Costing;
-use Modules\Sales\Entities\CostingLinkEquipment;
-use Modules\Sales\Entities\CostingProductEquipment;
 use Modules\Sales\Entities\SaleProductDetail;
+use Modules\Sales\Entities\CostingLinkEquipment;
 use Modules\Sales\Entities\FeasibilityRequirement;
-use Modules\Sales\Entities\Planning;
-use Modules\SCM\Entities\ScmRequisition;
+use Modules\Sales\Entities\CostingProductEquipment;
 
 class SaleController extends Controller
 {
@@ -364,9 +367,9 @@ class SaleController extends Controller
                 $qr->where("fr_no", $values->fr_no)->where('ownership', 'Client');
             })->get();
 
-
+            $saleData = SaleDetail::where('fr_no', $values->fr_no)->get()->first();
             $otc_lines_data = [];
-            $g_total = 0;
+            $equipment_amount = 0;
 
 
             foreach ($cle_data as $cle_data_key => $cle_data_values) {
@@ -376,21 +379,32 @@ class SaleController extends Controller
                     'rate' => $cle_data_values->rate,
                     'amount' => $cle_data_values->rate * $cle_data_values->quantity,
                 ];
-                $g_total += $cle_data_values->rate * $cle_data_values->quantity;
-            }
-
-            foreach ($cpe_data as $cle_data_key => $cle_data_values) {
-                $otc_lines_data[] = [
-                    'material_id' => $cle_data_values->material_id,
-                    'quantity' => $cle_data_values->quantity,
-                    'rate' => $cle_data_values->rate,
-                    'amount' => $cle_data_values->rate * $cle_data_values->quantity,
-                ];
-                $g_total += $cle_data_values->rate * $cle_data_values->quantity;
+                $equipment_amount += $cle_data_values->rate * $cle_data_values->quantity;
             }
 
             foreach ($cpe_data as $cpe_data_key => $cpe_data_values) {
+                $otc_lines_data[] = [
+                    'material_id' => $cpe_data_values->material_id,
+                    'quantity' => $cpe_data_values->quantity,
+                    'rate' => $cpe_data_values->rate,
+                    'amount' => $cpe_data_values->rate * $cpe_data_values->quantity,
+                ];
+                $equipment_amount += $cle_data_values->rate * $cle_data_values->quantity;
             }
+            $TotalAmount = $saleData->otc;
+            $installation_charge = $TotalAmount - $equipment_amount;
+            $otc = [
+                'client_no' =>  $values->client_no,
+                'fr_no' =>  $values->fr_no,
+                'date' =>  Carbon::now()->format('Y-m-d'),
+                'user_id' => auth()->id(),
+                'equipment_amount' => $equipment_amount,
+                'installation_charge' => $installation_charge,
+                'total_amount' => $TotalAmount,
+            ];
+
+            $otc_data = BillingOtcBill::create($otc);
+            $otc_data->lines()->createMany($otc_lines_data);
             $material_array[$key]['parent']['main'] = [
                 "client_no"         => $values->client_no,
                 "fr_no"             => $values->fr_no,
