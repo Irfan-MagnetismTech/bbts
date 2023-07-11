@@ -7,4 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class SaleLinkDetail extends Model
 {
     protected $guarded = [];
+
 }

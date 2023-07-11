@@ -18,7 +18,7 @@
             class="fas fa-plus"></i></a> --}}
 @endsection
 @section('sub-title')
-    Total: {{ count($surveys) }}
+    Total: {{ count($costings) }}
 @endsection
 
 
@@ -29,10 +29,11 @@
                 <tr>
                     <th>#SL</th>
                     <th>Client Name</th>
-                    <th>Client No</th>
+                    <th>Client id</th>
                     <th>MQ No</th>
                     <th>FR No</th>
-
+                    <th>Per month Investment</th>
+                    <th>Per month Revenue</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -43,27 +44,31 @@
                     <th>Client id</th>
                     <th>MQ No</th>
                     <th>FR No</th>
+                    <th>Per month Investment</th>
+                    <th>Per month Revenue</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($surveys as $key => $survey)
+                @foreach ($costings as $key => $costing)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $survey->lead_generation->client_name }}</td>
-                        <td>{{ $survey->client_no }}</td>
-                        <td>{{ $survey->mq_no }}</td>
-                        <td>{{ $survey->fr_no }}</td>
+                        <td>{{ $costing->lead_generation->client_name }}</td>
+                        <td>{{ $costing->client_no }}</td>
+                        <td>{{ $costing->mq_no }}</td>
+                        <td>{{ $costing->fr_no }}</td>
+                        <td>{{ number_format($costing->total_investment / $costing->month, 2) }}</td>
+                        <td>{{ $costing->total_mrc }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('survey.show', $survey->id) }}" data-toggle="tooltip" title="Details"
+                                    <a href="{{ route('survey.show', $costing->id) }}" data-toggle="tooltip" title="Details"
                                         class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('survey.edit', $survey->id) }}" data-toggle="tooltip" title="Edit"
+                                    <a href="{{ route('survey.edit', $costing->id) }}" data-toggle="tooltip" title="Edit"
                                         class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ route('survey.destroy', $survey->id) }}" method="POST"
+                                    <form action="{{ route('survey.destroy', $costing->id) }}" method="POST"
                                         class="d-inline" id="deleteClientProfile">
                                         @csrf
                                         @method('DELETE')
