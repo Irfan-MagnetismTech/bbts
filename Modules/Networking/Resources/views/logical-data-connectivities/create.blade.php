@@ -118,7 +118,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($physicalConnectivityData->vas_services as $key => $vas_service)
+                    {{-- @foreach ($physicalConnectivityData->vas_services as $key => $vas_service)
                         <tr>
                             <td>
                                 <input type="text" name="product_name[]" class="form-control product_name"
@@ -137,7 +137,7 @@
                                     value="{{ $vas_service->remarks }}">
                             </td>
                         </tr>
-                    @endforeach
+                    @endforeach --}}
                 </tbody>
             </table>
 

@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('store-client-feedback/{slug}', [ClientFeedbackController::class, 'storeClientFeedback'])->name('store-client-feedback');
 
     Route::get('search-ip', [CommonApiController::class, 'searchIp'])->name('searchIp');
+    Route::get('search-vendor', [CommonApiController::class, 'searchVendor'])->name('searchVendor');
 });
 
 require base_path('routes/dataencoding.php');
