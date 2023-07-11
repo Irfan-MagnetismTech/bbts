@@ -84,15 +84,15 @@
 
                 <div class="form-group col-3 connectivity_point1">
                     <label for="select2">Connectivity Point</label>
-                    <select class="form-control select2" id="connectivity_point" name="fr_no">
+                    <select class="form-control select2" id="connectivity_point" name="connectivity_point">
                         <option value="" readonly selected>Select FR No</option>
                         @if ($form_method == 'POST')
                             <option value="{{ old('connectivity_point') }}" selected>{{ old('connectivity_point') }}
                             </option>
                         @elseif($form_method == 'PUT')
                             @forelse ($connectivity_points as $key => $value)
-                                <option value="{{ $value->fr_no }}" @if ($connectivity_point == $value->fr_no) selected @endif>
-                                    {{ $value->connectivity_point . '-' . $value->fr_no }}
+                                <option value="{{ $value->connectivity_point . '_' . $value->fr_no }}" @if ($connectivity_point == $value->fr_no) selected @endif>
+                                    {{ $value->connectivity_point . '_' . $value->fr_no }}
                                 </option>
                             @empty
                             @endforelse
@@ -154,7 +154,6 @@
                         <th> Device IP </th>
                         <th> PORT </th>
                         <th> VLAN </th>
-                        <th> Distance </th>
                         <th> Connectivity Details </th>
                         <th> Comment </th>
                     </tr>
@@ -194,10 +193,6 @@
                                 <td>
                                     <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
                                         value="{{ $physicalConnectivityLine->vlan }}" readonly>
-                                </td>
-                                <td>
-                                    <input type="text" name="distance[]" class="form-control distance"
-                                        autocomplete="off" value="{{ $physicalConnectivityLine->distance }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="connectivity_details[]"

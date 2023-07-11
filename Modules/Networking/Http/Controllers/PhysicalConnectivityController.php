@@ -59,11 +59,17 @@ class PhysicalConnectivityController extends Controller
                     'device_ip' => $request->device_ip[$key],
                     'port' => $request->port[$key],
                     'vlan' => $request->vlan[$key],
-                    'distance' => $request->distance[$key],
                     'connectivity_details' => $request->connectivity_details[$key],
                     'comment' => $request->comment[$key],
                 ];
             }
+
+            $connectivity_point = explode('_', $request->connectivity_point);
+            $request->merge([
+                'connectivity_point' => $connectivity_point[0],
+                'fr_no' => $connectivity_point[1],
+            ]);
+
             $physicalConnectivity = PhysicalConnectivity::create($request->all());
             $physicalConnectivity->lines()->createMany($dataList);
 
@@ -132,7 +138,6 @@ class PhysicalConnectivityController extends Controller
                     'device_ip' => $request->device_ip[$key],
                     'port' => $request->port[$key],
                     'vlan' => $request->vlan[$key],
-                    'distance' => $request->distance[$key],
                     'connectivity_details' => $request->connectivity_details[$key],
                     'comment' => $request->comment[$key],
                 ];

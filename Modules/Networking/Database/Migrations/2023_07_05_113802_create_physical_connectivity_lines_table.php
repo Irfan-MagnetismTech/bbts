@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('device_ip')->nullable();
             $table->string('port')->nullable();
             $table->string('vlan')->nullable();
-            $table->string('distance')->nullable();
             $table->string('connectivity_details')->nullable();
             $table->string('comment')->nullable();
             $table->timestamps();
