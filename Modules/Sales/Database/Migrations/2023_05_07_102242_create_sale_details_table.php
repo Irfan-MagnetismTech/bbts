@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('billing_address_id')->nullable();
             $table->integer('collection_address_id')->nullable();
             $table->string('fr_no')->nullable();
+            $table->integer('costing_id')->nullable();
             $table->string('billpayment_date')->nullable();
             $table->string('payment_status')->nullable();
             $table->float('otc', 8, 2)->nullable();
