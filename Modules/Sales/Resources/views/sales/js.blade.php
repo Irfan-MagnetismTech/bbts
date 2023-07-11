@@ -48,6 +48,7 @@
                                                         </span>
                                                         <span>${element.fr_details.connectivity_point} ( ${element.fr_no} )</span>
                                                         <input type="hidden" class="fr_no" name="fr_no[${indx}]" value="${element.fr_no}">
+                                                        <input type="hidden" class="costing_id" name="costing_id[${indx}]" value="${element.element.costing.id}">
                                                     </label>
                                                     </div>
                                                 </div>

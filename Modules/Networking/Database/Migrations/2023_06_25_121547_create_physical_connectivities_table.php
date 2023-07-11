@@ -16,7 +16,14 @@ return new class extends Migration
         Schema::create('physical_connectivities', function (Blueprint $table) {
             $table->id();
             $table->string('fr_no')->nullable();
+            $table->string('connectivity_point')->nullable();
             $table->string('client_no')->nullable();
+            $table->string('client_name')->nullable();
+            $table->string('client_type')->nullable();
+            $table->string('contact_person')->nullable();
+            $table->string('contact_number')->nullable();
+            $table->string('email')->nullable();
+            $table->string('contact_address')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();
         });

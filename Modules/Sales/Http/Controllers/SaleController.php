@@ -17,6 +17,9 @@ use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\CollectionAddress;
+use Modules\Sales\Entities\Costing;
+use Modules\Sales\Entities\CostingLinkEquipment;
+use Modules\Sales\Entities\CostingProductEquipment;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\Planning;
@@ -157,6 +160,7 @@ class SaleController extends Controller
             $data[] = [
                 'checked'               => (isset($raw['checked']) && isset($raw['checked'][$key])) ? 1 : 0,
                 'fr_no'                 => $raw['fr_no'][$key],
+                'costing_id'            => $raw['costing_id'][$key],
                 'client_no'             => $raw['client_no'],
                 'delivery_date'         => $raw['delivery_date'][$key],
                 'billing_address_id'    => $raw['billing_address_id'][$key],
@@ -346,8 +350,47 @@ class SaleController extends Controller
         $datas = Planning::with('equipmentPlans.material', 'planLinks.PlanLinkEquipments.material')
             ->where('mq_no', $mq_no)
             ->get();
+        $Costingdatas = Costing::with('costingLinks.costingLinkEquipments', 'costingProductEquipments')
+            ->where('mq_no', $mq_no)
+            ->get();
         $material_array = [];
         foreach ($datas as $key => $values) {
+            $cle_data = CostingLinkEquipment::whereHas('costing', function ($qr) use ($values) {
+                $qr->where("fr_no", $values->fr_no)->where('ownership', 'Client');
+            })->get();
+
+
+            $cpe_data = CostingProductEquipment::whereHas('costing', function ($qr) use ($values) {
+                $qr->where("fr_no", $values->fr_no)->where('ownership', 'Client');
+            })->get();
+
+
+            $otc_lines_data = [];
+            $g_total = 0;
+
+
+            foreach ($cle_data as $cle_data_key => $cle_data_values) {
+                $otc_lines_data[] = [
+                    'material_id' => $cle_data_values->material_id,
+                    'quantity' => $cle_data_values->quantity,
+                    'rate' => $cle_data_values->rate,
+                    'amount' => $cle_data_values->rate * $cle_data_values->quantity,
+                ];
+                $g_total += $cle_data_values->rate * $cle_data_values->quantity;
+            }
+
+            foreach ($cpe_data as $cle_data_key => $cle_data_values) {
+                $otc_lines_data[] = [
+                    'material_id' => $cle_data_values->material_id,
+                    'quantity' => $cle_data_values->quantity,
+                    'rate' => $cle_data_values->rate,
+                    'amount' => $cle_data_values->rate * $cle_data_values->quantity,
+                ];
+                $g_total += $cle_data_values->rate * $cle_data_values->quantity;
+            }
+
+            foreach ($cpe_data as $cpe_data_key => $cpe_data_values) {
+            }
             $material_array[$key]['parent']['main'] = [
                 "client_no"         => $values->client_no,
                 "fr_no"             => $values->fr_no,

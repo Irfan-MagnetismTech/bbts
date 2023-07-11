@@ -13,4 +13,8 @@ class CostingProductEquipment extends Model
     {
         return $this->belongsTo(Material::class, 'material_id', 'id');
     }
+    public function costing()
+    {
+        return $this->hasMany(Costing::class, 'id', 'costing_link_id');
+    }
 }
