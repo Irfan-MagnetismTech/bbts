@@ -111,6 +111,7 @@
                                                     </span>
                                                     <span>{{$value->frDetails->connectivity_point}} ( {{$value->fr_no}} )</span>
                                                     <input type="hidden" class="fr_no" name="fr_no[{{$key}}]" value="{{$value->fr_no}}">
+                                                    <input type="hidden" class="costing_id" name="costing_id[{{$key}}]" value="{{$value->costing_id}}">
                                                 </label>
                                             </div>
                                         </div>

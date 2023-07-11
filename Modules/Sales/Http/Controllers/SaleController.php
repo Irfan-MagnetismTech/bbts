@@ -157,6 +157,7 @@ class SaleController extends Controller
             $data[] = [
                 'checked'               => (isset($raw['checked']) && isset($raw['checked'][$key])) ? 1 : 0,
                 'fr_no'                 => $raw['fr_no'][$key],
+                'costing_id'            => $raw['costing_id'][$key],
                 'client_no'             => $raw['client_no'],
                 'delivery_date'         => $raw['delivery_date'][$key],
                 'billing_address_id'    => $raw['billing_address_id'][$key],
