@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Billing\Http\Controllers\BillGenerateController;
+use Modules\Billing\Http\Controllers\MonthlyBillController;
+use Modules\Billing\Http\Controllers\BillingOtcBillController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +17,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('billing')->middleware(['auth'])->group(function () {
-        Route::get('/', 'BillingController@index');
-    
+    Route::get('/', 'BillingController@index');
+
     Route::resources([
         'monthly-bills' => MonthlyBillController::class,
+        'otc-bills'     => BillingOtcBillController::class,
     ]);
-    
+    Route::get('generate_otc_bill/{client_no}', [BillGenerateController::class, 'create'])->name('generate_otc_bill');
 });
-
-

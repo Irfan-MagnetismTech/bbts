@@ -6,8 +6,9 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Billing\Entities\BillingOtcBill;
+use Modules\Sales\Entities\BillingAddress;
 
-class BillingOtcBillController extends Controller
+class BillGenerateController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,17 +16,18 @@ class BillingOtcBillController extends Controller
      */
     public function index()
     {
-        $otc_bills = BillingOtcBill::get()->groupBy('client_no');
-        return view('billing::otcBill.index', compact('otc_bills'));
+        return view('billing::index');
     }
 
     /**
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function create($client_no)
     {
-        return view('billing::create');
+        $BillLocations = BillingOtcBill::where('client_no', $client_no)->get();
+        $BillingAddresses = BillingAddress::where('client_no', $client_no)->get();
+        return view('billing::billGenerate.create', compact('BillLocations', 'BillingAddresses'));
     }
 
     /**
