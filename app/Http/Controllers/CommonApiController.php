@@ -69,18 +69,15 @@ class CommonApiController extends Controller
 
     public function getClientsByLinkId()
     {
-        $results = ClientDetail::query()
-            ->with('client')
-            ->where('link_id', 'LIKE', '%' . request('search') . '%')
+        $results = Client::query()
+            ->with('feasibility_requirement_details')
+            ->where('client_no', 'LIKE', '%' . request('search') . '%')
             ->limit(15)
             ->get()
             ->map(fn ($item) => [
-                'value' => $item->id,
-                'label' => $item->link_id,
-                'client' => $item->client,
-                'id' => $item->id,
-                'text' => $item->link_id,
-                'fr_composite_key' => $item->fr_composite_key
+                'id' => $item->client_no,
+                'text' => $item->client_no . ' - ' . $item->client_name,
+                'fr_list' => $item->feasibility_requirement_details->pluck('fr_no', 'connectivity_point'),
             ]);
 
         return response()->json($results);
