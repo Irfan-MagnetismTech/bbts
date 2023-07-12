@@ -57,18 +57,21 @@ class FeasibilityRequirementController extends Controller
             $feasibilityRequirement = FeasibilityRequirement::create($data);
 
             $feasibilityDetails = [];
+            $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
+            if ($maxFrNo) {
+                $frArray = explode('-', $maxFrNo);
+                $fr_serial = $frArray[3] + 1;
+            } else {
+                $fr_serial = '1';
+            }
             foreach ($request['connectivity_point'] as $key => $connectivityPoint) {
                 $frNo = 'fr' . '-' . $data['client_no'] . '-';
-                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
-
-                if ($maxFrNo) {
-                    $frArray = explode('-', $maxFrNo);
-                    $frSerial = $frArray[3] + 1;
-                    $frNo .= $frSerial;
+                if ($key == 0) {
+                    $frSerial = intval($fr_serial);
                 } else {
-                    $frNo .= '1';
+                    $frSerial = intval($fr_serial) + 1;
                 }
-
+                $frNo .= $frSerial;
                 $feasibilityDetails[] = [
                     'connectivity_point' => $connectivityPoint,
                     'aggregation_type' => $request['aggregation_type'][$key],
