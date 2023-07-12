@@ -77,6 +77,12 @@ class CommonApiController extends Controller
             ->map(fn ($item) => [
                 'id' => $item->client_no,
                 'text' => $item->client_no . ' - ' . $item->client_name,
+                'client_name' => $item->client_name,
+                'contact_person' => $item->contact_person,
+                'contact_no' => $item->contact_no,
+                'email' => $item->email,
+                'client_type' => $item->client_type,
+                'address' => $item->location,
                 'fr_list' => $item->feasibility_requirement_details->pluck('fr_no', 'connectivity_point'),
             ]);
 
