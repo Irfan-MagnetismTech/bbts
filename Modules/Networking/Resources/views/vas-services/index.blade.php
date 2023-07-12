@@ -1,22 +1,21 @@
 @extends('layouts.backend-layout')
-@section('title', 'ERR')
+@section('title', 'VAS Service')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of ERR
+    List of VAS Service
 @endsection
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('errs.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
+    <a href="{{ route('vas-services.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
 @endsection
 
 @section('sub-title')
     Total: {{ count($datas) }} 
-    <x-warning-paragraph name="ERR" />
 @endsection
 
 @section('content')
@@ -26,15 +25,12 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>Type</th>
-                    <th>From Pop</th>
-                    <th>To Pop</th>
-                    <th>Capacity Type</th>
-                    <th>Capacity</th>
                     <th>Client</th>
+                    <th>Vendor</th>
+                    <th>FR NO</th>
+                    <th>Refercnce No</th>
                     <th>Date</th>
                     <th>Required Date</th>
-                    <th>Vendor</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -42,22 +38,19 @@
                 @foreach ($datas as $key => $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->type }}</td>
-                        <td>{{ $item->fromPop->name }}</td>
-                        <td>{{ $item->toPop->name }}</td>
-                        <td>{{ $item->capacity_type }}</td>
-                        <td>{{ $item->capacity }}</td>
                         <td>{{ $item->client->client_name }}</td>
+                        <td>{{ $item->vendor->name }}</td>
+                        <td>{{ $item->fr_no }}</td>
+                        <td>{{ $item->reference_no }}</td>
                         <td>{{ $item->date }}</td>
                         <td>{{ $item->required_date }}</td>
-                        <td>{{ $item->vendor->name }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                        <a href="{{ route('service-requisitions.edit', $item->id) }}" data-toggle="tooltip" title="Edit"
+                                        <a href="{{ route('vas-services.edit', $item->id) }}" data-toggle="tooltip" title="Edit"
                                             class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                         {!! Form::open([
-                                            'url' => route('service-requisitions.destroy', $item->id),
+                                            'url' => route('vas-services.destroy', $item->id),
                                             'method' => 'delete',
                                             'class' => 'd-inline',
                                             'data-toggle' => 'tooltip',
@@ -77,6 +70,5 @@
 
 @section('script')
     <script>
-        $(document).ready(function() {});
     </script>
 @endsection

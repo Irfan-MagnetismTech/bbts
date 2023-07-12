@@ -30,30 +30,23 @@
 </style>
 @php
     $is_old = old('type') ? true : false;
-    $form_heading = !empty($service_requisition) ? 'Update' : 'Add';
-    $form_url = !empty($service_requisition) ? route('service-requisitions.update', $service_requisition->id) : route('service-requisitions.store');
-    $form_method = !empty($service_requisition) ? 'PUT' : 'POST';
+    $form_heading = !empty($vasService) ? 'Update' : 'Add';
+    $form_url = !empty($vasService) ? route('vas-services.update', $vasService->id) : route('vas-services.store');
+    $form_method = !empty($vasService) ? 'PUT' : 'POST';
     
-    $type = old('type', !empty($service_requisition) ? $service_requisition->type : null);
-    $from = old('from', !empty($service_requisition) ? $service_requisition->fromPop->name : null);
-    $to = old('to', !empty($service_requisition) ? $service_requisition->toPop->name : null);
-    $from_pop_id = old('from_pop_id', !empty($service_requisition) ? $service_requisition->from_pop_id : null);
-    $to_pop_id = old('to_pop_id', !empty($service_requisition) ? $service_requisition->to_pop_id : null);
-    $capacity_type = old('capacity_type', !empty($service_requisition) ? $service_requisition->capacity_type : null);
-    $capacity = old('capacity', !empty($service_requisition) ? $service_requisition->capacity : null);
-    $client_name = old('client_name', !empty($service_requisition) ? $service_requisition->client_name : null);
-    $fr_no = old('fr_no', !empty($service_requisition) ? $service_requisition->fr_no : null);
-    $reason_of_inactive = old('reason_of_inactive', !empty($service_requisition) ? $service_requisition->reason_of_inactive : null);
-    $equipment_type = old('equipment_type', !empty($service_requisition) ? $service_requisition?->equipment_type : null);
-    $client_id = old('client_id', !empty($service_requisition) ? $service_requisition->client_id : null);
-    $client_name = old('client_name', !empty($service_requisition) ? $service_requisition?->client?->client_name : null);
-    $client_no = old('client_no', !empty($service_requisition) ? $service_requisition?->client_no : null);
-    $required_date = old('required_date', !empty($service_requisition) ? $service_requisition?->required_date : today()->format('d-m-Y'));
-    $date = old('date', !empty($service_requisition) ? $service_requisition?->date : today()->format('d-m-Y'));
-    $vendor = old('vendor', !empty($service_requisition) ? $service_requisition?->vendor->name : null);
-    $vendor_id = old('vendor_id', !empty($service_requisition) ? $service_requisition?->vendor_id : null);
-    $reference_no = old('reference_no', !empty($service_requisition) ? $service_requisition?->reference_no : null);
-    $remark = old('remark', !empty($service_requisition) ? $service_requisition?->remark : null);
+    $client_name = old('client_name', !empty($vasService) ? $vasService->client_name : null);
+    $fr_no = old('fr_no', !empty($vasService) ? $vasService->fr_no : null);
+    $reason_of_inactive = old('reason_of_inactive', !empty($vasService) ? $vasService->reason_of_inactive : null);
+    $equipment_type = old('equipment_type', !empty($vasService) ? $vasService?->equipment_type : null);
+    $client_id = old('client_id', !empty($vasService) ? $vasService->client_id : null);
+    $client_name = old('client_name', !empty($vasService) ? $vasService?->client?->client_name : null);
+    $client_no = old('client_no', !empty($vasService) ? $vasService?->client_no : null);
+    $required_date = old('required_date', !empty($vasService) ? $vasService?->required_date : today()->format('d-m-Y'));
+    $date = old('date', !empty($vasService) ? $vasService?->date : today()->format('d-m-Y'));
+    $vendor = old('vendor', !empty($vasService) ? $vasService?->vendor->name : null);
+    $vendor_id = old('vendor_id', !empty($vasService) ? $vasService?->vendor_id : null);
+    $reference_no = old('reference_no', !empty($vasService) ? $vasService?->reference_no : null);
+    $remarks = old('remarks', !empty($vasService) ? $vasService?->remarks : null);
 @endphp
 
 @section('breadcrumb-title')
@@ -72,7 +65,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('service-requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('vas-services.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -110,26 +103,20 @@
         <x-input-box colGrid="3" name="reference_no" value="{{ $reference_no }}" label="Reference No" />
 
         <div class="form-group col-3 vendor">
-            <select class="form-control select2" id="vendor" name="vendor">
+            <select class="form-control select2" id="vendor" name="vendor_id" placeholder="faf">
                 <option value="" disabled selected>Select Vendor</option>
-                @if ($form_method == 'POST')
-                @elseif($form_method == 'PUT')
-                    @forelse ($vendors as $key => $value)
-                        <option value="{{ $value->name }}" @if ($vendor == $value->name) selected @endif>
-                            {{ $value->name }}
-                        </option>
-                    @empty
-                    @endforelse
+                @if ($form_method == 'PUT')
+                    <option value="{{ $vendor_id }}" @selected($vendor_id)>{{ $vendor }}</option>                    
                 @endif
             </select>
         </div>
-        <x-input-box colGrid="3" name="client_no" value="{{ $client_no }}" label="" attr="hidden" />
+        <input name="client_no" class="client_no" id="client_no" value="{{ $client_no }}" type="hidden" />
     </div>
     <div class="row">
         <x-input-box colGrid="3" name="date" value="{{ $date }}" label="Date" class="date" />
         <x-input-box colGrid="3" name="required_date" value="{{ $required_date }}" label="Required Date"
             class="date" />
-        <x-input-box colGrid="3" name="remark" value="{{ $remark }}" label="Remark" />
+        <x-input-box colGrid="3" name="remarks" value="{{ $remarks }}" label="Remarks" />
     </div>
 
     <div class="row">
@@ -147,8 +134,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (!empty($service_requisition))
-                        @foreach ($service_requisition->lines as $key => $item)
+                    @if (!empty($vasService))
+                        @foreach ($vasService->lines as $key => $item)
                             <tr>
                                 <td>
                                     <select class="form-control select2 product_id" name="product_id[]" required>
@@ -160,12 +147,24 @@
                                     </select>
                                 </td>
                                 <td>
+                                    <input type="text" class="form-control unit" name="unit[]"
+                                        value="{{ $item->unit }}" required>
+                                </td>
+                                <td>
                                     <input type="number" class="form-control quantity" name="quantity[]"
                                         value="{{ $item->quantity }}" required>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control remarks" name="remarks[]"
-                                        value="{{ $item->remarks }}">
+                                    <input type="number" class="form-control rate" name="rate[]"
+                                        value="{{ $item->rate }}" required>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control total" name="total[]"
+                                        value="{{ $item->total }}" required>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control description" name="description[]"
+                                        value="{{ $item->description }}">
                                 </td>
                                 <td>
                                     @if ($loop->first)
@@ -197,8 +196,8 @@
     <script src="{{ asset('js/search-client.js') }}"></script>
     <script>
         //on change quantity and rate get total amount
-        $(document).ready(function(){
-            calculateTotal("#product_table", ".quantity", ".rate", ".total");  
+        $(document).ready(function() {
+            calculateTotal("#product_table", ".quantity", ".rate", ".total");
         })
 
         @if ($form_method == 'POST')
@@ -306,15 +305,15 @@
                             <input type="number" class="form-control total" name="total[]" readonly>
                         </td>
                         <td>
-                            <input type="text" class="form-control remarks" name="remarks[]" required>
+                            <input type="text" class="form-control description" name="description[]" required>
                         </td>
                         ${(row_index > 0) ? 
                             `<td>
-                                <button type="button" class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></button>
-                            </td>`:
+                                                <button type="button" class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></button>
+                                            </td>`:
                             `<td>
-                                <button type="button" class="btn btn-success btn-sm fa fa-plus add-service-row"></button>
-                            </td>`
+                                                <button type="button" class="btn btn-success btn-sm fa fa-plus add-service-row"></button>
+                                            </td>`
                         }
                     </tr>`;
             $('#product_table tbody').append(row);

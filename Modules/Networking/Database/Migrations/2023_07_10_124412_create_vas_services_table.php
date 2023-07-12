@@ -15,7 +15,13 @@ return new class extends Migration
     {
         Schema::create('vas_services', function (Blueprint $table) {
             $table->id();
-
+            $table->string('client_no')->nullable();
+            $table->string('fr_no')->nullable();
+            $table->string('reference_no')->nullable();
+            $table->string('vendor_id')->nullable();
+            $table->date('date')->nullable();
+            $table->date('required_date')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }
