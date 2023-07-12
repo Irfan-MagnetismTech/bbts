@@ -114,17 +114,17 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->division->name }}</span>
+                                                    <span class="form-control">{{ $item?->division?->name }}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->district->name }}</span>
+                                                    <span class="form-control">{{ $item?->district?->name }}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->thana->name }}</span>
+                                                    <span class="form-control">{{ $item?->thana?->name }}</span>
                                                 </div>
                                             </td>
                                             <td>
