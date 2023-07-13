@@ -56,6 +56,26 @@
         </ul>
     </li>
 
+    <li class="pcoded-hasmenu {{ request()->routeIs(['vas-services.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-mtext">Vas Service</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('vas-services.create') ? 'active' : null }}">
+                <a href="{{ route('vas-services.create') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+            <li class="{{ request()->routeIs('vas-services.index') ? 'active' : null }}">
+                <a href="{{ route('vas-services.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
+
     <li
         class="pcoded-hasmenu {{ request()->routeIs(['physical-connectivities.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
@@ -73,6 +93,44 @@
                 <a href="{{ route('physical-connectivities.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                         class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
+
+    <li
+        class="pcoded-hasmenu {{ request()->routeIs(['logical-data-connectivities.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-mtext">Logical Connectivity</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('logical-data-connectivities.create') ? 'active' : null }}">
+                <a href="{{ route('logical-data-connectivities.index') }}">
+                    <span class="pcoded-micon">
+                        <i class="ti-angle-right"></i>
+                    </span>
+                    <span class="pcoded-mtext">Data Services</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('logical-internet-connectivities.create') ? 'active' : null }}">
+                <a href="{{ route('logical-internet-connectivities.index') }}">
+                    <span class="pcoded-micon">
+                        <i class="ti-angle-right"></i>
+                    </span>
+                    <span class="pcoded-mtext">Internet Services</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
+            </li>
+            <li class="{{ request()->routeIs('logical-vas-connectivities.create') ? 'active' : null }}">
+                <a href="{{ route('logical-vas-connectivities.index') }}">
+                    <span class="pcoded-micon">
+                        <i class="ti-angle-right"></i>
+                    </span>
+                    <span class="pcoded-mtext">Vas Services</span>
+                    <span class="pcoded-mcaret"></span>
+                </a>
             </li>
         </ul>
     </li>
