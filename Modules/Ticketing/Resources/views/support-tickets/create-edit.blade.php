@@ -167,31 +167,31 @@
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="name">Client Name
                                             <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control col-8" id="name" name="name"
-                                            placeholder="Enter branch name" disabled>
+                                            placeholder="Enter branch name">
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="contact_person">
                                             Contact Person</label>
                                         <input type="text" class="form-control col-8" id="contact_person"
-                                            name="contact_person" placeholder="Contact Person" disabled>
+                                            name="contact_person" placeholder="Contact Person">
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="email_address">
                                             E-mail Address</label>
                                         <input type="text" class="form-control col-8" id="email_address"
-                                            name="email_address" placeholder="E-mail Address" disabled>
+                                            name="email_address" placeholder="E-mail Address">
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="switch_port"> Switch
                                             Port</label>
                                         <input type="text" class="form-control col-8" id="switch_port"
-                                            name="switch_port" placeholder="Switch Port" disabled>
+                                            name="switch_port" placeholder="Switch Port">
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="vlan">
                                             VLAN</label>
                                         <input type="text" class="form-control col-8" id="vlan" name="vlan"
-                                            placeholder="VLAN" disabled>
+                                            placeholder="VLAN">
                                     </div>
 
                                 </div>
@@ -375,9 +375,14 @@
             console.log(e.params.data.fullObject?.fr_list)
             var fr_no = '<option value="">Select FR</option>';
             $.each(e.params.data.fullObject?.fr_list, function(index, item) {
-                fr_no += '<option value="' + item + '">' + index + ' (' + item + ')' +'</option>'
+                fr_no += '<option value="' + item + '">' + index + ' (' + item + ')' + '</option>'
             });
             $("#fr_no").html(fr_no)
+            $('#name').val(e.params.data.fullObject?.client_name)
+            $('#address').val(e.params.data.fullObject?.address)
+            $('#contact_person').val(e.params.data.fullObject?.contact_person)
+            $('#contact_no').val(e.params.data.fullObject?.contact_no)
+            $('#email_address').val(e.params.data.fullObject?.email)
             $("#client_link_id").val(e.params.data.fullObject?.text)
             getClientsPreviousTickets(clientId, 5)
         });
