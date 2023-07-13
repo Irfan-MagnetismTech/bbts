@@ -22,6 +22,7 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::resources([
         'monthly-bills' => MonthlyBillController::class,
         'otc-bills'     => BillingOtcBillController::class,
+        'bill-generate' => BillGenerateController::class,
     ]);
     Route::get('generate_otc_bill/{client_no}', [BillGenerateController::class, 'create'])->name('generate_otc_bill');
 });

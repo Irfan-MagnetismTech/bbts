@@ -31,7 +31,7 @@
 
 @section('content')
     <div class="container">
-        <form action="{{ !empty($monthlyBill) ? route('branchs.update', $branch->id) : route('branchs.store') }}"
+        <form action="{{ !empty($monthlyBill) ? route('bill-generate.update', $branch->id) : route('bill-generate.store') }}"
             method="post" class="custom-form">
             @if (!empty($monthlyBill))
                 @method('PUT')
@@ -68,23 +68,23 @@
                                 @foreach ($BillLocations as $key => $item)
                                     <tr>
                                         <td>
-                                            <input type="text" class="form-control quantity" name="quantity[]"
+                                            <input type="text" class="form-control connectivity_point" name="connectivity_point[]"
                                                 value="{{ $item->frDetail->connectivity_point }}" required>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control rate" name="rate[]"
+                                            <input type="text" class="form-control contact" name="contact[]"
                                                 value="{{ $item->frDetail->contact_name . '-' . $item->frDetail->contact_number }}" required>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control amount" name="amount[]"
+                                            <input type="text" class="form-control billing_address" name="billing_address_id[]"
                                                 value="{{ $item->saleDetails->billingAddress->address }}" readonly>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control remarks" name="remarks[]"
+                                            <input type="text" class="form-control particular" name="particular[]"
                                                 value="">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control remarks" name="remarks[]"
+                                            <input type="text" class="form-control otc" name="otc[]"
                                                 value="{{ $item->saleDetails->otc }}">
                                         </td>
                                     </tr>
@@ -94,7 +94,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="4 text-right" style="text-align: right;">Total Amout</td>
+                                <td colspan="4 text-right" style="text-align: right;">Total Amount</td>
                                 <td>
                                     <input type="number" class="form-control total" name="total"
                                         value="{{$total}}" required>

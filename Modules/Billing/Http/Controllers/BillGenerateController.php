@@ -38,7 +38,9 @@ class BillGenerateController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         try {
+            $data = $request->only('client_no', 'date', 'billing_location_id');
         } catch (Exception $error) {
         }
     }
