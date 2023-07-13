@@ -24,6 +24,9 @@ return new class extends Migration
             $table->bigInteger('total_amount')->nullable();
             $table->string('particular')->nullable();
             $table->bigInteger('user_id')->nullable();
+            $table->bigInteger('sale_id')->nullable();
+            $table->bigInteger('sale_detail_id')->nullable();
+            $table->bigInteger('user_id')->nullable();
             $table->bigInteger('branch_id')->nullable();
             $table->timestamps();
         });

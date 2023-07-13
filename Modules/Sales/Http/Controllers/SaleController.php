@@ -396,6 +396,8 @@ class SaleController extends Controller
             $otc = [
                 'client_no' =>  $values->client_no,
                 'fr_no' =>  $values->fr_no,
+                'sale_id' => $saleData->sale_id,
+                'sale_detail_id' => $saleData->id,
                 'date' =>  Carbon::now()->format('Y-m-d'),
                 'user_id' => auth()->id(),
                 'equipment_amount' => $equipment_amount,
