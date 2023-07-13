@@ -83,7 +83,7 @@
                 </div>
 
                 <div class="form-group col-3 connectivity_point1">
-                    <label for="select2">Connectivity Point</label>
+                    <label for="select2">Connectivity Point and FR</label>
                     <select class="form-control select2" id="connectivity_point" name="connectivity_point">
                         <option value="" readonly selected>Select FR No</option>
                         @if ($form_method == 'POST')

@@ -13,14 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('logical_connectivities', function (Blueprint $table) {
+        Schema::create('vas_services', function (Blueprint $table) {
             $table->id();
             $table->string('client_no')->nullable();
             $table->string('fr_no')->nullable();
-            $table->string('product_category')->comment('Internet/Data/VAS')->nullable();
-            $table->string('shared_type')->comment('dedicated, Shared')->nullable();
-            $table->string('feasility_type')->comment('DNS/SMTP/VPN/VC/BGP')->nullable();
-            $table->string('comment')->nullable();
+            $table->string('reference_no')->nullable();
+            $table->string('vendor_id')->nullable();
+            $table->date('date')->nullable();
+            $table->date('required_date')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('logical_connectivities');
+        Schema::dropIfExists('vas_services');
     }
 };
