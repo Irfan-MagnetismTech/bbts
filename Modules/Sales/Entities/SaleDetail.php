@@ -64,4 +64,14 @@ class SaleDetail extends Model
     {
         return $this->belongsTo(Costing::class, 'fr_no', 'fr_no');
     }
+
+    public function billingAddress()
+    {
+        return $this->belongsTo(BillingAddress::class, 'billing_address_id', 'id');
+    }
+
+    public function collectionAddress()
+    {
+        return $this->belongsTo(CollectionAddress::class, 'collection_address_id', 'id');
+    }
 }

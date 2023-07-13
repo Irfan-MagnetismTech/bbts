@@ -15,7 +15,16 @@ return new class extends Migration
     {
         Schema::create('bill_generates', function (Blueprint $table) {
             $table->id();
-
+            $table->bigInteger('client_id')->nullable();
+            $table->string('client_no')->nullable();
+            $table->bigInteger('billing_address_id')->nullable();
+            $table->date('date')->nullable();
+            $table->integer('month')->nullable();
+            $table->string('bill_no')->nullable();
+            $table->string('bill_type')->comment('OTC/Monthly Bill/Broken Days');
+            $table->bigInteger('amount')->nullable();
+            $table->bigInteger('user_id')->nullable();
+            $table->bigInteger('branch_id')->nullable();
             $table->timestamps();
         });
     }

@@ -2,6 +2,7 @@
 
 namespace Modules\Billing\Http\Controllers;
 
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -26,7 +27,7 @@ class BillGenerateController extends Controller
     public function create($client_no)
     {
         $BillLocations = BillingOtcBill::where('client_no', $client_no)->get();
-        $BillingAddresses = BillingAddress::where('client_no', $client_no)->get();
+        $BillingAddresses = BillingAddress::where('client_no', $client_no)->orderBy('created_at')->get();
         return view('billing::billGenerate.create', compact('BillLocations', 'BillingAddresses'));
     }
 
@@ -37,7 +38,9 @@ class BillGenerateController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+        } catch (Exception $error) {
+        }
     }
 
     /**

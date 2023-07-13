@@ -45,9 +45,8 @@
                     <select name="billing_address_id" class="form-control">
                         <option value="">Select Billing Address</option>
                         @foreach ($BillingAddresses as $key => $value )
-                            <option value="{{$value->id}}">{{$value->address}}</option>
+                            <option value="{{$value->id}}" @if($loop->first) Selected @endif>{{$value->address}}</option>
                         @endforeach
-                        
                     </select>
                 </div>
             </div>
@@ -65,6 +64,7 @@
                         </thead>
                         <tbody>
                             @if (count($BillLocations))
+                                @php($total = 0)
                                 @foreach ($BillLocations as $key => $item)
                                     <tr>
                                         <td>
@@ -77,26 +77,27 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control amount" name="amount[]"
-                                                value="{{ $item->quantity * $item->rate }}" readonly>
+                                                value="{{ $item->saleDetails->billingAddress->address }}" readonly>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control remarks" name="remarks[]"
-                                                value="{{ $item->remarks }}">
+                                                value="">
                                         </td>
                                         <td>
                                             <input type="text" class="form-control remarks" name="remarks[]"
-                                                value="{{ $item->remarks }}">
+                                                value="{{ $item->saleDetails->otc }}">
                                         </td>
                                     </tr>
+                                @php($total+= $item->saleDetails->otc)
                                 @endforeach
                             @endif
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="3 text-right" style="text-align: right;">Total Amout</td>
+                                <td colspan="4 text-right" style="text-align: right;">Total Amout</td>
                                 <td>
                                     <input type="number" class="form-control total" name="total"
-                                        value="0" required>
+                                        value="{{$total}}" required>
                                 </td>
                                 <td></td>
                                 <td></td>
