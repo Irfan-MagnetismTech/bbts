@@ -98,7 +98,7 @@
     </li>
 
     <li
-        class="pcoded-hasmenu {{ request()->routeIs(['logical-data-connectivities.*']) ? 'active pcoded-trigger' : null }}">
+        class="pcoded-hasmenu {{ request()->routeIs(['logical-data-connectivities.*', 'logical-vas-connectivities.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
             <span class="pcoded-mtext">Logical Connectivity</span>
