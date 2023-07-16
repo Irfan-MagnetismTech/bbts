@@ -19,7 +19,7 @@ class LogicalConnectivityVasController extends Controller
      */
     public function index()
     {
-        return view('networking::index');
+        return abort(404);
     }
 
     /**
@@ -40,9 +40,11 @@ class LogicalConnectivityVasController extends Controller
             ->first();
 
         $logicalConnectivityVas = LogicalConnectivity::query()
-            ->where('fr_no', $physicalConnectivityVas->fr_no)
-            ->where('client_no', $physicalConnectivityVas->client_no)
-            ->where('product_category', 'VAS')
+            ->where([
+                'fr_no' => $physicalConnectivityVas->fr_no,
+                'client_no' => $physicalConnectivityVas->client_no,
+                'product_category' => 'VAS'
+            ])
             ->with('lines.product')
             ->latest()
             ->first();
@@ -78,6 +80,7 @@ class LogicalConnectivityVasController extends Controller
                 [
                     'fr_no' => $request->fr_no,
                     'client_no' => $request->client_no,
+                    'product_category' => 'VAS'
                 ],
                 $request->all()
             );
@@ -101,7 +104,7 @@ class LogicalConnectivityVasController extends Controller
      */
     public function show($id)
     {
-        return view('networking::show');
+        return abort(404);
     }
 
     /**
@@ -111,7 +114,7 @@ class LogicalConnectivityVasController extends Controller
      */
     public function edit($id)
     {
-        return view('networking::edit');
+        return abort(404);
     }
 
     /**
@@ -122,7 +125,7 @@ class LogicalConnectivityVasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return abort(404);
     }
 
     /**
@@ -132,6 +135,6 @@ class LogicalConnectivityVasController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return abort(404);
     }
 }

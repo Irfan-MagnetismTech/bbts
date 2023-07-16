@@ -13,6 +13,7 @@ Route::resources([
     'logical-internet-connectivities' => LogicalConnectivityDataController::class,
     'logical-data-connectivities' => LogicalConnectivityDataController::class,
     'logical-vas-connectivities' => LogicalConnectivityVasController::class,
+    'logical-internet-connectivities' => LogicalConnectivityVasController::class,
     'vas-services' => VasServiceController::class,
     'data-types' => DataTypeController::class,
 ]);

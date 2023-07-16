@@ -4,7 +4,11 @@ namespace Modules\Networking\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\Product;
+use Modules\Networking\Entities\DataType;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
 
 class LogicalConnectivityDataController extends Controller
@@ -29,7 +33,25 @@ class LogicalConnectivityDataController extends Controller
             ->with('lines')
             ->first();
 
-        return view('networking::logical-data-connectivities.create', compact('physicalConnectivityData'));
+        $dataTypes = DataType::query()
+            ->latest()
+            ->get();
+
+        $products = Product::whereHas('category', function ($query) {
+            $query->where('name', 'Data');
+        })->get();
+
+        $logicalConnectivityData = LogicalConnectivity::query()
+            ->where([
+                'fr_no' => $physicalConnectivityData->fr_no,
+                'client_no' => $physicalConnectivityData->client_no,
+                'product_category' => 'Data'
+            ])
+            ->with('lines.product')
+            ->latest()
+            ->first();
+
+        return view('networking::logical-data-connectivities.create', compact('physicalConnectivityData', 'dataTypes', 'logicalConnectivityData', 'products'));
     }
 
     /**
@@ -39,7 +61,49 @@ class LogicalConnectivityDataController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $dataList = [];
+            foreach ($request->product_id as $key => $value) {
+                $dataList[] = [
+                    'product_id' => $value,
+                    'product_category' => 'Data',
+                    'data_type' => $request->data_type[$key],
+                    'quantity' => $request->quantity[$key],
+                    'ip_ipv4' => $request->ip_ipv4[$key],
+                    'ip_ipv6' => $request->ip_ipv6[$key],
+                    'subnetmask' => $request->subnetmask[$key],
+                    'gateway' => $request->gateway[$key],
+                    'vlan' => $request->vlan[$key],
+                    'mrtg_user' => $request->mrtg_user[$key],
+                    'mrtg_pass' => $request->mrtg_pass[$key]
+                ];
+            }
+
+            $request->merge([
+                'product_category' => 'Data',
+            ]);
+
+            $logicalConnectivity = LogicalConnectivity::updateOrCreate(
+                [
+                    'fr_no' => $request->fr_no,
+                    'client_no' => $request->client_no,
+                    'product_category' => 'Data'
+                ],
+                $request->all()
+            );
+
+            $logicalConnectivity->lines()->delete();
+            $logicalConnectivity->lines()->createMany($dataList);
+
+            DB::commit();
+
+            return redirect()->back()->with('message', 'Logical Connectivity Data created successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**

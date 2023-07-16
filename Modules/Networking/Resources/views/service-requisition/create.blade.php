@@ -2,33 +2,32 @@
 @section('title', 'Service Requisition')
 <style>
     fieldset {
-   display: block!important;
-   margin-left: 2px!important;
-   margin-right: 2px!important;
-   padding-left: 0.75em!important;
-   padding-bottom: 0%!important;
-   padding-right: 0.75em!important;
-   border: #eeeeee 2px silid;
-   border: 2px black (internal value)!important;
- }
- fieldset {
-   background-color: #eeeeee!important;
- }
- 
- legend {
-   color: white!important;
-   display: block!important;
-   width: 90%!important;
-   max-width: 100%!important;
-   font-size: 0.7rem!important;
-   line-height: inherit!important;
-   font-weight: 500!important;
-   color: inherit!important;
-   white-space: normal!important;
- }
- 
- 
- </style>
+        display: block !important;
+        margin-left: 2px !important;
+        margin-right: 2px !important;
+        padding-left: 0.75em !important;
+        padding-bottom: 0% !important;
+        padding-right: 0.75em !important;
+        border: #eeeeee 2px silid;
+        border: 2px black (internal value) !important;
+    }
+
+    fieldset {
+        background-color: #eeeeee !important;
+    }
+
+    legend {
+        color: white !important;
+        display: block !important;
+        width: 90% !important;
+        max-width: 100% !important;
+        font-size: 0.7rem !important;
+        line-height: inherit !important;
+        font-weight: 500 !important;
+        color: inherit !important;
+        white-space: normal !important;
+    }
+</style>
 @php
     $is_old = old('type') ? true : false;
     $form_heading = !empty($service_requisition) ? 'Update' : 'Add';
@@ -72,7 +71,8 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('service-requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('service-requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -88,28 +88,28 @@
         'encType' => 'multipart/form-data',
         'class' => 'custom-form',
     ]) !!}
-     <div class="row pb-2">
+    <div class="row pb-2">
         <div class="col-3">
             <fieldset class="mb-2 pb-2">
                 <legend>Requisition Type</legend>
                 <div class="form-check-inline pt-0 mt-0">
                     <label class="form-check-label" for="new">
-                        <input type="radio" class="form-check-input type" id="new" name="type"
-                            value="new" @checked(@$type == 'new' || ($form_method == 'POST' && !old()))>
+                        <input type="radio" class="form-check-input type" id="new" name="type" value="new"
+                            @checked(@$type == 'new' || ($form_method == 'POST' && !old()))>
                         NEW
                     </label>
                 </div>
                 <div class="form-check-inline mt-0 pt-0">
                     <label class="form-check-label" for="existing">
-                        <input type="radio" class="form-check-input type" id="existing" name="type"
-                            value="existing" @checked(@$type == 'existing')>
+                        <input type="radio" class="form-check-input type" id="existing" name="type" value="existing"
+                            @checked(@$type == 'existing')>
                         EXISTING
                     </label>
                 </div>
                 <div class="form-check-inline pt-0 mt-0">
                     <label class="form-check-label" for="service">
-                        <input type="radio" class="form-check-input type" id="service" name="type"
-                            value="service" @checked(@$type == 'service' || ($form_method == 'POST' && !old()))>
+                        <input type="radio" class="form-check-input type" id="service" name="type" value="service"
+                            @checked(@$type == 'service' || ($form_method == 'POST' && !old()))>
                         Service
                     </label>
                 </div>
@@ -125,9 +125,9 @@
     </div>
     <div class="row">
         <x-input-box colGrid="3" name="from" value="{{ $from }}" label="From" />
-        <input type="hidden" id="from_pop_id" name="from_pop_id" value="{{$from_pop_id}}">
+        <input type="hidden" id="from_pop_id" name="from_pop_id" value="{{ $from_pop_id }}">
         <x-input-box colGrid="3" name="to" value="{{ $to }}" label="To" />
-        <input type="hidden" id="to_pop_id" name="to_pop_id" value="{{$to_pop_id}}">
+        <input type="hidden" id="to_pop_id" name="to_pop_id" value="{{ $to_pop_id }}">
         <x-input-box colGrid="3" name="capacity_type" value="{{ $capacity_type }}" label="Capacity Type" />
         <x-input-box colGrid="3" name="capacity" value="{{ $capacity }}" label="Capacity" />
     </div>
@@ -149,13 +149,14 @@
                 @endif
             </select>
         </div>
-        <x-input-box colGrid="3" name="client_no" value="{{ $client_no }}" label="Client No" attr="readonly"/>
+        <x-input-box colGrid="3" name="client_no" value="{{ $client_no }}" label="Client No" attr="readonly" />
     </div>
     <div class="row">
-        <x-input-box colGrid="3" name="date" value="{{ $date }}" label="Date" class="date"/>
-        <x-input-box colGrid="3" name="required_date" value="{{ $required_date }}" label="Required Date" class="date"/>
-        <x-input-box colGrid="3" name="vendor" value="{{ $vendor }}" label="Vendor"/>
-        <input type="hidden" name="vendor_id" value="{{ $vendor_id }}" id="vendor_id"/>
+        <x-input-box colGrid="3" name="date" value="{{ $date }}" label="Date" class="date" />
+        <x-input-box colGrid="3" name="required_date" value="{{ $required_date }}" label="Required Date"
+            class="date" />
+        <x-input-box colGrid="3" name="vendor" value="{{ $vendor }}" label="Vendor" />
+        <input type="hidden" name="vendor_id" value="{{ $vendor_id }}" id="vendor_id" />
         <x-input-box colGrid="3" name="remark" value="{{ $remark }}" label="Remark" />
     </div>
     <div class="row">
@@ -198,6 +199,7 @@
                                         <button type="button"
                                             class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></button>
                                     @endif
+                                </td>
                             </tr>
                         @endforeach
                     @endif
@@ -245,7 +247,7 @@
             //using form custom function js file
             fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
 
-         
+
             $("#pop_name").autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -273,24 +275,22 @@
 
         $('#from,#to').on('keyup', function(event) {
             let selector = this;
-            let myObject = { 
-                        }
-                jquaryUiAjax(this, "{{ route('get_pop') }}", uiList, myObject);
-                
-                function uiList(item) {
-                    $(selector).val(item.label).attr('value',item.label);
-                    if(event.target.id == "from"){
-                        $('#from_pop_id').val(item.id);
-                    }else{
-                        $('#to_pop_id').val(item.id);
-                    }
-                    return false;
+            let myObject = {}
+            jquaryUiAjax(this, "{{ route('get_pop') }}", uiList, myObject);
+
+            function uiList(item) {
+                $(selector).val(item.label).attr('value', item.label);
+                if (event.target.id == "from") {
+                    $('#from_pop_id').val(item.id);
+                } else {
+                    $('#to_pop_id').val(item.id);
                 }
+                return false;
+            }
         })
 
         $('#vendor').on('keyup', function() {
-            let myObject = { 
-            }
+            let myObject = {}
             jquaryUiAjax(this, "{{ route('get_vendors') }}", uiList, myObject);
 
             function uiList(item) {
@@ -299,6 +299,7 @@
                 return false;
             }
         });
+
         function appendServiceRow() {
             let row_index = $("#service_table tr:last").prop('rowIndex');
             console.log(row_index);
@@ -321,11 +322,11 @@
                         </td>
                         ${(row_index > 0) ? 
                             `<td>
-                                <button type="button" class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></button>
-                            </td>`:
+                                    <button type="button" class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></button>
+                                </td>`:
                             `<td>
-                                <button type="button" class="btn btn-success btn-sm fa fa-plus add-service-row"></button>
-                            </td>`
+                                    <button type="button" class="btn btn-success btn-sm fa fa-plus add-service-row"></button>
+                                </td>`
                         }
                     </tr>`;
             $('#service_table tbody').append(row);
@@ -351,7 +352,6 @@
                 placeholder: 'Select an option'
             });
         }
-       
     </script>
 
 @endsection

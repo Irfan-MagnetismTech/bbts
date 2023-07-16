@@ -8,20 +8,7 @@ use Modules\Networking\Entities\LogicalConnectivity;
 
 class LogicalConnectivityLine extends Model
 {
-    protected $fillable = [
-        'logical_connectivity_id',
-        'product_category',
-        'product_id',
-        'quantity',
-        'ip_ipv4',
-        'ip_ipv6',
-        'subnetmask',
-        'gateway',
-        'vlan',
-        'mrtg_user',
-        'mrtg_pass',
-        'remarks',
-    ];
+    protected $guarded = [];
 
     public function logicalConnectivity()
     {
