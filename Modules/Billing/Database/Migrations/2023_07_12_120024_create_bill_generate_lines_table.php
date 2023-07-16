@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('bill_generate_lines', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('bill_generate_id');
+            $table->foreignId('bill_generate_id')->constrained('bill_generates', 'id')->cascadeOnDelete();
             $table->string('fr_no')->nullable();
+            $table->string('particular')->nullable();
             $table->bigInteger('otc_bill_id')->nullable();
+            $table->bigInteger('child_billing_address_id')->nullable();
             $table->bigInteger('broken_days_bill_id')->nullable();
             $table->string('bill_type')->comment('OTC/Monthly Bill/Broken days');
             $table->bigInteger('product_id')->nullable();

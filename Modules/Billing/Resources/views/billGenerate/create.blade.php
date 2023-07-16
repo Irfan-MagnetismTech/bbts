@@ -41,6 +41,8 @@
                 <x-input-box colGrid="3" name="client_no" value="" label="Client ID" attr="readonly" value="{{$BillLocations->first()->client_no}}"/>
                 <x-input-box colGrid="3" name="client_name" value="" label="Client Name" attr="readonly" value="{{$BillLocations->first()->client->client_name}}"/>
                 <x-input-box colGrid="3" name="date" value="" label="Date" attr="readonly" value={{now()}}/>
+                <input type="hidden" class="form-control bill_type" name="bill_type"
+                value="{{ 'OTC' }}">
                 <div class="col-3">
                     <select name="billing_address_id" class="form-control">
                         <option value="">Select Billing Address</option>
@@ -55,6 +57,7 @@
                     <table class="table table-bordered" id="service_table">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Point Name</th>
                                 <th>Contact info</th>
                                 <th>Billing Address</th>
@@ -68,23 +71,34 @@
                                 @foreach ($BillLocations as $key => $item)
                                     <tr>
                                         <td>
+                                            <input type="checkbox" class="checkbox" value="Primary" name="checked[{{$key}}]">
+                                        </td>
+                                        <td>
                                             <input type="text" class="form-control connectivity_point" name="connectivity_point[]"
-                                                value="{{ $item->frDetail->connectivity_point }}" required>
+                                                value="{{ $item->frDetail->connectivity_point }}" readonly>
+                                            <input type="hidden" class="form-control connectivity_point" name="fr_no[]"
+                                                value="{{ $item->fr_no }}">
+                                            <input type="hidden" class="form-control otc_bill_id" name="otc_bill_id[]"
+                                                value="{{ $item->id }}">
                                         </td>
                                         <td>
                                             <input type="text" class="form-control contact" name="contact[]"
-                                                value="{{ $item->frDetail->contact_name . '-' . $item->frDetail->contact_number }}" required>
+                                                value="{{ $item->frDetail->contact_name . '-' . $item->frDetail->contact_number }}" readonly>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control billing_address" name="billing_address_id[]"
+                                            <input type="text" class="form-control billing_address" name="child_billing_address[]"
                                                 value="{{ $item->saleDetails->billingAddress->address }}" readonly>
+                                            <input type="hidden" class="form-control billing_address" name="child_billing_address_id[]"
+                                                value="{{ $item->saleDetails->billingAddress->id }}" readonly>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control particular" name="particular[]"
                                                 value="">
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control otc" name="otc[]"
+                                            <input type="text" class="form-control total_amount" name="total_amount[]"
+                                                value="{{ $item->saleDetails->otc }}" readonly>
+                                            <input type="hidden" class="form-control net_amount" name="net_amount[]"
                                                 value="{{ $item->saleDetails->otc }}">
                                         </td>
                                     </tr>
@@ -94,10 +108,10 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="4 text-right" style="text-align: right;">Total Amount</td>
+                                <td colspan="5" class="text-right" style="text-align: right;">Total Amount</td>
                                 <td>
-                                    <input type="number" class="form-control total" name="total"
-                                        value="{{$total}}" required>
+                                    <input type="number" class="form-control total" name="amount"
+                                        value="{{$total}}" readonly>
                                 </td>
                                 <td></td>
                                 <td></td>

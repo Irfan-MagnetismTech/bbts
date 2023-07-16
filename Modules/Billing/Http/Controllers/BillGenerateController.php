@@ -3,21 +3,33 @@
 namespace Modules\Billing\Http\Controllers;
 
 use Exception;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Billing\Entities\BillingOtcBill;
+use Illuminate\Support\Facades\DB;
+use App\Services\BbtsGlobalService;
+use Modules\Billing\Entities\BillGenerate;
 use Modules\Sales\Entities\BillingAddress;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Billing\Entities\BillingOtcBill;
 
 class BillGenerateController extends Controller
 {
+
+    private $billNo;
+
+
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->billNo = $globalService->generateUniqueId(BillGenerate::class, 'BILL');
+    }
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('billing::index');
+        $datas = BillGenerate::get();
+        return view('billing::billGenerate.index', compact('datas'));
     }
 
     /**
@@ -38,10 +50,19 @@ class BillGenerateController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         try {
-            $data = $request->only('client_no', 'date', 'billing_location_id');
+            DB::beginTransaction();
+            $data = $request->only('client_no', 'date', 'billing_address_id', 'bill_type', 'amount');
+            $data['user_id'] = Auth()->id();
+            $data['bill_no'] = $this->billNo;
+            $bill_generate = BillGenerate::create($data);
+            $getRow = $this->getRow($request);
+            $bill_generate->lines()->createMany($getRow);
+            DB::commit();
+            return redirect()->route('bill-generate.index')->with('message', 'Data has been created successfully');
         } catch (Exception $error) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($error->getMessage());
         }
     }
 
@@ -84,5 +105,33 @@ class BillGenerateController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    public function generate_bill($id)
+    {
+        $billData = BillGenerate::findOrFail($id);
+        $billData->load('lines.billingOtcBill.lines');
+        return view('billing::billGenerate.bill', compact('billData'));
+    }
+
+
+    public function getRow($req)
+    {
+        $row = [];
+        foreach ($req->connectivity_point as $key => $value) {
+            if ((isset($req['checked']) && isset($req['checked'][$key]))) {
+                $row[] = [
+                    'fr_no' => $req->fr_no[$key],
+                    'otc_bill_id' => $req->otc_bill_id[$key],
+                    'particular' => $req->particular[$key],
+                    'total_amount' => $req->total_amount[$key],
+                    'net_amount' => $req->net_amount[$key],
+                    'child_billing_address_id' => $req->child_billing_address_id[$key],
+                    'bill_type' => $req->bill_type,
+                ];
+            }
+        }
+        return $row;
     }
 }
