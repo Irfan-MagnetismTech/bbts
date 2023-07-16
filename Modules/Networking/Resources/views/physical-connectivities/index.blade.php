@@ -80,12 +80,12 @@
                         </td>
                         <td>
                             <span class="badge badge-info">
-                                <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}"
-                                    class="text-white">Internet</a>
+                                <a href="{{ route('logical-internet-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}"
+                                    class="text-white" target="_blank">Internet</a>
                             </span>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}"
-                                    class="text-white">Data</a>
+                                    class="text-white" target="_blank">Data</a>
                             </span>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-vas-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}" target="_blank"
