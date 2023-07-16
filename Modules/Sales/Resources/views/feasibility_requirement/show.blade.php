@@ -173,7 +173,7 @@
                                                         <a href="{{ route('add-planning', $item->id) }}"
                                                             class="btn btn-sm btn-success">Add Planning</a>
                                                     </div>
-                                                @elseif (!empty($item->connectivityRequirement))
+                                                @elseif ($item->connectivityRequirement)
                                                     <div class="input-group input-group-sm input-group-success">
                                                         <a href="{{ route('add-survey', $item->id) }}"
                                                             class="btn btn-sm btn-success">Add Survey</a>
