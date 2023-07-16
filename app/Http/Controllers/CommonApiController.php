@@ -18,6 +18,7 @@ use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Employee;
 use Modules\SCM\Entities\StockLedger;
 use App\Models\Dataencoding\Department;
+use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Ticketing\Entities\SupportTeam;
@@ -417,6 +418,13 @@ class CommonApiController extends Controller
             ->with('planning.finalSurveyDetails.pop')
             ->where('fr_no', request('connectivity_point'))
             ->first();
+
+        return response()->json($results);
+    }
+
+    public function getLinksByFr($client_no, $fr_no)
+    {
+        $results = PhysicalConnectivity::with('lines')->where('client_no', $client_no)->where('fr_no', $fr_no)->first();
 
         return response()->json($results);
     }

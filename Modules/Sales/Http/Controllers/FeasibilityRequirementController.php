@@ -60,18 +60,14 @@ class FeasibilityRequirementController extends Controller
             $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
             if ($maxFrNo) {
                 $frArray = explode('-', $maxFrNo);
-                $fr_serial = $frArray[3] + 1;
+                $fr_serial = intval($frArray[count($frArray) - 1]) + 1;
             } else {
-                $fr_serial = '1';
+                $fr_serial = 1;
             }
+
             foreach ($request['connectivity_point'] as $key => $connectivityPoint) {
-                $frNo = 'fr' . '-' . $data['client_no'] . '-';
-                if ($key == 0) {
-                    $frSerial = intval($fr_serial);
-                } else {
-                    $frSerial = intval($fr_serial) + 1;
-                }
-                $frNo .= $frSerial;
+                $frNo = 'fr' . '-' . $data['client_no'] . '-' . $fr_serial;
+                $fr_serial++;
                 $feasibilityDetails[] = [
                     'connectivity_point' => $connectivityPoint,
                     'aggregation_type' => $request['aggregation_type'][$key],
@@ -89,7 +85,6 @@ class FeasibilityRequirementController extends Controller
                     'contact_email' => $request['contact_email'][$key],
                 ];
             }
-
             $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
 
             DB::commit();
@@ -170,7 +165,7 @@ class FeasibilityRequirementController extends Controller
 
                 if ($maxFrNo) {
                     $frArray = explode('-', $maxFrNo);
-                    $frSerial = $frArray[3] + 1;
+                    $frSerial = intval($frArray[count($frArray) - 1]) + 1;
                     $frNo .= $frSerial;
                 } else {
                     $frNo .= '1';

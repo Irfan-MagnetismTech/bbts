@@ -46,8 +46,8 @@
                                     <label for="client_no" class="font-weight-bold">Client ID:</label>
                                     <select name="client_no" id="client_no" class="form-control">
                                         <option
-                                            value="{{ old('client_no') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}">
-                                            {{ old('client_link_no') ?? (!empty($supportTicket) ? $supportTicket?->clientDetail?->link_name : '') }}
+                                            value="{{ old('client_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->client_no : '') }}">
+                                            {{ old('client_link_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->client_no : '') }}
                                         </option>
                                     </select>
                                     <input type="hidden" name="client_link_id" id="client_link_id">
@@ -55,10 +55,15 @@
                                 <div class="col-6">
                                     <label for="fr_no" class="font-weight-bold">FR List</label>
                                     <select name="fr_no" id="fr_no" class="form-control">
-                                        <option
-                                            value="{{ old('fr_no') ?? (!empty($supportTicket) ? $supportTicket?->frDetail?->link_name : '') }}">
-                                            {{ old('fr_link_no') ?? (!empty($supportTicket) ? $supportTicket?->frDetail?->link_name : '') }}
-                                        </option>
+                                        @if (!empty($supportTicket))
+                                            @foreach ($fr_list as $key => $fr_no)
+                                                <option value="{{ $fr_no }}"
+                                                    @if (!empty($supportTicket->fr_no == $fr_no)) selected @endif>
+                                                    {{ $key . ' (' . $fr_no . ')' }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="">Select FR</option>
+                                        @endif`
                                     </select>
                                 </div>
                             </div>
@@ -167,59 +172,164 @@
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="name">Client Name
                                             <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control col-8" id="name" name="name"
-                                            placeholder="Enter branch name">
+                                            value="{{ old('name') ?? (!empty($supportTicket) ? $supportTicket?->client?->client_name : '') }}"
+                                            placeholder="Client Name" disabled>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="contact_person">
                                             Contact Person</label>
                                         <input type="text" class="form-control col-8" id="contact_person"
+                                            value="{{ old('contact_person') ?? (!empty($supportTicket) ? $supportTicket?->client?->contact_person : '') }}"
                                             name="contact_person" placeholder="Contact Person">
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="email_address">
                                             E-mail Address</label>
                                         <input type="text" class="form-control col-8" id="email_address"
+                                            value="{{ old('email_address') ?? (!empty($supportTicket) ? $supportTicket?->client?->email : '') }}"
                                             name="email_address" placeholder="E-mail Address">
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4" for="switch_port"> Switch
-                                            Port</label>
-                                        <input type="text" class="form-control col-8" id="switch_port"
-                                            name="switch_port" placeholder="Switch Port">
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4" for="vlan">
-                                            VLAN</label>
-                                        <input type="text" class="form-control col-8" id="vlan" name="vlan"
-                                            placeholder="VLAN">
-                                    </div>
-
                                 </div>
+
                                 <div class="col-6 pt-4 px-0">
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="address">
                                             Address</label>
                                         <input type="text" class="form-control col-8" id="address" name="address"
+                                            value="{{ old('address') ?? (!empty($supportTicket) ? $supportTicket?->client?->location : '') }}"
                                             placeholder="Address" disabled>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="contact_no"> Contact
                                             Number</label>
                                         <input type="text" class="form-control col-8" id="contact_no"
+                                            value="{{ old('contact_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->contact_no : '') }}"
                                             name="contact_no" placeholder="Contact Number" disabled>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4" for="switch_ip"> Switch
-                                            IP</label>
-                                        <input type="text" class="form-control col-8" id="switch_ip" name="switch_ip"
-                                            placeholder="Switch IP" disabled>
+                                </div>
+
+                                <div class="row pt-4 m-0 px-0" id="physical_connectivity">
+                                    <div class="col-12">
+                                        <h5 class="text-center">Physical Connectivity Information</h5>
+                                        <hr />
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4" for="pop">
-                                            POP</label>
-                                        <input type="text" class="form-control col-8" id="pop" name="pop"
-                                            placeholder="POP" disabled>
-                                    </div>
+                                    @if (!empty($supportTicket))
+                                        @forelse ($supportTicket->physicalConnectivity->lines as $item)
+                                            <div class="col-4">
+                                                <div class="form-item">
+                                                    <input type="text" id="link_type" name="link_type"
+                                                        class="form-control" autocomplete="off"
+                                                        value="{{ $item->link_type }}" readonly>
+                                                    <label for="link_type">Link Type</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-item">
+                                                    <input type="text" id="method" name="method"
+                                                        class="form-control" autocomplete="off"
+                                                        value="{{ $item->method }}" readonly>
+                                                    <label for="method">Method</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-item">
+                                                    <input type="text" id="ldp" name="ldp"
+                                                        class="form-control" autocomplete="off"
+                                                        value="{{ $item->ldp }}" readonly>
+                                                    <label for="ldp">LDP</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-item">
+                                                    <input type="text" id="switch_port" name="switch_port"
+                                                        class="form-control" autocomplete="off"
+                                                        value="{{ $item->port }}" readonly>
+                                                    <label for="switch_port">Switch Port</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-item">
+                                                    <input type="text" id="vlan" name="vlan"
+                                                        class="form-control" autocomplete="off"
+                                                        value="{{ $item->vlan }}" readonly>
+                                                    <label for="vlan">VLAN</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-item">
+                                                    <input type="text" id="switch_ip" name="switch_ip"
+                                                        class="form-control" autocomplete="off"
+                                                        value="{{ $item->device_ip }}" readonly>
+                                                    <label for="switch_ip">Switch IP</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-item">
+                                                    <input type="text" id="pop" name="pop"
+                                                        class="form-control" autocomplete="off"
+                                                        value="{{ $item->pop }}" readonly>
+                                                    <label for="pop">POP</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <hr />
+                                            </div>
+                                        @empty
+
+                                            <div class="col-4">
+                                                <div class="form-item">
+                                                    <input type="text" id="link_type" name="link_type"
+                                                        class="form-control" autocomplete="off" value="" required>
+                                                    <label for="link_type">Link Type</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-item">
+                                                    <input type="text" id="method" name="method"
+                                                        class="form-control" autocomplete="off" value="" required>
+                                                    <label for="method">Method</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="form-item">
+                                                    <input type="text" id="ldp" name="ldp"
+                                                        class="form-control" autocomplete="off" value="" required>
+                                                    <label for="ldp">LDP</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-item">
+                                                    <input type="text" id="switch_port" name="switch_port"
+                                                        class="form-control" autocomplete="off" value="" required>
+                                                    <label for="switch_port">Switch Port</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-item">
+                                                    <input type="text" id="vlan" name="vlan"
+                                                        class="form-control" autocomplete="off" value="" required>
+                                                    <label for="vlan">VLAN</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-item">
+                                                    <input type="text" id="switch_ip" name="switch_ip"
+                                                        class="form-control" autocomplete="off" value="" required>
+                                                    <label for="switch_ip">Switch IP</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <div class="form-item">
+                                                    <input type="text" id="pop" name="pop"
+                                                        class="form-control" autocomplete="off" value="" required>
+                                                    <label for="pop">POP</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <hr />
+                                            </div>
+                                        @endforelse
+                                    @endif
                                 </div>
 
                                 <div class="col-12">
@@ -360,24 +470,22 @@
     <script>
         $(document).ready(function() {
             select2Ajax("{{ route('get-clients-by-links') }}", '#client_no');
-
             $('#support_complain_type_id').select2({
                 placeholder: "Select Complain Type",
             })
         });
 
-        $('#client_no').on('change', function() {
-            $("#fr_composite_key").val($(this).val())
-        })
+
+
 
         $('#client_no').on('select2:select', function(e) {
             let clientId = e.params.data.fullObject?.client?.id
-            console.log(e.params.data.fullObject?.fr_list)
-            var fr_no = '<option value="">Select FR</option>';
+            let fr_no = '<option value="">Select FR</option>';
             $.each(e.params.data.fullObject?.fr_list, function(index, item) {
                 fr_no += '<option value="' + item + '">' + index + ' (' + item + ')' + '</option>'
             });
             $("#fr_no").html(fr_no)
+            $("#fr_no").select2();
             $('#name').val(e.params.data.fullObject?.client_name)
             $('#address').val(e.params.data.fullObject?.address)
             $('#contact_person').val(e.params.data.fullObject?.contact_person)
@@ -386,6 +494,74 @@
             $("#client_link_id").val(e.params.data.fullObject?.text)
             getClientsPreviousTickets(clientId, 5)
         });
+
+        $('#fr_no').on('select2:select', function(e) {
+            var html = `<div class="col-12">
+                            <h5 class="text-center">Physical Connectivity Information</h5>
+                            <hr />
+                        </div>`;
+            let fr_no = e.params.data.id;
+            let clientId = $("#client_no").val();
+            $.ajax({
+                url: "{{ url('get-links-by-fr') }}" + "/" + clientId + "/" + fr_no,
+                type: 'get',
+                dataType: "json"
+            }).done(function(data) {
+                $.each(data.lines, function(index, item) {
+                    html += `
+                        <div class="col-4">
+                            <div class="form-item">
+                                <input type="text" id="link_type" name="link_type" class="form-control" autocomplete="off" value="${item.link_type}" readonly>
+                                <label for="link_type">Link Type</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-item">
+                                <input type="text" id="method" name="method" class="form-control" autocomplete="off" value="${item.method}" readonly>
+                                <label for="method">Method</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-item">
+                                <input type="text" id="ldp" name="ldp" class="form-control" autocomplete="off" value="${item.ldp}" readonly>
+                                <label for="ldp">LDP</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-item">
+                                <input type="text" id="switch_port" name="switch_port" class="form-control" autocomplete="off" value="${item.port}" readonly>
+                                <label for="switch_port">Switch Port</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-item">
+                                <input type="text" id="vlan" name="vlan" class="form-control" autocomplete="off" value="${item.vlan}" readonly>
+                                <label for="vlan">VLAN</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-item">
+                                <input type="text" id="switch_ip" name="switch_ip" class="form-control" autocomplete="off" value="${item.device_ip}" readonly>
+                                <label for="switch_ip">Switch IP</label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-item">
+                                <input type="text" id="pop" name="pop" class="form-control" autocomplete="off" value="${item.pop}" readonly>
+                                <label for="pop">POP</label>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <hr />
+                        </div>
+                        `;
+                });
+
+                $("#physical_connectivity").empty();
+                $("#physical_connectivity").html(html);
+            });
+        });
+
 
         function getClientsPreviousTickets(clientId, limit = 5) {
             console.log(clientId, limit)
