@@ -12,20 +12,22 @@ use Modules\Ticketing\Entities\ClientFeedback;
 
 class ClientFeedbackController extends Controller
 {
-    public function provideFeedback($slug) {
+    public function provideFeedback($slug)
+    {
         $supportTicket = SupportTicket::where('clients_feedback_url', $slug)->first();
 
-        if(!$supportTicket) {
+        if (!$supportTicket) {
             abort(419);
         }
 
         return view('client-feedback-form', compact('slug', 'supportTicket'));
     }
 
-    public function storeClientFeedback(Request $request, $slug) {
+    public function storeClientFeedback(Request $request, $slug)
+    {
         $supportTicket = SupportTicket::where('clients_feedback_url', $slug)->first();
 
-        if(!$supportTicket) {
+        if (!$supportTicket) {
             abort(419);
         }
 
@@ -52,30 +54,32 @@ class ClientFeedbackController extends Controller
         }
     }
 
-    public function feedbackList(Request $request) {
+    public function feedbackList(Request $request)
+    {
 
         $from = $request->date_from;
         $to = $request->date_to;
         $supportTicketId = $request->ticket_no;
         $ticketNo = '';
-        if(!empty($supportTicketId)) {
+        if (!empty($supportTicketId)) {
             $ticketNo = SupportTicket::findOrFail($supportTicketId)->ticket_no;
         }
         $limit = 500;
 
-        $feedbacks = ClientFeedback::when(!empty($from), function($fromQuery) use($from) {
-                            $fromQuery->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
-                        })
-                        ->when(!empty($to), function($toQuery) use($to) {
-                            $toQuery->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
-                        })
-                        ->when(!empty($supportTicketId), function($ticketNoQuery) use($supportTicketId) {
-                            $ticketNoQuery->where('support_ticket_id', $supportTicketId);
-                        })
-                        ->orderBy('created_at', 'desc')
-                        ->take($limit)
-                        ->get()
-                        ->groupBy('support_ticket_id');
+        $feedbacks = ClientFeedback::with('supportTicket')->when(!empty($from), function ($fromQuery) use ($from) {
+            $fromQuery->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
+        })
+            ->when(!empty($to), function ($toQuery) use ($to) {
+                $toQuery->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
+            })
+            ->when(!empty($supportTicketId), function ($ticketNoQuery) use ($supportTicketId) {
+                $ticketNoQuery->where('support_ticket_id', $supportTicketId);
+            })
+            ->orderBy('created_at', 'desc')
+            ->take($limit)
+            ->get()
+            ->groupBy('support_ticket_id');
+
 
         return view('ticketing::client-feedbacks', compact('feedbacks', 'ticketNo'));
     }
