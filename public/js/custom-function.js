@@ -220,7 +220,6 @@ function populateDropdownByAjax(
     });
 }
 
-
 /**
  * Ajax autocomplete with jquery ui
  *
@@ -229,7 +228,12 @@ function populateDropdownByAjax(
  * @param {*} callback
  * @param {any} customQueryFields
  */
-function jquaryAjaxCall(route,customQueryFields, successcallback, failcallback = null) {
+function jquaryAjaxCall(
+    route,
+    customQueryFields,
+    successcallback,
+    failcallback = null
+) {
     $.ajax({
         url: route,
         type: "get",
@@ -238,12 +242,12 @@ function jquaryAjaxCall(route,customQueryFields, successcallback, failcallback =
         success: function (data) {
             if (data.length > 0) {
                 successcallback(data);
-            }else{
+            } else {
                 if (failcallback && typeof failcallback === "function") {
                     failcallback();
                 }
             }
             return false;
-        }
+        },
     });
 }

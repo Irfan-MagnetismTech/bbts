@@ -30,6 +30,7 @@
 <!-- jquery slimscroll js -->
 <script src="{{ asset('js/dataTables.select.min.js') }}"></script>
 
+<script src="{{ asset('js/common.js') }}"></script>
 
 <script>
     const Toast = Swal.mixin({
@@ -46,4 +47,3 @@
 </script>
 @yield('script')
 
-<script src="{{ asset('js/common.js') }}"></script>

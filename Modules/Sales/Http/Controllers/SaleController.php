@@ -392,10 +392,12 @@ class SaleController extends Controller
                 $equipment_amount += $cle_data_values->rate * $cle_data_values->quantity;
             }
             $TotalAmount = $saleData->otc;
-            $installation_charge = $TotalAmount - $equipment_amount;
+            $installation_charge = -1 * ($TotalAmount - $equipment_amount);
             $otc = [
                 'client_no' =>  $values->client_no,
                 'fr_no' =>  $values->fr_no,
+                'sale_id' => $saleData->sale_id,
+                'sale_detail_id' => $saleData->id,
                 'date' =>  Carbon::now()->format('Y-m-d'),
                 'user_id' => auth()->id(),
                 'equipment_amount' => $equipment_amount,

@@ -142,6 +142,13 @@ class PhysicalConnectivityController extends Controller
                     'comment' => $request->comment[$key],
                 ];
             }
+
+            $connectivity_point = explode('_', $request->connectivity_point);
+            $request->merge([
+                'connectivity_point' => $connectivity_point[0],
+                'fr_no' => $connectivity_point[1],
+            ]);
+
             $physicalConnectivity->update($request->all());
             $physicalConnectivity->lines()->delete();
             $physicalConnectivity->lines()->createMany($dataList);

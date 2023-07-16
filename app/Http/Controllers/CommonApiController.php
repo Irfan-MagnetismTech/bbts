@@ -25,6 +25,7 @@ use Modules\Ticketing\Entities\SupportTeam;
 use Modules\Ticketing\Entities\SupportTicket;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Modules\Sales\Entities\Vendor;
 
 class CommonApiController extends Controller
 {
@@ -425,6 +426,20 @@ class CommonApiController extends Controller
     public function getLinksByFr($client_no, $fr_no)
     {
         $results = PhysicalConnectivity::with('lines')->where('client_no', $client_no)->where('fr_no', $fr_no)->first();
+        return response()->json($results);
+    }
+    public function searchVendor()
+    {
+        $results = Vendor::query()
+            ->where('name', 'LIKE', '%' . request('search') . '%')
+            ->limit(10)
+            ->get()
+            ->map(fn ($item) => [
+                'id' => $item->id,
+                'text' => $item->name,
+                'value' => $item->id,
+                'label' => $item->name,
+            ]);
 
         return response()->json($results);
     }

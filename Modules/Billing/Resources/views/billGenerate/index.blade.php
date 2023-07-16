@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'OTC Bill')
+@section('title', 'Bill Generate')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of OTC Bill
+    List of Bill Generate
 @endsection
 
 @section('style')
@@ -29,6 +29,10 @@
                     <th>Client Name</th>
                     <th>Address</th>
                     <th>Contact No</th>
+                    <th>Bill Type</th>
+                    <th>Bill No</th>
+                    <th>Bill Date</th>
+                    <th>Amount</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -38,20 +42,28 @@
                     <th>Client Name</th>
                     <th>Address</th>
                     <th>Contact No</th>
+                    <th>Bill Type</th>
+                    <th>Bill No</th>
+                    <th>Bill Date</th>
+                    <th>Amount</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($otc_bills as $key => $value)
+                @foreach ($datas as $key => $value)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td class="text-center">{{ $value->first()->client->client_name }}</td>
-                        <td class="text-center">{{ $value->first()->client->location }}</td>
-                        <td class="text-center">{{ $value->first()->client->contact_no }}</td>
+                        <td class="text-center">{{ $value->client->client_name }}</td>
+                        <td class="text-center">{{ $value->client->location }}</td>
+                        <td class="text-center">{{ $value->client->contact_no }}</td>
+                        <td class="text-center">{{ $value->bill_type }}</td>
+                        <td class="text-center">{{ $value->bill_no }}</td>
+                        <td class="text-center">{{ $value->date }}</td>
+                        <td class="text-center">{{ $value->amount }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('generate_otc_bill', $value->first()->client->client_no) }}" data-toggle="tooltip" title="Edit"
+                                    <a href="{{ route('generate_bill', $value->id) }}" data-toggle="tooltip" title="Edit"
                                         class="btn btn-outline-success">Generate</a>
                                 </nobr>
                             </div>
