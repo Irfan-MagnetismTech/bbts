@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Branchs')
+@section('title', 'Bill Generate')
 
 @section('breadcrumb-title')
     @if (!empty($monthlyBill))
@@ -18,6 +18,18 @@
         .input-group-info .input-group-addon {
             /*background-color: #04748a!important;*/
         }
+
+        table {
+            border-collapse: collapse;
+            border: 1px solid black;
+            border-top: 2px solid black; 
+         }
+        #service_table1 {
+            border-radius: 100px!important;
+        }
+        .rounded-table {
+            border-radius: 30px; /* Adjust the value as per your preference */
+            }
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -38,12 +50,53 @@
             @endif
             @csrf
             <div class="row" style="padding:30px 0 30px">
-                Client : {{$billData->client->client_name}}<br/>
-                Address :{{$billData->billingAddress->address}}<br/>
-                Attention :{{$billData->billingAddress->contact_person}}<br/>
-                 :{{$billData->billingAddress->designation}}<br/>
-                BIN NO :{{$billData?->client?->bin_no ?? ''}}<br/>
-                <div class="col-3">
+                <div class="col-7">
+                    <table class="table rounded-table" id="service_table1">
+                        <thead>
+                            <tr>
+                                <td>Client : </td>  
+                                <td>{{$billData->client->client_name}}</td>
+                            </tr>
+                            <tr>
+                                <td>Address : </td>  
+                                <td>{{$billData->billingAddress->address}}</td>
+                            </tr>
+                            <tr>
+                                <td>Attention : </td>  
+                                <td>{{$billData->billingAddress->contact_person}}</td>
+                            </tr>
+                            <tr>
+                                <td></td>  
+                                <td>{{$billData->billingAddress->designation}}</td>
+                            </tr>
+                            <tr>
+                                <td>BIN NO : </td>  
+                                <td>{{$billData?->client?->bin_no ?? ''}}</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-5">
+                    <table class="table" id="service_table2">
+                        <thead>
+                            <tr>
+                                <td>Invoice No : </td>  
+                                <td>{{$billData->client->client_name}}</td>
+                            </tr>
+                            <tr>
+                                <td>Invoice Date : </td>  
+                                <td>{{$billData->billingAddress->address}}</td>
+                            </tr>
+                            <tr>
+                                <td>Invoice Period : </td>  
+                                <td>{{$billData->billingAddress->contact_person}}</td>
+                            </tr>
+                            <tr>
+                                <td>BBTSL BIN No</td>  
+                                <td>{{$billData?->client?->bin_no ?? ''}}</td>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
             <div class="row">
@@ -65,7 +118,7 @@
                                 $g_total = 0;
                             @endphp
                            @foreach ($billData->lines as $key=>$value )
-                               @if(count($value->billingOtcBill->lines))
+                               @if(isset($value->billingOtcBill) && count($value->billingOtcBill->lines))
                                 @php
                                     $total = $value->billingOtcBill->lines->sum('amount') + $value->billingOtcBill->installation_charge;
                                     $g_total += $total;
@@ -83,7 +136,7 @@
                                         @if($loop->first)
                                         <td rowspan="{{count($value->billingOtcBill->lines) + 1 }}">{{$total}}</td>
                                         @endif
-                                        </tr>
+                                    </tr>
                                 @endforeach
                                
                                 @else
@@ -92,7 +145,7 @@
                                 </tr>
                                @endif
                                <tr>
-                                    <td colspan="4">{{$value->billingOtcBill->particular}}</td>
+                                    <td colspan="4">{{isset($value->billingOtcBill) && $value->billingOtcBill->particular}}</td>
                                     <td>{{$value->billingOtcBill->installation_charge}}</td>
                                </tr>
                            @endforeach
