@@ -7,13 +7,14 @@ use Modules\Networking\Http\Controllers\VasServiceController;
 use Modules\Networking\Http\Controllers\PhysicalConnectivityController;
 use Modules\Networking\Http\Controllers\LogicalConnectivityVasController;
 use Modules\Networking\Http\Controllers\LogicalConnectivityDataController;
+use Modules\Networking\Http\Controllers\LogicalConnectivityInternetController;
 
 Route::resources([
     'physical-connectivities' => PhysicalConnectivityController::class,
     'logical-internet-connectivities' => LogicalConnectivityDataController::class,
     'logical-data-connectivities' => LogicalConnectivityDataController::class,
     'logical-vas-connectivities' => LogicalConnectivityVasController::class,
-    'logical-internet-connectivities' => LogicalConnectivityVasController::class,
+    'logical-internet-connectivities' => LogicalConnectivityInternetController::class,
     'vas-services' => VasServiceController::class,
     'data-types' => DataTypeController::class,
 ]);
