@@ -3,22 +3,22 @@
 
 @php
     $is_old = old('comment') ? true : false;
-    $form_heading = !empty($logicalConnectivityVas) ? 'Update' : 'Add';
-    $form_url = !empty($logicalConnectivityVas) ? route('errs.update', $logicalConnectivityVas->id) : route('errs.store');
-    $form_method = !empty($logicalConnectivityVas) ? 'PUT' : 'POST';
+    $form_heading = !empty($logicalConnectivityData) ? 'Update' : 'Add';
+    $form_url = !empty($logicalConnectivityData) ? route('errs.update', $logicalConnectivityData->id) : route('errs.store');
+    $form_method = !empty($logicalConnectivityData) ? 'PUT' : 'POST';
     
-    $comment = $is_old ? old('comment') : @$logicalConnectivityVas->comment;
-    $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityVas) ? $logicalConnectivityVas->lines->pluck('quantity') : null);
-    $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityVas) ? $logicalConnectivityVas->lines->pluck('remarks') : null);
+    $comment = $is_old ? old('comment') : @$logicalConnectivityData->comment;
+    $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('quantity') : null);
+    $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('remarks') : null);
 @endphp
 
 @section('breadcrumb-title')
-    @if (!empty($logicalConnectivityVas))
+    @if (!empty($logicalConnectivityData))
         Edit
     @else
         Create
     @endif
-    Logical Connectivity For VAS Service
+    Logical Connectivity For Data Service
 @endsection
 
 @section('style')
@@ -34,7 +34,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('logical-vas-connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('logical-data-connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -46,57 +46,56 @@
 
 @section('content')
     <div class="">
-        <form
-            action="{{ route('logical-vas-connectivities.store') }}"
-            method="post" class="custom-form">
+        <form action="{{ route('logical-data-connectivities.store') }}" method="post" class="custom-form">
             @csrf
 
             <div class="row">
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ $physicalConnectivityVas->client_name }}" readonly>
-                    <input type="hidden" name="client_no" id="client_no" value="{{ $physicalConnectivityVas->client_no }}">
+                        name="client_name" value="{{ $physicalConnectivityData->client_name }}" readonly>
+                    <input type="hidden" name="client_no" id="client_no"
+                        value="{{ $physicalConnectivityData->client_no }}">
                 </div>
 
                 <div class="form-group col-3 client_type">
                     <label for="client_type">Client Type:</label>
                     <input type="text" class="form-control" id="client_type" name="client_type"
-                        aria-describedby="client_type" readonly value="{{ $physicalConnectivityVas->client_type }}">
+                        aria-describedby="client_type" readonly value="{{ $physicalConnectivityData->client_type }}">
                 </div>
 
                 <div class="form-group col-3 connectivity_point1">
                     <label for="select2">Connectivity Point And FR</label>
                     <input type="text" class="form-control" id="connectivity_point1" name="connectivity_point1"
                         aria-describedby="connectivity_point1"
-                        value="{{ $physicalConnectivityVas->connectivity_point . '_' . $physicalConnectivityVas->fr_no }}"
+                        value="{{ $physicalConnectivityData->connectivity_point . '_' . $physicalConnectivityData->fr_no }}"
                         readonly>
-                    <input type="hidden" name="fr_no" id="fr_no" value="{{ $physicalConnectivityVas->fr_no }}">
+                    <input type="hidden" name="fr_no" id="fr_no" value="{{ $physicalConnectivityData->fr_no }}">
                 </div>
 
                 <div class="form-group col-3 contact_person">
                     <label for="contact_person">Contact Person:</label>
                     <input type="text" class="form-control" id="contact_person" name="contact_person"
-                        aria-describedby="contact_person" readonly value="{{ $physicalConnectivityVas->contact_person }}">
+                        aria-describedby="contact_person" readonly value="{{ $physicalConnectivityData->contact_person }}">
                 </div>
 
                 <div class="form-group col-3 contact_number">
                     <label for="contact_number">Contact Number:</label>
                     <input type="text" class="form-control" id="contact_number" aria-describedby="contact_number"
-                        name="contact_number" readonly value="{{ $physicalConnectivityVas->contact_number }}">
+                        name="contact_number" readonly value="{{ $physicalConnectivityData->contact_number }}">
                 </div>
 
                 <div class="form-group col-3 email">
                     <label for="email">Email:</label>
                     <input type="text" class="form-control" id="email" name="email" aria-describedby="email"
-                        readonly value="{{ $physicalConnectivityVas->email }}">
+                        readonly value="{{ $physicalConnectivityData->email }}">
                 </div>
 
                 <div class="form-group col-3 contact_address">
                     <label for="contact_address">Contact Address:</label>
                     <input type="text" class="form-control" id="contact_address" name="contact_address"
                         aria-describedby="contact_address" readonly
-                        value="{{ $physicalConnectivityVas->contact_address }}">
+                        value="{{ $physicalConnectivityData->contact_address }}">
                 </div>
 
                 <div class="form-group col-3 comment">
@@ -106,40 +105,92 @@
                 </div>
             </div>
 
-            <h5 class="text-center p-2">VAS SERVICE</h5>
-            <table class="table table-bordered" id="vas_service">
+            <h5 class="text-center p-2">DATA SERVICE</h5>
+            <table class="table table-bordered" id="data_service">
                 <thead>
                     <tr>
                         <th> Product Name</th>
-                        <th> Description</th>
-                        <th> Number of User</th>
-                        <th> Remarks</th>
+                        <th>Data Type</th>
+                        <th>Bandwidth</th>
+                        <th>IP Adress ipv4</th>
+                        <th>IP Adress ipv6</th>
+                        <th> Subnet Mask</th>
+                        <th> Gateway</th>
+                        <th> VLAN</th>
+                        <th> User ID</th>
+                        <th> Password</th>
+                        <th> Action </th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($vasServices->lines as $key => $line)
-                        <tr>
-                            <td>
-                                <input type="text" name="product_name[]" class="form-control product_name"
-                                    value="{{ $line->product->name }}" readonly>
-
-                                <input type="hidden" name="product_id[]" class="form-control product_id"
-                                    value="{{ $line->product_id }}">
-                            </td>
-                            <td>
-                                <input type="text" name="description[]" class="form-control description"
-                                    value="{{ $line->description }}" readonly>
-                            </td>
-                            <td>
-                                <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off"
-                                    value="{{ @$quantity[$key] }}">
-                            </td>
-                            <td>
-                                <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off"
-                                    value="{{ @$remarks[$key] }}">
-                            </td>
-                        </tr>
-                    @endforeach
+                    @if (!empty($logicalConnectivityData))
+                        @forelse ($logicalConnectivityData?->lines as $key => $line)
+                            <tr>
+                                <td>
+                                    <select name="product_id[]" class="form-control product_id select2" readonly>
+                                        <option value="">Select Product</option>
+                                        @foreach ($products as $product)
+                                            <option value="{{ $product->id }}" @selected($line->product_id)>
+                                                {{ $product->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="data_type[]" class="form-control data_type select2" readonly>
+                                        <option value="">Select Data Type</option>
+                                        @foreach ($dataTypes as $dataType)
+                                            <option value="{{ $dataType->name }}" @selected($line->data_type == $dataType->name)>
+                                                {{ $dataType->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
+                                        value="{{ $line->quantity }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="ip_ipv4[]" class="form-control ip_ipv4" autocomplete="off"
+                                        value="{{ $line->ip_ipv4 }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="ip_ipv6[]" class="form-control ip_ipv6"
+                                        autocomplete="off" value="{{ $line->ip_ipv6 }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="subnetmask[]" class="form-control subnetmask"
+                                        autocomplete="off" value="{{ $line->subnetmask }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="gateway[]" class="form-control gateway"
+                                        autocomplete="off" value="{{ $line->gateway }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
+                                        value="{{ $line->vlan }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="mrtg_user[]" class="form-control mrtg_user"
+                                        autocomplete="off" value="{{ $line->mrtg_user }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="mrtg_pass[]" class="form-control mrtg_pass"
+                                        autocomplete="off" value="{{ $line->mrtg_pass }}">
+                                </td>
+                                @if ($loop->first)
+                                    <td>
+                                        <button type="button"
+                                            class="btn btn-success btn-sm fa fa-plus add-data-service-row"></button>
+                                    </td>
+                                @else
+                                    <td>
+                                        <button type="button"
+                                            class="btn btn-danger btn-sm fa fa-minus remove-data-service-row"></button>
+                                    </td>
+                                @endif
+                            </tr>
+                        @empty
+                        @endforelse
+                    @endif
                 </tbody>
             </table>
 
@@ -160,7 +211,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($physicalConnectivityVas->lines as $key => $line)
+                    @forelse ($physicalConnectivityData->lines as $key => $line)
                         <tr>
                             <td>
                                 <input type="text" name="link_type[]" class="form-control link_type"
@@ -204,7 +255,8 @@
                                     value="{{ $line->comment }}" readonly>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                    @endforelse
                 </tbody>
             </table>
 
@@ -220,4 +272,5 @@
 
 @endsection
 @section('script')
+    @include('networking::logical-data-connectivities.js')
 @endsection

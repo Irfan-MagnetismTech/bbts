@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('logical_connectivity_id')->constrained('logical_connectivities')->onDelete('cascade');
             $table->string('product_category')->nullable();
             $table->integer('product_id')->nullable();
+            $table->string('data_type')->nullable();
             $table->integer('quantity')->nullable();
             $table->string('ip_ipv4')->nullable();
             $table->string('ip_ipv6')->nullable();
