@@ -86,7 +86,7 @@
                         <td><a
                                 href="{{ route('support-tickets.show', ['support_ticket' => $feedback->first()->support_ticket_id]) }}">{{ $feedback->first()->supportTicket->ticket_no }}</a>
                         </td>
-                        <td>{{ $feedback->first()->client->name }}</td>
+                        <td>{{ $feedback->first()->client->client_name }}</td>
                         <td>{{ $feedback->first()->supportTicket->feasibilityRequirementDetails->connectivity_point }} /
                             {{ ' (' . $feedback->first()->supportTicket->fr_no . ')' }}</td>
                         <td class="text-left">

@@ -32,12 +32,11 @@ class CommonApiController extends Controller
     public function searchClient()
     {
         $results = Client::query()
-            ->with('saleDetails')
             ->where('client_name', 'LIKE', '%' . request('search') . '%')
             ->limit(15)
             ->get()
             ->map(fn ($item) => [
-                'value' => $item->id,
+                'value' => $item->client_no,
                 'id' => $item->id,
                 'label' => $item->client_name,
                 'text' => $item->client_name,
