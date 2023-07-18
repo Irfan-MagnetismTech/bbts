@@ -18,10 +18,10 @@ class Client extends Model
 {
     protected $guarded = [];
 
-    public function clientDetails()
-    {
-        return $this->hasMany(ClientDetail::class);
-    }
+    // public function clientDetails()
+    // {
+    //     return $this->hasMany(ClientDetail::class);
+    // }
 
     public function saleDetails()
     {
@@ -35,7 +35,7 @@ class Client extends Model
 
     public function supportTickets()
     {
-        return $this->hasMany(SupportTicket::class);
+        return $this->hasMany(SupportTicket::class, 'client_no', 'client_no');
     }
 
     public function billingAddress()

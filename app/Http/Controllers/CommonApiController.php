@@ -18,6 +18,7 @@ use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Employee;
 use Modules\SCM\Entities\StockLedger;
 use App\Models\Dataencoding\Department;
+use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Ticketing\Entities\SupportTeam;
@@ -31,12 +32,11 @@ class CommonApiController extends Controller
     public function searchClient()
     {
         $results = Client::query()
-            ->with('saleDetails')
             ->where('client_name', 'LIKE', '%' . request('search') . '%')
             ->limit(15)
             ->get()
             ->map(fn ($item) => [
-                'value' => $item->id,
+                'value' => $item->client_no,
                 'id' => $item->id,
                 'label' => $item->client_name,
                 'text' => $item->client_name,
@@ -70,18 +70,21 @@ class CommonApiController extends Controller
 
     public function getClientsByLinkId()
     {
-        $results = ClientDetail::query()
-            ->with('client')
-            ->where('link_id', 'LIKE', '%' . request('search') . '%')
+        $results = Client::query()
+            ->with('feasibility_requirement_details')
+            ->where('client_no', 'LIKE', '%' . request('search') . '%')
             ->limit(15)
             ->get()
             ->map(fn ($item) => [
-                'value' => $item->id,
-                'label' => $item->link_id,
-                'client' => $item->client,
-                'id' => $item->id,
-                'text' => $item->link_id,
-                'fr_composite_key' => $item->fr_composite_key
+                'id' => $item->client_no,
+                'text' => $item->client_no . ' - ' . $item->client_name,
+                'client_name' => $item->client_name,
+                'contact_person' => $item->contact_person,
+                'contact_no' => $item->contact_no,
+                'email' => $item->email,
+                'client_type' => $item->client_type,
+                'address' => $item->location,
+                'fr_list' => $item->feasibility_requirement_details->pluck('fr_no', 'connectivity_point'),
             ]);
 
         return response()->json($results);
@@ -419,6 +422,11 @@ class CommonApiController extends Controller
         return response()->json($results);
     }
 
+    public function getLinksByFr($client_no, $fr_no)
+    {
+        $results = PhysicalConnectivity::with('lines')->where('client_no', $client_no)->where('fr_no', $fr_no)->first();
+        return response()->json($results);
+    }
     public function searchVendor()
     {
         $results = Vendor::query()

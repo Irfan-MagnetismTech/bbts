@@ -42,14 +42,14 @@
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="client_id">Status<span
                                         class="text-danger">*</span></label>
-                                <span class="form-control">{{ $feasibility_requirement->is_existing }}</span>
+                                <span class="form-control">{{ $feasibility_requirement->is_existing ?? '' }}</span>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="client_id">Client ID<span
                                         class="text-danger">*</span></label>
-                                <span class="form-control">{{ $feasibility_requirement->client_no }}</span>
+                                <span class="form-control">{{ $feasibility_requirement->client_no ?? '' }}</span>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
@@ -57,14 +57,14 @@
                                 <label class="input-group-addon" for="client_name">Client Name<span
                                         class="text-danger">*</span></label>
                                 <span
-                                    class="form-control">{{ $feasibility_requirement->lead_generation->client_name }}</span>
+                                    class="form-control">{{ $feasibility_requirement->lead_generation->client_name ?? '' }}</span>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="client_type">Date<span
                                         class="text-danger">*</span></label>
-                                <span class="form-control">{{ $feasibility_requirement->date }}</span>
+                                <span class="form-control">{{ $feasibility_requirement->date ?? '' }}</span>
                             </div>
                         </div>
                     </div>
@@ -114,17 +114,17 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->division->name }}</span>
+                                                    <span class="form-control">{{ $item?->division?->name }}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->district->name }}</span>
+                                                    <span class="form-control">{{ $item?->district?->name }}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->thana->name }}</span>
+                                                    <span class="form-control">{{ $item?->thana?->name }}</span>
                                                 </div>
                                             </td>
                                             <td>
@@ -173,7 +173,7 @@
                                                         <a href="{{ route('add-planning', $item->id) }}"
                                                             class="btn btn-sm btn-success">Add Planning</a>
                                                     </div>
-                                                @elseif (!empty($item->connectivityRequirement))
+                                                @elseif ($item->connectivityRequirement)
                                                     <div class="input-group input-group-sm input-group-success">
                                                         <a href="{{ route('add-survey', $item->id) }}"
                                                             class="btn btn-sm btn-success">Add Survey</a>

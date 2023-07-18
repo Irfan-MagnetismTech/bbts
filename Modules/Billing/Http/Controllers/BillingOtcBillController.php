@@ -1,12 +1,13 @@
 <?php
 
-namespace Modules\Sales\Http\Controllers;
+namespace Modules\Billing\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Billing\Entities\BillingOtcBill;
 
-class SalesController extends Controller
+class BillingOtcBillController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,8 @@ class SalesController extends Controller
      */
     public function index()
     {
-        return view('sales::index');
+        $otc_bills = BillingOtcBill::get()->groupBy('client_no');
+        return view('billing::otcBill.index', compact('otc_bills'));
     }
 
     /**
@@ -23,7 +25,7 @@ class SalesController extends Controller
      */
     public function create()
     {
-        return view('sales::create');
+        return view('billing::create');
     }
 
     /**
@@ -43,7 +45,7 @@ class SalesController extends Controller
      */
     public function show($id)
     {
-        return view('sales::show');
+        return view('billing::show');
     }
 
     /**
@@ -53,7 +55,7 @@ class SalesController extends Controller
      */
     public function edit($id)
     {
-        return view('sales::edit');
+        return view('billing::edit');
     }
 
     /**
@@ -75,15 +77,5 @@ class SalesController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function salesDashboard()
-    {
-        return view('sales::dashboard.sales_dashboard');
-    }
-
-    public function salesAdminDashboard()
-    {
-        return view('sales::dashboard.sales_admin_dashboard');
     }
 }

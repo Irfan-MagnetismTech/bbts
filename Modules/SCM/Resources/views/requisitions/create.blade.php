@@ -85,7 +85,7 @@
             <div class="form-group col-3 client_name">
                 <label for="client_name">Client Name:</label>
                 <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                    name="client_name" value="{{ old('client_name') ?? ($client_name ?? '') }}" placeholder="Search...">
+                    name="client_name" value="{{ old('client_name') ?? ($requisition->client->client_name ?? '') }}" placeholder="Search...">
             </div>
 
             <div class="form-group col-3 fr_no">
@@ -96,7 +96,7 @@
                         <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
                     @elseif($formType == 'edit')
                         @forelse ($fr_nos as $key => $value)
-                            <option value="{{ $value->fr_no }}" @if ($fr_no == $value->fr_no) selected @endif>
+                            <option value="{{ $value->fr_no }}" @if (@$requisition->fr_no == $value->fr_no) selected @endif>
                                 {{ $value->fr_no }}
                             </option>
                         @empty
@@ -113,7 +113,7 @@
                         <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
                     @elseif($formType == 'edit')
                         @forelse ($client_links as $key => $value)
-                            <option value="{{ $value->link_no }}" @if ($client_link_no == $value->link_no) selected @endif>
+                            <option value="{{ $value->link_no }}" @if (@$requisition->link_no == $value->link_no) selected @endif>
                                 {{ $value->link_no }}
                             </option>
                         @empty
@@ -125,14 +125,14 @@
             <div class="form-group col-3 client_no">
                 <label for="client_no">Client No:</label>
                 <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                    readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
+                    readonly value="{{ old('client_no') ?? (@$requisition->client_no ?? '') }}">
             </div>
 
             <div class="form-group col-3 client_address">
                 <label for="client_address">Client Address:</label>
                 <input type="text" class="form-control" id="client_address" name="client_address"
                     aria-describedby="client_address" readonly
-                    value="{{ old('client_address') ?? (@$client_address ?? '') }}">
+                    value="{{ old('client_address') ?? (@$requisition->client->location ?? '') }}">
             </div>
 
             <div class="form-group col-3">

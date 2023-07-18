@@ -28,9 +28,9 @@ return new class extends Migration
             $table->foreignIdFor(Division::class);
             $table->foreignIdFor(District::class);
             $table->foreignIdFor(Thana::class);
-            $table->foreignIdFor(Client::class);
+            $table->string('client_no')->nullable();
             $table->string('ticket_no')->comment('format: YYMMDD-000001');
-            $table->foreignId('fr_composite_key')->comment('Clients Link ID');
+            $table->foreignId('fr_no')->comment('Feasibility details fr no');
             $table->dateTime('complain_time');
             $table->text('description')->nullable();
             $table->foreignIdFor(SupportComplainType::class);

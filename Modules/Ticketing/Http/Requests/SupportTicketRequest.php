@@ -15,20 +15,20 @@ class SupportTicketRequest extends FormRequest
     public function rules()
     {
         return [
-            'fr_composite_key' => 'required', 
-            'complain_time' => 'date', 
-            'description' => 'string', 
+            'fr_no' => 'required',
+            'complain_time' => 'date',
+            'description' => 'string',
             'priority' => [
                 'string',
                 Rule::in(config('businessinfo.ticketPriorities')),
-            ], 
-            'remarks' => 'string', 
-            'sources_id' => 'integer|exists:ticket_sources,id', 
-            'complain_types_id' => 'integer|exists:support_complain_types,id', 
+            ],
+            'remarks' => 'string',
+            'sources_id' => 'integer|exists:ticket_sources,id',
+            'complain_types_id' => 'integer|exists:support_complain_types,id',
             'status' => [
                 'string',
                 Rule::in(config('businessinfo.ticketStatuses')),
-            ], 
+            ],
 
         ];
     }

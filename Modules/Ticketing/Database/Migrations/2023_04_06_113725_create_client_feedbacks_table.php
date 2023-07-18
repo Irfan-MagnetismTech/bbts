@@ -18,8 +18,8 @@ return new class extends Migration
         Schema::create('client_feedbacks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(SupportTicket::class);
-            $table->string('fr_composite_key');
-            $table->foreignIdFor(Client::class);
+            $table->string('fr_no');
+            $table->string('client_no');
             $table->string('rating');
             $table->string('feedback')->nullable();
             $table->timestamps();

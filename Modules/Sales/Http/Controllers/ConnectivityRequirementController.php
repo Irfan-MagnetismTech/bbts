@@ -180,6 +180,10 @@ class ConnectivityRequirementController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $connectivity_requirement = ConnectivityRequirement::find($id);
+        $connectivity_requirement->connectivityRequirementDetails()->delete();
+        $connectivity_requirement->connectivityProductRequirementDetails()->delete();
+        $connectivity_requirement->delete();
+        return redirect()->route('connectivity-requirement.index')->with('success', 'Connectivity Requirement Deleted Successfully');
     }
 }

@@ -35,6 +35,11 @@ class SaleDetail extends Model
         return $this->hasMany(SaleLinkDetail::class, 'sale_detail_id', 'id');
     }
 
+    public function saleProductDetails()
+    {
+        return $this->hasMany(SaleProductDetail::class, 'sale_detail_id', 'id');
+    }
+
     public function frDetails(): BelongsTo
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
@@ -48,5 +53,25 @@ class SaleDetail extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
+
+    public function feasibilityRequirementDetails()
+    {
+        return $this->hasOne(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
+    }
+
+    public function costing()
+    {
+        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no');
+    }
+
+    public function billingAddress()
+    {
+        return $this->belongsTo(BillingAddress::class, 'billing_address_id', 'id');
+    }
+
+    public function collectionAddress()
+    {
+        return $this->belongsTo(CollectionAddress::class, 'collection_address_id', 'id');
     }
 }

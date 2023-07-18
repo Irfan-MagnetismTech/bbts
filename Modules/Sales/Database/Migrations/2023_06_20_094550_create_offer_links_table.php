@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('offer_details_id')->nullable();
             $table->string('link_id')->nullable();
             $table->string('link_type')->nullable();
+            $table->string('link_no')->nullable();
             $table->string('option')->nullable();
             $table->string('connectivity_status')->nullable();
             $table->string('method')->nullable();

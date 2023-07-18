@@ -19,6 +19,8 @@ use Modules\Ticketing\Entities\SupportTicket;
 use Modules\Ticketing\Entities\TicketMovement;
 use App\Notifications\TicketMovementNotification;
 use Exception;
+use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Ticketing\Entities\SupportTeamMember;
 use Modules\Ticketing\Entities\SupportQuickSolution;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
@@ -36,21 +38,21 @@ class SupportTicketController extends Controller
         $to = $request->date_to;
         $supportTicketId = $request->ticket_no;
         $ticketNo = '';
-        if(!empty($supportTicketId)) {
+        if (!empty($supportTicketId)) {
             $ticketNo = SupportTicket::findOrFail($supportTicketId)->ticket_no;
         }
 
-        $supportTickets = SupportTicket::when(!empty($from), function($fromQuery) use($from) {
-                            $fromQuery->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
-                        })
-                        ->when(!empty($to), function($toQuery) use($to) {
-                            $toQuery->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
-                        })
-                        ->when(!empty($supportTicketId), function($ticketNoQuery) use($supportTicketId) {
-                            $ticketNoQuery->where('id', $supportTicketId);
-                        })
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+        $supportTickets = SupportTicket::when(!empty($from), function ($fromQuery) use ($from) {
+            $fromQuery->whereDate('created_at', '>=', Carbon::parse($from)->startOfDay());
+        })
+            ->when(!empty($to), function ($toQuery) use ($to) {
+                $toQuery->whereDate('created_at', '<=', Carbon::parse($to)->endOfDay());
+            })
+            ->when(!empty($supportTicketId), function ($ticketNoQuery) use ($supportTicketId) {
+                $ticketNoQuery->where('id', $supportTicketId);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('ticketing::support-tickets.index', compact('supportTickets', 'ticketNo'));
     }
@@ -74,35 +76,37 @@ class SupportTicketController extends Controller
      */
     public function store(SupportTicketRequest $request)
     {
-        $clientInfo = ClientDetail::where('fr_composite_key', $request->fr_composite_key)->first();
+        $clientInfo = Client::where('client_no', $request->client_no)->first();
 
-        if($clientInfo->client->supportTickets->where('status', '!=', 'Closed')->count() > 0) {
+        if ($clientInfo->supportTickets->where('status', '!=', 'Closed')->count() > 0) {
             return back()->withInput()->withErrors([
                 'message' => 'This client already has previous tickets.'
             ]);
-        } 
-        
-        $lastTicketOfThisMonth = SupportTicket::where('created_at', '>=', Carbon::now()->startOfMonth())
-                                ->orderBy('created_at', 'desc')
-                                ->first();
+        }
 
-        if(empty($lastTicketOfThisMonth)) {
-            $ticketIno = Carbon::now()->format('ymd').'-000001';
+        $lastTicketOfThisMonth = SupportTicket::where('created_at', '>=', Carbon::now()->startOfMonth())
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (empty($lastTicketOfThisMonth)) {
+            $ticketIno = Carbon::now()->format('ymd') . '-000001';
         } else {
             $ticketIno = (int) substr($lastTicketOfThisMonth->ticket_no, 7) + 1; // substring 6 character because ymd takes 6 character space
-            $ticketIno = Carbon::now()->format('ymd').'-'.str_pad($ticketIno, 6, '0', STR_PAD_LEFT);
+            $ticketIno = Carbon::now()->format('ymd') . '-' . str_pad($ticketIno, 6, '0', STR_PAD_LEFT);
         }
 
         $ticketInfo = $request->only([
-            'fr_composite_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
+            'fr_no', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 'status',
             'mailNotification', 'smsNotification'
         ]);
 
-        
+
+
+
         $ticketInfo['ticket_no'] = $ticketIno;
         $ticketInfo['created_by'] = auth()->user()->id;
         $ticketInfo['opening_date'] = Carbon::parse(decrypt($request->opening_date) ?? null)->format('Y-m-d H:i:s');
-        $ticketInfo['client_id'] = $clientInfo->client_id;
+        $ticketInfo['client_no'] = $clientInfo->client_no;
 
         // Below will be derived from $clientInfo object.
         $ticketInfo['branch_id'] = 2;
@@ -116,59 +120,63 @@ class SupportTicketController extends Controller
             'cc', 'subject', 'body', 'mailNotification', 'smsNotification'
         ]);
 
-       try {
-        $supportTicket = DB::transaction(function() use($ticketInfo) {
-            $ticket = SupportTicket::create($ticketInfo);
-            $ticket->supportTicketLifeCycles()->create([
-                'status' => 'Pending', // We are not taking $ticketInfo['status'] real input as it might be selected as closed.
-                'user_id' => auth()->user()->id,
-                'support_ticket_id' => $ticket->id,
-                'remarks' => 'Ticket Created by '.auth()->user()->name,
+
+
+        try {
+            $supportTicket = DB::transaction(function () use ($ticketInfo) {
+
+                $ticket = SupportTicket::create($ticketInfo);
+                $ticket->supportTicketLifeCycles()->create([
+                    'status' => 'Pending', // We are not taking $ticketInfo['status'] real input as it might be selected as closed.
+                    'user_id' => auth()->user()->id,
+                    'support_ticket_id' => $ticket->id,
+                    'remarks' => 'Ticket Created by ' . auth()->user()->name,
+                ]);
+                return $ticket;
+            });
+
+
+            // Email and SMS Thing
+
+            $cc = explode(";", str_replace(" ", "", $request->cc));
+            $subject = "[$supportTicket->ticket_no] " . $request->subject;
+            $message = $request->description;
+            $model = 'Modules\Ticketing\Entities\SupportTicket';
+            $receiver = $supportTicket?->clientDetail?->client?->name;
+
+
+            if ($request->mailNotification == 1) {
+                $to = $supportTicket?->clientDetail?->email;
+                $notificationError = (new EmailService())->sendEmail($to, $cc, $receiver, $subject, $message);
+            }
+            if ($request->smsNotification == 1) {
+                $to = $supportTicket?->clientDetail?->mobile;
+                $notificationError = (new SmsService())->sendSms($to, $message);
+            }
+
+
+            if ($supportTicket->status == 'Closed') {
+                $supportTicket->supportTicketLifeCycles()->create([
+                    'status' => 'Accepted',
+                    'user_id' => auth()->user()->id,
+                    'support_ticket_id' => $supportTicket->id,
+                    'remarks' => 'Ticket Accepted by ' . auth()->user()->name
+                ]);
+
+                $supportTicket->update([
+                    'status' => 'Accepted'
+                ]);
+
+                return redirect()->route('close-ticket', ['supportTicketId' => $supportTicket->id])->with('message', 'Ticket Opened Successfully.');
+            }
+
+            return redirect()->route('support-tickets.index')->with('message', 'Ticket Opened Successfully.');
+        } catch (QueryException $e) {
+            // return back()->withInput()->withErrors($e->getMessage());
+            return back()->withInput()->withErrors([
+                'message' => 'Something went wrong. Please try again.'
             ]);
-            return $ticket;
-        });
-
-        // Email and SMS Thing
-        
-        $cc = explode(";", str_replace(" ", "", $request->cc));
-        $subject = "[$supportTicket->ticket_no] ".$request->subject;
-        $message = $request->description;
-        $model = 'Modules\Ticketing\Entities\SupportTicket';
-        $receiver = $supportTicket?->clientDetail?->client?->name;
-        
-
-        if($request->mailNotification == 1) {
-            $to = $supportTicket?->clientDetail?->email;
-            $notificationError = (new EmailService())->sendEmail($to, $cc, $receiver, $subject, $message);
         }
-        if($request->smsNotification == 1) {
-            $to = $supportTicket?->clientDetail?->mobile;
-            $notificationError = (new SmsService())->sendSms($to, $message);
-        }
-
-        if($supportTicket->status == 'Closed') {
-            $supportTicket->supportTicketLifeCycles()->create([
-                'status' => 'Accepted', 
-                'user_id' => auth()->user()->id,
-                'support_ticket_id' => $supportTicket->id,
-                'remarks' => 'Ticket Accepted by '.auth()->user()->name
-            ]);
-
-            $supportTicket->update([
-                'status' => 'Accepted'
-            ]);
-
-            return redirect()->route('close-ticket', ['supportTicketId' => $supportTicket->id])->with('message', 'Ticket Opened Successfully.');
-        }
-
-        return redirect()->route('support-tickets.index')->with('message', 'Ticket Opened Successfully.');
-       } catch (QueryException $e) {
-        // return back()->withInput()->withErrors($e->getMessage());
-        return back()->withInput()->withErrors([
-            'message' => 'Something went wrong. Please try again.'
-        ]);
-       }
-        
     }
 
     /**
@@ -180,10 +188,8 @@ class SupportTicketController extends Controller
     {
         $complainTypes = (new BbtsGlobalService())->getComplainTypes();
         $ticketSources = (new BbtsGlobalService())->getTicketSources();
-        $supportTicket->load(['clientDetail' => function($query) {
-            $query->select('id', 'client_id', 'fr_composite_key')->with(['client' => function($client) {
-                $client->select('id', 'name', 'email');
-            }]);
+        $supportTicket->load(['client' => function ($query) {
+            $query->select('id', 'client_no', 'email', 'client_name', 'contact_person', 'location', 'contact_no');
         }]);
 
         $quickSolutions = SupportQuickSolution::get();
@@ -200,8 +206,9 @@ class SupportTicketController extends Controller
     {
         $complainTypes = (new BbtsGlobalService())->getComplainTypes();
         $ticketSources = (new BbtsGlobalService())->getTicketSources();
+        $fr_list = FeasibilityRequirementDetail::where('client_no', $supportTicket->client_no)->pluck('fr_no', 'connectivity_point')->toArray();
         $priorities = config('businessinfo.ticketPriorities');
-        return view('ticketing::support-tickets.create-edit', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities'));
+        return view('ticketing::support-tickets.create-edit', compact('supportTicket', 'complainTypes', 'ticketSources', 'priorities', 'fr_list'));
     }
 
     /**
@@ -212,20 +219,20 @@ class SupportTicketController extends Controller
      */
     public function update(SupportTicket $supportTicket, Request $request)
     {
-        if($supportTicket->status == 'Closed') {
+        if ($supportTicket->status == 'Closed') {
             return back()->withInput()->withErrors([
                 'message' => 'This ticket is already closed.'
             ]);
         }
         $ticketInfo = $request->only([
-                        'fr_composite_key', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id', 
-                        'mailNotification', 'smsNotification'
-                    ]);
+            'fr_no', 'complain_time', 'description', 'priority', 'remarks', 'ticket_source_id', 'support_complain_type_id',
+            'mailNotification', 'smsNotification'
+        ]);
 
-        $clientInfo = ClientDetail::where('fr_composite_key', $request->fr_composite_key)->first();
+        $clientInfo = Client::where('client_no', $request->client_no)->first();
 
         $ticketInfo['updated_by'] = auth()->user()->id;
-        $ticketInfo['client_id'] = $clientInfo->client_id;
+        $ticketInfo['client_no'] = $clientInfo->client_no;
 
         // Below will be derived from $clientInfo object.
         $ticketInfo['branch_id'] = 2;
@@ -236,24 +243,24 @@ class SupportTicketController extends Controller
 
 
         $mailingInfo = $request->only([
-        'cc', 'subject', 'body', 'mailNotification', 'smsNotification'
+            'cc', 'subject', 'body', 'mailNotification', 'smsNotification'
         ]);
 
         try {
-        DB::transaction(function() use($supportTicket, $ticketInfo) {
-            $supportTicket->update($ticketInfo);
+            DB::transaction(function () use ($supportTicket, $ticketInfo) {
+                $supportTicket->update($ticketInfo);
 
-            $supportTicket->supportTicketLifeCycles()->create([
-                'status' => $supportTicket->status,
-                'user_id' => auth()->user()->id,
-                'support_ticket_id' => $supportTicket->id,
-                'remarks' => 'Ticket Updated.'
-            ]);
-        });
+                $supportTicket->supportTicketLifeCycles()->create([
+                    'status' => $supportTicket->status,
+                    'user_id' => auth()->user()->id,
+                    'support_ticket_id' => $supportTicket->id,
+                    'remarks' => 'Ticket Updated.'
+                ]);
+            });
 
-        return back()->with('message', 'Ticket Updated Successfully');
+            return back()->with('message', 'Ticket Updated Successfully');
         } catch (QueryException $e) {
-        return back()->withInput()->withErrors($e->getMessage());
+            return back()->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -267,9 +274,10 @@ class SupportTicketController extends Controller
         //
     }
 
-    public function acceptTicket(Request $request) {
+    public function acceptTicket(Request $request)
+    {
 
-        if(!empty($request->ticket_id)) {
+        if (!empty($request->ticket_id)) {
             try {
                 $ticket = SupportTicket::findOrFail($request->ticket_id);
             } catch (\Throwable $th) {
@@ -278,11 +286,11 @@ class SupportTicketController extends Controller
                 ]);
             }
 
-            if($ticket->status == 'Pending' || $ticket->status == 'Approved') {
+            if ($ticket->status == 'Pending' || $ticket->status == 'Approved') {
                 $ticket->status = 'Accepted';
 
                 try {
-                    DB::transaction(function() use($ticket) {
+                    DB::transaction(function () use ($ticket) {
                         $ticket->save();
 
                         $ticket->supportTicketLifeCycles()->create([
@@ -292,18 +300,16 @@ class SupportTicketController extends Controller
                             'remarks' => 'Ticket Accepted.'
                         ]);
                     });
-                
-                    return back()->with('message', 'Ticket Accepted Successfully');
 
+                    return back()->with('message', 'Ticket Accepted Successfully');
                 } catch (QueryException $e) {
                     return back()->withErrors([
                         'message' => 'Something went wrong. Check if your internet connection is stable or not.'
                     ]);
                 }
-                
             } else {
                 return back()->withErrors([
-                    'message' => 'You cannot accept this ticket. As it is currently '.$ticket->status.'.'
+                    'message' => 'You cannot accept this ticket. As it is currently ' . $ticket->status . '.'
                 ]);
             }
         } else {
@@ -313,50 +319,51 @@ class SupportTicketController extends Controller
         }
     }
 
-    public function addSolution(Request $request) {
+    public function addSolution(Request $request)
+    {
 
-        if(!empty($request->ticket_id)) {
-            
-                $ticket = SupportTicket::findOrFail($request->ticket_id);
+        if (!empty($request->ticket_id)) {
 
-                if($ticket->status == 'Pending' || $ticket->status == 'Closed') {
-                    return back()->withErrors([
-                        'message' => 'You cannot add solution to this ticket.'
-                    ]);
-                }
+            $ticket = SupportTicket::findOrFail($request->ticket_id);
 
-                $permissibleUsers = $ticket->supportTicketLifeCycles
-                              ->where('status', '!=', 'Pending')
-                              ->where('status', '!=', 'Closed')
-                              ->where('status', '!=', 'Approved')
-                              ->pluck('user_id')
-                              ->toArray();
+            if ($ticket->status == 'Pending' || $ticket->status == 'Closed') {
+                return back()->withErrors([
+                    'message' => 'You cannot add solution to this ticket.'
+                ]);
+            }
 
-                if(!in_array(auth()->user()->id, $permissibleUsers)) {
-                    return back()->withErrors([
-                        'message' => 'You cannot add solution to this ticket.'
-                    ]);
-                } else {
-                    try {
-                        DB::transaction(function() use($request, $ticket) {
-                            $ticket->supportTicketLifeCycles()->create([
-                                'status' => collect($ticket->supportTicketLifeCycles)->last()->status,
-                                'user_id' => auth()->user()->id,
-                                'support_ticket_id' => $ticket->id,
-                                'remarks'   => 'Solution Added.',
-                                'description' => ($request->quick_solution != 'other') ? $request->quick_solution : $request->custom_solution
-                            ]);
-                        });
+            $permissibleUsers = $ticket->supportTicketLifeCycles
+                ->where('status', '!=', 'Pending')
+                ->where('status', '!=', 'Closed')
+                ->where('status', '!=', 'Approved')
+                ->pluck('user_id')
+                ->toArray();
 
-                        return back()->with('message', 'Solution Added Successfully');
-                    } catch (QueryException $e) {
-                        return back()->withErrors([
-                            'message' => 'Something went wrong. Check if your internet connection is stable or not.'
+            if (!in_array(auth()->user()->id, $permissibleUsers)) {
+                return back()->withErrors([
+                    'message' => 'You cannot add solution to this ticket.'
+                ]);
+            } else {
+                try {
+                    DB::transaction(function () use ($request, $ticket) {
+                        $ticket->supportTicketLifeCycles()->create([
+                            'status' => collect($ticket->supportTicketLifeCycles)->last()->status,
+                            'user_id' => auth()->user()->id,
+                            'support_ticket_id' => $ticket->id,
+                            'remarks'   => 'Solution Added.',
+                            'description' => ($request->quick_solution != 'other') ? $request->quick_solution : $request->custom_solution
                         ]);
-                    }
-                }
+                    });
 
-                // Incase of Handover or Forward USER_ID will be blank and it will be available after someone approve it.
+                    return back()->with('message', 'Solution Added Successfully');
+                } catch (QueryException $e) {
+                    return back()->withErrors([
+                        'message' => 'Something went wrong. Check if your internet connection is stable or not.'
+                    ]);
+                }
+            }
+
+            // Incase of Handover or Forward USER_ID will be blank and it will be available after someone approve it.
 
         } else {
             return back()->withErrors([
@@ -365,21 +372,23 @@ class SupportTicketController extends Controller
         }
     }
 
-    public function forwardedTickets(Request $request) {
-        
+    public function forwardedTickets(Request $request)
+    {
+
         $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
-        
+
         $filteredTickets = (new BbtsGlobalService())->filterTicketsBasedOnMovement($request, $movementTypes[0]);
 
         $supportTicketMovements = $filteredTickets['supportTicketMovements'];
         $ticketInfo = $filteredTickets['ticket'];
-                                
+
         $type = 'Forwarded';
         return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes', 'ticketInfo'));
     }
 
-    public function backwardedTickets(Request $request) {
-        
+    public function backwardedTickets(Request $request)
+    {
+
         $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
         $filteredTickets = (new BbtsGlobalService())->filterTicketsBasedOnMovement($request, $movementTypes[1]);
 
@@ -390,9 +399,10 @@ class SupportTicketController extends Controller
         return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes', 'ticketInfo'));
     }
 
-    public function handoveredTickets(Request $request) {
+    public function handoveredTickets(Request $request)
+    {
         $movementTypes = config('businessinfo.ticketMovements'); // Forward, Backward, Handover
-    
+
         $filteredTickets = (new BbtsGlobalService())->filterTicketsBasedOnMovement($request, $movementTypes[2]);
 
         $supportTicketMovements = $filteredTickets['supportTicketMovements'];
@@ -402,22 +412,24 @@ class SupportTicketController extends Controller
         return view('ticketing::support-tickets.forwarded-backward', compact('supportTicketMovements', 'type', 'movementTypes', 'ticketInfo'));
     }
 
-    public function closeTicket($supportTicketId) {
+    public function closeTicket($supportTicketId)
+    {
         $supportTicket = SupportTicket::findOrFail($supportTicketId);
-        if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
+        if ($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
             return redirect()->route('support-tickets.index')->withErrors([
-                'message' => 'You cannot close this Ticket at this time. Ticket No: '.$supportTicket->ticket_no
+                'message' => 'You cannot close this Ticket at this time. Ticket No: ' . $supportTicket->ticket_no
             ]);
         }
         if (!auth()->user()->hasAnyPermission(['support-ticket-close', 'support-ticket-super-close'])) {
             return redirect()->route('support-tickets.index')->withErrors([
-                'message' => 'You do not have permission to close this ticket. Ticket No: '.$supportTicket->ticket_no
+                'message' => 'You do not have permission to close this ticket. Ticket No: ' . $supportTicket->ticket_no
             ]);
         }
         return view('ticketing::support-tickets.close-ticket', compact('supportTicket'));
     }
 
-    public function processCloseTicket(Request $request, $supportTicketId) {
+    public function processCloseTicket(Request $request, $supportTicketId)
+    {
         $supportTicket = SupportTicket::findOrFail($supportTicketId);
 
 
@@ -437,9 +449,9 @@ class SupportTicketController extends Controller
         $info['closed_by'] = auth()->user()->id;
         $info['status'] = 'Closed';
         $info['duration'] = $minutesDiff;
-        
 
-        if($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
+
+        if ($supportTicket->status == 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved') {
             return back()->withInput()->withErrors([
                 'message' => 'You cannot close this Ticket at this time.'
             ]);
@@ -450,16 +462,16 @@ class SupportTicketController extends Controller
                 'message' => 'You cannot close this ticket.'
             ]);
         }
-        
+
         try {
 
-            if(!auth()->user()->hasPermissionTo('support-ticket-super-close')) {
+            if (!auth()->user()->hasPermissionTo('support-ticket-super-close')) {
                 $info['is_temporary_close'] = 1;
             }
-            
+
             $info['clients_feedback_url'] = Str::random(40);
 
-            DB::transaction(function() use($supportTicket, $info, $request) {
+            DB::transaction(function () use ($supportTicket, $info, $request) {
                 $supportTicket->update($info);
                 $supportTicket->ticketFeedbacks()->create([
                     'feedbackable_type' => 'Modules\Ticketing\Entities\SupportTicket',
@@ -471,34 +483,33 @@ class SupportTicketController extends Controller
                 $supportTicket->supportTicketLifeCycles()->create([
                     'status' => 'Closed',
                     'user_id' => auth()->user()->id,
-                    'remarks' => 'Ticket Closed by '.auth()->user()->name,
+                    'remarks' => 'Ticket Closed by ' . auth()->user()->name,
                     'description' => $info['feedback_to_bbts'],
                 ]);
             });
 
             $subject = "Your Ticket: $supportTicket->ticket_no is closed.";
             $message = "Your Ticket $supportTicket->ticket_no is now resolved.";
-            $message .= "<br /> ".$info['feedback_to_client'];
+            $message .= "<br /> " . $info['feedback_to_client'];
             $message .= "<br /> You can provide feedback by clicking the following button.";
             $button = [
-                'url' => url('/provide-feedback')."/".$info['clients_feedback_url'],
+                'url' => url('/provide-feedback') . "/" . $info['clients_feedback_url'],
                 'text' => 'Provide Feedback',
             ];
 
             $receiver = $supportTicket?->clientDetail?->client?->name;
-        
 
-            if($request->mailNotification == 1) {
+
+            if ($request->mailNotification == 1) {
                 $to = $supportTicket?->clientDetail?->client?->email;
                 $notificationError = (new EmailService())->sendEmail($to, $cc = null, $receiver, $subject, $message, $button);
             }
-            if($request->smsNotification == 1) {
+            if ($request->smsNotification == 1) {
                 $to = $supportTicket?->clientDetail?->client?->mobile;
                 $notificationError = (new SmsService())->sendSms($to, $message);
             }
 
             return redirect()->route('support-tickets.index')->with('message', 'Ticket is marked as closed successfully.');
-            
         } catch (QueryException $e) {
             return back()->withErrors([
                 'message' => $e->getMessage()
@@ -506,7 +517,8 @@ class SupportTicketController extends Controller
         }
     }
 
-    public function reopenTicket($supportTicketId) {
+    public function reopenTicket($supportTicketId)
+    {
         $supportTicket = SupportTicket::findOrFail($supportTicketId);
 
         $closingDate = $supportTicket->closing_date;
@@ -514,15 +526,15 @@ class SupportTicketController extends Controller
         $minutesDiff = $currentTime->diffInMinutes($closingDate);
         $reopenValidity = config('businessinfo.ticketReopenValidity');
 
-        if($supportTicket->status != 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved' || $minutesDiff > $reopenValidity) {
+        if ($supportTicket->status != 'Closed' || $supportTicket->status == 'Pending' || $supportTicket->status == 'Approved' || $minutesDiff > $reopenValidity) {
             return redirect()->route('support-tickets.index')->withErrors([
-                'message' => 'You cannot reopen this Ticket. Ticket No: '.$supportTicket->ticket_no
+                'message' => 'You cannot reopen this Ticket. Ticket No: ' . $supportTicket->ticket_no
             ]);
         }
 
         if (!auth()->user()->hasPermissionTo('support-ticket-reopen')) {
             return redirect()->route('support-tickets.index')->withErrors([
-                'message' => 'You do not have permission to reopen this ticket. Ticket No: '.$supportTicket->ticket_no
+                'message' => 'You do not have permission to reopen this ticket. Ticket No: ' . $supportTicket->ticket_no
             ]);
         }
 
@@ -530,14 +542,15 @@ class SupportTicketController extends Controller
         return view('ticketing::support-tickets.reopen-ticket', compact('supportTicket'));
     }
 
-    public function processReopenTicket(Request $request, $supportTicketId) {
+    public function processReopenTicket(Request $request, $supportTicketId)
+    {
         $supportTicket = SupportTicket::findOrFail($supportTicketId);
 
         $closingDate = $supportTicket->closing_date;
         $currentTime = \Carbon\Carbon::now();
         $minutesDiff = $currentTime->diffInMinutes($closingDate);
 
-        if($supportTicket->status != 'Closed' || $minutesDiff > (60*24)) {
+        if ($supportTicket->status != 'Closed' || $minutesDiff > (60 * 24)) {
             return back()->withInput()->withErrors([
                 'message' => 'You cannot reopen this Ticket at this time.'
             ]);
@@ -548,9 +561,9 @@ class SupportTicketController extends Controller
                 'message' => 'You cannot reopen this ticket.'
             ]);
         }
-        
+
         try {
-            DB::transaction(function() use($supportTicket, $request) {
+            DB::transaction(function () use ($supportTicket, $request) {
                 $supportTicket->update([
                     'status' => 'Reopen',
                     'reopened_by' => auth()->user()->id,
@@ -561,20 +574,18 @@ class SupportTicketController extends Controller
                 $supportTicket->supportTicketLifeCycles()->create([
                     'status' => 'Reopen',
                     'user_id' => auth()->user()->id,
-                    'remarks' => 'Ticket Reopened by '.auth()->user()->name,
+                    'remarks' => 'Ticket Reopened by ' . auth()->user()->name,
                     'description' => $request->remarks,
                 ]);
 
-                $notificationMessage = "Ticket ".$supportTicket->ticket_no." is reopened by ".auth()->user()->name;
+                $notificationMessage = "Ticket " . $supportTicket->ticket_no . " is reopened by " . auth()->user()->name;
                 $authorizedMember = User::findOrFail($supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id);
-    
-                Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
 
+                Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
             });
-           
+
 
             return redirect()->route('support-tickets.index')->with('message', 'Ticket is reopened successfully.');
-            
         } catch (Exception $e) {
             // return back()->withInput()->withErrors([
             //     'message' => $e->getMessage()

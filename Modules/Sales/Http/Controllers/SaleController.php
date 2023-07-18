@@ -3,6 +3,7 @@
 namespace Modules\Sales\Http\Controllers;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\UploadService;
 use Modules\Sales\Entities\Sale;
@@ -10,13 +11,22 @@ use Modules\SCM\Entities\ScmMur;
 use Modules\Sales\Entities\Offer;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\Costing;
+use Modules\Sales\Entities\Planning;
 use App\Models\Dataencoding\Division;
+use App\Models\Dataencoding\Employee;
+use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\QueryException;
+use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Billing\Entities\BillingOtcBill;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
+use Modules\Sales\Entities\CostingLinkEquipment;
+use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\CostingProductEquipment;
 
 class SaleController extends Controller
 {
@@ -52,7 +62,7 @@ class SaleController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no');
+            $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
             $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale');
             $data['work_order'] = $this->uploadFile->handleFile($request->work_order, 'sales/sale');
             $sale = Sale::create($data);
@@ -88,7 +98,9 @@ class SaleController extends Controller
     public function edit(Sale $sale)
     {
         $divisions = Division::latest()->get();
-        return view('sales::sales.create', compact('sale', 'divisions'));
+        $billing_address = BillingAddress::where('client_no', $sale->client_no)->get();
+        $collection_address = CollectionAddress::where('client_no', $sale->client_no)->get();
+        return view('sales::sales.create', compact('sale', 'divisions', 'billing_address', 'collection_address'));
     }
 
     /**
@@ -99,7 +111,7 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {
-        $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no');
+        $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
         if ($request->hasFile('sla')) {
             $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale', $sale->sla);
         } else {
@@ -151,10 +163,11 @@ class SaleController extends Controller
             $data[] = [
                 'checked'               => (isset($raw['checked']) && isset($raw['checked'][$key])) ? 1 : 0,
                 'fr_no'                 => $raw['fr_no'][$key],
+                'costing_id'            => $raw['costing_id'][$key],
                 'client_no'             => $raw['client_no'],
                 'delivery_date'         => $raw['delivery_date'][$key],
-                'billing_address'       => $raw['billing_address'][$key],
-                'collection_address'    => $raw['collection_address'][$key],
+                'billing_address_id'    => $raw['billing_address_id'][$key],
+                'collection_address_id' => $raw['collection_address_id'][$key],
                 'bill_payment_date'     => $raw['bill_payment_date'][$key],
                 'payment_status'        => $raw['payment_status'][$key],
                 'mrc'                   => $raw['mrc'][$key],
@@ -197,6 +210,7 @@ class SaleController extends Controller
             foreach ($raw['link_no'][$key] as $key1 => $value) {
                 $data[] = [
                     'link_no'           => $raw['link_no'][$key][$key1],
+                    'client_no'         => $raw['client_no'],
                     'link_type'         => $raw['link_type'][$key][$key1],
                     'fr_no'             => $raw['fr_no'][$key],
                     'sale_id'           => $saleDetail[$key]['sale_id'],
@@ -250,9 +264,21 @@ class SaleController extends Controller
 
     public function testTestTest()
     {
-        info(request()->client_no);
         $lists = BillingAddress::where('client_no', request()->client_no)->get()->latest();
         $lists = CollectionAddress::where('client_no', request()->client_no)->get()->latest();
+    }
+
+
+    public function getEmployees()
+    {
+        $items = Employee::where('name', 'like', '%' . request()->search . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value'        => $item->name,
+                'label'        => $item->name,
+                'id'           => $item->id
+            ]);
+        return response()->json($items);
     }
 
     public function updateAddress(Request $request)
@@ -269,7 +295,7 @@ class SaleController extends Controller
             $data['division_id'] = $request->division_id;
             $data['district_id'] = $request->district_id;
             $data['thana_id'] = $request->thana_id;
-            $data['fr_no'] = $request->fr_no;
+            $data['fr_no'] = $request->fr;
             if ($request->update_type == 'billing') {
                 $data['submission_date'] = $request->submission_date_add;
                 $data['submission_by'] = $request->submission_by_add;
@@ -287,5 +313,179 @@ class SaleController extends Controller
             DB::rollBack();
             return response()->json($e->getMessage(), 500);
         }
+    }
+
+    public function pnlSummary($mq_no = null)
+    {
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')->where('mq_no', $mq_no)->first();
+        $sale = Sale::where('mq_no', $mq_no)->first();
+        return view('sales::pnl.pnl_summary', compact('feasibility_requirement', 'mq_no', 'sale'));
+    }
+
+    public function pnlDetails($mq_no = null)
+    {
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing.costingProducts')
+            ->where('mq_no', $mq_no)->first();
+        if ($feasibility_requirement) {
+            $feasibility_requirement->feasibilityRequirementDetails->map(function ($item) {
+                $item->costing->costingProducts->map(function ($item) {
+                    $item->sale_product = SaleProductDetail::where('product_id', $item->product_id)->where('fr_no', $item->fr_no)->first();
+                    return $item;
+                });
+                return $item;
+            });
+        }
+        return view('sales::pnl.pnl_details', compact('feasibility_requirement', 'mq_no'));
+    }
+
+    public function pnlApproveByFinance($mq_no = null)
+    {
+        $sales = Sale::where('mq_no', $mq_no)->first();
+        $sales->update([
+            'finance_approval' => 'Approved',
+            'finance_approved_by' => auth()->user()->id
+        ]);
+        return redirect()->back()->with('success', 'Approved Successfully');
+    }
+
+    public function pnlApproveByManagement($mq_no = null)
+    {
+        $datas = Planning::with('equipmentPlans.material', 'planLinks.PlanLinkEquipments.material')
+            ->where('mq_no', $mq_no)
+            ->get();
+        $Costingdatas = Costing::with('costingLinks.costingLinkEquipments', 'costingProductEquipments')
+            ->where('mq_no', $mq_no)
+            ->get();
+        $material_array = [];
+        foreach ($datas as $key => $values) {
+            $cle_data = CostingLinkEquipment::whereHas('costing', function ($qr) use ($values) {
+                $qr->where("fr_no", $values->fr_no)->where('ownership', 'Client');
+            })->get();
+
+
+            $cpe_data = CostingProductEquipment::whereHas('costing', function ($qr) use ($values) {
+                $qr->where("fr_no", $values->fr_no)->where('ownership', 'Client');
+            })->get();
+
+            $saleData = SaleDetail::where('fr_no', $values->fr_no)->get()->first();
+            $otc_lines_data = [];
+            $equipment_amount = 0;
+
+
+            foreach ($cle_data as $cle_data_key => $cle_data_values) {
+                $otc_lines_data[] = [
+                    'material_id' => $cle_data_values->material_id,
+                    'quantity' => $cle_data_values->quantity,
+                    'rate' => $cle_data_values->rate,
+                    'amount' => $cle_data_values->rate * $cle_data_values->quantity,
+                ];
+                $equipment_amount += $cle_data_values->rate * $cle_data_values->quantity;
+            }
+
+            foreach ($cpe_data as $cpe_data_key => $cpe_data_values) {
+                $otc_lines_data[] = [
+                    'material_id' => $cpe_data_values->material_id,
+                    'quantity' => $cpe_data_values->quantity,
+                    'rate' => $cpe_data_values->rate,
+                    'amount' => $cpe_data_values->rate * $cpe_data_values->quantity,
+                ];
+                $equipment_amount += $cle_data_values->rate * $cle_data_values->quantity;
+            }
+            $TotalAmount = $saleData->otc;
+            $installation_charge = -1 * ($TotalAmount - $equipment_amount);
+            $otc = [
+                'client_no' =>  $values->client_no,
+                'fr_no' =>  $values->fr_no,
+                'sale_id' => $saleData->sale_id,
+                'sale_detail_id' => $saleData->id,
+                'date' =>  Carbon::now()->format('Y-m-d'),
+                'user_id' => auth()->id(),
+                'equipment_amount' => $equipment_amount,
+                'installation_charge' => $installation_charge,
+                'total_amount' => $TotalAmount,
+            ];
+
+            $otc_data = BillingOtcBill::create($otc);
+            $otc_data->lines()->createMany($otc_lines_data);
+            $material_array[$key]['parent']['main'] = [
+                "client_no"         => $values->client_no,
+                "fr_no"             => $values->fr_no,
+                "type"              => 'client',
+                "requisition_by"    => auth()->id(),
+                "branch_id"         => 1,
+                "date"              => now()->format('d-m-Y'),
+            ];
+            foreach ($values->equipmentPlans as $key2 => $values2) {
+                $material_array[$key]['parent']['child'][] = [
+                    "material_id"   => $values2->material_id,
+                    "item_code"     => $values2->material->code,
+                    "brand_id"      => $values2->brand_id,
+                    "quantity"      => $values2->quantity,
+                    "model"         => $values2->model,
+                ];
+            }
+            foreach ($values->planLinks as $key2 => $values2) {
+                $material_array[$key]['link'][$key2]['main'] = [
+                    "client_no"         => $values->client_no,
+                    "fr_no"             => $values->fr_no,
+                    "link_no"           => $values2->link_no,
+                    "type"              => 'client',
+                    "requisition_by"    => auth()->id(),
+                    "branch_id"         => 1,
+                    "date"              => now()->format('d-m-Y'),
+                ];
+                foreach ($values2->PlanLinkEquipments as $key3 => $values3) {
+                    $material_array[$key]['link'][$key2]['child'][] = [
+                        "material_id"   => $values3->material_id,
+                        "item_code"     => $values3->material->code,
+                        "brand_id"      => $values3->brand_id,
+                        "quantity"      => $values3->quantity,
+                        "model"         => $values3->model,
+                    ];
+                }
+            }
+        }
+        $lastMRSId = ScmRequisition::latest()->first();
+        $currentYear = now()->format('Y');
+        $mrsNoCounter = $lastMRSId ? $lastMRSId->id + 1 : 1;
+        foreach ($material_array as $key => $value) {
+            $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
+            $mrsNoCounter++;
+            $value['parent']['main']['mrs_no'] = $mrsNo;
+            $reqq = ScmRequisition::create($value['parent']['main']);
+            $reqChildItems = collect($value['parent']['child'])->map(function ($child) use ($reqq) {
+                $child['req_key'] = $reqq->id . '-' . $child['item_code'];
+                return $child;
+            });
+            $reqq->scmRequisitiondetails()->createMany($reqChildItems);
+            foreach ($value['link'] as $key1 => $value1) {
+                $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
+                $mrsNoCounter++;
+                $value1['main']['mrs_no'] = $mrsNo;
+                $reqq = ScmRequisition::create($value1['main']);
+                $reqChildItems = collect($value1['child'])->map(function ($child) use ($reqq) {
+                    $child['req_key'] = $reqq->id . '-' . $child['item_code'];
+                    return $child;
+                });
+                $reqq->scmRequisitiondetails()->createMany($reqChildItems);
+            }
+        }
+        return redirect()->route('pnl-summary', $mq_no)->with('success', 'Approved Successfully');
+    }
+
+    public function pnlApproveByCmo($mq_no = null)
+    {
+        $sales = Sale::where('mq_no', $mq_no)->first();
+        $sales->update([
+            'cmo_approval' => 'Approved',
+            'cmo_approved_by' => auth()->user()->id
+        ]);
+        return redirect()->back()->with('success', 'Approved Successfully');
+    }
+
+    public function clientOffer($mq_no = null)
+    {
+        $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
+        return view('sales::sales.client_offer', compact('sale', 'mq_no'));
     }
 }

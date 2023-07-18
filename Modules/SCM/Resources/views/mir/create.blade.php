@@ -359,7 +359,7 @@
                 }
             })
 
-            $('.select2').select2();
+            
 
             $('#applied_date').datepicker({
                 format: "dd-mm-yyyy",

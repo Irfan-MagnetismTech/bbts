@@ -38,4 +38,9 @@ class Costing extends Model
     {
         return $this->hasOne(SaleDetail::class, 'fr_no', 'fr_no');
     }
+
+    public function costingLinkEquipments()
+    {
+        return $this->hasMany(CostingLinkEquipment::class, 'costing_id', 'id');
+    }
 }

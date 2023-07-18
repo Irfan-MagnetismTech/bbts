@@ -2,7 +2,7 @@
 @section('title', 'Support Ticket Details')
 
 @section('style')
-    
+
 @endsection
 
 @section('breadcrumb-title')
@@ -14,7 +14,8 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('support-tickets.index')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('support-tickets.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', 'col-12 my-3')
@@ -29,8 +30,7 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="{{ $supportTicket->ticket_no }}" disabled>
+                            <input type="text" class="form-control" value="{{ $supportTicket->ticket_no }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -41,7 +41,8 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket->clientDetail->link_name }}" disabled>
+                                value="{{ $supportTicket->feasibilityRequirementDetails->connectivity_point . ' (' . $supportTicket->feasibilityRequirementDetails->fr_no . ')' }}"
+                                disabled>
                         </div>
                     </div>
                 </div>
@@ -72,8 +73,8 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="{{ $supportTicket->ticketSource->name }}" disabled>
+                            <input type="text" class="form-control" value="{{ $supportTicket->ticketSource->name }}"
+                                disabled>
                         </div>
                     </div>
                 </div>
@@ -93,8 +94,7 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                            <input type="text" class="form-control" value="" disabled>
                         </div>
                     </div>
                 </div>
@@ -104,8 +104,7 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                            <input type="text" class="form-control" value="" disabled>
                         </div>
                     </div>
                 </div>
@@ -115,8 +114,7 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                            <input type="text" class="form-control" value="" disabled>
                         </div>
                     </div>
                 </div>
@@ -126,8 +124,7 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                            <input type="text" class="form-control" value="" disabled>
                         </div>
                     </div>
                 </div>
@@ -139,8 +136,8 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="{{ $supportTicket->clientDetail?->client?->name }}" disabled>
+                            <input type="text" class="form-control" value="{{ $supportTicket?->client?->client_name }}"
+                                disabled>
                         </div>
                     </div>
                 </div>
@@ -150,8 +147,8 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                            <input type="text" class="form-control" value="{{ $supportTicket->client?->contact_person }}"
+                                disabled>
                         </div>
                     </div>
                 </div>
@@ -162,29 +159,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                            value="{{ $supportTicket->clientDetail?->client?->email }}"disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Swtich Port
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        VLAN
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                                value="{{ $supportTicket?->client?->email }}"disabled>
                         </div>
                     </div>
                 </div>
@@ -194,8 +169,8 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                            <input type="text" class="form-control" value="{{ $supportTicket?->client?->location }}"
+                                disabled>
                         </div>
                     </div>
                 </div>
@@ -206,40 +181,61 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="" disabled>
+                                value="{{ $supportTicket?->client?->contact_no }}" disabled>
                         </div>
                     </div>
                 </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Switch IP
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                <div class="col-12">
+                    <h4 class="text-center mt-5">Physibility Information</h4>
+                </div>
+                @foreach ($supportTicket->physicalConnectivity->lines as $line)
+                    <hr />
+                    <div class="row align-items-center mt-2">
+                        <div class="col-2 text-right">
+                            Swtich Port
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group mb-0">
+                                <input type="text" class="form-control" value="{{ $line->port }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-2 text-right">
+                            VLAN
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group mb-0">
+                                <input type="text" class="form-control" value="{{ $line->vlan }}" disabled>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        POP
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+
+                    <div class="row align-items-center mt-2">
+                        <div class="col-2 text-right">
+                            Switch IP
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group mb-0">
+                                <input type="text" class="form-control" value="{{ $line->device_ip }}" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-2 text-right">
+                            LDP
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group mb-0">
+                                <input type="text" class="form-control" value="{{ $line?->ldb }}" disabled>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endforeach
                 <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
+                    <div class="col-2 text-right">
                         Ticket Closed By
                     </div>
-                    <div class="col-8">
+                    <div class="col-10">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                            <input type="text" class="form-control" value="" disabled>
                         </div>
                     </div>
                 </div>
@@ -261,139 +257,150 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($supportTicket->supportTicketLifeCycles as $activity)
-                            <tr>
-                                <td>{{ $loop->index + 1 }}</td>
-                                <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('H:i a \o\n d/m/Y') }}</td>
-                                <td>{{ $activity->remarks }}</td>
-                                <td>{{ $activity->description }}</td>
-                                <td>{{ $activity->user->employee->department->name }}</td>
-                                <td>{{ $activity->user->name }}</td>
-                            </tr>
+                            @foreach ($supportTicket->supportTicketLifeCycles as $activity)
+                                <tr>
+                                    <td>{{ $loop->index + 1 }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('H:i a \o\n d/m/Y') }}</td>
+                                    <td>{{ $activity->remarks }}</td>
+                                    <td>{{ $activity->description }}</td>
+                                    <td>{{ $activity->user->employee->department->name }}</td>
+                                    <td>{{ $activity->user->name }}</td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            @if($supportTicket->status == 'Pending' || $supportTicket->status == 'Approved')
-            <div class="col-12 my-5">
-                <div class="col-2 mx-auto">
-                    <form action="{{ route('accept-ticket') }}" method="POST" data-toggle="tooltip" title="Accept" class="d-inline">
-                        @csrf
-                        <input type="hidden" name="ticket_id" value="{{ $supportTicket->id }}">
-                        <button type="submit" class="btn btn-success btn-out btn-md btn-round">
-                            <i class="fas fa-check"></i>
-                            Accept Ticket
-                        </button>
-                    </form>
-                </div>
-            </div>
-            @endif
-            @if($supportTicket->status == 'Accepted' || $supportTicket->status == 'Processing' || $supportTicket->status == 'Reopen')
-            <div class="col-12 my-5">
-                <div class="row">
-                    <div class="col-6 mx-auto rounded shadow-sm" style="background-color: #A0B9FF; box-shadow: 2px 2px 6px 0px #70708d">
-                        <form action="{{ route('add-solution') }}" method="post">
+            @if ($supportTicket->status == 'Pending' || $supportTicket->status == 'Approved')
+                <div class="col-12 my-5">
+                    <div class="col-2 mx-auto">
+                        <form action="{{ route('accept-ticket') }}" method="POST" data-toggle="tooltip" title="Accept"
+                            class="d-inline">
                             @csrf
                             <input type="hidden" name="ticket_id" value="{{ $supportTicket->id }}">
-                            <h4 class="text-center mt-5">Add New Solution</h4>
-                            <label for="quick_solution"><b>Solution Name:</b></label>
-                            <select name="quick_solution" id="quick_solution" class="form-control mb-2">
-                                <option value="">Select Solution</option>
-                                @foreach($quickSolutions as $solution)
-                                <option value="{{ $solution->name }}"
-                                {{ old('quick_solution', '') == $solution->id ? 'selected' : '' }}>{{ $solution->name }}</option>
-                                @endforeach
-                                <option value="other">Others</option>
-        
-                            </select>
-                            <div class="form-group d-none" id="custom-solution">
-                                <label for="solution"><b>Solution / Remarks:</b></label>
-                                <textarea class="form-control mb-2" id="solution" name="custom_solution" aria-describedby="solution"
-                                    value="{{ old('solution') ?? null }}" placeholder="Solution / Remarks"></textarea>
-                            </div>
-                            <div class="mx-auto text-center">
-                                <input type="submit" value="Submit" class="btn btn-info btn-round my-2">
-                            </div>
+                            <button type="submit" class="btn btn-success btn-out btn-md btn-round">
+                                <i class="fas fa-check"></i>
+                                Accept Ticket
+                            </button>
                         </form>
                     </div>
                 </div>
-            </div>
             @endif
-            @if($supportTicket->status != 'Closed')
-            <hr>
-            <div class="col-12 d-flex justify-content-between mt-3">
-                @can('support-ticket-backward')
-                <a href="{{ route('ticket-movements', ['type' => 'Backward', 'id' => $supportTicket->id]) }}" class="btn btn-success btn-round btn-inline-block py-2">
-                    <i class="fas fa-chevron-circle-left"></i>
-                    Backward
-                </a>
-                @endcan
+            @if (
+                $supportTicket->status == 'Accepted' ||
+                    $supportTicket->status == 'Processing' ||
+                    $supportTicket->status == 'Reopen')
+                <div class="col-12 my-5">
+                    <div class="row">
+                        <div class="col-6 mx-auto rounded shadow-sm"
+                            style="background-color: #A0B9FF; box-shadow: 2px 2px 6px 0px #70708d">
+                            <form action="{{ route('add-solution') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="ticket_id" value="{{ $supportTicket->id }}">
+                                <h4 class="text-center mt-5">Add New Solution</h4>
+                                <label for="quick_solution"><b>Solution Name:</b></label>
+                                <select name="quick_solution" id="quick_solution" class="form-control mb-2">
+                                    <option value="">Select Solution</option>
+                                    @foreach ($quickSolutions as $solution)
+                                        <option value="{{ $solution->name }}"
+                                            {{ old('quick_solution', '') == $solution->id ? 'selected' : '' }}>
+                                            {{ $solution->name }}</option>
+                                    @endforeach
+                                    <option value="other">Others</option>
 
-                @can('support-ticket-forward')
-                <a href="{{ route('ticket-movements', ['type' => 'Forward', 'id' => $supportTicket->id]) }}" class="btn btn-success btn-round btn-inline-block py-2">
-                    Forward
-                    <i class="fas fa-chevron-circle-right"></i>
-                </a>
-                @endcan
+                                </select>
+                                <div class="form-group d-none" id="custom-solution">
+                                    <label for="solution"><b>Solution / Remarks:</b></label>
+                                    <textarea class="form-control mb-2" id="solution" name="custom_solution" aria-describedby="solution"
+                                        value="{{ old('solution') ?? null }}" placeholder="Solution / Remarks"></textarea>
+                                </div>
+                                <div class="mx-auto text-center">
+                                    <input type="submit" value="Submit" class="btn btn-info btn-round my-2">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @if ($supportTicket->status != 'Closed')
+                <hr>
+                <div class="col-12 d-flex justify-content-between mt-3">
+                    @can('support-ticket-backward')
+                        <a href="{{ route('ticket-movements', ['type' => 'Backward', 'id' => $supportTicket->id]) }}"
+                            class="btn btn-success btn-round btn-inline-block py-2">
+                            <i class="fas fa-chevron-circle-left"></i>
+                            Backward
+                        </a>
+                    @endcan
 
-                @can('support-ticket-handover')
-                <a href="{{ route('ticket-movements', ['type' => 'Handover', 'id' => $supportTicket->id]) }}" class="btn btn-success btn-round btn-inline-block py-2">
-                    Handover
-                    <i class="fas fa-handshake"></i>
-                </a>
-                @endcan
+                    @can('support-ticket-forward')
+                        <a href="{{ route('ticket-movements', ['type' => 'Forward', 'id' => $supportTicket->id]) }}"
+                            class="btn btn-success btn-round btn-inline-block py-2">
+                            Forward
+                            <i class="fas fa-chevron-circle-right"></i>
+                        </a>
+                    @endcan
 
-                @can('support-client-send-email')
-                <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'email']) }}" class="btn btn-success btn-round btn-inline-block py-2">
-                    Send Mail
-                    <i class="fas fa-envelope"></i>
-                </a>
-                @endcan
+                    @can('support-ticket-handover')
+                        <a href="{{ route('ticket-movements', ['type' => 'Handover', 'id' => $supportTicket->id]) }}"
+                            class="btn btn-success btn-round btn-inline-block py-2">
+                            Handover
+                            <i class="fas fa-handshake"></i>
+                        </a>
+                    @endcan
 
-                @can('support-client-send-sms')
-                <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'sms']) }}" class="btn btn-success btn-round btn-inline-block py-2">
-                    Send SMS
-                    <i class="fas fa-inbox"></i>
-                </a>
-                @endcan
-                
-                @can('support-ticket-close')
-                    @if($supportTicket->status != 'Closed')
-                    <a href="{{ route('close-ticket', ['supportTicketId' => $supportTicket?->id]) }}" class="btn btn-danger btn-round btn-inline-block py-2">
-                        Close
-                        <i class="far fa-check-circle"></i>
-                    </a>
-                    @endif
-                @endcan
-            </div>
+                    @can('support-client-send-email')
+                        <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'email']) }}"
+                            class="btn btn-success btn-round btn-inline-block py-2">
+                            Send Mail
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    @endcan
+
+                    @can('support-client-send-sms')
+                        <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'sms']) }}"
+                            class="btn btn-success btn-round btn-inline-block py-2">
+                            Send SMS
+                            <i class="fas fa-inbox"></i>
+                        </a>
+                    @endcan
+
+                    @can('support-ticket-close')
+                        @if ($supportTicket->status != 'Closed')
+                            <a href="{{ route('close-ticket', ['supportTicketId' => $supportTicket?->id]) }}"
+                                class="btn btn-danger btn-round btn-inline-block py-2">
+                                Close
+                                <i class="far fa-check-circle"></i>
+                            </a>
+                        @endif
+                    @endcan
+                </div>
             @else
-            <hr>
-            @php
-                $closingDate = $supportTicket->closing_date;
-                $currentTime = \Carbon\Carbon::now();
-                $minutesDiff = $currentTime->diffInMinutes($closingDate);
-            @endphp
-            @if($minutesDiff <= (60*24))
-            <div class="col-12 d-flex justify-content-center mt-3">
-                @can('support-ticket-reopen')
-                <a href="{{ route('reopen-ticket', ['supportTicketId' => $supportTicket->id]) }}" class="btn btn-success btn-round btn-inline-block py-2">
-                    <i class="fas fa-folder-open"></i>
-                    Reopen
-                </a>
-                @endcan
-            </div>
-            @endif
+                <hr>
+                @php
+                    $closingDate = $supportTicket->closing_date;
+                    $currentTime = \Carbon\Carbon::now();
+                    $minutesDiff = $currentTime->diffInMinutes($closingDate);
+                @endphp
+                @if ($minutesDiff <= 60 * 24)
+                    <div class="col-12 d-flex justify-content-center mt-3">
+                        @can('support-ticket-reopen')
+                            <a href="{{ route('reopen-ticket', ['supportTicketId' => $supportTicket->id]) }}"
+                                class="btn btn-success btn-round btn-inline-block py-2">
+                                <i class="fas fa-folder-open"></i>
+                                Reopen
+                            </a>
+                        @endcan
+                    </div>
+                @endif
             @endif
         </div>
     </div>
 @endsection
 
 @section('script')
-<script>
-        
-
+    <script>
         $(document).on('keyup focus', '#client_id', function() {
             $(this).autocomplete({
                 source: function(request, response) {
@@ -410,7 +417,7 @@
                     });
                 },
                 select: function(event, ui) {
-                    
+
                     console.log(ui.item)
                     $("#client_id").val(ui.item.label)
                     $("#fr_composit_key").val(ui.item.value)
@@ -424,7 +431,7 @@
         function getClientsPreviousTickets(clientId, limit = 5) {
             console.log(clientId, limit)
             $.ajax({
-                url: "{{ url('get-clients-previous-tickets') }}"+"/"+clientId+"/"+limit,
+                url: "{{ url('get-clients-previous-tickets') }}" + "/" + clientId + "/" + limit,
                 type: 'get',
                 dataType: "json"
             }).done(function(data) {
@@ -451,7 +458,10 @@
                     tableData += '<td>' + value.opening_date + '</td>';
                     tableData += '<td>' + value.complain_type.name + '</td>';
                     tableData += '<td>' + value.remarks + '</td>';
-                    tableData += '<td><div class="icon-btn"><a href="{{ route('support-tickets.index') }}/'+value.id+'" data-toggle="tooltip" title="Details" class="btn btn-outline-primary" data-original-title="Details"><i class="fas fa-eye"></i></a></div></td>';
+                    tableData +=
+                        '<td><div class="icon-btn"><a href="{{ route('support-tickets.index') }}/' + value
+                        .id +
+                        '" data-toggle="tooltip" title="Details" class="btn btn-outline-primary" data-original-title="Details"><i class="fas fa-eye"></i></a></div></td>';
                     tableData += '</tr>';
                 })
 
@@ -462,7 +472,7 @@
         }
 
         $("#quick_solution").on("change", function() {
-            if($(this).val() == "other") {
+            if ($(this).val() == "other") {
                 $("#custom-solution").addClass("d-block");
             } else {
                 $("#custom-solution").removeClass("d-block");
@@ -475,5 +485,5 @@
         //     todayHighlight: true,
         //     showOtherMonths: true,
         // }).datepicker("setDate", new Date());
-</script>
+    </script>
 @endsection
