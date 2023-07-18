@@ -115,4 +115,62 @@
             placeholder: 'Select an option'
         });
     }
+
+    //on checkbox check enable input box and on uncheck disable input box
+    $(document).on('change', '.dns_checkbox', function() {
+        if ($(this).prop('checked')) {
+            $('#dns_domain, #dns_mx_record, #dns_a_record, #dns_reverse_record, #dns_ip_address').prop(
+                'disabled', false);
+        } else {
+            $('#dns_domain, #dns_mx_record, #dns_a_record, #dns_reverse_record, #dns_ip_address').prop(
+                'disabled', true);
+        }
+    });
+
+    $(document).on('change', '.smtp_checkbox', function() {
+        if ($(this).prop('checked')) {
+            $('#smtp_domain, #smtp_server').prop('disabled', false);
+        } else {
+            $('#smtp_domain, #smtp_server').prop('disabled', true);
+        }
+    });
+
+    $(document).on('change', '.vpn_checkbox', function() {
+        if ($(this).prop('checked')) {
+            $('#vpn_purpose, #vpn_source_ip, #vpn_destination_ip, #vpn_bandwidth, #vpn_iig_name, #vpn_tunnel_active_date, #vpn_submission_date, #vpn_remarks')
+                .prop('disabled', false);
+        } else {
+            $('#vpn_purpose, #vpn_source_ip, #vpn_destination_ip, #vpn_bandwidth, #vpn_iig_name, #vpn_tunnel_active_date, #vpn_submission_date, #vpn_remarks')
+                .prop('disabled', true);
+        }
+    });
+
+    $(document).on('change', '.vc_checkbox', function() {
+        if ($(this).prop('checked')) {
+            $('#vc_issued_date, #vc_source_ip, #vc_destination_ip, #vc_iig_name, #vc_itc_name, #vc_renewal_date, #vc_remarks')
+                .prop(
+                    'disabled', false);
+        } else {
+            $('#vc_issued_date, #vc_source_ip, #vc_destination_ip, #vc_iig_name, #vc_itc_name, #vc_renewal_date, #vc_remarks')
+                .prop(
+                    'disabled', true);
+        }
+    });
+
+    $(document).on('change', '.bgp_checkbox', function() {
+        if ($(this).prop('checked')) {
+            $('#bgp_primary_peering, #bgp_secondary_peering, #bgp_client_prefix, #bgp_client_as').prop(
+                'disabled', false);
+        } else {
+            $('#bgp_primary_peering, #bgp_secondary_peering, #bgp_client_prefix, #bgp_client_as').prop(
+                'disabled', true);
+        }
+    });
+    
+    $('.date').datepicker({
+        format: "dd-mm-yyyy",
+        autoclose: true,
+        todayHighlight: true,
+        showOtherMonths: true
+    });
 </script>

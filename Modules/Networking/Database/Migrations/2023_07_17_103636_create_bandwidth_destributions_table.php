@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('bandwidth_destributions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('logical_connectivity_id')->constrained('logical_connectivities')->onDelete('cascade');
-            $table->bigInteger('ip_addreess');
-            $table->bigInteger('bandwidth');
-            $table->bigInteger('remarks');
+            $table->integer('ip_id')->nullable();
+            $table->string('bandwidth')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }

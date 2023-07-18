@@ -10,6 +10,8 @@
     $comment = $is_old ? old('comment') : @$logicalConnectivityInternet->comment;
     $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->lines->pluck('quantity') : null);
     $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->lines->pluck('remarks') : null);
+
+    $effective_date = $is_old ? old('effective_date') : $sale->effective_date ?? today()->format('d-m-Y');
 @endphp
 
 @section('breadcrumb-title')
@@ -246,33 +248,258 @@
                 </tbody>
             </table>
 
-            <div class="row">
-                <div class="client_name">
-                    <div class="checkbox-fade fade-in-primary">
-                        <label>
-                            <input type="checkbox" name="device[]" value="Router">
-                            <span class="cr">
-                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                            </span>
-                            <span>DNS</span>
-                        </label>
+            <hr>
+
+            <div class="row mt-4">
+                <div class="form-group col-1">
+                    <label for="total_bandwidth">&nbsp;</label>
+                    <div class="client_name">
+                        <div class="checkbox-fade fade-in-primary">
+                            <label>
+                                <input type="checkbox" name="dns_checkbox[]" name='dns_checkbox' value="dns"
+                                    class="dns_checkbox">
+                                <span class="cr">
+                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                </span>
+                                <span class="font-weight-bold">DNS</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group col-3 client_name">
-                    <label for="client_name">Client Name:</label>
-                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ $physicalConnectivityData->client_name }}" readonly>
-                    <input type="hidden" name="client_no" id="client_no"
-                        value="{{ $physicalConnectivityData->client_no }}">
+                <div class="form-group col-2 dns_domain">
+                    <label for="dns_domain">Domain Name</label>
+                    <input type="text" class="form-control" name="dns_domain" aria-describedby="dns_domain" disabled
+                        value="" id="dns_domain">
                 </div>
 
-                <div class="form-group col-3 client_type">
-                    <label for="client_type">Client Type:</label>
-                    <input type="text" class="form-control" id="client_type" name="client_type"
-                        aria-describedby="client_type" readonly value="{{ $physicalConnectivityData->client_type }}">
+                <div class="form-group col-2 dns_mx_record">
+                    <label for="dns_mx_record">Mx Record</label>
+                    <input type="text" class="form-control" name="dns_mx_record" aria-describedby="dns_mx_record"
+                        disabled value="" id="dns_mx_record">
+                </div>
+
+                <div class="form-group col-2 dns_a_record">
+                    <label for="dns_a_record">A Record</label>
+                    <input type="text" class="form-control" name="dns_a_record" aria-describedby="dns_a_record"
+                        disabled value="" id="dns_a_record">
+                </div>
+
+                <div class="form-group col-2 dns_reverse_record">
+                    <label for="dns_reverse_record">Reverse Record</label>
+                    <input type="text" class="form-control" name="dns_reverse_record"
+                        aria-describedby="dns_reverse_record" disabled value="" id="dns_reverse_record">
+                </div>
+
+                <div class="form-group col-2 dns_ip_address">
+                    <label for="dns_ip_address">IP Address</label>
+                    <input type="text" class="form-control" name="dns_ip_address" aria-describedby="dns_ip_address"
+                        disabled value="" id="dns_ip_address">
                 </div>
             </div>
 
+            <hr>
+
+            <div class="row">
+                <div class="form-group col-1">
+                    <label for="total_bandwidth">&nbsp;</label>
+                    <div class="client_name">
+                        <div class="checkbox-fade fade-in-primary">
+                            <label>
+                                <input type="checkbox" name="smtp_checkbox[]" name='smtp_checkbox' value="smtp"
+                                    class="smtp_checkbox">
+                                <span class="cr">
+                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                </span>
+                                <span class="font-weight-bold">SMTP</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-2 smtp_domain">
+                    <label for="smtp_domain">Domain Name</label>
+                    <input type="text" class="form-control" name="smtp_domain"
+                        aria-describedby="smtp_domain" disabled value="" id="smtp_domain">
+                </div>
+
+                <div class="form-group col-2 smtp_server">
+                    <label for="smtp_server">Server Name</label>
+                    <input type="text" class="form-control" name="smtp_server"
+                        aria-describedby="smtp_server" disabled value="" id="smtp_server">
+                </div>
+            </div>
+            
+            <hr>
+
+            <div class="row">
+                <div class="form-group col-1">
+                    <label for="total_bandwidth">&nbsp;</label>
+                    <div class="client_name">
+                        <div class="checkbox-fade fade-in-primary">
+                            <label>
+                                <input type="checkbox" name="vpn_checkbox[]" name='vpn_checkbox' value="vpn"
+                                    class="vpn_checkbox">
+                                <span class="cr">
+                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                </span>
+                                <span class="font-weight-bold">VPN</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-2 vpn_purpose">
+                    <label for="vpn_purpose">Purpose Of Using VPN</label>
+                    <input type="text" class="form-control" name="vpn_purpose" aria-describedby="vpn_purpose"
+                        disabled value="" id="vpn_purpose">
+                </div>
+
+                <div class="form-group col-2 vpn_source_ip">
+                    <label for="vpn_source_ip">Source IP</label>
+                    <input type="text" class="form-control" name="vpn_source_ip" aria-describedby="vpn_source_ip"
+                        disabled value="" id="vpn_source_ip">
+                </div>
+
+                <div class="form-group col-2 vpn_destination_ip">
+                    <label for="vpn_destination_ip">Destination IP</label>
+                    <input type="text" class="form-control" name="vpn_destination_ip"
+                        aria-describedby="vpn_destination_ip" disabled value="" id="vpn_destination_ip">
+                </div>
+
+                <div class="form-group col-2 vpn_bandwidth">
+                    <label for="vpn_bandwidth">VPN Bandwidth (Mbps)</label>
+                    <input type="text" class="form-control" name="vpn_bandwidth" aria-describedby="vpn_bandwidth"
+                        disabled value="" id="vpn_bandwidth">
+                </div>
+
+                <div class="form-group col-2 vpn_iig_name">
+                    <label for="vpn_iig_name">IIG Name</label>
+                    <input type="text" class="form-control" name="vpn_iig_name" aria-describedby="vpn_iig_name"
+                        disabled value="" id="vpn_iig_name">
+                </div>
+
+                <div class="form-group offset-md-1 col-2 vpn_tunnel_active_date">
+                    <label for="vpn_tunnel_active_date">VPN Tunnel Active Date</label>
+                    <input type="text" class="form-control date" name="vpn_tunnel_active_date"
+                        aria-describedby="vpn_tunnel_active_date" disabled value="" id="vpn_tunnel_active_date">
+                </div>
+
+                <div class="form-group col-2 vpn_submission_date">
+                    <label for="vpn_submission_date">Submission Date</label>
+                    <input type="text" class="form-control date" name="vpn_submission_date"
+                        aria-describedby="vpn_submission_date" disabled value="" id="vpn_submission_date">
+                </div>
+
+                <div class="form-group col-2 vpn_remarks">
+                    <label for="vpn_remarks">Remarks</label>
+                    <input type="text" class="form-control" name="vpn_remarks" aria-describedby="vpn_remarks"
+                        disabled value="" id="vpn_remarks">
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="form-group col-1">
+                    <label for="total_bandwidth">&nbsp;</label>
+                    <div class="client_name">
+                        <div class="checkbox-fade fade-in-primary">
+                            <label>
+                                <input type="checkbox" name="vc_checkbox[]" name='vc_checkbox' value="vc"
+                                    class="vc_checkbox">
+                                <span class="cr">
+                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                </span>
+                                <span class="font-weight-bold">VC</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-2 vc_issued_date">
+                    <label for="vc_issued_date">Issued Date</label>
+                    <input type="text" class="form-control date" name="vc_issued_date" aria-describedby="vc_issued_date"
+                        disabled value="" id="vc_issued_date">
+                </div>
+
+                <div class="form-group col-2 vc_source_ip">
+                    <label for="vc_source_ip">Source IP</label>
+                    <input type="text" class="form-control" name="vc_source_ip" aria-describedby="vc_source_ip"
+                        disabled value="" id="vc_source_ip">
+                </div>
+
+                <div class="form-group col-2 vc_destination_ip">
+                    <label for="vc_destination_ip">Destination IP</label>
+                    <input type="text" class="form-control" name="vc_destination_ip"
+                        aria-describedby="vc_destination_ip" disabled value="" id="vc_destination_ip">
+                </div>
+
+                <div class="form-group col-2 vc_iig_name">
+                    <label for="vc_iig_name">IIG Name</label>
+                    <input type="text" class="form-control" name="vc_iig_name" aria-describedby="vc_iig_name"
+                        disabled value="" id="vc_iig_name">
+                </div>
+
+                <div class="form-group col-2 vc_itc_name">
+                    <label for="vc_itc_name">ITC Name</label>
+                    <input type="text" class="form-control" name="vc_itc_name" aria-describedby="vc_itc_name"
+                        disabled value="" id="vc_itc_name">
+                </div>
+
+                <div class="form-group offset-md-1 col-2 vc_renewal_date">
+                    <label for="vc_renewal_date">Renewal Date</label>
+                    <input type="text" class="form-control date" name="vc_renewal_date" aria-describedby="vc_renewal_date"
+                        disabled value="" id="vc_renewal_date">
+                </div>
+
+                <div class="form-group col-2 vc_remarks">
+                    <label for="vc_remarks">Remarks</label>
+                    <input type="text" class="form-control" name="vc_remarks" aria-describedby="vc_remarks" disabled
+                        value="" id="vc_remarks">
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="form-group col-1">
+                    <label for="total_bandwidth">&nbsp;</label>
+                    <div class="client_name">
+                        <div class="checkbox-fade fade-in-primary">
+                            <label>
+                                <input type="checkbox" name="bgp_checkbox[]" name='bgp_checkbox' value="bgp"
+                                    class="bgp_checkbox">
+                                <span class="cr">
+                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                </span>
+                                <span class="font-weight-bold">BGP</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-2 bgp_primary_peering">
+                    <label for="bgp_primary_peering">Primary Peering</label>
+                    <input type="text" class="form-control" name="bgp_primary_peering"
+                        aria-describedby="bgp_primary_peering" disabled value="" id="bgp_primary_peering">
+                </div>
+
+                <div class="form-group col-2 bgp_secondary_peering">
+                    <label for="bgp_secondary_peering">Secondary Peering</label>
+                    <input type="text" class="form-control" name="bgp_secondary_peering"
+                        aria-describedby="bgp_secondary_peering" disabled value="" id="bgp_secondary_peering">
+                </div>
+
+                <div class="form-group col-2 bgp_client_prefix">
+                    <label for="bgp_client_prefix">Client Prefix</label>
+                    <input type="text" class="form-control" name="bgp_client_prefix"
+                        aria-describedby="bgp_client_prefix" disabled value="" id="bgp_client_prefix">
+                </div>
+
+                <div class="form-group col-2 bgp_client_as">
+                    <label for="bgp_client_as">Client As</label>
+                    <input type="text" class="form-control" name="bgp_client_as" aria-describedby="bgp_client_as"
+                        disabled value="" id="bgp_client_as">
+                </div>
+            </div>
+            
             <h5 class="text-center p-2">NETWORK INFORMATION</h5>
             <table class="table table-bordered" id="physical_connectivity">
                 <thead>
