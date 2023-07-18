@@ -111,15 +111,15 @@
                 <div class="row justify-content-end">
                     <div class="col-auto">
                         <div class="">
-                            <input class="" type="radio" name="shared_type" id="dedicatedRadio"
-                                value="dedicated" required>
+                            <input class="" type="radio" name="shared_type" id="dedicatedRadio" value="dedicated"
+                                required>
                             <label class="form-check-label" for="dedicatedRadio">Dedicated</label>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="">
-                            <input class="" type="radio" name="shared_type" id="sharedRadio"
-                                value="shared" required>
+                            <input class="" type="radio" name="shared_type" id="sharedRadio" value="shared"
+                                required>
                             <label class="form-check-label" for="sharedRadio">Shared</label>
                         </div>
                     </div>
@@ -150,7 +150,8 @@
                                         <option value="">Select Product</option>
                                         @foreach ($products as $data)
                                             <option value="{{ $data->product->id }}" @selected($line->product_id)>
-                                                {{ $data->product->name }}</option>
+                                                {{ $data->product->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -244,6 +245,33 @@
                     @endif
                 </tbody>
             </table>
+
+            <div class="row">
+                <div class="client_name">
+                    <div class="checkbox-fade fade-in-primary">
+                        <label>
+                            <input type="checkbox" name="device[]" value="Router">
+                            <span class="cr">
+                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                            </span>
+                            <span>DNS</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-3 client_name">
+                    <label for="client_name">Client Name:</label>
+                    <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                        name="client_name" value="{{ $physicalConnectivityData->client_name }}" readonly>
+                    <input type="hidden" name="client_no" id="client_no"
+                        value="{{ $physicalConnectivityData->client_no }}">
+                </div>
+
+                <div class="form-group col-3 client_type">
+                    <label for="client_type">Client Type:</label>
+                    <input type="text" class="form-control" id="client_type" name="client_type"
+                        aria-describedby="client_type" readonly value="{{ $physicalConnectivityData->client_type }}">
+                </div>
+            </div>
 
             <h5 class="text-center p-2">NETWORK INFORMATION</h5>
             <table class="table table-bordered" id="physical_connectivity">
