@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('costing_links', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('costing_id');
+            $table->foreignId('costing_id')->constrained('costings')->onDelete('cascade');
             $table->string('link_type');
+            $table->string('link_no')->nullable();
+            $table->string('link_status')->nullable();
             $table->string('option');
             $table->string('transmission_capacity');
             $table->integer('quantity');
@@ -37,8 +39,6 @@ return new class extends Migration
             $table->decimal('operation_cost', 10, 2);
             $table->decimal('total_mrc', 10, 2);
             $table->timestamps();
-            // Add foreign key constraints if necessary
-            $table->foreign('costing_id')->references('id')->on('costings');
         });
     }
 

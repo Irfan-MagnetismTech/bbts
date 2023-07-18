@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('followups', function (Blueprint $table) {
             $table->id();
-            $table->integer('meeting_id')->nullable();
+            $table->foreignId('meeting_id')->constrained('meetings')->onDelete('cascade');
             $table->date('activity_date')->nullable();
             $table->time('work_start_time')->nullable();
             $table->time('work_end_time')->nullable();

@@ -55,10 +55,10 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
-                                    <a href="{{ route('pnl-summary', $sale->mq_no) }}" data-toggle="tooltip"
-                                        title="Add Survey" class="btn btn-outline-success">PNL</a>
+                                    <a href="{{ route('pnl-summary', $sale->mq_no) }}" data-toggle="tooltip" title="PNL"
+                                        class="btn btn-outline-success">PNL</a>
                                     <a href="{{ route('client-offer', $sale->mq_no) }}" data-toggle="tooltip"
-                                        title="Add Survey" class="btn btn-outline-success">Client Offer</a>
+                                        title="Client OFfer" class="btn btn-outline-success">Client Offer</a>
                                 </nobr>
                             </div>
                         </td>

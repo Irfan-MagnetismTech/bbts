@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('costing_products', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('costing_id');
+            $table->foreignId('costing_id')->constrained('costings')->onDelete('cascade');
+            $table->string('fr_no')->nullable();
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
             $table->decimal('rate', 8, 2);
@@ -27,8 +28,6 @@ return new class extends Migration
             $table->decimal('operation_cost_total', 10, 2);
             $table->decimal('offer_price', 10, 2);
             $table->decimal('total', 10, 2);
-            // Add foreign key constraints if necessary
-            $table->foreign('costing_id')->references('id')->on('costings');
             $table->timestamps();
         });
     }

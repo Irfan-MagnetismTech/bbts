@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('costing_link_equipment', function (Blueprint $table) {
+        Schema::create('costing_link_equipments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('costing_id');
-            $table->unsignedBigInteger('costing_link_id');
+            $table->foreignId('costing_id')->constrained('costings')->onDelete('cascade');
+            $table->foreignId('costing_link_id')->constrained('costing_links')->onDelete('cascade');
             $table->unsignedBigInteger('material_id');
             $table->string('unit');
             $table->string('ownership');
@@ -24,9 +24,6 @@ return new class extends Migration
             $table->decimal('rate', 8, 2);
             $table->decimal('total', 10, 2);
             $table->timestamps();
-            // Add foreign key constraints if necessary
-            $table->foreign('costing_id')->references('id')->on('costings');
-            $table->foreign('costing_link_id')->references('id')->on('costing_links');
         });
     }
 

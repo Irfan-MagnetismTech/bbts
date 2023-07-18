@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('feasibility_requirements', function (Blueprint $table) {
             $table->id();
-            $table->string('client_id');
+            $table->string('client_no');
             $table->integer('lead_generation_id')->nullable();
             $table->boolean('is_existing')->default(0)->nullable();
             $table->string('mq_no')->nullable();

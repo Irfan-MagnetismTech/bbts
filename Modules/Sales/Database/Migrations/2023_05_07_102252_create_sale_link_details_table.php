@@ -15,9 +15,8 @@ return new class extends Migration
     {
         Schema::create('sale_link_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sale_id');
-            $table->foreign('sale_id')->references('id')->on('sales');
-            $table->unsignedBigInteger('sale_detail_id')->nullable();
+            $table->foreignId('sale_id')->constrained('sales')->onDelete('cascade');
+            $table->foreignId('sale_detail_id')->constrained('sale_details')->onDelete('cascade');
             $table->string('fr_no')->nullable();
             $table->string('client_no')->nullable();
             $table->string('link_no')->nullable();

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('client_no')->nullable();
             $table->string('mq_no')->nullable();
             $table->date('offer_validity')->nullable();
-         
             $table->timestamps();
         });
     }

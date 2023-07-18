@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('connectivity_product_requirement_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('connectivity_requirement_id');
+            $table->foreign('connectivity_requirement_id', 'fk_connectivity_pro_req_details_connectivity_req_id')
+                ->references('id')->on('connectivity_requirements')
+                ->onDelete('cascade');
             $table->integer('category_id')->nullable();
             $table->integer('product_id')->nullable();
             $table->string('capacity')->nullable();

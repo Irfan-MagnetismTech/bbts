@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('client_questions', function (Blueprint $table) {
             $table->id();
-            $table->integer('follow_up_id')->unsigned();
+            $table->foreignId('followup_id')->constrained('followups')->onDelete('cascade');
             $table->integer('client_no')->unsigned();
             $table->string('reason_of_switching')->nullable();
             $table->string('lan_issue')->nullable();

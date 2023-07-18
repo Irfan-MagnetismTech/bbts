@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('plan_links', function (Blueprint $table) {
             $table->id();
-            $table->integer('planning_id')->nullable();
+            $table->foreignId('planning_id')->constrained('plannings')->onDelete('cascade');
             $table->string('link_type')->nullable();
+            $table->string('link_no')->nullable();
             $table->string(('existing_infrastructure'))->nullable();
             $table->string('option')->nullable();
             $table->integer('existing_transmission_capacity')->nullable();

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('offer_details', function (Blueprint $table) {
             $table->id();
-            $table->integer('offer_id')->nullable();
+            $table->foreignId('offer_id')->constrained('offers')->onDelete('cascade');
             $table->string('fr_no')->nullable();
             $table->double('client_equipment_total')->nullable();
             $table->double('total_otc')->nullable();

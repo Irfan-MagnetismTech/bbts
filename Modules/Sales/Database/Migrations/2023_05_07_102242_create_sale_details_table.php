@@ -15,13 +15,14 @@ return new class extends Migration
     {
         Schema::create('sale_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sale_id');
-            $table->foreign('sale_id')->references('id')->on('sales');
+            $table->foreignId('sale_id')->constrained('sales')->onDelete('cascade');
             $table->string('client_no')->nullable();
             $table->integer('billing_address_id')->nullable();
             $table->integer('collection_address_id')->nullable();
             $table->string('fr_no')->nullable();
             $table->integer('costing_id')->nullable();
+            $table->string('checked')->nullable();
+            $table->float('total_mrc', 8, 2)->nullable();
             $table->string('billpayment_date')->nullable();
             $table->string('payment_status')->nullable();
             $table->float('otc', 8, 2)->nullable();

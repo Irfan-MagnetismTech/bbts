@@ -15,7 +15,10 @@ return new class extends Migration
     {
         Schema::create('feasibility_requirement_details', function (Blueprint $table) {
             $table->id();
-            $table->string('feasibility_requirement_id');
+            $table->unsignedBigInteger('feasibility_requirement_id');
+            $table->foreign('feasibility_requirement_id', 'fk_feasibility_req_details_feasibility_req_id')
+                ->references('id')->on('feasibility_requirements')
+                ->onDelete('cascade');
             $table->string('client_no');
             $table->string('fr_no')->nullable();
             $table->string('connectivity_point')->nullable();
@@ -26,7 +29,6 @@ return new class extends Migration
             $table->string('location', 255)->nullable();
             $table->string('lat')->nullable();
             $table->string('long')->nullable();
-            $table->string('client_no')->nullable();
             $table->string('contact_name')->nullable();
             $table->string('contact_designation')->nullable();
             $table->string('contact_number')->nullable();

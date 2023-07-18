@@ -13,16 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('costing_product_equipment', function (Blueprint $table) {
+        Schema::create('costing_product_equipments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('costing_id');
+            $table->foreignId('costing_id')->constrained('costings')->onDelete('cascade');
             $table->unsignedBigInteger('material_id');
             $table->integer('quantity');
             $table->string('unit');
             $table->string('ownership');
             $table->decimal('rate', 8, 2);
             $table->decimal('total', 10, 2);
-            $table->foreign('costing_id')->references('id')->on('costings');
             $table->timestamps();
         });
     }

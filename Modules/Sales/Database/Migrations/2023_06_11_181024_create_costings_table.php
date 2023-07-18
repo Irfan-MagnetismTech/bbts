@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('costings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('fr_id');
-            $table->unsignedBigInteger('fr_no');
-            $table->unsignedBigInteger('mq_no');
-            $table->unsignedBigInteger('client_no');
+            $table->string('fr_no');
+            $table->string('mq_no');
+            $table->string('client_no');
             $table->string('connectivity_point');
             $table->string('month');
             $table->decimal('product_total_cost', 10, 2);
