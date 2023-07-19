@@ -11,6 +11,36 @@
 @section('breadcrumb-title')
     {{ ucfirst($form_heading) }} Survey Requirement
 @endsection
+@section('style')
+    <style>
+        .custom-tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .custom-tooltip .custom-tooltip-text {
+            visibility: hidden;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 5px;
+            border-radius: 4px;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .custom-tooltip:hover .custom-tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+@endsection
 
 @section('breadcrumb-button')
     <a href="{{ route('survey.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
@@ -334,7 +364,7 @@
                                     <th>Option</th>
                                     <th>Status</th>
                                     <th>Method</th>
-                                    <th>BTS/POP</th>
+                                    <th colspan="2">POP</th>
                                     <th>LDP</th>
                                     <th>Vendor</th>
                                     <th>Latitude</th>
@@ -402,9 +432,9 @@
                                                     </select>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td colspan="2">
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="pop[]" id="pop" class="form-control">
+                                                    <select name="pop[]" id="pop" class="form-control pop">
                                                         <option value="">Select POP</option>
                                                         @foreach ($pops as $pop)
                                                             <option value="{{ $pop->id }}"
@@ -536,14 +566,17 @@
                                                 </select>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="input-group input-group-sm input-group-primary">
-                                                <select name="pop[]" id="pop" class="form-control">
+                                        <td colspan="2">
+                                            <div class="input-group input-group-sm input-group-primary ">
+                                                <select name="pop[]" class="form-control pop" title="">
                                                     <option value="">Select POP</option>
                                                     @foreach ($pops as $pop)
                                                         <option value="{{ $pop->id }}">{{ $pop->name }}</option>
                                                     @endforeach
                                                 </select>
+                                                <div class="custom-tooltip">
+                                                    <span class="custom-tooltip-text">Tooltip content</span>
+                                                </div>
                                             </div>
                                         </td>
                                         <td>
@@ -671,6 +704,33 @@
                 }
             });
         });
+
+        $('.pop').on('change', function() {
+            console.log('pop')
+            var e = $(this)
+            var pop_id = e.val();
+            $.ajax({
+                url: "{{ route('get-pop-details') }}",
+                data: {
+                    pop_id: pop_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    var html = '';
+                    $.each(data, function(key, value) {
+                        $.each(value, function(key, value) {
+                            html += 'Vendor: ' + value.vendor_name + ' | Pop Name: ' +
+                                value
+                                .from_pop_name +
+                                ' | Capacity:' +
+                                value.capacity + '\n';
+                        });
+                    });
+
+                    e.attr('title', html);
+                }
+            });
+        })
 
         $(document).keydown(function(event) {
             if (event.ctrlKey && event.key === 'Insert') {
