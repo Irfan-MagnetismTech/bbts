@@ -10,7 +10,7 @@
     $comment = $is_old ? old('comment') : @$logicalConnectivityInternet->comment;
     $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->lines->pluck('quantity') : null);
     $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->lines->pluck('remarks') : null);
-
+    
     $effective_date = $is_old ? old('effective_date') : $sale->effective_date ?? today()->format('d-m-Y');
 @endphp
 
@@ -36,7 +36,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('logical-data-connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('logical-internet-connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -48,7 +48,7 @@
 
 @section('content')
     <div class="">
-        <form action="{{ route('logical-data-connectivities.store') }}" method="post" class="custom-form">
+        <form action="{{ route('logical-internet-connectivities.store') }}" method="post" class="custom-form">
             @csrf
 
             <div class="row">
@@ -113,14 +113,14 @@
                 <div class="row justify-content-end">
                     <div class="col-auto">
                         <div class="">
-                            <input class="" type="radio" name="shared_type" id="dedicatedRadio" value="dedicated"
+                            <input class="" type="radio" name="shared_type" id="dedicatedRadio" value="dedicated" @checked($logicalConnectivityInternet->shared_type == 'dedicated' || old('shared_type') == 'dedicated')
                                 required>
                             <label class="form-check-label" for="dedicatedRadio">Dedicated</label>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="">
-                            <input class="" type="radio" name="shared_type" id="sharedRadio" value="shared"
+                            <input class="" type="radio" name="shared_type" id="sharedRadio" value="shared" @checked(@$logicalConnectivityInternet->shared_type == 'shared' || old('shared_type') == 'shared')
                                 required>
                             <label class="form-check-label" for="sharedRadio">Shared</label>
                         </div>
@@ -192,12 +192,12 @@
                                 @if ($loop->first)
                                     <td>
                                         <button type="button"
-                                            class="btn btn-success btn-sm fa fa-plus add-data-service-row"></button>
+                                            class="btn btn-success btn-sm fa fa-plus add-internet-service-row"></button>
                                     </td>
                                 @else
                                     <td>
                                         <button type="button"
-                                            class="btn btn-danger btn-sm fa fa-minus remove-data-service-row"></button>
+                                            class="btn btn-danger btn-sm fa fa-minus remove-internet-service-row"></button>
                                     </td>
                                 @endif
                             </tr>
@@ -218,17 +218,28 @@
                         <th> Action </th>
                     </tr>
                 </thead>
+                @php
+                    $ip_address = $is_old ? old('ip_address') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->bandwidths->pluck('ip.id') : null);
+                @endphp
                 <tbody>
                     @if (!empty($logicalConnectivityInternet))
-                        @forelse ($logicalConnectivityBandwidth?->lines as $key => $line)
+                        @forelse ($logicalConnectivityBandwidths as $key => $bandwidth)
                             <tr>
                                 <td>
-                                    <input type="text" name="ip_address[]" class="form-control ip_address"
-                                        autocomplete="off" value="{{ $line->ip_address }}">
+                                    <select name="ip_address[]" class="form-control select2" required>
+                                        <option value="" slected disable>Select IP Address</option>
+                                        @foreach ($ips as $ip)
+                                            <option value="{{ $ip->id }}" @selected($ip_address[$key] == $ip->id)>{{ $ip->address }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" name="bandwidth[]" class="form-control bandwidth"
-                                        autocomplete="off" value="{{ $line->bandwidth }}">
+                                        autocomplete="off" value="{{ $bandwidth->bandwidth }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="remarks[]" class="form-control remarks"
+                                        autocomplete="off" value="{{ $bandwidth->remarks }}">
                                 </td>
                                 @if ($loop->first)
                                     <td>
@@ -256,7 +267,7 @@
                     <div class="client_name">
                         <div class="checkbox-fade fade-in-primary">
                             <label>
-                                <input type="checkbox" name="dns_checkbox[]" name='dns_checkbox' value="dns"
+                                <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
                                     class="dns_checkbox">
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
@@ -305,7 +316,7 @@
                     <div class="client_name">
                         <div class="checkbox-fade fade-in-primary">
                             <label>
-                                <input type="checkbox" name="smtp_checkbox[]" name='smtp_checkbox' value="smtp"
+                                <input type="checkbox" name="smtp_checkbox" name='smtp_checkbox' value="smtp"
                                     class="smtp_checkbox">
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
@@ -317,17 +328,17 @@
                 </div>
                 <div class="form-group col-2 smtp_domain">
                     <label for="smtp_domain">Domain Name</label>
-                    <input type="text" class="form-control" name="smtp_domain"
-                        aria-describedby="smtp_domain" disabled value="" id="smtp_domain">
+                    <input type="text" class="form-control" name="smtp_domain" aria-describedby="smtp_domain"
+                        disabled value="" id="smtp_domain">
                 </div>
 
                 <div class="form-group col-2 smtp_server">
                     <label for="smtp_server">Server Name</label>
-                    <input type="text" class="form-control" name="smtp_server"
-                        aria-describedby="smtp_server" disabled value="" id="smtp_server">
+                    <input type="text" class="form-control" name="smtp_server" aria-describedby="smtp_server"
+                        disabled value="" id="smtp_server">
                 </div>
             </div>
-            
+
             <hr>
 
             <div class="row">
@@ -336,7 +347,7 @@
                     <div class="client_name">
                         <div class="checkbox-fade fade-in-primary">
                             <label>
-                                <input type="checkbox" name="vpn_checkbox[]" name='vpn_checkbox' value="vpn"
+                                <input type="checkbox" name="vpn_checkbox" name='vpn_checkbox' value="vpn"
                                     class="vpn_checkbox">
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
@@ -403,7 +414,7 @@
                     <div class="client_name">
                         <div class="checkbox-fade fade-in-primary">
                             <label>
-                                <input type="checkbox" name="vc_checkbox[]" name='vc_checkbox' value="vc"
+                                <input type="checkbox" name="vc_checkbox" name='vc_checkbox' value="vc"
                                     class="vc_checkbox">
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
@@ -415,8 +426,8 @@
                 </div>
                 <div class="form-group col-2 vc_issued_date">
                     <label for="vc_issued_date">Issued Date</label>
-                    <input type="text" class="form-control date" name="vc_issued_date" aria-describedby="vc_issued_date"
-                        disabled value="" id="vc_issued_date">
+                    <input type="text" class="form-control date" name="vc_issued_date"
+                        aria-describedby="vc_issued_date" disabled value="" id="vc_issued_date">
                 </div>
 
                 <div class="form-group col-2 vc_source_ip">
@@ -445,8 +456,8 @@
 
                 <div class="form-group offset-md-1 col-2 vc_renewal_date">
                     <label for="vc_renewal_date">Renewal Date</label>
-                    <input type="text" class="form-control date" name="vc_renewal_date" aria-describedby="vc_renewal_date"
-                        disabled value="" id="vc_renewal_date">
+                    <input type="text" class="form-control date" name="vc_renewal_date"
+                        aria-describedby="vc_renewal_date" disabled value="" id="vc_renewal_date">
                 </div>
 
                 <div class="form-group col-2 vc_remarks">
@@ -464,7 +475,7 @@
                     <div class="client_name">
                         <div class="checkbox-fade fade-in-primary">
                             <label>
-                                <input type="checkbox" name="bgp_checkbox[]" name='bgp_checkbox' value="bgp"
+                                <input type="checkbox" name="bgp_checkbox" name='bgp_checkbox' value="bgp"
                                     class="bgp_checkbox">
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
@@ -499,7 +510,7 @@
                         disabled value="" id="bgp_client_as">
                 </div>
             </div>
-            
+
             <h5 class="text-center p-2">NETWORK INFORMATION</h5>
             <table class="table table-bordered" id="physical_connectivity">
                 <thead>

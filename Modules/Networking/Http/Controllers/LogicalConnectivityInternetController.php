@@ -3,15 +3,16 @@
 namespace Modules\Networking\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\Ip;
+use Modules\Admin\Entities\Bank;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
-use Modules\Sales\Entities\Product;
-use Modules\Networking\Entities\DataType;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\Admin\Entities\Ip;
 use Modules\Sales\Entities\SaleProductDetail;
+use Modules\Networking\Entities\ClientFacility;
 use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
+use Modules\Networking\Entities\BandwidthDestribution;
 
 class LogicalConnectivityInternetController extends Controller
 {
@@ -42,9 +43,13 @@ class LogicalConnectivityInternetController extends Controller
             ->with('product')
             ->get()
             ->unique('product_id');
-        
+
         $ips = Ip::latest()->get();
-        
+
+        $ipv4Ips = Ip::where('ip_type', 'IPv4')->latest()->get();
+
+        $ipv6Ips = Ip::where('ip_type', 'IPv6')->latest()->get();
+
         $logicalConnectivityInternet = LogicalConnectivity::query()
             ->where([
                 'fr_no' => $physicalConnectivityData->fr_no,
@@ -55,7 +60,12 @@ class LogicalConnectivityInternetController extends Controller
             ->latest()
             ->first();
 
-        return view('networking::logical-internet-connectivities.create', compact('physicalConnectivityData', 'logicalConnectivityInternet', 'products', 'ips'));
+        $logicalConnectivityBandwidths = BandwidthDestribution::query()
+            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+            ->with('ip')
+            ->get();
+
+        return view('networking::logical-internet-connectivities.create', compact('physicalConnectivityData', 'logicalConnectivityInternet', 'products', 'ips', 'ipv4Ips', 'ipv6Ips', 'logicalConnectivityBandwidths'));
     }
 
     /**
@@ -72,8 +82,7 @@ class LogicalConnectivityInternetController extends Controller
             foreach ($request->product_id as $key => $value) {
                 $dataList[] = [
                     'product_id' => $value,
-                    'product_category' => 'Data',
-                    'data_type' => $request->data_type[$key],
+                    'product_category' => 'Internet',
                     'quantity' => $request->quantity[$key],
                     'ip_ipv4' => $request->ip_ipv4[$key],
                     'ip_ipv6' => $request->ip_ipv6[$key],
@@ -85,15 +94,24 @@ class LogicalConnectivityInternetController extends Controller
                 ];
             }
 
+            $bandwidthDataList = [];
+            foreach ($request->bandwidth as $key => $value) {
+                $bandwidthDataList[] = [
+                    'bandwidth' => $value,
+                    'ip_id' => $request->ip_address[$key],
+                    'remarks' => $request->remarks[$key],
+                ];
+            }
+
             $request->merge([
-                'product_category' => 'Data',
+                'product_category' => 'Internet',
             ]);
 
             $logicalConnectivity = LogicalConnectivity::updateOrCreate(
                 [
                     'fr_no' => $request->fr_no,
                     'client_no' => $request->client_no,
-                    'product_category' => 'Data'
+                    'product_category' => 'Internet'
                 ],
                 $request->all()
             );
@@ -101,9 +119,15 @@ class LogicalConnectivityInternetController extends Controller
             $logicalConnectivity->lines()->delete();
             $logicalConnectivity->lines()->createMany($dataList);
 
+            $logicalConnectivity->bandwidths()->delete();
+            $logicalConnectivity->bandwidths()->createMany($bandwidthDataList);
+
+            $logicalConnectivity->clientFacility->delete();
+            $logicalConnectivity->clientFacility()->create($request->all());
+
             DB::commit();
 
-            return redirect()->back()->with('message', 'Logical Connectivity Data created successfully!');
+            return redirect()->back()->with('message', 'Logical Connectivity for Internet created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($e->getMessage());

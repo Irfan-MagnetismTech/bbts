@@ -16,10 +16,20 @@
                     <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off" required>
                 </td>
                 <td>
-                    <input type="text" name="ip_ipv4[]" class="form-control ip_ipv4" autocomplete="off" required>
+                    <select name="ip_ipv4[]" class="form-control select2 ip_ipv4" required>
+                        <option value="" slected disable>Select IP Address</option>
+                        @foreach ($ipv4Ips as $ip)
+                            <option value="{{ $ip->address }}">{{ $ip->address }}</option>
+                        @endforeach
+                    </select>
                 </td>
                 <td>
-                    <input type="text" name="ip_ipv6[]" class="form-control ip_ipv6" autocomplete="off" required>
+                    <select name="ip_ipv6[]" class="form-control select2 ip_ipv6" required>
+                        <option value="" slected disable>Select IP Address</option>
+                        @foreach ($ipv6Ips as $ip)
+                            <option value="{{ $ip->address }}">{{ $ip->address }}</option>
+                        @endforeach
+                    </select>
                 </td>
                 <td>
                     <input type="text" name="subnetmask[]" class="form-control subnetmask" autocomplete="off" required>
