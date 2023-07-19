@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('user_id')->nullable();
             $table->integer('branch_id')->nullable();
             $table->date('date')->nullable();
-            $table->string('connectivity_remarks')->nullable();
+            $table->string('survey_remarks')->nullable();
             $table->timestamps();
         });
     }
