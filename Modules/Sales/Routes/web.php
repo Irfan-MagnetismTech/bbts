@@ -15,6 +15,7 @@ use Modules\Sales\Http\Controllers\VendorController;
 use Modules\Sales\Http\Controllers\PlanningController;
 use Modules\Sales\Http\Controllers\SaleController;
 use Modules\Sales\Http\Controllers\ClientProfileController;
+use Modules\Sales\Http\Controllers\CommonController;
 use Modules\Sales\Http\Controllers\CostingController;
 use Modules\Sales\Http\Controllers\OfferController;
 
@@ -72,4 +73,5 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('pnl-approve-by-cmo/{mq_no}', [SaleController::class, 'pnlApproveByCmo'])->name('pnl-approve-by-cmo');
     Route::get('pnl-approve-by-management/{mq_no}', [SaleController::class, 'pnlApproveByManagement'])->name('pnl-approve-by-management');
     Route::get('client-offer/{mq_no}', [SaleController::class, 'clientOffer'])->name('client-offer');
+    Route::get('get-pop-details', [CommonController::class, 'getPopDetails'])->name('get-pop-details');
 });

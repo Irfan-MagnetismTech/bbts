@@ -9,10 +9,6 @@
     Lead Generation List
 @endsection
 
-@section('style')
-    <style>
-    </style>
-@endsection
 @section('breadcrumb-button')
     <a href="{{ route('lead-generation.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-plus"></i></a>
@@ -24,7 +20,7 @@
 
 @section('content')
     <div class="dt-responsive table-responsive">
-        <table id="dataTable" class="table table-striped table-bordered">
+        <table id="dataTable" class="table table-striped table-bordered">  
             <thead>
                 <tr>
                     <th>#SL</th>
