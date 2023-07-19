@@ -127,7 +127,7 @@ class BillGenerateController extends Controller
                     'particular' => $req->particular[$key],
                     'total_amount' => $req->total_amount[$key],
                     'net_amount' => $req->net_amount[$key],
-                    'child_billing_address_id' => $req->child_billing_address_id[$key],
+                    'billing_address_id' => $req->child_billing_address_id[$key],
                     'bill_type' => $req->bill_type,
                 ];
             }

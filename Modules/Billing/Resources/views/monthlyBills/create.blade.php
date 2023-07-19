@@ -21,7 +21,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('branchs.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('monthly-bills.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -32,7 +32,7 @@
 
 @section('content')
     <div class="container">
-        <form action="{{ !empty($monthlyBill) ? route('branchs.update', $branch->id) : route('branchs.store') }}"
+        <form action="{{ !empty($monthlyBill) ? route('monthly-bills.update', $branch->id) : route('monthly-bills.store') }}"
             method="post" class="custom-form">
             @if (!empty($monthlyBill))
                 @method('PUT')
