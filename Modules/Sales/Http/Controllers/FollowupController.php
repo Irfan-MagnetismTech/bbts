@@ -65,7 +65,7 @@ class FollowupController extends Controller
             ClientQuestion::create($question_data);
             if ($tada_amount > 0) {
                 $tada_data = [
-                    'follow_up_id' => $followup->id,
+                    'followup_id' => $followup->id,
                     'client_no' => $followup->client_no,
                     'amount' => $tada_amount,
                 ];

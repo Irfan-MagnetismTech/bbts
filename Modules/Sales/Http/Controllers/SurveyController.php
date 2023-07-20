@@ -55,7 +55,7 @@ class SurveyController extends Controller
     {
         $connectivity_requirement_data = $request->only('date', 'client_no', 'fr_no', 'survey_remarks');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
-        $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
+        $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? null;
         $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
         $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_no', $connectivity_requirement_data['client_no'])->first()->mq_no;
         $connectivity_requirement_data['lead_generation_id'] = LeadGeneration::where('client_no', $connectivity_requirement_data['client_no'])->first()->id;
@@ -129,7 +129,7 @@ class SurveyController extends Controller
     {
         $survey_data = $request->only('date', 'client_no', 'fr_no', 'survey_remarks');
         $survey_data['user_id'] = auth()->user()->id ?? '';
-        $survey_data['branch_id'] = auth()->user()->branch_id ?? '';
+        $survey_data['branch_id'] = auth()->user()->branch_id ?? null;
         $survey_data['date'] = date('Y-m-d', strtotime($request->date));
         $survey_data['mq_no'] = FeasibilityRequirement::where('client_no', $survey_data['client_no'])->first()->mq_no;
         $survey_data['lead_generation_id'] = LeadGeneration::where('client_no', $survey_data['client_no'])->first()->id;

@@ -111,6 +111,9 @@
                                                     class="form-control form-control-sm input" placeholder="Product"
                                                     value="{{ $service_plan->connectivityProductRequirementDetails->product->name }}"
                                                     readonly>
+                                                <input type="hidden" name="product_id[]" id="product"
+                                                    class="form-control form-control-sm input" placeholder="Product"
+                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->id }}">
                                             </span>
                                         </td>
                                         <td>
@@ -249,9 +252,12 @@
                                     <tr class="connectivity_details_row">
                                         <td>
                                             <span>
-                                                <input type="text" name="material_id[]" id="material_id "
+                                                <input type="text" name="material[]" id="material"
                                                     class="form-control form-control-sm input" placeholder="Link Type"
                                                     value="{{ $equipment_plan->material->name }}" readonly>
+                                                <input type="hidden" name="material_id[]" id="material_id "
+                                                    class="form-control form-control-sm input" placeholder="Link Type"
+                                                    value="{{ $equipment_plan->material->id }}" readonly>
                                             </span>
                                         </td>
                                         <td>
@@ -406,7 +412,8 @@
             @foreach ($planning->PlanLinks as $key => $plan_link)
                 @php $row_no = $key + 1; @endphp
                 <input type="hidden" name="total_key" value="{{ $row_no }}">
-                <div class="PlanLinkMainRow">
+                <div class="PlanLinkMainRow"
+                    style="border: 2px solid gray; border-radius: 15px; padding: 15px; margin-top: 15px;">
                     <div class="row">
                         <div class="col-1 col-md-1">
                             <div class="checkbox-fade fade-in-primary">
@@ -936,7 +943,7 @@
                 '.plan_equipment_quantity').val();
             var equipment_total = parseInt(plan_equipment_quantity) * parseInt(plan_equipment_rate);
             $(this).closest('tr').find('.plan_equipment_total').val(equipment_total);
-            $('.plan_equipment_total').each(function() {
+            $(this).closest('.PlanLinkMainRow').find('.plan_equipment_total').each(function() {
                 var value = parseInt($(this).val());
                 if (!isNaN(value)) {
                     plan_all_equipment_total += value;
@@ -946,17 +953,17 @@
                     plan_client_equipment_total += value;
                 }
             });
+            console.log('plan_all_equipment_total', plan_all_equipment_total)
+            console.log('plan_client_equipment_total', plan_client_equipment_total)
             var plan_equipment_partial_total = plan_all_equipment_total - plan_client_equipment_total;
             $(this).closest('.PlanLinkMainRow').find('.plan_all_equipment_total').val(plan_all_equipment_total);
             $(this).closest('.PlanLinkMainRow').find('.plan_client_equipment_total').val(
                 plan_client_equipment_total);
             $(this).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total').val(
                 plan_equipment_partial_total);
-            $(this).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total').val(
-                plan_equipment_partial_total);
-            planEquipmentPartialTotal();
-            planEquipmentInvestTotal();
-            calculatePlanEquipmentROI()
+            // planEquipmentPartialTotal(this);
+            // planEquipmentInvestTotal(this);
+            // calculatePlanEquipmentROI(this)
         });
 
         $('.plan_equipment_deployment_cost, .plan_equipment_interest, .plan_equipment_vat, .plan_equipment_tax').on('keyup',

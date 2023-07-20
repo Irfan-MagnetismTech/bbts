@@ -9,6 +9,8 @@ class PlanLinkEquipment extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'plan_link_equipments';
+
     public function material()
     {
         return $this->hasOne(Material::class, 'id', 'material_id');
