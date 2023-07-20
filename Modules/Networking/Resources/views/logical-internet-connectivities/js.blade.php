@@ -93,7 +93,31 @@
         $("#bandwidth_distribution tbody").append(html);
     }
 
+    const dns_input_fields = "#dns_domain, #dns_mx_record, #dns_a_record, #dns_reverse_record, #dns_ip_address";
+    const smtp_input_fields = "#smtp_domain, #smtp_server";
+    const vpn_input_fields =
+        "#vpn_purpose, #vpn_source_ip, #vpn_destination_ip, #vpn_bandwidth, #vpn_iig_name, #vpn_tunnel_active_date, #vpn_submission_date, #vpn_remarks";
+    const vc_input_fields =
+        "#vc_issued_date, #vc_source_ip, #vc_destination_ip, #vc_iig_name, #vc_itc_name, #vc_renewal_date, #vc_remarks";
+    const bgp_input_fields = "#bgp_primary_peering, #bgp_secondary_peering, #bgp_client_prefix, #bgp_client_as";
+
     $(document).ready(function() {
+        @php
+            $inputFieldsMap = [
+                'dns'  => 'dns_input_fields',
+                'smtp' => 'smtp_input_fields',
+                'vpn'  => 'vpn_input_fields',
+                'vc'   => 'vc_input_fields',
+                'bgp'  => 'bgp_input_fields',
+            ];
+        @endphp
+
+        @foreach ($facilityTypes as $facilityType)
+            @if (isset($inputFieldsMap[$facilityType]))
+                $({{ $inputFieldsMap[$facilityType] }}).prop('disabled', false)
+            @endif
+        @endforeach
+    
         @if (empty($logicalConnectivityInternet))
             appendDataServiceRow();
             appendBandwidthDistributionRow();
@@ -129,39 +153,39 @@
     //on checkbox check enable input box and on uncheck disable input box
     $(document).on('change', '.dns_checkbox', function() {
         if ($(this).prop('checked')) {
-            $('#dns_domain, #dns_mx_record, #dns_a_record, #dns_reverse_record, #dns_ip_address').prop(
+            $(dns_input_fields).prop(
                 'disabled', false);
         } else {
-            $('#dns_domain, #dns_mx_record, #dns_a_record, #dns_reverse_record, #dns_ip_address').prop(
+            $(dns_input_fields).prop(
                 'disabled', true);
         }
     });
 
     $(document).on('change', '.smtp_checkbox', function() {
         if ($(this).prop('checked')) {
-            $('#smtp_domain, #smtp_server').prop('disabled', false);
+            $(smtp_input_fields).prop('disabled', false);
         } else {
-            $('#smtp_domain, #smtp_server').prop('disabled', true);
+            $(smtp_input_fields).prop('disabled', true);
         }
     });
 
     $(document).on('change', '.vpn_checkbox', function() {
         if ($(this).prop('checked')) {
-            $('#vpn_purpose, #vpn_source_ip, #vpn_destination_ip, #vpn_bandwidth, #vpn_iig_name, #vpn_tunnel_active_date, #vpn_submission_date, #vpn_remarks')
+            $(vpn_input_fields)
                 .prop('disabled', false);
         } else {
-            $('#vpn_purpose, #vpn_source_ip, #vpn_destination_ip, #vpn_bandwidth, #vpn_iig_name, #vpn_tunnel_active_date, #vpn_submission_date, #vpn_remarks')
+            $(vpn_input_fields)
                 .prop('disabled', true);
         }
     });
 
     $(document).on('change', '.vc_checkbox', function() {
         if ($(this).prop('checked')) {
-            $('#vc_issued_date, #vc_source_ip, #vc_destination_ip, #vc_iig_name, #vc_itc_name, #vc_renewal_date, #vc_remarks')
+            $(vc_input_fields)
                 .prop(
                     'disabled', false);
         } else {
-            $('#vc_issued_date, #vc_source_ip, #vc_destination_ip, #vc_iig_name, #vc_itc_name, #vc_renewal_date, #vc_remarks')
+            $(vc_input_fields)
                 .prop(
                     'disabled', true);
         }
@@ -169,14 +193,14 @@
 
     $(document).on('change', '.bgp_checkbox', function() {
         if ($(this).prop('checked')) {
-            $('#bgp_primary_peering, #bgp_secondary_peering, #bgp_client_prefix, #bgp_client_as').prop(
+            $(bgp_input_fields).prop(
                 'disabled', false);
         } else {
-            $('#bgp_primary_peering, #bgp_secondary_peering, #bgp_client_prefix, #bgp_client_as').prop(
+            $(bgp_input_fields).prop(
                 'disabled', true);
         }
     });
-    
+
     $('.date').datepicker({
         format: "dd-mm-yyyy",
         autoclose: true,

@@ -113,15 +113,15 @@
                 <div class="row justify-content-end">
                     <div class="col-auto">
                         <div class="">
-                            <input class="" type="radio" name="shared_type" id="dedicatedRadio" value="dedicated" @checked($logicalConnectivityInternet->shared_type == 'dedicated' || old('shared_type') == 'dedicated')
-                                required>
+                            <input class="" type="radio" name="shared_type" id="dedicatedRadio" value="dedicated"
+                                @checked(@$logicalConnectivityInternet->shared_type == 'dedicated' || old('shared_type') == 'dedicated') required>
                             <label class="form-check-label" for="dedicatedRadio">Dedicated</label>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="">
-                            <input class="" type="radio" name="shared_type" id="sharedRadio" value="shared" @checked(@$logicalConnectivityInternet->shared_type == 'shared' || old('shared_type') == 'shared')
-                                required>
+                            <input class="" type="radio" name="shared_type" id="sharedRadio" value="shared"
+                                @checked(@$logicalConnectivityInternet->shared_type == 'shared' || old('shared_type') == 'shared') required>
                             <label class="form-check-label" for="sharedRadio">Shared</label>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
                                     <select name="product_id[]" class="form-control product_id select2" readonly>
                                         <option value="">Select Product</option>
                                         @foreach ($products as $data)
-                                            <option value="{{ $data->product->id }}" @selected($line->product_id)>
+                                            <option value="{{ $data->product->id }}" @selected($line->product_id == $data->product->id)>
                                                 {{ $data->product->name }}
                                             </option>
                                         @endforeach
@@ -229,7 +229,8 @@
                                     <select name="ip_address[]" class="form-control select2" required>
                                         <option value="" slected disable>Select IP Address</option>
                                         @foreach ($ips as $ip)
-                                            <option value="{{ $ip->id }}" @selected($ip_address[$key] == $ip->id)>{{ $ip->address }}</option>
+                                            <option value="{{ $ip->id }}" @selected($ip_address[$key] == $ip->id)>
+                                                {{ $ip->address }}</option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -268,7 +269,7 @@
                         <div class="checkbox-fade fade-in-primary">
                             <label>
                                 <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                    class="dns_checkbox">
+                                    class="dns_checkbox" @checked(!empty($logicalConnectivityInternet) ? in_array('dns', $facilityTypes) : false)>
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                 </span>
@@ -280,31 +281,37 @@
                 <div class="form-group col-2 dns_domain">
                     <label for="dns_domain">Domain Name</label>
                     <input type="text" class="form-control" name="dns_domain" aria-describedby="dns_domain" disabled
-                        value="" id="dns_domain">
+                        id="dns_domain"
+                        value="{{ old('dns_domain') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->dns_domain : '') }}">
                 </div>
 
                 <div class="form-group col-2 dns_mx_record">
                     <label for="dns_mx_record">Mx Record</label>
                     <input type="text" class="form-control" name="dns_mx_record" aria-describedby="dns_mx_record"
-                        disabled value="" id="dns_mx_record">
+                    value="{{ old('dns_mx_record') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->dns_mx_record : '') }}"
+                        disabled id="dns_mx_record">
                 </div>
 
                 <div class="form-group col-2 dns_a_record">
                     <label for="dns_a_record">A Record</label>
                     <input type="text" class="form-control" name="dns_a_record" aria-describedby="dns_a_record"
-                        disabled value="" id="dns_a_record">
+                    value="{{ old('dns_a_record') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->dns_a_record : '') }}"
+                        disabled id="dns_a_record">
                 </div>
 
                 <div class="form-group col-2 dns_reverse_record">
                     <label for="dns_reverse_record">Reverse Record</label>
                     <input type="text" class="form-control" name="dns_reverse_record"
-                        aria-describedby="dns_reverse_record" disabled value="" id="dns_reverse_record">
+                        aria-describedby="dns_reverse_record" disabled 
+                        value="{{ old('dns_reverse_record') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->dns_reverse_record : '') }}"
+                        id="dns_reverse_record">
                 </div>
 
                 <div class="form-group col-2 dns_ip_address">
                     <label for="dns_ip_address">IP Address</label>
                     <input type="text" class="form-control" name="dns_ip_address" aria-describedby="dns_ip_address"
-                        disabled value="" id="dns_ip_address">
+                    value="{{ old('dns_ip_address') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->dns_ip_address : '') }}"
+                        disabled id="dns_ip_address">
                 </div>
             </div>
 
@@ -317,7 +324,7 @@
                         <div class="checkbox-fade fade-in-primary">
                             <label>
                                 <input type="checkbox" name="smtp_checkbox" name='smtp_checkbox' value="smtp"
-                                    class="smtp_checkbox">
+                                    class="smtp_checkbox" @checked(!empty($logicalConnectivityInternet) ? in_array('smtp', $facilityTypes) : false)>
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                 </span>
@@ -329,13 +336,15 @@
                 <div class="form-group col-2 smtp_domain">
                     <label for="smtp_domain">Domain Name</label>
                     <input type="text" class="form-control" name="smtp_domain" aria-describedby="smtp_domain"
-                        disabled value="" id="smtp_domain">
+                    value="{{ old('smtp_domain') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->smtp_domain : '') }}"
+                        disabled id="smtp_domain">
                 </div>
 
                 <div class="form-group col-2 smtp_server">
                     <label for="smtp_server">Server Name</label>
                     <input type="text" class="form-control" name="smtp_server" aria-describedby="smtp_server"
-                        disabled value="" id="smtp_server">
+                    value="{{ old('smtp_server') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->smtp_server : '') }}"
+                        disabled id="smtp_server">
                 </div>
             </div>
 
@@ -348,7 +357,7 @@
                         <div class="checkbox-fade fade-in-primary">
                             <label>
                                 <input type="checkbox" name="vpn_checkbox" name='vpn_checkbox' value="vpn"
-                                    class="vpn_checkbox">
+                                    class="vpn_checkbox" @checked(!empty($logicalConnectivityInternet) ? in_array('vpn', $facilityTypes) : false)>
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                 </span>
@@ -360,49 +369,60 @@
                 <div class="form-group col-2 vpn_purpose">
                     <label for="vpn_purpose">Purpose Of Using VPN</label>
                     <input type="text" class="form-control" name="vpn_purpose" aria-describedby="vpn_purpose"
-                        disabled value="" id="vpn_purpose">
+                    value="{{ old('vpn_purpose') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vpn_purpose : '') }}"
+                        disabled id="vpn_purpose">
                 </div>
 
                 <div class="form-group col-2 vpn_source_ip">
                     <label for="vpn_source_ip">Source IP</label>
                     <input type="text" class="form-control" name="vpn_source_ip" aria-describedby="vpn_source_ip"
-                        disabled value="" id="vpn_source_ip">
+                    value="{{ old('vpn_source_ip') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vpn_source_ip : '') }}"
+                        disabled id="vpn_source_ip">
                 </div>
 
                 <div class="form-group col-2 vpn_destination_ip">
                     <label for="vpn_destination_ip">Destination IP</label>
                     <input type="text" class="form-control" name="vpn_destination_ip"
-                        aria-describedby="vpn_destination_ip" disabled value="" id="vpn_destination_ip">
+                        aria-describedby="vpn_destination_ip" disabled 
+                        value="{{ old('vpn_destination_ip') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vpn_destination_ip : '') }}"
+                        id="vpn_destination_ip">
                 </div>
 
                 <div class="form-group col-2 vpn_bandwidth">
                     <label for="vpn_bandwidth">VPN Bandwidth (Mbps)</label>
                     <input type="text" class="form-control" name="vpn_bandwidth" aria-describedby="vpn_bandwidth"
-                        disabled value="" id="vpn_bandwidth">
+                    value="{{ old('vpn_bandwidth') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vpn_bandwidth : '') }}"
+                        disabled id="vpn_bandwidth">
                 </div>
 
                 <div class="form-group col-2 vpn_iig_name">
                     <label for="vpn_iig_name">IIG Name</label>
                     <input type="text" class="form-control" name="vpn_iig_name" aria-describedby="vpn_iig_name"
-                        disabled value="" id="vpn_iig_name">
+                    value="{{ old('vpn_iig_name') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vpn_iig_name : '') }}"
+                        disabled id="vpn_iig_name">
                 </div>
 
                 <div class="form-group offset-md-1 col-2 vpn_tunnel_active_date">
                     <label for="vpn_tunnel_active_date">VPN Tunnel Active Date</label>
                     <input type="text" class="form-control date" name="vpn_tunnel_active_date"
-                        aria-describedby="vpn_tunnel_active_date" disabled value="" id="vpn_tunnel_active_date">
+                        aria-describedby="vpn_tunnel_active_date" disabled 
+                        value="{{ old('vpn_tunnel_active_date') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vpn_tunnel_active_date : '') }}"
+                        id="vpn_tunnel_active_date">
                 </div>
 
                 <div class="form-group col-2 vpn_submission_date">
                     <label for="vpn_submission_date">Submission Date</label>
                     <input type="text" class="form-control date" name="vpn_submission_date"
-                        aria-describedby="vpn_submission_date" disabled value="" id="vpn_submission_date">
+                        aria-describedby="vpn_submission_date" disabled 
+                        value="{{ old('vpn_submission_date') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vpn_submission_date : '') }}"
+                        id="vpn_submission_date">
                 </div>
 
                 <div class="form-group col-2 vpn_remarks">
                     <label for="vpn_remarks">Remarks</label>
                     <input type="text" class="form-control" name="vpn_remarks" aria-describedby="vpn_remarks"
-                        disabled value="" id="vpn_remarks">
+                    value="{{ old('vpn_remarks') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vpn_remarks : '') }}"
+                        disabled id="vpn_remarks">
                 </div>
             </div>
 
@@ -415,7 +435,7 @@
                         <div class="checkbox-fade fade-in-primary">
                             <label>
                                 <input type="checkbox" name="vc_checkbox" name='vc_checkbox' value="vc"
-                                    class="vc_checkbox">
+                                    class="vc_checkbox" @checked(!empty($logicalConnectivityInternet) ? in_array('vc', $facilityTypes) : false)>
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                 </span>
@@ -427,43 +447,53 @@
                 <div class="form-group col-2 vc_issued_date">
                     <label for="vc_issued_date">Issued Date</label>
                     <input type="text" class="form-control date" name="vc_issued_date"
-                        aria-describedby="vc_issued_date" disabled value="" id="vc_issued_date">
+                        aria-describedby="vc_issued_date" disabled 
+                        value="{{ old('vc_issued_date') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vc_issued_date : '') }}"
+                        id="vc_issued_date">
                 </div>
 
                 <div class="form-group col-2 vc_source_ip">
                     <label for="vc_source_ip">Source IP</label>
                     <input type="text" class="form-control" name="vc_source_ip" aria-describedby="vc_source_ip"
-                        disabled value="" id="vc_source_ip">
+                    value="{{ old('vc_source_ip') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vc_source_ip : '') }}"
+                        disabled id="vc_source_ip">
                 </div>
 
                 <div class="form-group col-2 vc_destination_ip">
                     <label for="vc_destination_ip">Destination IP</label>
                     <input type="text" class="form-control" name="vc_destination_ip"
-                        aria-describedby="vc_destination_ip" disabled value="" id="vc_destination_ip">
+                        aria-describedby="vc_destination_ip" disabled 
+                        value="{{ old('vc_destination_ip') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vc_destination_ip : '') }}"
+                        id="vc_destination_ip">
                 </div>
 
                 <div class="form-group col-2 vc_iig_name">
                     <label for="vc_iig_name">IIG Name</label>
                     <input type="text" class="form-control" name="vc_iig_name" aria-describedby="vc_iig_name"
-                        disabled value="" id="vc_iig_name">
+                    value="{{ old('vc_iig_name') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vc_iig_name : '') }}"
+                        disabled id="vc_iig_name">
                 </div>
 
                 <div class="form-group col-2 vc_itc_name">
                     <label for="vc_itc_name">ITC Name</label>
                     <input type="text" class="form-control" name="vc_itc_name" aria-describedby="vc_itc_name"
-                        disabled value="" id="vc_itc_name">
+                    value="{{ old('vc_itc_name') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vc_itc_name : '') }}"
+                        disabled id="vc_itc_name">
                 </div>
 
                 <div class="form-group offset-md-1 col-2 vc_renewal_date">
                     <label for="vc_renewal_date">Renewal Date</label>
                     <input type="text" class="form-control date" name="vc_renewal_date"
-                        aria-describedby="vc_renewal_date" disabled value="" id="vc_renewal_date">
+                        aria-describedby="vc_renewal_date" disabled 
+                        value="{{ old('vc_renewal_date') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vc_renewal_date : '') }}"
+                        id="vc_renewal_date">
                 </div>
 
                 <div class="form-group col-2 vc_remarks">
                     <label for="vc_remarks">Remarks</label>
                     <input type="text" class="form-control" name="vc_remarks" aria-describedby="vc_remarks" disabled
-                        value="" id="vc_remarks">
+                    value="{{ old('vc_remarks') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->vc_remarks : '') }}"
+                        id="vc_remarks">
                 </div>
             </div>
 
@@ -476,7 +506,7 @@
                         <div class="checkbox-fade fade-in-primary">
                             <label>
                                 <input type="checkbox" name="bgp_checkbox" name='bgp_checkbox' value="bgp"
-                                    class="bgp_checkbox">
+                                    class="bgp_checkbox" @checked(!empty($logicalConnectivityInternet) ? in_array('bgp', $facilityTypes) : false)>
                                 <span class="cr">
                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                 </span>
@@ -489,25 +519,32 @@
                 <div class="form-group col-2 bgp_primary_peering">
                     <label for="bgp_primary_peering">Primary Peering</label>
                     <input type="text" class="form-control" name="bgp_primary_peering"
-                        aria-describedby="bgp_primary_peering" disabled value="" id="bgp_primary_peering">
+                        aria-describedby="bgp_primary_peering" disabled 
+                        value="{{ old('bgp_primary_peering') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->bgp_primary_peering : '') }}"
+                        id="bgp_primary_peering">
                 </div>
 
                 <div class="form-group col-2 bgp_secondary_peering">
                     <label for="bgp_secondary_peering">Secondary Peering</label>
                     <input type="text" class="form-control" name="bgp_secondary_peering"
-                        aria-describedby="bgp_secondary_peering" disabled value="" id="bgp_secondary_peering">
+                        aria-describedby="bgp_secondary_peering" disabled 
+                        value="{{ old('bgp_secondary_peering') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->bgp_secondary_peering : '') }}"
+                        id="bgp_secondary_peering">
                 </div>
 
                 <div class="form-group col-2 bgp_client_prefix">
                     <label for="bgp_client_prefix">Client Prefix</label>
                     <input type="text" class="form-control" name="bgp_client_prefix"
-                        aria-describedby="bgp_client_prefix" disabled value="" id="bgp_client_prefix">
+                        aria-describedby="bgp_client_prefix" disabled 
+                        value="{{ old('bgp_client_prefix') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->bgp_client_prefix : '') }}"
+                        id="bgp_client_prefix">
                 </div>
 
                 <div class="form-group col-2 bgp_client_as">
                     <label for="bgp_client_as">Client As</label>
                     <input type="text" class="form-control" name="bgp_client_as" aria-describedby="bgp_client_as"
-                        disabled value="" id="bgp_client_as">
+                    value="{{ old('bgp_client_as') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->bgp_client_as : '') }}"
+                        disabled id="bgp_client_as">
                 </div>
             </div>
 

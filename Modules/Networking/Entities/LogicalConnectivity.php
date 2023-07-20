@@ -14,7 +14,7 @@ class LogicalConnectivity extends Model
         'fr_no',
         'product_category',
         'shared_type',
-        'feasility_type',
+        'facility_type',
         'comment',
     ];
 

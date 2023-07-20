@@ -60,12 +60,23 @@ class LogicalConnectivityInternetController extends Controller
             ->latest()
             ->first();
 
-        $logicalConnectivityBandwidths = BandwidthDestribution::query()
-            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
-            ->with('ip')
-            ->get();
+        if ($logicalConnectivityInternet) {
+            $logicalConnectivityBandwidths = BandwidthDestribution::query()
+                ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+                ->with('ip')
+                ->get();
+        } else {
+            $logicalConnectivityBandwidths = [];
+        }
 
-        return view('networking::logical-internet-connectivities.create', compact('physicalConnectivityData', 'logicalConnectivityInternet', 'products', 'ips', 'ipv4Ips', 'ipv6Ips', 'logicalConnectivityBandwidths'));
+        //explode facility type
+        $facilityTypes = explode(',', @$logicalConnectivityInternet->facility_type);
+
+        $clientFacility = ClientFacility::query()
+            ->where('logical_connectivity_id', @$logicalConnectivityInternet->id)
+            ->first();
+
+        return view('networking::logical-internet-connectivities.create', compact('physicalConnectivityData', 'logicalConnectivityInternet', 'products', 'ips', 'ipv4Ips', 'ipv6Ips', 'logicalConnectivityBandwidths', 'facilityTypes' ?? [], 'clientFacility' ?? []));
     }
 
     /**
@@ -103,7 +114,18 @@ class LogicalConnectivityInternetController extends Controller
                 ];
             }
 
+            //check if facility type is checked and merge it to request data as comma separated string
+            $checkboxes = ['dns_checkbox', 'vpn_checkbox', 'smtp_checkbox', 'vc_checkbox', 'bgp_checkbox'];
+
+            $facilityTypes = collect($checkboxes)
+                ->map(function ($checkbox) use ($request) {
+                    return $request->has($checkbox) ? substr($checkbox, 0, -9) : null;
+                })
+                ->filter()
+                ->implode(',');
+
             $request->merge([
+                'facility_type' => $facilityTypes,
                 'product_category' => 'Internet',
             ]);
 
@@ -122,7 +144,7 @@ class LogicalConnectivityInternetController extends Controller
             $logicalConnectivity->bandwidths()->delete();
             $logicalConnectivity->bandwidths()->createMany($bandwidthDataList);
 
-            $logicalConnectivity->clientFacility->delete();
+            $logicalConnectivity->clientFacility()->delete();
             $logicalConnectivity->clientFacility()->create($request->all());
 
             DB::commit();

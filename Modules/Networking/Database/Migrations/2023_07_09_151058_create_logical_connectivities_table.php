@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('fr_no')->nullable();
             $table->string('product_category')->comment('Internet/Data/VAS')->nullable();
             $table->string('shared_type')->comment('dedicated, Shared')->nullable();
-            $table->string('feasibility_type')->comment('DNS/SMTP/VPN/VC/BGP')->nullable();
+            $table->string('facility_type')->comment('DNS/SMTP/VPN/VC/BGP')->nullable();
             $table->string('comment')->nullable();
             $table->timestamps();
         });
