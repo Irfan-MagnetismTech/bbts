@@ -9,6 +9,8 @@ class CostingProductEquipment extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'costing_product_equipments';
+
     public function material()
     {
         return $this->belongsTo(Material::class, 'material_id', 'id');

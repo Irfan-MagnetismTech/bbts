@@ -10,7 +10,7 @@ use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\Offer;
 use Modules\Sales\Entities\Product;
-use Modules\Sales\Entities\SaleProductDetail;
+use Modules\Sales\Entities\FeasibilityRequirement;
 
 class OfferController extends Controller
 {

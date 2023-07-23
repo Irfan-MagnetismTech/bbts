@@ -7,6 +7,16 @@
     $form_url = !empty($planning->id) ? route('planning.update', $planning->id) : route('planning.store');
     $form_method = !empty($planning->id) ? 'PUT' : 'POST';
 @endphp
+@section('style')
+    <style>
+        #link_container .main_link {
+            border: 2px solid gray;
+            border-radius: 15px;
+            padding: 8px;
+            margin-top: 10px;
+        }
+    </style>
+@endsection
 
 @section('breadcrumb-title')
     {{ ucfirst($form_heading) }} Planning
@@ -232,6 +242,7 @@
                     <div id="link_container">
                         <div class="main_link">
                             <h5 class="text-center mb-2">Link <span class="link_no">1</span></h5>
+                            <hr />
                             <div class="row">
                                 <div class="md-col-3 col-3">
                                     <div class="form-item">

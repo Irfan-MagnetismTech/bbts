@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('aggregation_type')->nullable();
             $table->date('date')->nullable();
             $table->integer('user_id')->nullable();
-            $table->integer('branch_id')->nullable();
+            $table->string('branch_id')->nullable();
             $table->string('document')->nullable();
             $table->timestamps();
         });

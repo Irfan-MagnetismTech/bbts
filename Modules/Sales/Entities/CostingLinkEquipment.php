@@ -10,6 +10,8 @@ class CostingLinkEquipment extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'costing_link_equipments';
+
     public function costing()
     {
         return $this->hasMany(Costing::class, 'id', 'costing_id');
@@ -18,5 +20,5 @@ class CostingLinkEquipment extends Model
     public function material()
     {
         return $this->hasOne(Material::class, 'id', 'material_id');
-    } 
+    }
 }

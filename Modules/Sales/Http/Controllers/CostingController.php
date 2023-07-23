@@ -116,7 +116,7 @@ class CostingController extends Controller
 
     private function createCostingProducts($request, $costing)
     {
-        foreach ($request->product as $key => $product) {
+        foreach ($request->product_id as $key => $product) {
             $productData = [
                 'costing_id' => $costing->id,
                 'product_id' => $product,

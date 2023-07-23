@@ -203,17 +203,18 @@
                                                     </td>
                                                     <td>
                                                         <input type="number" name="capacity[]"
-                                                            class="form-control capacity" value="{{ $capacity[$key] }}"
-                                                            placeholder="Capacity" />
+                                                            class="form-control capacity"
+                                                            value="{{ $capacity[$key] ?? '' }}" placeholder="Capacity" />
                                                     </td>
                                                     <td>
-                                                        <input type="text" name="unit[]" value="{{ $unit[$key] }}"
-                                                            class="form-control unit" placeholder="Unit" />
+                                                        <input type="text" name="unit[]"
+                                                            value="{{ $unit[$key] ?? '' }}" class="form-control unit"
+                                                            placeholder="Unit" />
                                                     </td>
                                                     <td>
                                                         <input type="text" name="remarks[]"
-                                                            value="{{ $remarks[$key] }}" class="form-control remarks"
-                                                            placeholder="Remarks" />
+                                                            value="{{ $remarks[$key] ?? '' }}"
+                                                            class="form-control remarks" placeholder="Remarks" />
                                                     </td>
                                                     <td>
                                                         <button type="button" producut_attr=""
