@@ -38,16 +38,17 @@ class ZoneController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Zone $zone)
+    public function store()
     {
         try {
             DB::beginTransaction();
 
-            $zone->create(request()->all());
+            $zone = Zone::create(request()->all());
             $thana_ids = [];
             foreach (request()->thana_ids as $thana_id) {
                 $thana_ids[] = ['thana_id' => $thana_id];
             }
+            
             $zone->zoneLines()->createMany($thana_ids);
             DB::commit();
 

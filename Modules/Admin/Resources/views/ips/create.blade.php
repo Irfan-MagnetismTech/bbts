@@ -68,6 +68,22 @@
                 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="ip_type">Ip Type <span
+                                class="text-danger">*</span></label>
+                        <select class="form-control" id="ip_type" name="ip_type" required>
+                            <option value="">Select ip type</option>
+                            @foreach (config('businessinfo.ipType') as $type)
+                                <option value="{{ $type }}"
+                                    {{ (old('ip_type') ?? ($ip->ip_type ?? '')) == $type ? 'selected' : '' }}>
+                                    {{ $type }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="col-12">
+                    <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="purpose">Purpose <span
                                 class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="purpose" name="purpose"

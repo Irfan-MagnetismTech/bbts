@@ -39,6 +39,8 @@ return new class extends Migration
      */
     public function down()
     {
+        
+
         Schema::dropIfExists('logical_connectivity_lines');
     }
 };

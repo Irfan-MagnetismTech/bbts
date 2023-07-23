@@ -3,6 +3,8 @@
 namespace Modules\Networking\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Networking\Entities\ClientFacility;
+use Modules\Networking\Entities\BandwidthDestribution;
 use Modules\Networking\Entities\LogicalConnectivityLine;
 
 class LogicalConnectivity extends Model
@@ -12,12 +14,22 @@ class LogicalConnectivity extends Model
         'fr_no',
         'product_category',
         'shared_type',
-        'feasility_type',
+        'facility_type',
         'comment',
     ];
 
     public function lines()
     {
         return $this->hasMany(LogicalConnectivityLine::class);
+    }
+
+    public function bandwidths()
+    {
+        return $this->hasMany(BandwidthDestribution::class);
+    }
+
+    public function clientFacility()
+    {
+        return $this->hasOne(ClientFacility::class);
     }
 }
