@@ -134,4 +134,11 @@
             </li>
         </ul>
     </li>
+
+    <li class="pcoded-submenu {{ request()->routeIs(['activation-preprocesses.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="{{ route('activation-preprocesses.index') }}">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>            
+            <span>New</span>
+        </a>
+    </li>
 </ul>

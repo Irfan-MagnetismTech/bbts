@@ -3,6 +3,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Networking\Http\Controllers\DataTypeController;
+use Modules\Networking\Http\Controllers\CCScheduleController;
 use Modules\Networking\Http\Controllers\VasServiceController;
 use Modules\Networking\Http\Controllers\PhysicalConnectivityController;
 use Modules\Networking\Http\Controllers\LogicalConnectivityVasController;
@@ -21,3 +22,4 @@ Route::resources([
 Route::get('get-network-info-by-fr', [PhysicalConnectivityController::class, 'getNetworkInfoByFr'])->name('getNetworkInfoByFr');
 Route::get('get-challan-by-link-no', [PhysicalConnectivityController::class, 'getChallanInfoByLinkNo'])->name('getChallanInfoByLinkNo');
 Route::get('get-challan-info-by-challan-no', [PhysicalConnectivityController::class, 'getChallanInfoByChallanNo'])->name('getChallanInfoByChallanNo');
+Route::get('activation-preprocesses', [CCScheduleController::class, 'index'])->name('activation-preprocesses.index');
