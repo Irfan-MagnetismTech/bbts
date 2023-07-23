@@ -27,5 +27,6 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
         'broken-days-bills' => BrokenDaysBillController::class,
     ]);
     Route::get('generate_otc_bill/{client_no}', [BillGenerateController::class, 'create'])->name('generate_otc_bill');
+    Route::get('generate_otc_bill_pdf/{id}', [BillGenerateController::class, 'pdf'])->name('generate_otc_bill_pdf');
     Route::get('generate_bill/{id}', [BillGenerateController::class, 'generate_bill'])->name('generate_bill');
 });
