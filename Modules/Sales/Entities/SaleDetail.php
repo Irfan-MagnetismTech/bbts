@@ -3,10 +3,15 @@
 namespace Modules\Sales\Entities;
 
 use Carbon\Carbon;
+use Modules\Sales\Entities\Sale;
 use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\Costing;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\OfferDetail;
+use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
+use Modules\Sales\Entities\CollectionAddress;
+use Modules\Sales\Entities\SaleProductDetail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
@@ -73,5 +78,10 @@ class SaleDetail extends Model
     public function collectionAddress()
     {
         return $this->belongsTo(CollectionAddress::class, 'collection_address_id', 'id');
+    }
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'sale_id');
     }
 }

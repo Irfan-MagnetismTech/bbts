@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('fr_no')->nullable();
             $table->string('particular')->nullable();
             $table->bigInteger('otc_bill_id')->nullable();
-            $table->bigInteger('child_billing_address_id')->nullable();
+            $table->bigInteger('billing_address_id')->nullable();
             $table->bigInteger('broken_days_bill_id')->nullable();
             $table->string('bill_type')->comment('OTC/Monthly Bill/Broken days');
             $table->bigInteger('product_id')->nullable();
