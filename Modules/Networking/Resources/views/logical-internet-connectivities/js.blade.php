@@ -104,11 +104,11 @@
     $(document).ready(function() {
         @php
             $inputFieldsMap = [
-                'dns'  => 'dns_input_fields',
+                'dns' => 'dns_input_fields',
                 'smtp' => 'smtp_input_fields',
-                'vpn'  => 'vpn_input_fields',
-                'vc'   => 'vc_input_fields',
-                'bgp'  => 'bgp_input_fields',
+                'vpn' => 'vpn_input_fields',
+                'vc' => 'vc_input_fields',
+                'bgp' => 'bgp_input_fields',
             ];
         @endphp
 
@@ -117,7 +117,7 @@
                 $({{ $inputFieldsMap[$facilityType] }}).prop('disabled', false)
             @endif
         @endforeach
-    
+
         @if (empty($logicalConnectivityInternet))
             appendDataServiceRow();
             appendBandwidthDistributionRow();
@@ -150,16 +150,16 @@
         });
     }
 
+
+
     //on checkbox check enable input box and on uncheck disable input box
-    $(document).on('change', '.dns_checkbox', function() {
-        if ($(this).prop('checked')) {
-            $(dns_input_fields).prop(
-                'disabled', false);
+    function checkboxChange(e, inputFields) {
+        if (e.checked) {
+            $(inputFields).prop('disabled', false);
         } else {
-            $(dns_input_fields).prop(
-                'disabled', true);
+            $(inputFields).prop('disabled', true);
         }
-    });
+    }
 
     $(document).on('change', '.smtp_checkbox', function() {
         if ($(this).prop('checked')) {
