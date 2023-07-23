@@ -3,6 +3,7 @@
 namespace Modules\Sales\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\Product;
@@ -121,9 +122,14 @@ class PlanningController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Planning $planning)
     {
-        //
+        try {
+            $planning->delete();
+            return redirect()->route('planning.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('planning.index')->withErrors($e->getMessage());
+        }
     }
 
     private function createServicePlans($request, $plan)

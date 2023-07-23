@@ -254,10 +254,10 @@
                                             <span>
                                                 <input type="text" name="material[]" id="material"
                                                     class="form-control form-control-sm input" placeholder="Link Type"
-                                                    value="{{ $equipment_plan->material->name }}" readonly>
+                                                    value="{{ $equipment_plan->material->name ?? '' }}" readonly>
                                                 <input type="hidden" name="material_id[]" id="material_id "
                                                     class="form-control form-control-sm input" placeholder="Link Type"
-                                                    value="{{ $equipment_plan->material->id }}" readonly>
+                                                    value="{{ $equipment_plan->material->id ?? '' }}" readonly>
                                             </span>
                                         </td>
                                         <td>

@@ -35,8 +35,11 @@ class CostingController extends Controller
      */
     public function create($id = null)
     {
+        // dd('ff');
         $feasibilityRequirementDetail = FeasibilityRequirementDetail::find($id);
-        $planning = Planning::with('equipmentPlans.material', 'servicePlans', 'planLinks.PlanLinkEquipments.material')->where('fr_no', $feasibilityRequirementDetail->fr_no)->first();
+        // dd($feasibilityRequirementDetail);
+        $planning = Planning::with('equipmentPlans.material', 'servicePlans', 'planLinks.PlanLinkEquipments.material')
+                    ->where('fr_no', $feasibilityRequirementDetail->fr_no)->first();
         return view('sales::costing.create', compact('planning', 'feasibilityRequirementDetail'));
     }
 
@@ -63,7 +66,7 @@ class CostingController extends Controller
             $this->createCostingLinks($request, $costing);
 
             DB::commit();
-            return response()->json(['message' => 'Data saved successfully.']);
+            // return response()->json(['message' => 'Data saved successfully.']);
             return view('sales::costing.show', compact('costing'));
         } catch (\Exception $e) {
             DB::rollBack();
