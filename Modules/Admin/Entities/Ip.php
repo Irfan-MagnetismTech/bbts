@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ip extends Model
 {
-    protected $fillable = ['address', 'type', 'purpose', 'vlan_id', 'zone_id'];
+    protected $fillable = ['address', 'type', 'ip_type', 'purpose', 'vlan_id', 'zone_id'];
 
     public function zone()
     {

@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('ips', function (Blueprint $table) {
+        Schema::create('bandwidth_destributions', function (Blueprint $table) {
             $table->id();
-            $table->string('address')->unique();
-            $table->string('type')->comment('link, internet, data, management');
-            $table->string('ip_type')->nullable()->comment('ipv4, ipv6');
-            $table->string('purpose')->nullable();
-            $table->string('vlan_id')->nullable();
-            $table->integer('zone_id')->nullable();
+            $table->foreignId('logical_connectivity_id')->constrained('logical_connectivities')->onDelete('cascade');
+            $table->integer('ip_id')->nullable();
+            $table->string('bandwidth')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ips');
+        Schema::dropIfExists('bandwidth_destributions');
     }
 };

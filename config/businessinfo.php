@@ -113,4 +113,10 @@ return [
         'Corporate' => 'Corporate',
         'Individual' => 'Individual',
     ],
+
+    //ip address type
+    'ipType' => [
+        'IPv4' => 'IPv4',
+        'IPv6' => 'IPv6',
+    ],
 ];
