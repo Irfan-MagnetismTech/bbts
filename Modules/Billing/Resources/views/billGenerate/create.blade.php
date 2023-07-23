@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Branchs')
+@section('title', 'Bill Generate')
 
 @section('breadcrumb-title')
     @if (!empty($monthlyBill))

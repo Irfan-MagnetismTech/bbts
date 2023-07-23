@@ -62,8 +62,8 @@
                             $category_data = $is_old ? old('category_id') : $category_data ?? [];
                             $aggregation_type = $is_old ? old('aggregation_type') : $connectivity_requirement->aggregation_type ?? null;
                             $from_location = $is_old ? old('from_location') : $connectivity_requirement->from_location ?? null;
-                            $connectivity_point = $is_old ? old('connectivity_point') : $connectivity_requirement->fromLocation->connectivity_point ?? $fr_detail->connectivity_point;
-                            $fr_no = $is_old ? old('fr_no') : $connectivity_requirement->fr_no ?? $fr_detail->fr_no;
+                            $connectivity_point = $is_old ? old('connectivity_point') : $connectivity_requirement->FeasibilityRequirementDetail->connectivity_point ?? $fr_detail->connectivity_point;
+                            $fr_no = $is_old ? old('fr_no') : $connectivity_requirement->FeasibilityRequirementDetail->fr_no ?? $fr_detail->fr_no;
                             $product_id = $is_old ? old('product_id') : $product_id ?? null;
                             $capacity = $is_old ? old('capacity') : $capacity ?? null;
                             $unit = $is_old ? old('unit') : $connectivity_requirement->product_unit ?? null;

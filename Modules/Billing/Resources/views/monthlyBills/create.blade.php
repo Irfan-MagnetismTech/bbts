@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Branchs')
+@section('title', 'Monthly Bill')
 
 @section('breadcrumb-title')
     @if (!empty($monthlyBill))
@@ -21,7 +21,6 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('monthly-bills.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')

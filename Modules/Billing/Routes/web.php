@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Billing\Http\Controllers\BillGenerateController;
 use Modules\Billing\Http\Controllers\MonthlyBillController;
 use Modules\Billing\Http\Controllers\BillingOtcBillController;
+use Modules\Billing\Http\Controllers\BrokenDaysBillController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,10 +21,12 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::get('/', 'BillingController@index');
 
     Route::resources([
-        'monthly-bills' => MonthlyBillController::class,
-        'otc-bills'     => BillingOtcBillController::class,
-        'bill-generate' => BillGenerateController::class,
+        'monthly-bills'     => MonthlyBillController::class,
+        'otc-bills'         => BillingOtcBillController::class,
+        'bill-generate'     => BillGenerateController::class,
+        'broken-days-bills' => BrokenDaysBillController::class,
     ]);
     Route::get('generate_otc_bill/{client_no}', [BillGenerateController::class, 'create'])->name('generate_otc_bill');
+    Route::get('generate_otc_bill_pdf/{id}', [BillGenerateController::class, 'pdf'])->name('generate_otc_bill_pdf');
     Route::get('generate_bill/{id}', [BillGenerateController::class, 'generate_bill'])->name('generate_bill');
 });
