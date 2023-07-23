@@ -74,4 +74,5 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('pnl-approve-by-management/{mq_no}', [SaleController::class, 'pnlApproveByManagement'])->name('pnl-approve-by-management');
     Route::get('client-offer/{mq_no}', [SaleController::class, 'clientOffer'])->name('client-offer');
     Route::get('get-pop-details', [CommonController::class, 'getPopDetails'])->name('get-pop-details');
+    Route::get('get-existing-link-list', [CommonController::class, 'getExistingLinkList'])->name('get-existing-link-list');
 });
