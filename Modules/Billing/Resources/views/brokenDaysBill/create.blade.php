@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Monthly Bill')
+@section('title', 'Broken Days Bill')
 
 @section('breadcrumb-title')
     @if (!empty($monthlyBill))
         Edit
     @else
     @endif
-    Monthly Bill Generate
+   Broken Days Bill Generate
 @endsection
 
 @section('style')
@@ -31,26 +31,22 @@
 
 @section('content')
     <div class="container">
-        <form action="{{ !empty($monthlyBill) ? route('monthly-bills.update', $branch->id) : route('monthly-bills.store') }}"
+        <form action="{{ !empty($monthlyBill) ? route('broken-days-bills.update', $branch->id) : route('broken-days-bills.store') }}"
             method="post" class="custom-form">
             @if (!empty($monthlyBill))
                 @method('PUT')
             @endif
             @csrf
             <div class="row" style="padding:30px 0 30px">
-                <div class="col-6">
-                    <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="month">Month <span class="text-danger">*</span></label>
-                        <input type="month" class="form-control" id="month" name="month" placeholder="Enter  Month"
-                            value="{{ old('month') ?? ($branch->month ?? '') }}" required>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="date">Date <span class="text-danger">*</span></label>
-                        <input class="form-control" id="date" name="date" aria-describedby="date"
-                            placeholder="Enter  date" value="{{ old('date') ?? ($branch->date ?? '') }}" required>
-                    </div>
+                <x-input-box colGrid="3" name="client_no" value="" label="Client ID" attr="readonly" value=""/>
+                <x-input-box colGrid="3" name="client_name" value="" label="Client Name" attr="readonly" value=""/>
+                <x-input-box colGrid="3" name="date" value="" label="Date" attr="readonly" value={{now()}}/>
+                <input type="hidden" class="form-control bill_type" name="bill_type"
+                value="{{ 'Broken Days' }}">
+                <div class="col-3">
+                    <select name="billing_address_id" class="form-control">
+                        <option value="">Select Billing Address</option>
+                    </select>
                 </div>
             </div>
     </div>

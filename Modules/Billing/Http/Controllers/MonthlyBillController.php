@@ -42,11 +42,11 @@ class MonthlyBillController extends Controller
             foreach ($datas as $key => $val) {
                 $child = [];
                 $parent = [
-                    'client_no' => $val->first()->sale->client_no,
-                    'billing_address_id' => $key,
-                    'date' => $request->date,
-                    'bill_type' => "Monthly Bill",
-                    'month' => explode("-", $request->month)[1]
+                    'client_no'             => $val->first()->sale->client_no,
+                    'billing_address_id'    => $key,
+                    'date'                  => $request->date,
+                    'bill_type'             => "Monthly Bill",
+                    'month'                 => explode("-", $request->month)[1]
                 ];
                 $net_amount = 0;
                 foreach ($val as $key1 => $val2) {
@@ -65,7 +65,6 @@ class MonthlyBillController extends Controller
                         $net_amount += ($vv->quantity * $vv->price);
                     }
                 }
-
                 $data = BillGenerate::create($parent);
                 $data->lines()->createMany($child);
             }
