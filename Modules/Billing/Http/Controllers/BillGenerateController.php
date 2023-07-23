@@ -2,6 +2,7 @@
 
 namespace Modules\Billing\Http\Controllers;
 
+use PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -105,6 +106,17 @@ class BillGenerateController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function pdf($id)
+    {
+        $billData = BillGenerate::findOrFail($id);
+        $billData->load('lines.billingOtcBill.lines');
+        return PDF::loadView('billing::billGenerate.pdf', ['billData' => $billData], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+        ])->stream('bill.pdf');
+        return view('billing::billGenerate.pdf', compact('billData'));
     }
 
 

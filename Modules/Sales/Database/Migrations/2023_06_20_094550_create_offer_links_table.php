@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('offer_details_id')->constrained('offer_details')->onDelete('cascade');
             $table->string('link_id')->nullable();
             $table->string('link_type')->nullable();
+            $table->string('link_status')->nullable();
             $table->string('link_no')->nullable();
             $table->string('option')->nullable();
             $table->string('connectivity_status')->nullable();

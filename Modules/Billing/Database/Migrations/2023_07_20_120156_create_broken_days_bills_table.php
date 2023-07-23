@@ -13,16 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('bill_generates', function (Blueprint $table) {
+        Schema::create('broken_days_bills', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('client_id')->nullable();
             $table->string('client_no')->nullable();
-            $table->bigInteger('billing_address_id')->nullable();
+            $table->string('fr_no')->nullable();
             $table->date('date')->nullable();
-            $table->string('month')->nullable();
             $table->string('bill_no')->nullable();
-            $table->string('bill_type')->comment('OTC/Monthly Bill/Broken Days');
-            $table->bigInteger('amount')->nullable();
+            $table->string('type')->comment('new/existing');
+            $table->integer('days')->nullable();
             $table->bigInteger('user_id')->nullable();
             $table->bigInteger('branch_id')->nullable();
             $table->timestamps();
@@ -36,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bill_generates');
+        Schema::dropIfExists('broken_days_bills');
     }
 };

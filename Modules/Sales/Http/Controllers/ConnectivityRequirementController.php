@@ -49,45 +49,45 @@ class ConnectivityRequirementController extends Controller
      * @return Renderable
      */
     public function store(ConnectivityRequirementRequest $request)
-{
-    $data = $request->only('date', 'client_no', 'from_location', 'aggregation_type', 'fr_no');
-    $data['user_id'] = auth()->id() ?: '';
-    $data['branch_id'] = auth()->user()->branch_id ?: '';
-    $data['date'] = date('Y-m-d', strtotime($request->date));
-    $data['mq_no'] = optional(FeasibilityRequirement::where('client_no', $data['client_no'])->first())->mq_no;
+    {
+        $data = $request->only('date', 'client_no', 'from_location', 'aggregation_type', 'fr_no');
+        $data['user_id'] = auth()->id() ?: '';
+        $data['branch_id'] = auth()->user()->branch_id ?: '';
+        $data['date'] = date('Y-m-d', strtotime($request->date));
+        $data['mq_no'] = optional(FeasibilityRequirement::where('client_no', $data['client_no'])->first())->mq_no;
 
-    DB::beginTransaction();
-    try {
-        $requirement = ConnectivityRequirement::create($data);
+        DB::beginTransaction();
+        try {
+            $requirement = ConnectivityRequirement::create($data);
 
-        foreach ($request->category_id as $key => $category_id) {
-            ConnectivityProductRequirementDetail::create([
-                'connectivity_requirement_id' => $requirement->id,
-                'category_id' => $category_id,
-                'product_id' => $request->product_id[$key],
-                'capacity' => $request->capacity[$key],
-                'remarks' => $request->remarks[$key],
-            ]);
+            foreach ($request->category_id as $key => $category_id) {
+                ConnectivityProductRequirementDetail::create([
+                    'connectivity_requirement_id' => $requirement->id,
+                    'category_id' => $category_id,
+                    'product_id' => $request->product_id[$key],
+                    'capacity' => $request->capacity[$key],
+                    'remarks' => $request->remarks[$key],
+                ]);
+            }
+
+            foreach ($request->link_type as $key => $link_type) {
+                ConnectivityRequirementDetail::create([
+                    'connectivity_requirement_id' => $requirement->id,
+                    'link_type' => $link_type,
+                    'method' => $request->method[$key],
+                    'connectivity_capacity' => $request->connectivity_capacity[$key],
+                    'sla' => $request->uptime_req[$key],
+                    'vendor_id' => $request->vendor_id[$key],
+                ]);
+            }
+
+            DB::commit();
+            return redirect()->route('connectivity-requirement.index')->with('success', 'Connectivity Requirement Created Successfully');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
-
-        foreach ($request->link_type as $key => $link_type) {
-            ConnectivityRequirementDetail::create([
-                'connectivity_requirement_id' => $requirement->id,
-                'link_type' => $link_type,
-                'method' => $request->method[$key],
-                'connectivity_capacity' => $request->connectivity_capacity[$key],
-                'sla' => $request->uptime_req[$key],
-                'vendor_id' => $request->vendor_id[$key],
-            ]);
-        }
-
-        DB::commit();
-        return redirect()->route('connectivity-requirement.index')->with('success', 'Connectivity Requirement Created Successfully');
-    } catch (\Exception $e) {
-        DB::rollback();
-        return redirect()->back()->with('error', $e->getMessage())->withInput();
     }
-}
 
 
     /**
@@ -110,7 +110,7 @@ class ConnectivityRequirementController extends Controller
     {
         $product_select = [];
         $product_unit = [];
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails.category.products', 'lead_generation', 'fromLocation')->find($id);
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails.category.products', 'lead_generation')->find($id);
 
         foreach ($connectivity_requirement->connectivityProductRequirementDetails as $key => $connectivityProductRequirementDetail) {
             $product_select[] = $connectivityProductRequirementDetail->category->products->pluck('id', 'name');
@@ -118,7 +118,7 @@ class ConnectivityRequirementController extends Controller
         }
         $connectivity_requirement->product_unit = $product_unit;
         $connectivity_requirement->product_select = $product_select;
-        $all_fr_list = FeasibilityRequirementDetail::where('feasibility_requirement_id', $connectivity_requirement->fromLocation->feasibility_requirement_id)->get();
+        $all_fr_list = FeasibilityRequirementDetail::where('fr_no', $connectivity_requirement->fr_no)->get();
         $categories = Category::all();
         $vendors = Vendor::all();
         // dd($categories);
