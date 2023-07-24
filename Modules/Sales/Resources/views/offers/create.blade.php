@@ -94,8 +94,8 @@
                                                     </tr>
                                                 </thead>
 
-                                                @foreach ($details->costing->costingLinks as $key => $link)
-                                                    <tbody class="mainRow">
+                                                <tbody class="mainRow">
+                                                    @foreach ($details->costing->costingLinks as $key => $link)
                                                         <tr class="offer_details_row">
                                                             <td>
                                                                 <div class="checkbox-fade fade-in-primary"
@@ -180,7 +180,7 @@
                                                                     <input type="text"
                                                                         name="client_equipment_amount_{{ $row_no }}[]"
                                                                         value="{{ $link->plan_client_equipment_total }}"
-                                                                        class="form-control client_equipment_amount"
+                                                                        class="form-control client_equipment_amount text-right"
                                                                         id="client_equipment_amount" readonly>
                                                                 </div>
                                                             </td>
@@ -189,7 +189,7 @@
                                                                     class="input-group input-group-sm input-group-primary">
                                                                     <input type="text"
                                                                         name="otc_{{ $row_no }}[]"
-                                                                        value="{{ $link->otc }}" class="form-control"
+                                                                        value="{{ $link->otc }}" class="form-control text-right"
                                                                         id="otc" readonly>
                                                                 </div>
                                                             </td>
@@ -198,7 +198,7 @@
                                                                     class="input-group input-group-sm input-group-primary">
                                                                     <input type="text"
                                                                         name="mo_cost_{{ $row_no }}[]"
-                                                                        value="{{ $link->roi }}" class="form-control"
+                                                                        value="{{ $link->roi }}" class="form-control text-right"
                                                                         id="mo_cost" readonly>
                                                                 </div>
                                                             </td>
@@ -207,7 +207,7 @@
                                                                     class="input-group input-group-sm input-group-primary ">
                                                                     <input type="text"
                                                                         name="offer_otc_{{ $row_no }}[]"
-                                                                        class="form-control offer_otc" id="offer_otc">
+                                                                        class="form-control offer_otc text-right" id="offer_otc">
                                                                 </div>
                                                             </td>
                                                             <td>
@@ -215,7 +215,7 @@
                                                                     class="input-group input-group-sm input-group-primary">
                                                                     <input type="text"
                                                                         name="total_cost_{{ $row_no }}[]"
-                                                                        class="form-control total_cost_otc"
+                                                                        class="form-control total_cost_otc text-right"
                                                                         id="total_cost_otc" readonly>
                                                                 </div>
                                                             </td>
@@ -224,215 +224,213 @@
                                                                     class="input-group input-group-sm input-group-primary">
                                                                     <input type="text"
                                                                         name="offer_mrc_{{ $row_no }}[]"
-                                                                        class="form-control offer_mrc" id="offer_mrc">
+                                                                        class="form-control offer_mrc text-right" id="offer_mrc">
                                                                 </div>
                                                             </td>
-                                                        </tr>
+                                                        </tr> 
+                                                    @endforeach
 
-                                                        <tr>
-                                                            <td colspan="6" rowspan="5"></td>
-                                                            <td colspan="2" style="text-align: right;">Link wise Total
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="client_equipment_total_{{ $row_no }}"
-                                                                        class="form-control client_equipment_total"
-                                                                        id="client_equipment_total"
-                                                                        value="{{ $details->costing->costingLinks->sum('plan_client_equipment_total') }}"
-                                                                        readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="total_otc_{{ $row_no }}"
-                                                                        class="form-control total_otc" id="total_otc[]"
-                                                                        value="{{ $details->costing->costingLinks->sum('otc') }}"
-                                                                        readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="total_roi_{{ $row_no }}"
-                                                                        value="{{ $details->costing->costingLinks->sum('roi') }}"
-                                                                        class="form-control total_roi" id="total_roi"
-                                                                        readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary ">
-                                                                    <input type="text"
-                                                                        name="total_offer_otc_{{ $row_no }}"
-                                                                        class="form-control total_offer_otc"
-                                                                        id="total_offer_otc" readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="grand_total_otc_{{ $row_no }}"
-                                                                        class="form-control grand_total_otc"
-                                                                        id="grand_total_otc" readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="total_offer_mrc_{{ $row_no }}"
-                                                                        class="form-control total_offer_mrc"
-                                                                        id="total_offer_mrc" readonly>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                                    <tr>
+                                                        <td colspan="6" rowspan="5"></td>
+                                                        <td colspan="2" style="text-align: right;">Link wise Total
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="client_equipment_total_{{ $row_no }}"
+                                                                    class="form-control client_equipment_total text-right"
+                                                                    id="client_equipment_total"
+                                                                    value="{{ $details->costing->costingLinks->sum('plan_client_equipment_total') }}"
+                                                                    readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="total_otc_{{ $row_no }}"
+                                                                    class="form-control total_otc text-right" id="total_otc[]"
+                                                                    value="{{ $details->costing->costingLinks->sum('otc') }}"
+                                                                    readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="total_roi_{{ $row_no }}"
+                                                                    value="{{ $details->costing->costingLinks->sum('roi') }}"
+                                                                    class="form-control total_roi text-right" id="total_roi"
+                                                                    readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary ">
+                                                                <input type="text"
+                                                                    name="total_offer_otc_{{ $row_no }}"
+                                                                    class="form-control total_offer_otc text-right"
+                                                                    id="total_offer_otc" readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="grand_total_otc_{{ $row_no }}"
+                                                                    class="form-control grand_total_otc text-right"
+                                                                    id="grand_total_otc" readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="total_offer_mrc_{{ $row_no }}"
+                                                                    class="form-control total_offer_mrc text-right"
+                                                                    id="total_offer_mrc" readonly>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
-                                                        <tr>
-                                                            
-                                                            <td colspan="2" style="text-align: right;">Product
-                                                                Equipment</td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="product_equipment_price_{{ $row_no }}"
-                                                                        class="form-control product_equipment_price"
-                                                                        id="product_equipment_price"
-                                                                        value="{{ $details->costing->client_equipment_total }}"
-                                                                        readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="equipment_otc_{{ $row_no }}"
-                                                                        class="form-control"
-                                                                        value="{{ $details->costing->equipment_otc }}"
-                                                                        id="equipment_otc" readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="equipment_roi_{{ $row_no }}"
-                                                                        value="{{ $details->costing->equipment_roi }}"
-                                                                        class="form-control" id="equipment_roi" readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="equipment_offer_price_{{ $row_no }}"
-                                                                        class="form-control equipment_offer_price"
-                                                                        id="equipment_offer_price">
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="equipment_total_otc_{{ $row_no }}"
-                                                                        class="form-control equipment_total_otc"
-                                                                        id="equipment_total_otc" readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="equipment_total_mrc_{{ $row_no }}"
-                                                                        class="form-control equipment_total_mrc"
-                                                                        id="equipment_total_mrc">
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                                    <tr>
+                                                        
+                                                        <td colspan="2" style="text-align: right;">Product
+                                                            Equipment</td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="product_equipment_price_{{ $row_no }}"
+                                                                    class="form-control product_equipment_price text-right"
+                                                                    id="product_equipment_price"
+                                                                    value="{{ $details->costing->client_equipment_total }}"
+                                                                    readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="equipment_otc_{{ $row_no }}"
+                                                                    class="form-control text-right"
+                                                                    value="{{ $details->costing->equipment_otc }}"
+                                                                    id="equipment_otc" readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="equipment_roi_{{ $row_no }}"
+                                                                    value="{{ $details->costing->equipment_roi }}"
+                                                                    class="form-control text-right" id="equipment_roi" readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="equipment_offer_price_{{ $row_no }}"
+                                                                    class="form-control equipment_offer_price text-right"
+                                                                    id="equipment_offer_price">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="equipment_total_otc_{{ $row_no }}"
+                                                                    class="form-control equipment_total_otc text-right"
+                                                                    id="equipment_total_otc" readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="equipment_total_mrc_{{ $row_no }}"
+                                                                    class="form-control equipment_total_mrc text-right"
+                                                                    id="equipment_total_mrc">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
-                                                        <tr>
-                                                            
-                                                            <td colspan="2" style="text-align: right;">Product Price
-                                                            </td>
-                                                            <td colspan="2"></td> 
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="product_amount_{{ $row_no }}"
-                                                                        class="form-control product_price"
-                                                                        value="{{ $details->costing->total_cost_amount }}"
-                                                                        id="product_price" readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td colspan="2"></td> 
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="offer_product_amount_{{ $row_no }}"
-                                                                        class="form-control offer_product_amount"
-                                                                        id="offer_product_amount">
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                                    <tr>
+                                                        
+                                                        <td colspan="2" style="text-align: right;">Product Price
+                                                        </td>
+                                                        <td colspan="2"></td> 
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="product_amount_{{ $row_no }}"
+                                                                    class="form-control product_price text-right"
+                                                                    value="{{ $details->costing->total_cost_amount }}"
+                                                                    id="product_price" readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td colspan="2"></td> 
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="offer_product_amount_{{ $row_no }}"
+                                                                    class="form-control offer_product_amount text-right"
+                                                                    id="offer_product_amount">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
-                                                        <tr>
-                                                            
-                                                            <td colspan="2" style="text-align: right;">Management Cost
-                                                            </td>
-                                                            <td colspan="2"></td> 
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="management_cost_{{ $row_no }}"
-                                                                        class="form-control management_cost"
-                                                                        value="{{ $details->costing->management_cost_amount }}"
-                                                                        id="management_cost" readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td colspan="2"></td> 
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="offer_management_cost_{{ $row_no }}"
-                                                                        value="{{ $details->costing->management_cost_amount }} "
-                                                                        class="form-control offer_management_cost"
-                                                                        id="offer_management_cost" readonly>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                                    <tr>
+                                                        
+                                                        <td colspan="2" style="text-align: right;">Management Cost
+                                                        </td>
+                                                        <td colspan="2"></td> 
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="management_cost_{{ $row_no }}"
+                                                                    class="form-control management_cost text-right"
+                                                                    value="{{ $details->costing->management_cost_amount }}"
+                                                                    id="management_cost" readonly>
+                                                            </div>
+                                                        </td>
+                                                        <td colspan="2"></td> 
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="offer_management_cost_{{ $row_no }}"
+                                                                    value="{{ $details->costing->management_cost_amount }} "
+                                                                    class="form-control offer_management_cost text-right"
+                                                                    id="offer_management_cost" readonly>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
-                                                        <tr>
-                                                            
-                                                            <td colspan="2" style="text-align: right;">Total Price</td>
-                                                            <td colspan="5"></td> 
-                                                            <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="grand_total_{{ $row_no }}"
-                                                                        class="form-control grand_total" id="grand_total"
-                                                                        readonly>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                @endforeach
+                                                    <tr>
+                                                        
+                                                        <td colspan="2" style="text-align: right;">Total Price</td>
+                                                        <td colspan="5"></td> 
+                                                        <td>
+                                                            <div
+                                                                class="input-group input-group-sm input-group-primary">
+                                                                <input type="text"
+                                                                    name="grand_total_{{ $row_no }}"
+                                                                    class="form-control grand_total text-right" id="grand_total"
+                                                                    readonly>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
+                                                </tbody>
                                             </table>
                                         </div>
-
                                     </div>
-
                                 </div>
                             @endif
                         @endforeach
