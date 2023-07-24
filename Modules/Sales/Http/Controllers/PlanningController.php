@@ -161,6 +161,7 @@ class PlanningController extends Controller
         for ($i = 1; $i <= $request->total_key; $i++) {
             $plan_link_data['link_type'] = request("link_type_{$i}");
             $plan_link_data['existing_infrastructure'] = request("existing_infrastructure_{$i}");
+            $plan_link_data['existing_infrastructure_link'] = request("existing_infrastructure_link_{$i}");
             $plan_link_data['option'] = request("option_{$i}");
             $plan_link_data['existing_transmission_capacity'] = request("existing_transmission_capacity_{$i}");
             $plan_link_data['increase_capacity'] = request("increase_capacity_{$i}");

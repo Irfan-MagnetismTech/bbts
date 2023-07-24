@@ -702,6 +702,8 @@
                 $(this).closest('tr').find('.link_unit').val(find_material.unit);
             });
 
+            let link_array = [];
+
             $('.existing_infrastructure').on('change', function() {
                 var this_event = $(this);
                 var value = this_event.val();
@@ -715,27 +717,48 @@
                             _token: "{{ csrf_token() }}"
                         },
                         success: function(data) {
-
-                            this_event.closest('.main_link').find('.link_list').css(
-                                'display',
-                                'block');
+                            this_event.closest('.main_link').find('.link_list').css('display', 'block');
                             var html = '<option value="">Select Link</option>';
                             $.each(data, function(key, item) {
                                 $.each(item, function(key, value) {
+                                    link_array.push(value);
                                     html += '<option value="' + value.bbts_link_id + '">' +
-                                        value
-                                        .bbts_link_id + '</option>';
+                                        value.bbts_link_id + '</option>';
                                 });
                             });
-                            this_event.closest('.main_link').find('.existing_infrastructure_link')
-                                .html(html);
+                            this_event.closest('.main_link').find('.existing_infrastructure_link').html(
+                                html);
                         }
                     });
-                }else{
-                    this_event.closest('.main_link').find('.link_list').css(
-                                'display',
-                                'none');
+                } else {
+                    this_event.closest('.main_link').find('.link_list').css('display', 'none');
                 }
-            })
+            });
+
+            $('.existing_infrastructure_link').on('change', function() {
+                console.log(link_array);
+                var this_event = $(this);
+                var value = this_event.val();
+
+                // Filter the link_array to find the link with the selected 'bbts_link_id'
+                var link = link_array.filter(function(item) {
+                    return item.bbts_link_id == value;
+                });
+
+                // Sort the link array based on the 'created_at' date in descending order (latest date first)
+                link.sort(function(a, b) {
+                    // Convert the dates to JavaScript Date objects for comparison
+                    const dateA = new Date(a.created_at);
+                    const dateB = new Date(b.created_at);
+                    // Sort in descending order
+                    return dateB - dateA;
+                });
+
+                // Access the link with the latest date (first element of the sorted array)
+                const latestLink = link[0];
+                console.log('latestLink', latestLink);
+                this_event.closest('.main_link').find('.existing_transmission_capacity').val(latestLink.capacity).attr(
+                    'value', latestLink.capacity);
+            });
         </script>
     @endsection

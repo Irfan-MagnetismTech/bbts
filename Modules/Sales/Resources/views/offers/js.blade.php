@@ -16,30 +16,26 @@
         var total_amount = parseFloat(offer_otc) + parseFloat(client_equipment_amount);
         $(this).closest('tr').find('.total_cost_otc').val(total_amount);
         $(this).val(offer_otc);
-        var total_otc = 0;
-        var total_cost_otc = 0;
-
-        //otc calculation
-        var total_otc = $(this).closest('tr').find('.offer_otc').val();
-        console.log('total_otc', total_otc)
-        var row = $(this).closest('.mainRow').find('.total_offer_otc').val(total_otc);
-        console.log('row', row)
-        var total_cost_otc = $(this).closest('tr').find('.total_cost_otc').val();
-        console.log('total_cost_otc', total_cost_otc)
-        $(this).closest('.mainRow').find('.grand_total_otc').val(total_cost_otc);
-        // calculateTotalOtc($(this));
+        calculateTotalOtc($(this));
     });
 
 
 
     function calculateTotalOtc(event) {
-
-
-        //total cost calculation
-        // event.closest('tr').find('.total_cost_otc').each(function() {
-        //     total_cost_otc += parseFloat($(this).val());
-        // });
-        // event.closest('.offer_details_row').find('.grand_total_otc').val(total_cost_otc);
+        var total_otc = 0;
+        var total_cost_otc = 0;
+        event.closest('.mainRow').find('.offer_otc').each(function() {
+            let offer_otc = $(this).val() ? $(this).val() : 0;
+            total_otc += parseFloat(offer_otc);
+        });
+        event.closest('.mainRow').find('.total_cost_otc').each(function() {
+            let cost_otc = $(this).val() ? $(this).val() : 0;
+            total_cost_otc += parseFloat(cost_otc);
+        });
+        event.closest('.mainRow').find('.total_offer_otc').val(total_otc);
+        event.closest('.mainRow').find('.grand_total_otc').val(total_cost_otc);
+        console.log('total_otc', total_otc)
+        console.log('total_cost_otc', total_cost_otc)
     }
 
     $('.offer_mrc').on('input', function() {
@@ -48,10 +44,10 @@
     });
 
     function calculateTotalMrc(event) {
-        console.log('fine')
         var total_offer_mrc = 0
-        event.closest('tr').find('.offer_mrc').each(function() {
-            total_offer_mrc += parseFloat($(this).val());
+        event.closest('.mainRow').find('.offer_mrc').each(function() {
+            let offer_mrc = $(this).val() ? $(this).val() : 0;
+            total_offer_mrc += parseFloat(offer_mrc);
         });
         console.log(total_offer_mrc)
         event.closest('.mainRow').find('.total_offer_mrc').val(total_offer_mrc);
