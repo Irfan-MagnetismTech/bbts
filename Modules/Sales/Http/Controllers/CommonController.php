@@ -39,6 +39,7 @@ class CommonController extends Controller
             return [
                 'bbts_link_id' => $connectivity_link->bbts_link_id,
                 'capacity' => $connectivity_link->new_capacity,
+                'created_at' => $connectivity_link->created_at->format('d-m-Y'),
             ];
         });
         return response()->json([

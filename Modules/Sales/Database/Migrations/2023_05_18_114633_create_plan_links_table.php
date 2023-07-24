@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('link_type')->nullable();
             $table->string('link_no')->nullable();
             $table->string(('existing_infrastructure'))->nullable();
+            $table->string('existing_infrastructure_link')->nullable();
             $table->string('option')->nullable();
             $table->integer('existing_transmission_capacity')->nullable();
             $table->integer('increase_capacity')->nullable();
