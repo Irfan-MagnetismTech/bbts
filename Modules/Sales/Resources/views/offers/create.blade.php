@@ -66,30 +66,32 @@
                             @if ($details->costing)
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="tableHeading">
-                                            <h5> <span> &#10070; </span> FR NO - {{ $details->fr_no }} <span>&#10070;</span>
+                                        <div class="tableHeading" style="background-color: #024FA7">
+                                            <h5> <span> &#10070; </span> {{ $details->connectivity_point }} ({{ $details->fr_no }}) <span>&#10070;</span>
                                             </h5>
                                             <input type="hidden" name="fr_no_{{ $row_no }}"
                                                 value="{{ $details->fr_no }}">
                                             <input type="hidden" name="row_no" value="{{ $row_no }}">
                                         </div>
                                         <div class="table-responsive">
-                                            <table class="table table-bordered table-striped">
+                                            <table class="table table-bordered ">
                                                 <thead>
-                                                    <th>Select</th>
-                                                    <th>Link Type</th>
-                                                    <th>Option</th>
-                                                    <th>Existing/New</th>
-                                                    <th>Method</th>
-                                                    <th>Vendor</th>
-                                                    <th>BBTS/POP/LDP</th>
-                                                    <th>Distance</th>
-                                                    <th>Client <br> Equipment</th>
-                                                    <th>OTC</th>
-                                                    <th>Mo <br> Cost</th>
-                                                    <th>Offer <br> OTC</th>
-                                                    <th>Total <br> OTC</th>
-                                                    <th>Offer <br> MRC</th>
+                                                    <tr>
+                                                        <th style="background-color:#057097" >Select</th>
+                                                        <th style="background-color:#057097">Link Type</th>
+                                                        <th style="background-color:#057097">Option</th>
+                                                        <th style="background-color:#057097">Existing/New</th>
+                                                        <th style="background-color:#057097">Method</th>
+                                                        <th style="background-color:#057097">Vendor</th>
+                                                        <th style="background-color:#057097">BBTS/POP/LDP</th>
+                                                        <th style="background-color:#057097">Distance</th>
+                                                        <th style="background-color:#057097">Client <br> Equipment</th>
+                                                        <th style="background-color:#057097">OTC</th>
+                                                        <th style="background-color:#057097">Mo <br> Cost</th>
+                                                        <th style="background-color:#057097">Offer <br> OTC</th>
+                                                        <th style="background-color:#057097">Total <br> OTC</th>
+                                                        <th style="background-color:#057097">Offer <br> MRC</th>
+                                                    </tr>
                                                 </thead>
 
                                                 @foreach ($details->costing->costingLinks as $key => $link)
@@ -133,7 +135,7 @@
                                                                     <input type="text"
                                                                         name="existing_or_new_{{ $row_no }}[]"
                                                                         class="form-control"
-                                                                        value="{{ $link->finalSurveyDetails->planLinks->existing_infrastructure }}"
+                                                                        value="{{ $link->finalSurveyDetails->planLinks->existing_infrastructure ?? ''}}"
                                                                         id="existingOrNew" readonly>
                                                                 </div>
                                                             </td>
@@ -228,7 +230,8 @@
                                                         </tr>
 
                                                         <tr>
-                                                            <td colspan="8" style="text-align: right;">Link wise Total
+                                                            <td colspan="6" rowspan="5"></td>
+                                                            <td colspan="2" style="text-align: right;">Link wise Total
                                                             </td>
                                                             <td>
                                                                 <div
@@ -291,7 +294,8 @@
                                                         </tr>
 
                                                         <tr>
-                                                            <td colspan="8" style="text-align: right;">Product
+                                                            
+                                                            <td colspan="2" style="text-align: right;">Product
                                                                 Equipment</td>
                                                             <td>
                                                                 <div
@@ -353,10 +357,10 @@
                                                         </tr>
 
                                                         <tr>
-                                                            <td colspan="8" style="text-align: right;">Product Price
+                                                            
+                                                            <td colspan="2" style="text-align: right;">Product Price
                                                             </td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td colspan="2"></td> 
                                                             <td>
                                                                 <div
                                                                     class="input-group input-group-sm input-group-primary">
@@ -367,8 +371,7 @@
                                                                         id="product_price" readonly>
                                                                 </div>
                                                             </td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td colspan="2"></td> 
                                                             <td>
                                                                 <div
                                                                     class="input-group input-group-sm input-group-primary">
@@ -381,10 +384,10 @@
                                                         </tr>
 
                                                         <tr>
-                                                            <td colspan="8" style="text-align: right;">Management Cost
+                                                            
+                                                            <td colspan="2" style="text-align: right;">Management Cost
                                                             </td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td colspan="2"></td> 
                                                             <td>
                                                                 <div
                                                                     class="input-group input-group-sm input-group-primary">
@@ -395,8 +398,7 @@
                                                                         id="management_cost" readonly>
                                                                 </div>
                                                             </td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            <td colspan="2"></td> 
                                                             <td>
                                                                 <div
                                                                     class="input-group input-group-sm input-group-primary">
@@ -410,12 +412,9 @@
                                                         </tr>
 
                                                         <tr>
-                                                            <td colspan="8" style="text-align: right;">Total Price</td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
-                                                            <td></td>
+                                                            
+                                                            <td colspan="2" style="text-align: right;">Total Price</td>
+                                                            <td colspan="5"></td> 
                                                             <td>
                                                                 <div
                                                                     class="input-group input-group-sm input-group-primary">
