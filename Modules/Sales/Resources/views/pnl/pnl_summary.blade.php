@@ -10,7 +10,7 @@
 @section('content')
     <div class="row mb-1">
         <div class="col-12 text-center">
-            <h2>Profit and Loss Statement</h2>
+            <h2>PNL Summary</h2>
             <hr />
         </div>
     </div>
@@ -18,7 +18,7 @@
         <table class="table table-bordered table-hover">
             <thead>
                 <tr class="text-center">
-                    <th>Link Name</th>
+                    <th>Connectivity Point Name</th>
                     <th>Total Inv</th>
                     <th>OTC</th>
                     <th>Equipment Price</th>
@@ -49,8 +49,26 @@
                             $total_monthly_pnl += $details->offerDetail->grand_total - $details->costing->management_cost_amount;
                             $total_pnl += ($details->offerDetail->grand_total - $details->costing->management_cost_amount) * $details->costing->month;
                         @endphp
+                        <tr>
+                            <td class="text-left">{{ $details->connectivity_point }} ({{ $details->fr_no }})</td>
+                            <td>{{ $details->costing->total_investment }}</td>
+                            <td>{{ $details->costing->total_otc }}</td>
+                            <td>{{ $details->costing->equipment_price_for_client }}</td>
+                            <td>{{ $details->costing->total_otc_with_client_equipment }}</td>
+                            <td>{{ $details->costing->product_total_cost }}</td>
+                            <td>{{ $details->costing->total_service_cost }}</td>
+                            <td>{{ $details->costing->management_cost_amount }}</td>
+                            <td>{{ $details->costing->management_cost_total }}</td>
+                            <td>{{ $details->costing->management_cost_total * $details->costing->month }}</td>
+                            <td>{{ $details->offerDetail->grand_total }}</td>
+                            <td>{{ $details->offerDetail->grand_total * $details->costing->month }}</td>
+                            <td>{{ $details->offerDetail->grand_total - $details->costing->management_cost_amount }}
+                            </td>
+                            <td>{{ ($details->offerDetail->grand_total - $details->costing->management_cost_amount) * $details->costing->month }}
+                            </td>
+                        </tr>
                         @foreach ($details->costing->costingProducts as $product)
-                            <tr>
+                            {{-- <tr>
                                 <td>{{ $details->fr_no }}</td>
                                 <td>{{ $details->costing->total_investment }}</td>
                                 <td>{{ $details->costing->total_otc }}</td>
@@ -67,17 +85,17 @@
                                 </td>
                                 <td>{{ ($details->offerDetail->grand_total - $details->costing->management_cost_amount) * $details->costing->month }}
                                 </td>
-                            </tr>
+                            </tr> --}}
                         @endforeach
                     @endif
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right">Total</td>
-                    <td class="text-center">{{ $details->costing->sum('total_otc_with_client_equipment') }}</td>
+                    <td colspan="4" class="text-right">Total </td>
+                    {{-- <td class="text-center">{{ $details->costing->sum('total_otc_with_client_equipment') }}</td> --}}
                     <td colspan="2"></td>
-                    <td class="text-center">{{ $details->costing->sum('management_cost_amount') }}</td>
+                    {{-- <td class="text-center">{{ $details->costing->sum('management_cost_amount') }}</td> --}}
 
                     <td></td>
                     <td class="text-center">{{ $total_budget }}</td>

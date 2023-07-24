@@ -317,8 +317,12 @@ class SaleController extends Controller
 
     public function pnlSummary($mq_no = null)
     {
-        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')->where('mq_no', $mq_no)->first();
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')
+        // ->withSum('feasibilityRequirementDetails.costing', 'total_otc_with_client_equipment')
+        ->where('mq_no', $mq_no)->first();
         $sale = Sale::where('mq_no', $mq_no)->first();
+
+        // dd($feasibility_requirement);
         return view('sales::pnl.pnl_summary', compact('feasibility_requirement', 'mq_no', 'sale'));
     }
 
@@ -328,11 +332,14 @@ class SaleController extends Controller
             ->where('mq_no', $mq_no)->first();
         if ($feasibility_requirement) {
             $feasibility_requirement->feasibilityRequirementDetails->map(function ($item) {
-                $item->costing->costingProducts->map(function ($item) {
+                if($item->costing){
+                    $item->costing->costingProducts->map(function ($item) {
                     $item->sale_product = SaleProductDetail::where('product_id', $item->product_id)->where('fr_no', $item->fr_no)->first();
                     return $item;
                 });
                 return $item;
+                }
+                
             });
         }
         return view('sales::pnl.pnl_details', compact('feasibility_requirement', 'mq_no'));
