@@ -66,7 +66,7 @@
                                                 <div class="col-2">
                                                     <select name="billing_address_id[${indx}]">`
                     item.billing_address.forEach(ele => {
-                        appendedData +=`<option ele="${ele.id}">${ele.address}</option>`
+                        appendedData +=`<option value="${ele.id}">${ele.address}</option>`
                     })
                     appendedData +=  `</select>
                                                 </div>
@@ -74,12 +74,12 @@
                                                 <div class="col-2">
                                         <select name="collection_address_id[${indx}]">`
                     item.collection_address.forEach(ele => {
-                        appendedData +=`<option ele="${ele.id}">${ele.address}</option>`
+                        appendedData +=`<option value="${ele.id}">${ele.address}</option>`
                     })
                     appendedData +=   `</select>
                                                 </div>
                                                 <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','${element.fr_no}',this)"></i></span>
-                                                <x-input-box colGrid="3" type="date" name="bill_payment_date[${indx}]" value="{{ $bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
+                                                <x-input-box colGrid="3" name="bill_payment_date[${indx}]" value="{{ $bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
                                                 <div class="col-3">
                                                     <div class="form-check-inline">
                                                         <label class="form-check-label" for="prepaid_${+indx}">
