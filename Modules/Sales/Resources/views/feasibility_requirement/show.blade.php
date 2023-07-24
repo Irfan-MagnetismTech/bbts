@@ -119,42 +119,42 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item?->district?->name ?? '' !!}</span>
+                                                    <span class="form-control">{!! $item?->district?->name ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item?->thana?->name ?? '' !!}</span>
+                                                    <span class="form-control">{!! $item?->thana?->name ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->location ?? '' !!}</span>
+                                                    <span class="form-control">{!! $item->location ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->lat ?? '' !!}</span>
+                                                    <span class="form-control">{!! $item->lat ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->long ?? '' !!}</span>
+                                                    <span class="form-control">{!! $item->long ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->contact_name ?? '' !!}</span>
+                                                    <span class="form-control">{!! $item->contact_name ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->contact_designation ?? '' !!}</span>
+                                                    <span class="form-control">{!! $item->contact_designation ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->contact_number ?? '' !!}</span>
+                                                    <span class="form-control">{!! $item->contact_number ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
