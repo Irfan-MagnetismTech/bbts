@@ -373,8 +373,10 @@ class SaleController extends Controller
             $cpe_data = CostingProductEquipment::whereHas('costing', function ($qr) use ($values) {
                 $qr->where("fr_no", $values->fr_no)->where('ownership', 'Client');
             })->get();
-
             $saleData = SaleDetail::where('fr_no', $values->fr_no)->get()->first();
+            if (!$saleData) {
+                continue;
+            }
             $otc_lines_data = [];
             $equipment_amount = 0;
 
