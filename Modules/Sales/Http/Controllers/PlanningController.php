@@ -3,6 +3,7 @@
 namespace Modules\Sales\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\Product;
@@ -20,6 +21,7 @@ use Modules\Sales\Entities\Survey;
 use Modules\Sales\Entities\PlanLinkEquipment;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Brand;
+use Modules\Sales\Entities\Vendor;
 use Modules\SCM\Entities\Material;
 
 class PlanningController extends Controller
@@ -47,7 +49,8 @@ class PlanningController extends Controller
         $particulars = Product::get();
         $materials = Material::get();
         $brands = Brand::get();
-        return view('sales::planning.create', compact('feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands'));
+        $vendors = Vendor::get();
+        return view('sales::planning.create', compact('feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors'));
     }
 
     /**
@@ -121,9 +124,14 @@ class PlanningController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Planning $planning)
     {
-        //
+        try {
+            $planning->delete();
+            return redirect()->route('planning.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('planning.index')->withErrors($e->getMessage());
+        }
     }
 
     private function createServicePlans($request, $plan)
@@ -155,6 +163,7 @@ class PlanningController extends Controller
         for ($i = 1; $i <= $request->total_key; $i++) {
             $plan_link_data['link_type'] = request("link_type_{$i}");
             $plan_link_data['existing_infrastructure'] = request("existing_infrastructure_{$i}");
+            $plan_link_data['existing_infrastructure_link'] = request("existing_infrastructure_link_{$i}");
             $plan_link_data['option'] = request("option_{$i}");
             $plan_link_data['existing_transmission_capacity'] = request("existing_transmission_capacity_{$i}");
             $plan_link_data['increase_capacity'] = request("increase_capacity_{$i}");

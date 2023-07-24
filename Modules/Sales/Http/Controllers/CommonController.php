@@ -29,4 +29,21 @@ class CommonController extends Controller
             'connectivity_links' => $links,
         ]);
     }
+
+    public function getExistingLinkList(Request $request)
+    {
+        $pop_id = $request->pop_id;
+
+        $connectivity_links = ConnectivityLink::with('vendor')->where('to_pop_id', $pop_id)->orWhere('from_pop_id', $pop_id)->latest()->get();
+        $connectivity_links = $connectivity_links->map(function ($connectivity_link, $key) {
+            return [
+                'bbts_link_id' => $connectivity_link->bbts_link_id,
+                'capacity' => $connectivity_link->new_capacity,
+                'created_at' => $connectivity_link->created_at->format('d-m-Y'),
+            ];
+        });
+        return response()->json([
+            'connectivity_links' => $connectivity_links,
+        ]);
+    }
 }

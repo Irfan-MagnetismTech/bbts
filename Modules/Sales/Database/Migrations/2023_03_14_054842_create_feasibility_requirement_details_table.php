@@ -20,6 +20,7 @@ return new class extends Migration
                 ->references('id')->on('feasibility_requirements')
                 ->onDelete('cascade');
             $table->string('client_no');
+            $table->string('aggregation_type');
             $table->string('fr_no')->nullable();
             $table->string('connectivity_point')->nullable();
             $table->string('agreegation_type')->nullable();

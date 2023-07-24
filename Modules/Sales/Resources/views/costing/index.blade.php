@@ -56,7 +56,7 @@
                         <td>{{ $costing->lead_generation->client_name }}</td>
                         <td>{{ $costing->client_no }}</td>
                         <td>{{ $costing->mq_no }}</td>
-                        <td>{{ $costing->fr_no }}</td>
+                        <td>{{ $costing->planning->feasibilityRequirementDetail->connectivity_point }} ({{ $costing->fr_no }})</td>
                         <td>{{ number_format($costing->total_investment / $costing->month, 2) }}</td>
                         <td>{{ $costing->total_mrc }}</td>
                         <td>
