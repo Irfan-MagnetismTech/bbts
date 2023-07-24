@@ -64,22 +64,27 @@
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[${indx}]" value="{{ $delivery_date ?? '' }}" label="Delivery Date" class="date"/>
                                                 <div class="col-2">
+                                                    <div class="row">
+                                                    <div class="col-10">
                                                     <select name="billing_address_id[${indx}]">`
                     item.billing_address.forEach(ele => {
                         appendedData +=`<option value="${ele.id}">${ele.address}</option>`
                     })
-                    appendedData +=  `</select>
-                                                </div>
+                    appendedData +=  `</select></div><div class="col-2">
+                                                
                                                 <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add" onClick="ShowModal('billing','${element.fr_no}',this)"></i></span>
+                                            </div></div></div>
                                                 <div class="col-2">
+                                                    <div class="row">
+                                                    <div class="col-10">
                                         <select name="collection_address_id[${indx}]">`
                     item.collection_address.forEach(ele => {
                         appendedData +=`<option value="${ele.id}">${ele.address}</option>`
                     })
-                    appendedData +=   `</select>
-                                                </div>
+                    appendedData +=   `</select></div><div class="col-2">
                                                 <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','${element.fr_no}',this)"></i></span>
                                                 <x-input-box colGrid="3" name="bill_payment_date[${indx}]" value="{{ $bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
+                                            </div></div></div>
                                                 <div class="col-3">
                                                     <div class="form-check-inline">
                                                         <label class="form-check-label" for="prepaid_${+indx}">
