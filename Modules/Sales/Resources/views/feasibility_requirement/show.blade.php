@@ -109,57 +109,57 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->connectivity_point }}</span>
+                                                    <span class="form-control">{!! $item->connectivity_point ?? '&nbsp;' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item?->division?->name }}</span>
+                                                    <span class="form-control">{!! $item?->division?->name ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item?->district?->name }}</span>
+                                                    <span class="form-control">{!! $item?->district?->name ?? '' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item?->thana?->name }}</span>
+                                                    <span class="form-control">{!! $item?->thana?->name ?? '' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->location }}</span>
+                                                    <span class="form-control">{!! $item->location ?? '' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->lat }}</span>
+                                                    <span class="form-control">{!! $item->lat ?? '' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->long }}</span>
+                                                    <span class="form-control">{!! $item->long ?? '' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->contact_name }}</span>
+                                                    <span class="form-control">{!! $item->contact_name ?? '' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->contact_designation }}</span>
+                                                    <span class="form-control">{!! $item->contact_designation ?? '' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->contact_number }}</span>
+                                                    <span class="form-control">{!! $item->contact_number ?? '' !!}</span>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->contact_email }}</span>
+                                                    <span class="form-control">{!! $item->contact_email ?? '&nbsp;' !!}</span>
                                                 </div>
                                             </td>
                                             <td>

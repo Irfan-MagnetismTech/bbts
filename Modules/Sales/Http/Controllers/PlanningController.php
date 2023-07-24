@@ -21,6 +21,7 @@ use Modules\Sales\Entities\Survey;
 use Modules\Sales\Entities\PlanLinkEquipment;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Brand;
+use Modules\Sales\Entities\Vendor;
 use Modules\SCM\Entities\Material;
 
 class PlanningController extends Controller
@@ -48,7 +49,8 @@ class PlanningController extends Controller
         $particulars = Product::get();
         $materials = Material::get();
         $brands = Brand::get();
-        return view('sales::planning.create', compact('feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands'));
+        $vendors = Vendor::get();
+        return view('sales::planning.create', compact('feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors'));
     }
 
     /**

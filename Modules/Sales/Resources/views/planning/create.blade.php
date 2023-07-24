@@ -311,9 +311,10 @@
                                     <div class="form-item">
                                         <select name="link_availability_status_1" id="link_availability_status"
                                             class="form-control form-control-sm link_availability_status">
-                                            <option value="">Select Status</option>
-                                            <option value="Available">Available</option>
-                                            <option value="Not Available">Not Available</option>
+                                            <option value="">Select Vendor</option>
+                                            @foreach ($vendors as $vendor)
+                                                <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
+                                            @endforeach
                                         </select>
                                         <label for="type">New Transmission Link</label>
                                     </div>
