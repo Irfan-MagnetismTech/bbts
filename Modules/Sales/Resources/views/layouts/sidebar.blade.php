@@ -177,6 +177,28 @@
         </ul>
     </li>
 
+    <li class="pcoded-hasmenu {{ request()->routeIs(['client-profile.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-mtext">Clients</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('client-profile.create') ? 'active' : null }}">
+                <a href="{{ route('client-profile.create') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Add New</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('client-profile.index') ? 'active' : null }}">
+                <a href="{{ route('client-profile.create') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Client List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
+
     <li class="pcoded-hasmenu {{ request()->routeIs(['sales.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
