@@ -94,10 +94,10 @@
                 </ul>
             </li>
         </ul>
-        @include('scm::layouts.sidebar')
+        @include('sales::layouts.sidebar') 
         @include('ticketing::layouts.sidebar')
-        @include('sales::layouts.sidebar')
         @include('networking::layouts.sidebar')
+        @include('scm::layouts.sidebar')
         @include('billing::layouts.sidebar')
         <div class="p-5"></div>
     </div>

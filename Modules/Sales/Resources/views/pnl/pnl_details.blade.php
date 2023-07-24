@@ -12,7 +12,7 @@
 @section('content')
     <div>
         @foreach ($feasibility_requirement->feasibilityRequirementDetails as $details)
-            @if ($details->costing)
+            @if ($details->costing && $details->costing->saleDetail)
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -85,6 +85,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{-- @dd($details->costing->total_investment, $details->costing->saleDetail->otc); --}}
                             @php $product_roi = ($details->costing->total_investment - $details->costing->saleDetail->otc) / 12 ;  @endphp
                             <tr>
                                 <td>Product Equipment</td>

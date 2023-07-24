@@ -115,6 +115,7 @@ class BillGenerateController extends Controller
         return PDF::loadView('billing::billGenerate.pdf', ['billData' => $billData], [], [
             'format'                     => 'A4',
             'orientation'                => 'L',
+            'title'                      => 'OTC Bill',
         ])->stream('bill.pdf');
         return view('billing::billGenerate.pdf', compact('billData'));
     }
