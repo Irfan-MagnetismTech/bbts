@@ -48,7 +48,7 @@
                                 <nobr>
                                     <a href="{{ route('errs.show', $err->id) }}" data-toggle="tooltip" title="Show"
                                         class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    @if (!$scmMur->isDeleteable())
+                                    {{-- @if (!$scmMur->isDeleteable()) --}}
                                         <a href="{{ route('errs.edit', $err->id) }}" data-toggle="tooltip" title="Edit"
                                             class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                         {!! Form::open([
@@ -60,7 +60,7 @@
                                         ]) !!}
                                         {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
                                         {!! Form::close() !!}
-                                    @endif
+                                    {{-- @endif --}}
                                 </nobr>
                             </div>
                         </td>
