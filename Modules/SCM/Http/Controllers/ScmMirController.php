@@ -92,10 +92,10 @@ class ScmMirController extends Controller
             $mir->stockable()->createMany($stock_ledgers);
             DB::commit();
 
-            return redirect()->route('material-issues.create')->with('success', 'MIR Created Successfully');
+            return redirect()->route('material-issues.index')->with('success', 'MIR Created Successfully');
         } catch (Exception $err) {
             DB::rollBack();
-            return redirect()->route('material-issues.create')->with('error', $err->getMessage());
+            return redirect()->back()->with('error', $err->getMessage());
         }
     }
 
