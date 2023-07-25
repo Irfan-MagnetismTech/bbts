@@ -56,6 +56,9 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
+                                    <a href="{{ route('material-utilizations.edit', $scmMur->id) }}"
+                                        data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
+                                            class="fas fa-pen"></i></a>
                                     @if (!$scmMur->isDeleteable())
                                         <a href="{{ route('material-utilizations.edit', $scmMur->id) }}"
                                             data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i

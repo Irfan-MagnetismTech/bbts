@@ -10,7 +10,7 @@
     
     $type = $is_old ? old('type') : (!empty($material_utilization) ? $material_utilization->type : (!empty($challanData) ? $challanData->type: null));
     $date = $is_old ? old('date') : (!empty($material_utilization) ? $material_utilization->date : now());
-    $purpose = $is_old ? old('purpose') : (!empty($material_utilization) ? $material_utilization->purpose : null);
+    $purpose = $is_old ? old('purpose') : (!empty($material_utilization) ? $material_utilization->purpose : (!empty($challanData) ? $challanData->purpose : null));
     $challan_no = $is_old ? old('challan_no') : (!empty($material_utilization) ? $material_utilization?->challan?->challan_no : (!empty($challanData) ? $challanData->type: null));
     $challan_id = $is_old ? old('challan_id') : (!empty($material_utilization) ? $material_utilization?->challan_id : (!empty($challanData) ? $challanData->id: null));
     $challan_date = $is_old ? old('challan_date') : (!empty($material_utilization) ? $material_utilization?->challan?->date : (!empty($challanData) ? $challanData->date: null));
@@ -93,8 +93,7 @@
                 <div class="form-group col-3">
                     <label for="purpose">Purpose</label>
                     <input type="text" class="form-control" id="purpose" aria-describedby="purpose"
-                        name="purpose" value="{{ old('purpose') ?? ($purpose ?? '') }}"
-                        placeholder="Search...">
+                        name="purpose" value="{{ old('purpose') ?? ($purpose ?? '') }}">
                     {{-- <select class="form-control select2" id="purpose" name="purpose">
                         <option value="" selected>Select Purpose</option>
                         @foreach (config('businessinfo.challanPurpose') as $key => $value)
