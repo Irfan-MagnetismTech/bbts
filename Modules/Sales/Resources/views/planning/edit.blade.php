@@ -3,9 +3,9 @@
 
 @php
     $is_old = old() ? true : false;
-    $form_heading = !empty($planning->id) ? 'Edit' : 'Create';
-    $form_url = !empty($planning->id) ? route('planning.update', $planning->id) : route('planning.store');
-    $form_method = !empty($planning->id) ? 'PUT' : 'POST';
+    $form_heading = 'Edit';
+    $form_url = route('planning.update', $plan->id);
+    $form_method = 'PUT';
 @endphp
 
 @section('breadcrumb-title')
@@ -124,12 +124,12 @@
                                                         class="form-control form-control-sm"
                                                         value="{{ $service_plan->id ?? '' }}">
                                                     <span
-                                                        class="form-control form-control-sm">{{ $service_plan->product->name ?? '' }}</span>
+                                                        class="form-control form-control-sm">{{ $service_plan->connectivityProductRequirementDetails->product->name ?? '' }}</span>
 
                                                 </td>
                                                 <td>
                                                     <span
-                                                        class="form-control form-control-sm">{{ $service_plan->capacity ?? '' }}</span>
+                                                        class="form-control form-control-sm">{{ $service_plan->connectivityProductRequirementDetails->capacity ?? '' }}</span>
                                                 </td>
                                                 <td>
                                                     <input type="text" name="plan[]" id="plan"
@@ -138,7 +138,7 @@
                                                 </td>
                                                 <td style="width:30%">
                                                     <span
-                                                        class="form-control form-control-sm">{{ $service_plan->remarks ?? '' }}</span>
+                                                        class="form-control form-control-sm">{{ $service_plan->connectivityProductRequirementDetails->remarks ?? '' }}</span>
                                                 </td>
                                                 <td>
                                                     <button type="button"
@@ -179,7 +179,7 @@
                                                         <option value="">Select Equipment</option>
                                                         @foreach ($materials as $material)
                                                             <option value="{{ $material->id }}"
-                                                                {{ $equipment_plan->equipment_id == $material->id ? 'selected' : '' }}>
+                                                                {{ $equipment_plan->material_id == $material->id ? 'selected' : '' }}>
                                                                 {{ $material->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -247,7 +247,7 @@
                             @php $total_key = $key + 1; @endphp
                             <div class="main_link">
                                 <h5 class="text-center mb-2">Link <span class="link_no">{{ $total_key }}</span></h5>
-                                <hr/>
+                                <hr />
                                 <div class="row">
                                     <div class="md-col-3 col-3">
                                         <div class="form-item">
