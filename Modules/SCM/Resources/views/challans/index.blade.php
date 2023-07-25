@@ -68,9 +68,12 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
-                                    @if(in_array($challan->type, ['client', 'pop']))
+                                    @if(in_array($challan->type, ['client', 'pop']) && !($challan->mur))
                                     <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-secondary">MUR</a>
+                                        title="Create MUR" class="btn btn-outline-secondary">Create MUR</a>
+                                    @else
+                                    <a href="{{ route('material-utilizations.edit', $challan->mur->id) }}"
+                                        data-toggle="tooltip" title="Edit MUR" class="btn btn-outline-warning">Edit MUR</a>
                                     @endif
                                 </nobr>
                             </div>
