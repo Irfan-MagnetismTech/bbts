@@ -180,10 +180,10 @@
                 var client_id = $(this).val();
                 var clients = JSON.parse('{!! json_encode($clients) !!}');
                 var client = clients.find(client => client.id == client_id);
-                $('#contact_person').val(client.contact_person);
-                $('#designation').val(client.designation);
-                $('#contact_number').val(client.contact_no);
-                $('#email').val(client.email);
+                $('#contact_person').val(client.contact_person).attr('value', client.contact_person)
+                $('#designation').val(client.designation).attr('value', client.designation)
+                $('#contact_number').val(client.contact_no).attr('value', client.contact_no)
+                $('#email').val(client.email).attr('value', client.email)
             })
 
             $('.select2').select2();
