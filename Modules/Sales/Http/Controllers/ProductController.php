@@ -22,8 +22,9 @@ class ProductController extends Controller
             'user' => 'User',
             'pcs' => 'PCS',
             'tb' => 'TB',
+            'job' => 'JOB',
         ];
-        $products = Product::all();
+        $products = Product::latest()->get();
         return view('sales::settings.product.create', compact('categories', 'units', 'products'));
     }
 
