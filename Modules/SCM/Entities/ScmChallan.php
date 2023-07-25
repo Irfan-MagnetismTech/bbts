@@ -4,6 +4,7 @@ namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
 use Modules\Admin\Entities\Pop;
+use Modules\SCM\Entities\ScmMur;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\StockLedger;
@@ -57,5 +58,10 @@ class ScmChallan extends Model
     public function clientDetails()
     {
         return $this->belongsTo(ClientDetail::class, 'fr_composite_key', 'fr_composite_key');
+    }
+
+    public function mur()
+    {
+        return $this->hasOne(ScmMur::class, 'challan_id');
     }
 }

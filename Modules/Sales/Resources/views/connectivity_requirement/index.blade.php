@@ -32,7 +32,7 @@
                     <th>Client id</th>
                     <th>MQ No</th>
                     <th>FR No</th>
-                    <th>Location</th>
+                    <th>Connectivity Point</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -43,7 +43,7 @@
                     <th>Client id</th>
                     <th>MQ No</th>
                     <th>FR No</th>
-                    <th>Location</th>
+                    <th>Connectivity Point</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -55,7 +55,7 @@
                         <td>{{ $connectivity_requirement->client_no }}</td>
                         <td>{{ $connectivity_requirement->mq_no }}</td>
                         <td>{{ $connectivity_requirement->fr_no }}</td>
-                        <td>{{ $connectivity_requirement->fromLocation->location ?? '' }}</td>
+                        <td>{{ $connectivity_requirement->FeasibilityRequirementDetail->connectivity_point }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

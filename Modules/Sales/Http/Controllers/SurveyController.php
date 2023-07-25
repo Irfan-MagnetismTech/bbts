@@ -40,7 +40,7 @@ class SurveyController extends Controller
     {
         $fr_detail = FeasibilityRequirementDetail::with('feasibilityRequirement.lead_generation')->find($fr_id);
         $all_fr_list = FeasibilityRequirementDetail::get();
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $fr_detail->fr_no)->first();
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $fr_detail->fr_no)->first();
         $pops = Pop::get();
         $vendors = Vendor::get();
         return view('sales::survey.create', compact('fr_detail', 'all_fr_list', 'connectivity_requirement', 'pops', 'vendors'));
@@ -101,7 +101,7 @@ class SurveyController extends Controller
     public function show($id)
     {
         $survey = Survey::with('surveyDetails', 'lead_generation')->find($id);
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $survey->fr_no)->first();
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $survey->fr_no)->first();
         return view('sales::survey.show', compact('survey', 'connectivity_requirement'));
     }
 
@@ -113,7 +113,7 @@ class SurveyController extends Controller
     public function edit($id)
     {
         $survey = Survey::with('surveyDetails', 'lead_generation', 'feasibilityRequirementDetails')->find($id);
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->where('fr_no', $survey->fr_no)->first();
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $survey->fr_no)->first();
         $pops = Pop::get();
         $vendors = Vendor::get();
         return view('sales::survey.create', compact('survey', 'connectivity_requirement', 'pops', 'vendors'));

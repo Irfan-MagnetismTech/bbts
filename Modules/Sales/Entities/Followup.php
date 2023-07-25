@@ -20,11 +20,11 @@ class Followup extends Model
 
     public function clientQuestion()
     {
-        return $this->hasOne(ClientQuestion::class, 'follow_up_id', 'id');
+        return $this->hasOne(ClientQuestion::class, 'followup_id', 'id');
     }
 
     public function tada()
     {
-        return $this->hasOne(Tada::class, 'follow_up_id', 'id');
+        return $this->hasOne(Tada::class, 'followup_id', 'id');
     }
 }

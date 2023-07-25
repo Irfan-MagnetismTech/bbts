@@ -32,4 +32,9 @@ class ConnectivityRequirement extends Model
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
     }
+
+    public function fromLocation()
+    {
+        return $this->belongsTo(FeasibilityRequirementDetail::class, 'from_location', 'id');
+    }
 }
