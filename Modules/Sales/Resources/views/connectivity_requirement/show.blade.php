@@ -50,7 +50,7 @@
                             $category_data = $category_data ?? [];
                             $aggregation_type = $connectivity_requirement->aggregation_type ?? null;
                             $from_location = $connectivity_requirement->fromLocation->fr_no ?? null;
-                            $connectivity_point = $connectivity_requirement->fromLocation->connectivity_point ?? null;
+                            $connectivity_point = $connectivity_requirement->FeasibilityRequirementDetail->connectivity_point ?? null;
                             $fr_no = $connectivity_requirement->fr_no;
                             $product_id = $product_id ?? null;
                             $capacity = $capacity ?? null;

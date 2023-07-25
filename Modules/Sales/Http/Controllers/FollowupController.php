@@ -60,7 +60,7 @@ class FollowupController extends Controller
         $tada_amount = $request->tada_amount ?? 0;
         DB::transaction(function () use ($data, $question_data, $tada_amount) {
             $followup = Followup::create($data);
-            $question_data['follow_up_id'] = $followup->id;
+            $question_data['followup_id'] = $followup->id;
             $question_data['client_no'] = $followup->client_no;
             ClientQuestion::create($question_data);
             if ($tada_amount > 0) {

@@ -25,7 +25,7 @@ class ConnectivityRequirementController extends Controller
      */
     public function index()
     {
-        $connectivity_requirements = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->get();
+        $connectivity_requirements = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails', 'lead_generation')->get();
         return view('sales::connectivity_requirement.index', compact('connectivity_requirements'));
     }
 
@@ -97,7 +97,7 @@ class ConnectivityRequirementController extends Controller
      */
     public function show($id)
     {
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation', 'fromLocation')->find($id);
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->find($id);
         return view('sales::connectivity_requirement.show', compact('connectivity_requirement'));
     }
 
