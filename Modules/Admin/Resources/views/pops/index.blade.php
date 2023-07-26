@@ -40,7 +40,7 @@
             <tr>
                 <td>{{$loop->iteration}}</td>
                 <td class="text-center">{{$data->name}}</td>
-                <td class="text-center">{{$data->branch->name}}</td>
+                <td class="text-center">{{$data->branch->name ?? ''}}</td>
                 <td class="text-center">{{$data->address}}</td>
                 <td>
                     <div class="icon-btn">
