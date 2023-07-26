@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Pyhsical Connectivity')
+@section('title', 'Client Activation Pre-Process')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
@@ -8,6 +8,11 @@
         .checkbox-fade .cr {
             height: 10px;
             width: 10px;
+        }
+
+        .noWrapStyle {
+            white-space: normal;
+            min-width: 12rem;
         }
     </style>
 @endsection
@@ -23,7 +28,7 @@
 @endsection
 
 @section('sub-title')
-    {{-- Total: {{ count($physicalConnectivities) }} --}}
+    Total: {{ count($salesDetails) }}
 @endsection
 
 @section('content')
@@ -37,7 +42,7 @@
                     <th>FR No</th>
                     <th>Connectivity Point</th>
                     <th>New/Existing</th>
-                    <th>Required Delivery Date</th>
+                    <th>Delivery Date</th>
                     <th>Commissioning Date</th>
                     <th>Status</th>
                     <th>Connectivity Status</th>
@@ -50,16 +55,15 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $details->client->client_name }}</td>
                         <td>{{ $details->fr_no }}</td>
-                        <td>{{ $details->frDetails->connectivity_point }}</td>
+                        <td class="noWrapStyle">{{ $details->frDetails->connectivity_point }}</td>
                         <td></td>
                         <td>{{ $details->delivery_date }}</td>
                         <td></td>
-
-                        <td>
+                        <td class="noWrapStyle">
                             <span class="checkbox-fade fade-in-primary">
                                 <label>
                                     <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox" checked>
+                                        class="dns_checkbox" @checked($details->sale->management_approval == 'Approved')>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -117,8 +121,7 @@
                                 </label>
                             </span>
                         </td>
-
-                        <td>
+                        <td class="noWrapStyle">
                             <span class="checkbox-fade fade-in-primary">
                                 <label>
                                     <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
@@ -162,12 +165,14 @@
                         </td>
 
                         <td>
+                            @if($details->sale->management_approval == 'Approved')
                             <span class="badge badge-info">
-                                <a href="{{ route('logical-internet-connectivities.create', ['physical_connectivity_id' => $details->id]) }}"
+                                <a href="{{ route('cc-schedules.create', ['fr_no' => $details->fr_no]) }}"
                                     class="text-white" target="_blank">Scheduling</a>
                             </span>
+                            @endif
                             <span class="badge badge-info">
-                                <a href="{{ route('logical-internet-connectivities.create', ['physical_connectivity_id' => $details->id]) }}"
+                                <a href="{{ route('cc-schedules.create', ['physical_connectivity_id' => $details->id]) }}"
                                     class="text-white" target="_blank">Plan</a>
                             </span>
                         </td>

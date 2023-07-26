@@ -15,7 +15,14 @@ return new class extends Migration
     {
         Schema::create('c_c_schedules', function (Blueprint $table) {
             $table->id();
-
+            $table->string('fr_no')->nullable();
+            $table->string('client_no')->nullable();
+            $table->string('approved_type')->nullable();
+            $table->date('client_readyness_date')->nullable();
+            $table->date('nttn_date')->nullable();
+            $table->date('equipment_readyness_date')->nullable();
+            $table->date('field_operation_date')->nullable();
+            $table->date('schedule_date')->nullable();
             $table->timestamps();
         });
     }
