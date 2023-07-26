@@ -133,58 +133,58 @@
                                 </tr>
                             </thead>
                             <tbody class="connectivityBody">
-                                @foreach ($planning->equipmentPlans as $equipment_plan)
+                                @foreach ($costing->costingProductEquipments as $product_equipment)
                                     <tr class="connectivity_details_row">
-                                        <td>{{ $equipment_plan->material->name ?? '' }}</td>
-                                        <td>{{ $equipment_plan->quantity }}</td>
-                                        <td>{{ $equipment_plan->unit }}</td>
-                                        <td>BBTCL</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ $product_equipment->material->name ?? '' }}</td>
+                                        <td>{{ $product_equipment->quantity }}</td>
+                                        <td>{{ $product_equipment->unit }}</td>
+                                        <td>{{ $product_equipment->ownership }}</td>
+                                        <td>{{ $product_equipment->rate }}</td>
+                                        <td>{{ $product_equipment->total }}</td>
                                     </tr>
                                 @endforeach
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">Equipment Total</td>
-                                    <td></td>
+                                    <td>{{ $costing->equipment_wise_total }}</td>
                                 </tr>
 
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">Client Equipment Total
                                     </td>
-                                    <td></td>
+                                    <td> {{ $costing->client_equipment_total }} </td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">Partial Total</td>
-                                    <td></td>
+                                    <td> {{ $costing->equipment_partial_total }} </td>
                                 </tr>
 
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">Deployment Cost</td>
-                                    <td></td>
+                                    <td> {{ $costing->equipment_deployment_cost }} </td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">Interest</td>
-                                    <td></td>
+                                    <td>{{ $costing->equipment_interest }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">VAT</td>
-                                    <td></td>
+                                    <td>{{ $costing->equipment_vat }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">Tax</td>
-                                    <td></td>
+                                    <td>{{ $costing->equipment_tax }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">Total</td>
-                                    <td></td>
+                                    <td>{{ $costing->equipment_grand_total }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">OTC</td>
-                                    <td></td>
+                                    <td>{{ $costing->equipment_otc }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size: 14px;">ROI</td>
-                                    <td></td>
+                                    <td>{{ $costing->equipment_roi }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -196,32 +196,27 @@
                 <h5> <span> &#10070; </span> Link Details <span>&#10070;</span> </h5>
             </div>
             <hr />
-            @foreach ($planning->PlanLinks as $key => $plan_link)
-                @php $row_no = $key + 1; @endphp
+            @foreach ($costing->costingLinks as $costing_link)
                 <div class="PlanLinkMainRow"
                     style="border: 2px solid gray; border-radius: 15px; padding: 15px; margin-top: 15px;">
                     <div class="row">
-                        <div class="col-1 col-md-1">
-                            <input type="hidden" name="total_key" value="{{ $row_no }}">
-                            <input type="checkbox" disabled>
+                        <div class="col-2 col-md-2">
+                            <span>{{ $costing_link->link_type }}</span>
                         </div>
                         <div class="col-2 col-md-2">
-                            <span>{{ $plan_link->link_type }}</span>
+                            <span>{{ $costing_link->option }}</span>
                         </div>
                         <div class="col-2 col-md-2">
-                            <span>{{ $plan_link->option }}</span>
+                            <span>{{ $costing_link->existing_transmission_capacity }}</span>
                         </div>
                         <div class="col-2 col-md-2">
-                            <span>{{ $plan_link->existing_transmission_capacity ?? $plan_link->new_transmission_capacity }}</span>
-                        </div>
-                        <div class="col-2 col-md-2">
-                            <span></span>
+                            <span>{{ $costing_link->quantity }}</span>
                         </div>
                         <div class="col-1 col-md-1">
-                            <span></span>
+                            <span>{{ $costing_link->rate }}</span>
                         </div>
                         <div class="col-2 col-md-2">
-                            <span></span>
+                            <span>{{ $costing_link->total }}</span>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -240,45 +235,45 @@
                                 </tr>
                             </thead>
                             <tbody class="tbody">
-                                @foreach ($plan_link->PlanLinkEquipments as $plan_link_equipment)
+                                @foreach ($costing_link->costingLinkEquipments as $link_equipment)
                                     <tr>
                                         <td>
-                                            <span>{{ $plan_link_equipment->material->name ?? '' }}</span>
+                                            <span>{{ $link_equipment->material->name ?? '' }}</span>
                                         </td>
                                         <td>
-                                            <span>{{ $plan_link_equipment->unit ?? '' }}</span>
+                                            <span>{{ $link_equipment->unit ?? '' }}</span>
                                         </td>
                                         <td>
-                                            <span>{{ $plan_link_equipment->ownership }}</span>
+                                            <span>{{ $link_equipment->ownership }}</span>
                                         </td>
                                         <td>
-                                            <span>{{ $plan_link_equipment->quantity ?? '' }}</span>
+                                            <span>{{ $link_equipment->quantity ?? '' }}</span>
                                         </td>
                                         <td>
-                                            <span></span>
+                                            <span>{{ $link_equipment->rate ?? '' }}</span>
                                         </td>
                                         <td>
-                                            <span></span>
+                                            <span>{{ $link_equipment->total ?? '' }}</span>
                                         </td>
                                     </tr>
                                 @endforeach
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size:14px;">Plan Equipment Total</td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing_link->plan_all_equipment_total }}</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size:14px;">Client Equipment Total
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_client_equipment_total }}</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-right" style="font-size:14px;">Total</td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_partial_total }}</span>
                                     </td>
                                 </tr>
                                 <tr class="text-right">
@@ -286,13 +281,13 @@
                                         <span style="font-size: 14px;">OTC</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_otc }}</span>
                                     </td>
                                     <td>
                                         <span style="font-size: 14px;">Deployment Cost</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_deployment_cost }}</span>
                                     </td>
                                 </tr>
                                 <tr class="text-right">
@@ -300,13 +295,13 @@
                                         <span style="font-size: 14px;">ROI</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_roi }}</span>
                                     </td>
                                     <td>
                                         <span style="font-size: 14px;">Interest</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_interest }}</span>
                                     </td>
                                 </tr>
                                 <tr class="text-right">
@@ -314,13 +309,13 @@
                                         <span style="font-size: 14px;">Capacity</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_capacity }}</span>
                                     </td>
                                     <td>
                                         <span style="font-size: 14px;">Total</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_grand_total }}</span>
                                     </td>
                                 </tr>
                                 <tr class="text-right">
@@ -328,13 +323,13 @@
                                         <span style="font-size: 14px;">Operation Cost</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_operation_cost }}</span>
                                     </td>
                                     <td>
                                         <span style="font-size: 14px;">VAT</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_vat }}</span>
                                     </td>
                                 </tr>
                                 <tr class="text-right">
@@ -342,13 +337,13 @@
                                         <span style="font-size: 14px;">Total MRC</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_total_mrc }}</span>
                                     </td>
                                     <td>
                                         <span style="font-size: 14px;">Tax</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_tax }}</span>
                                     </td>
                                 </tr>
                                 <tr class="text-right">
@@ -356,7 +351,7 @@
                                         <span style="font-size: 14px;">Total Inv</span>
                                     </td>
                                     <td>
-                                        <span></span>
+                                        <span>{{ $costing->plan_equipment_total_inv }}</span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -380,9 +375,7 @@
                                     <span style="font-size:14px;">Total Investment</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_investment" id="total_investment"
-                                        class="form-control form-control-sm text-center plan_fr_total_investment input"
-                                        placeholder="Total Investment" value="">
+                                    {{ $costing->total_investment }}
                                 </td>
                             </tr>
                             <tr>
@@ -390,9 +383,7 @@
                                     <span style="font-size:14px;">Total OTC</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_otc" id="total_otc"
-                                        class="form-control form-control-sm text-center total_otc input"
-                                        placeholder="Total OTC" value="">
+                                    {{ $costing->total_otc }}
                                 </td>
                             </tr>
                             <tr>
@@ -400,9 +391,7 @@
                                     <span style="font-size:14px;">Total Product Cost</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_product_cost" id="total_product_cost"
-                                        class="form-control form-control-sm text-center total_product_cost input"
-                                        placeholder="Total Product Cost" value="">
+                                    {{ $costing->total_product_cost }}
                                 </td>
                             </tr>
                             <tr>
@@ -410,9 +399,7 @@
                                     <span style="font-size:14px;">Total Service Cost</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_service_cost" id="total_service_cost"
-                                        class="form-control form-control-sm text-center total_service_cost input"
-                                        placeholder="Total Service Cost" value="">
+                                    {{ $costing->total_service_cost }}
                                 </td>
                             </tr>
                             <tr>
@@ -420,9 +407,7 @@
                                     <span style="font-size:14px;">Total MRC</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_mrc" id="total_mrc"
-                                        class="form-control form-control-sm text-center total_mrc input"
-                                        placeholder="Total MRC" value="" readonly>
+                                    {{ $costing->total_mrc }}
                                 </td>
                             </tr>
                             <tr>
@@ -430,19 +415,13 @@
                                     <span style="font-size:14px;">Margin</span>
                                 </td>
                                 <td>
-                                    <input type="number" name="management_perchantage" id="management_perchantage"
-                                        class="form-control form-control-sm text-center margin input" placeholder="Margin"
-                                        value="">
+                                    {{ $costing->management_percentage }}
                                 </td>
                                 <td>
-                                    <input type="number" name="management_cost_amount" id="management_cost_amount"
-                                        class="form-control form-control-sm text-center management_cost_amount input"
-                                        placeholder="Margin Amount" value="" readonly>
+                                    {{ $costing->management_cost_amount }}
                                 </td>
                                 <td>
-                                    <input type="number" name="management_cost_total" id="management_cost_total"
-                                        class="form-control form-control-sm text-center management_cost_total input"
-                                        placeholder="Margin Amount" value="" readonly>
+                                    {{ $costing->management_cost_total }}
                                 </td>
                             </tr>
                             <tr>
@@ -450,10 +429,7 @@
                                     <span style="font-size:14px;">Equipment Price for Client</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="equipment_price_for_client"
-                                        id="equipment_price_for_client"
-                                        class="form-control form-control-sm text-center equipment_price_for_client input"
-                                        placeholder="Equipment Price for Client" value="" readonly>
+                                    {{ $costing->equipment_price_for_client }}
                                 </td>
                             </tr>
                             <tr>
@@ -461,10 +437,7 @@
                                     <span style="font-size:14px;">Total OTC</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_otc_with_client_equipment"
-                                        id="total_otc_with_client_equipment"
-                                        class="form-control form-control-sm text-center total_otc_with_client_equipment input"
-                                        placeholder="Total OTC" value="" readonly>
+                                    {{ $costing->total_otc_with_client_equipment }}
                                 </td>
                             </tr>
                         </tbody>

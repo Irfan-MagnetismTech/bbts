@@ -83,7 +83,7 @@ class CostingController extends Controller
      */
     public function show($id)
     {
-        $costing = Costing::with('costingProducts', 'costingLinks', 'costingLinks.costingLinkEquipments', 'lead_generation', 'feasibilityRequirementDetail')->find($id);
+        $costing = Costing::with('costingProducts', 'costingProductEquipments', 'costingLinks.costingLinkEquipments', 'lead_generation', 'feasibilityRequirementDetail')->find($id);
         return view('sales::costing.show', compact('costing'));
     }
 

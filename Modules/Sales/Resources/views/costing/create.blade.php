@@ -506,23 +506,22 @@
                                                     value="{{ $plan_link_equipment->material->name ?? '' }}">
                                                 <input type="hidden"
                                                     name="plan_equipment_material_id_{{ $row_no }}[]"
-                                                    value="{{ $plan_link_equipment->material->id ?? '' }}"
-                                            </span>
+                                                    value="{{ $plan_link_equipment->material->id ?? '' }}" </span>
                                         </td>
                                         <td>
                                             <span>
                                                 <input type="text"
                                                     class="form-control form-control-sm plan_equipment_unit input"
                                                     placeholder="Unit" name="plan_equipment_unit_{{ $row_no }}[]"
-                                                    value="{{ $plan_link_equipment->unit ?? '' }}>
+                                                    value="{{ $plan_link_equipment->unit ?? '' }}">
                                             </span>
                                         </td>
                                         <td>
                                             <span>
                                                 <select name="ownership_{{ $row_no }}[]"
                                                     class="form-control form-control-sm input plan_equipment_ownership">
-                                                <option value="BBTS">BBTS</option>
-                                                <option value="Client">Client</option>
+                                                    <option value="BBTS">BBTS</option>
+                                                    <option value="Client">Client</option>
                                                 </select>
                                             </span>
                                         </td>
@@ -531,11 +530,8 @@
                                                 <input type="number"
                                                     class="form-control form-control-sm plan_equipment_quantity input"
                                                     placeholder="Quantity"
-                                                    name="plan_equipment_quantity_{{ $row_no }}[]" <<<<<<< HEAD
+                                                    name="plan_equipment_quantity_{{ $row_no }}[]"
                                                     value="{{ $plan_link_equipment->quantity ?? '' }}">
-                                                =======
-                                                value="{{ $plan_link_equipment->quantity ?? '' }}">
-                                                >>>>>>> main
                                             </span>
                                         </td>
                                         <td>
