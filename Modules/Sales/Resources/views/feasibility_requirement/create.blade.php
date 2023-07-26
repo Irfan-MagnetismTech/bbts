@@ -120,14 +120,14 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="feasibiltyBody">
                                     @if (!empty($feasibility_requirement))
                                         @foreach ($feasibility_requirement->feasibilityRequirementDetails as $item)
+                                            <input type="hidden" name="detail_id[]" value="{{ $item->id }}">
                                             <tr class="feasibility_details_row">
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="hidden" name="detail_id[]"
-                                                            value="{{ $item->id }}">
+
                                                         <input type="text" name="connectivity_point[]"
                                                             class="form-control" value="{{ $item->connectivity_point }}"
                                                             autocomplete="off" placeholder="Connectivity Point">
@@ -153,7 +153,8 @@
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="division_id[]" class="form-control division"
-                                                            id="division" autocomplete="off" placeholder="Select Division">
+                                                            id="division" autocomplete="off"
+                                                            placeholder="Select Division">
                                                             <option value="">Select Division</option>
                                                             @foreach ($divisions as $division)
                                                                 <option value="{{ $division->id }}"
@@ -425,7 +426,7 @@
                     });
 
                     function addRow() {
-                        $('.feasibility_details_row').first().clone().appendTo('tbody');
+                        $('.feasibility_details_row').first().clone().appendTo('.feasibiltyBody');
                         $('.feasibility_details_row').last().find('input').val('');
                         $('.feasibility_details_row').last().find('select').val('');
                     };

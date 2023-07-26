@@ -87,6 +87,7 @@ class ScmWorController extends Controller
      */
     public function show($id)
     {
+        abort(404);
         // return view('scm::wor.show');
     }
 

@@ -208,7 +208,7 @@
             var clients = JSON.parse('{!! json_encode($clients) !!}');
             var client = clients.find(client => client.id == client_id);
             console.log('client', client)
-            $('#address').val(client.address);
+            $('#address').val(client.address).attr('value', client.address);
         })
 
         $('.select2').select2();

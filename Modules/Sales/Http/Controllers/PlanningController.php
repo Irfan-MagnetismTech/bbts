@@ -116,7 +116,24 @@ class PlanningController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request->all());
+        $plan_data = $request->only('mq_no', 'fr_no', 'client_no');
+        $plan_data['date'] = date('Y-m-d');
+        $plan_data['user_id'] = auth()->user()->id ?? '';
+        DB::beginTransaction();
+        try {
+            $plan = Planning::where('id', $id)->update($plan_data);
+            $this->createServicePlans($request, $plan);
+            $this->createEquipmentPlans($request, $plan);
+            if ($request->total_key > 0) {
+                $this->createPlanLinks($request, $plan);
+            }
+            DB::commit();
+            return redirect()->route('planning.index')->with('success', 'Planning updated successfully');
+        } catch (QueryException $e) {
+            DB::rollback();
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
     }
 
     /**

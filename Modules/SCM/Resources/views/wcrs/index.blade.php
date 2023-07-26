@@ -49,7 +49,7 @@
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $ScmData->wcr_no }}</td>
                         <td class="text-center">{{ ucfirst($ScmData->type) }}</td>
-                        <td class="text-center">{{ ucfirst($ScmData->branch->name) }}</td>
+                        <td class="text-center"></td>
                         <td class="text-center">{{ $ScmData->date }}</td>
                         <td>
                             <div class="icon-btn">

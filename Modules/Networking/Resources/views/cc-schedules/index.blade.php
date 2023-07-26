@@ -3,10 +3,17 @@
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
+
+    <style>
+        .checkbox-fade .cr {
+            height: 10px;
+            width: 10px;
+        }
+    </style>
 @endsection
 
 @section('breadcrumb-title')
-    List of Pyhsical Connectivity
+    Client Activation Pre-Process
 @endsection
 
 
@@ -16,7 +23,7 @@
 @endsection
 
 @section('sub-title')
-    Total: {{ count($physicalConnectivities) }}
+    {{-- Total: {{ count($physicalConnectivities) }} --}}
 @endsection
 
 @section('content')
@@ -26,93 +33,143 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>FR No</th>
                     <th>Client Name</th>
+                    <th>FR No</th>
                     <th>Connectivity Point</th>
-                    <th>Link Type</th>
-                    <th>POP</th>
-                    <th>LDP</th>
-                    <th>Device IP</th>
-                    <th>PORT</th>
-                    <th>Vlan</th>
-                    <th></th>
+                    <th>New/Existing</th>
+                    <th>Required Delivery Date</th>
+                    <th>Commissioning Date</th>
+                    <th>Status</th>
+                    <th>Connectivity Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($physicalConnectivities as $key => $physicalConnectivity)
+                @foreach ($salesDetails as $key => $details)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $physicalConnectivity->fr_no }}</td>
-                        <td>{{ $physicalConnectivity->client->client_name }}</td>
-                        <td>
-                            {{ $physicalConnectivity->connectivity_point }}
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->link_type }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->pop }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->ldp }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->device_ip }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->port }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->vlan }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            <span class="badge badge-info">
-                                <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id, 'type' => 'internet']) }}"
-                                    class="text-white">Internet</a>
-                            </span>
-                            <span class="badge badge-info">
-                                <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}"
-                                    class="text-white">Data</a>
-                            </span>
-                            <span class="badge badge-info">
-                                <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id, 'type' => 'vas']) }}"
-                                    class="text-white">VAS</a>
-                            </span>
-                        </td>
-                        <td>
-                            <div class="icon-btn">
-                                <nobr>
-                                    <a href="{{ route('physical-connectivities.show', $physicalConnectivity->id) }}"
-                                        data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i
-                                            class="fas fa-eye"></i></a>
+                        <td>{{ $details->client->client_name }}</td>
+                        <td>{{ $details->fr_no }}</td>
+                        <td>{{ $details->frDetails->connectivity_point }}</td>
+                        <td></td>
+                        <td>{{ $details->delivery_date }}</td>
+                        <td></td>
 
-                                    <a href="{{ route('physical-connectivities.edit', $physicalConnectivity->id) }}"
-                                        data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
-                                            class="fas fa-pen"></i></a>
-                                    {!! Form::open([
-                                        'url' => route('physical-connectivities.destroy', $physicalConnectivity->id),
-                                        'method' => 'delete',
-                                        'class' => 'd-inline',
-                                        'data-toggle' => 'tooltip',
-                                        'title' => 'Delete',
-                                    ]) !!}
-                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
-                                    {!! Form::close() !!}
-                                </nobr>
-                            </div>
+                        <td>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox" checked>
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">PNL</span>
+                                </label>
+                            </span>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">NTTN/Service</span>
+                                </label>
+                            </span>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">Client</span>
+                                </label>
+                            </span>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">Equipment</span>
+                                </label>
+                            </span>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">Field Ops</span>
+                                </label>
+                            </span>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">Schedule</span>
+                                </label>
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">Physical Link</span>
+                                </label>
+                            </span>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">Logical Connectivity</span>
+                                </label>
+                            </span>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">Commissioning Date</span>
+                                </label>
+                            </span>
+                            <span class="checkbox-fade fade-in-primary">
+                                <label>
+                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
+                                        class="dns_checkbox">
+                                    <span class="cr">
+                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                    </span>
+                                    <span class="font-weight-bold">Biling Date</span>
+                                </label>
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge badge-info">
+                                <a href="{{ route('logical-internet-connectivities.create', ['physical_connectivity_id' => $details->id]) }}"
+                                    class="text-white" target="_blank">Scheduling</a>
+                            </span>
+                            <span class="badge badge-info">
+                                <a href="{{ route('logical-internet-connectivities.create', ['physical_connectivity_id' => $details->id]) }}"
+                                    class="text-white" target="_blank">Plan</a>
+                            </span>
                         </td>
                     </tr>
                 @endforeach

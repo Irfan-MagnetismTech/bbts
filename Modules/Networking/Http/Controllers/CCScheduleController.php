@@ -5,6 +5,7 @@ namespace Modules\Networking\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Sales\Entities\SaleDetail;
 
 class CCScheduleController extends Controller
 {
@@ -14,7 +15,15 @@ class CCScheduleController extends Controller
      */
     public function index()
     {
-        
+        $salesDetails = SaleDetail::query()
+            ->whereHas('sale', function ($query) {
+                $query->where('management_approval', '=', 'Approved');
+            })
+            ->with('client', 'frDetails')
+            ->latest()
+            ->get();
+
+        return view('networking::cc-schedules.index', compact('salesDetails'));
     }
 
     /**
