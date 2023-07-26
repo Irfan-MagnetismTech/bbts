@@ -146,9 +146,9 @@ class ScmMurController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show()
+    public function show(ScmMur $material_utilization)
     {
-        abort(404);
+        return view('scm::mur.show', compact('material_utilization'));
     }
 
     /**

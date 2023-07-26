@@ -104,7 +104,8 @@
                                     <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
                                     <a href="{{ route('cs.edit', $cs->id) }}" data-toggle="tooltip" title="Edit"
                                         class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-
+                                    <a href="{{ route('cs.show', $cs->id) }}" data-toggle="tooltip"
+                                            title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
                                     {!! Form::open([
                                         'url' => route('cs.destroy', $cs->id),

@@ -104,9 +104,9 @@ class ScmMirController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(ScmMir $material_issue)
     {
-        abort(404);
+        return view('scm::mir.show', compact('material_issue'));
     }
 
     /**

@@ -1,12 +1,13 @@
 @extends('layouts.backend-layout')
-@section('title', 'Indent Show')
+@section('title', 'Gate Pass Show')
 
 @section('breadcrumb-title')
-    Indent Show
+    Gate Pass Show
 @endsection
 
 @section('breadcrumb-button')
-<a href="{{ route('indents.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+<a href="{{ route('gate-passes.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', null)
@@ -18,16 +19,20 @@
                 <table id="dataTable" class="table table-striped table-bordered">
                     <tbody class="text-left">
                         <tr style="background-color: #0C4A77;color: white">
-                            <td> <strong>Indent No.</strong> </td>
-                            <td> <strong>{{ $indent->indent_no }}</strong></td>
+                            <td> <strong>Gate Pass No.</strong> </td>
+                            <td> <strong>{{ $gate_pass->gate_pass_no }}</strong></td>
                         </tr>
                         <tr>
                             <td> <strong>Date</strong> </td>
-                            <td> {{ $indent->date }}</td>
+                            <td> {{ $gate_pass->date }}</td>
                         </tr>
                         <tr>
-                            <td> <strong>Created By</strong> </td>
-                            <td> {{ ucfirst($indent->user->name ?? '') }}</td>
+                            <td> <strong>Type</strong> </td>
+                            <td> {{ ucfirst($gate_pass->type ?? '') }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Carrier</strong> </td>
+                            <td> {{ ucfirst($gate_pass->carrier ?? '') }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -39,13 +44,13 @@
         <table id="example" class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th>PRS</th>
+                    <th>Challan / MIR</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($indent->indentLines as $key => $value)
+                @foreach ($gate_pass->lines as $key => $value)
                     <tr>
-                        <td> {{ $value->scmPurchaseRequisition->prs_no }} </td>
+                        <td> {{ $value->challan?->challan_no ?? $value->mir?->mir_no }} </td>
                     </tr>
                 @endforeach
             </tbody>

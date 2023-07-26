@@ -105,9 +105,9 @@ class ScmChallanController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(ScmChallan $challan)
     {
-        abort(404);
+        return view('scm::challans.show', compact('challan'));
     }
 
     /**
