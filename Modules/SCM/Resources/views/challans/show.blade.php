@@ -1,13 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'MRS Details')
+@section('title', 'Challan Show')
 
 @section('breadcrumb-title')
-    MRS (Material Requisition Slip) Details
+    Challan Show
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-database"></i></a>
+    <a href="{{ route('challans.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', null)
@@ -19,32 +18,52 @@
                 <table id="dataTable" class="table table-striped table-bordered">
                     <tbody class="text-left">
                         <tr style="background-color: #0C4A77;color: white">
-                            <td> <strong>MRS No.</strong> </td>
-                            <td> <strong>{{ $requisition->mrs_no }}</strong></td>
+                            <td> <strong>Challan No.</strong> </td>
+                            <td> <strong>{{ $challan->challan_no }}</strong></td>
                         </tr>
                         <tr>
                             <td> <strong>Type</strong> </td>
-                            <td> {{ ucfirst($requisition->type) }}</td>
+                            <td> {{ ucfirst($challan->type) }}</td>
                         </tr>
-                        @if ($requisition?->type == 'client')
-                            <tr>
-                                <td> <strong>Client Name</strong> </td>
-                                <td> {{ ucfirst($requisition->client->name) }}</td>
-                            </tr>
-                        @endif
-                        @if ($requisition?->type == 'pop')
-                            <tr>
-                                <td> <strong>Pop Name</strong> </td>
-                                <td> {{ ucfirst($requisition->pop->name) }}</td>
-                            </tr>
-                        @endif
                         <tr>
                             <td> <strong>Date</strong> </td>
-                            <td> {{ $requisition->date }}</td>
+                            <td> {{ $challan->date }}</td>
                         </tr>
                         <tr>
-                            <td> <strong>Requisition By</strong> </td>
-                            <td> {{ ucfirst($requisition->requisitionBy->name) }}</td>
+                            <td> <strong>Requisition No</strong> </td>
+                            <td> {{ $challan->scmRequisition->mrs_no }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Purpose</strong> </td>
+                            <td> {{ $challan->purpose }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Client</strong> </td>
+                            <td> {{ $challan?->client?->client_name ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>FR No</strong> </td>
+                            <td> {{ $challan->fr_no }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Link No</strong> </td>
+                            <td> {{ $challan->link_no }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Branch No</strong> </td>
+                            <td> {{ $challan?->branch?->name ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Equipment Type</strong> </td>
+                            <td> {{ $challan->equipment_type }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Pop No</strong> </td>
+                            <td> {{ $challan?->pop?->name ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Challan By</strong> </td>
+                            <td> {{ ucfirst($challan->challanBy->name) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -57,24 +76,28 @@
             <thead>
                 <tr>
                     <th>Material Name</th>
-                    <th>Description</th>
+                    <th>Item Code</th>
                     <th>Unit</th>
                     <th>Quantity</th>
                     <th>Brand</th>
                     <th>Model</th>
+                    <th>Serial Code</th>
                     <th>Purpose</th>
+                    <th>Remarks</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($requisition->scmRequisitiondetailsWithMaterial as $key => $requisitiondetail)
+                @foreach ($challan->scmChallanLines as $key => $scmChallanLine)
                     <tr>
-                        <td> {{ $requisitiondetail->material->name }} </td>
-                        <td> {{ $requisitiondetail->description }} </td>
-                        <td> {{ $requisitiondetail->material->unit }} </td>
-                        <td> {{ $requisitiondetail->quantity }} </td>
-                        <td> {{ $requisitiondetail->brand->name }} </td>
-                        <td> {{ $requisitiondetail->model }} </td>
-                        <td> {{ $requisitiondetail->purpose }} </td>
+                        <td> {{ $scmChallanLine->material->name }} </td>
+                        <td> {{ $scmChallanLine->item_code }} </td>
+                        <td> {{ $scmChallanLine->material->unit }} </td>
+                        <td> {{ $scmChallanLine->quantity }} </td>
+                        <td> {{ $scmChallanLine->brand->name }} </td>
+                        <td> {{ $scmChallanLine->model }} </td>
+                        <td> {{ $scmChallanLine->serial_code }} </td>
+                        <td> {{ $scmChallanLine->purpose }} </td>
+                        <td> {{ $scmChallanLine->remarks }} </td>
                     </tr>
                 @endforeach
             </tbody>

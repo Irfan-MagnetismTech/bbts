@@ -139,9 +139,9 @@ class ScmMrrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(ScmMrr $materialReceive)
     {
-        return view('scm::show');
+        return view('scm::mrr.show', compact('materialReceive'));
     }
 
     /**

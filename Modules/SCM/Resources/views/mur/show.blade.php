@@ -1,13 +1,13 @@
 @extends('layouts.backend-layout')
-@section('title', 'MRS Details')
+@section('title', 'MUR Show')
 
 @section('breadcrumb-title')
-    MRS (Material Requisition Slip) Details
+    MUR Show
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-database"></i></a>
+    <a href="{{ route('material-utilizations.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', null)
@@ -19,32 +19,52 @@
                 <table id="dataTable" class="table table-striped table-bordered">
                     <tbody class="text-left">
                         <tr style="background-color: #0C4A77;color: white">
-                            <td> <strong>MRS No.</strong> </td>
-                            <td> <strong>{{ $requisition->mrs_no }}</strong></td>
+                            <td> <strong>MUR No.</strong> </td>
+                            <td> <strong>{{ $material_utilization->mur_no }}</strong></td>
                         </tr>
                         <tr>
                             <td> <strong>Type</strong> </td>
-                            <td> {{ ucfirst($requisition->type) }}</td>
+                            <td> {{ ucfirst($material_utilization->type) }}</td>
                         </tr>
-                        @if ($requisition?->type == 'client')
-                            <tr>
-                                <td> <strong>Client Name</strong> </td>
-                                <td> {{ ucfirst($requisition->client->name) }}</td>
-                            </tr>
-                        @endif
-                        @if ($requisition?->type == 'pop')
-                            <tr>
-                                <td> <strong>Pop Name</strong> </td>
-                                <td> {{ ucfirst($requisition->pop->name) }}</td>
-                            </tr>
-                        @endif
+                        <tr>
+                            <td> <strong>Challan No</strong> </td>
+                            <td> {{ ucfirst($material_utilization->challan->challan_no) }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Purpose</strong> </td>
+                            <td> {{ $material_utilization->purpose }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Client Name</strong> </td>
+                            <td> {{ $material_utilization?->client?->client_name ?? ''}}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>FR No</strong> </td>
+                            <td> {{ $material_utilization->fr_no }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Link No</strong> </td>
+                            <td> {{ $material_utilization->link_no }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Equipment Type</strong> </td>
+                            <td> {{ $material_utilization->equipment_type }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Branch</strong> </td>
+                            <td> {{ $material_utilization->branch->name }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Pop</strong> </td>
+                            <td> {{ $material_utilization?->pop?->name ?? '' }}</td>
+                        </tr>
                         <tr>
                             <td> <strong>Date</strong> </td>
-                            <td> {{ $requisition->date }}</td>
+                            <td> {{ $material_utilization->date }}</td>
                         </tr>
                         <tr>
-                            <td> <strong>Requisition By</strong> </td>
-                            <td> {{ ucfirst($requisition->requisitionBy->name) }}</td>
+                            <td> <strong>Created By</strong> </td>
+                            <td> {{ ucfirst($material_utilization->createdBy->name) }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -62,19 +82,27 @@
                     <th>Quantity</th>
                     <th>Brand</th>
                     <th>Model</th>
+                    <th>Serial Code</th>
+                    <th>Utilized Quantity</th>
+                    <th>BBTS Ownership</th>
+                    <th>Client Ownership</th>
                     <th>Purpose</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($requisition->scmRequisitiondetailsWithMaterial as $key => $requisitiondetail)
+                @foreach ($material_utilization->lines as $key => $line)
                     <tr>
-                        <td> {{ $requisitiondetail->material->name }} </td>
-                        <td> {{ $requisitiondetail->description }} </td>
-                        <td> {{ $requisitiondetail->material->unit }} </td>
-                        <td> {{ $requisitiondetail->quantity }} </td>
-                        <td> {{ $requisitiondetail->brand->name }} </td>
-                        <td> {{ $requisitiondetail->model }} </td>
-                        <td> {{ $requisitiondetail->purpose }} </td>
+                        <td> {{ $line->material->name }} </td>
+                        <td> {{ $line->description }} </td>
+                        <td> {{ $line->material->unit }} </td>
+                        <td> {{ $line->quantity }} </td>
+                        <td> {{ $line->brand->name }} </td>
+                        <td> {{ $line->model }} </td>
+                        <td> {{ $line->serial_code }} </td>
+                        <td> {{ $line->utilized_quantity }} </td>
+                        <td> {{ $line->bbts_ownership }} </td>
+                        <td> {{ $line->client_ownership }} </td>
+                        <td> {{ $line->purpose }} </td>
                     </tr>
                 @endforeach
             </tbody>

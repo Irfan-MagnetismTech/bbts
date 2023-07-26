@@ -99,7 +99,7 @@ class ScmErrController extends Controller
      */
     public function show($id)
     {
-        return view('scm::show');
+        abort(404);
     }
 
     /**

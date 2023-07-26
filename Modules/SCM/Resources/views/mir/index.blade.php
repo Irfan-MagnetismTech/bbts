@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of Material Receive Report
+    List of Material Issue Report
 @endsection
 
 

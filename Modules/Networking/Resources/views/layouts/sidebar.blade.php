@@ -1,3 +1,48 @@
+<div class="pcoded-navigation-label text-uppercase bg-primary">Infrastructure</div>
+    <ul class="pcoded-item pcoded-left-item">
+        <li class="pcoded-hasmenu {{ request()->routeIs(['pops.*']) ? 'active pcoded-trigger' : null }}">
+            <a href="javascript:void(0)">
+                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-mtext">Pops</span>
+                <span class="pcoded-mcaret"></span>
+            </a>
+            <ul class="pcoded-submenu">
+                <li class="{{ request()->routeIs('pops.create') ? 'active' : null }}">
+                    <a href="{{ route('pops.create') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Add New Pop</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+            </ul>
+            <ul class="pcoded-submenu">
+                <li class="{{ request()->routeIs('pops.index') ? 'active' : null }}">
+                    <a href="{{ route('pops.index') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Pops List</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+            </ul> 
+        </li>
+        <li class="pcoded-hasmenu {{ request()->routeIs(['connectivity.*']) ? 'active pcoded-trigger' : null }}">
+            <a href="javascript:void(0)">
+                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-mtext">Connectivity</span>
+                <span class="pcoded-mcaret"></span>
+            </a>
+            <ul class="pcoded-submenu">
+                <li class="{{ request()->routeIs('connectivity.create') ? 'active' : null }}">
+                    <a href="{{ route('connectivity.create') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Add New Links</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+            </ul>
+            <ul class="pcoded-submenu">
+                <li class="{{ request()->routeIs('connectivity.index') ? 'active' : null }}">
+                    <a href="{{ route('connectivity.index') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Connectivity List</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+            </ul> 
+        </li>
+    </ul>
 <div class="pcoded-navigation-label text-uppercase bg-primary">Networking</div>
 <ul class="pcoded-item pcoded-left-item">
 

@@ -83,9 +83,9 @@ class ScmGatePassController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(ScmGatePass $gate_pass)
     {
-        return view('scm::show');
+        return view('scm::gate-passes.show', compact('gate_pass'));
     }
 
     /**

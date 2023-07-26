@@ -43,4 +43,9 @@ class Costing extends Model
     {
         return $this->hasMany(CostingLinkEquipment::class, 'costing_id', 'id');
     }
+
+    public function feasibilityRequirementDetail()
+    {
+        return $this->hasOne(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
+    }
 }
