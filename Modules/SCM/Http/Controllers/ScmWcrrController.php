@@ -87,7 +87,7 @@ class ScmWcrrController extends Controller
     public function show(ScmWcr $warranty_claims_receife)
     {
 
-        return view('scm::show');
+        abort(404);
     }
 
     /**

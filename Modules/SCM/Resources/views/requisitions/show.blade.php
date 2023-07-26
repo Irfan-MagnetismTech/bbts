@@ -29,7 +29,7 @@
                         @if ($requisition?->type == 'client')
                             <tr>
                                 <td> <strong>Client Name</strong> </td>
-                                <td> {{ ucfirst($requisition->client->name) }}</td>
+                                <td> {{ ucfirst($requisition->client?->client_name ?? '') }}</td>
                             </tr>
                         @endif
                         @if ($requisition?->type == 'pop')

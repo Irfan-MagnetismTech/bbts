@@ -49,7 +49,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $requisition->prs_no }}</td>
-                        <td class="text-center">{{ ucfirst($requisition->type) }}</td>
+                        <td class="text-center">{{ ucfirst($requisition->type) }} {{($requisition->type == 'client') ? ('( '. $requisition->client?->client_name . ' :: ' . $requisition->fr_no . ' )') : ''}}</td>
                         <td class="text-center">{{ ucfirst($requisition->requisitionBy->name) }}</td>
                         <td class="text-center">{{ $requisition->date }}</td>
                         <td>
