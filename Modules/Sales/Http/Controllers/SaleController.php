@@ -483,7 +483,8 @@ class SaleController extends Controller
             $sales = Sale::where('mq_no', $mq_no)->first();
             $sales->update([
                 'management_approval' => 'Approved',
-                'management_approved_by' => auth()->user()->id
+                'management_approved_by' => auth()->user()->id,
+                'approval_date'  => now()
             ]);
             DB::commit();
             return redirect()->route('pnl-summary', $mq_no)->with('success', 'Approved Successfully');

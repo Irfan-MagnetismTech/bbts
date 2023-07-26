@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('sla')->nullable()->comment('file_path');
             $table->string('finance_approval')->nullable();
             $table->string('management_approval')->nullable();
+            $table->date('approval_date')->nullable();
             $table->string('cmo_approval')->nullable();
             $table->integer('finance_approved_by')->nullable();
             $table->integer('management_approved_by')->nullable();

@@ -4,6 +4,7 @@ namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
 use Modules\Admin\Entities\User;
+use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\Supplier;
 use Modules\SCM\Entities\ScmMrrLine;
 use Modules\SCM\Entities\StockLedger;
