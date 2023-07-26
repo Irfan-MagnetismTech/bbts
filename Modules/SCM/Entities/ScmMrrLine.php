@@ -3,6 +3,7 @@
 namespace Modules\SCM\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\ScmMrrSerialCodeLine;
 
 class ScmMrrLine extends Model
@@ -16,6 +17,10 @@ class ScmMrrLine extends Model
     public function material()
     {
         return $this->belongsTo(Material::class);
+    }
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 
     public function scmMrr()
