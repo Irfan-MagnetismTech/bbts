@@ -66,7 +66,7 @@ class MaterialController extends Controller
      */
     public function show(Material $material)
     {
-        //
+        abort(404);
     }
 
     /**

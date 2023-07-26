@@ -293,7 +293,7 @@
                                         <input type="text" name="existing_transmission_capacity_1"
                                             id="existing_transmission_capacity"
                                             class="form-control form-control-sm existing_transmission_capacity"
-                                            value="" required>
+                                            value="" >
                                         <label for="type">Existing Transmission Capacity</label>
                                     </div>
                                 </div>
@@ -302,7 +302,7 @@
                                     <div class="form-item">
                                         <input type="text" name="increase_capacity_1" id="increase_capacity"
                                             class="form-control form-control-sm increase_capacity" value=""
-                                            required>
+                                            >
                                         <label for="type">Increase Capacity</label>
                                     </div>
                                 </div>
@@ -324,7 +324,7 @@
                                     <div class="form-item">
                                         <input type="text" name="new_transmission_capacity_1"
                                             id="new_transmission_capacity" class="form-control form-control-sm"
-                                            value="" required>
+                                            value="" >
                                         <label for="type">New Transmission Capacity</label>
                                     </div>
                                 </div>
@@ -499,7 +499,7 @@
                     </div>
 
                     {{-- create a responsive table --}}
-                    <div class="row">
+                    {{--<div class="row">
                         <div class="col-md-12">
                             <hr />
                             <div class="text-center">
@@ -535,7 +535,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>--}}
                     <input type="hidden" id="client_no" name="client_no" value="{{ $lead_generation->client_no }}">
                     <input type="hidden" id="fr_no" name="fr_no"
                         value="{{ $feasibilityRequirementDetail->fr_no }}">
@@ -564,7 +564,7 @@
                 let count = $('.equipment_row').length;
                 if (count > 1) {
                     $(this).closest('tr').remove();
-                    //get attr_one value 
+                    //get attr_one value
                     var attr_one = $(this).attr('connectivity_attr');
                     //if attr_one value is not empty then delete from database
                     if (attr_one != '') {

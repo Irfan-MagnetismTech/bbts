@@ -101,7 +101,7 @@ class CsController extends Controller
      */
     public function show(Cs $c)
     {
-        // dd($c);
+        abort(404);
     }
 
     /**

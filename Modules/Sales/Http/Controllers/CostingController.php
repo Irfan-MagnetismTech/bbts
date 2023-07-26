@@ -67,7 +67,7 @@ class CostingController extends Controller
 
             DB::commit();
             // return response()->json(['message' => 'Data saved successfully.']);
-            return view('sales::costing.show', compact('costing'));
+            return redirect()->route('sales.costing.index')->with('success', 'Data saved successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Failed to save data. Error: ' . $e->getMessage());

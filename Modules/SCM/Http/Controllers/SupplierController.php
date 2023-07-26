@@ -64,7 +64,7 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier)
     {
-        //
+        abort(404);
     }
 
     /**

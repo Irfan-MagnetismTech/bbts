@@ -148,7 +148,7 @@ class ScmMurController extends Controller
      */
     public function show()
     {
-        return view('scm::show');
+        abort(404);
     }
 
     /**
