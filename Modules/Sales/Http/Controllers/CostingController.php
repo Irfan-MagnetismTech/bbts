@@ -39,7 +39,7 @@ class CostingController extends Controller
         $feasibilityRequirementDetail = FeasibilityRequirementDetail::find($id);
         // dd($feasibilityRequirementDetail);
         $planning = Planning::with('equipmentPlans.material', 'servicePlans', 'planLinks.PlanLinkEquipments.material')
-                    ->where('fr_no', $feasibilityRequirementDetail->fr_no)->first();
+            ->where('fr_no', $feasibilityRequirementDetail->fr_no)->first();
         return view('sales::costing.create', compact('planning', 'feasibilityRequirementDetail'));
     }
 
@@ -83,7 +83,8 @@ class CostingController extends Controller
      */
     public function show($id)
     {
-        return view('sales::show');
+        $costing = Costing::with('costingProducts', 'costingLinks', 'costingLinks.costingLinkEquipments', 'lead_generation', 'feasibilityRequirementDetail')->find($id);
+        return view('sales::costing.show', compact('costing'));
     }
 
     /**

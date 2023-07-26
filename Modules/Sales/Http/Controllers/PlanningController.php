@@ -91,7 +91,8 @@ class PlanningController extends Controller
      */
     public function show($id)
     {
-        return view('sales::show');
+        $plan = Planning::with('planLinks', 'equipmentPlans', 'servicePlans',)->where('id', $id)->first();
+        return view('sales::planning.show', compact('plan'));
     }
 
     /**
