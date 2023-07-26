@@ -63,7 +63,7 @@ class UnitController extends Controller
      */
     public function show(Unit $unit)
     {
-        //
+        abort(404);
     }
 
     /**

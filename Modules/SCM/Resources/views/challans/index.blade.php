@@ -61,6 +61,8 @@
                                     <a href="{{ route('challans.edit', $challan->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
+                                  
+                                    @if(in_array($challan->type, ['client', 'pop']) && !($challan->mur))
                                     <form action="{{ url("scm/challans/$challan->id") }}" method="POST"
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
@@ -68,7 +70,6 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
-                                    @if(in_array($challan->type, ['client', 'pop']) && !($challan->mur))
                                     <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}" data-toggle="tooltip"
                                         title="Create MUR" class="btn btn-outline-secondary">Create MUR</a>
                                     @else

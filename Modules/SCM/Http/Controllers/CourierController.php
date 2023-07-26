@@ -63,7 +63,7 @@ class CourierController extends Controller
      */
     public function show(Courier $courier)
     {
-        //
+        abort(404);
     }
 
     /**
