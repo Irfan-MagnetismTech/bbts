@@ -7,7 +7,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of Warranty Claim Info
+    List of Warranty Claim
 @endsection
 
 
@@ -54,6 +54,8 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
+                                    <a href="{{ route('warranty-claims.show', $ScmData->id) }}" data-toggle="tooltip"
+                                        title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                                     @if (!$ScmData->isDeleteable())
                                         <a href="{{ route('warranty-claims.edit', $ScmData->id) }}" data-toggle="tooltip"
                                             title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>

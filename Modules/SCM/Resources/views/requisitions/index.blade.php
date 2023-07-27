@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of Requisition Info
+    List of Requisition
 @endsection
 
 @section('style')

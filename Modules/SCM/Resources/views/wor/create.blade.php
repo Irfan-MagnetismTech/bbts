@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Material Receiving Report')
+@section('title', 'Work Order Receiving Report')
 
 @php
     $is_old = old('supplier_name') ? true : false;

@@ -361,9 +361,9 @@ class SaleController extends Controller
             $datas = Planning::with('equipmentPlans.material', 'planLinks.PlanLinkEquipments.material')
                 ->where('mq_no', $mq_no)
                 ->get();
-            $Costingdatas = Costing::with('costingLinks.costingLinkEquipments', 'costingProductEquipments')
-                ->where('mq_no', $mq_no)
-                ->get();
+            // $Costingdatas = Costing::with('costingLinks.costingLinkEquipments', 'costingProductEquipments')
+            //     ->where('mq_no', $mq_no)
+            //     ->get();
             $material_array = [];
             foreach ($datas as $key => $values) {
                 $cle_data = CostingLinkEquipment::whereHas('costing', function ($qr) use ($values) {

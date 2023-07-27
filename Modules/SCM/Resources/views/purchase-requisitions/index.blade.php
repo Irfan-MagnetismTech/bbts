@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of Purchase Requisitions Slip Info
+    List of Purchase Requisitions Slip
 @endsection
 
 @section('style')

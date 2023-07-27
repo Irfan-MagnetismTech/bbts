@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Material Receive Report')
+@section('title', 'Work Order Receiving Report')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of Material Receive Report
+    List of Work Order Receiving Report
 @endsection
 
 
