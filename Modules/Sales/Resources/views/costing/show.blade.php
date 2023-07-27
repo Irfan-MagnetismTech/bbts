@@ -34,35 +34,25 @@
         <div class="tableHeading">
             <h5> <span> &#10070; </span> Costing Sheet <span>&#10070;</span> </h5>
         </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-xl-3 col-md-3">
-                    <div class="form-item">
-                        <label for="client_id">Client ID<span class="text-danger">*</span></label>
-                        <p>{{ $costing->client_no }} </p>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-3">
-                    <div class="form-item">
-                        <label for="client_name">Client Name<span class="text-danger">*</span></label>
-                        <p>{{ $costing->lead_generation->client_name ?? '' }}</p>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-3">
-                    <div>
-                        <div class="form-item">
-                            <label for="connectivity_point">Connectivity Point</label>
-                            <p>{{ $costing->feasibilityRequirementDetail->connectivity_point ?? '' }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-md-3">
-                    <div class="form-item">
-                        <label for="month">Month</label>
-                        <p>{{ $costing->month }}</p>
-                    </div>
-                </div>
-            </div>
+        < class="card-body">
+                <table class="table">
+                    <tr>
+                        <th style="font-size: 13px;">Client No:</th>
+                        <td style="font-size: 13px; font-weight:bold">{{ $costing->lead_generation->client_no ?? '' }}</td>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13px;">Client Name:</th>
+                        <td style="font-size: 13px; font-weight:bold">{{ $costing->lead_generation->client_name ?? '' }}</td>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13px;">Connectivity Point:</th>
+                        <td style="font-size: 13px; font-weight:bold">{{ $costing->feasibilityRequirementDetail->connectivity_point ?? '' }}</td>
+                    </tr>
+                    <tr>
+                        <th style="font-size: 13px;">Month:</th>
+                        <td style="font-size: 13px; font-weight:bold">{{ $costing->month ?? '' }}</td>
+                    </tr>
+                </table>
             <div class="row">
                 <div class="md-col-12 col-12">
                     <div class="table-responsive">
