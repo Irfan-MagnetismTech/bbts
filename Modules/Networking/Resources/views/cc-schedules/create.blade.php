@@ -96,7 +96,11 @@
             </div>
 
             @php
-                $client_readyness_date;
+                $client_readyness_date = old('client_readyness_date') ? old('client_readyness_date') : (!empty($ccSchedules) ? $ccSchedules->client_readyness_date : null);
+                $nttn_date = old('nttn_date') ? old('nttn_date') : (!empty($ccSchedules) ? $ccSchedules->nttn_date : null);
+                $equipment_readyness_date = old('equipment_readyness_date') ? old('equipment_readyness_date') : (!empty($ccSchedules) ? $ccSchedules->equipment_readyness_date : null);
+                $field_operation_date = old('field_operation_date') ? old('field_operation_date') : (!empty($ccSchedules) ? $ccSchedules->field_operation_date : null);
+                $schedule_date = old('schedule_date') ? old('schedule_date') : (!empty($ccSchedules) ? $ccSchedules->schedule_date : null);
             @endphp
 
             <div class="row">
@@ -104,7 +108,7 @@
                     <div class="checkbox-fade fade-in-primary">
                         <label>
                             <input type="checkbox" name="cr_checkbox" value="cr" class="cr_checkbox"
-                                @checked(!empty($logicalConnectivityInternet) ? in_array('cr', $facilityTypes) : false)>
+                                @checked(!empty($ccSchedules) ? in_array('cr', $approvedType) : false)>
                             <span class="cr">
                                 <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                             </span>
@@ -114,7 +118,7 @@
                 </div>
                 <div class="form-group col-2 client_readyness_date">
                     <input type="text" class="form-control date" name="client_readyness_date" id="client_readyness_date"
-                        value="">
+                        value="{{ $client_readyness_date }}">
                 </div>
             </div>
 
@@ -123,7 +127,7 @@
                     <div class="checkbox-fade fade-in-primary">
                         <label>
                             <input type="checkbox" name="nttn_checkbox" class="nttn_checkbox" value="nttn" 
-                                @checked(!empty($logicalConnectivityInternet) ? in_array('nttn', $facilityTypes) : false)>
+                                @checked(!empty($ccSchedules) ? in_array('nttn', $approvedType) : false)>
                             <span class="cr">
                                 <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                             </span>
@@ -132,7 +136,7 @@
                     </div>
                 </div>
                 <div class="form-group col-2 nttn_date">
-                    <input type="text" class="form-control date" name="nttn_date" id="nttn_date" value="">
+                    <input type="text" class="form-control date" name="nttn_date" id="nttn_date" value="{{ $nttn_date }}">
                 </div>
             </div>
 
@@ -141,7 +145,7 @@
                     <div class="checkbox-fade fade-in-primary">
                         <label>
                             <input type="checkbox" name="er_checkbox" value="er" class="er_checkbox"
-                                @checked(!empty($logicalConnectivityInternet) ? in_array('er', $facilityTypes) : false)>
+                                @checked(!empty($ccSchedules) ? in_array('er', $approvedType) : false)>
                             <span class="cr">
                                 <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                             </span>
@@ -151,7 +155,7 @@
                 </div>
                 <div class="form-group col-2 equipment_readyness_date">
                     <input type="text" class="form-control date" name="equipment_readyness_date"
-                        id="equipment_readyness_date" value="">
+                        id="equipment_readyness_date" value="{{ $equipment_readyness_date }}">
                 </div>
             </div>
 
@@ -160,7 +164,7 @@
                     <div class="checkbox-fade fade-in-primary">
                         <label>
                             <input type="checkbox" name="fo_checkbox" value="fo" class="fo_checkbox"
-                                @checked(!empty($logicalConnectivityInternet) ? in_array('fo', $facilityTypes) : false)>
+                                @checked(!empty($ccSchedules) ? in_array('fo', $approvedType) : false)>
                             <span class="cr">
                                 <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                             </span>
@@ -170,7 +174,7 @@
                 </div>
                 <div class="form-group col-2 field_operation_date">
                     <input type="text" class="form-control date" name="field_operation_date"
-                        id="field_operation_date" value="">
+                        id="field_operation_date" value="{{ $field_operation_date }}">
                 </div>
             </div>
 
@@ -179,7 +183,7 @@
                     <div class="checkbox-fade fade-in-primary">
                         <label>
                             <input type="checkbox" name="schedule_checkbox" class="schedule_checkbox" value="schedule"
-                                @checked(!empty($logicalConnectivityInternet) ? in_array('schedule', $facilityTypes) : false)>
+                                @checked(!empty($ccSchedules) ? in_array('schedule', $approvedType) : false)>
                             <span class="cr">
                                 <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                             </span>
@@ -189,7 +193,7 @@
                 </div>
                 <div class="form-group col-2 schedule_date">
                     <input type="text" class="form-control date" name="schedule_date"
-                        id="schedule_date" value="">
+                        id="schedule_date" value="{{ $schedule_date }}">
                 </div>
             </div>
 
