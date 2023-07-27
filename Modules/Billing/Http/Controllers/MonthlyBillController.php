@@ -5,10 +5,11 @@ namespace Modules\Billing\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Billing\Entities\MonthlyBill;
-use Illuminate\Contracts\Support\Renderable;
-use Modules\Billing\Entities\BillGenerate;
+use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\SaleDetail;
+use Modules\Billing\Entities\MonthlyBill;
+use Modules\Billing\Entities\BillGenerate;
+use Illuminate\Contracts\Support\Renderable;
 
 class MonthlyBillController extends Controller
 {
@@ -65,11 +66,15 @@ class MonthlyBillController extends Controller
                         $net_amount += ($vv->quantity * $vv->price);
                     }
                 }
+                $parent['amount'] = $net_amount;
                 $data = BillGenerate::create($parent);
                 $data->lines()->createMany($child);
             }
-        } catch (Exception $err) {
-            dd($err->getMessage());
+            DB::commit();
+            return redirect()->route('monthly-bills.index')->with('message', 'Data has been created successfully');
+        } catch (Exception $error) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($error->getMessage());
         }
     }
 
