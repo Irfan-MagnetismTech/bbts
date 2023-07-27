@@ -5,11 +5,10 @@ namespace Modules\Billing\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
-use Modules\Sales\Entities\SaleDetail;
 use Modules\Billing\Entities\MonthlyBill;
-use Modules\Billing\Entities\BillGenerate;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Billing\Entities\BillGenerate;
+use Modules\Sales\Entities\SaleDetail;
 
 class MonthlyBillController extends Controller
 {
@@ -19,8 +18,7 @@ class MonthlyBillController extends Controller
      */
     public function index()
     {
-        $datas = BillGenerate::where('bill_type', 'Monthly Bill')->get();
-        return view('billing::monthlyBills.index', compact('datas'));
+        return view('billing::index');
     }
 
     /**
@@ -46,8 +44,7 @@ class MonthlyBillController extends Controller
                 $parent = [
                     'client_no'             => $val->first()->sale->client_no,
                     'billing_address_id'    => $key,
-                    'date'                  => $
-                    ->date,
+                    'date'                  => $request->date,
                     'bill_type'             => "Monthly Bill",
                     'month'                 => $request->month
                 ];
@@ -56,7 +53,6 @@ class MonthlyBillController extends Controller
                     foreach ($val2->sale->saleProductDetails as $kk => $vv) {
                         $child[] = [
                             "fr_no"                    => $vv->fr_no,
-                            "billing_address_id"       => $key,
                             "product_id"               => $vv->product_id,
                             "quantity"                 => $vv->quantity,
                             "unit_price"               => $vv->price,
@@ -69,15 +65,11 @@ class MonthlyBillController extends Controller
                         $net_amount += ($vv->quantity * $vv->price);
                     }
                 }
-                $parent['amount'] = $net_amount;
                 $data = BillGenerate::create($parent);
                 $data->lines()->createMany($child);
             }
-            DB::commit();
-            return redirect()->route('monthly-bills.index')->with('message', 'Data has been created successfully');
-        } catch (Exception $error) {
-            DB::rollBack();
-            return redirect()->back()->withInput()->withErrors($error->getMessage());
+        } catch (Exception $err) {
+            dd($err->getMessage());
         }
     }
 
