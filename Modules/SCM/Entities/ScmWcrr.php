@@ -3,6 +3,8 @@
 namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
+use Modules\Admin\Entities\User;
+use Modules\SCM\Entities\ScmWcr;
 use Modules\Admin\Entities\Branch;
 use Modules\SCM\Entities\ScmWcrrLine;
 use Modules\SCM\Entities\StockLedger;
@@ -37,5 +39,10 @@ class ScmWcrr extends Model
     public function wcr()
     {
         return $this->belongsTo(ScmWcr::class, 'wcr_id', 'id');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

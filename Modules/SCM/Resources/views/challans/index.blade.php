@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of Challan Info
+    List of Challan
 @endsection
 
 @section('style')

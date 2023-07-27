@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of Supplier Info
+    List of Supplier
 @endsection
 
 @section('style')
