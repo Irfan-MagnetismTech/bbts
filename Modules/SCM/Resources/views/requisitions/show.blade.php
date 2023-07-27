@@ -72,7 +72,7 @@
                         <td> {{ $requisitiondetail->description }} </td>
                         <td> {{ $requisitiondetail->material->unit }} </td>
                         <td> {{ $requisitiondetail->quantity }} </td>
-                        <td> {{ $requisitiondetail->brand->name }} </td>
+                        <td> {{ $requisitiondetail?->brand?->name ?? ''}} </td>
                         <td> {{ $requisitiondetail->model }} </td>
                         <td> {{ $requisitiondetail->purpose }} </td>
                     </tr>

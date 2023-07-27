@@ -43,7 +43,7 @@
                     $fr_no = $is_old ? old('fr_no') : $planning->feasibilityRequirementDetail->fr_no;
                     $fr_id = $is_old ? old('fr_id') : $planning->feasibilityRequirementDetail->id;
                     $mq_no = $is_old ? old('mq_no') : $planning->feasibilityRequirementDetail->feasibilityRequirement->mq_no;
-
+                    
                 @endphp
                 {{-- exiting or new radio button --}}
                 <div class="col-xl-3 col-md-3">
@@ -120,7 +120,7 @@
                                             <span>
                                                 <input type="number" name="product_quantity[]"
                                                     class="form-control form-control-sm input product_quantity"
-                                                    placeholder="Quantity" value="{{ $service_plan->plan }}" >
+                                                    placeholder="Quantity" value="{{ $service_plan->plan }}">
                                             </span>
                                         </td>
                                         <td>
@@ -506,15 +506,14 @@
                                                     value="{{ $plan_link_equipment->material->name ?? '' }}">
                                                 <input type="hidden"
                                                     name="plan_equipment_material_id_{{ $row_no }}[]"
-                                                    value="{{ $plan_link_equipment->material->id ?? ''}}">
-                                            </span>
+                                                    value="{{ $plan_link_equipment->material->id ?? '' }}" </span>
                                         </td>
                                         <td>
                                             <span>
                                                 <input type="text"
                                                     class="form-control form-control-sm plan_equipment_unit input"
                                                     placeholder="Unit" name="plan_equipment_unit_{{ $row_no }}[]"
-                                                    value="{{ $plan_link_equipment->unit ?? ''}}">
+                                                    value="{{ $plan_link_equipment->unit ?? '' }}">
                                             </span>
                                         </td>
                                         <td>
@@ -532,7 +531,7 @@
                                                     class="form-control form-control-sm plan_equipment_quantity input"
                                                     placeholder="Quantity"
                                                     name="plan_equipment_quantity_{{ $row_no }}[]"
-                                                    value="{{ $plan_link_equipment->quantity ?? ''}}">
+                                                    value="{{ $plan_link_equipment->quantity ?? '' }}">
                                             </span>
                                         </td>
                                         <td>

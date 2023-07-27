@@ -2,10 +2,17 @@
 
 namespace Modules\Networking\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\Ip;
 use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\SaleDetail;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\SaleProductDetail;
+use Modules\Networking\Entities\ClientFacility;
+use Modules\Networking\Entities\LogicalConnectivity;
+use Modules\Networking\Entities\PhysicalConnectivity;
+use Modules\Networking\Entities\BandwidthDestribution;
+use Modules\Networking\Entities\CCSchedule;
 
 class CCScheduleController extends Controller
 {
@@ -16,10 +23,10 @@ class CCScheduleController extends Controller
     public function index()
     {
         $salesDetails = SaleDetail::query()
-            ->whereHas('sale', function ($query) {
-                $query->where('management_approval', '=', 'Approved');
-            })
-            ->with('client', 'frDetails')
+            // ->whereHas('sale', function ($query) {
+            //     $query->where('management_approval', '=', 'Approved');
+            // })
+            ->with('sale', 'client', 'frDetails')
             ->latest()
             ->get();
 
@@ -32,7 +39,15 @@ class CCScheduleController extends Controller
      */
     public function create()
     {
-        return view('networking::create');
+        $salesDetails = SaleDetail::query()
+            ->whereHas('sale', function ($query) {
+                $query->where('management_approval', '=', 'Approved');
+            })
+            ->with('sale', 'client', 'frDetails')
+            ->where('fr_no', '=', request()->fr_no)
+            ->first();
+
+        return view('networking::cc-schedules.create', compact('salesDetails' ?? []));
     }
 
     /**
@@ -42,7 +57,26 @@ class CCScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $checkboxes = ['cr_checkbox', 'nttn_checkbox', 'er_checkbox', 'fo_checkbox', 'schedule_checkbox'];
+
+        $approved_type = collect($checkboxes)
+            ->map(function ($checkbox) use ($request) {
+                return $request->has($checkbox) ? substr($checkbox, 0, -9) : null;
+            })
+            ->filter()
+            ->implode(',');
+
+        $request->merge([
+            'approved_type' => $approved_type
+        ]);
+
+        CCSchedule::updateOrCreate(
+            [
+                'fr_no' => $request->fr_no,
+                'client_no' => $request->client_no,
+            ],
+            $request->all()
+        );
     }
 
     /**

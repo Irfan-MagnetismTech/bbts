@@ -4,6 +4,7 @@ namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
 use Modules\Admin\Entities\Pop;
+use Modules\Admin\Entities\User;
 use Modules\SCM\Entities\ScmMur;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
@@ -63,5 +64,10 @@ class ScmChallan extends Model
     public function mur()
     {
         return $this->hasOne(ScmMur::class, 'challan_id');
+    }
+
+    public function challanBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

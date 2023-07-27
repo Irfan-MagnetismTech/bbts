@@ -13,7 +13,8 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('indents.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('gate-passes.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')

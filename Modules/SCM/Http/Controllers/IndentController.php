@@ -79,9 +79,9 @@ class IndentController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(Indent $indent)
     {
-        abort(404);
+        return view('scm::indents.show', compact('indent'));
     }
 
     /**

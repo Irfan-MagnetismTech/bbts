@@ -1,318 +1,454 @@
 @extends('layouts.backend-layout')
-@section('title', 'Survey')
+@section('title', 'consting')
+
+@php
+    $is_old = old('client_id') ? true : false;
+    $form_heading = !empty($costing->id) ? 'Update' : 'Add';
+    $form_url = !empty($costing->id) ? route('survey.update', $costing->id) : route('costing.store');
+    $form_method = !empty($costing->id) ? 'PUT' : 'POST';
+@endphp
 
 @section('breadcrumb-title')
-    Survey Details
+    {{ ucfirst($form_heading) }} Costing Sheet
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('survey.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('costing.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
+@section('sub-title')
+    <span class="text-danger">*</span> Marked are required.
+@endsection
 
 @section('content-grid', null)
 
 @section('content')
-    <style>
-        .input-group-addon {
-            min-width: 105px;
-        }
-    </style>
-    {{-- Comparative Statement --}}
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="tableHeading">
-                    <h5> <span> &#10070; </span> Survey <span>&#10070;</span> </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        {{-- exiting or new radio button --}}
-                        <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_type">Date<span
-                                        class="text-danger">*</span></label>
-                                <span class="form-control">{{ $survey->date }}</span>
-                            </div>
-                        </div>
 
-                        <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_id">Client ID<span
-                                        class="text-danger">*</span></label>
-                                <span class="form-control">{{ $survey->lead_generation->client_no }}</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_name">Client Name<span
-                                        class="text-danger">*</span></label>
-                                <span class="form-control">{{ $survey->lead_generation->client_name }}</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="link_name">Name of the link</label>
-                                <span class="form-control">{{ $survey->feasibilityRequirementDetails->link_name }}</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="fr_id">FR No</label>
-                                <span class="form-control">{{ $survey->fr_no }}</span>
-                            </div>
-                        </div>
-                        {{-- gps --}}
-                        <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="gps">GPS</label>
-                                <span
-                                    class="form-control">{{ $survey->feasibilityRequirementDetails->lat_long ?? '' }}</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-4 col-md-4">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="mq_id">MQ ID</label>
-                                <span class="form-control">{{ $survey->mq_no }}</span>
-                            </div>
+    {!! Form::open([
+        'url' => $form_url,
+        'method' => $form_method,
+    ]) !!}
+
+    {{-- Comparative Statement --}}
+    <div class="card">
+        <div class="tableHeading">
+            <h5> <span> &#10070; </span> Costing Sheet <span>&#10070;</span> </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-xl-3 col-md-3">
+                    <div class="form-item">
+                        <label for="client_id">Client ID<span class="text-danger">*</span></label>
+                        <p>{{ $costing->client_no }} </p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-3">
+                    <div class="form-item">
+                        <label for="client_name">Client Name<span class="text-danger">*</span></label>
+                        <p>{{ $costing->lead_generation->client_name ?? '' }}</p>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-3">
+                    <div>
+                        <div class="form-item">
+                            <label for="connectivity_point">Connectivity Point</label>
+                            <p>{{ $costing->feasibilityRequirementDetail->connectivity_point ?? '' }}</p>
                         </div>
                     </div>
                 </div>
-                <hr />
-                <div class="text-center">
-                    <h5> <span> &#10070; </span> Connectivity Details <span>&#10070;</span> </h5>
-                </div>
-                <hr />
-                {{-- create a responsive table --}}
-                <div class="row">
-                    <div class="md-col-6 col-6">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th colspan="5">Product Details</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Category</th>
-                                        <th>Product</th>
-                                        <th>Capacity</th>
-                                        <th>Unit</th>
-                                        <th>Remarks</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="productBody">
-                                    @foreach ($connectivity_requirement->connectivityProductRequirementDetails as $connectivityProductRequirementDetail)
-                                        <tr class="product_details_row">
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityProductRequirementDetail->category->name }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityProductRequirementDetail->product->name }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityProductRequirementDetail->capacity }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityProductRequirementDetail->product->unit }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityProductRequirementDetail->remarks ?? '' }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="md-col-6 col-6">
-                        {{-- Connectivity Details --}}
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th colspan="5">Connectivity Details</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Link Type</th>
-                                        <th>Method</th>
-                                        <th>Capacity %</th>
-                                        <th>Uptime Reg/SLA</th>
-                                        <th>Vendor</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="connectivityBody">
-                                    @foreach ($connectivity_requirement->connectivityRequirementDetails as $connectivityRequirementDetail)
-                                        <tr class="connectivity_details_row">
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityRequirementDetail->link_type }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityRequirementDetail->method }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityRequirementDetail->connectivity_capacity }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityRequirementDetail->sla }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    {{ $connectivityRequirementDetail->vendor->name ?? '' }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                <div class="col-xl-3 col-md-3">
+                    <div class="form-item">
+                        <label for="month">Month</label>
+                        <p>{{ $costing->month }}</p>
                     </div>
                 </div>
-                <hr />
-                <div class="text-center">
-                    <h5> <span> &#10070; </span> Survey Details <span>&#10070;</span> </h5>
+            </div>
+            <div class="row">
+                <div class="md-col-12 col-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="11">Product Costing</th>
+                                </tr>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Rate</th>
+                                    <th>Unit</th>
+                                    <th>Amount</th>
+                                    <th>Vat(%)</th>
+                                    <th>Vat Amount</th>
+                                    <th>Operation Cost</th>
+                                    <th>Total Amount</th>
+                                    <th>Price</th>
+                                    <th>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody class="productBody">
+                                @foreach ($costing->costingProducts as $costing_product)
+                                    <tr class="product_details_row">
+                                        <td>{{ $costing_product->product->name }}</td>
+                                        <td>{{ $costing_product->quantity }}</td>
+                                        <td>{{ $costing_product->rate }}</td>
+                                        <td>{{ $costing_product->unit }}</td>
+                                        <td>{{ $costing_product->sub_total }}</td>
+                                        <td>{{ $costing_product->product_vat }}</td>
+                                        <td>{{ $costing_product->product_vat_amount }}</td>
+                                        <td>{{ $costing_product->operation_cost }}</td>
+                                        <td>{{ $costing_product->operation_cost_total }}</td>
+                                        <td>{{ $costing_product->offer_price }}</td>
+                                        <td>{{ $costing_product->total }}</td>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <td colspan="4" class="text-right">Total</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <hr />
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Link Type</th>
-                                <th>Option</th>
-                                <th>Status</th>
-                                <th>Method</th>
-                                <th>Vendor</th>
-                                <th>BTS/POP/LDP</th>
-                                <th>GPS</th>
-                                <th>Distance</th>
-                                <th>Current Capacity</th>
-                                <th>Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($survey->surveyDetails as $detail)
-                                <tr class="feasibility_details_row">
-                                    <td>
-                                        <span>{{ $detail->link_type }}</span>
+                <div class="md-col-12 col-12">
+                    {{-- Connectivity Details --}}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="6">Product Related Equipment</th>
+                                </tr>
+                                <tr>
+                                    <th>Link Type</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Ownership</th>
+                                    <th>Rate</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="connectivityBody">
+                                @foreach ($costing->costingProductEquipments as $product_equipment)
+                                    <tr class="connectivity_details_row">
+                                        <td>{{ $product_equipment->material->name ?? '' }}</td>
+                                        <td>{{ $product_equipment->quantity }}</td>
+                                        <td>{{ $product_equipment->unit }}</td>
+                                        <td>{{ $product_equipment->ownership }}</td>
+                                        <td>{{ $product_equipment->rate }}</td>
+                                        <td>{{ $product_equipment->total }}</td>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Equipment Total</td>
+                                    <td>{{ $costing->equipment_wise_total }}</td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Client Equipment Total
                                     </td>
+                                    <td> {{ $costing->client_equipment_total }} </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Partial Total</td>
+                                    <td> {{ $costing->equipment_partial_total }} </td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Deployment Cost</td>
+                                    <td> {{ $costing->equipment_deployment_cost }} </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Interest</td>
+                                    <td>{{ $costing->equipment_interest }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">VAT</td>
+                                    <td>{{ $costing->equipment_vat }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Tax</td>
+                                    <td>{{ $costing->equipment_tax }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">Total</td>
+                                    <td>{{ $costing->equipment_grand_total }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">OTC</td>
+                                    <td>{{ $costing->equipment_otc }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size: 14px;">ROI</td>
+                                    <td>{{ $costing->equipment_roi }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="text-center">
+                <h5> <span> &#10070; </span> Link Details <span>&#10070;</span> </h5>
+            </div>
+            <hr />
+            @foreach ($costing->costingLinks as $costing_link)
+                <div class="PlanLinkMainRow"
+                    style="border: 2px solid gray; border-radius: 15px; padding: 15px; margin-top: 15px;">
+                    <div class="row">
+                        <div class="col-2 col-md-2">
+                            <span>{{ $costing_link->link_type }}</span>
+                        </div>
+                        <div class="col-2 col-md-2">
+                            <span>{{ $costing_link->option }}</span>
+                        </div>
+                        <div class="col-2 col-md-2">
+                            <span>{{ $costing_link->existing_transmission_capacity }}</span>
+                        </div>
+                        <div class="col-2 col-md-2">
+                            <span>{{ $costing_link->quantity }}</span>
+                        </div>
+                        <div class="col-1 col-md-1">
+                            <span>{{ $costing_link->rate }}</span>
+                        </div>
+                        <div class="col-2 col-md-2">
+                            <span>{{ $costing_link->total }}</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="text-center">
+                                    <th colspan="6">Equipment</th>
+                                </tr>
+                                <tr>
+                                    <th>Material</th>
+                                    <th>Unit</th>
+                                    <th>Ownership</th>
+                                    <th>Quantity</th>
+                                    <th>Rate</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tbody">
+                                @foreach ($costing_link->costingLinkEquipments as $link_equipment)
+                                    <tr>
+                                        <td>
+                                            <span>{{ $link_equipment->material->name ?? '' }}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{ $link_equipment->unit ?? '' }}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{ $link_equipment->ownership }}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{ $link_equipment->quantity ?? '' }}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{ $link_equipment->rate ?? '' }}</span>
+                                        </td>
+                                        <td>
+                                            <span>{{ $link_equipment->total ?? '' }}</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size:14px;">Plan Equipment Total</td>
                                     <td>
-                                        <span>{{ $detail->option }}</span>
-                                    </td>
-                                    <td>
-                                        <span>{{ $detail->status }}</span>
-                                    </td>
-                                    <td>
-                                        <span>{{ $detail->method }}</span>
-                                    </td>
-                                    <td>
-                                        <span>{{ $detail->vendor }}</span>
-                                    </td>
-                                    <td>
-                                        <span>{{ $detail->bts_pop_ldp }}</span>
-                                    </td>
-                                    <td>
-                                        <span>{{ $detail->gps }}</span>
-                                    </td>
-                                    <td>
-                                        <span>{{ $detail->distance }}</span>
-                                    </td>
-                                    <td>
-                                        <span>{{ $detail->current_capacity }}</span>
-                                    </td>
-                                    <td>
-                                        <span>{{ $detail->remarks }}</span>
+                                        <span>{{ $costing_link->plan_all_equipment_total }}</span>
                                     </td>
                                 </tr>
-                            @endforeach
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size:14px;">Client Equipment Total
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_client_equipment_total }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right" style="font-size:14px;">Total</td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_partial_total }}</span>
+                                    </td>
+                                </tr>
+                                <tr class="text-right">
+                                    <td colspan="3">
+                                        <span style="font-size: 14px;">OTC</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_otc }}</span>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 14px;">Deployment Cost</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_deployment_cost }}</span>
+                                    </td>
+                                </tr>
+                                <tr class="text-right">
+                                    <td colspan="3">
+                                        <span style="font-size: 14px;">ROI</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_roi }}</span>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 14px;">Interest</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_interest }}</span>
+                                    </td>
+                                </tr>
+                                <tr class="text-right">
+                                    <td colspan="3">
+                                        <span style="font-size: 14px;">Capacity</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_capacity }}</span>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 14px;">Total</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_grand_total }}</span>
+                                    </td>
+                                </tr>
+                                <tr class="text-right">
+                                    <td colspan="3">
+                                        <span style="font-size: 14px;">Operation Cost</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_operation_cost }}</span>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 14px;">VAT</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_vat }}</span>
+                                    </td>
+                                </tr>
+                                <tr class="text-right">
+                                    <td colspan="3">
+                                        <span style="font-size: 14px;">Total MRC</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_total_mrc }}</span>
+                                    </td>
+                                    <td>
+                                        <span style="font-size: 14px;">Tax</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_tax }}</span>
+                                    </td>
+                                </tr>
+                                <tr class="text-right">
+                                    <td colspan="5">
+                                        <span style="font-size: 14px;">Total Inv</span>
+                                    </td>
+                                    <td>
+                                        <span>{{ $costing->plan_equipment_total_inv }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endforeach
+            <hr />
+            <div class="text-center">
+                <h5>FR Wise Cost Calculation</h5>
+            </div>
+            <hr />
+            <div class="row p-0 m-0">
+                <div class="col-3 col-md-3">
+                </div>
+                <div class="col-6 col-md-6">
+                    <table class="table table-bordered w-full">
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total Investment</span>
+                                </td>
+                                <td colspan="2">
+                                    {{ $costing->total_investment }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total OTC</span>
+                                </td>
+                                <td colspan="2">
+                                    {{ $costing->total_otc }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total Product Cost</span>
+                                </td>
+                                <td colspan="2">
+                                    {{ $costing->total_product_cost }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total Service Cost</span>
+                                </td>
+                                <td colspan="2">
+                                    {{ $costing->total_service_cost }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total MRC</span>
+                                </td>
+                                <td colspan="2">
+                                    {{ $costing->total_mrc }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span style="font-size:14px;">Margin</span>
+                                </td>
+                                <td>
+                                    {{ $costing->management_percentage }}
+                                </td>
+                                <td>
+                                    {{ $costing->management_cost_amount }}
+                                </td>
+                                <td>
+                                    {{ $costing->management_cost_total }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Equipment Price for Client</span>
+                                </td>
+                                <td colspan="2">
+                                    {{ $costing->equipment_price_for_client }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <span style="font-size:14px;">Total OTC</span>
+                                </td>
+                                <td colspan="2">
+                                    {{ $costing->total_otc_with_client_equipment }}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="col-3 col-md-3">
                 </div>
             </div>
         </div>
     </div>
-@endsection
-
-@section('script')
-    <script>
-        $('#addRow').on('click', function() {
-            addRow();
-        });
-
-        function addRow() {
-            $('.feasibility_details_row').first().clone().appendTo('tbody');
-            $('.feasibility_details_row').last().find('input').val('');
-            $('.feasibility_details_row').last().find('select').val('');
-        };
-
-        $(document).on('click', '.removeRow', function() {
-            let count = $('.feasibility_details_row').length;
-            if (count > 1) {
-
-                //get attr_one value 
-                var attr_one = $(this).attr('attr_one');
-                //if attr_one value is not empty then delete from database
-                if (attr_one != '') {
-                    $.ajax({
-                        url: "{{ route('delete-feasibility-requirement-details') }}",
-                        data: {
-                            id: attr_one,
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(data) {
-                            console.log(data);
-                        }
-                    });
-                }
-                $(this).closest('tr').remove();
-            }
-        });
-
-        $('#client_id').on('input', function() {
-            var client_id = $(this).val();
-            console.log(client_id)
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ route('get-client') }}",
-                        data: {
-                            client_id: client_id,
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $('#client_id').val(ui.item.label);
-                    $('#client_name').val(ui.item.value);
-                    $('#lead_generation_id').val(ui.item.lead_generation_id);
-                    return false;
-                }
-            });
-        });
-        $('#date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());
-    </script>
+    <button class="py-2 btn btn-success ">{{ !empty($costing->id) ? 'Update' : 'Save' }}</button>
+    </div>
+    {!! Form::close() !!}
 @endsection
