@@ -41,13 +41,22 @@ class CCScheduleController extends Controller
     {
         $salesDetails = SaleDetail::query()
             ->whereHas('sale', function ($query) {
-                $query->where('management_approval', '=', 'Approved');
+                $query->where('management_approval', 'Approved');
             })
-            ->with('sale', 'client', 'frDetails')
-            ->where('fr_no', '=', request()->fr_no)
+            ->with(['sale', 'client', 'frDetails'])
+            ->whereFrNo(request()->fr_no)
+            ->latest()
             ->first();
 
-        return view('networking::cc-schedules.create', compact('salesDetails' ?? []));
+
+        $ccSchedules = CCSchedule::query()
+            ->whereClientNoAndFrNo($salesDetails->client_no, $salesDetails->fr_no)
+            ->latest()
+            ->first();
+
+        $approvedType = explode(',', @$ccSchedules->approved_type);
+
+        return view('networking::cc-schedules.create', compact('salesDetails' ?? [], 'ccSchedules' ?? [], 'approvedType' ?? []));
     }
 
     /**
@@ -77,6 +86,8 @@ class CCScheduleController extends Controller
             ],
             $request->all()
         );
+
+        return redirect()->back()->with('message', 'Client Connectivity Schedule updated successfully.');
     }
 
     /**
