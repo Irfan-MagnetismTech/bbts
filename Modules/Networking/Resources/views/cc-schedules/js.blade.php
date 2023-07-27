@@ -1,98 +1,6 @@
 <script>
-    function appendDataServiceRow() {
-        let row_index = $("#data_service tr:last").prop('rowIndex');
-
-        var html = `
-            <tr>
-                <td>
-                    <select name="product_id[]" class="form-control select2" required>
-                        <option value="" slected disable>Select Product</option>
-                        @foreach ($products as $data)
-                            <option value="{{ $data->product->id }}">{{ $data->product->name }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td>
-                    <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off" required>
-                </td>
-                <td>
-                    <select name="ip_ipv4[]" class="form-control select2 ip_ipv4" required>
-                        <option value="" slected disable>Select IP Address</option>
-                        @foreach ($ipv4Ips as $ip)
-                            <option value="{{ $ip->address }}">{{ $ip->address }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td>
-                    <select name="ip_ipv6[]" class="form-control select2 ip_ipv6" required>
-                        <option value="" slected disable>Select IP Address</option>
-                        @foreach ($ipv6Ips as $ip)
-                            <option value="{{ $ip->address }}">{{ $ip->address }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td>
-                    <input type="text" name="subnetmask[]" class="form-control subnetmask" autocomplete="off" required>
-                </td>
-                <td>
-                    <input type="text" name="gateway[]" class="form-control gateway" autocomplete="off" required>
-                </td>
-                <td>
-                    <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off" required>
-                </td>
-                <td>
-                    <input type="text" name="mrtg_user[]" class="form-control mrtg_user" autocomplete="off" required>
-                </td>
-                <td>
-                    <input type="text" name="mrtg_pass[]" class="form-control mrtg_pass" autocomplete="off" required>
-                </td>
-                ${(row_index > 0) ? 
-                `<td>
-                    <button type="button" class="btn btn-danger btn-sm fa fa-minus remove-data-service-row"></button>
-                </td>`:
-                `<td>
-                    <button type="button" class="btn btn-success btn-sm fa fa-plus add-data-service-row"></button>
-                </td>`
-                }
-            </tr>
-        `;
-        $("#data_service tbody").append(html);
-    }
-
-    function appendBandwidthDistributionRow() {
-        let row_index = $("#bandwidth_distribution tr:last").prop('rowIndex');
-
-        var html = `
-            <tr>
-                <td>
-                    <select name="ip_address[]" class="form-control select2" required>
-                        <option value="" slected disable>Select IP Address</option>
-                        @foreach ($ips as $ip)
-                            <option value="{{ $ip->id }}">{{ $ip->address }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td>
-                    <input type="text" name="bandwidth[]" class="form-control bandwidth"
-                        autocomplete="off" value="{{ $line->bandwidth }}">
-                </td>
-                <td>
-                    <input type="text" name="remarks[]" class="form-control remarks"
-                        autocomplete="off" value="{{ $line->remarks }}">
-                </td>
-                ${(row_index > 0) ? 
-                `<td>
-                    <button type="button" class="btn btn-danger btn-sm fa fa-minus remove-bandwidth-distribution-row"></button>
-                </td>`:
-                `<td>
-                    <button type="button" class="btn btn-success btn-sm fa fa-plus add-bandwidth-distribution-row"></button>
-                </td>`
-                }
-            </tr>
-        `;
-        $("#bandwidth_distribution tbody").append(html);
-    }
-
+    
+    
     // all input fields of logical connectivity facilities
     const dns_input_fields = "#dns_domain, #dns_mx_record, #dns_a_record, #dns_reverse_record, #dns_ip_address";
     const smtp_input_fields = "#smtp_domain, #smtp_server";
@@ -118,15 +26,7 @@
             @if (isset($inputFieldsMap[$facilityType]))
                 $({{ $inputFieldsMap[$facilityType] }}).prop('disabled', false);
             @endif
-        @endforeach
-
-        //call the functions to append data service and bandwidth distribution rows
-        @if (empty($logicalConnectivityInternet))
-            appendDataServiceRow();
-            appendBandwidthDistributionRow();
-            initializeSelect2();
-        @endif
-        initializeSelect2();
+        @endforeach        
     });
 
     /* Adds and removes quantity row on click */
@@ -161,12 +61,4 @@
             $(inputFields).prop('disabled', true);
         }
     }
-
-    //initialize datepicker
-    $('.date').datepicker({
-        format: "dd-mm-yyyy",
-        autoclose: true,
-        todayHighlight: true,
-        showOtherMonths: true
-    });
 </script>
