@@ -59,11 +59,11 @@ class CostingController extends Controller
 
             $costing = Costing::create($costingData);
 
-            $this->createCostingProducts($request, $costing);
+            $this->createOrUpdateCostingProducts($request, $costing);
 
-            $this->createCostingMaterials($request, $costing);
+            $this->createOrUpdateCostingMaterials($request, $costing);
 
-            $this->createCostingLinks($request, $costing);
+            $this->createOrUpdateCostingLinks($request, $costing);
 
             DB::commit();
             // return response()->json(['message' => 'Data saved successfully.']);
@@ -94,7 +94,8 @@ class CostingController extends Controller
      */
     public function edit($id)
     {
-        return view('sales::edit');
+        $costing = Costing::with('costingProducts', 'costingProductEquipments', 'costingLinks.costingLinkEquipments', 'lead_generation', 'feasibilityRequirementDetail')->find($id);
+        return view('sales::costing.edit', compact('costing'));
     }
 
     /**
@@ -105,7 +106,29 @@ class CostingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        try {
+            DB::beginTransaction();
+
+            $costingData = $request->all();
+
+            $costing = Costing::find($id);
+
+            $costing->update($costingData);
+
+            $this->createOrUpdateCostingProducts($request, $costing);
+
+            $this->createOrUpdateCostingMaterials($request, $costing);
+
+            $this->createOrUpdateCostingLinks($request, $costing);
+
+            DB::commit();
+            // return response()->json(['message' => 'Data saved successfully.']);
+            return redirect()->route('sales.costing.index')->with('success', 'Data saved successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to save data. Error: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -202,6 +225,113 @@ class CostingController extends Controller
                     'ownership' => request('ownership_' . $rowNo)[$key],
                 ];
                 CostingLinkEquipment::create($equipmentData);
+            }
+        }
+    }
+
+    private function createOrUpdateCostingProducts($request, $costing)
+    {
+        foreach ($request->product_id as $key => $product) {
+            $productData = [
+                'costing_id' => $costing->id,
+                'product_id' => $product,
+                'fr_no' => $request->fr_no,
+                'quantity' => $request->product_quantity[$key],
+                'rate' => $request->product_rate[$key],
+                'unit' => $request->product_unit[$key],
+                'sub_total' => $request->product_price[$key],
+                'product_vat' => $request->product_vat[$key],
+                'product_vat_amount' => $request->product_vat_amount[$key],
+                'operation_cost' => $request->product_operation_cost[$key],
+                'operation_cost_total' => $request->product_total_cost[$key],
+                'offer_price' => $request->offer_price[$key],
+                'total' => $request->product_offer_total[$key],
+            ];
+            if (isset($request->product_costing_id[$key])) {
+                $costingProduct = CostingProduct::find($request->product_costing_id[$key]);
+                $costingProduct->update($productData);
+            } else {
+                CostingProduct::create($productData);
+            }
+        }
+    }
+
+    private function createOrUpdateCostingMaterials($request, $costing)
+    {
+        foreach ($request->material_id as $key => $material) {
+            $materialData = [
+                'costing_id' => $costing->id,
+                'material_id' => $request->material_id[$key],
+                'quantity' => $request->equipment_quantity[$key],
+                'rate' => $request->equipment_rate[$key],
+                'total' => $request->equipment_total[$key],
+                'unit' => $request->equipment_unit[$key],
+                'ownership' => $request->equipment_ownership[$key],
+            ];
+            if (isset($request->equipment_costing_id[$key])) {
+                $costingProductEquipment = CostingProductEquipment::find($request->equipment_costing_id[$key]);
+                $costingProductEquipment->update($materialData);
+            } else {
+                CostingProductEquipment::create($materialData);
+            }
+        }
+    }
+
+    private function createOrUpdateCostingLinks($request, $costing)
+    {
+
+        for ($rowNo = 1; $rowNo <= $request->total_key; $rowNo++) {
+            $costingLinkData = [
+                'costing_id' => $costing->id,
+                'link_status' => request('plan_link_status_' . $rowNo) ?? 0,
+                'link_no' => request('link_no_' . $rowNo),
+                'link_type' => request('link_type_' . $rowNo),
+                'option' => request('option_' . $rowNo),
+                'transmission_capacity' => request('capacity_' . $rowNo),
+                'rate' => request('rate_' . $rowNo),
+                'quantity' => request('quantity_' . $rowNo),
+                'total' => request('link_total_' . $rowNo),
+                'plan_all_equipment_total' => request('plan_all_equipment_total_' . $rowNo),
+                'plan_client_equipment_total' => request('plan_client_equipment_total_' . $rowNo),
+                'partial_total' => request('plan_equipment_partial_total_' . $rowNo),
+                'deployment_cost' => request('plan_equipment_deployment_cost_' . $rowNo),
+                'interest' => request('plan_equipment_interest_' . $rowNo),
+                'vat' => request('plan_equipment_vat_' . $rowNo),
+                'tax' => request('plan_equipment_tax_' . $rowNo),
+                'grand_total' => request('plan_equipment_grand_total_' . $rowNo),
+                'otc' => request('plan_equipment_otc_' . $rowNo),
+                'roi' => request('plan_equipment_roi_' . $rowNo),
+                'investment' => request('plan_equipment_total_inv_' . $rowNo),
+                'capacity_amount' => request('plan_equipment_capacity_' . $rowNo),
+                'operation_cost' => request('plan_equipment_operation_cost_' . $rowNo),
+                'total_mrc' => request('plan_equipment_total_mrc_' . $rowNo),
+            ];
+
+            if (isset($request->link_costing_id[$rowNo])) {
+                $costingLink = CostingLink::find($request->link_costing_id[$rowNo]);
+                $costingLink->update($costingLinkData);
+            } else {
+                $costingLink = CostingLink::create($costingLinkData);
+            }
+
+            foreach (request('plan_equipment_material_id_' . $rowNo) as $key => $equipment) {
+
+                $equipmentData = [
+                    'costing_id' => $costing->id,
+                    'costing_link_id' => $costingLink->id,
+                    'material_id' => request('plan_equipment_material_id_' . $rowNo)[$key],
+                    'unit' => request('plan_equipment_unit_' . $rowNo)[$key],
+                    'rate' => request('plan_equipment_rate_' . $rowNo)[$key],
+                    'quantity' => request('plan_equipment_quantity_' . $rowNo)[$key],
+                    'total' => request('plan_equipment_total_' . $rowNo)[$key],
+                    'ownership' => request('ownership_' . $rowNo)[$key],
+                ];
+                if (isset($request->equipment_link_costing_id[$rowNo][$key])) {
+                    $costingLinkEquipment = CostingLinkEquipment::find($request->equipment_link_costing_id[$rowNo][$key]);
+                    $costingLinkEquipment->update($equipmentData);
+                } else {
+                    CostingLinkEquipment::create($equipmentData);
+                }
             }
         }
     }
