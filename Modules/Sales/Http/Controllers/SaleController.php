@@ -173,6 +173,8 @@ class SaleController extends Controller
                 'mrc'                   => $raw['mrc'][$key],
                 'otc'                   => $raw['otc'][$key],
                 'total_mrc'             => $raw['total_mrc'][$key],
+                'vat_amount'            => $raw['vat_amount'][$key],
+                'vat_percent'           => $raw['vat_percent'][$key]
             ];
         }
         return $data;

@@ -240,6 +240,21 @@
                                                                 </div>
                                                             </td>
                                                         </tr>
+                                                        <tr>
+                                                            <td style="text-align: left;"></td>
+                                                            <td style="text-align: left;">Vat Percent</td>
+                                                            <td style="text-align: center;">
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="vat_percent[{{$key}}]" class="form-control text-right vat_percent" value="{{$value->vat_percent}}">
+                                                                </div>
+                                                            </td>
+                                                            <td style="text-align: left;">Vat Amount</td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="vat_amount[{{$key}}]" class="form-control text-right vat_amount" readonly value="{{$value->vat_amount}}">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
                                                     </tfoot>
                                                 </table>
                                             </div>
