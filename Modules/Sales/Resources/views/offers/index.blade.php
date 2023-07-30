@@ -54,6 +54,8 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
+                                    <a href="{{ route('client-offer', $offer->mq_no) }}" data-toggle="tooltip"
+                                        title="Client OFfer" class="btn btn-outline-success">Client Offer</a>
                                 </nobr>
                             </div>
                         </td>

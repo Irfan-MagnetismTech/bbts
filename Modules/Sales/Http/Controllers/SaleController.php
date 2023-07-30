@@ -506,7 +506,48 @@ class SaleController extends Controller
 
     public function clientOffer($mq_no = null)
     {
+        // offer
+
+        // pr = product costing, costing product ->rate hidden for calcolation
+
+        // rate-> offer details -> total_offer_mrc divided hidden rate //206 tk
+
+        // profit_percentage = (total_offer_mrc / total product amout (costing er  ) ) * 100 -100
+
+        // total_product = sum(costing_products->rate * quantity)
+
+        // main product rate = profit_percentage * pr + pr
+
+        // offer details e offer otc
+
+        // total otc up + down otc
+
+        // 2*4 = 8
+        // 3* 2= 6 8+6
+
+        // total_product = sum(costing_products->rate * quantity)
+        // profit_percentage = (total_offer_mrc / total_product ) * 100 -100
+        // product_price = costing_products->rate * profit_percentage + costing_products->rate
+
+
         $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
-        return view('sales::sales.client_offer', compact('sale', 'mq_no'));
+
+
+        $offer = Offer::with('client', 'offerDetails.frDetails', 'costing.costingProducts')->where('mq_no', $mq_no)->first();
+
+        $offerData = $offer->offerDetails->map(function ($item) {
+            $item->total_product = $item->costing->costingProducts->sum(function ($item) {
+                return $item->rate * $item->quantity;
+            });
+            $profit_percentage = $item->profit_percentage = (($item->total_offer_mrc / $item->total_product) * 100) - 100;
+            $item->costing->costingProducts->map(function ($item) use ($profit_percentage) {
+                $item->product_price = ($item->rate * ($profit_percentage / 100)) + $item->rate;
+                return $item;
+            });
+            return $item;
+        });
+        // dd($offerData);
+
+        return view('sales::offers.client_offer', compact('sale', 'mq_no', 'offer', 'offerData'));
     }
 }
