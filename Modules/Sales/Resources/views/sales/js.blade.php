@@ -180,6 +180,22 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td style="text-align: left;"></td>
+                                            <td style="text-align: left;">Vat Percent</td>
+                                            <td style="text-align: center;">
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="vat_percent[${indx}]" class="form-control text-right vat_percent" value="0">
+                                                </div>
+                                            </td>
+                                            <td style="text-align: left;">Vat Amount</td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="vat_amount[${indx}]" class="form-control text-right vat_amount" readonly value="0">
+                                                </div>
+                                            </td>
+                                        </tr>
+
                                     </tfoot>
                                 </table>
                             </div>
@@ -227,6 +243,14 @@
             });
             $('#grand_total').val(vvall);
         })
+
+        $(document).on('keyup','.vat_percent',function(){
+            let mrc = Number($(this).closest('tr').prev().find('.total_mrc').val());
+            let vat_percent = Number($(this).val());
+            let vat_tk = mrc * vat_percent / 100;
+            $(this).closest('tr').find('.vat_amount').val(vat_tk);
+        })
+
 
     function updateAddress(){
         var form_data = {

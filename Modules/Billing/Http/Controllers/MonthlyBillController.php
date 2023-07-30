@@ -19,7 +19,8 @@ class MonthlyBillController extends Controller
      */
     public function index()
     {
-        return view('billing::index');
+        $datas = BillGenerate::where('bill_type', 'Monthly Bill')->get();
+        return view('billing::monthlyBills.index', compact('datas'));
     }
 
     /**
@@ -58,9 +59,11 @@ class MonthlyBillController extends Controller
                             "quantity"                 => $vv->quantity,
                             "unit_price"               => $vv->price,
                             "total_price"              => $vv->quantity * $vv->price,
+                            'vat'                      => $vv->vat_amount,
+                            "total_amount"             => ($vv->quantity * $vv->price) - $vv->vat_amount,
                             "total_product_price"      => $vv->quantity * $vv->price,
-                            "total_amount"             => $vv->quantity * $vv->price,
-                            "net_amount"               => $vv->quantity * $vv->price,
+                            "penality"                 => 0,
+                            "net_amount"               => ($vv->quantity * $vv->price) - $vv->vat_amount,
                             'bill_type'                => "Monthly Bill",
                         ];
                         $net_amount += ($vv->quantity * $vv->price);
@@ -119,5 +122,19 @@ class MonthlyBillController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function mrc_bill($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $monthlyBill->load('lines');
+        return view('billing::monthlyBills.mrcBill', compact('monthlyBill'));
+    }
+
+    public function mrc_bill_summary($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $monthlyBill->load('lines');
+        return view('billing::monthlyBills.mrcBillSummary', compact('monthlyBill'));
     }
 }
