@@ -46,8 +46,7 @@ class MonthlyBillController extends Controller
                 $parent = [
                     'client_no'             => $val->first()->sale->client_no,
                     'billing_address_id'    => $key,
-                    'date'                  => $
-                    ->date,
+                    'date'                  => $request->date,
                     'bill_type'             => "Monthly Bill",
                     'month'                 => $request->month
                 ];
@@ -56,14 +55,15 @@ class MonthlyBillController extends Controller
                     foreach ($val2->sale->saleProductDetails as $kk => $vv) {
                         $child[] = [
                             "fr_no"                    => $vv->fr_no,
-                            "billing_address_id"       => $key,
                             "product_id"               => $vv->product_id,
                             "quantity"                 => $vv->quantity,
                             "unit_price"               => $vv->price,
                             "total_price"              => $vv->quantity * $vv->price,
+                            'vat'                      => $vv->vat_amount,
+                            "total_amount"             => ($vv->quantity * $vv->price) - $vv->vat_amount,
                             "total_product_price"      => $vv->quantity * $vv->price,
-                            "total_amount"             => $vv->quantity * $vv->price,
-                            "net_amount"               => $vv->quantity * $vv->price,
+                            "penality"                 => 0,
+                            "net_amount"               => ($vv->quantity * $vv->price) - $vv->vat_amount,
                             'bill_type'                => "Monthly Bill",
                         ];
                         $net_amount += ($vv->quantity * $vv->price);
