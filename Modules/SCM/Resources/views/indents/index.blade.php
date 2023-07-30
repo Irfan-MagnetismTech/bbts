@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of Indent Info
+    List of Indent
 @endsection
 
 @section('style')
