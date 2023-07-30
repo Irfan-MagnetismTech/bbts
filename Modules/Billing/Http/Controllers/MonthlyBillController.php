@@ -19,7 +19,8 @@ class MonthlyBillController extends Controller
      */
     public function index()
     {
-        return view('billing::index');
+        $datas = BillGenerate::where('bill_type', 'Monthly Bill')->get();
+        return view('billing::monthlyBills.index', compact('datas'));
     }
 
     /**
@@ -121,5 +122,19 @@ class MonthlyBillController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function mrc_bill($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $monthlyBill->load('lines');
+        return view('billing::monthlyBills.mrcBill', compact('monthlyBill'));
+    }
+
+    public function mrc_bill_summary($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $monthlyBill->load('lines');
+        return view('billing::monthlyBills.mrcBillSummary', compact('monthlyBill'));
     }
 }
