@@ -3,6 +3,7 @@
 namespace Modules\Billing\Entities;
 
 use Modules\SCM\Entities\Material;
+use Modules\Sales\Entities\Product;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Billing\Entities\BillingOtcBill;
@@ -31,5 +32,10 @@ class BillGenerateLine extends Model
     public function frDetail(): BelongsTo
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 }

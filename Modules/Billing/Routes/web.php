@@ -31,4 +31,6 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::get('generate_bill/{id}', [BillGenerateController::class, 'generate_bill'])->name('generate_bill');
     Route::get('mrc_bill/{id}', [MonthlyBillController::class, 'mrc_bill'])->name('mrc_bill');
     Route::get('mrc_bill_summary/{id}', [MonthlyBillController::class, 'mrc_bill_summary'])->name('mrc_bill_summary');
+    Route::get('mrc_bill_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_except_penalty'])->name('mrc_bill_except_penalty');
+    Route::get('mrc_bill_summary_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_summary_except_penalty'])->name('mrc_bill_summary_except_penalty');
 });

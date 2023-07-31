@@ -185,6 +185,8 @@
                                                         <th>Unit</th>
                                                         <th>Price</th>
                                                         <th>Total Price</th>
+                                                        <th>Vat Percent</th>
+                                                        <th>Vat Amount</th>
                                                     </thead>
                                                     <tbody>
                                                     @foreach ($value->saleProductDetails as $key1 => $val)
@@ -227,6 +229,18 @@
                                                                         class="form-control text-right" readonly value="{{((($percent * $val->rate) + $val->rate) * $val->quantity)}}">
                                                                 </div>
                                                             </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="vat_percent[{{$key}}][]"
+                                                                        class="form-control text-right vat_percent" value="0">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="input-group input-group-sm input-group-primary">
+                                                                    <input type="text" name="vat_amount[{{$key}}][]"
+                                                                        class="form-control text-right vat_amount" readonly value="0">
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                     </tbody>
@@ -237,21 +251,6 @@
                                                             <td>
                                                                 <div class="input-group input-group-sm input-group-primary">
                                                                     <input type="text" name="total_mrc[{{$key}}]" class="form-control text-right total_mrc" readonly value="{{$value->total_mrc}}">
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="text-align: left;"></td>
-                                                            <td style="text-align: left;">Vat Percent</td>
-                                                            <td style="text-align: center;">
-                                                                <div class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text" name="vat_percent[{{$key}}]" class="form-control text-right vat_percent" value="{{$value->vat_percent}}">
-                                                                </div>
-                                                            </td>
-                                                            <td style="text-align: left;">Vat Amount</td>
-                                                            <td>
-                                                                <div class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text" name="vat_amount[{{$key}}]" class="form-control text-right vat_amount" readonly value="{{$value->vat_amount}}">
                                                                 </div>
                                                             </td>
                                                         </tr>

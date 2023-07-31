@@ -146,50 +146,65 @@
         header: page-header;
         footer: page-footer;
         }
+
+        /* Define the fixed header styles */
+        .header {
+            clear: both;
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+        #fixed_header { 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            left: 0; 
+            right: 0;
+        }
+        /* Add clearfix to clear floats */
+
     </style>
 </head>
 
 <body>
-    <htmlpageheader name="page-header">
     <div>
-        <div id="logo" class="pdflogo">
-            <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
-            <div class="clearfix"></div>
-            <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
-        </div>
+        <div id="fixed_header">
+            <div id="logo" class="pdflogo">
+                <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
+                <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+            </div>
 
-        <div>
-            <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
-                {{$billData->bill_type}}</h2>
+            <div>
+                <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
+                    MRC Bill (Details)</h2>
+            </div>
         </div>
     </div>
-    </htmlpageheader>
-    <html-separator/>
-    <div class="clearfix" style="margin-top: 50%!important; width: 96%;"></div>
+    <div style="clear: both"></div>
     <div class="container" style="margin-top: 50%!important; width: 96%;">
-            <div class="row" style="padding:30px 0 30px;">
+        <div class="row" style="padding:30px 0 30px;">
                 <div class="col-5" style="border: 1px solid #000000; border-radius: 5px;margin: 0;">
                     <table class="table rounded-table infoTable">
                         <thead>
                             <tr>
                                 <td>Client : </td>  
-                                <td>{{$billData->client->client_name}}</td>
+                                <td>{{$monthlyBill->client->client_name}}</td>
                             </tr>
                             <tr>
                                 <td>Address : </td>  
-                                <td>{{$billData->billingAddress->address}}</td>
+                                <td>{{$monthlyBill->billingAddress->address}}</td>
                             </tr>
                             <tr>
                                 <td>Attention : </td>  
-                                <td>{{$billData->billingAddress->contact_person}}</td>
+                                <td>{{$monthlyBill->billingAddress->contact_person}}</td>
                             </tr>
                             <tr>
                                 <td></td>  
-                                <td>{{$billData->billingAddress->designation}}</td>
+                                <td>{{$monthlyBill->billingAddress->designation}}</td>
                             </tr>
                             <tr>
                                 <td>BIN NO : </td>  
-                                <td>{{$billData?->client?->bin_no ?? ''}}</td>
+                                <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
                             </tr>
                         </thead>
                     </table>
@@ -200,88 +215,91 @@
                         <thead>
                             <tr>
                                 <td>Invoice No : </td>  
-                                <td>{{$billData->client->client_name}}</td>
+                                <td>{{$monthlyBill->client->client_name}}</td>
                             </tr>
                             <tr>
                                 <td>Invoice Date : </td>  
-                                <td>{{$billData->billingAddress->address}}</td>
+                                <td>{{$monthlyBill->billingAddress->address}}</td>
                             </tr>
                             <tr>
                                 <td>Invoice Period : </td>  
-                                <td>{{$billData->billingAddress->contact_person}}</td>
+                                <td>{{$monthlyBill->billingAddress->contact_person}}</td>
                             </tr>
                             <tr>
                                 <td>BBTSL BIN No</td>  
-                                <td>{{$billData?->client?->bin_no ?? ''}}</td>
+                                <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
                             </tr>
                         </thead>
                     </table>
                 </div>
             </div>
-            <div class="">
-                <div>
+            <div class="row">
+                <div class="offset-md-2 col-md-7 mt-1">
                     <table class="table table-bordered" id="table">
                         <thead>
                             <tr>
-                                <th>Connectivity Point</th>
-                                <th>Material</th>
-                                <th>Quantity</th>
-                                <th>Unit</th>
-                                <th>Rate</th>
-                                <th>Amount</th>
-                                <th>Total Amount</th>
+                                <th width="9.09%">Point Name</th>
+                                <th width="9.09%">Product/Service</th>
+                                <th width="9.09%">Quantity</th>
+                                <th width="9.09%">Rate</th>
+                                <th width="9.09%">Amount</th>
+                                <th width="9.09%">Total</th>
+                                <th width="9.09%">Vat</th>
+                                <th width="9.09%">Total Amount</th>
+                                <th width="9.09%">Due</th>
+                                <th width="9.09%">Net Amount</th>
                             </tr>
                         </thead>
                         <tbody>
                             @php
-                                $g_total = 0;
+                                $g_total_price = 0;
+                                $g_vat = 0;
                             @endphp
-                           @foreach ($billData->lines as $key=>$value )
-                               @if(isset($value->billingOtcBill) && count($value->billingOtcBill->lines))
-                                @php
-                                    $total = $value->billingOtcBill->lines->sum('amount') + $value->billingOtcBill->installation_charge;
-                                    $g_total += $total;
-                                @endphp
-                                @foreach ($value->billingOtcBill->lines as $key1 => $value1 )
+                            @foreach ($groupedLines as $key1=>$values )
+                                @foreach($values as $key2 => $value)
+                                    @if ($loop->first)
+                                            <tr>
+                                                <td rowspan="{{count($values)}}" style="text-align: center;">{{$value->frDetail->connectivity_point}}</td>
+                                    @else
                                     <tr>
-                                        @if($loop->first)
-                                        <td rowspan="{{count($value->billingOtcBill->lines) + 1 }}">{{$value->frDetail->connectivity_point}}</td>
-                                        @endif
-                                        <td style="text-align: center;">{{$value1->material->name}}</td>
-                                        <td style="text-align: center;">{{$value1->quantity}}</td>
-                                        <td style="text-align: center;">{{$value1->material->unit}}</td>
-                                        <td style="text-align: center;">{{$value1->rate}}</td>
-                                        <td style="text-align: center;">{{$value1->amount}}</td>
-                                        @if($loop->first)
-                                        <td rowspan="{{count($value->billingOtcBill->lines) + 1 }}" style="text-align: center;">{{$total}}</td>
-                                        @endif
-                                    </tr>
+                                    @endif
+                                        <td style="text-align: center;">{{$value->product->name}}</td>
+                                        <td style="text-align: center;">{{$value->quantity}} {{$value->product->unit}}</td>
+                                        <td style="text-align: center;">{{$value->unit_price}}</td>
+                                        <td style="text-align: center;">{{$value->total_price}}</td>
+                                        
+                                    @if ($loop->first)
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('vat')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">0</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat')}}</td>
+                                        </tr>
+                                        @php
+                                            $g_total_price += $values->sum('total_price');
+                                            $g_vat += $values->sum('vat');
+                                        @endphp
+                                    @else
+                                        </tr>
+                                    @endif
                                 @endforeach
-                               
-                                @else
-                                <tr>
-                                    <td>{{$value->frDetail->connectivity_point}}</td>
-                                </tr>
-                               @endif
-                               <tr>
-                                    <td colspan="4">{{isset($value->billingOtcBill) && $value->billingOtcBill->particular}}</td>
-                                    <td style="text-align: center;">{{$value->billingOtcBill->installation_charge}}</td>
-                               </tr>
                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="6" class="text-right" style="text-align: right;">Total Amount</td>
-                                <td style="text-align: center;">
-                                    {{$g_total}}
-                                </td>
+                                <td colspan="5" style="text-align: right;">Total Amount</td>
+                                <td style="text-align: center;">{{$g_total_price}}</td>
+                                <td style="text-align: center;">{{$g_vat}}</td>
+                                <td style="text-align: center;">{{$g_total_price + $g_vat}}</td>
+                                <td style="text-align: center;">0</td>
+                                <td style="text-align: center;">{{$g_total_price + $g_vat}}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
+    </form>
     </div>
-
 </body>
 
 </html>

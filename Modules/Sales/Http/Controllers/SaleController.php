@@ -172,9 +172,7 @@ class SaleController extends Controller
                 'payment_status'        => $raw['payment_status'][$key],
                 'mrc'                   => $raw['mrc'][$key],
                 'otc'                   => $raw['otc'][$key],
-                'total_mrc'             => $raw['total_mrc'][$key],
-                'vat_amount'            => $raw['vat_amount'][$key],
-                'vat_percent'           => $raw['vat_percent'][$key]
+                'total_mrc'             => $raw['total_mrc'][$key]
             ];
         }
         return $data;
@@ -194,6 +192,8 @@ class SaleController extends Controller
                     'rate'              => $raw['rate'][$key][$key1],
                     'price'             => $raw['price'][$key][$key1],
                     'total_price'       => $raw['total_price'][$key][$key1],
+                    'vat_amount'        => $raw['vat_amount'][$key][$key1],
+                    'vat_percent'       => $raw['vat_percent'][$key][$key1],
                     'sale_id'           => $saleDetail[$key]['sale_id'],
                     'sale_detail_id'    => $saleDetail[$key]['id'],
                     'created_at'        => now(),
@@ -509,7 +509,7 @@ class SaleController extends Controller
     public function clientOffer($mq_no = null)
     {
         $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
-//        $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
+        //        $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
         return view('sales::sales.client_offer', compact('sale', 'mq_no'));
     }
 }

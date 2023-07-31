@@ -7,6 +7,7 @@ use Modules\Sales\Entities\Client;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Billing\Entities\BillGenerateLine;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
@@ -34,6 +35,17 @@ class BillGenerate extends Model
     public function lines()
     {
         return $this->hasMany(BillGenerateLine::class, 'bill_generate_id');
+    }
+
+    public function linesGroup(string $groupColumn = null): HasMany
+    {
+        $lines = $this->hasMany(BillGenerateLine::class, 'bill_generate_id');
+
+        if ($groupColumn) {
+            $lines->groupBy($groupColumn);
+        }
+
+        return $lines;
     }
 
     public function client(): BelongsTo

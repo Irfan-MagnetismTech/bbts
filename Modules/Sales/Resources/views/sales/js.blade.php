@@ -121,6 +121,8 @@
                                                     <th>Unit</th>
                                                     <th>Price</th>
                                                     <th>Total Price</th>
+                                                    <th>Vat Percent</th>
+                                                    <th>Vat Amount</th>
                                                 </thead>
                                                 <tbody>
                                                 `
@@ -156,13 +158,25 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="price[${indx}][]"
-                                                        class="form-control text-right" readonly value="${(Number(percentage) * Number(itm.rate)) + Number(itm.rate)}">
+                                                        class="form-control text-right price" readonly value="${(Number(percentage) * Number(itm.rate)) + Number(itm.rate)}">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="total_price[${indx}][]"
-                                                        class="form-control text-right" readonly value="${((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity)}">
+                                                        class="form-control text-right total_price" readonly value="${((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity)}">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="vat_percent[${indx}][]"
+                                                        class="form-control text-right vat_percent" value="0">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="vat_amount[${indx}][]"
+                                                        class="form-control text-right vat_amount" readonly value="0">
                                                 </div>
                                             </td>
                                         </tr>
@@ -180,24 +194,8 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td style="text-align: left;"></td>
-                                            <td style="text-align: left;">Vat Percent</td>
-                                            <td style="text-align: center;">
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="vat_percent[${indx}]" class="form-control text-right vat_percent" value="0">
-                                                </div>
-                                            </td>
-                                            <td style="text-align: left;">Vat Amount</td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="vat_amount[${indx}]" class="form-control text-right vat_amount" readonly value="0">
-                                                </div>
-                                            </td>
-                                        </tr>
-
                                     </tfoot>
-                                </table>
+                                </table> 
                             </div>
                     </div>
                 </div> `
@@ -244,8 +242,15 @@
             $('#grand_total').val(vvall);
         })
 
+        // $(document).on('keyup','.vat_percent',function(){
+        //     let mrc = Number($(this).closest('tr').prev().find('.total_mrc').val());
+        //     let vat_percent = Number($(this).val());
+        //     let vat_tk = mrc * vat_percent / 100;
+        //     $(this).closest('tr').find('.vat_amount').val(vat_tk);
+        // })
+
         $(document).on('keyup','.vat_percent',function(){
-            let mrc = Number($(this).closest('tr').prev().find('.total_mrc').val());
+            let mrc = Number($(this).closest('tr').find('.total_price').val());
             let vat_percent = Number($(this).val());
             let vat_tk = mrc * vat_percent / 100;
             $(this).closest('tr').find('.vat_amount').val(vat_tk);
