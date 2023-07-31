@@ -522,6 +522,18 @@ class SaleController extends Controller
             return $item;
         });
 
-        return view('sales::offers.client_offer', compact('mq_no', 'offer', 'offerData'));
+        $costingProductEquipments = $offer->costing->costingProductEquipments->where('ownership', 'Client');
+        $costingLinkEquipments = $offer->costing->costingLinkEquipments->where('ownership', 'Client');
+        $mergedEquipments = $costingProductEquipments->merge($costingLinkEquipments);
+
+        $uniqueEquipments = $mergedEquipments->unique('material_id')->map(function ($item) use ($mergedEquipments) {
+            $item->sum_quantity = $mergedEquipments->where('material_id', $item->material_id)->sum('quantity');
+            $item->total_price = $mergedEquipments->where('material_id', $item->material_id)->sum(function ($item) {
+                return $item->rate * $item->quantity;
+            });
+            return $item;
+        });
+        
+        return view('sales::offers.client_offer', compact('mq_no', 'offer', 'offerData', 'uniqueEquipments'));
     }
 }

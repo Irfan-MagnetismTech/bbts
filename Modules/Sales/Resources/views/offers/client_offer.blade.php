@@ -120,24 +120,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data->costing->costingProductEquipments->where('ownership', 'Client') as $equipment)
+                                @foreach ($uniqueEquipments as $equipment)
                                     <tr>
                                         <td>{{ $equipment->material->name }}</td>
-                                        <td>{{ $equipment->quantity }}</td>
+                                        <td>{{ $equipment->sum_quantity }}</td>
                                         <td>{{ $equipment->unit }}</td>
                                         <td>{{ $equipment->ownership }}</td>
                                         <td>{{ $equipment->rate }}</td>
-                                        <td>{{ $equipment->total }}</td>
-                                    </tr>
-                                @endforeach
-                                @foreach ($data->costing->costingLinkEquipments->where('ownership', 'Client') as $link_equipment)
-                                    <tr>
-                                        <td>{{ $link_equipment->material->name }}</td>
-                                        <td>{{ $link_equipment->quantity }}</td>
-                                        <td>{{ $link_equipment->unit }}</td>
-                                        <td>{{ $link_equipment->ownership }}</td>
-                                        <td>{{ $link_equipment->rate }}</td>
-                                        <td>{{ $link_equipment->total }}</td>
+                                        <td>{{ $equipment->total_price }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -147,9 +137,11 @@
             @endforeach
             <div class="float-right" style="margin-top: 20px;">
                 <span class="p-2 border bg-primary">
-                    Total MRC</span>
+                    Total MRC
+                </span>
                 <span class="p-2 border border-primary text-dark">
-                    {{ $total_mrc }}</span>
+                    {{ $total_mrc }}
+                </span>
             </div>
         </div>
     </div>
