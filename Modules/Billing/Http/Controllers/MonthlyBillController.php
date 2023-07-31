@@ -2,6 +2,7 @@
 
 namespace Modules\Billing\Http\Controllers;
 
+use PDF;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -19,7 +20,8 @@ class MonthlyBillController extends Controller
      */
     public function index()
     {
-        return view('billing::index');
+        $datas = BillGenerate::where('bill_type', 'Monthly Bill')->get();
+        return view('billing::monthlyBills.index', compact('datas'));
     }
 
     /**
@@ -61,7 +63,7 @@ class MonthlyBillController extends Controller
                             'vat'                      => $vv->vat_amount,
                             "total_amount"             => ($vv->quantity * $vv->price) - $vv->vat_amount,
                             "total_product_price"      => $vv->quantity * $vv->price,
-                            "penality"                 => 0,
+                            "penalty"                  => 0,
                             "net_amount"               => ($vv->quantity * $vv->price) - $vv->vat_amount,
                             'bill_type'                => "Monthly Bill",
                         ];
@@ -121,5 +123,83 @@ class MonthlyBillController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function mrc_bill($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+        return PDF::loadView('billing::monthlyBills.mrcBill', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'OTC Bill',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('bill.pdf');
+        return view('billing::monthlyBills.mrcBill', compact('monthlyBill', 'groupedLines'));
+    }
+
+    public function mrc_bill_summary($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+        return PDF::loadView('billing::monthlyBills.mrcBillSummary', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'OTC Bill',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_font'             => 'sans-serif',
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.1,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('bill.pdf');
+        return view('billing::monthlyBills.mrcBill', compact('monthlyBill', 'groupedLines'));
+    }
+
+    public function mrc_bill_except_penalty($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+        return PDF::loadView('billing::monthlyBills.mrcBillExceptPenalty', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'OTC Bill',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('bill.pdf');
+        return view('billing::monthlyBills.mrcBillExceptPenalty', compact('monthlyBill', 'groupedLines'));
+    }
+
+    public function mrc_bill_summary_except_penalty($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+        return PDF::loadView('billing::monthlyBills.mrcBillExceptPenaltySummary', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'OTC Bill',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_font'             => 'sans-serif',
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.1,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('bill.pdf');
+        return view('billing::monthlyBills.mrcBillExceptPenaltySummary', compact('monthlyBill', 'groupedLines'));
     }
 }

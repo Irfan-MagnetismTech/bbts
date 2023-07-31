@@ -172,9 +172,7 @@ class SaleController extends Controller
                 'payment_status'        => $raw['payment_status'][$key],
                 'mrc'                   => $raw['mrc'][$key],
                 'otc'                   => $raw['otc'][$key],
-                'total_mrc'             => $raw['total_mrc'][$key],
-                'vat_amount'            => $raw['vat_amount'][$key],
-                'vat_percent'           => $raw['vat_percent'][$key]
+                'total_mrc'             => $raw['total_mrc'][$key]
             ];
         }
         return $data;
@@ -194,6 +192,8 @@ class SaleController extends Controller
                     'rate'              => $raw['rate'][$key][$key1],
                     'price'             => $raw['price'][$key][$key1],
                     'total_price'       => $raw['total_price'][$key][$key1],
+                    'vat_amount'        => $raw['vat_amount'][$key][$key1],
+                    'vat_percent'       => $raw['vat_percent'][$key][$key1],
                     'sale_id'           => $saleDetail[$key]['sale_id'],
                     'sale_detail_id'    => $saleDetail[$key]['id'],
                     'created_at'        => now(),
@@ -508,8 +508,32 @@ class SaleController extends Controller
 
     public function clientOffer($mq_no = null)
     {
-        $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
-//        $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
-        return view('sales::sales.client_offer', compact('sale', 'mq_no'));
+        $offer = Offer::firstWhere('mq_no', $mq_no);
+
+        $offerData = $offer->offerDetails->map(function ($item) {
+            $item->total_product = $item->costing->costingProducts->sum(function ($item) {
+                return $item->rate * $item->quantity;
+            });
+            $profit_percentage = $item->profit_percentage = (($item->total_offer_mrc / $item->total_product) * 100) - 100;
+            $item->costing->costingProducts->map(function ($item) use ($profit_percentage) {
+                $item->product_price = ($item->rate * ($profit_percentage / 100)) + $item->rate;
+                return $item;
+            });
+            return $item;
+        });
+
+        $costingProductEquipments = $offer->costing->costingProductEquipments->where('ownership', 'Client');
+        $costingLinkEquipments = $offer->costing->costingLinkEquipments->where('ownership', 'Client');
+        $mergedEquipments = $costingProductEquipments->merge($costingLinkEquipments);
+
+        $uniqueEquipments = $mergedEquipments->unique('material_id')->map(function ($item) use ($mergedEquipments) {
+            $item->sum_quantity = $mergedEquipments->where('material_id', $item->material_id)->sum('quantity');
+            $item->total_price = $mergedEquipments->where('material_id', $item->material_id)->sum(function ($item) {
+                return $item->rate * $item->quantity;
+            });
+            return $item;
+        });
+        
+        return view('sales::offers.client_offer', compact('mq_no', 'offer', 'offerData', 'uniqueEquipments'));
     }
 }

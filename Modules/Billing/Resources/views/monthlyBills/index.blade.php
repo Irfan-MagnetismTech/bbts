@@ -22,7 +22,7 @@
 
 
 @section('content')
-    <div class="dt-responsive table-responsive">
+<div class="dt-responsive table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
@@ -64,7 +64,14 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                   
+                                <a href="{{ route('mrc_bill', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-success">MRC Bill</a>
+                                <a href="{{ route('mrc_bill_summary', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-success">MRC Bill Summary</a>
+                                <a href="{{ route('mrc_bill_except_penalty', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                    class="btn btn-outline-success">MRC Bill (without penalty)</a>
+                                <a href="{{ route('mrc_bill_summary_except_penalty', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-success">MRC Bill Summary  (without penalty)</a>
                                 </nobr>
                             </div>
                         </td>
