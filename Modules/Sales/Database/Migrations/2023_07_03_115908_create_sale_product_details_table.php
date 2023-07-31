@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('rate')->nullable();
             $table->string('price')->nullable();
             $table->string('total_price')->nullable();
+            $table->float('vat_percent', 8, 2)->default(0);
+            $table->float('vat_amount', 8, 2)->default(0);
             $table->timestamps();
         });
     }

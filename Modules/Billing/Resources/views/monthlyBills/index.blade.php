@@ -68,6 +68,10 @@
                                         class="btn btn-outline-success">MRC Bill</a>
                                 <a href="{{ route('mrc_bill_summary', $value->id) }}" data-toggle="tooltip" title="Edit"
                                         class="btn btn-outline-success">MRC Bill Summary</a>
+                                <a href="{{ route('mrc_bill_except_penalty', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                    class="btn btn-outline-success">MRC Bill (without penalty)</a>
+                                <a href="{{ route('mrc_bill_summary_except_penalty', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-success">MRC Bill Summary  (without penalty)</a>
                                 </nobr>
                             </div>
                         </td>

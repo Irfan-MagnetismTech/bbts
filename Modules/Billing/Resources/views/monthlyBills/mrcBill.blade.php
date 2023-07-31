@@ -1,53 +1,190 @@
-@extends('layouts.backend-layout')
-@section('title', 'Bill Generate')
+<!DOCTYPE html>
+<html>
 
-@section('breadcrumb-title')
-    @if (!empty($monthlyBill))
-        Edit
-    @else
-    @endif
-   Bill Generate (OTC)
-@endsection
-
-@section('style')
+<head>
     <style>
-        .input-group-addon {
-            min-width: 120px;
-        }
-
-        .input-group-info .input-group-addon {
-            /*background-color: #04748a!important;*/
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
         }
 
         table {
-            border-collapse: collapse;
-            border: 1px solid black;
-            border-top: 2px solid black; 
-         }
-        #service_table1 {
-            border-radius: 100px!important;
+            font-size: 12px;
         }
-        .rounded-table {
-            border-radius: 30px; /* Adjust the value as per your preference */
-            }
+
+        #table {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #table td,
+        #table th {
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
+
+        #table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #table tr:hover {
+            background-color: #ddd;
+        }
+
+        #table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color: #98acc3;
+        }
+
+        .tableHead {
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        h2 {
+            margin: 0;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        #logo {
+            clear: both;
+            width: 100%;
+            display: block;
+            text-align: center;
+            position: relative;
+        }
+
+
+        .infoTable {
+            font-size: 12px;
+            width: 100%;
+        }
+
+        .infoTableTable td:nth-child(2) {
+            text-align: center;
+            width: 20px;
+        }
+
+        .pdflogo a {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        @page {
+            margin: 40px 0 0 0;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+         }
+        .col-12 {
+            float: left;
+            width: 100%;
+        }
+        .col-3 {
+            width: 25%;
+            float: left;
+        }
+        .col-1 {
+            width: 8.33333333333%;
+            float: left;
+        }
+        .col-7 {
+            width: 58.3333333333%;
+            float: left;
+        }
+
+        .col-5 {
+            width: 41.6666666667%;
+            float: left;
+        }
+        .col-9 {
+            width: 75%;
+            float: left;
+        }
+        .col-2-5 {
+            width: 20%;
+            float: left;
+        }
+        .col-4 {
+            float: left;
+            width: 33.333333%;
+        }
+        @page {
+        header: page-header;
+        footer: page-footer;
+        }
+
+        /* Define the fixed header styles */
+        .header {
+            clear: both;
+            width: 100%;
+            display: block;
+            text-align: center;
+        }
+        #fixed_header { 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            left: 0; 
+            right: 0;
+        }
+        /* Add clearfix to clear floats */
+
     </style>
-@endsection
-@section('breadcrumb-button')
-@endsection
+</head>
 
-@section('sub-title')
-    <span class="text-danger">*</span> Marked are required.
-@endsection
+<body>
+    <div>
+        <div id="fixed_header">
+            <div id="logo" class="pdflogo">
+                <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
+                <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+            </div>
 
-@section('content-grid', 'offset-md-1 col-md-10 offset-lg-2 col-lg-8 my-3')
-
-@section('content')
-    <div class="container">
-        <form action=""
-            method="get" class="custom-form">
-            <div class="row" style="padding:30px 0 30px">
-                <div class="col-7">
-                    <table class="table rounded-table" id="service_table1">
+            <div>
+                <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
+                    MRC Bill (Details)</h2>
+            </div>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+    <div class="container" style="margin-top: 50%!important; width: 96%;">
+        <div class="row" style="padding:30px 0 30px;">
+                <div class="col-5" style="border: 1px solid #000000; border-radius: 5px;margin: 0;">
+                    <table class="table rounded-table infoTable">
                         <thead>
                             <tr>
                                 <td>Client : </td>  
@@ -72,8 +209,9 @@
                         </thead>
                     </table>
                 </div>
-                <div class="col-5">
-                    <table class="table" id="service_table2">
+                <div class="col-2"></div>
+                <div class="col-4" style="border: 1px solid #000000; border-radius: 5px;margin: 0;float:right;">
+                    <table class="table infoTable">
                         <thead>
                             <tr>
                                 <td>Invoice No : </td>  
@@ -97,69 +235,76 @@
             </div>
             <div class="row">
                 <div class="offset-md-2 col-md-7 mt-1">
-                    <table class="table table-bordered" id="service_table">
+                    <table class="table table-bordered" id="table">
                         <thead>
                             <tr>
-                                <th>Connectivity Point</th>
-                                <th>Material</th>
-                                <th>Quantity</th>
-                                <th>Unit</th>
-                                <th>Rate</th>
-                                <th>Amount</th>
-                                <th>Total Amount</th>
+                                <th width="9.09%">Point Name</th>
+                                <th width="9.09%">Product/Service</th>
+                                <th width="9.09%">Quantity</th>
+                                <th width="9.09%">Rate</th>
+                                <th width="9.09%">Amount</th>
+                                <th width="9.09%">Total</th>
+                                <th width="9.09%">Vat</th>
+                                <th width="9.09%">Penalty</th>
+                                <th width="9.09%">Total Amount</th>
+                                <th width="9.09%">Due</th>
+                                <th width="9.09%">Net Amount</th>
                             </tr>
                         </thead>
                         <tbody>
                             @php
-                                $g_total = 0;
+                                $g_total_price = 0;
+                                $g_vat = 0;
+                                $g_panalty = 0;
                             @endphp
-                            @foreach ($monthlyBill->lines as $key=>$value )
+                            @foreach ($groupedLines as $key1=>$values )
+                                @foreach($values as $key2 => $value)
+                                    @if ($loop->first)
+                                            <tr>
+                                                <td rowspan="{{count($values)}}" style="text-align: center;">{{$value->frDetail->connectivity_point}}</td>
+                                    @else
                                     <tr>
-                                        <td>{{$value->frDetail->connectivity_point}}</td>                                        <td>{{$value->product_id}}</td>
-                                        <td>{{$value->quantity}}</td>
-                                        <td>{{$value->unit_price}}</td>
-                                        <td>{{$value->total_price}}</td>
-                                        <td>{{$value->vat}}</td>
-                                        <td>{{$value->total_amount}}</td>
-                                        <td>{{$value->penality}}</td>
-                                        <td>{{$value->net_amount}}</td>
-                                    </tr>
-                               
-                               <tr>
-                                    
-                               </tr>
+                                    @endif
+                                        <td style="text-align: center;">{{$value->product->name}}</td>
+                                        <td style="text-align: center;">{{$value->quantity}} {{$value->product->unit}}</td>
+                                        <td style="text-align: center;">{{$value->unit_price}}</td>
+                                        <td style="text-align: center;">{{$value->total_price}}</td>
+                                        
+                                    @if ($loop->first)
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('vat')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('panalty')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $values->sum('panalty')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">0</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $values->sum('panalty')}}</td>
+                                        </tr>
+                                        @php
+                                            $g_total_price += $values->sum('total_price');
+                                            $g_vat += $values->sum('vat');
+                                            $g_panalty += $values->sum('panalty');
+                                        @endphp
+                                    @else
+                                        </tr>
+                                    @endif
+                                @endforeach
                            @endforeach
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="6" class="text-right" style="text-align: right;">Total Amount</td>
-                                <td style="text-align: center;">
-                                </td>
+                                <td colspan="5" style="text-align: right;">Total Amount</td>
+                                <td style="text-align: center;">{{$g_total_price}}</td>
+                                <td style="text-align: center;">{{$g_panalty}}</td>
+                                <td style="text-align: center;">{{$g_vat}}</td>
+                                <td style="text-align: center;">{{$g_total_price + $g_vat - $g_panalty}}</td>
+                                <td style="text-align: center;">0</td>
+                                <td style="text-align: center;">{{$g_total_price + $g_vat - $g_panalty}}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="offset-md-4 col-md-4 mt-2">
-                    <div class="input-group input-group-sm ">
-                        <button class="btn btn-success btn-round btn-block py-2">Generate</button>
-                    </div>
-                </div>
-            </div>
     </form>
     </div>
-@endsection
+</body>
 
-@section('script')
-    <script src="{{ asset('js/custom-function.js') }}"></script>
-    <script>
-        $('#date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());
-    </script>
-@endsection
+</html>

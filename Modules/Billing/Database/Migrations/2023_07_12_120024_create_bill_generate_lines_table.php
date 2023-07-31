@@ -29,7 +29,7 @@ return new class extends Migration
             $table->double('vat', 8, 2)->nullable();
             $table->double('total_product_price', 8, 2)->nullable();
             $table->double('total_amount', 8, 2)->nullable();
-            $table->double('penality', 8, 2)->nullable();
+            $table->double('penalty', 8, 2)->nullable();
             $table->double('net_amount', 8, 2)->nullable();
             $table->timestamps();
         });
