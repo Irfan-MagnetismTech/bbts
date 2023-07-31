@@ -26,10 +26,10 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-xl-3 col-md-3">
+                <div class="col-xl-4 col-md-4">
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="client_id">Client Name<span class="text-danger">*</span></label>
-                        <span class="form-control">{{ $offer->client->client_name }}</span>
+                        <span class="form-control">{{ $offer->client->client_name ?? null }}</span>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-3">
@@ -45,6 +45,9 @@
                     </div>
                 </div>
             </div>
+            @php
+                $total_mrc = 0;
+            @endphp
             @foreach ($offerData as $data)
                 <div style="border: 2px solid gray; border-radius: 15px; margin-top: 30px;" class="row">
                     <div class="col-12 col-md-12" style="margin-top: -11px;">
@@ -74,6 +77,7 @@
                                         $totalProductPrice = $product->quantity * $productPrice;
                                         $vat = number_format($totalProductPrice * ($product->product->vat / 100), 2);
                                         $total += $totalProductPrice + $vat;
+                                        $total_mrc += $totalProductPrice + $vat;
                                     @endphp
                                     <tr class="text-center">
                                         <td>{{ $product->product->name }}</td>
@@ -94,16 +98,16 @@
                                 <tr>
                                     <td class="text-right" colspan="6">OTC</td>
                                     <td class="text-center">{{ $data->total_offer_otc }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="6" class="text-right">Total</td>
-                                                <td class="text-center">{{ $total + $data->total_offer_otc }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="text-right">Total</td>
+                                    <td class="text-center">{{ $total + $data->total_offer_otc }}</td>
 
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                                {{-- <div class="col-12 mt-3">
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="col-12 mt-3">
                         <table class="table table-bordered">
                             <thead>
                                 <tr class="text-center">
@@ -116,7 +120,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($details->costing->costingProductEquipments->where('ownership', 'Client') as $equipment)
+                                @foreach ($data->costing->costingProductEquipments->where('ownership', 'Client') as $equipment)
                                     <tr>
                                         <td>{{ $equipment->material->name }}</td>
                                         <td>{{ $equipment->quantity }}</td>
@@ -126,7 +130,7 @@
                                         <td>{{ $equipment->total }}</td>
                                     </tr>
                                 @endforeach
-                                @foreach ($details->costing->costingLinkEquipments->where('ownership', 'Client') as $link_equipment)
+                                @foreach ($data->costing->costingLinkEquipments->where('ownership', 'Client') as $link_equipment)
                                     <tr>
                                         <td>{{ $link_equipment->material->name }}</td>
                                         <td>{{ $link_equipment->quantity }}</td>
@@ -138,9 +142,15 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    </div> --}}
-                            </div>
-    @endforeach
                     </div>
                 </div>
+            @endforeach
+            <div class="float-right" style="margin-top: 20px;">
+                <span class="p-2 border bg-primary">
+                    Total MRC</span>
+                <span class="p-2 border border-primary text-dark">
+                    {{ $total_mrc }}</span>
+            </div>
+        </div>
+    </div>
 @endsection
