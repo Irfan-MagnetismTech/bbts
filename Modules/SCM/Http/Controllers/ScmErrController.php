@@ -97,9 +97,9 @@ class ScmErrController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(ScmErr $err)
     {
-        abort(404);
+        return view('scm::errs.show', compact('err'));
     }
 
     /**

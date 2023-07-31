@@ -38,6 +38,7 @@ class SurveyController extends Controller
      */
     public function create($fr_id)
     {
+        $fr_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->find($fr_id);
         $all_fr_list = FeasibilityRequirementDetail::get();
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $fr_detail->fr_no)->first();
         $pops = Pop::get();

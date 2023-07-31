@@ -3,11 +3,13 @@
 namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
+use Modules\Admin\Entities\User;
 use Modules\Admin\Entities\Branch;
+use Modules\Sales\Entities\Client;
+use Modules\SCM\Entities\Supplier;
 use Modules\SCM\Entities\ScmWcrLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Sales\Entities\Client;
 use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmWcr extends Model
@@ -54,5 +56,15 @@ class ScmWcr extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function sentBy()
+    {
+        return $this->belongsTo(User::class, 'sent_by');
     }
 }

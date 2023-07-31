@@ -85,10 +85,9 @@ class ScmWorController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(ScmWor $work_order_receife)
     {
-        abort(404);
-        // return view('scm::wor.show');
+        return view('scm::wor.show', compact('work_order_receife'));
     }
 
     /**

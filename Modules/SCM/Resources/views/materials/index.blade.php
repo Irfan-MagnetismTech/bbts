@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-   List of  Material Info
+   List of  Material
 @endsection
 
 @section('style')

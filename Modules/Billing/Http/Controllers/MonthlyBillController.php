@@ -5,10 +5,11 @@ namespace Modules\Billing\Http\Controllers;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Billing\Entities\MonthlyBill;
-use Illuminate\Contracts\Support\Renderable;
-use Modules\Billing\Entities\BillGenerate;
+use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\SaleDetail;
+use Modules\Billing\Entities\MonthlyBill;
+use Modules\Billing\Entities\BillGenerate;
+use Illuminate\Contracts\Support\Renderable;
 
 class MonthlyBillController extends Controller
 {
@@ -18,7 +19,8 @@ class MonthlyBillController extends Controller
      */
     public function index()
     {
-        return view('billing::index');
+        $datas = BillGenerate::where('bill_type', 'Monthly Bill')->get();
+        return view('billing::monthlyBills.index', compact('datas'));
     }
 
     /**
@@ -46,7 +48,7 @@ class MonthlyBillController extends Controller
                     'billing_address_id'    => $key,
                     'date'                  => $request->date,
                     'bill_type'             => "Monthly Bill",
-                    'month'                 => explode("-", $request->month)[1]
+                    'month'                 => $request->month
                 ];
                 $net_amount = 0;
                 foreach ($val as $key1 => $val2) {
@@ -57,19 +59,25 @@ class MonthlyBillController extends Controller
                             "quantity"                 => $vv->quantity,
                             "unit_price"               => $vv->price,
                             "total_price"              => $vv->quantity * $vv->price,
+                            'vat'                      => $vv->vat_amount,
+                            "total_amount"             => ($vv->quantity * $vv->price) - $vv->vat_amount,
                             "total_product_price"      => $vv->quantity * $vv->price,
-                            "total_amount"             => $vv->quantity * $vv->price,
-                            "net_amount"               => $vv->quantity * $vv->price,
+                            "penality"                 => 0,
+                            "net_amount"               => ($vv->quantity * $vv->price) - $vv->vat_amount,
                             'bill_type'                => "Monthly Bill",
                         ];
                         $net_amount += ($vv->quantity * $vv->price);
                     }
                 }
+                $parent['amount'] = $net_amount;
                 $data = BillGenerate::create($parent);
                 $data->lines()->createMany($child);
             }
-        } catch (Exception $err) {
-            dd($err->getMessage());
+            DB::commit();
+            return redirect()->route('monthly-bills.index')->with('message', 'Data has been created successfully');
+        } catch (Exception $error) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($error->getMessage());
         }
     }
 
@@ -114,5 +122,19 @@ class MonthlyBillController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function mrc_bill($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $monthlyBill->load('lines');
+        return view('billing::monthlyBills.mrcBill', compact('monthlyBill'));
+    }
+
+    public function mrc_bill_summary($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $monthlyBill->load('lines');
+        return view('billing::monthlyBills.mrcBillSummary', compact('monthlyBill'));
     }
 }

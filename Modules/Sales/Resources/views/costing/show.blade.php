@@ -35,34 +35,31 @@
             <h5> <span> &#10070; </span> Costing Sheet <span>&#10070;</span> </h5>
         </div>
         <div class="card-body">
+            <!-- Assuming you are inside a form element and $costing is the model instance you are editing -->
+
             <div class="row">
-                <div class="col-xl-3 col-md-3">
-                    <div class="form-item">
-                        <label for="client_id">Client ID<span class="text-danger">*</span></label>
-                        <p>{{ $costing->client_no }} </p>
-                    </div>
+                <div class="col-md-2">
+                    <label for="client_no" style="font-size: 13px">Client No:</label>
+                    <input type="text" id="client_no" name="client_no" class="form-control"
+                        value="{{ $costing->client_no ?? '' }}">
                 </div>
-                <div class="col-xl-3 col-md-3">
-                    <div class="form-item">
-                        <label for="client_name">Client Name<span class="text-danger">*</span></label>
-                        <p>{{ $costing->lead_generation->client_name ?? '' }}</p>
-                    </div>
+                <div class="col-md-3">
+                    <label for="client_name" style="font-size: 13px">Client Name:</label>
+                    <input type="text" id="client_name" name="client_name" class="form-control"
+                        value="{{ $costing->lead_generation->client_name ?? '' }}">
                 </div>
-                <div class="col-xl-3 col-md-3">
-                    <div>
-                        <div class="form-item">
-                            <label for="connectivity_point">Connectivity Point</label>
-                            <p>{{ $costing->feasibilityRequirementDetail->connectivity_point ?? '' }}</p>
-                        </div>
-                    </div>
+                <div class="col-md-5">
+                    <label for="connectivity_point" style="font-size: 13px">Connectivity Point:</label>
+                    <input type="text" id="connectivity_point" name="connectivity_point" class="form-control"
+                        value="{{ $costing->feasibilityRequirementDetail->connectivity_point ?? '' }}">
                 </div>
-                <div class="col-xl-3 col-md-3">
-                    <div class="form-item">
-                        <label for="month">Month</label>
-                        <p>{{ $costing->month }}</p>
-                    </div>
+                <div class="col-md-2">
+                    <label for="month" style="font-size: 13px">Month:</label>
+                    <input type="text" id="month" name="month" class="form-control"
+                        value="{{ $costing->month ?? '' }}">
                 </div>
             </div>
+
             <div class="row">
                 <div class="md-col-12 col-12">
                     <div class="table-responsive">
@@ -207,7 +204,7 @@
                             <span>{{ $costing_link->option }}</span>
                         </div>
                         <div class="col-2 col-md-2">
-                            <span>{{ $costing_link->existing_transmission_capacity }}</span>
+                            <span>{{ $costing_link->transmission_capacity }}</span>
                         </div>
                         <div class="col-2 col-md-2">
                             <span>{{ $costing_link->quantity }}</span>
@@ -258,7 +255,8 @@
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="5" class="text-right" style="font-size:14px;">Plan Equipment Total</td>
+                                    <td colspan="5" class="text-right" style="font-size:14px;">Plan Equipment Total
+                                    </td>
                                     <td>
                                         <span>{{ $costing_link->plan_all_equipment_total }}</span>
                                     </td>

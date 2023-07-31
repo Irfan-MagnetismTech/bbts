@@ -4,6 +4,7 @@ namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
 use Modules\Admin\Entities\Pop;
+use Modules\Admin\Entities\User;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\ScmErrLine;
@@ -56,5 +57,10 @@ class ScmErr extends Model
     public function pop()
     {
         return $this->belongsTo(Pop::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }
