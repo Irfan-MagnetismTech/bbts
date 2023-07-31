@@ -65,36 +65,45 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $total = 0;
+                                @endphp
                                 @foreach ($data->costing->costingProducts as $product)
+                                    @php
+                                        $productPrice = number_format($product->product_price, 2);
+                                        $totalProductPrice = $product->quantity * $productPrice;
+                                        $vat = number_format($totalProductPrice * ($product->product->vat / 100), 2);
+                                        $total += $totalProductPrice + $vat;
+                                    @endphp
                                     <tr class="text-center">
                                         <td>{{ $product->product->name }}</td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>{{ $product->unit }}</td>
-                                        <td>{{ $product->product_price }}</td>
-                                        <td>{{ $product->quantity * $product->product_price }}</td>
-                                        <td>{{ $product->quantity * $product->product_price * ($product->product->vat / 100) }}
-                                        <td>{{ $product->quantity * $product->product_price + $product->quantity * $product->product_price * ($product->product->vat / 100) }}
+                                        <td>{{ $productPrice }}</td>
+                                        <td>{{ $totalProductPrice }}</td>
+                                        <td>{{ $vat }}</td>
+                                        <td>{{ $totalProductPrice + $vat }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td class="text-right" colspan="6">Total Product Price</td>
-                                    <td class="text-center"></td>
+                                    <td class="text-center">{{ $total }}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-right" colspan="6">OTC</td>
-                                    <td class="text-center"></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="6" class="text-right">Total</td>
-                                    <td class="text-center"></td>
-                                       
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    {{-- <div class="col-12 mt-3">
+                                    <td class="text-center">{{ $data->total_offer_otc }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6" class="text-right">Total</td>
+                                                <td class="text-center">{{ $total + $data->total_offer_otc }}</td>
+
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                {{-- <div class="col-12 mt-3">
                         <table class="table table-bordered">
                             <thead>
                                 <tr class="text-center">
@@ -130,8 +139,8 @@
                             </tbody>
                         </table>
                     </div> --}}
+                            </div>
+    @endforeach
+                    </div>
                 </div>
-            @endforeach
-        </div>
-    </div>
 @endsection

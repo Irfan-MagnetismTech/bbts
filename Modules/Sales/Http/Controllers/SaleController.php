@@ -532,7 +532,7 @@ class SaleController extends Controller
         // product_price = costing_products->rate * profit_percentage + costing_products->rate
 
 
-        $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
+        // $sale = Sale::with('saleDetails', 'saleProductDetails', 'saleLinkDetails')->where('mq_no', $mq_no)->first();
 
         $offer = Offer::with('client', 'offerDetails.frDetails', 'costing.costingProducts')->where('mq_no', $mq_no)->first();
 
@@ -549,6 +549,6 @@ class SaleController extends Controller
         });
         // dd($offerData);
 
-        return view('sales::offers.client_offer', compact('sale', 'mq_no', 'offer', 'offerData'));
+        return view('sales::offers.client_offer', compact('mq_no', 'offer', 'offerData'));
     }
 }
