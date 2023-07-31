@@ -21,7 +21,7 @@ class Costing extends Model
 
     public function costingLinks()
     {
-        return $this->hasMany(CostingLink::class, 'costing_id', 'id')->where('link_status', 1);
+        return $this->hasMany(CostingLink::class, 'costing_id', 'id');
     }
 
     public function lead_generation()

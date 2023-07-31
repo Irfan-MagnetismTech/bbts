@@ -98,6 +98,8 @@
                             <tbody class="productBody">
                                 @foreach ($costing->costingProducts as $costing_product)
                                     <tr class="product_details_row">
+                                        <input hidden type="text" name="costing_product_id[]"
+                                            value="{{ $costing_product->id }}">
                                         <td>
                                             <span>
                                                 <input type="text" name="product[]" id="product"
@@ -246,6 +248,8 @@
                             <tbody class="connectivityBody">
                                 @foreach ($costing->costingProductEquipments as $product_equipment)
                                     <tr class="connectivity_details_row">
+                                        <input hidden type="text" name="costing_product_equipment_id[]"
+                                            value="{{ $product_equipment->id }}">
                                         <td>
                                             <span>
                                                 <input type="text" name="material[]" id="material"
@@ -410,6 +414,7 @@
             @foreach ($costing->costingLinks as $key => $costing_link)
                 @php $row_no = $key + 1; @endphp
                 <input type="hidden" name="total_key" value="{{ $row_no }}">
+                <input type="hidden" name="costing_link_id_{{ $row_no }}" value="{{ $costing_link->id }}">
                 <div class="PlanLinkMainRow"
                     style="border: 2px solid gray; border-radius: 15px; padding: 15px; margin-top: 15px;">
                     <div class="row">
@@ -495,6 +500,8 @@
                             <tbody class="tbody">
                                 @foreach ($costing_link->costingLinkEquipments as $link_equipment)
                                     <tr>
+                                        <input hidden type="text" name="costing_link_equipment_id_{{ $row_no }}[]"
+                                            value="{{ $link_equipment->id }}">
                                         <td>
                                             <span>
                                                 <input type="text"
@@ -727,7 +734,8 @@
                                 <td colspan="2">
                                     <input type="number" name="total_investment" id="total_investment"
                                         class="form-control form-control-sm text-center plan_fr_total_investment input"
-                                        placeholder="Total Investment" value="{{ $costing->total_investment }}" readonly>
+                                        placeholder="Total Investment" value="{{ $costing->total_investment }}"
+                                        readonly>
                                 </td>
                             </tr>
                             <tr>

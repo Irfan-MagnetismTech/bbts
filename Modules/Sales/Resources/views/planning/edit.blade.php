@@ -119,6 +119,8 @@
                                     <tbody id="particular_body">
                                         @foreach ($plan->servicePlans as $service_plan)
                                             <tr class="particular_row">
+                                                <input type="hidden" name="service_plan_id[]"
+                                                    value="{{ $service_plan->id ?? '' }}">
                                                 <td style="width:30%">
                                                     <input type="hidden" name="detail_id[]" id="detail_id"
                                                         class="form-control form-control-sm"
@@ -172,6 +174,8 @@
                                     </thead>
                                     <tbody id="equipment_body">
                                         @foreach ($plan->equipmentPlans as $equipment_plan)
+                                            <input type="hidden" name="equipment_plan_id[]"
+                                                value="{{ $equipment_plan->id ?? '' }}">
                                             <tr class="equipment_row">
                                                 <td>
                                                     <select name="equipment_id[]" id="equipment_id"
@@ -245,6 +249,10 @@
                     <div id="link_container">
                         @foreach ($plan->planLinks as $key => $plan_link)
                             @php $total_key = $key + 1; @endphp
+                            <input type="hidden" name="plan_link_id_{{ $total_key }}"
+                                value="{{ $plan_link->id ?? '' }}">
+                            <input type="hidden" name="final_survey_id_{{ $total_key }}[]"
+                                value="{{ $plan_link->finalSurveyDetails->id ?? '' }}">
                             <div class="main_link">
                                 <h5 class="text-center mb-2">Link <span class="link_no">{{ $total_key }}</span></h5>
                                 <hr />
@@ -470,6 +478,9 @@
                                             </thead>
                                             <tbody class="link_equipment_table">
                                                 @foreach ($plan_link->PlanLinkEquipments as $plan_equipment)
+                                                    <input type="hidden"
+                                                        name="plan_link_equipment_id_{{ $total_key }}[]"
+                                                        value="{{ $plan_equipment->id ?? '' }}">
                                                     <tr>
                                                         <td>
                                                             <select name="material_id_{{ $total_key }}[]"
