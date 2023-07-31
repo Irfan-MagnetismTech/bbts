@@ -12,7 +12,6 @@ use Modules\Networking\Http\Controllers\LogicalConnectivityInternetController;
 
 Route::resources([
     'physical-connectivities' => PhysicalConnectivityController::class,
-    'logical-internet-connectivities' => LogicalConnectivityDataController::class,
     'logical-data-connectivities' => LogicalConnectivityDataController::class,
     'logical-vas-connectivities' => LogicalConnectivityVasController::class,
     'logical-internet-connectivities' => LogicalConnectivityInternetController::class,
