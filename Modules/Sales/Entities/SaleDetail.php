@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\OfferDetail;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
+use Modules\Networking\Entities\CCSchedule;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -83,5 +84,10 @@ class SaleDetail extends Model
     public function sale()
     {
         return $this->belongsTo(Sale::class, 'sale_id');
+    }
+
+    public function ccSchedule()
+    {
+        return $this->hasOne(CCSchedule::class, 'fr_no', 'fr_no');
     }
 }

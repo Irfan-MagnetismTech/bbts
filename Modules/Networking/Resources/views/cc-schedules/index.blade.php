@@ -51,6 +51,7 @@
             </thead>
             <tbody>
                 @foreach ($salesDetails as $key => $details)
+                    {{-- @dd($details->ccSchedule->approved_type) --}}
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $details->client->client_name }}</td>
@@ -60,102 +61,53 @@
                         <td>{{ $details->delivery_date }}</td>
                         <td></td>
                         <td class="noWrapStyle">
-                            <span class="checkbox-fade fade-in-primary">
+                            <span class="checkbox-fade">
                                 <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox" @checked($details->sale->management_approval == 'Approved')>
+                                    <input type="checkbox" disabled @checked($details->sale->management_approval == 'Approved')>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
                                     <span class="font-weight-bold">PNL</span>
                                 </label>
                             </span>
-                            <span class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">NTTN/Service</span>
-                                </label>
-                            </span>
-                            <span class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">Client</span>
-                                </label>
-                            </span>
-                            <span class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">Equipment</span>
-                                </label>
-                            </span>
-                            <span class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">Field Ops</span>
-                                </label>
-                            </span>
-                            <span class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">Schedule</span>
-                                </label>
-                            </span>
+
+                            <x-checkbox arrayValue="nttn" label="NTTN/Service" :sale="$details" />
+                            <x-checkbox arrayValue="cr" label="Client" :sale="$details" />
+                            <x-checkbox arrayValue="er" label="Equipment" :sale="$details" />
+                            <x-checkbox arrayValue="fo" label="Field Ops" :sale="$details" />
+                            <x-checkbox arrayValue="schedule" label="Schedule" :sale="$details" />
                         </td>
                         <td class="noWrapStyle">
-                            <span class="checkbox-fade fade-in-primary">
+                            <span class="checkbox-fade">
                                 <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox">
+                                    <input type="checkbox">
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
                                     <span class="font-weight-bold">Physical Link</span>
                                 </label>
                             </span>
-                            <span class="checkbox-fade fade-in-primary">
+                            <span class="checkbox-fade">
                                 <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox">
+                                    <input type="checkbox">
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
                                     <span class="font-weight-bold">Logical Connectivity</span>
                                 </label>
                             </span>
-                            <span class="checkbox-fade fade-in-primary">
+                            <span class="checkbox-fade">
                                 <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox">
+                                    <input type="checkbox">
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
                                     <span class="font-weight-bold">Commissioning Date</span>
                                 </label>
                             </span>
-                            <span class="checkbox-fade fade-in-primary">
+                            <span class="checkbox-fade">
                                 <label>
-                                    <input type="checkbox" name="dns_checkbox" name='dns_checkbox' value="dns"
-                                        class="dns_checkbox">
+                                    <input type="checkbox">
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -165,11 +117,11 @@
                         </td>
 
                         <td>
-                            @if($details->sale->management_approval == 'Approved')
-                            <span class="badge badge-info">
-                                <a href="{{ route('cc-schedules.create', ['fr_no' => $details->fr_no]) }}"
-                                    class="text-white" target="_blank">Scheduling</a>
-                            </span>
+                            @if ($details->sale->management_approval == 'Approved')
+                                <span class="badge badge-info">
+                                    <a href="{{ route('cc-schedules.create', ['fr_no' => $details->fr_no]) }}"
+                                        class="text-white" target="_blank">Scheduling</a>
+                                </span>
                             @endif
                             <span class="badge badge-info">
                                 <a href="{{ route('cc-schedules.create', ['physical_connectivity_id' => $details->id]) }}"
