@@ -19,6 +19,16 @@
 @section('sub-title')
     <span class="text-danger">*</span> Marked are required.
 @endsection
+@section('style')
+    <style>
+        #link_container .main_link {
+            border: 2px solid gray;
+            border-radius: 15px;
+            padding: 8px;
+            margin-top: 10px;
+        }
+    </style>
+@endsection
 
 
 
@@ -235,8 +245,6 @@
                     <div class="row">
                         <input type="hidden" id="client_id" name="client_id"
                             value="{{ $plan->lead_generation->client_no }}">
-                        <input type="hidden" name="total_key" id="total_key"
-                            value="{{ $plan->equipmentPlans->count() }}">
                         <div class="col-md-11 text-center">
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
                         </div>
@@ -247,16 +255,27 @@
                     </div>
                     <hr />
                     <div id="link_container">
+                        <input type="hidden" name="total_key" id="total_key" value="{{ $plan->planLinks->count() }}">
                         @foreach ($plan->planLinks as $key => $plan_link)
-                            @php $total_key = $key + 1; @endphp
-                            <input type="hidden" name="plan_link_id_{{ $total_key }}"
-                                value="{{ $plan_link->id ?? '' }}">
-                            <input type="hidden" name="final_survey_id_{{ $total_key }}[]"
-                                value="{{ $plan_link->finalSurveyDetails->id ?? '' }}">
                             <div class="main_link">
-                                <h5 class="text-center mb-2">Link <span class="link_no">{{ $total_key }}</span></h5>
-                                <hr />
+                                @php $total_key = $key + 1; @endphp
+
+                                <input type="hidden" name="plan_link_id_{{ $total_key }}"
+                                    value="{{ $plan_link->id ?? '' }}">
+                                <input type="hidden" name="plan_link_no_{{ $total_key }}"
+                                    value="{{ $plan_link->link_no ?? '' }}">
+                                <input type="hidden" name="final_survey_id_{{ $total_key }}"
+                                    value="{{ $plan_link->finalSurveyDetails->id ?? '' }}">
                                 <div class="row">
+                                    <div class="col-md-11 col-11">
+                                        <h5 class="text-center mb-2">Link <span
+                                                class="link_no">{{ $total_key }}</span></h5>
+                                    </div>
+                                    <div class="col-md-1 col-1">
+                                        <button type="button" class="btn btn-sm btn-danger text-left removeLinkRow"
+                                            onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                    <hr / style="width: 100%; margin-bottom: 10px;">
                                     <div class="md-col-3 col-3">
                                         <div class="form-item">
                                             <select name="link_type_{{ $total_key }}"
@@ -593,6 +612,9 @@
                     <input type="hidden" id="client_no" name="client_no"
                         value="{{ $plan->lead_generation->client_no }}">
                     <input type="hidden" id="fr_no" name="fr_no" value="{{ $plan->fr_no }}">
+                    <input type="hidden" id="delete_plan_link_id" name="delete_plan_link_id" value="">
+                    <input type="hidden" id="delete_equipment_plan_id" name="delete_equipment_plan_id" value="">
+                    <input type="hidden" id="delete_link_equipment_id" name="delete_link_equipment_id" value="">
                 </div>
                 <button
                     class="py-2 btn btn-success float-right">{{ !empty($connectivity_requirement->id) ? 'Update' : 'Save' }}</button>
@@ -614,25 +636,12 @@
                 $('.equipment_row').last().find('select').val('');
             };
 
+            let delete_equipment_id = [];
             $(document).on('click', '.removeEquipmentRow', function() {
-                let count = $('.equipment_row').length;
-                if (count > 1) {
-                    $(this).closest('tr').remove();
-                    //get attr_one value 
-                    var attr_one = $(this).attr('connectivity_attr');
-                    //if attr_one value is not empty then delete from database
-                    if (attr_one != '') {
-                        $.ajax({
-                            url: "{{ route('delete-connectivity-requirement-details') }}",
-                            data: {
-                                id: attr_one,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(data) {
-                                console.log(data);
-                            }
-                        });
-                    }
+                var equipment_plan_id = $(this).closest('tr').find('input[name^="equipment_plan_id_"]').val();
+                if (equipment_plan_id) {
+                    delete_equipment_id.push(equipment_plan_id);
+                    $('#delete_equipment_plan_id').val(delete_equipment_id);
                 }
             });
 
@@ -701,12 +710,17 @@
                 $table.find('tbody').append($clone);
             }
 
+            let delete_link_equipment_id = [];
+
             function removeLinkEquipmentRow(event) {
+                var link_equipemnt_id = $(event).closest('tr').find('input[name^="plan_link_equipment_id_"]').val();
+                if (link_equipemnt_id) {
+                    delete_link_equipment_id.push(link_equipemnt_id);
+                    $('#delete_link_equipment_id').val(delete_link_equipment_id);
+                }
                 var $table = $(event).closest('.table-bordered');
                 var $tr = $table.find('tbody tr');
-                if ($tr.length > 1) {
-                    $(event).closest('tr').remove();
-                }
+                $(event).closest('tr').remove();
             }
             $('#addLinkRow').on('click', function() {
                 addLinkRow();
@@ -739,6 +753,18 @@
                     $equipmentRow);
                 if ($equipmentRow > 1) {
                     clonedRow.find('.link_equipment_table tr').not(':first').remove();
+                }
+            }
+
+            let deletedPlanLinkId = [];
+
+            function removeLinkRow(event) {
+                var plan_link_id = $(event).closest('.main_link').find('input[name^="plan_link_id_"]').val();
+                deletedPlanLinkId.push(plan_link_id);
+                $('#delete_plan_link_id').val(deletedPlanLinkId);
+                let count = $('.main_link').length;
+                if (count > 1) {
+                    $(event).closest('.main_link').remove();
                 }
             }
 

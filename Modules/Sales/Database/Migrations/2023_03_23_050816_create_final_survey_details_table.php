@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('final_survey_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('survey_id')->constrained('surveys')->onDelete('cascade');
+            $table->foreignId('survey_detail_id')->constrained('survey_details')->onDelete('cascade');
             $table->bigInteger('planning_id')->nullable();
             $table->bigInteger('plan_link_id')->nullable();
             $table->string('link_type')->nullable();

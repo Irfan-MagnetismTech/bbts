@@ -8,6 +8,8 @@ class PlanLink extends Model
 {
     protected $guarded = [];
 
+    protected $table = 'plan_links';
+
     public function planning()
     {
         return $this->belongsTo(Planning::class, 'planning_id', 'id');
@@ -22,5 +24,4 @@ class PlanLink extends Model
     {
         return $this->hasOne(FinalSurveyDetail::class, 'plan_link_id', 'id');
     }
-
 }

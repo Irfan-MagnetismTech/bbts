@@ -38,4 +38,9 @@ class Planning extends Model
     {
         return $this->hasMany(FinalSurveyDetail::class, 'planning_id', 'id');
     }
+
+    public function costing()
+    {
+        return $this->hasOne(Costing::class, 'fr_no', 'fr_no');
+    }
 }
