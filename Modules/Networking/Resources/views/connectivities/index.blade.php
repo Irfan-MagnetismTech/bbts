@@ -59,6 +59,22 @@
                         <td></td>   
                         <td>
                             <span class="badge badge-info">
+                                <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id]) }}"
+                                    class="text-white" target="_blank">Pyhsical Connectivity</a>
+                            </span> 
+                            <span class="badge badge-info">
+                                <a href="{{ url("networking/connectivities/create/$details->fr_no") }}"
+                                    class="text-white" target="_blank">Details</a>
+                            </span> 
+                            <span class="badge badge-info">
+                                <a href="{{ url("networking/connectivities/create/$details->fr_no") }}"
+                                    class="text-white" target="_blank">Details</a>
+                            </span> 
+                            <span class="badge badge-info">
+                                <a href="{{ url("networking/connectivities/create/$details->fr_no") }}"
+                                    class="text-white" target="_blank">Details</a>
+                            </span> 
+                            <span class="badge badge-info">
                                 <a href="{{ url("networking/connectivities/create/$details->fr_no") }}"
                                     class="text-white" target="_blank">Details</a>
                             </span> 
