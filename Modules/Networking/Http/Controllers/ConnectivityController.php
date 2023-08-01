@@ -29,6 +29,7 @@ class ConnectivityController extends Controller
      */
     public function create($fr_no)
     {
+         
         $salesDetail = SaleDetail::query() 
         ->with('sale', 'client', 'frDetails')
         ->where('fr_no', $fr_no)

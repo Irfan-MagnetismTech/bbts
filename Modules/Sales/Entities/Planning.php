@@ -33,7 +33,6 @@ class Planning extends Model
         return $this->hasMany(PlanLink::class, 'planning_id', 'id');
     }
 
-
     public function finalSurveyDetails()
     {
         return $this->hasMany(FinalSurveyDetail::class, 'planning_id', 'id');
