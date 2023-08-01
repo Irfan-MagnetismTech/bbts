@@ -38,13 +38,11 @@
 
         $.ajax({
             url: "{{ route('getFrDetailsData') }}",
-            type: "post",
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
+            type: "get",
             dataType: "json",
             data: {
-                connectivity_point: connectivity_point,
+                fr_no: connectivity_point,
+                sale_id: "{{ request()->sale_id }}",
             },
             success: function(data) {
                 $("#fr_no").val(data.fr_no);

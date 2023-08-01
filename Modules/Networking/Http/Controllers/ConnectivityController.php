@@ -15,7 +15,6 @@ class ConnectivityController extends Controller
      */
     public function index()
     {
-        // dd('ff');
         $salesDetails = SaleDetail::query() 
         ->with('sale', 'client', 'frDetails')
         ->latest()
@@ -28,8 +27,7 @@ class ConnectivityController extends Controller
      * @return Renderable
      */
     public function create($fr_no)
-    {
-         
+    {         
         $salesDetail = SaleDetail::query() 
         ->with('sale', 'client', 'frDetails')
         ->where('fr_no', $fr_no)
