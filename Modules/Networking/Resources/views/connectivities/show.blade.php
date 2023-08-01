@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Pyhsical Connectivity')
+@section('title', ' Connectivity Details')
 
 
 @section('breadcrumb-title')
