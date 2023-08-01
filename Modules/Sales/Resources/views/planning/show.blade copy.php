@@ -179,118 +179,95 @@
                             </div>
                         </div>
                     </div>
-
-                    <div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-11 text-center">
+                            <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="link_container">
                         @foreach ($plan->planLinks as $key => $plan_link)
                             @php $total_key = $key + 1; @endphp
-                            <hr />
-                            <div class="text-center">
-                                <h5> <span> &#10070; </span> Link Details <span>&#10070;</span> </h5>
-                            </div>
-                            <hr />
-                            <div class="main_link row">
-                                <div class="table-responsive col-md-6 col-6">
-                                    <table class="table table-bordered table-particulars text-right">
+                            <div class="main_link">
+                                <h5 class="text-center mb-2">Link <span class="link_no">{{ $total_key }}</span></h5>
+                                <hr />
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-particulars ">
                                         <tr>
-                                            <th colspan="2">Link {{ $total_key }} Information</th>
+                                            <th>Type</th>
+                                            <td>{{ $plan_link->link_type }}</td>
+                                            <th>Option</th>
+                                            <td>{{ $plan_link->option }}</td>
+                                            <th>Link Status</th>
+                                            <td>{{ $plan_link->existing_infrastructure }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-left" style="width: 50%;">Type</th>
-                                            <td class="text-left">{{ $plan_link->link_type }}</td>
+                                            <th>Existing Transmission Capacity</th>
+                                            <td>{{ $plan_link->existing_transmission_capacity }}</td>
+                                            <th>Increase Capacity</th>
+                                            <td>{{ $plan_link->increase_capacity }}</td>
+                                            <th>Link Availability Status</th>
+                                            <td>{{ $plan_link->link_availability_status }}</td>
                                         </tr>
                                         <tr>
-                                            <th class="text-left" style="width: 50%;">Option</th>
-                                            <td class="text-left">{{ $plan_link->option }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left" style="width: 50%;">Link Status</th>
-                                            <td class="text-left">{{ $plan_link->existing_infrastructure }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left" style="width: 50%;">Existing Transmission Capacity</th>
-                                            <td class="text-left">{{ $plan_link->existing_transmission_capacity }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left" style="width: 50%;">Increase Capacity</th>
-                                            <td class="text-left">{{ $plan_link->increase_capacity }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left" style="width: 50%;">Link Availability Status</th>
-                                            <td class="text-left">{{ $plan_link->link_availability_status }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left" style="width: 50%;">New Transmission Capacity</th>
-                                            <td class="text-left">{{ $plan_link->new_transmission_capacity }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-left" style="width: 50%;">Link Remarks</th>
-                                            <td class="text-left">{{ $plan_link->link_remarks }}</td>
+                                            <th>New Transmission Capacity</th>
+                                            <td>{{ $plan_link->new_transmission_capacity }}</td>
+                                            <th>Link Remarks</th>
+                                            <td colspan="3">{{ $plan_link->link_remarks }}</td>
                                         </tr>
                                     </table>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="table-responsive">
+                                        <hr />
+                                        <h5 class="text-center">Survey Information</h5>
+                                        <hr />
                                         <table class="table table-bordered table-particulars">
                                             <tr>
-                                                <th colspan="4">Survey Information</th>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-left" style="width: 50%;">Link Vendor</th>
-                                                <td class="link_vendor">
+                                                <th>Link Vendor</th>
+                                                <td class="link_vendor" style="width:30%">
                                                     {{ $plan_link->finalSurveyDetails->vendor->name ?? '' }}
                                                 </td>
+                                                <th>Connecting POP Running Vendor</th>
+                                                <td class="running_vendor_pop" style="width:30%"></td>
                                             </tr>
                                             <tr>
-                                                <th class="text-left" style="width: 50%;">Connecting POP Running Vendor</th>
-                                                <td class="running_vendor_pop"></td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-left" style="width: 50%;">Link Availability Status</th>
-                                                <td class="availability_status">
+                                                <th>Link Availability Status</th>
+                                                <td class="availability_status" style="width:30%">
                                                     {{ $plan_link->finalSurveyDetails->availability_status ?? '' }}
                                                 </td>
+                                                <th>Connecting POP Running Vendor Capacity</th>
+                                                <td class="running_vendor_capacity" style="width:30%"></td>
                                             </tr>
                                             <tr>
-                                                <th class="text-left" style="width: 50%;">Connecting POP Running Vendor
-                                                    Capacity</th>
-                                                <td class="running_vendor_capacity"></td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-left" style="width: 50%;">Link Connectivity POP</th>
-                                                <td class="link_connecting_pop">
+                                                <th>Link Connectivity POP</th>
+                                                <td class="link_connecting_pop" style="width:30%">
                                                     {{ $plan_link->finalSurveyDetails->pop->name ?? '' }}
                                                 </td>
+                                                <th>Zone Area Running NTTN Vendor</th>
+                                                <td class="nttn_vendor_zone" style="width:30%"></td>
                                             </tr>
                                             <tr>
-                                                <th class="text-left" style="width: 50%;">Zone Area Running NTTN Vendor</th>
-                                                <td class="nttn_vendor_zone"></td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-left" style="width: 50%;">Last Mile Connectivity Method</th>
-                                                <td class="last_mile_connectivity_method">
+                                                <th>Last Mile Connectivity Method</th>
+                                                <td class="last_mile_connectivity_method" style="width:30%">
                                                     {{ $plan_link->finalSurveyDetails->method ?? '' }}
                                                 </td>
+                                                <th>Zone Area Running NTTN BW</th>
+                                                <td class="running_nttn_bw" style="width:30%"></td>
                                             </tr>
                                             <tr>
-                                                <th class="text-left" style="width: 50%;">Zone Area Running NTTN BW</th>
-                                                <td class="running_nttn_bw"></td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-left" style="width: 50%;">Last Connectivity Point Latitute
-                                                </th>
-                                                <td class="connectivity_lat_long">
+                                                <th>Last Connectivity Point Latitute</th>
+                                                <td class="connectivity_lat_long" style="width:30%">
                                                     {{ $plan_link->finalSurveyDetails->lat ?? '' }}
                                                 </td>
+                                                <th>Connectivity Route</th>
+                                                <td class="connectivity_route" style="width:30%"></td>
                                             </tr>
                                             <tr>
-                                                <th class="text-left" style="width: 50%;">Connectivity Route</th>
-                                                <td class="connectivity_route"></td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-left" style="width: 50%;">Last Connectivity Point Longitute
-                                                </th>
-                                                <td class="connectivity_lat_long">
+                                                <th>Last Connectivity Point Longitute</th>
+                                                <td class="connectivity_lat_long" style="width:30%">
                                                     {{ $plan_link->finalSurveyDetails->long ?? '' }}
                                                 </td>
                                             </tr>
