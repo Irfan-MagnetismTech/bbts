@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Sales\Entities\ConnectivityRequirement;
-use Modules\Sales\Entities\Offer;
 use Modules\Sales\Http\Controllers\LeadGenerationController;
 use Modules\Sales\Http\Controllers\MeetingController;
 use Modules\Sales\Http\Controllers\FollowUpController;

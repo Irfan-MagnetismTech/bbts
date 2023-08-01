@@ -23,12 +23,13 @@ class CCScheduleController extends Controller
     public function index()
     {
         $salesDetails = SaleDetail::query()
-            // ->whereHas('sale', function ($query) {
-            //     $query->where('management_approval', '=', 'Approved');
-            // })
-            ->with('sale', 'client', 'frDetails')
+            ->with('sale', 'client', 'frDetails', 'ccSchedule')
             ->latest()
-            ->get();
+            ->get()
+            ->map(function ($saleDetail) {
+                $saleDetail->ccSchedule->approved_type = explode(',', $saleDetail->ccSchedule->approved_type);
+                return $saleDetail;
+            });
 
         return view('networking::cc-schedules.index', compact('salesDetails'));
     }
