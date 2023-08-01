@@ -5,7 +5,9 @@ namespace Modules\Billing\Entities;
 use Carbon\Carbon;
 use Modules\Sales\Entities\Client;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Billing\Entities\Collection;
 use Modules\Sales\Entities\BillingAddress;
+use Modules\Billing\Entities\CollectionBill;
 use Modules\Billing\Entities\BillGenerateLine;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -61,5 +63,10 @@ class BillGenerate extends Model
     public function frDetail(): BelongsTo
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
+    }
+
+    public function collection(): HasMany
+    {
+        return $this->hasMany(CollectionBill::class, 'bill_no', 'bill_no');
     }
 }

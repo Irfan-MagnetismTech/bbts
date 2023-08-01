@@ -21,7 +21,7 @@ class BillGenerateController extends Controller
 
     public function __construct(BbtsGlobalService $globalService)
     {
-        $this->billNo = $globalService->generateUniqueId(BillGenerate::class, 'BILL');
+        $this->billNo = $globalService->generateUniqueId(BillGenerate::class, 'OTC');
     }
     /**
      * Display a listing of the resource.

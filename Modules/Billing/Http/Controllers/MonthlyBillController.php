@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Services\BbtsGlobalService;
 use Modules\Sales\Entities\SaleDetail;
 use Modules\Billing\Entities\MonthlyBill;
 use Modules\Billing\Entities\BillGenerate;
@@ -14,6 +15,14 @@ use Illuminate\Contracts\Support\Renderable;
 
 class MonthlyBillController extends Controller
 {
+    private $billNo;
+
+
+    public function __construct(BbtsGlobalService $globalService)
+    {
+        $this->billNo = $globalService->generateUniqueId(BillGenerate::class, 'MRC');
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -49,7 +58,9 @@ class MonthlyBillController extends Controller
                     'billing_address_id'    => $key,
                     'date'                  => $request->date,
                     'bill_type'             => "Monthly Bill",
-                    'month'                 => $request->month
+                    'month'                 => $request->month,
+                    'bill_no'               => (new BbtsGlobalService)->generateUniqueId(BillGenerate::class, 'MRC'),
+                    'user_id'               => auth()->id(),
                 ];
                 $net_amount = 0;
                 foreach ($val as $key1 => $val2) {
