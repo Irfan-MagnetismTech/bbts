@@ -773,8 +773,10 @@
 
             function removeLinkRow(event) {
                 var plan_link_id = $(event).closest('.main_link').find('input[name^="plan_link_id_"]').val();
+                console.log(plan_link_id);
                 deletedPlanLinkId.push(plan_link_id);
-                $('#delete_plan_link_id').val(deletedPlanLinkId);
+                let deletedPlanLinkIdJson = JSON.stringify(deletedPlanLinkId);
+                $('#delete_plan_link_id').val(deletedPlanLinkIdJson);
                 let count = $('.main_link').length;
                 if (count > 1) {
                     $(event).closest('.main_link').remove();

@@ -158,48 +158,52 @@ class CostingController extends Controller
 
     private function createOrUpdateCostingProducts($request, $costing)
     {
-        foreach ($request->product_id as $key => $product) {
-            $productData = [
-                'costing_id' => $costing->id,
-                'product_id' => $product,
-                'fr_no' => $request->fr_no,
-                'quantity' => $request->product_quantity[$key],
-                'rate' => $request->product_rate[$key],
-                'unit' => $request->product_unit[$key],
-                'sub_total' => $request->product_price[$key],
-                'product_vat' => $request->product_vat[$key],
-                'product_vat_amount' => $request->product_vat_amount[$key],
-                'operation_cost' => $request->product_operation_cost[$key],
-                'operation_cost_total' => $request->product_total_cost[$key],
-                'offer_price' => $request->offer_price[$key],
-                'total' => $request->product_offer_total[$key],
-            ];
-            if (isset($request->costing_product_id[$key])) {
-                $costingProduct = CostingProduct::find($request->costing_product_id[$key]);
-                $costingProduct->update($productData);
-            } else {
-                CostingProduct::create($productData);
+        if (!empty($request->product_id)) {
+            foreach ($request->product_id as $key => $product) {
+                $productData = [
+                    'costing_id' => $costing->id,
+                    'product_id' => $product,
+                    'fr_no' => $request->fr_no,
+                    'quantity' => $request->product_quantity[$key],
+                    'rate' => $request->product_rate[$key],
+                    'unit' => $request->product_unit[$key],
+                    'sub_total' => $request->product_price[$key],
+                    'product_vat' => $request->product_vat[$key],
+                    'product_vat_amount' => $request->product_vat_amount[$key],
+                    'operation_cost' => $request->product_operation_cost[$key],
+                    'operation_cost_total' => $request->product_operation_cost_total[$key],
+                    'offer_price' => $request->offer_price[$key],
+                    'total' => $request->product_offer_total[$key],
+                ];
+                if (isset($request->costing_product_id[$key])) {
+                    $costingProduct = CostingProduct::find($request->costing_product_id[$key]);
+                    $costingProduct->update($productData);
+                } else {
+                    CostingProduct::create($productData);
+                }
             }
         }
     }
 
     private function createOrUpdateCostingMaterials($request, $costing)
     {
-        foreach ($request->material_id as $key => $material) {
-            $materialData = [
-                'costing_id' => $costing->id,
-                'material_id' => $request->material_id[$key],
-                'quantity' => $request->equipment_quantity[$key],
-                'rate' => $request->equipment_rate[$key],
-                'total' => $request->equipment_total[$key],
-                'unit' => $request->equipment_unit[$key],
-                'ownership' => $request->equipment_ownership[$key],
-            ];
-            if (isset($request->costing_product_equipment_id[$key])) {
-                $costingProductEquipment = CostingProductEquipment::find($request->costing_product_equipment_id[$key]);
-                $costingProductEquipment->update($materialData);
-            } else {
-                CostingProductEquipment::create($materialData);
+        if (!empty($request->material_id)) {
+            foreach ($request->material_id as $key => $material) {
+                $materialData = [
+                    'costing_id' => $costing->id,
+                    'material_id' => $request->material_id[$key],
+                    'quantity' => $request->equipment_quantity[$key],
+                    'rate' => $request->equipment_rate[$key],
+                    'total' => $request->equipment_total[$key],
+                    'unit' => $request->equipment_unit[$key],
+                    'ownership' => $request->equipment_ownership[$key],
+                ];
+                if (isset($request->costing_product_equipment_id[$key])) {
+                    $costingProductEquipment = CostingProductEquipment::find($request->costing_product_equipment_id[$key]);
+                    $costingProductEquipment->update($materialData);
+                } else {
+                    CostingProductEquipment::create($materialData);
+                }
             }
         }
     }
@@ -240,24 +244,25 @@ class CostingController extends Controller
             } else {
                 $costingLink = CostingLink::create($costingLinkData);
             }
+            if (request('plan_equipment_material_id_' . $rowNo)) {
+                foreach (request('plan_equipment_material_id_' . $rowNo) as $key => $equipment) {
 
-            foreach (request('plan_equipment_material_id_' . $rowNo) as $key => $equipment) {
-
-                $equipmentData = [
-                    'costing_id' => $costing->id,
-                    'costing_link_id' => $costingLink->id,
-                    'material_id' => request('plan_equipment_material_id_' . $rowNo)[$key],
-                    'unit' => request('plan_equipment_unit_' . $rowNo)[$key],
-                    'rate' => request('plan_equipment_rate_' . $rowNo)[$key],
-                    'quantity' => request('plan_equipment_quantity_' . $rowNo)[$key],
-                    'total' => request('plan_equipment_total_' . $rowNo)[$key],
-                    'ownership' => request('ownership_' . $rowNo)[$key],
-                ];
-                if (isset(request('costing_link_equipment_id_' . $rowNo)[$key])) {
-                    $costingLinkEquipment = CostingLinkEquipment::find(request('costing_link_equipment_id_' . $rowNo)[$key]);
-                    $costingLinkEquipment->update($equipmentData);
-                } else {
-                    CostingLinkEquipment::create($equipmentData);
+                    $equipmentData = [
+                        'costing_id' => $costing->id,
+                        'costing_link_id' => $costingLink->id,
+                        'material_id' => request('plan_equipment_material_id_' . $rowNo)[$key],
+                        'unit' => request('plan_equipment_unit_' . $rowNo)[$key],
+                        'rate' => request('plan_equipment_rate_' . $rowNo)[$key],
+                        'quantity' => request('plan_equipment_quantity_' . $rowNo)[$key],
+                        'total' => request('plan_equipment_total_' . $rowNo)[$key],
+                        'ownership' => request('ownership_' . $rowNo)[$key],
+                    ];
+                    if (isset(request('costing_link_equipment_id_' . $rowNo)[$key])) {
+                        $costingLinkEquipment = CostingLinkEquipment::find(request('costing_link_equipment_id_' . $rowNo)[$key]);
+                        $costingLinkEquipment->update($equipmentData);
+                    } else {
+                        CostingLinkEquipment::create($equipmentData);
+                    }
                 }
             }
         }

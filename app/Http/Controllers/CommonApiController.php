@@ -422,7 +422,7 @@ class CommonApiController extends Controller
             ->whereSaleId(request('sale_id'))
             ->with('frDetails', 'saleLinkDetails.finalSurveyDetails.pop')
             ->whereHas('saleLinkDetails.finalSurveyDetails.surveyDetail.survey', function ($query) use ($feasibility_details) {
-                $query->where('fr_no', request('fr_no'))->where('mq_no', $feasibility_details->feasibilityRequirement->mq_no);
+                $query->whereFrNoAndMqNo(request('fr_no'), $feasibility_details->feasibilityRequirement->mq_no);
             })
             ->first();
 

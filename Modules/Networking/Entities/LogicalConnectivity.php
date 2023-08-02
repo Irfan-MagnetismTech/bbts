@@ -10,6 +10,7 @@ use Modules\Networking\Entities\LogicalConnectivityLine;
 class LogicalConnectivity extends Model
 {
     protected $fillable = [
+        'sale_id',
         'client_no',
         'fr_no',
         'product_category',

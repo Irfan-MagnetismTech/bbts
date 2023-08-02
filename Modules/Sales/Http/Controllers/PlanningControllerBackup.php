@@ -156,6 +156,78 @@ class PlanningController extends Controller
         }
     }
 
+    private function createServicePlans($request, $plan)
+    {
+        foreach ($request->detail_id as $key => $detail_id) {
+            $service_plan_data['connectivity_product_requirement_details_id'] = $request->detail_id[$key];
+            $service_plan_data['plan'] = $request->plan[$key];
+            $service_plan_data['planning_id'] = $plan->id;
+            ServicePlan::create($service_plan_data);
+        }
+    }
+
+    private function createEquipmentPlans($request, $plan)
+    {
+        foreach ($request->equipment_id as $key => $equipment_id) {
+            $equipment_plan_data['material_id'] = $request->equipment_id[$key];
+            $equipment_plan_data['brand_id'] = $request->brand_id[$key];
+            $equipment_plan_data['quantity'] = $request->quantity[$key];
+            $equipment_plan_data['model'] = $request->model[$key];
+            $equipment_plan_data['unit'] = $request->unit[$key];
+            $equipment_plan_data['remarks'] = $request->equipment_remarks[$key];
+            $equipment_plan_data['planning_id'] = $plan->id;
+            EquipmentPlan::create($equipment_plan_data);
+        }
+    }
+
+    private function createPlanLinks($request, $plan)
+    {
+        for ($i = 1; $i <= $request->total_key; $i++) {
+            $plan_link_data['link_type'] = request("link_type_{$i}");
+            $plan_link_data['existing_infrastructure'] = request("existing_infrastructure_{$i}");
+            $plan_link_data['existing_infrastructure_link'] = request("existing_infrastructure_link_{$i}");
+            $plan_link_data['option'] = request("option_{$i}");
+            $plan_link_data['existing_transmission_capacity'] = request("existing_transmission_capacity_{$i}");
+            $plan_link_data['increase_capacity'] = request("increase_capacity_{$i}");
+            $plan_link_data['link_availability_status'] = request("link_availability_status_{$i}");
+            $plan_link_data['new_transmission_capacity'] = request("new_transmission_capacity_{$i}");
+            $plan_link_data['link_remarks'] = request("link_remarks_{$i}");
+            $plan_link_data['planning_id'] = $plan->id;
+            $plan_link = PlanLink::create($plan_link_data);
+            $survey = Survey::where('fr_no', $request->fr_no)->where('client_no', $request->client_no)->first();
+            $survey_details = SurveyDetail::where('survey_id', $survey->id)->where('link_type', request("link_type_{$i}"))->where('option', request("option_{$i}"))->first();
+            $final_survey_data['link_no'] = $survey_details->link_no;
+            $final_survey_data['vendor_id'] = request("link_vender_id_{$i}");
+            $final_survey_data['link_type'] = request("link_type_{$i}");
+            $final_survey_data['method'] = request("last_mile_connectivity_method_{$i}");
+            $final_survey_data['option'] = request("option_{$i}");
+            $final_survey_data['status'] = request("status_{$i}");
+            $final_survey_data['pop_id'] = request("link_connecting_pop_id_{$i}");
+            $final_survey_data['lat'] = request("connectivity_lat_{$i}");
+            $final_survey_data['long'] = request("connectivity_long_{$i}");
+            $final_survey_data['distance'] = $survey_details->distance;
+            $final_survey_data['current_capacity'] = $survey_details->current_capacity;
+            $final_survey_data['survey_id'] = $survey_details->id;
+            $final_survey_data['planning_id'] = $plan->id;
+            $final_survey_data['plan_link_id'] = $plan_link->id;
+            $final_survey = FinalSurveyDetail::create($final_survey_data);
+            $materials = request("material_id_$i");
+            foreach ($materials as $key => $material_id) {
+                $plan_link_equipment['material_id'] = $material_id;
+                $plan_link_equipment['brand_id'] = request("brand_id_$i")[$key];
+                $plan_link_equipment['quantity'] = request("quantity_$i")[$key];
+                $plan_link_equipment['model'] = request("model_$i")[$key];
+                $plan_link_equipment['description'] = request("description_$i")[$key];
+                $plan_link_equipment['unit'] = request("unit_$i")[$key];
+                $plan_link_equipment['remarks'] = request("remarks_$i")[$key];
+                $plan_link_equipment['final_survey_id'] = $final_survey->id;
+                $plan_link_equipment['planning_id'] = $plan->id;
+                $plan_link_equipment['plan_link_id'] = $plan_link->id;
+                PlanLinkEquipment::create($plan_link_equipment);
+            }
+        }
+    }
+
     private function createOrUpdateServicePlans($request, $plan)
     {
         foreach ($request->detail_id as $key => $detail_id) {
@@ -174,26 +246,93 @@ class PlanningController extends Controller
 
     private function createOrUpdateEquipmentPlans($request, $plan)
     {
-        if (!empty($request->equipment_id)) {
-            foreach ($request->equipment_id as $key => $equipment_id) {
-                $equipment_plan_data = [
-                    'material_id' => $request->equipment_id[$key],
-                    'brand_id' => $request->brand_id[$key],
-                    'quantity' => $request->quantity[$key],
-                    'model' => $request->model[$key],
-                    'unit' => $request->unit[$key],
-                    'remarks' => $request->equipment_remarks[$key],
-                    'planning_id' => $plan->id
-                ];
-                if (isset($request->equipment_plan_id[$key])) {
-                    EquipmentPlan::where('id', $request->equipment_plan_id[$key])->update($equipment_plan_data);
-                } else {
-                    EquipmentPlan::create($equipment_plan_data);
-                }
+        foreach ($request->equipment_id as $key => $equipment_id) {
+            $equipment_plan_data = [
+                'material_id' => $request->equipment_id[$key],
+                'brand_id' => $request->brand_id[$key],
+                'quantity' => $request->quantity[$key],
+                'model' => $request->model[$key],
+                'unit' => $request->unit[$key],
+                'remarks' => $request->equipment_remarks[$key],
+                'planning_id' => $plan->id
+            ];
+            if (isset($request->equipment_plan_id[$key])) {
+                EquipmentPlan::where('id', $request->equipment_plan_id[$key])->update($equipment_plan_data);
+            } else {
+                EquipmentPlan::create($equipment_plan_data);
             }
         }
     }
 
+    // private function createOrUpdatePlanLinks($request, $plan)
+    // {
+    //     for ($i = 1; $i <= $request->total_key; $i++) {
+    //         if (request("link_type_{$i}") != null) {
+    //             $plan_link_data['link_type'] = request("link_type_{$i}");
+    //             $plan_link_data['link_no'] = request("link_no_{$i}");
+    //             $plan_link_data['existing_infrastructure'] = request("existing_infrastructure_{$i}");
+    //             $plan_link_data['existing_infrastructure_link'] = request("existing_infrastructure_link_{$i}");
+    //             $plan_link_data['option'] = request("option_{$i}");
+    //             $plan_link_data['existing_transmission_capacity'] = request("existing_transmission_capacity_{$i}");
+    //             $plan_link_data['increase_capacity'] = request("increase_capacity_{$i}");
+    //             $plan_link_data['link_availability_status'] = request("link_availability_status_{$i}");
+    //             $plan_link_data['new_transmission_capacity'] = request("new_transmission_capacity_{$i}");
+    //             $plan_link_data['link_remarks'] = request("link_remarks_{$i}");
+    //             $plan_link_data['planning_id'] = $plan->id;
+    //             if (request("plan_link_id_{$i}") != null) {
+    //                 $id = request("plan_link_id_{$i}");
+    //                 PlanLink::where('id', $id)->update($plan_link_data);
+    //                 $plan_link = PlanLink::find($id);
+    //             } else {
+    //                 $plan_link = PlanLink::create($plan_link_data);
+    //             }
+    //             $survey = Survey::where('fr_no', $request->fr_no)->where('client_no', $request->client_no)->first();
+    //             $survey_details = SurveyDetail::where('survey_id', $survey->id)->where('link_type', request("link_type_{$i}"))->where('option', request("option_{$i}"))->first();
+    //             $final_survey_data['link_no'] = $survey_details->link_no ?? '';
+    //             $final_survey_data['vendor_id'] = request("link_vender_id_{$i}");
+    //             $final_survey_data['link_type'] = request("link_type_{$i}");
+    //             $final_survey_data['method'] = request("last_mile_connectivity_method_{$i}");
+    //             $final_survey_data['option'] = request("option_{$i}");
+    //             $final_survey_data['status'] = request("status_{$i}");
+    //             $final_survey_data['pop_id'] = request("link_connecting_pop_id_{$i}");
+    //             $final_survey_data['lat'] = request("connectivity_lat_{$i}");
+    //             $final_survey_data['long'] = request("connectivity_long_{$i}");
+    //             $final_survey_data['distance'] = $survey_details->distance ?? '';
+    //             $final_survey_data['current_capacity'] = $survey_details->current_capacity ?? '';
+    //             $final_survey_data['survey_detail_id'] = $survey_details->id ?? null;
+    //             $final_survey_data['planning_id'] = $plan->id;
+    //             $final_survey_data['plan_link_id'] = $plan_link->id;
+    //             if (request("final_survey_id_{$i}") != null) {
+    //                 $final_survey_update = FinalSurveyDetail::where('id', request("final_survey_id_{$i}"))->update($final_survey_data);
+    //                 $final_survey = FinalSurveyDetail::find(request("final_survey_id_{$i}"));
+    //             } else {
+    //                 $final_survey = FinalSurveyDetail::create($final_survey_data);
+    //             }
+    //             $materials = request("material_id_$i");
+    //             $planLinkEquipmentIds = request("plan_link_equipment_id_{$i}");
+    //             if ($materials) {
+    //                 foreach ($materials as $key => $material_id) {
+    //                     $plan_link_equipment['material_id'] = $material_id;
+    //                     $plan_link_equipment['brand_id'] = request("brand_id_$i")[$key];
+    //                     $plan_link_equipment['quantity'] = request("quantity_$i")[$key];
+    //                     $plan_link_equipment['model'] = request("model_$i")[$key];
+    //                     $plan_link_equipment['description'] = request("description_$i")[$key];
+    //                     $plan_link_equipment['unit'] = request("unit_$i")[$key];
+    //                     $plan_link_equipment['remarks'] = request("remarks_$i")[$key];
+    //                     $plan_link_equipment['final_survey_id'] = $final_survey->id;
+    //                     $plan_link_equipment['planning_id'] = $plan->id;
+    //                     $plan_link_equipment['plan_link_id'] = $plan_link->id;
+    //                     if ($planLinkEquipmentIds && isset($planLinkEquipmentIds[$key])) {
+
+    //                         PlanLinkEquipment::where('id', $planLinkEquipmentIds[$key])->update($plan_link_equipment);
+    //                     } else {
+    //                         PlanLinkEquipment::create($plan_link_equipment);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     private function createOrUpdatePlanLinks($request, $plan)
     {
@@ -284,7 +423,6 @@ class PlanningController extends Controller
 
     private function deleteRequestedItems($delete_plan_link_id, $delete_equipment_plan_id, $delete_link_equipment_id)
     {
-        $delete_plan_link_id = json_decode($delete_plan_link_id);
         if ($delete_plan_link_id) {
             foreach ($delete_plan_link_id as $key => $plan_link_id) {
                 PlanLink::where('id', $plan_link_id)->delete();
