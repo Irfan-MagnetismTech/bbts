@@ -28,7 +28,7 @@ class SurveyController extends Controller
      */
     public function index()
     {
-        $surveys = Survey::with('surveyDetails', 'lead_generation')->get();
+        $surveys = Survey::with('surveyDetails', 'lead_generation')->latest()->get();
         return view('sales::survey.index', compact('surveys'));
     }
 
