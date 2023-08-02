@@ -116,7 +116,7 @@
 
         @foreach ($facilityTypes as $facilityType)
             @if (isset($inputFieldsMap[$facilityType]))
-                $({{ $inputFieldsMap[$facilityType] }}).prop('disabled', false);
+                $(<?= $inputFieldsMap[$facilityType] ?>).prop('disabled', false);
             @endif
         @endforeach
 
