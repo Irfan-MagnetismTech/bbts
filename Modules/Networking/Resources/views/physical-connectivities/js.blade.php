@@ -34,6 +34,8 @@
     });
 
     $("#connectivity_point").on("change", function() {
+        $("#physical_connectivity tbody").html("");
+
         let connectivity_point = $(this).val().split("_")[1];
         let sale_id = $("#sale_id").val();
 
@@ -46,7 +48,21 @@
                 sale_id: sale_id,
             },
             success: function(data) {
-                console.log(data)
+                if (data.fr_details == null) {
+                    $("#fr_no").val("");
+                    $("#contact_person").val("");
+                    $("#contact_number").val("");
+                    $("#email").val("");
+                    $("#contact_address").val("");
+                    $("#lat").val("");
+                    $("#long").val("");
+
+                    $("#physical_connectivity tbody").html(
+                        `<tr><td colspan="11" class="text-center">No Data Found</td></tr>`
+                    );
+                    Swal.fire('No data found')
+                    return false;
+                }
                 $("#fr_no").val(data.fr_details.fr_no);
                 $("#contact_person").val(data.fr_details.contact_name);
                 $("#contact_number").val(data.fr_details.contact_number);
@@ -56,6 +72,12 @@
                 $("#long").val(data.fr_details.long);
 
                 $("#physical_connectivity tbody").html("");
+                console.log(data.sale_link_details.length)
+                if (data.sale_link_details.length == 0) {
+                    $("#physical_connectivity tbody").html(
+                        `<tr><td colspan="11" class="text-center">No Data Found</td></tr>`
+                    );
+                }
                 appendNetworkInfoRow(data.sale_link_details);
             },
         });

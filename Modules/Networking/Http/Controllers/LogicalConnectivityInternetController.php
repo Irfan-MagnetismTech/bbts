@@ -7,6 +7,7 @@ use Modules\Admin\Entities\Ip;
 use Modules\Admin\Entities\Bank;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Networking\Entities\ClientFacility;
@@ -31,9 +32,16 @@ class LogicalConnectivityInternetController extends Controller
      */
     public function create()
     {
+        $saleDetalis = SaleDetail::query()
+            ->whereSaleId(request()->get('sale_id'))
+            ->with('client', 'frDetails')
+            ->latest()
+            ->first();
+
         $physicalConnectivityData = PhysicalConnectivity::query()
-            ->where('id', request()->get('physical_connectivity_id'))
+            ->whereSaleId(request()->get('sale_id'))
             ->with('lines')
+            ->latest()
             ->first();
 
         $products = SaleProductDetail::query()
@@ -45,9 +53,7 @@ class LogicalConnectivityInternetController extends Controller
             ->unique('product_id');
 
         $ips = Ip::latest()->get();
-
         $ipv4Ips = Ip::where('ip_type', 'IPv4')->latest()->get();
-
         $ipv6Ips = Ip::where('ip_type', 'IPv6')->latest()->get();
 
         $logicalConnectivityInternet = LogicalConnectivity::query()
@@ -76,7 +82,7 @@ class LogicalConnectivityInternetController extends Controller
             ->where('logical_connectivity_id', @$logicalConnectivityInternet->id)
             ->first();
 
-        return view('networking::logical-internet-connectivities.create', compact('physicalConnectivityData', 'logicalConnectivityInternet', 'products', 'ips', 'ipv4Ips', 'ipv6Ips', 'logicalConnectivityBandwidths', 'facilityTypes' ?? [], 'clientFacility' ?? []));
+        return view('networking::logical-internet-connectivities.create', compact('saleDetalis', 'physicalConnectivityData', 'logicalConnectivityInternet', 'products', 'ips', 'ipv4Ips', 'ipv6Ips', 'logicalConnectivityBandwidths', 'facilityTypes' ?? [], 'clientFacility' ?? []));
     }
 
     /**
