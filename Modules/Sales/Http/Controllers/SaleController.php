@@ -302,12 +302,12 @@ class SaleController extends Controller
                 $data['submission_date'] = $request->submission_date_add;
                 $data['submission_by'] = $request->submission_by_add;
                 BillingAddress::create($data);
-                $listData = BillingAddress::all();
+                $listData = BillingAddress::where('client_no', $request->client_no_add)->get();
             } else {
                 $data['payment_method'] = $request->payment_method_add;
                 $data['payment_date'] = $request->payment_date_add;
                 CollectionAddress::create($data);
-                $listData = CollectionAddress::all();
+                $listData = CollectionAddress::where('client_no', $request->client_no_add)->get();
             }
             DB::commit();
             return response()->json(['status' => 'success', 'listdata' => $listData, 'messsage' => 'Address Added Successfully'], 200);
@@ -533,7 +533,7 @@ class SaleController extends Controller
             });
             return $item;
         });
-        
+
         return view('sales::offers.client_offer', compact('mq_no', 'offer', 'offerData', 'uniqueEquipments'));
     }
 }

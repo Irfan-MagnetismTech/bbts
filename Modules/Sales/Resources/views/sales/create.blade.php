@@ -41,6 +41,24 @@
     padding: 0px!important;
     text-align: center!important;
 }
+.day_td {
+    cursor:pointer;
+}
+
+.day_td:hover {
+    color:blue;
+    background-color: yellow;
+}
+
+.box {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  display:hidden;
+}
+.container {
+  position: relative;
+}
 </style>
 
     {!! Form::open([
@@ -153,8 +171,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
-                                                
+                                                <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="container"/>
+
                                                 <div class="col-3">
                                                     <div class="form-check-inline">
                                                         <label class="form-check-label" for="prepaid">
@@ -260,7 +278,7 @@
                         </div>
                     </div>
                     @endforeach
-                    
+                   
                 @endif
 
             </div>
@@ -390,7 +408,57 @@
         </div>
     </div>
     <div class="md-overlay"></div>
-
+    <div class="box bg-secondary">
+        <div style="">
+            <div class="">
+                <table class="table-condensed bg-secondary">
+                    <tbody>
+                        <tr>
+                            <td class="day_td">1</td>
+                            <td class="day_td">2</td>
+                            <td class="day_td">3</td>
+                            <td class="day_td">4</td>
+                            <td class="day_td">5</td>
+                            <td class="day_td">6</td>
+                            <td class="day_td">7</td>
+                        </tr>
+                        <tr>
+                            <td class="day_td">8</td>
+                            <td class="day_td">9</td>
+                            <td class="day_td">10</td>
+                            <td class="day_td">11</td>
+                            <td class="day_td">12</td>
+                            <td class="day_td">13</td>
+                            <td class="day_td">14</td>
+                        </tr>
+                        <tr>
+                            <td class="day_td">15</td>
+                            <td class="day_td">16</td>
+                            <td class="day_td">17</td>
+                            <td class="day_td">18</td>
+                            <td class="day_td">19</td>
+                            <td class="day_td">20</td>
+                            <td class="day_td">21</td>
+                        </tr>
+                        <tr>
+                            <td class="day_td">22</td>
+                            <td class="day_td">23</td>
+                            <td class="day_td">24</td>
+                            <td class="day_td">25</td>
+                            <td class="day_td">26</td>
+                            <td class="day_td">27</td>
+                            <td class="day_td">28</td>
+                        </tr>
+                        <tr>
+                            <td class="day_td">29</td>
+                            <td class="day_td">30</td>
+                            <td class="day_td">31</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     @include('sales::sales.js')
