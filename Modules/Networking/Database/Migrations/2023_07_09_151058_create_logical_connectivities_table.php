@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('logical_connectivities', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('sale_id');
             $table->string('client_no')->nullable();
             $table->string('fr_no')->nullable();
             $table->string('product_category')->comment('Internet/Data/VAS')->nullable();

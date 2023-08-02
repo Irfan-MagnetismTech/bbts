@@ -1,196 +1,126 @@
 @extends('layouts.backend-layout')
-@section('title', 'Feasibility Requirement Details')
-
-@php
-    $is_old = old('client_id') ? true : false;
-    $form_heading = !empty($feasibility_requirement->id) ? 'Update' : 'Add';
-    $form_url = !empty($feasibility_requirement->id) ? route('feasibility-requirement.update', $feasibility_requirement->id) : route('feasibility-requirement.store');
-    $form_method = !empty($feasibility_requirement->id) ? 'PUT' : 'POST';
-@endphp
+@section('title', 'Collection Show')
 
 @section('breadcrumb-title')
-    {{ ucfirst($form_heading) }} Feasibility Requirement Details
+    Collection Show
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('feasibility-requirement.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-database"></i></a>
-@endsection
-
-@section('sub-title')
-    <span class="text-danger">*</span> Marked are required.
+        <a href="{{ route('collections.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', null)
 
 @section('content')
-
-
-
-    {{-- Comparative Statement --}}
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="tableHeading">
-                    <h5> <span> &#10070; </span> Feasibility Requirement <span>&#10070;</span> </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-responsive">
+                <table id="dataTable" class="table table-striped table-bordered">
+                    <tbody class="text-left">
+                        <tr style="background-color: #0C4A77;color: white">
+                            <td> <strong>Client Name</strong> </td>
+                            <td> <strong>{{ $collection->client->client_name }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Client No</strong> </td>
+                            <td> {{ $collection->client_no }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Date</strong> </td>
+                            <td> {{ $collection->date }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>MR No</strong> </td>
 
-                        {{-- exiting or new radio button --}}
-                        <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_id">Status<span
-                                        class="text-danger">*</span></label>
-                                <span class="form-control">{{ $feasibility_requirement->is_existing ?? '' }}</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_id">Client ID<span
-                                        class="text-danger">*</span></label>
-                                <span class="form-control">{{ $feasibility_requirement->client_no ?? '' }}</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_name">Client Name<span
-                                        class="text-danger">*</span></label>
-                                <span
-                                    class="form-control">{{ $feasibility_requirement->lead_generation->client_name ?? '' }}</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_type">Date<span
-                                        class="text-danger">*</span></label>
-                                <span class="form-control">{{ $feasibility_requirement->date ?? '' }}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- create a responsive table --}}
-                    <hr />
-                    <div class="text-center">
-                        <h5> <span> &#10070; </span> Feasibility Requirement Details <span>&#10070;</span> </h5>
-                    </div>
-                    <hr />
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2">FR No</th>
-                                    <th rowspan="2">Name of the Link</th>
-                                    <th colspan="6">Connectivity Address</th>
-                                    <th colspan="5">Local Contact Details</th>
-                                </tr>
-                                <tr>
-                                    <th>Division</th>
-                                    <th>District</th>
-                                    <th>Thana</th>
-                                    <th>Location</th>
-                                    <th>Latitude</th>
-                                    <th>Longitude</th>
-                                    <th>Name</th>
-                                    <th>Designation</th>
-                                    <th>Con. No.</th>
-                                    <th>Email</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (!empty($feasibility_requirement))
-                                    @foreach ($feasibility_requirement->feasibilityRequirementDetails as $item)
-                                        <tr class="feasibility_details_row">
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{{ $item->fr_no }}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->connectivity_point ?? '&nbsp;' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item?->division?->name ?? '&nbsp' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item?->district?->name ?? '&nbsp' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item?->thana?->name ?? '&nbsp' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->location ?? '&nbsp' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->lat ?? '&nbsp' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->long ?? '&nbsp' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->contact_name ?? '&nbsp' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->contact_designation ?? '&nbsp' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->contact_number ?? '&nbsp' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <span class="form-control">{!! $item->contact_email ?? '&nbsp;' !!}</span>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                @if (!empty($item->planning) && !empty($item->survey) && !empty($item->connectivityRequirement))
-                                                    <div class="input-group input-group-sm input-group-success">
-                                                        <a href="{{ route('add-costing', $item->id) }}"
-                                                            class="btn btn-sm btn-success">Add Costing</a>
-                                                    </div>
-                                                @elseif (!empty($item->survey && $item->connectivityRequirement))
-                                                    <div class="input-group input-group-sm input-group-success">
-                                                        <a href="{{ route('add-planning', $item->id) }}"
-                                                            class="btn btn-sm btn-success">Add Planning</a>
-                                                    </div>
-                                                @elseif ($item->connectivityRequirement)
-                                                    <div class="input-group input-group-sm input-group-success">
-                                                        <a href="{{ route('add-survey', $item->id) }}"
-                                                            class="btn btn-sm btn-success">Add Survey</a>
-                                                    </div>
-                                                @else
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <a href="{{ route('connectivity-requirement-add', $item->id) }}"
-                                                            class="btn btn-sm btn-success">Add Req</a>
-                                                    </div>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            <td>{{ $collection->mr_no }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Remarks</strong> </td>
+                            <td> {{ $collection->remarks }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        @endsection
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <hr>
+        <table id="example" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="6" class="bg-secondary">Payments</th>
+                </tr>
+                <tr>
+                    <th>Payment Method</th>
+                    <th>Bank Name</th>
+                    <th>Instrument No</th>
+                    <th>Instrument Date</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($collection->lines as $item)
+                    <tr class="payment_details_row">
+                        <td>{{strtoupper($item->payment_method)}}</td>
+                        <td>{{$item->bank_name}}</td>
+                        <td>{{$item->instrument_no}}</td>
+                        <td>{{$item->instrument_date}}</td>
+                        <td>{{$item->amount}}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" class="text-right"> Total Amount </td>
+                    <td class="text-center">{{ $collection->total_amount }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="table-responsive">
+        <hr>
+        <table id="example" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="9" class="bg-secondary">Bills</th>
+                </tr>
+                <tr>
+                    <th>Bill No</th>
+                    <th>Bill Amount</th>
+                    <th>Previous Due</th>
+                    <th>Discount</th>
+                    <th>Penalty</th>
+                    <th>Net Amount</th>
+                    <th>Receive Amount</th>
+                    <th>Due</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($collection->collectionBills as $item)
+                        <tr class="bill_details_row">
+                            <td>{{$item->bill_no}}</td>
+                            <td>{{$item->amount}}</td>
+                            <td>{{$item->previous_due}}</td>
+                            <td>{{$item->discount}}</td>
+                            <td>{{$item->penalty}}</td>
+                            <td>{{$item->net_amount}}</td>
+                            <td>{{$item->receive_amount}}</td>
+                            <td>{{$item->due}}</td>
+                        </tr>
+                    @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="text-right">Total</td>
+                    <td class="text-center">{{$collection->total_net_amount}}</td>
+                    <td class="text-center">{{$collection->total_receive_amount}}</td>
+                    <td class="text-center">{{$collection->total_due}}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    @endsection
+
+    

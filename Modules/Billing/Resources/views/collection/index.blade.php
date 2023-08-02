@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Feasibility Requirement List')
+@section('title', 'Bill Collection List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Feasibility Requirement List
+    Bill Collection List
 @endsection
 
 @section('style')
@@ -14,11 +14,11 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('feasibility-requirement.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('collections.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
-    Total: {{ count($feasibility_requirements) }}
+    Total: {{ count($datas) }}
 @endsection
 
 
@@ -29,11 +29,13 @@
                 <tr>
                     <th>#SL</th>
                     <th>Client Name</th>
-                    <th>Client No</th>
-                    <th>MQ No</th>
-                    <th>Total FR </th>
-                    <th>Survey/Planing/Costing</th>
-                    <th>Status</th>
+                    <th>Date</th>
+                    <th>MR No</th>
+                    <th>Remarks</th>
+                    <th>Total Amount</th>
+                    <th>Total Net Amount</th>
+                    <th>Total Receive Amount</th>
+                    <th>Total Due</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -41,45 +43,41 @@
                 <tr>
                     <th>#SL</th>
                     <th>Client Name</th>
-                    <th>Client No</th>
-                    <th>MQ No</th>
-                    <th>Total FR </th>
-                    <th>Survey/Planing/Costing</th>
-                    <th>Status</th>
+                    <th>Date</th>
+                    <th>MR No</th>
+                    <th>Remarks</th>
+                    <th>Total Amount</th>
+                    <th>Total Net Amount</th>
+                    <th>Total Receive Amount</th>
+                    <th>Total Due</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($feasibility_requirements as $key => $feasibility_requirement)
+                @foreach ($datas as $key => $data)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $feasibility_requirement->lead_generation->client_name }}</td>
-                        <td>{{ $feasibility_requirement->client_no }}</td>
-                        <td>{{ $feasibility_requirement->mq_no }}</td>
-                        <td>{{ $feasibility_requirement->feasibilityRequirementDetails->count() }}</td>
-                        <td>
-                            @if ($feasibility_requirement->feasibilityRequirementDetails->count() > 0)
-                                {{ $feasibility_requirement->feasibilityRequirementDetails[0]->surveySum->count() ?? '' }}/
-                                {{ $feasibility_requirement->feasibilityRequirementDetails[0]->planningSum->count() ?? '' }}
-                                /
-                                {{ $feasibility_requirement->feasibilityRequirementDetails[0]->costingSum->count() ?? '' }}
-                            @endif
-                        </td>
-                        </td>
-                        <td>{{ $feasibility_requirement->is_existing }}</td>
+                        <td>{{ $data->client->client_name }}</td>
+                        <td>{{ $data->date }}</td>
+                        <td>{{ $data->mr_no }}</td>
+                        <td>{{ $data->remarks }}</td>
+                        <td>{{ $data->total_amount }}</td>
+                        <td>{{ $data->total_net_amount }}</td>
+                        <td>{{ $data->total_receive_amount }}</td>
+                        <td>{{ $data->total_due }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('feasibility-requirement.show', $feasibility_requirement->id) }}"
+                                    <a href="{{ route('collections.show', $data->id) }}"
                                         data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i
                                             class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('feasibility-requirement.edit', $feasibility_requirement->id) }}"
+                                    <a href="{{ route('collections.edit', $data->id) }}"
                                         data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
                                             class="fas fa-pen"></i></a>
 
                                     <form
-                                        action="{{ route('feasibility-requirement.destroy', $feasibility_requirement->id) }}"
+                                        action="{{ route('collections.destroy', $data->id) }}"
                                         method="POST" class="d-inline" id="deleteClientProfile">
                                         @csrf
                                         @method('DELETE')
@@ -87,9 +85,6 @@
                                                 class="fas fa-trash"></i></button>
                                     </form>
                                     {{-- add offer  --}}
-                                    <a href="{{ route('add-offer', $feasibility_requirement->mq_no) }}"
-                                        data-toggle="tooltip" title="Add Offer" class="btn btn-outline-success"><i
-                                            class="fas fa-plus"></i></a>
                                 </nobr>
                             </div>
                         </td>

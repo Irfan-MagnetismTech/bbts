@@ -12,6 +12,7 @@
     $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->lines->pluck('remarks') : null);
     
     $effective_date = $is_old ? old('effective_date') : $sale->effective_date ?? today()->format('d-m-Y');
+    $sale_id = old('sale_id', !empty($physicalConnectivity) ? $physicalConnectivity->sale_id : request()->sale_id);
 @endphp
 
 @section('breadcrumb-title')
@@ -52,10 +53,11 @@
             @csrf
 
             <div class="row">
+                <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ $physicalConnectivityData->client_name }}" readonly>
+                        name="client_name" value="{{ $saleDetalis->client->client_name }}" readonly>
                     <input type="hidden" name="client_no" id="client_no"
                         value="{{ $physicalConnectivityData->client_no }}">
                 </div>
@@ -63,7 +65,7 @@
                 <div class="form-group col-3 client_type">
                     <label for="client_type">Client Type:</label>
                     <input type="text" class="form-control" id="client_type" name="client_type"
-                        aria-describedby="client_type" readonly value="{{ $physicalConnectivityData->client_type }}">
+                        aria-describedby="client_type" readonly value="{{ $saleDetalis->client->client_type }}">
                 </div>
 
                 <div class="form-group col-3 connectivity_point1">
@@ -78,26 +80,26 @@
                 <div class="form-group col-3 contact_person">
                     <label for="contact_person">Contact Person:</label>
                     <input type="text" class="form-control" id="contact_person" name="contact_person"
-                        aria-describedby="contact_person" readonly value="{{ $physicalConnectivityData->contact_person }}">
+                        aria-describedby="contact_person" readonly value="{{ $saleDetalis->frDetails->contact_name }}">
                 </div>
 
                 <div class="form-group col-3 contact_number">
                     <label for="contact_number">Contact Number:</label>
                     <input type="text" class="form-control" id="contact_number" aria-describedby="contact_number"
-                        name="contact_number" readonly value="{{ $physicalConnectivityData->contact_number }}">
+                        name="contact_number" readonly value="{{ $saleDetalis->frDetails->contact_number }}">
                 </div>
 
                 <div class="form-group col-3 email">
                     <label for="email">Email:</label>
                     <input type="text" class="form-control" id="email" name="email" aria-describedby="email"
-                        readonly value="{{ $physicalConnectivityData->email }}">
+                        readonly value="{{ $saleDetalis->frDetails->contact_email }}">
                 </div>
 
                 <div class="form-group col-3 contact_address">
                     <label for="contact_address">Contact Address:</label>
                     <input type="text" class="form-control" id="contact_address" name="contact_address"
                         aria-describedby="contact_address" readonly
-                        value="{{ $physicalConnectivityData->contact_address }}">
+                        value="{{ $saleDetalis->frDetails->location }}">
                 </div>
 
                 <div class="form-group col-3 comment">
@@ -257,6 +259,74 @@
                         @empty
                         @endforelse
                     @endif
+                </tbody>
+            </table>
+
+            <hr>
+
+            <h5 class="text-center p-2">NETWORK INFORMATION</h5>
+            <table class="table table-bordered" id="physical_connectivity">
+                <thead>
+                    <tr>
+                        <th> Link Type</th>
+                        <th> Method</th>
+                        <th> POP</th>
+                        <th>LDP</th>
+                        <th> Link ID </th>
+                        <th> Device IP </th>
+                        <th> PORT </th>
+                        <th> VLAN </th>
+                        <th> Connectivity Details </th>
+                        <th> Comment </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($physicalConnectivityData->lines as $key => $line)
+                        <tr>
+                            <td>
+                                <input type="text" name="link_type[]" class="form-control link_type"
+                                    autocomplete="off" value="{{ $line->link_type }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="method[]" class="form-control method" autocomplete="off"
+                                    value="{{ $line->method }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
+                                    value="{{ $line->pop }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
+                                    value="{{ $line->ldp }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="link_id[]" class="form-control link_id" autocomplete="off"
+                                    value="{{ $line->link_id }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="device_ip[]" class="form-control device_ip"
+                                    autocomplete="off" value="{{ $line->device_ip }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="port[]" class="form-control port" autocomplete="off"
+                                    value="{{ $line->port }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
+                                    value="{{ $line->vlan }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" name="connectivity_details[]"
+                                    class="form-control connectivity_details" autocomplete="off"
+                                    value="{{ $line->connectivity_details }}" readonly>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control comment" autocomplete="off"
+                                    value="{{ $line->comment }}" readonly>
+                            </td>
+                        </tr>
+                    @empty
+                    @endforelse
                 </tbody>
             </table>
 
@@ -551,73 +621,7 @@
                         value="{{ old('bgp_client_as') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->bgp_client_as : '') }}"
                         disabled id="bgp_client_as">
                 </div>
-            </div>
-
-            <h5 class="text-center p-2">NETWORK INFORMATION</h5>
-            <table class="table table-bordered" id="physical_connectivity">
-                <thead>
-                    <tr>
-                        <th> Link Type</th>
-                        <th> Method</th>
-                        <th> POP</th>
-                        <th>LDP</th>
-                        <th> Link ID </th>
-                        <th> Device IP </th>
-                        <th> PORT </th>
-                        <th> VLAN </th>
-                        <th> Connectivity Details </th>
-                        <th> Comment </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($physicalConnectivityData->lines as $key => $line)
-                        <tr>
-                            <td>
-                                <input type="text" name="link_type[]" class="form-control link_type"
-                                    autocomplete="off" value="{{ $line->link_type }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="method[]" class="form-control method" autocomplete="off"
-                                    value="{{ $line->method }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
-                                    value="{{ $line->pop }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
-                                    value="{{ $line->ldp }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="link_id[]" class="form-control link_id" autocomplete="off"
-                                    value="{{ $line->link_id }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="device_ip[]" class="form-control device_ip"
-                                    autocomplete="off" value="{{ $line->device_ip }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="port[]" class="form-control port" autocomplete="off"
-                                    value="{{ $line->port }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
-                                    value="{{ $line->vlan }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="connectivity_details[]"
-                                    class="form-control connectivity_details" autocomplete="off"
-                                    value="{{ $line->connectivity_details }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control comment" autocomplete="off"
-                                    value="{{ $line->comment }}" readonly>
-                            </td>
-                        </tr>
-                    @empty
-                    @endforelse
-                </tbody>
-            </table>
+            </div>            
 
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
