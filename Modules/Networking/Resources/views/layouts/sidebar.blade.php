@@ -120,6 +120,13 @@
         </ul>
     </li>
 
+    <li class="pcoded-submenu {{ request()->routeIs(['connectivities.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="{{ route('connectivities.index') }}">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>            
+            <span>Connectivities</span>
+        </a>
+    </li>
+
     <li
         class="pcoded-hasmenu {{ request()->routeIs(['physical-connectivities.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">

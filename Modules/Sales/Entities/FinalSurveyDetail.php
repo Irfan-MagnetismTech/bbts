@@ -18,4 +18,9 @@ class FinalSurveyDetail extends Model
     {
         return $this->hasOne(Pop::class, 'id', 'pop_id');
     }
+
+    public function surveyDetail()
+    {
+        return $this->belongsTo(SurveyDetail::class, 'survey_detail_id', 'id');
+    }
 }

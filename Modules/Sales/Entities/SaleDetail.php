@@ -90,4 +90,9 @@ class SaleDetail extends Model
     {
         return $this->hasOne(CCSchedule::class, 'fr_no', 'fr_no');
     }
+
+    public function survey()
+    {
+        return $this->hasOne(Survey::class, 'fr_no', 'fr_no');
+    }
 }

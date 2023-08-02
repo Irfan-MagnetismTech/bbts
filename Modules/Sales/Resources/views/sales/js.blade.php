@@ -25,7 +25,6 @@
             jquaryUiAjax(this, "{{ route('get_client_info_for_sales') }}", uiList, myObject);
 
             function uiList(item) {
-                console.log(item);
                 $('#client_name').val(item.value).attr('value', item.value);
                 $('#client_no').val(item.client_no).attr('value', item.client_no);
                 $('#client_id').val(item.client_id).attr('value', item.client_id);

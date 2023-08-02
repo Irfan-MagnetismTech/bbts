@@ -13,12 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('physical_connectivities', function (Blueprint $table) {
+        Schema::create('collections', function (Blueprint $table) {
             $table->id();
-            $table->string('fr_no')->nullable();
-            $table->string('connectivity_point')->nullable();
             $table->string('client_no')->nullable();
+            $table->string('date')->nullable();
+            $table->string('mr_no')->nullable();
             $table->string('remarks')->nullable();
+            $table->integer('total_amount')->default(0);
+            $table->integer('total_net_amount')->default(0);
+            $table->integer('total_receive_amount')->default(0);
+            $table->integer('total_due')->default(0);
             $table->timestamps();
         });
     }
@@ -30,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('physical_connectivities');
+        Schema::dropIfExists('collections');
     }
 };

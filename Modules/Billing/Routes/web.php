@@ -5,6 +5,7 @@ use Modules\Billing\Http\Controllers\BillGenerateController;
 use Modules\Billing\Http\Controllers\MonthlyBillController;
 use Modules\Billing\Http\Controllers\BillingOtcBillController;
 use Modules\Billing\Http\Controllers\BrokenDaysBillController;
+use Modules\Billing\Http\Controllers\CollectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
         'otc-bills'         => BillingOtcBillController::class,
         'bill-generate'     => BillGenerateController::class,
         'broken-days-bills' => BrokenDaysBillController::class,
+        'collections'       => CollectionController::class,
     ]);
     Route::get('generate_otc_bill/{client_no}', [BillGenerateController::class, 'create'])->name('generate_otc_bill');
     Route::get('generate_otc_bill_pdf/{id}', [BillGenerateController::class, 'pdf'])->name('generate_otc_bill_pdf');
@@ -33,4 +35,6 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::get('mrc_bill_summary/{id}', [MonthlyBillController::class, 'mrc_bill_summary'])->name('mrc_bill_summary');
     Route::get('mrc_bill_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_except_penalty'])->name('mrc_bill_except_penalty');
     Route::get('mrc_bill_summary_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_summary_except_penalty'])->name('mrc_bill_summary_except_penalty');
+    Route::get('get_client', [CollectionController::class, 'get_client'])->name('get_client');
+    Route::get('get_bill', [CollectionController::class, 'get_bill'])->name('get_bill');
 });
