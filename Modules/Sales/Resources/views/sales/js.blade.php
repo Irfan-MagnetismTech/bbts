@@ -91,6 +91,55 @@
                                                     </div>
                                                 </div>
                                                 <x-input-box colGrid="3" name="bill_payment_date[${indx}]" value="{{ $bill_payment_date ?? '' }}" label="Bill Payment Date" class="date"/>
+                                                <div style="">
+                                                <div class="datepicker-day">
+                                                        <table class="table-condensed">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class="day_td day">1</td>
+                                                                    <td class="day_td day">2</td>
+                                                                    <td class="day_td day">3</td>
+                                                                    <td class="day_td day">4</td>
+                                                                    <td class="day_td day">5</td>
+                                                                    <td class="day_td day">6</td>
+                                                                    <td class="day_td day">7</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="day_td day">8</td>
+                                                                    <td class="day_td day">9</td>
+                                                                    <td class="day_td day">10</td>
+                                                                    <td class="day_td day">11</td>
+                                                                    <td class="day_td day">12</td>
+                                                                    <td class="day_td day">13</td>
+                                                                    <td class="day_td day">14</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="day_td day">15</td>
+                                                                    <td class="day_td day">16</td>
+                                                                    <td class="day_td day">17</td>
+                                                                    <td class="day_td day">18</td>
+                                                                    <td class="day_td day">19</td>
+                                                                    <td class="day_td day">20</td>
+                                                                    <td class="day_td day">21</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="day_td day">22</td>
+                                                                    <td class="day_td day">23</td>
+                                                                    <td class="day_td day">24</td>
+                                                                    <td class="day_td day">25</td>
+                                                                    <td class="day_td day">26</td>
+                                                                    <td class="day_td day">27</td>
+                                                                    <td class="day_td day">28</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class="day_td day">29</td>
+                                                                    <td class="day_td day">30</td>
+                                                                    <td class="day_td day">31</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                                 <div class="col-3">
                                                     <div class="form-check-inline">
                                                         <label class="form-check-label" for="prepaid_${+indx}">
@@ -99,6 +148,7 @@
                                                             Prepaid
                                                         </label>
                                                     </div>
+                                                    
                                                     <div class="form-check-inline">
                                                         <label class="form-check-label" for="prepaid_${+indx}">
                                                             <input type="radio" class="form-check-input payment_status" id="prepaid_${+indx}" name="payment_status[${indx}]"
@@ -206,7 +256,7 @@
                 return false;
             }
         })
-
+        
         $('#mq_id').on('keyup', function() {
             let myObject = {}
             jquaryUiAjax(this, "{{ route('get_frs_based_on_mq') }}", uiList, myObject);
@@ -238,7 +288,7 @@
                     vvall += totalMRCValue;
                 }
             });
-            $('#grand_total').val(vvall);
+            $('#grand_total').val(round(vvall));
         })
 
         // $(document).on('keyup','.vat_percent',function(){
@@ -266,7 +316,6 @@
             var value = $(element).is('select') ? $(element).find('option:selected').val() : $(element).val();
             form_data[name] = value;
             });
-            console.log(JSON.stringify(form_data));
             fetch("{{ route('updateAddress') }}", {
                 method: 'POST',
                 headers: {
@@ -304,7 +353,7 @@
                 });
     }
     function ShowModal(a,b,ds){
-        select_selector = $(ds).parent().prev().find('select');
+        select_selector = $(ds).parent().parent().prev().find('select');
         $("#modal-13").modal("show");
         $("#modal-13").addClass("md-show");
         $("#client_no_add").val($('#client_no').val());
@@ -370,5 +419,18 @@
 
     associativeDropdown("{{ route('get-districts') }}", 'division_id', '#division_id', '#district_id', 'get', null)
     associativeDropdown("{{ route('get-thanas') }}", 'district_id', '#district_id', '#thana_id', 'get', null)
+       
+    var day_picker_selector;
+        $(document).ready(function () {
+            $(document).on('click','.container',function(){
+                day_picker_selector = $(this);
+                $('.box').css('left',(($(this).offset().left) - 50)+'px').css('top',(($(this).offset().top)-150)+'px').css('display','block');
+            })
+            $(document).on('click','.day_td',function(){
+                console.log($(this).text());
+                day_picker_selector.val($(this).text());
+                $('.box').css('display','hidden');
+            })
+        });
 
 </script>
