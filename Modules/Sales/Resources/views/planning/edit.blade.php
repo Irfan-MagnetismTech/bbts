@@ -184,9 +184,9 @@
                                     </thead>
                                     <tbody id="equipment_body">
                                         @foreach ($plan->equipmentPlans as $equipment_plan)
-                                            <input type="hidden" name="equipment_plan_id[]"
-                                                value="{{ $equipment_plan->id ?? '' }}">
                                             <tr class="equipment_row">
+                                                <input type="hidden" name="equipment_plan_id[]"
+                                                    value="{{ $equipment_plan->id ?? '' }}">
                                                 <td>
                                                     <select name="equipment_id[]" id="equipment_id"
                                                         class="form-control form-control-sm equipment_id">
@@ -497,10 +497,10 @@
                                             </thead>
                                             <tbody class="link_equipment_table">
                                                 @foreach ($plan_link->PlanLinkEquipments as $plan_equipment)
-                                                    <input type="hidden"
-                                                        name="plan_link_equipment_id_{{ $total_key }}[]"
-                                                        value="{{ $plan_equipment->id ?? '' }}">
                                                     <tr>
+                                                        <input type="hidden"
+                                                            name="plan_link_equipment_id_{{ $total_key }}[]"
+                                                            value="{{ $plan_equipment->id ?? '' }}">
                                                         <td>
                                                             <select name="material_id_{{ $total_key }}[]"
                                                                 id="material_id"
@@ -513,6 +513,7 @@
                                                                 @endforeach
                                                             </select>
                                                         </td>
+
                                                         <td>
                                                             <input type="text" name="quantity_{{ $total_key }}[]"
                                                                 id="quantity"
@@ -637,12 +638,17 @@
             };
 
             let delete_equipment_id = [];
-            $(document).on('click', '.removeEquipmentRow', function() {
-                var equipment_plan_id = $(this).closest('tr').find('input[name^="equipment_plan_id_"]').val();
+            $(document).on('click', '.removeEquipmentRow', function(e) {
+                e.preventDefault();
+                var equipment_plan_id = $(this).closest('tr').find('input[name^="equipment_plan_id"]').val();
+                console.log(equipment_plan_id);
                 if (equipment_plan_id) {
                     delete_equipment_id.push(equipment_plan_id);
-                    $('#delete_equipment_plan_id').val(delete_equipment_id);
+                    let delete_equipment_id_json = JSON.stringify(delete_equipment_id);
+                    console.log(delete_equipment_id_json);
+                    $('#delete_equipment_plan_id').val(delete_equipment_id_json);
                 }
+                $(this).closest('tr').remove();
             });
 
             $('#date').datepicker({
@@ -713,10 +719,17 @@
             let delete_link_equipment_id = [];
 
             function removeLinkEquipmentRow(event) {
-                var link_equipemnt_id = $(event).closest('tr').find('input[name^="plan_link_equipment_id_"]').val();
-                if (link_equipemnt_id) {
-                    delete_link_equipment_id.push(link_equipemnt_id);
-                    $('#delete_link_equipment_id').val(delete_link_equipment_id);
+                var plan_link_id = $(event).closest('.main_link').find('input[name^="plan_link_id_"]').val();
+                var link_equipment_id = $(event).closest('tr').find('input[name^="plan_link_equipment_id_"]').val();
+                console.log('plan_link_id', plan_link_id);
+                console.log('link_equipemnt_id', link_equipment_id);
+                if (link_equipment_id) {
+                    delete_link_equipment_id.push({
+                        'link_equipment_id': link_equipment_id,
+                        'plan_link_id': plan_link_id
+                    });
+                    let delete_link_equipment_id_json = JSON.stringify(delete_link_equipment_id);
+                    $('#delete_link_equipment_id').val(delete_link_equipment_id_json);
                 }
                 var $table = $(event).closest('.table-bordered');
                 var $tr = $table.find('tbody tr');

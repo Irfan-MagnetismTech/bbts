@@ -146,7 +146,7 @@ class PlanningController extends Controller
     public function destroy(Planning $planning)
     {
         try {
-            if($planning->costing){
+            if ($planning->costing) {
                 return redirect()->route('planning.index')->with('error', 'Planning has costing, cannot be deleted');
             }
             $planning->delete();
@@ -279,7 +279,7 @@ class PlanningController extends Controller
                 $plan_link_data['new_transmission_capacity'] = request("new_transmission_capacity_{$i}");
                 $plan_link_data['link_remarks'] = request("link_remarks_{$i}");
                 $plan_link_data['planning_id'] = $plan->id;
-                if (null !== request("plan_link_id_{$i}")) {
+                if (request("plan_link_id_{$i}") != null) {
                     $id = request("plan_link_id_{$i}");
                     PlanLink::where('id', $id)->update($plan_link_data);
                     $plan_link = PlanLink::find($id);
@@ -302,13 +302,14 @@ class PlanningController extends Controller
                 $final_survey_data['survey_detail_id'] = $survey_details->id ?? null;
                 $final_survey_data['planning_id'] = $plan->id;
                 $final_survey_data['plan_link_id'] = $plan_link->id;
-                if (request("final_survey_id_{$i}")) {
+                if (request("final_survey_id_{$i}") != null) {
                     $final_survey_update = FinalSurveyDetail::where('id', request("final_survey_id_{$i}"))->update($final_survey_data);
                     $final_survey = FinalSurveyDetail::find(request("final_survey_id_{$i}"));
                 } else {
                     $final_survey = FinalSurveyDetail::create($final_survey_data);
                 }
                 $materials = request("material_id_$i");
+                $planLinkEquipmentIds = request("plan_link_equipment_id_{$i}");
                 if ($materials) {
                     foreach ($materials as $key => $material_id) {
                         $plan_link_equipment['material_id'] = $material_id;
@@ -321,8 +322,9 @@ class PlanningController extends Controller
                         $plan_link_equipment['final_survey_id'] = $final_survey->id;
                         $plan_link_equipment['planning_id'] = $plan->id;
                         $plan_link_equipment['plan_link_id'] = $plan_link->id;
-                        if (request("plan_link_equipment_id_{$i}")) {
-                            PlanLinkEquipment::where('id', request("plan_link_equipment_id_{$i}"))->update($plan_link_equipment);
+                        if ($planLinkEquipmentIds && isset($planLinkEquipmentIds[$key])) {
+
+                            PlanLinkEquipment::where('id', $planLinkEquipmentIds[$key])->update($plan_link_equipment);
                         } else {
                             PlanLinkEquipment::create($plan_link_equipment);
                         }
@@ -339,14 +341,17 @@ class PlanningController extends Controller
                 PlanLink::where('id', $plan_link_id)->delete();
             }
         }
+
+        $delete_equipment_plan_id = json_decode($delete_equipment_plan_id);
         if ($delete_equipment_plan_id) {
             foreach ($delete_equipment_plan_id as $key => $equipment_plan_id) {
                 EquipmentPlan::where('id', $equipment_plan_id)->delete();
             }
         }
-        if ($delete_link_equipment_id) {
-            foreach ($delete_link_equipment_id as $key => $plan_link_equipment_id) {
-                PlanLinkEquipment::where('id', $plan_link_equipment_id)->delete();
+        $link_equipment_id_array = json_decode($delete_link_equipment_id);
+        if (!empty($link_equipment_id_array)) {
+            foreach ($link_equipment_id_array as $key => $equipment_array) {
+                PlanLinkEquipment::where('id', $equipment_array->link_equipment_id)->where('plan_link_id', $equipment_array->plan_link_id)->delete();
             }
         }
     }
