@@ -397,7 +397,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="offer_management_cost_{{ $row_no }}"
-                                                                    value="{{ $details->costing->management_cost_amount }} "
+                                                                    value="{{ $details->costing->management_cost_amount ?? 0 }} "
                                                                     class="form-control offer_management_cost text-right"
                                                                     id="offer_management_cost" readonly>
                                                             </div>
