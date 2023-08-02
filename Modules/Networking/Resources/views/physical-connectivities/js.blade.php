@@ -72,7 +72,6 @@
                 $("#long").val(data.fr_details.long);
 
                 $("#physical_connectivity tbody").html("");
-                //if (data.sale_link_details.length > 0) then show no data found
                 console.log(data.sale_link_details.length)
                 if (data.sale_link_details.length == 0) {
                     $("#physical_connectivity tbody").html(

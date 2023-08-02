@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('physical_connectivities', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('sale_id');
             $table->string('fr_no')->nullable();
             $table->string('connectivity_point')->nullable();
             $table->string('client_no')->nullable();
