@@ -17,13 +17,14 @@
     
     $connectivity_point = old('connectivity_point', !empty($physicalConnectivity) ? $physicalConnectivity->fr_no : null);
     
-    $contact_person = old('contact_person', !empty($physicalConnectivity) ? $clientInfo->contact_name : null);
-    $contact_number = old('contact_number', !empty($physicalConnectivity) ? $clientInfo->contact_number : null);
-    $email = old('email', !empty($physicalConnectivity) ? $clientInfo->contact_email : null);
-    $contact_address = old('contact_address', !empty($physicalConnectivity) ? $clientInfo->location : null);
-    $lat = old('lat', !empty($physicalConnectivity) ? $clientInfo->lat : null);
-    $long = old('long', !empty($physicalConnectivity) ? $clientInfo->long : null);
+    $contact_person = old('contact_person', !empty($physicalConnectivity) ? $feasibility_details->contact_name : null);
+    $contact_number = old('contact_number', !empty($physicalConnectivity) ? $feasibility_details->contact_number : null);
+    $email = old('email', !empty($physicalConnectivity) ? $feasibility_details->contact_email : null);
+    $contact_address = old('contact_address', !empty($physicalConnectivity) ? $feasibility_details->location : null);
+    $lat = old('lat', !empty($physicalConnectivity) ? $feasibility_details->lat : null);
+    $long = old('long', !empty($physicalConnectivity) ? $feasibility_details->long : null);
     $remarks = old('remarks', !empty($physicalConnectivity) ? $physicalConnectivity->remarks : null);
+    $sale_id = old('sale_id', !empty($physicalConnectivity) ? $physicalConnectivity->sale_id : request()->sale_id);
 @endphp
 
 @section('breadcrumb-title')
@@ -67,8 +68,8 @@
                 @method('PUT')
             @endif
             @csrf
-
             <div class="row">
+                <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"

@@ -416,30 +416,16 @@ class CommonApiController extends Controller
 
     public function getFrDetailsData()
     {
-        // $results = FeasibilityRequirementDetail::query()
-        //     ->with('planning.finalSurveyDetails.pop')
-        //     ->where('fr_no', request('connectivity_point'))
-        //     ->first();
-        // dd(request()->connectivity_point);
-
         $feasibility_details = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', request('fr_no'))->first();
-
-        // $results = Sale::query()
-        //     ->whereId(request('sale_id'))
-        //     ->with('saleDetails', 'saleLinkDetails.finalSurveyDetails.pop')
-        //     ->whereHas('saleLinkDetails.finalSurveyDetails.surveyDetail.survey', function ($query) use ($feasibility_details) {
-        //         $query->where('fr_no', request('fr_no'))->where('mq_no', $feasibility_details->feasibilityRequirement->mq_no);
-        //     })
-        //     ->first();
 
         $results = SaleDetail::query()
             ->whereSaleId(request('sale_id'))
-            ->with('saleLinkDetails.finalSurveyDetails.pop')
+            ->with('frDetails', 'saleLinkDetails.finalSurveyDetails.pop')
             ->whereHas('saleLinkDetails.finalSurveyDetails.surveyDetail.survey', function ($query) use ($feasibility_details) {
                 $query->where('fr_no', request('fr_no'))->where('mq_no', $feasibility_details->feasibilityRequirement->mq_no);
             })
             ->first();
-            
+
         return response()->json($results);
     }
 

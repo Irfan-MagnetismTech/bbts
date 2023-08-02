@@ -11,7 +11,7 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('physical-connectivities.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
+    <a href="{{ route('connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-success"><i
             class="fa fa-plus"></i></a>
 @endsection
 
@@ -35,7 +35,7 @@
                     <th>Device IP</th>
                     <th>PORT</th>
                     <th>Vlan</th>
-                    <th></th>
+                    {{-- <th></th> --}}
                     <th>Action</th>
                 </tr>
             </thead>
@@ -78,7 +78,7 @@
                                 <span class="badge badge-info">{{ $line->vlan }}</span> <br>
                             @endforeach
                         </td>
-                        <td>
+                        {{-- <td>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-internet-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}"
                                     class="text-white" target="_blank">Internet</a>
@@ -91,7 +91,7 @@
                                 <a href="{{ route('logical-vas-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}" target="_blank"
                                     class="text-white">VAS</a>
                             </span>
-                        </td>
+                        </td> --}}
                         <td>
                             <div class="icon-btn">
                                 <nobr>

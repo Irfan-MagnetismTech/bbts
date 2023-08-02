@@ -101,6 +101,8 @@ class PhysicalConnectivityController extends Controller
     {
         Session::put('physicalConnectivityEditUrl', url()->current());
 
+        $feasibility_details = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $physicalConnectivity->fr_no)->first();
+
         $challanInfo = ScmChallan::query()
             ->where('fr_no', $physicalConnectivity->fr_no)
             ->get();
@@ -113,7 +115,7 @@ class PhysicalConnectivityController extends Controller
             ->where('fr_no', $physicalConnectivity->fr_no)
             ->first();
 
-        return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'challanInfo', 'connectivity_points', 'clientInfo'));
+        return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
 
     /**

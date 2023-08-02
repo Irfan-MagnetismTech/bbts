@@ -35,6 +35,7 @@
 
     $("#connectivity_point").on("change", function() {
         let connectivity_point = $(this).val().split("_")[1];
+        let sale_id = $("#sale_id").val();
 
         $.ajax({
             url: "{{ route('getFrDetailsData') }}",
@@ -42,19 +43,20 @@
             dataType: "json",
             data: {
                 fr_no: connectivity_point,
-                sale_id: "{{ request()->sale_id }}",
+                sale_id: sale_id,
             },
             success: function(data) {
-                $("#fr_no").val(data.fr_no);
-                $("#contact_person").val(data.contact_name);
-                $("#contact_number").val(data.contact_number);
-                $("#email").val(data.contact_email);
-                $("#contact_address").val(data.location);
-                $("#lat").val(data.lat);
-                $("#long").val(data.long);
+                console.log(data)
+                $("#fr_no").val(data.fr_details.fr_no);
+                $("#contact_person").val(data.fr_details.contact_name);
+                $("#contact_number").val(data.fr_details.contact_number);
+                $("#email").val(data.fr_details.contact_email);
+                $("#contact_address").val(data.fr_details.location);
+                $("#lat").val(data.fr_details.lat);
+                $("#long").val(data.fr_details.long);
 
                 $("#physical_connectivity tbody").html("");
-                appendNetworkInfoRow(data.planning.final_survey_details);
+                appendNetworkInfoRow(data.sale_link_details);
             },
         });
     });
@@ -68,11 +70,11 @@
                             </td>
                             <td>
                                 <input type="text" name="method[]" class="form-control method"
-                                    autocomplete="off" value="${element.method}" readonly>
+                                    autocomplete="off" value="${element.final_survey_details.method}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="pop[]" class="form-control pop"
-                                    autocomplete="off" value="${element.pop.name}" readonly>
+                                    autocomplete="off" value="${element.final_survey_details.pop.name}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="ldp[]" class="form-control ldp"

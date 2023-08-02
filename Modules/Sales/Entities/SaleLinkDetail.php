@@ -16,6 +16,6 @@ class SaleLinkDetail extends Model
 
     public function finalSurveyDetails()
     {
-        return $this->hasMany(FinalSurveyDetail::class, 'link_no', 'link_no');
+        return $this->hasOne(FinalSurveyDetail::class, 'link_no', 'link_no');
     }
 }
