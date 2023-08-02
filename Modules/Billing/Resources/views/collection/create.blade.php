@@ -1,11 +1,11 @@
 @extends('layouts.backend-layout')
-@section('title', 'Feasibility Requirement')
+@section('title', 'Bill Collection')
 
 @php
-    $is_old = old('client_id') ? true : false;
-    $form_heading = !empty($collections->id) ? 'Update' : 'Add';
-    $form_url = !empty($collections->id) ? route('collections.update', $collections->id) : route('collections.store');
-    $form_method = !empty($collections->id) ? 'PUT' : 'POST';
+    $is_old = old('client_no') ? true : false;
+    $form_heading = !empty($collection->id) ? 'Update' : 'Add';
+    $form_url = !empty($collection->id) ? route('collections.update', $collection->id) : route('collections.store');
+    $form_method = !empty($collection->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
@@ -39,45 +39,44 @@
                 <div class="card-body">
                     <div class="row">
                         @php
-                            $client_name = $is_old ? old('client_name') : $collections->lead_generation->client_name ?? null;
-                            $client_no = $is_old ? old('client_no') : $collections->client_no ?? null;
-                            $is_existing = $is_old ? old('is_existing') : $collections->is_existing ?? null;
-                            $date = $is_old ? old('date') : $collections->date ?? null;
-                            $mr_no = $is_old ? old('mr_no') : $collections->mr_no ?? null;
-                            $remarks = $is_old ? old('remarks') : $collections->remarks ?? null;
+                            $client_name = $is_old ? old('client_name') : $collection->client->client_name ?? null;
+                            $client_no = $is_old ? old('client_no') : $collection->client_no ?? null;
+                            $date = $is_old ? old('date') : $collection->date ?? null;
+                            $mr_no = $is_old ? old('mr_no') : $collection->mr_no ?? null;
+                            $remarks = $is_old ? old('remarks') : $collection->remarks ?? null;
+                            $total_amount = $is_old ? old('total_amount') : $collection->total_amount ?? null;
+                            $total_net_amount = $is_old ? old('total_net_amount') : $collection->total_net_amount ?? null;
+                            $total_receive_amount = $is_old ? old('total_receive_amount') : $collection->total_receive_amount ?? null;
+                            $total_due = $is_old ? old('total_due') : $collection->total_due ?? null;
                         @endphp
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="client_no" id="client_no"
-                                    value="" autocomplete="off" readonly>
+                                <input type="text" class="form-control" name="client_no" id="client_no" autocomplete="off" readonly value="{{$client_no}}">
                                 <label for="client_no">Client NO<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="client_name" id="client_name"
-                                    value="" autocomplete="off" required>
+                                <input type="text" class="form-control" name="client_name" id="client_name" autocomplete="off" required value="{{$client_name}}">
                                 <label for="client_name">Client Name<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="mr_no" id="mr_no"
-                                    value="" autocomplete="off" required>
+                                <input type="text" class="form-control" name="mr_no" id="mr_no" autocomplete="off" required value="{{$mr_no}}">
                                 <label for="mr_no">MR No<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
                                 <input type="date" name="date" id="date" class="form-control"
-                                    value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off">
+                                    value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off" value="{{$date}}">
                                 <label for="client_type">Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="remarks" id="remarks"
-                                    value="" autocomplete="off" required>
+                                <input type="text" class="form-control" name="remarks" id="remarks" autocomplete="off" required value="{{$remarks}}">
                                 <label for="remarks">Remarks<span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -105,47 +104,43 @@
                                     </tr>
                                 </thead>
                                 <tbody class="paymentBody">
-                                    @if (!empty($feasibility_requirement))
-                                        @foreach ($feasibility_requirement->feasibilityRequirementDetails as $item)
+                                    @if (!empty($collection))
+                                        @foreach ($collection->lines as $item)
                                             <tr class="payment_details_row">
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="payment_method[]" class="form-control"
                                                         autocomplete="off">
                                                             <option value="">Select Payment Method</option>
-                                                            <option value="bank">BANK</option>
-                                                            <option value="cash">CASH</option>
-                                                            <option value="bkash">BKASH</option>
-                                                            <option value="nogod">NOGOD</option>
+                                                            <option value="bank" @if($item->payment_method == "bank") Selected @endif>BANK</option>
+                                                            <option value="cash" @if($item->payment_method == "cash") Selected @endif>CASH</option>
+                                                            <option value="bkash" @if($item->payment_method == "bkash") Selected @endif>BKASH</option>
+                                                            <option value="nogod" @if($item->payment_method == "nogod") Selected @endif>NOGOD</option>
                                                         </select>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="bank_name[]" class="form-control"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Bank Name">
+                                                        <input type="text" name="bank_name[]" class="form-control" autocomplete="off"
+                                                            placeholder="Bank Name" value="{{$item->bank_name}}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="lat[]" class="form-control"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Instrument No">
+                                                        <input type="text" name="instrument_no[]" class="form-control"  autocomplete="off"
+                                                            placeholder="Instrument No" value="{{$item->instrument_no}}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="long[]" class="form-control"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Instrument Date">
+                                                        <input type="text" name="instrument_date[]" class="form-control" autocomplete="off"
+                                                            placeholder="Instrument Date" value="{{$item->instrument_date}}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="contact_name[]" class="form-control"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Amount">
+                                                        <input type="text" name="amount[]" class="form-control" autocomplete="off"
+                                                            placeholder="Amount" value="{{$item->amount}}">
                                                     </div>
                                                 </td>
                                                 <td>
@@ -203,7 +198,7 @@
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_amount" class="form-control"
-                                                    id="total_amount" autocomplete="off" placeholder="Total Amount" readonly>
+                                                    id="total_amount" autocomplete="off" placeholder="Total Amount" readonly value="{{$total_amount}}">
                                             </div>
                                         </td>
                                     </tr>
@@ -236,61 +231,54 @@
                                     </tr>
                                 </thead>
                                 <tbody class="billBody">
-                                    @if (!empty($feasibility_requirement))
-                                        @foreach ($feasibility_requirement->feasibilityRequirementDetails as $item)
+                                    @if (!empty($collection))
+                                        @foreach ($collection->collectionBills as $item)
                                             <tr class="bill_details_row">
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="bill_no[]" class="form-control bill_no"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Bill No">
+                                                        <input type="text" name="bill_no[]" class="form-control bill_no" autocomplete="off"
+                                                            placeholder="Bill No" value="{{$item->bill_no}}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="previous_due[]" class="form-control previous_due" autocomplete="off" placeholder="Previous Due">
+                                                        <input type="text" name="bill_amount[]" class="form-control bill_amount" autocomplete="off"
+                                                        placeholder="Bill Amount" value="{{$item->amount}}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="bill_amount[]" class="form-control bill_amount"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Bill Amount">
+                                                        <input type="text" name="previous_due[]" class="form-control previous_due" autocomplete="off" placeholder="Previous Due" value="{{$item->previous_due}}" readonly>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="long[]" class="form-control"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Discount">
+                                                        <input type="text" name="discount[]" class="form-control discount" autocomplete="off"
+                                                            placeholder="Discount" value="{{$item->discount}}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="contact_name[]" class="form-control"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Penalty">
+                                                        <input type="text" name="penalty[]" class="form-control penalty" autocomplete="off"
+                                                            placeholder="Penalty" value="{{$item->penalty}}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="net_amount[]" class="form-control net_amount"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Net Amount">
+                                                        <input type="text" name="net_amount[]" class="form-control net_amount" autocomplete="off"
+                                                            placeholder="Net Amount" value="{{$item->net_amount}}" readonly>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="long[]" class="form-control"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Receive Amount">
+                                                        <input type="text" name="receive_amount[]" class="form-control receive_amount" autocomplete="off"
+                                                            placeholder="Receive Amount" value="{{$item->receive_amount}}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="contact_name[]" class="form-control"
-                                                            value="" autocomplete="off"
-                                                            placeholder="Due">
+                                                        <input type="text" name="due[]" class="form-control due" autocomplete="off"
+                                                            placeholder="Due" value="{{$item->due}}" readonly>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -356,19 +344,19 @@
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_net_amount" class="form-control"
-                                                    id="total_net_amount" autocomplete="off" placeholder="Total Net" readonly>
+                                                    id="total_net_amount" autocomplete="off" placeholder="Total Net" readonly value="{{$total_net_amount}}">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_receive_amount" class="form-control"
-                                                    id="total_receive_amount" autocomplete="off" placeholder="Total Received" readonly>
+                                                    id="total_receive_amount" autocomplete="off" placeholder="Total Received" readonly value="{{$total_receive_amount}}">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_due" class="form-control"
-                                                    id="total_due" autocomplete="off" placeholder="Total Due" readonly>
+                                                    id="total_due" autocomplete="off" placeholder="Total Due" readonly value="{{$total_due}}">
                                             </div>
                                         </td>
                                     </tr>

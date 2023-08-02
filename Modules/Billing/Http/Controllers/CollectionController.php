@@ -4,12 +4,13 @@ namespace Modules\Billing\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\Client;
 use App\Services\BbtsGlobalService;
-use Modules\Billing\Entities\BillGenerate;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\QueryException;
 use Modules\Billing\Entities\Collection;
+use Modules\Billing\Entities\BillGenerate;
+use Illuminate\Contracts\Support\Renderable;
 
 class CollectionController extends Controller
 {
@@ -21,7 +22,8 @@ class CollectionController extends Controller
      */
     public function index()
     {
-        return view('billing::collection.index');
+        $datas = Collection::query()->get();
+        return view('billing::collection.index', compact('datas'));
     }
 
     /**
@@ -41,15 +43,18 @@ class CollectionController extends Controller
     public function store(Request $request)
     {
         try {
+            DB::beginTransaction();
             $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount', 'total_receive_amount', 'total_due');
             $BillCollection = Collection::create($CollectionData);
             $lineRow = $this->createLineRow($request);
             $collectionBillRow = $this->createCollectionBillRow($request);
             $BillCollection->lines()->createMany($lineRow);
-            $BillCollection->collectionLines()->createMany($collectionBillRow);
-            dd('Done');
-        } catch (QueryException $err) {
-            dd($err->getMessage());
+            $BillCollection->collectionBills()->createMany($collectionBillRow);
+            DB::commit();
+            return redirect()->route('collections.index')->with('message', 'Data has been created successfully');
+        } catch (QueryException $error) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($error->getMessage());
         }
     }
 
@@ -58,9 +63,9 @@ class CollectionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(Collection $collection)
     {
-        return view('billing::show');
+        return view('billing::collection.show', compact('collection'));
     }
 
     /**
@@ -68,9 +73,9 @@ class CollectionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(Collection $collection)
     {
-        return view('billing::edit');
+        return view('billing::collection.create', compact('collection'));
     }
 
     /**
@@ -79,9 +84,24 @@ class CollectionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Collection $collection)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount', 'total_receive_amount', 'total_due');
+            $collection->update($CollectionData);
+            $lineRow = $this->createLineRow($request);
+            $collectionBillRow = $this->createCollectionBillRow($request);
+            $collection->lines()->delete();
+            $collection->collectionBills()->delete();
+            $collection->lines()->createMany($lineRow);
+            $collection->collectionBills()->createMany($collectionBillRow);
+            DB::commit();
+            return redirect()->route('collections.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $error) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($error->getMessage());
+        }
     }
 
     /**
@@ -89,9 +109,16 @@ class CollectionController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Collection $collection)
     {
-        //
+        try {
+            $collection->lines()->delete();
+            $collection->collectionBills()->delete();
+            $collection->delete();
+            return redirect()->route('collections.index')->with('message', 'User has been deleted successfully.');
+        } catch (QueryException $e) {
+            return redirect()->back()->withErrors($e->getMessage());
+        }
     }
 
 
