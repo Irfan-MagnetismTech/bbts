@@ -15,6 +15,11 @@
             padding: 8px;
             margin-top: 10px;
         }
+
+        .table_label{
+            width: 30px;
+            text-align: left!important;
+        }
     </style>
 @endsection
 
@@ -56,39 +61,39 @@
                             <hr />
                             <table class="table custom_table table-bordered" style="font-size: 12px;">
                                 <tr>
-                                    <th>Client Name</th>
+                                    <th class="table_label">Client Name</th>
                                     <td>{{ $lead_generation->client_name }}</td>
-                                    <th>Address</th>
+                                    <th class="table_label">Address</th>
                                     <td>{{ $lead_generation->address }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Division</th>
+                                    <th class="table_label">Division</th>
                                     <td>{{ $lead_generation->division->name ?? '' }}</td>
-                                    <th>District</th>
+                                    <th class="table_label">District</th>
                                     <td>{{ $lead_generation->district->name ?? '' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Thana</th>
+                                    <th class="table_label">Thana</th>
                                     <td>{{ $lead_generation->thana->name ?? '' }}</td>
-                                    <th>Landmark</th>
+                                    <th class="table_label">Landmark</th>
                                     <td>{{ $lead_generation->landmark }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Lat-Long</th>
+                                    <th class="table_label">Lat-Long</th>
                                     <td>{{ $lead_generation->lat_long }}</td>
-                                    <th>Contact Person</th>
+                                    <th class="table_label">Contact Person</th>
                                     <td>{{ $lead_generation->contact_person }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Contact No</th>
+                                    <th class="table_label">Contact No</th>
                                     <td>{{ $lead_generation->contact_no }}</td>
-                                    <th>Email</th>
+                                    <th class="table_label">Email</th>
                                     <td>{{ $lead_generation->email }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Website</th>
+                                    <th class="table_label">Website</th>
                                     <td>{{ $lead_generation->website }}</td>
-                                    <th>Document</th>
+                                    <th class="table_label">Document</th>
                                     <td>
                                         @if ($lead_generation->document)
                                             <a href="{{ asset('uploads/lead_generation/' . $lead_generation->document) }}"
