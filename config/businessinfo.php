@@ -119,4 +119,26 @@ return [
         'IPv4' => 'IPv4',
         'IPv6' => 'IPv6',
     ],
+
+
+    'fiberType' => [
+        '4 Core' => '4 Core',
+        '8 Core' => '8 Core',
+        '12 Core' => '12 Core',
+        '16 Core' => '16 Core',
+        '24 Core' => '24 Core',
+        '28 Core' => '28 Core',
+        '32 Core' => '32 Core',
+    ],
+
+
+    'coreNoColor' => [
+        '1 - Green' => '1 - Green',
+        '2 - Green' => '2 - Green',
+        '3 - Green' => '3 - Green',
+        '4 - Green' => '4 - Green',
+        '5 - Green' => '5 - Green',
+        '6 - Green' => '6 - Green',
+        '7 - Green' => '7 - Green',
+    ],
 ];
