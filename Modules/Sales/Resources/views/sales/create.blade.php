@@ -54,7 +54,7 @@
   position: absolute;
   width: 30px;
   height: 30px;
-  display:hidden;
+  left: -1000px;
 }
 .container {
   position: relative;
@@ -171,7 +171,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="container"/>
+                                                <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="container" readonly/>
 
                                                 <div class="col-3">
                                                     <div class="form-check-inline">

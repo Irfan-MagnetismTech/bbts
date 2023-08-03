@@ -20,7 +20,7 @@ class LeadGenerationController extends Controller
      */
     public function index()
     {
-        $lead_generations = LeadGeneration::with('division', 'district', 'thana')->get();
+        $lead_generations = LeadGeneration::with('division', 'district', 'thana')->latest()->get();
         return view('sales::lead_generation.index', compact('lead_generations'));
     }
 
