@@ -293,7 +293,7 @@
                                         <input type="text" name="existing_transmission_capacity_1"
                                             id="existing_transmission_capacity"
                                             class="form-control form-control-sm existing_transmission_capacity"
-                                            value="" >
+                                            value="">
                                         <label for="type">Existing Transmission Capacity</label>
                                     </div>
                                 </div>
@@ -301,8 +301,7 @@
                                 <div class="md-col-3 col-3 mt-3">
                                     <div class="form-item">
                                         <input type="text" name="increase_capacity_1" id="increase_capacity"
-                                            class="form-control form-control-sm increase_capacity" value=""
-                                            >
+                                            class="form-control form-control-sm increase_capacity" value="">
                                         <label for="type">Increase Capacity</label>
                                     </div>
                                 </div>
@@ -324,7 +323,7 @@
                                     <div class="form-item">
                                         <input type="text" name="new_transmission_capacity_1"
                                             id="new_transmission_capacity" class="form-control form-control-sm"
-                                            value="" >
+                                            value="">
                                         <label for="type">New Transmission Capacity</label>
                                     </div>
                                 </div>
@@ -499,7 +498,7 @@
                     </div>
 
                     {{-- create a responsive table --}}
-                    {{--<div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-12">
                             <hr />
                             <div class="text-center">
@@ -535,7 +534,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>--}}
+                    </div> --}}
                     <input type="hidden" id="client_no" name="client_no" value="{{ $lead_generation->client_no }}">
                     <input type="hidden" id="fr_no" name="fr_no"
                         value="{{ $feasibilityRequirementDetail->fr_no }}">
@@ -550,35 +549,36 @@
 
     @section('script')
         <script>
+            let plan_equipment_html = '';
             $('#addEquipmentRow').on('click', function() {
                 addEquipmentRow();
             });
 
             function addEquipmentRow() {
-                $('.equipment_row').first().clone().appendTo('#equipment_body');
-                $('.equipment_row').last().find('input').val('');
-                $('.equipment_row').last().find('select').val('');
+                let check_first_row = $('.equipment_row').first();
+                if (check_first_row.length !== 0) {
+                    console.log('not empty');
+                    $('.equipment_row').first().clone().appendTo('#equipment_body');
+                    $('.equipment_row').last().find('input').val('');
+                    $('.equipment_row').last().find('select').val('');
+                } else {
+                    console.log('empty');
+                    console.log(plan_equipment_html);
+                    $('#equipment_body').append('<tr>' + plan_equipment_html + '</tr>');
+                }
+                // $('.equipment_row').first().clone().appendTo('#equipment_body');
+                // $('.equipment_row').last().find('input').val('');
+                // $('.equipment_row').last().find('select').val('');
             };
+
 
             $(document).on('click', '.removeEquipmentRow', function() {
                 let count = $('.equipment_row').length;
                 if (count > 1) {
                     $(this).closest('tr').remove();
-                    //get attr_one value
-                    var attr_one = $(this).attr('connectivity_attr');
-                    //if attr_one value is not empty then delete from database
-                    if (attr_one != '') {
-                        $.ajax({
-                            url: "{{ route('delete-connectivity-requirement-details') }}",
-                            data: {
-                                id: attr_one,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(data) {
-                                console.log(data);
-                            }
-                        });
-                    }
+                } else {
+                    plan_equipment_html = $(this).closest('tr').html();
+                    $(this).closest('tr').remove();
                 }
             });
 

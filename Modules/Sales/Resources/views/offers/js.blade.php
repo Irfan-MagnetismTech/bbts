@@ -72,16 +72,22 @@
     });
 
     function calculateGrandTotal(event) {
-        var total_offer_mrc = event.closest('.mainRow').find('.total_offer_mrc').val();
+        var total_offer_mrc = event.closest('.mainRow').find('.total_offer_mrc').val() ?? 0;
         total_offer_mrc = total_offer_mrc ? total_offer_mrc : 0;
-        var equipment_total_mrc = event.closest('.mainRow').find('.equipment_total_mrc').val();
+        var equipment_total_mrc = event.closest('.mainRow').find('.equipment_total_mrc').val() ?? 0;
         equipment_total_mrc = equipment_total_mrc ? equipment_total_mrc : 0;
-        var offer_product_amount = event.closest('.mainRow').find('.offer_product_amount').val();
+        var offer_product_amount = event.closest('.mainRow').find('.offer_product_amount').val() ?? 0;
         offer_product_amount = offer_product_amount ? offer_product_amount : 0;
-        var offer_management_cost = event.closest('.mainRow').find('.offer_management_cost').val();
+        var offer_management_cost = event.closest('.mainRow').find('.offer_management_cost').val() ?? 0;
         offer_management_cost = offer_management_cost ? offer_management_cost : 0;
         var grand_total_mrc = parseFloat(total_offer_mrc) + parseFloat(equipment_total_mrc) + parseFloat(
             offer_product_amount) + parseFloat(offer_management_cost);
+        console.log('total_offer_mrc', total_offer_mrc)
+        console.log('equipment_total_mrc', equipment_total_mrc)
+        console.log('offer_product_amount', offer_product_amount)
+        console.log('offer_management_cost', offer_management_cost)
+        console.log('grand_total_mrc', grand_total_mrc)
+
         event.closest('.mainRow').find('.grand_total').val(grand_total_mrc);
     }
 </script>

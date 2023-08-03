@@ -25,7 +25,7 @@ class ConnectivityRequirementController extends Controller
      */
     public function index()
     {
-        $connectivity_requirements = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails', 'lead_generation')->get();
+        $connectivity_requirements = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails', 'lead_generation')->latest()->get();
         return view('sales::connectivity_requirement.index', compact('connectivity_requirements'));
     }
 

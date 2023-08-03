@@ -182,7 +182,6 @@ class OfferController extends Controller
             $offerLinks = $this->createOfferLinks($offer, $requestData, $i);
             $offerDetails[$i - 1]['offerLinks'] = $offerLinks;
         }
-
         return $offerDetails;
     }
 
@@ -190,31 +189,31 @@ class OfferController extends Controller
     {
         $offerLinks = [];
         $linkStatuses = $requestData['link_status' . "_" . $index] ?? [];
+        if (!empty($requestData['link_no' . '_' . $index])) {
+            foreach ($requestData['link_no' . '_' . $index] as $key => $linkNo) {
 
-        foreach ($requestData['link_no' . '_' . $index] as $key => $linkNo) {
+                $linkStatus = $linkStatuses[$key] ?? 0;
 
-            $linkStatus = $linkStatuses[$key] ?? 0;
-
-            $offerLinks[] = [
-                'offer_id' => $offer->id,
-                'link_no' => $requestData['link_no' . '_' . $index][$key] ?? '',
-                'link_type' => $requestData['link_type' . "_" . $index][$key] ?? '',
-                'link_status' => $requestData['link_status' . "_" . $index][$key] ?? '0',
-                'option' => $requestData['option' . "_" . $index][$key] ?? '',
-                'connectivity_status' => $requestData['connectivity_status' . "_" . $index][$key] ?? '',
-                'method' => $requestData['method' . "_" . $index][$key] ?? '',
-                'vendor' => $requestData['vendor' . "_" . $index][$key] ?? '',
-                'bts_pop_ldp' => $requestData['bts_pop_ldp' . "_" . $index][$key] ?? '',
-                'distance' => $requestData['distance' . "_" . $index][$key] ?? '',
-                'client_equipment_amount' => $requestData['client_equipment_amount' . "_" . $index][$key] ?? '',
-                'otc' => $requestData['otc' . "_" . $index][$key] ?? '',
-                'mo_cost' => $requestData['mo_cost' . "_" . $index][$key] ?? '',
-                'offer_otc' => $requestData['offer_otc' . "_" . $index][$key] ?? '',
-                'total_cost' => $requestData['total_cost' . "_" . $index][$key] ?? '',
-                'offer_mrc' => $requestData['offer_mrc' . "_" . $index][$key] ?? '',
-            ];
+                $offerLinks[] = [
+                    'offer_id' => $offer->id,
+                    'link_no' => $requestData['link_no' . '_' . $index][$key] ?? '',
+                    'link_type' => $requestData['link_type' . "_" . $index][$key] ?? '',
+                    'link_status' => $requestData['link_status' . "_" . $index][$key] ?? '0',
+                    'option' => $requestData['option' . "_" . $index][$key] ?? '',
+                    'connectivity_status' => $requestData['connectivity_status' . "_" . $index][$key] ?? '',
+                    'method' => $requestData['method' . "_" . $index][$key] ?? '',
+                    'vendor' => $requestData['vendor' . "_" . $index][$key] ?? '',
+                    'bts_pop_ldp' => $requestData['bts_pop_ldp' . "_" . $index][$key] ?? '',
+                    'distance' => $requestData['distance' . "_" . $index][$key] ?? '',
+                    'client_equipment_amount' => $requestData['client_equipment_amount' . "_" . $index][$key] ?? '',
+                    'otc' => $requestData['otc' . "_" . $index][$key] ?? '',
+                    'mo_cost' => $requestData['mo_cost' . "_" . $index][$key] ?? '',
+                    'offer_otc' => $requestData['offer_otc' . "_" . $index][$key] ?? '',
+                    'total_cost' => $requestData['total_cost' . "_" . $index][$key] ?? '',
+                    'offer_mrc' => $requestData['offer_mrc' . "_" . $index][$key] ?? '',
+                ];
+            }
         }
-
         return $offerLinks;
     }
 }
