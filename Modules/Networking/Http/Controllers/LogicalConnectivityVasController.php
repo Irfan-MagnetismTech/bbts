@@ -6,6 +6,7 @@ use Termwind\Components\Dd;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\SaleDetail;
 use Modules\Networking\Entities\VasService;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Networking\Entities\LogicalConnectivity;
@@ -28,9 +29,16 @@ class LogicalConnectivityVasController extends Controller
      */
     public function create()
     {
+        $saleDetalis = SaleDetail::query()
+            ->whereSaleId(request()->get('sale_id'))
+            ->with('client', 'frDetails')
+            ->latest()
+            ->first();
+
         $physicalConnectivityVas = PhysicalConnectivity::query()
-            ->where('id', request()->get('physical_connectivity_id'))
+            ->whereSaleId(request()->get('sale_id'))
             ->with('lines')
+            ->latest()
             ->first();
 
         $vasServices = VasService::query()
@@ -49,7 +57,7 @@ class LogicalConnectivityVasController extends Controller
             ->latest()
             ->first();
 
-        return view('networking::logical-vas-connectivities.create', compact('physicalConnectivityVas', 'vasServices', 'logicalConnectivityVas'));
+        return view('networking::logical-vas-connectivities.create', compact('saleDetalis', 'physicalConnectivityVas', 'vasServices', 'logicalConnectivityVas'));
     }
 
     /**
