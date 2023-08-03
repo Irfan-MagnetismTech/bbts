@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\Product;
+use Modules\Sales\Entities\SaleDetail;
 use Modules\Networking\Entities\DataType;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Networking\Entities\LogicalConnectivity;
@@ -28,9 +29,16 @@ class LogicalConnectivityDataController extends Controller
      */
     public function create()
     {
+        $saleDetalis = SaleDetail::query()
+            ->whereSaleId(request()->get('sale_id'))
+            ->with('client', 'frDetails')
+            ->latest()
+            ->first();
+
         $physicalConnectivityData = PhysicalConnectivity::query()
-            ->where('id', request()->get('physical_connectivity_id'))
+            ->whereSaleId(request()->get('sale_id'))
             ->with('lines')
+            ->latest()
             ->first();
 
         $dataTypes = DataType::query()
@@ -51,7 +59,7 @@ class LogicalConnectivityDataController extends Controller
             ->latest()
             ->first();
 
-        return view('networking::logical-data-connectivities.create', compact('physicalConnectivityData', 'dataTypes', 'logicalConnectivityData', 'products'));
+        return view('networking::logical-data-connectivities.create', compact('saleDetalis', 'physicalConnectivityData', 'dataTypes', 'logicalConnectivityData', 'products'));
     }
 
     /**

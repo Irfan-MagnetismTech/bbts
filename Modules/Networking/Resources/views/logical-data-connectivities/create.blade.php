@@ -10,6 +10,8 @@
     $comment = $is_old ? old('comment') : @$logicalConnectivityData->comment;
     $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('quantity') : null);
     $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('remarks') : null);
+    $sale_id = old('sale_id', !empty($physicalConnectivity) ? $physicalConnectivity->sale_id : request()->sale_id);
+
 @endphp
 
 @section('breadcrumb-title')
