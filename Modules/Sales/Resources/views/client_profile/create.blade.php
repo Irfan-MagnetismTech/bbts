@@ -41,7 +41,8 @@
     $single_division = $is_old ? old('division') : $client_profile->division_id ?? null;
     $single_district = $is_old ? old('district') : $client_profile->district_id ?? null;
     $single_thana = $is_old ? old('thana') : $client_profile->thana_id ?? null;
-    $lat_long = $is_old ? old('lat_long') : $client_profile->lat_long ?? null;
+    $lat = $is_old ? old('lat_long') : $client_profile->lat ?? null;
+    $long = $is_old ? old('lat_long') : $client_profile->long ?? null;
     $contact_person = $is_old ? old('contact_person') : $client_profile->contact_person ?? null;
     $designation = $is_old ? old('designation') : $client_profile->designation ?? null;
     $contact_no = $is_old ? old('contact_no') : $client_profile->contact_no ?? null;
@@ -224,10 +225,18 @@
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
-                                                                <input type="text" id="lat_long" name="lat_long"
+                                                                <input type="text" id="lat" name="lat"
                                                                     class="form-control" autocomplete="off"
-                                                                    value="{{ $lat_long }}" required>
-                                                                <label for="lat_long">Lat Long</label>
+                                                                    value="{{ $lat }}" required>
+                                                                <label for="lat">Lat</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="form-item">
+                                                                <input type="text" id="long" name="long"
+                                                                    class="form-control" autocomplete="off"
+                                                                    value="{{ $long }}" required>
+                                                                <label for="long">Long</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-xl-4 col-md-4">
@@ -699,19 +708,26 @@
                             });
                         },
                         select: function(event, ui) {
-                            $('#client_no').val(ui.item.label);
-                            $('#client_name').val(ui.item.value);
-                            $('#client_type').val(ui.item.client_type);
-                            $('#business_type').val(ui.item.business_type);
-                            $('#division').val(ui.item.division);
-                            $('#district').val(ui.item.district);
-                            $('#thana').val(ui.item.thana);
-                            $('#location').val(ui.item.location);
-                            $('#contact_person').val(ui.item.contact_person);
-                            $('#contact_no').val(ui.item.contact_no);
-                            $('#email').val(ui.item.email);
-                            $('#designation').val(ui.item.designation);
-                            $('#lat_long').val(ui.item.lat_long);
+                            console.log(ui.item)
+                            $('#client_no').val(ui.item.label).attr('value', ui.item.label);
+                            $('#client_name').val(ui.item.value).attr('value', ui.item.value);
+                            $('#client_type').val(ui.item.client_type).attr('value', ui.item
+                                .client_type);
+                            $('#business_type').val(ui.item.business_type).attr('value', ui.item
+                                .business_type);
+                            $('#division').val(ui.item.division).attr('value', ui.item.division);
+                            $('#district').val(ui.item.district).attr('value', ui.item.district);
+                            $('#thana').val(ui.item.thana).attr('value', ui.item.thana);
+                            $('#location').val(ui.item.location).attr('value', ui.item.location);
+                            $('#contact_person').val(ui.item.contact_person).attr('value', ui.item
+                                .contact_person);
+                            $('#contact_no').val(ui.item.contact_no).attr('value', ui.item
+                                .contact_no);
+                            $('#email').val(ui.item.email).attr('value', ui.item.email);
+                            $('#designation').val(ui.item.designation).attr('value', ui.item
+                                .designation);
+                            $('#lat').val(ui.item.lat).attr('value', ui.item.lat);
+                            $('#long').val(ui.item.long).attr('value', ui.item.long);
                             return false;
                         }
                     });
@@ -735,8 +751,6 @@
                     });
                     $('#thana').html(html);
                 }
-
-
                 $('#finishButton').on('click', function() {
                     $('#basic-forms').submit();
                 });
