@@ -18,7 +18,8 @@ class NetFiberManagementController extends Controller
      */
     public function index()
     {
-        return view('networking::net-fiber-management.index');
+        $datas = NetFiberManagement::get();
+        return view('networking::net-fiber-management.index',compact('datas'));
     }
 
     /**
@@ -38,7 +39,6 @@ class NetFiberManagementController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
         try {
             $material_data = $request->only('core_no_color', 'parent_id', 'fiber_type', 'cable_code', 'connectivity_point_name', 'pop_id');
             DB::transaction(function () use ($material_data) {
@@ -67,7 +67,8 @@ class NetFiberManagementController extends Controller
      */
     public function edit(NetFiberManagement $fiberManagement)
     {
-        return view('networking::edit');
+        $CoreRefIds = NetFiberManagement::orderBy('id')->get('id', 'cable_code');
+        return view('networking::net-fiber-management.create', compact('CoreRefIds','fiberManagement'));
     }
 
     /**
@@ -78,7 +79,15 @@ class NetFiberManagementController extends Controller
      */
     public function update(Request $request, NetFiberManagement $fiberManagement)
     {
-        //
+        try {
+            $material_data = $request->only('core_no_color', 'parent_id', 'fiber_type', 'cable_code', 'connectivity_point_name', 'pop_id');
+            DB::transaction(function () use ($material_data) {
+                $fiberManagement->update($material_data);
+            });
+            return redirect()->route('fiber-managements.index')->with('success', 'Material has been updated successfully');
+        } catch (QueryException $e) {
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -88,6 +97,11 @@ class NetFiberManagementController extends Controller
      */
     public function destroy(NetFiberManagement $fiberManagement)
     {
-        //
+        try{
+            $fiberManagement->delete();
+            return redirect()->route('fiber-managements.index')->with('message', 'Material has been deleted successfully.');
+        }catch(QueryException $e){
+            return redirect()->back()->withErrors($e->getMessage());
+        }
     }
 }
