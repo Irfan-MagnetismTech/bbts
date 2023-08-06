@@ -15,7 +15,11 @@ return new class extends Migration
     {
         Schema::create('connectivities', function (Blueprint $table) {
             $table->id();
-
+            $table->unsignedBigInteger('sale_id');
+            $table->string('client_no');
+            $table->string('fr_no');
+            $table->integer('attendant_engineer')->nullable();
+            $table->date('commissioning_Date')->nullable();
             $table->timestamps();
         });
     }

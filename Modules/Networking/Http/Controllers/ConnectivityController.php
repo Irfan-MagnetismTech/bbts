@@ -2,10 +2,11 @@
 
 namespace Modules\Networking\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use App\Models\Dataencoding\Employee;
 use Modules\Sales\Entities\SaleDetail;
+use Illuminate\Contracts\Support\Renderable;
 
 class ConnectivityController extends Controller
 {
@@ -33,7 +34,9 @@ class ConnectivityController extends Controller
         ->where('fr_no', $fr_no)
         ->first();
 
-    return view('networking::connectivities.show', compact('salesDetail'));
+        $employees = Employee::latest()->get();
+
+    return view('networking::connectivities.create', compact('salesDetail', 'employees'));
     }
 
     /**
