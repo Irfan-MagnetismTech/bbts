@@ -348,31 +348,67 @@
                                     <tr>
                                         <td colspan="5" class="text-right" style="font-size: 14px;">Interest</td>
                                         <td>
-                                            <span>
-                                                <input type="number" name="equipment_interest" id="equipment_interest"
-                                                    class="form-control form-control-sm input" placeholder="Interest"
-                                                    value="">
-                                            </span>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number" name="equipment_perchantage_interest"
+                                                            id="equipment_perchantage_interest"
+                                                            class="form-control form-control-sm input"
+                                                            placeholder="Interest (%)" value="">
+                                                    </span>
+                                                </div>
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number" name="equipment_interest"
+                                                            id="equipment_interest"
+                                                            class="form-control form-control-sm input"
+                                                            placeholder="Interest" value="" readonly>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="5" class="text-right" style="font-size: 14px;">VAT</td>
                                         <td>
-                                            <span>
-                                                <input type="number" name="equipment_vat" id="equipment_vat"
-                                                    class="form-control form-control-sm input" placeholder="VAT"
-                                                    value="">
-                                            </span>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number" name="equipment_perchantage_vat"
+                                                            id="equipment_perchantage_vat"
+                                                            class="form-control form-control-sm input"
+                                                            placeholder="VAT (%)" value="">
+                                                    </span>
+                                                </div>
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number" name="equipment_vat" id="equipment_vat"
+                                                            class="form-control form-control-sm input" placeholder="VAT"
+                                                            value="" readonly>
+                                                    </span>
+                                                </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="5" class="text-right" style="font-size: 14px;">Tax</td>
                                         <td>
-                                            <span>
-                                                <input type="number" name="equipment_tax" id="equipment_tax"
-                                                    class="form-control form-control-sm input" placeholder="Tax"
-                                                    value="">
-                                            </span>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number" name="equipment_perchantage_tax"
+                                                            id="equipment_perchantage_tax"
+                                                            class="form-control form-control-sm input"
+                                                            placeholder="Tax (%)" value="">
+                                                    </span>
+                                                </div>
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number" name="equipment_tax" id="equipment_tax"
+                                                            class="form-control form-control-sm input" placeholder="Tax"
+                                                            value="" readonly>
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -487,7 +523,6 @@
                         </div>
                     </div>
                     @if (!empty($plan_link->PlanLinkEquipments))
-                        )
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -637,10 +672,26 @@
                                             <span style="font-size: 14px;">Interest</span>
                                         </td>
                                         <td>
-                                            <input type="number" name="plan_equipment_interest_{{ $row_no }}"
-                                                id="plan_equipment_interest"
-                                                class="form-control form-control-sm plan_equipment_interest input"
-                                                placeholder="Interest" value="">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number"
+                                                            name="plan_equipment_perchantage_interest_{{ $row_no }}"
+                                                            id="plan_equipment_perchantage_interest"
+                                                            class="form-control form-control-sm plan_equipment_perchantage_interest input"
+                                                            placeholder="Interest (%)" value="">
+                                                    </span>
+                                                </div>
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number"
+                                                            name="plan_equipment_interest_{{ $row_no }}"
+                                                            id="plan_equipment_interest"
+                                                            class="form-control form-control-sm plan_equipment_interest input"
+                                                            placeholder="Interest" value="">
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr class="text-right">
@@ -678,10 +729,26 @@
                                             <span style="font-size: 14px;">VAT</span>
                                         </td>
                                         <td>
-                                            <input type="number" name="plan_equipment_vat_{{ $row_no }}"
-                                                id="plan_equipment_vat"
-                                                class="form-control form-control-sm plan_equipment_vat input"
-                                                placeholder="VAT" value="">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number"
+                                                            name="plan_equipment_perchantage_vat_{{ $row_no }}"
+                                                            id="plan_equipment_perchantage_vat"
+                                                            class="form-control form-control-sm plan_equipment_perchantage_vat input"
+                                                            placeholder="VAT (%)" value="">
+                                                    </span>
+                                                </div>
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number"
+                                                            name="plan_equipment_vat_{{ $row_no }}"
+                                                            id="plan_equipment_vat"
+                                                            class="form-control form-control-sm plan_equipment_vat input"
+                                                            placeholder="VAT" value="">
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr class="text-right">
@@ -698,10 +765,26 @@
                                             <span style="font-size: 14px;">Tax</span>
                                         </td>
                                         <td>
-                                            <input type="number" name="plan_equipment_tax_{{ $row_no }}"
-                                                id="plan_equipment_tax"
-                                                class="form-control form-control-sm plan_equipment_tax input"
-                                                placeholder="Tax" value="">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number"
+                                                            name="plan_equipment_perchantage_tax_{{ $row_no }}"
+                                                            id="plan_equipment_perchantage_tax"
+                                                            class="form-control form-control-sm plan_equipment_perchantage_tax input"
+                                                            placeholder="Tax (%)" value="">
+                                                    </span>
+                                                </div>
+                                                <div class="col-6">
+                                                    <span>
+                                                        <input type="number"
+                                                            name="plan_equipment_tax_{{ $row_no }}"
+                                                            id="plan_equipment_tax"
+                                                            class="form-control form-control-sm plan_equipment_tax input"
+                                                            placeholder="Tax" value="">
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr class="text-right">
@@ -904,9 +987,10 @@
             equipmentPartialTotal();
         });
 
-        $('#equipment_deployment_cost, #equipment_interest, #equipment_vat, #equipment_tax').on('keyup', function() {
-            equipmentPartialTotal();
-        });
+        $('#equipment_deployment_cost, #equipment_perchantage_interest, #equipment_perchantage_vat, #equipment_perchantage_tax')
+            .on('keyup', function() {
+                equipmentPartialTotal();
+            });
 
         function equipmentPartialTotal() {
             var equipment_total = 0;
@@ -930,9 +1014,15 @@
             var partial_total = equipment_total - client_equipment_total;
             $('#equipment_partial_total').val(equipment_total - client_equipment_total);
             var development_cost = $('#equipment_deployment_cost').val() ? $('#equipment_deployment_cost').val() : 0;
-            var interest = $('#equipment_interest').val() ? $('#equipment_interest').val() : 0;
-            var vat = $('#equipment_vat').val() ? $('#equipment_vat').val() : 0;
-            var tax = $('#equipment_tax').val() ? $('#equipment_tax').val() : 0;
+            var interest_perchat_amount = (partial_total * $('#equipment_perchantage_interest').val()) / 100;
+            var interest = $('#equipment_perchantage_interest').val() ? interest_perchat_amount : 0;
+            $('#equipment_interest').val(interest_perchat_amount)
+            var perchantage_vat_amount = (partial_total * $('#equipment_perchantage_vat').val()) / 100;
+            $('#equipment_vat').val(perchantage_vat_amount)
+            var vat = $('#equipment_perchantage_vat').val() ? perchantage_vat_amount : 0;
+            var perchantage_tax_amount = (partial_total * $('#equipment_perchantage_tax').val()) / 100;
+            var tax = $('#equipment_perchantage_tax').val() ? perchantage_tax_amount : 0;
+            $('#equipment_tax').val(perchantage_tax_amount)
             var total = parseInt(partial_total) + parseInt(development_cost) + parseInt(interest) + parseInt(
                 vat) + parseInt(tax);
             $('#equipment_grand_total').val(total);
@@ -985,13 +1075,14 @@
             // calculatePlanEquipmentROI(this)
         });
 
-        $('.plan_equipment_deployment_cost, .plan_equipment_interest, .plan_equipment_vat, .plan_equipment_tax').on('keyup',
-            function() {
-                var event = this;
-                planEquipmentPartialTotal(event);
-                planEquipmentInvestTotal(event);
-                calculatePlanEquipmentROI(event);
-            });
+        $('.plan_equipment_deployment_cost, .plan_equipment_perchantage_interest, .plan_equipment_perchantage_vat, .plan_equipment_perchantage_tax')
+            .on('keyup',
+                function() {
+                    var event = this;
+                    planEquipmentPartialTotal(event);
+                    planEquipmentInvestTotal(event);
+                    calculatePlanEquipmentROI(event);
+                });
 
         function planEquipmentPartialTotal(event) {
             var plan_equipment_partial_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total')
@@ -999,15 +1090,21 @@
             var deployment_cost = $(event).closest('.PlanLinkMainRow').find(
                 '.plan_equipment_deployment_cost').val();
             var plan_equipment_deployment_cost = deployment_cost ? deployment_cost : 0;
-            var equipment_interest = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_interest').val();
-            var plan_equipment_interest = equipment_interest ? equipment_interest : 0;
+            var equipment_perchantage_interest = $(event).closest('.PlanLinkMainRow').find(
+                '.plan_equipment_perchantage_interest').val();
+            var plan_equipment_perchantage_interest_amount = (plan_equipment_partial_total *
+                equipment_perchantage_interest) / 100;
+
+            var plan_equipment_interest = plan_equipment_perchantage_interest_amount ?
+                plan_equipment_perchantage_interest_amount : 0;
+            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_interest').val(plan_equipment_interest);
             var plan_equipment_total = parseInt(plan_equipment_partial_total) + parseInt(plan_equipment_deployment_cost) +
                 parseInt(plan_equipment_interest);
             $(event).closest('.PlanLinkMainRow').find('.plan_equipment_grand_total').val(plan_equipment_total);
         }
 
 
-        $('.plan_equipment_vat, .plan_equipment_tax').on('keyup', function() {
+        $('.plan_equipment_perchantage_vat, .plan_equipment_perchantage_tax').on('keyup', function() {
             var event = this;
             planEquipmentPartialTotal(event);
             planEquipmentInvestTotal(event);
@@ -1017,10 +1114,17 @@
 
         function planEquipmentInvestTotal(event) {
             var plan_equipment_grand_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_grand_total').val();
-            var equipment_vat = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_vat').val();
-            var plan_equipment_vat = equipment_vat ? equipment_vat : 0;
-            var equipment_tax = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_tax').val();
-            var plan_equipment_tax = equipment_tax ? equipment_tax : 0;
+            var equipment_perchantage_vat = $(event).closest('.PlanLinkMainRow').find(
+                '.plan_equipment_perchantage_vat').val() || 0;
+            var plan_equipment_perchantage_vat_amount = (plan_equipment_grand_total * equipment_perchantage_vat) / 100;
+            var plan_equipment_vat = plan_equipment_perchantage_vat_amount ? plan_equipment_perchantage_vat_amount : 0;
+            var equipment_perchantage_tax = $(event).closest('.PlanLinkMainRow').find(
+                '.plan_equipment_perchantage_tax').val() || 0;
+
+            var plan_equipment_perchantage_tax_amount = (plan_equipment_grand_total * equipment_perchantage_tax) / 100;
+            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_tax').val(plan_equipment_perchantage_tax_amount);
+            var plan_equipment_tax = plan_equipment_perchantage_tax_amount ? plan_equipment_perchantage_tax_amount : 0;
+            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_vat').val(plan_equipment_vat);
             var plan_equipment_invest_total = parseInt(plan_equipment_grand_total) + parseInt(plan_equipment_vat) +
                 parseInt(plan_equipment_tax);
             $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_inv').val(plan_equipment_invest_total);

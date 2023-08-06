@@ -1,0 +1,11 @@
+{
+    "name": "Changes",
+    "alias": "changes",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Changes\\Providers\\ChangesServiceProvider"
+    ],
+    "files": []
+}

@@ -6,5 +6,7 @@
     "Sales": true,
     "SCM": true,
     "Ticketing": true,
-    "Networking": true
+    "Networking": true,
+    "Blog": true,
+    "Changes": true
 }
