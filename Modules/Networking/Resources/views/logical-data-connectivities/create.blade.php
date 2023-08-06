@@ -10,7 +10,7 @@
     $comment = $is_old ? old('comment') : @$logicalConnectivityData->comment;
     $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('quantity') : null);
     $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('remarks') : null);
-    $sale_id = old('sale_id', !empty($physicalConnectivity) ? $physicalConnectivity->sale_id : request()->sale_id);
+    $sale_id = old('sale_id', !empty($logicalConnectivityData) ? $logicalConnectivityData->sale_id : request()->sale_id);
 
 @endphp
 
@@ -52,10 +52,12 @@
             @csrf
 
             <div class="row">
+                <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
+
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                        name="client_name" value="{{ $physicalConnectivityData->client_name }}" readonly>
+                        name="client_name" value="{{ $saleDetalis->client->client_name }}" readonly>
                     <input type="hidden" name="client_no" id="client_no"
                         value="{{ $physicalConnectivityData->client_no }}">
                 </div>
@@ -63,7 +65,7 @@
                 <div class="form-group col-3 client_type">
                     <label for="client_type">Client Type:</label>
                     <input type="text" class="form-control" id="client_type" name="client_type"
-                        aria-describedby="client_type" readonly value="{{ $physicalConnectivityData->client_type }}">
+                        aria-describedby="client_type" readonly value="{{ $saleDetalis->client->client_type }}">
                 </div>
 
                 <div class="form-group col-3 connectivity_point1">
@@ -78,26 +80,26 @@
                 <div class="form-group col-3 contact_person">
                     <label for="contact_person">Contact Person:</label>
                     <input type="text" class="form-control" id="contact_person" name="contact_person"
-                        aria-describedby="contact_person" readonly value="{{ $physicalConnectivityData->contact_person }}">
+                        aria-describedby="contact_person" readonly value="{{ $saleDetalis->frDetails->contact_name }}">
                 </div>
 
                 <div class="form-group col-3 contact_number">
                     <label for="contact_number">Contact Number:</label>
                     <input type="text" class="form-control" id="contact_number" aria-describedby="contact_number"
-                        name="contact_number" readonly value="{{ $physicalConnectivityData->contact_number }}">
+                        name="contact_number" readonly value="{{ $saleDetalis->frDetails->contact_number }}">
                 </div>
 
                 <div class="form-group col-3 email">
                     <label for="email">Email:</label>
                     <input type="text" class="form-control" id="email" name="email" aria-describedby="email"
-                        readonly value="{{ $physicalConnectivityData->email }}">
+                        readonly value="{{ $saleDetalis->frDetails->contact_email }}">
                 </div>
 
                 <div class="form-group col-3 contact_address">
                     <label for="contact_address">Contact Address:</label>
                     <input type="text" class="form-control" id="contact_address" name="contact_address"
                         aria-describedby="contact_address" readonly
-                        value="{{ $physicalConnectivityData->contact_address }}">
+                        value="{{ $saleDetalis->frDetails->location }}">
                 </div>
 
                 <div class="form-group col-3 comment">
