@@ -6,5 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Connectivity extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'sale_id',
+        'client_no',
+        'fr_no',
+        'attendant_engineer',
+        'commissioning_Date'
+    ];
 }

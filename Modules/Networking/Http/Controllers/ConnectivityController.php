@@ -2,10 +2,16 @@
 
 namespace Modules\Networking\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\Ip;
 use Illuminate\Routing\Controller;
+use App\Models\Dataencoding\Employee;
 use Modules\Sales\Entities\SaleDetail;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\SaleProductDetail;
+use Modules\Networking\Entities\LogicalConnectivity;
+use Modules\Networking\Entities\PhysicalConnectivity;
+use Modules\Networking\Entities\BandwidthDestribution;
 
 class ConnectivityController extends Controller
 {
@@ -15,10 +21,10 @@ class ConnectivityController extends Controller
      */
     public function index()
     {
-        $salesDetails = SaleDetail::query() 
-        ->with('sale', 'client', 'frDetails')
-        ->latest()
-        ->get();
+        $salesDetails = SaleDetail::query()
+            ->with('sale', 'client', 'frDetails')
+            ->latest()
+            ->get();
         return view('networking::connectivities.index', compact('salesDetails'));
     }
 
@@ -27,13 +33,47 @@ class ConnectivityController extends Controller
      * @return Renderable
      */
     public function create($fr_no)
-    {         
-        $salesDetail = SaleDetail::query() 
-        ->with('sale', 'client', 'frDetails')
-        ->where('fr_no', $fr_no)
-        ->first();
+    {
+        $salesDetail = SaleDetail::query()
+            ->with('sale', 'client', 'frDetails')
+            ->where('fr_no', $fr_no)
+            ->first();
 
-    return view('networking::connectivities.show', compact('salesDetail'));
+        $employees = Employee::latest()->get();
+
+        $physicalConnectivity = PhysicalConnectivity::query()
+            ->where('sale_id', $salesDetail->sale_id)
+            ->with('lines')
+            ->latest()
+            ->first();
+
+        $logicalConnectivityInternet = LogicalConnectivity::query()
+            ->where([
+                'product_category' => 'Internet',
+                'sale_id' => $salesDetail->sale_id
+            ])
+            ->with('lines')
+            ->latest()
+            ->first();
+
+        $logicalConnectivityInternet = LogicalConnectivity::query()
+            ->where([
+                'fr_no' => $physicalConnectivity->fr_no,
+                'client_no' => $physicalConnectivity->client_no,
+                'product_category' => 'Internet'
+            ])
+            ->with('lines.product')
+            ->latest()
+            ->first();
+
+        $logicalConnectivityBandwidths = BandwidthDestribution::query()
+            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+            ->with('ip')
+            ->get();
+
+
+
+        return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityInternet', 'logicalConnectivityBandwidths'));
     }
 
     /**
