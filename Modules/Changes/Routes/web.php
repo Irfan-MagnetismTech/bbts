@@ -15,5 +15,4 @@ use Modules\Changes\Http\Controllers\ClientRequirementController;
 
 Route::prefix('changes')->middleware(['auth'])->group(function () {
     Route::get('/', 'ChangesController@index');
-    Route::get('client-request', 'ClientRequirementController@clientRequest')->name('client-request');
 });
