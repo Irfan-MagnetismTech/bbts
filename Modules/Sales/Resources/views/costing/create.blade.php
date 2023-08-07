@@ -86,7 +86,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th colspan="11">Product Costing</th>
+                                    <th colspan="12">Product Costing</th>
                                 </tr>
                                 <tr>
                                     <th>Product</th>
@@ -94,11 +94,12 @@
                                     <th>Rate</th>
                                     <th>Unit</th>
                                     <th>Amount</th>
-                                    <th>Vat(%)</th>
-                                    <th>Vat Amount</th>
                                     <th>Operation Cost</th>
                                     <th>Total Amount</th>
                                     <th>Price </th>
+                                    <th>Total </th>
+                                    <th>Vat(%)</th>
+                                    <th>Vat Amount</th>
                                     <th>Total Price</th>
                                 </tr>
                             </thead>
@@ -144,12 +145,40 @@
                                                     class="form-control form-control-sm input product_price"
                                                     placeholder="Amount" value="" readonly>
                                             </span>
+                                        </td> 
+                                        <td>
+                                            <span>
+                                                <input type="number" name="product_operation_cost[]"
+                                                    class="form-control form-control-sm input product_operation_cost"
+                                                    placeholder="Operation Cost" value="">
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <input type="number" name="product_operation_cost_total[]"
+                                                    class="form-control form-control-sm input product_operation_cost_total"
+                                                    placeholder="Total" value="" readonly>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <input type="number" name="offer_price[]"
+                                                    class="form-control form-control-sm input offer_price"
+                                                    placeholder=" Price" value="" readonly>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>
+                                                <input type="number" name="product_offer_total[]"
+                                                    class="form-control form-control-sm input product_offer_total"
+                                                    placeholder="Total Price" value="" readonly>
+                                            </span>
                                         </td>
                                         <td>
                                             <span>
                                                 <input type="number" name="product_vat[]"
                                                     class="form-control form-control-sm input product_vat" placeholder="Vat"
-                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->vat }}">
+                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->vat }}" step="0.01">
                                             </span>
                                         </td>
                                         <td>
@@ -161,29 +190,8 @@
                                         </td>
                                         <td>
                                             <span>
-                                                <input type="number" name="product_operation_cost[]"
-                                                    class="form-control form-control-sm input product_operation_cost"
-                                                    placeholder="Total" value="">
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="product_operation_cost_total[]"
-                                                    class="form-control form-control-sm input product_operation_cost_total"
-                                                    placeholder="Operation Cost" value="" readonly>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="offer_price[]"
-                                                    class="form-control form-control-sm input offer_price"
-                                                    placeholder="Margin Price" value="" readonly>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="product_offer_total[]"
-                                                    class="form-control form-control-sm input product_offer_total"
+                                                <input type="number" name="total_price[]"
+                                                    class="form-control form-control-sm input total_price"
                                                     placeholder="Total Price" value="" readonly>
                                             </span>
                                         </td>
@@ -195,16 +203,14 @@
                                         <span>
                                             <input type="number" name="product_total_cost" id="product_total_cost"
                                                 class="form-control form-control-sm input" placeholder="Total Price"
-                                                value="" readonly>
+                                                value="" readonly step="0.01">
                                         </span>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
+                                    </td> 
                                     <td>
                                         <span>
                                             <input type="number" name="total_operation_cost" id="total_operation_cost"
                                                 class="form-control form-control-sm input" placeholder="Total Cost"
-                                                value="" readonly>
+                                                value="" readonly step="0.01"> 
                                         </span>
                                     </td>
                                     <td>
@@ -212,16 +218,29 @@
                                             <input type="number" name="total_cost_amount"
                                                 id="total_with_operation_amount"
                                                 class="form-control form-control-sm input" placeholder="Total Amount"
-                                                value="" readonly>
+                                                value="" readonly step="0.01">
                                         </span>
                                     </td>
-                                    <td>
-
-                                    </td>
+                                    <td></td>
                                     <td>
                                         <span>
                                             <input type="number" name="product_grand_total" id="product_grand_total"
                                                 class="form-control form-control-sm input" placeholder="Total Price"
+                                                value="" readonly step="0.01">
+                                        </span>
+                                    </td>
+                                    <td></td>
+                                    <td>
+                                        <span>
+                                            <input type="number" name="total_vat" id="total_vat"
+                                                class="form-control form-control-sm input" placeholder="Total VAT"
+                                                value="" readonly step="0.01">
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>
+                                            <input type="number" name="grand_total_price" id="grand_total_price"
+                                                class="form-control form-control-sm input" placeholder="Grand Total "
                                                 value="" readonly>
                                         </span>
                                     </td>
@@ -550,7 +569,7 @@
                                                         value="{{ $plan_link_equipment->material->name ?? '' }}">
                                                     <input type="hidden"
                                                         name="plan_equipment_material_id_{{ $row_no }}[]"
-                                                        value="{{ $plan_link_equipment->material->id ?? '' }}" </span>
+                                                        value="{{ $plan_link_equipment->material->id ?? '' }}" >
                                             </td>
                                             <td>
                                                 <span>
@@ -584,7 +603,7 @@
                                                     <input type="number"
                                                         class="form-control form-control-sm plan_equipment_rate input"
                                                         name="plan_equipment_rate_{{ $row_no }}[]"
-                                                        placeholder="Rate" value="">
+                                                        placeholder="Rate" value="" step="0.01">
                                                 </span>
                                             </td>
                                             <td>
@@ -592,7 +611,7 @@
                                                     <input type="number"
                                                         class="form-control form-control-sm plan_equipment_total input"
                                                         name="plan_equipment_total_{{ $row_no }}[]"
-                                                        placeholder="Total" value="">
+                                                        placeholder="Total" value="" step="0.01">
                                                 </span>
                                             </td>
                                         </tr>
@@ -606,7 +625,7 @@
                                                 <input type="number" name="plan_all_equipment_total_{{ $row_no }}"
                                                     id="plan_all_equipment_total"
                                                     class="form-control form-control-sm plan_all_equipment_total input"
-                                                    placeholder="Total" value="">
+                                                    placeholder="Total" value="" step="0.01">
                                             </span>
                                         </td>
                                     </tr>
@@ -620,7 +639,7 @@
                                                     name="plan_client_equipment_total_{{ $row_no }}"
                                                     id="plan_client_equipment_total"
                                                     class="form-control form-control-sm plan_client_equipment_total input"
-                                                    placeholder="Total" value="">
+                                                    placeholder="Total" value="" step="0.01">
                                             </span>
                                         </td>
                                     </tr>
@@ -633,7 +652,7 @@
                                                     name="plan_equipment_partial_total_{{ $row_no }}"
                                                     id="plan_equipment_partial_total"
                                                     class="form-control form-control-sm plan_equipment_partial_total input"
-                                                    placeholder="Total" value="">
+                                                    placeholder="Total" value="" step="0.01">
                                             </span>
                                         </td>
                                     </tr>
@@ -645,7 +664,7 @@
                                             <input type="number" name="plan_equipment_otc_{{ $row_no }}"
                                                 id="plan_equipment_otc"
                                                 class="form-control form-control-sm plan_equipment_otc input"
-                                                placeholder="OTC" value="">
+                                                placeholder="OTC" value="" step="0.01">
                                         </td>
                                         <td>
                                             <span style="font-size: 14px;">Deployment Cost</span>
@@ -655,7 +674,7 @@
                                                 name="plan_equipment_deployment_cost_{{ $row_no }}"
                                                 id="plan_equipment_deployment_cost"
                                                 class="form-control form-control-sm plan_equipment_deployment_cost input"
-                                                placeholder="Deployment Cost" value="">
+                                                placeholder="Deployment Cost" value="" step="0.01">
                                         </td>
                                     </tr>
                                     <tr class="text-right">
@@ -666,7 +685,7 @@
                                             <input type="number" name="plan_equipment_roi_{{ $row_no }}"
                                                 id="plan_equipment_roi"
                                                 class="form-control form-control-sm plan_equipment_roi input"
-                                                placeholder="ROI" value="">
+                                                placeholder="ROI" value="" step="0.01">
                                         </td>
                                         <td>
                                             <span style="font-size: 14px;">Interest</span>
@@ -679,7 +698,7 @@
                                                             name="plan_equipment_perchantage_interest_{{ $row_no }}"
                                                             id="plan_equipment_perchantage_interest"
                                                             class="form-control form-control-sm plan_equipment_perchantage_interest input"
-                                                            placeholder="Interest (%)" value="">
+                                                            placeholder="Interest (%)" value="" step="0.01">
                                                     </span>
                                                 </div>
                                                 <div class="col-6">
@@ -688,7 +707,7 @@
                                                             name="plan_equipment_interest_{{ $row_no }}"
                                                             id="plan_equipment_interest"
                                                             class="form-control form-control-sm plan_equipment_interest input"
-                                                            placeholder="Interest" value="">
+                                                            placeholder="Interest" value="" step="0.01">
                                                     </span>
                                                 </div>
                                             </div>
@@ -702,7 +721,7 @@
                                             <input type="number" name="plan_equipment_capacity_{{ $row_no }}"
                                                 id="plan_equipment_capacity"
                                                 class="form-control form-control-sm plan_equipment_capacity input"
-                                                placeholder="Capacity" value="">
+                                                placeholder="Capacity" value="" step="0.01">
                                         </td>
                                         <td>
                                             <span style="font-size: 14px;">Total</span>
@@ -711,7 +730,7 @@
                                             <input type="number" name="plan_equipment_grand_total_{{ $row_no }}"
                                                 id="plan_equipment_grand_total"
                                                 class="form-control form-control-sm plan_equipment_grand_total input"
-                                                placeholder="Total" value="">
+                                                placeholder="Total" value="" step="0.01">
                                         </td>
                                     </tr>
                                     <tr class="text-right">
@@ -723,7 +742,7 @@
                                                 name="plan_equipment_operation_cost_{{ $row_no }}"
                                                 id="plan_equipment_operation_cost"
                                                 class="form-control form-control-sm plan_equipment_operation_cost input"
-                                                placeholder="Operation Cost" value="">
+                                                placeholder="Operation Cost" value="" step="0.01">
                                         </td>
                                         <td>
                                             <span style="font-size: 14px;">VAT</span>
@@ -736,7 +755,7 @@
                                                             name="plan_equipment_perchantage_vat_{{ $row_no }}"
                                                             id="plan_equipment_perchantage_vat"
                                                             class="form-control form-control-sm plan_equipment_perchantage_vat input"
-                                                            placeholder="VAT (%)" value="">
+                                                            placeholder="VAT (%)" value="" step="0.01">
                                                     </span>
                                                 </div>
                                                 <div class="col-6">
@@ -745,7 +764,7 @@
                                                             name="plan_equipment_vat_{{ $row_no }}"
                                                             id="plan_equipment_vat"
                                                             class="form-control form-control-sm plan_equipment_vat input"
-                                                            placeholder="VAT" value="">
+                                                            placeholder="VAT" value="" step="0.01">
                                                     </span>
                                                 </div>
                                             </div>
@@ -759,7 +778,7 @@
                                             <input type="number" name="plan_equipment_total_mrc_{{ $row_no }}"
                                                 id="plan_equipment_total_mrc"
                                                 class="form-control form-control-sm plan_equipment_total_mrc input"
-                                                placeholder="Total MRC" value="">
+                                                placeholder="Total MRC" value="" step="0.01">
                                         </td>
                                         <td>
                                             <span style="font-size: 14px;">Tax</span>
@@ -772,7 +791,7 @@
                                                             name="plan_equipment_perchantage_tax_{{ $row_no }}"
                                                             id="plan_equipment_perchantage_tax"
                                                             class="form-control form-control-sm plan_equipment_perchantage_tax input"
-                                                            placeholder="Tax (%)" value="">
+                                                            placeholder="Tax (%)" value="" step="0.01">
                                                     </span>
                                                 </div>
                                                 <div class="col-6">
@@ -781,7 +800,7 @@
                                                             name="plan_equipment_tax_{{ $row_no }}"
                                                             id="plan_equipment_tax"
                                                             class="form-control form-control-sm plan_equipment_tax input"
-                                                            placeholder="Tax" value="">
+                                                            placeholder="Tax" value="" step="0.01">
                                                     </span>
                                                 </div>
                                             </div>
@@ -795,7 +814,7 @@
                                             <input type="number" name="plan_equipment_total_inv_{{ $row_no }}"
                                                 id="plan_equipment_total_inv"
                                                 class="form-control form-control-sm plan_equipment_total_inv input"
-                                                placeholder="Total Inv" value="">
+                                                placeholder="Total Inv" value="" step="0.01">
                                         </td>
                                     </tr>
                                 </tbody>
@@ -936,19 +955,20 @@
             var product_quantity = $(this).closest('tr').find('.product_quantity').val();
             var product_total = product_rate * product_quantity;
             $(this).closest('tr').find('.product_price').val(product_total);
-            var vat_perchant = $(this).closest('tr').find('.product_vat').val();
-            var vat_amount = (product_total * vat_perchant) / 100;
-            $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
+            // var vat_perchant = $(this).closest('tr').find('.product_vat').val();
+            // var vat_amount = (product_total * vat_perchant) / 100;
+            // $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
             productPartialTotal();
         });
 
         $('.product_operation_cost').on('keyup', function() {
             var product_operation_cost = $(this).val();
             var product_price = $(this).closest('tr').find('.product_price').val();
-            var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
-            var product_total = parseInt(product_operation_cost) + parseInt(product_price) + parseInt(vat_amount);
+            // var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
+            var product_total = parseInt(product_operation_cost) + parseInt(product_price);
             $(this).closest('tr').find('.product_operation_cost_total').val(product_total);
-            $('#total_product_cost').val(product_total);
+            $('#total_product_cost').val(product_total); 
+            $('#total_mrc').val(product_total); 
             productPartialTotal();
         });
 
@@ -1029,7 +1049,7 @@
         }
 
         $('#calculate_data').on('click', function() {
-            alert('fine')
+            // alert('fine')
             equipmentPartialTotal()
         })
 
@@ -1144,8 +1164,8 @@
             var plan_equipment_otc = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_otc').val();
             var plan_equipment_total_inv = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_inv').val();
             var plan_equipment_month = $('#month').val();
-            var plan_equipment_roi = (parseInt(plan_equipment_total_inv) - parseInt(plan_equipment_otc)) / parseInt(
-                plan_equipment_month);
+            var plan_equipment_roi = ((parseInt(plan_equipment_total_inv) - parseInt(plan_equipment_otc)) / parseInt(
+                plan_equipment_month)).toFixed(2);
             $(event).closest('.PlanLinkMainRow').find('.plan_equipment_roi').val(plan_equipment_roi);
             var capacity_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_capacity').val();
             var plan_equipment_operation_cost = $(event).closest('.PlanLinkMainRow').find(
@@ -1175,12 +1195,8 @@
                 total_plan_equipment_otc = parseFloat(planLinkMainRows.find(
                     '.plan_equipment_otc').val()) || 0;
 
-            });
-            console.log('total_mrc', total_mrc)
-            console.log('total_equipment_investment', total_equipment_investment)
-            console.log('total_plan_equipment_otc', total_plan_equipment_otc)
-
-            $('#total_mrc').val(total_mrc);
+            }); 
+    
             const equipment_grand_total = parseInt($('#equipment_grand_total').val()) || 0;
             const total_investment = equipment_grand_total + total_equipment_investment;
             console.log('total_investment', total_investment)
@@ -1189,11 +1205,12 @@
             total_otc = total_plan_equipment_otc + total_equipment_otc;
             $('#total_otc').val(total_otc);
             const equipment_roi = parseInt($('#equipment_roi').val()) || 0;
-            const total_service_cost = total_mrc + equipment_roi;
+            const total_service_cost = (total_mrc + equipment_roi) || 0;
             $('#total_service_cost').val(total_service_cost);
-
+            
             const total_product_cost = parseInt($('#total_with_operation_amount').val()) || 0;
             $('#total_product_cost').val(total_product_cost);
+            $('#total_mrc').val(total_service_cost + total_product_cost);
         });
 
 
@@ -1203,23 +1220,40 @@
             var total_mrc = parseFloat($('#total_mrc').val());
             var total_mrc_amount = total_mrc * margin / 100;
             $('#management_cost_amount').val(total_mrc_amount);
+            
+            var product_total_cost = parseFloat($('#product_total_cost').val());
             var management_cost_total = total_mrc + total_mrc_amount;
-            $('#management_cost_total').val(management_cost_total);
-            var product_total_cost = parseFloat($('#total_product_cost').val());
+            $('#management_cost_total').val(management_cost_total); 
+ 
             var perchantage = (management_cost_total / product_total_cost) * 100 - 100;
             $('.product_rate').each(function() {
+                
                 var product_rate = parseFloat($(this).val());
-                var product_rate_perchantage = product_rate.toFixed(2) * perchantage / 100;
+                var product_rate_perchantage = product_rate.toFixed(2) * (perchantage / 100);
                 var product_margin_rate = (product_rate + product_rate_perchantage).toFixed(2);
                 $(this).closest('tr').find('.offer_price').val(product_margin_rate);
                 var total_margin_amount = product_margin_rate * parseFloat($(this).closest('tr').find(
                     '.product_quantity').val());
                 $(this).closest('tr').find('.product_offer_total').val(total_margin_amount.toFixed(2));
+
+                var vat_perchant = $(this).closest('tr').find('.product_vat').val();
+                var vat_amount = (total_margin_amount * vat_perchant) / 100; 
+                $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
+                $(this).closest('tr').find('.total_price').val((total_margin_amount + vat_amount).toFixed(2));
             });
             var product_grand_total = $('.product_offer_total').get()
                 .reduce(function(sum, el) {
                     return sum + parseFloat(el.value);
                 }, 0);
+            var total_vat = $('.product_vat_amount').get()
+                .reduce(function(sum, el) {
+                    return sum + parseFloat(el.value);
+                }, 0);
+            var grand_total_price = $('.total_price').get()
+                .reduce(function(sum, el) {
+                    return sum + parseFloat(el.value);
+                }, 0); 
+
             const client_equipment_total = parseFloat($('#client_equipment_total').val());
 
             //client equipment total
@@ -1242,6 +1276,8 @@
             let total_equipment_otc = equipment_otc + plan_equipment_otc + equipment_price_for_client
             $('#total_otc_with_client_equipment').val(total_equipment_otc);
             $('#product_grand_total').val(product_grand_total.toFixed(2));
+            $('#total_vat').val(total_vat.toFixed(2));
+            $('#grand_total_price').val(grand_total_price.toFixed(2));
         });
 
         //This is button function for add new row in plan link

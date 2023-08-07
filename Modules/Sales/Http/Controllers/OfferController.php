@@ -20,7 +20,7 @@ class OfferController extends Controller
      */
     public function index()
     {
-        $offers = Offer::with('offerDetails.offerLinks')->get();
+        $offers = Offer::with('offerDetails.offerLinks')->latest()->get();
         return view('sales::offers.index', compact('offers'));
     }
 
