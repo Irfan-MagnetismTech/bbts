@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('client_no');
             $table->integer('lead_generation_id')->nullable();
             $table->string('is_existing')->default(0)->nullable();
+            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
             $table->string('mq_no')->nullable();
             $table->integer('user_id')->nullable();
             $table->integer('branch_id')->nullable();
