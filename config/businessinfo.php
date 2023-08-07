@@ -133,12 +133,12 @@ return [
 
 
     'coreNoColor' => [
-        '1 - Green' => '1 - Green',
-        '2 - Green' => '2 - Green',
-        '3 - Green' => '3 - Green',
-        '4 - Green' => '4 - Green',
-        '5 - Green' => '5 - Green',
-        '6 - Green' => '6 - Green',
-        '7 - Green' => '7 - Green',
+        '1-Green' => '1 - Green',
+        '2-Green' => '2 - Green',
+        '3-Green' => '3 - Green',
+        '4-Green' => '4 - Green',
+        '5-Green' => '5 - Green',
+        '6-Green' => '6 - Green',
+        '7-Green' => '7 - Green',
     ],
 ];

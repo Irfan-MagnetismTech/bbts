@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Cable Core')
+@section('title', 'Fiber')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
@@ -8,7 +8,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    List of Cable Link
+    List of Fiber
 @endsection
 
 
@@ -28,9 +28,9 @@
                     <th>Parent</th>
                     <th>Pop</th>
                     <th>Conectivity Point</th>
-                    <th>cable code</th>
-                    <th>fiber type</th>
-                    <th>core no color</th>
+                    <th>Cable code</th>
+                    <th>Fiber type</th>
+                    <th>Core no color</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -39,7 +39,7 @@
                     
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td> {{ $value->parent()->id }}</td>
+                    <td> {{ $value->parent->coreRefId }}</td>
                     <td> {{ $value->pop_id }}</td>
                     <td> {{ $value->connectivity_point_name }}</td>
                     <td> {{ $value->cable_code }}</td>
