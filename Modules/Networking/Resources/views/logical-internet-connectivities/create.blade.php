@@ -622,7 +622,7 @@
                         value="{{ old('bgp_client_as') ?? (!empty($logicalConnectivityInternet) ? $clientFacility->bgp_client_as : '') }}"
                         disabled id="bgp_client_as">
                 </div>
-            </div>            
+            </div>         
 
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
