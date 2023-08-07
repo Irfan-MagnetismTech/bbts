@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->string('client_no')->nullable();
+            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
             $table->string('account_holder')->nullable();
             $table->integer('employee_id')->nullable();
             $table->integer('offer_id')->nullable();

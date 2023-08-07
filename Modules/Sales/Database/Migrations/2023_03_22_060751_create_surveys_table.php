@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('surveys', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('feasibility_requirement_details_id');
+            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
             $table->string('fr_no');
             $table->string('client_no');
             $table->string('lead_generation_id');

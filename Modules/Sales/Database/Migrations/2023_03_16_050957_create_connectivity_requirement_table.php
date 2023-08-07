@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('fr_no');
             $table->string('client_no');
             $table->string('mq_no');
+            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
             $table->string('from_location')->nullable();
             $table->string('aggregation_type')->nullable();
             $table->date('date')->nullable();

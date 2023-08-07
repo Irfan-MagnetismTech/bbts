@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
             $table->string('client_no')->nullable();
+            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
             $table->string('mq_no')->nullable();
             $table->date('offer_validity')->nullable();
             $table->timestamps();
