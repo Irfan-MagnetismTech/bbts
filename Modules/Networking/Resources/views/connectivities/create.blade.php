@@ -67,6 +67,8 @@
                     label="Commissioning Date" />
             </div>
 
+            <h5 class="text-center p-2">NETWORK INFORMATION</h5>
+
             <table class="table table-bordered" id="physical_connectivity">
                 <thead>
                     <tr>
@@ -103,8 +105,8 @@
                                         value="{{ $physicalConnectivityLine->ldp }}" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="link_id[]" class="form-control link_id"
-                                        autocomplete="off" value="{{ $physicalConnectivityLine->link_id }}" readonly>
+                                    <input type="text" name="link_id[]" class="form-control link_id" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->link_id }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="device_ip[]" class="form-control device_ip"
@@ -127,14 +129,13 @@
                                     <input type="text" name="comment[]" class="form-control comment"
                                         autocomplete="off" value="{{ $physicalConnectivityLine->comment }}" readonly>
                                 </td>
-                                <td>
-                                    <i class="btn btn-danger btn-sm fa fa-minus remove-network-info-row"></i>
-                                </td>
                             </tr>
                         @endforeach
                     @endif
                 </tbody>
-            </table> 
+            </table>
+
+            <h5 class="text-center p-2">INTERNET SERVICE</h5>
 
             <table class="table table-bordered" id="data_service">
                 <thead>
@@ -148,7 +149,6 @@
                         <th> VLAN</th>
                         <th> User ID</th>
                         <th> Password</th>
-                        <th> Action </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -156,58 +156,41 @@
                         @forelse ($logicalConnectivityInternet?->lines as $key => $line)
                             <tr>
                                 <td>
-                                    <select name="product_id[]" class="form-control product_id select2" readonly>
-                                        <option value="">Select Product</option>
-                                        @foreach ($products as $data)
-                                            <option value="{{ $data->product->id }}" @selected($line->product_id == $data->product->id)>
-                                                {{ $data->product->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" name="product_name[]" class="form-control product_name"
+                                        autocomplete="off" value="{{ $line->product->name }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="quantity[]" class="form-control quantity"
-                                        autocomplete="off" value="{{ $line->quantity }}">
+                                        autocomplete="off" value="{{ $line->quantity }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="ip_ipv4[]" class="form-control ip_ipv4"
-                                        autocomplete="off" value="{{ $line->ip_ipv4 }}">
+                                        autocomplete="off" value="{{ $line->ip_ipv4 }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="ip_ipv6[]" class="form-control ip_ipv6"
-                                        autocomplete="off" value="{{ $line->ip_ipv6 }}">
+                                        autocomplete="off" value="{{ $line->ip_ipv6 }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="subnetmask[]" class="form-control subnetmask"
-                                        autocomplete="off" value="{{ $line->subnetmask }}">
+                                        autocomplete="off" value="{{ $line->subnetmask }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="gateway[]" class="form-control gateway"
-                                        autocomplete="off" value="{{ $line->gateway }}">
+                                        autocomplete="off" value="{{ $line->gateway }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
-                                        value="{{ $line->vlan }}">
+                                        value="{{ $line->vlan }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="mrtg_user[]" class="form-control mrtg_user"
-                                        autocomplete="off" value="{{ $line->mrtg_user }}">
+                                        autocomplete="off" value="{{ $line->mrtg_user }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="mrtg_pass[]" class="form-control mrtg_pass"
-                                        autocomplete="off" value="{{ $line->mrtg_pass }}">
+                                        autocomplete="off" value="{{ $line->mrtg_pass }}" readonly>
                                 </td>
-                                @if ($loop->first)
-                                    <td>
-                                        <button type="button"
-                                            class="btn btn-success btn-sm fa fa-plus add-internet-service-row"></button>
-                                    </td>
-                                @else
-                                    <td>
-                                        <button type="button"
-                                            class="btn btn-danger btn-sm fa fa-minus remove-internet-service-row"></button>
-                                    </td>
-                                @endif
                             </tr>
                         @empty
                         @endforelse
@@ -215,72 +198,40 @@
                 </tbody>
             </table>
 
-            <h5 class="text-center p-2">NETWORK INFORMATION</h5>
-            <table class="table table-bordered" id="physical_connectivity">
+            <h5 class="text-center p-2">Bandwidth Distribution </h5>
+
+            <table class="table table-bordered" id="bandwidth_distribution">
                 <thead>
                     <tr>
-                        <th> Link Type</th>
-                        <th> Method</th>
-                        <th> POP</th>
-                        <th>LDP</th>
-                        <th> Link ID </th>
-                        <th> Device IP </th>
-                        <th> PORT </th>
-                        <th> VLAN </th>
-                        <th> Connectivity Details </th>
-                        <th> Comment </th>
+                        <th> IP Address</th>
+                        <th> Bandwidth</th>
+                        <th> Remarks </th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($physicalConnectivityVas->lines as $key => $line)
-                        <tr>
-                            <td>
-                                <input type="text" name="link_type[]" class="form-control link_type"
-                                    autocomplete="off" value="{{ $line->link_type }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="method[]" class="form-control method" autocomplete="off"
-                                    value="{{ $line->method }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
-                                    value="{{ $line->pop }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
-                                    value="{{ $line->ldp }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="link_id[]" class="form-control link_id" autocomplete="off"
-                                    value="{{ $line->link_id }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="device_ip[]" class="form-control device_ip"
-                                    autocomplete="off" value="{{ $line->device_ip }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="port[]" class="form-control port" autocomplete="off"
-                                    value="{{ $line->port }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
-                                    value="{{ $line->vlan }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="connectivity_details[]"
-                                    class="form-control connectivity_details" autocomplete="off"
-                                    value="{{ $line->connectivity_details }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control comment" autocomplete="off"
-                                    value="{{ $line->comment }}" readonly>
-                            </td>
-                        </tr>
-                    @endforeach
+                    @if (!empty($logicalConnectivityInternet))
+                        @forelse ($logicalConnectivityBandwidths as $key => $bandwidth)
+                            <tr>
+                                <td>
+                                    <input type="text" name="ip_address[]" class="form-control ip_address"
+                                        autocomplete="off" value="{{ $bandwidth->ip->address }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="bandwidth[]" class="form-control bandwidth"
+                                        autocomplete="off" value="{{ $bandwidth->bandwidth }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="remarks[]" class="form-control remarks"
+                                        autocomplete="off" value="{{ $bandwidth->remarks }}" readonly>
+                                </td>
+                            </tr>
+                        @empty
+                        @endforelse
+                    @endif
                 </tbody>
             </table>
-
-            <h5 class="text-center p-2">NETWORK INFORMATION</h5>
+            
+            <h5 class="text-center p-2">VAS SERVICE</h5>
             <table class="table table-bordered" id="physical_connectivity">
                 <thead>
                     <tr>

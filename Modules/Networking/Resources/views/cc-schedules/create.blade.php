@@ -211,5 +211,5 @@
 
 @endsection
 @section('script')
-    @include('networking::logical-internet-connectivities.js')
+    @include('networking::cc-schedules.js')
 @endsection
