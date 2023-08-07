@@ -1045,6 +1045,10 @@
             $('#equipment_grand_total').val(total);
         }
 
+        $('#calculate_data').on('click', function() {
+            equipmentPartialTotal()
+        })
+
         $('#equipment_otc').on('keyup', function() {
             var equipment_otc = $(this).val();
             var equipment_total = $('#equipment_grand_total').val();
@@ -1169,30 +1173,33 @@
         }
 
         $('.plan_link_status').click(function(event) {
-            alert('ok')
             let total_mrc = 0;
             let total_otc = 0;
             let total_equipment_investment = 0;
             let total_plan_equipment_otc = 0;
-            const $planLinkMainRows = $('.PlanLinkMainRow');
+            const planLinkMainRows = $('.PlanLinkMainRow');
 
             $('.plan_link_status:checked').each(function() {
                 const $this = $(this);
-                const plan_link_total_mrc = parseInt($this.closest('.PlanLinkMainRow').find(
-                    '.plan_equipment_total_mrc').val()) || 0;
-                total_mrc += plan_link_total_mrc;
+                const plan_link_total_mrc = planLinkMainRows.find(
+                    '.plan_equipment_total_mrc').val() || 0;
+                total_mrc += parseFloat(plan_link_total_mrc);
 
-                total_equipment_investment += parseInt($this.closest('.PlanLinkMainRow').find(
+                total_equipment_investment += parseFloat(planLinkMainRows.find(
                     '.plan_equipment_total_inv').val()) || 0;
 
-                total_plan_equipment_otc = parseInt($this.closest('.PlanLinkMainRow').find(
+                total_plan_equipment_otc = parseFloat(planLinkMainRows.find(
                     '.plan_equipment_otc').val()) || 0;
 
             });
+            console.log('total_mrc', total_mrc)
+            console.log('total_equipment_investment', total_equipment_investment)
+            console.log('total_plan_equipment_otc', total_plan_equipment_otc)
 
             $('#total_mrc').val(total_mrc);
-            const equipment_grand_total = parseInt($('#equipment_grand_total').val());
+            const equipment_grand_total = parseInt($('#equipment_grand_total').val()) || 0;
             const total_investment = equipment_grand_total + total_equipment_investment;
+            console.log('total_investment', total_investment)
             $('#total_investment').val(total_investment);
             const total_equipment_otc = parseInt($('#equipment_otc').val()) || 0;
             total_otc = total_plan_equipment_otc + total_equipment_otc;

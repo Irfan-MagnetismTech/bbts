@@ -16,9 +16,9 @@
             margin-top: 10px;
         }
 
-        .table_label{
+        .table_label {
             width: 30px;
-            text-align: left!important;
+            text-align: left !important;
         }
     </style>
 @endsection
@@ -233,7 +233,8 @@
                     </div>
                     <hr />
                     <div class="row">
-                        <input type="hidden" id="client_id" name="client_id" value="{{ $lead_generation->client_id }}">
+                        <input type="hidden" id="client_id" name="client_id"
+                            value="{{ $lead_generation->client_id }}">
                         <input type="hidden" name="total_key" id="total_key" value="1">
                         <div class="col-md-11 text-center">
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
@@ -246,9 +247,15 @@
                     <hr />
                     <div id="link_container">
                         <div class="main_link">
-                            <h5 class="text-center mb-2">Link <span class="link_no">1</span></h5>
-                            <hr />
                             <div class="row">
+                                <div class="col-md-11 col-11">
+                                    <h5 class="text-center mb-2">Link <span class="link_no">1</span></h5>
+                                </div>
+                                <div class="col-md-1 col-1">
+                                    <button type="button" class="btn btn-sm btn-danger text-left removeLinkRow"
+                                        onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
+                                </div>
+                                <hr / style="width: 100%; margin-bottom: 10px;">
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
                                         <select name="link_type_1" class="form-control form-control-sm link_type">
@@ -690,6 +697,13 @@
                 console.log($equipmentRow);
                 if ($equipmentRow > 1) {
                     clonedRow.find('.link_equipment_table tr').not(':first').remove();
+                }
+            }
+
+            function removeLinkRow(event) {
+                var count = $('.main_link').length;
+                if (count > 1) {
+                    $(event).closest('.main_link').remove();
                 }
             }
 
