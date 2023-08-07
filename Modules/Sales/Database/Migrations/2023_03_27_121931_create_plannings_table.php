@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('plannings', function (Blueprint $table) {
             $table->id();
             $table->string('client_no');
+            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
             $table->string('mq_no')->nullable();
             $table->string('fr_no')->nullable();
             $table->date('date')->nullable();

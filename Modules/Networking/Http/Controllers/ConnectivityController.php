@@ -9,6 +9,7 @@ use App\Models\Dataencoding\Employee;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\SaleProductDetail;
+use Modules\Networking\Entities\ClientFacility;
 use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Networking\Entities\BandwidthDestribution;
@@ -66,14 +67,38 @@ class ConnectivityController extends Controller
             ->latest()
             ->first();
 
+        $logicalConnectivityVas = LogicalConnectivity::query()
+            ->where([
+                'fr_no' => $physicalConnectivity->fr_no,
+                'client_no' => $physicalConnectivity->client_no,
+                'product_category' => 'VAS'
+            ])
+            ->with('lines.product')
+            ->latest()
+            ->first();
+
+        $logicalConnectivityData = LogicalConnectivity::query()
+            ->where([
+                'fr_no' => $physicalConnectivity->fr_no,
+                'client_no' => $physicalConnectivity->client_no,
+                'product_category' => 'Data'
+            ])
+            ->with('lines.product')
+            ->latest()
+            ->first();
+
         $logicalConnectivityBandwidths = BandwidthDestribution::query()
             ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
             ->with('ip')
             ->get();
 
+        $facilityTypes = explode(',', $logicalConnectivityInternet->facility_type);
 
+        $clientFacility = ClientFacility::query()
+            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+            ->first();
 
-        return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityInternet', 'logicalConnectivityBandwidths'));
+        return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityInternet', 'logicalConnectivityBandwidths', 'logicalConnectivityVas', 'logicalConnectivityData', 'facilityTypes', 'clientFacility'));
     }
 
     /**

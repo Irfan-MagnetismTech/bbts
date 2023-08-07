@@ -64,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-ip', [CommonApiController::class, 'searchIp'])->name('searchIp');
     Route::get('get-links-by-fr/{client_id}/{fr_no}', [CommonApiController::class, 'getLinksByFr'])->name('get-links-by-fr');
     Route::get('search-vendor', [CommonApiController::class, 'searchVendor'])->name('searchVendor');
+    Route::get('get-logical-connectivity-data', [CommonApiController::class, 'getLogicalConnectivityData'])->name('getLogicalConnectivityData');
 });
 
 require base_path('routes/dataencoding.php');

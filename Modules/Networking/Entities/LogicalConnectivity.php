@@ -33,4 +33,17 @@ class LogicalConnectivity extends Model
     {
         return $this->hasOne(ClientFacility::class);
     }
+
+    public function scopeForProductCategories($query, array $categories)
+    {
+        return $query->whereIn('product_category', $categories);
+    }
+
+    public function scopeForClientAndFrNo($query, $clientNo, $frNo)
+    {
+        return $query->where([
+            'fr_no' => $frNo,
+            'client_no' => $clientNo,
+        ]);
+    }
 }

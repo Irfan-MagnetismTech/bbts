@@ -90,7 +90,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <x-input-box colGrid="3" name="bill_payment_date[${indx}]" label="Bill Payment Date" class="container" readonly value=""/>
+                                                <x-input-box colGrid="3" name="bill_payment_date[${indx}]" label="Bill Payment Date" class="container" attr='readonly' value=""/>
                                                 <div class="col-3">
                                                     <div class="form-check-inline">
                                                         <label class="form-check-label" for="prepaid_${+indx}">
@@ -381,6 +381,14 @@
                 day_picker_selector.val($(this).text());
                 $('.box').css('left','-1000px');
             })
-        });
+       
+            $(document).on('click', function(event) {
+                var $table = $('.box');
+                var $inpt = $('.container');
+                if (!$table.is(event.target) && !$table.has(event.target).length && !$inpt.is(event.target) && !$inpt.has(event.target).length) {
+                    $('.box').css('left','-1000px');
+                }
+            });
+    });
 
 </script>

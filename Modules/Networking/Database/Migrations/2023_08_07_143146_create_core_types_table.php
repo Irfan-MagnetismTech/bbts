@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('offers', function (Blueprint $table) {
+        Schema::create('core_types', function (Blueprint $table) {
             $table->id();
-            $table->string('client_no')->nullable();
-            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
-            $table->string('mq_no')->nullable();
-            $table->date('offer_validity')->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offers');
+        Schema::dropIfExists('core_types');
     }
 };
