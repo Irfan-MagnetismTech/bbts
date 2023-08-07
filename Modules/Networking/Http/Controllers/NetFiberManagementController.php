@@ -19,7 +19,7 @@ class NetFiberManagementController extends Controller
     public function index()
     {
         $datas = NetFiberManagement::get();
-        return view('networking::net-fiber-management.index',compact('datas'));
+        return view('networking::net-fiber-management.index', compact('datas'));
     }
 
     /**
@@ -28,7 +28,7 @@ class NetFiberManagementController extends Controller
      */
     public function create()
     {
-        $CoreRefIds = NetFiberManagement::orderBy('id')->get('id', 'cable_code');
+        $CoreRefIds = NetFiberManagement::orderBy('id')->get(['connectivity_point_name', 'cable_code', 'fiber_type', 'core_no_color', 'id'])->pluck('coreRefId', 'id');
         return view('networking::net-fiber-management.create', compact('CoreRefIds'));
     }
 
@@ -67,8 +67,8 @@ class NetFiberManagementController extends Controller
      */
     public function edit(NetFiberManagement $fiberManagement)
     {
-        $CoreRefIds = NetFiberManagement::orderBy('id')->get('id', 'cable_code');
-        return view('networking::net-fiber-management.create', compact('CoreRefIds','fiberManagement'));
+        $CoreRefIds = NetFiberManagement::orderBy('id')->get(['connectivity_point_name', 'cable_code', 'fiber_type', 'core_no_color', 'id'])->pluck('coreRefId', 'id');
+        return view('networking::net-fiber-management.create', compact('CoreRefIds', 'fiberManagement'));
     }
 
     /**
@@ -97,10 +97,10 @@ class NetFiberManagementController extends Controller
      */
     public function destroy(NetFiberManagement $fiberManagement)
     {
-        try{
+        try {
             $fiberManagement->delete();
             return redirect()->route('fiber-managements.index')->with('message', 'Material has been deleted successfully.');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->back()->withErrors($e->getMessage());
         }
     }

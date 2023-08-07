@@ -192,4 +192,24 @@
             <span>Client Schedules</span>
         </a>
     </li>
+    <li
+        class="pcoded-hasmenu {{ request()->routeIs(['fiber-managements.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-mtext">Fiber</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('fiber-managements.create') ? 'active' : null }}">
+                <a href="{{ route('fiber-managements.create') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+            <li class="{{ request()->routeIs('fiber-managements.index') ? 'active' : null }}">
+                <a href="{{ route('fiber-managements.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
 </ul>
