@@ -50,38 +50,9 @@ class ConnectivityController extends Controller
 
         $logicalConnectivityInternet = LogicalConnectivity::query()
             ->where([
-                'product_category' => 'Internet',
-                'sale_id' => $salesDetail->sale_id
-            ])
-            ->with('lines')
-            ->latest()
-            ->first();
-
-        $logicalConnectivityInternet = LogicalConnectivity::query()
-            ->where([
                 'fr_no' => $physicalConnectivity->fr_no,
                 'client_no' => $physicalConnectivity->client_no,
                 'product_category' => 'Internet'
-            ])
-            ->with('lines.product')
-            ->latest()
-            ->first();
-
-        $logicalConnectivityVas = LogicalConnectivity::query()
-            ->where([
-                'fr_no' => $physicalConnectivity->fr_no,
-                'client_no' => $physicalConnectivity->client_no,
-                'product_category' => 'VAS'
-            ])
-            ->with('lines.product')
-            ->latest()
-            ->first();
-
-        $logicalConnectivityData = LogicalConnectivity::query()
-            ->where([
-                'fr_no' => $physicalConnectivity->fr_no,
-                'client_no' => $physicalConnectivity->client_no,
-                'product_category' => 'Data'
             ])
             ->with('lines.product')
             ->latest()
@@ -97,6 +68,22 @@ class ConnectivityController extends Controller
         $clientFacility = ClientFacility::query()
             ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
             ->first();
+
+        $physicalConnectivity = PhysicalConnectivity::with('lines')
+            ->where('sale_id', $salesDetail->sale_id)
+            ->latest()
+            ->firstOrFail();
+
+        $logicalConnectivities = LogicalConnectivity::with(['lines.product'])
+            ->forProductCategories(['VAS', 'Data', 'Internet'])
+            ->forClientAndFrNo($physicalConnectivity->client_no, $physicalConnectivity->fr_no)
+            ->latest()
+            ->get()
+            ->keyBy('product_category');
+
+        $logicalConnectivityVas = $logicalConnectivities->get('VAS');
+        $logicalConnectivityData = $logicalConnectivities->get('Data');
+        $logicalConnectivityInternet = $logicalConnectivities->get('Internet');
 
         return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityInternet', 'logicalConnectivityBandwidths', 'logicalConnectivityVas', 'logicalConnectivityData', 'facilityTypes', 'clientFacility'));
     }
