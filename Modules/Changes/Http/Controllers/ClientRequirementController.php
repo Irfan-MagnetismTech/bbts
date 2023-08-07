@@ -25,7 +25,7 @@ class ClientRequirementController extends Controller
      */
     public function create()
     {
-        return view('changes::create');
+        return view('changes::client_requirement.create');
     }
 
     /**

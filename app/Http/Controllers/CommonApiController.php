@@ -18,6 +18,7 @@ use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Employee;
 use Modules\SCM\Entities\StockLedger;
 use App\Models\Dataencoding\Department;
+use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\Sales\Entities\SaleLinkDetail;
@@ -33,7 +34,7 @@ class CommonApiController extends Controller
 {
     public function searchClient()
     {
-        $results = Client::query()
+        $results = Client::query()->with('feasibility_requirement_details')
             ->where('client_name', 'LIKE', '%' . request('search') . '%')
             ->limit(15)
             ->get()
@@ -49,6 +50,7 @@ class CommonApiController extends Controller
                 'email' => $item->email,
                 'client_type' => $item->client_type,
                 'saleDetails' => $item->saleDetails,
+                'frDetails' => $item->feasibility_requirement_details->pluck('fr_no', 'fr_no'),
             ]);
 
         return response()->json($results);
@@ -448,5 +450,25 @@ class CommonApiController extends Controller
             ]);
 
         return response()->json($results);
+    }
+
+    public function getLogicalConnectivityData()
+    {
+        $logicalConnectivity = LogicalConnectivity::with('lines')->where('client_no', request('client_no'))->where('fr_no', request('fr_no'))->orderBy('sale_id', 'desc')->first();
+        $physicalConnectivity = PhysicalConnectivity::with('lines')->where('client_no', request('client_no'))->where('fr_no', request('fr_no'))->orderBy('sale_id', 'desc')->first();
+        $logical_table_data = '';
+        $physical_table_data = '';
+        if ($logicalConnectivity) {
+            $logical_table_data = view('changes::client_requirement.logical_connectivity.table', compact('logicalConnectivity'))->render();
+        }
+
+        if ($physicalConnectivity) {
+            $physical_table_data = view('changes::client_requirement.physical_connectivity.table', compact('physicalConnectivity'))->render();
+        }
+        return response()->json([
+            'logical_connectivity' => $logicalConnectivity,
+            'logical_table_data' => $logical_table_data,
+            'physical_table_data' => $physical_table_data,
+        ]);
     }
 }
