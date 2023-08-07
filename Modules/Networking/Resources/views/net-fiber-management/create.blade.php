@@ -57,7 +57,6 @@
                     <label class="input-group-addon" for="fiber_type">Type<span
                             class="text-danger">*</span></label>
                     <select class="form-control" id="fiber_type" name="fiber_type" required>
-                        <option>Select Type</option>
                         @foreach (config('businessinfo.fiberType') as $key => $value)
                             <option value="{{ $key }}" @if ($value == $fiberType) selected @endif >
                                 {{ $value }}
