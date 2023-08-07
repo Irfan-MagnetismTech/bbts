@@ -41,7 +41,7 @@
             </div>
             <div class="col-md-12 col-xl-12">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="connectivity_point_name">Connectivity Point Name<span class="text-danger">*</span></label>
+                    <label class="input-group-addon" for="connectivity_point_name">Connectivity <br/>Point Name<span class="text-danger">*</span></label>
                     {{Form::text('connectivity_point_name', $connectivity_point_name,['class' => 'form-control','id' => 'connectivity_point_name', 'autocomplete'=>"off",'required',])}}
                 </div>
             </div>
