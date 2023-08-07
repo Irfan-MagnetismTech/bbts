@@ -12,7 +12,7 @@
     $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->lines->pluck('remarks') : null);
     
     $effective_date = $is_old ? old('effective_date') : $sale->effective_date ?? today()->format('d-m-Y');
-    $sale_id = old('sale_id', !empty($physicalConnectivity) ? $physicalConnectivity->sale_id : request()->sale_id);
+    $sale_id = old('sale_id', !empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->sale_id : request()->sale_id);
 @endphp
 
 @section('breadcrumb-title')
@@ -54,6 +54,7 @@
 
             <div class="row">
                 <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
+                
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
