@@ -48,57 +48,25 @@ class ConnectivityController extends Controller
             ->latest()
             ->first();
 
-        $logicalConnectivityInternet = LogicalConnectivity::query()
-            ->where([
-                'product_category' => 'Internet',
-                'sale_id' => $salesDetail->sale_id
-            ])
-            ->with('lines')
+        $logicalConnectivities = LogicalConnectivity::with(['lines.product'])
+            ->forProductCategories(['VAS', 'Data', 'Internet'])
+            ->forClientAndFrNo($physicalConnectivity->client_no, $physicalConnectivity->fr_no)
             ->latest()
-            ->first();
-
-        $logicalConnectivityInternet = LogicalConnectivity::query()
-            ->where([
-                'fr_no' => $physicalConnectivity->fr_no,
-                'client_no' => $physicalConnectivity->client_no,
-                'product_category' => 'Internet'
-            ])
-            ->with('lines.product')
-            ->latest()
-            ->first();
-
-        $logicalConnectivityVas = LogicalConnectivity::query()
-            ->where([
-                'fr_no' => $physicalConnectivity->fr_no,
-                'client_no' => $physicalConnectivity->client_no,
-                'product_category' => 'VAS'
-            ])
-            ->with('lines.product')
-            ->latest()
-            ->first();
-
-        $logicalConnectivityData = LogicalConnectivity::query()
-            ->where([
-                'fr_no' => $physicalConnectivity->fr_no,
-                'client_no' => $physicalConnectivity->client_no,
-                'product_category' => 'Data'
-            ])
-            ->with('lines.product')
-            ->latest()
-            ->first();
+            ->get()
+            ->keyBy('product_category');
 
         $logicalConnectivityBandwidths = BandwidthDestribution::query()
-            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')->id)
             ->with('ip')
             ->get();
 
-        $facilityTypes = explode(',', $logicalConnectivityInternet->facility_type);
+        $facilityTypes = explode(',', $logicalConnectivities->get('Internet')->facility_type);
 
         $clientFacility = ClientFacility::query()
-            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')->id)
             ->first();
 
-        return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityInternet', 'logicalConnectivityBandwidths', 'logicalConnectivityVas', 'logicalConnectivityData', 'facilityTypes', 'clientFacility'));
+        return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityBandwidths', 'logicalConnectivities', 'facilityTypes', 'clientFacility'));
     }
 
     /**
