@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -20,7 +21,7 @@ class OfferController extends Controller
      */
     public function index()
     {
-        $offers = Offer::with('offerDetails.offerLinks')->get();
+        $offers = Offer::with('offerDetails.offerLinks')->latest()->get();
         return view('sales::offers.index', compact('offers'));
     }
 
@@ -94,9 +95,20 @@ class OfferController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Offer $offer)
     {
-        //
+        try {
+            if($offer->sale()->exists()){
+                return redirect()->route('offers.index')->with('message', 'Please delete Sales Data first');
+            }
+            else{
+                $offer->delete();
+            } 
+
+            return redirect()->route('offers.index')->with('message', 'Offer Deleted Successfully');
+        } catch (Exception $err) { 
+            return redirect()->back()->with('error', $err->getMessage())->withInput();
+        }
     }
 
     public function clientWiseMq(Request $request)

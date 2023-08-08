@@ -25,7 +25,7 @@ class CostingController extends Controller
     public function index()
     {
         // return view('sales::index');
-        $costings = Costing::with('costingProducts', 'costingLinks', 'costingLinks.costingLinkEquipments')->get();
+        $costings = Costing::with('costingProducts', 'costingLinks', 'costingLinks.costingLinkEquipments')->latest()->get();
         return view('sales::costing.index', compact('costings'));
     }
 

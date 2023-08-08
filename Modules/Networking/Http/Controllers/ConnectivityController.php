@@ -8,11 +8,13 @@ use Illuminate\Routing\Controller;
 use App\Models\Dataencoding\Employee;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Networking\Entities\ClientFacility;
 use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Networking\Entities\BandwidthDestribution;
+use Modules\Networking\Entities\Connectivity;
 
 class ConnectivityController extends Controller
 {
@@ -26,6 +28,7 @@ class ConnectivityController extends Controller
             ->with('sale', 'client', 'frDetails')
             ->latest()
             ->get();
+
         return view('networking::connectivities.index', compact('salesDetails'));
     }
 
@@ -48,57 +51,30 @@ class ConnectivityController extends Controller
             ->latest()
             ->first();
 
-        $logicalConnectivityInternet = LogicalConnectivity::query()
-            ->where([
-                'product_category' => 'Internet',
-                'sale_id' => $salesDetail->sale_id
-            ])
-            ->with('lines')
+        $logicalConnectivities = LogicalConnectivity::with(['lines.product'])
+            ->forProductCategories(['VAS', 'Data', 'Internet'])
+            ->whereClientNoAndFrNo($physicalConnectivity->client_no, $physicalConnectivity->fr_no)
             ->latest()
-            ->first();
+            ->get()
+            ->keyBy('product_category');
 
-        $logicalConnectivityInternet = LogicalConnectivity::query()
-            ->where([
-                'fr_no' => $physicalConnectivity->fr_no,
-                'client_no' => $physicalConnectivity->client_no,
-                'product_category' => 'Internet'
-            ])
-            ->with('lines.product')
-            ->latest()
-            ->first();
-
-        $logicalConnectivityVas = LogicalConnectivity::query()
-            ->where([
-                'fr_no' => $physicalConnectivity->fr_no,
-                'client_no' => $physicalConnectivity->client_no,
-                'product_category' => 'VAS'
-            ])
-            ->with('lines.product')
-            ->latest()
-            ->first();
-
-        $logicalConnectivityData = LogicalConnectivity::query()
-            ->where([
-                'fr_no' => $physicalConnectivity->fr_no,
-                'client_no' => $physicalConnectivity->client_no,
-                'product_category' => 'Data'
-            ])
-            ->with('lines.product')
-            ->latest()
-            ->first();
+        $facilityTypes = explode(',', $logicalConnectivities->get('Internet')->facility_type);
 
         $logicalConnectivityBandwidths = BandwidthDestribution::query()
-            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')->id)
             ->with('ip')
             ->get();
 
-        $facilityTypes = explode(',', $logicalConnectivityInternet->facility_type);
-
         $clientFacility = ClientFacility::query()
-            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')->id)
             ->first();
 
-        return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityInternet', 'logicalConnectivityBandwidths', 'logicalConnectivityVas', 'logicalConnectivityData', 'facilityTypes', 'clientFacility'));
+        $connectivity = Connectivity::query()
+            ->with('employee')
+            ->whereSaleId($salesDetail->sale_id)
+            ->first();
+
+        return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityBandwidths', 'logicalConnectivities', 'facilityTypes', 'clientFacility', 'connectivity'));
     }
 
     /**
@@ -106,9 +82,14 @@ class ConnectivityController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+        try {
+            Connectivity::create(request()->all());
+            return redirect()->route('connectivities.index')->with('message', 'Data has been inserted successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('connectivities.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**

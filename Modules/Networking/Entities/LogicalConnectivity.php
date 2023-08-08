@@ -38,12 +38,4 @@ class LogicalConnectivity extends Model
     {
         return $query->whereIn('product_category', $categories);
     }
-
-    public function scopeForClientAndFrNo($query, $clientNo, $frNo)
-    {
-        return $query->where([
-            'fr_no' => $frNo,
-            'client_no' => $clientNo,
-        ]);
-    }
 }

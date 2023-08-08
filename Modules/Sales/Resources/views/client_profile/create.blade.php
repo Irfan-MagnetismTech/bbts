@@ -119,18 +119,18 @@
                                                     <div class="form-group row">
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
-                                                                <input type="text" id="client_no" name="client_no"
-                                                                    class="form-control" autocomplete="off"
-                                                                    value="{{ $client_id }}" required>
-                                                                <label for="client_id">Client ID</label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-item">
                                                                 <input type="text" id="client_name" name="client_name"
                                                                     class="form-control" autocomplete="off"
                                                                     value="{{ $client_name }}" required>
                                                                 <label for="client_name">Client Name</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <div class="form-item">
+                                                                <input type="text" id="client_no" name="client_no"
+                                                                    class="form-control" autocomplete="off"
+                                                                    value="{{ $client_id }}" required readonly>
+                                                                <label for="client_id">Client ID</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-xl-4 col-md-4">
@@ -689,15 +689,15 @@
                     });
                 });
 
-                $('#client_no').on('input', function() {
-                    var client_id = $(this).val();
-                    console.log(client_id)
+                $('#client_name').on('input', function() {
+                    var client_name = $(this).val();
+                    console.log(client_name)
                     $(this).autocomplete({
                         source: function(request, response) {
                             $.ajax({
                                 url: "{{ route('get-client-information-for-profile') }}",
                                 data: {
-                                    client_id: client_id,
+                                    client_name: client_name,
                                     _token: "{{ csrf_token() }}"
                                 },
                                 success: function(data) {
@@ -709,8 +709,8 @@
                         },
                         select: function(event, ui) {
                             console.log(ui.item)
-                            $('#client_no').val(ui.item.label).attr('value', ui.item.label);
-                            $('#client_name').val(ui.item.value).attr('value', ui.item.value);
+                            $('#client_no').val(ui.item.value).attr('value', ui.item.value);
+                            $('#client_name').val(ui.item.client_name).attr('value', ui.item.client_name);
                             $('#client_type').val(ui.item.client_type).attr('value', ui.item
                                 .client_type);
                             $('#business_type').val(ui.item.business_type).attr('value', ui.item

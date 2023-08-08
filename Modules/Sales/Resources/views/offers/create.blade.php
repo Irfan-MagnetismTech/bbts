@@ -84,7 +84,6 @@
                                                         <th style="background-color:#057097">Method</th>
                                                         <th style="background-color:#057097">Vendor</th>
                                                         <th style="background-color:#057097">BBTS/POP/LDP</th>
-                                                        <th style="background-color:#057097">Distance</th>
                                                         <th style="background-color:#057097">Client <br> Equipment</th>
                                                         <th style="background-color:#057097">OTC</th>
                                                         <th style="background-color:#057097">Mo <br> Cost</th>
@@ -168,16 +167,6 @@
                                                             </td>
                                                             <td>
                                                                 <div
-                                                                    class="input-group input-group-sm input-group-primary">
-                                                                    <input type="text"
-                                                                        name="distance_{{ $row_no }}[]"
-                                                                        class="form-control"
-                                                                        value="{{ $link->finalSurveyDetails->distance }}"
-                                                                        id="distance" readonly>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <div
                                                                     class="input-group input-group-sm input-group-primary ">
                                                                     <input type="text"
                                                                         name="client_equipment_amount_{{ $row_no }}[]"
@@ -201,7 +190,7 @@
                                                                     class="input-group input-group-sm input-group-primary">
                                                                     <input type="text"
                                                                         name="mo_cost_{{ $row_no }}[]"
-                                                                        value="{{ $link->roi }}"
+                                                                        value="{{ $link->roi + $link->capacity_amount }}"
                                                                         class="form-control text-right" id="mo_cost"
                                                                         readonly>
                                                                 </div>
@@ -237,7 +226,7 @@
                                                     @endforeach
 
                                                     <tr>
-                                                        <td colspan="6" rowspan="5"></td>
+                                                        <td colspan="5" rowspan="5"></td>
                                                         <td colspan="2" style="text-align: right;">Link wise Total
                                                         </td>
                                                         <td>

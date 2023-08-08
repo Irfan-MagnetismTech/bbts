@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('client_no');
             $table->string('fr_no');
             $table->integer('attendant_engineer')->nullable();
-            $table->date('commissioning_Date')->nullable();
+            $table->date('commissioning_date')->nullable();
             $table->timestamps();
         });
     }

@@ -34,7 +34,11 @@
                 $('#fr_details').empty();
                 var appendedData = '';
                 item.details.forEach(element => {
-                    var percentage = (element.total_offer_mrc / element.costing.product_total_cost) - 1; 
+                    let offer_mrc = element.total_offer_mrc ?? 0;
+                    let product_amount = element.offer_product_amount ?? 0;
+                    let management_cost = element.management_cost ?? 0;
+                    let total_mrc = offer_mrc + product_amount + management_cost;
+                    var percentage = (total_mrc / element.costing.product_total_cost) - 1; 
                     appendedData += `<div class="card">
                                         <div class="card-body">
                                             <div class="row">
@@ -65,12 +69,13 @@
                                                 <div class="col-md-2">
                                                         <div class="row">
                                                             <div class="col-md-10">
-                                                    <select name="billing_address_id[${indx}]">`
-                    item.billing_address.forEach(ele => {
-                        appendedData +=`<option value="${ele.id}">${ele.address}</option>`
-                    })
-                    appendedData +=  `</select>
-                                                </div>
+                                                                <select name="billing_address_id[${indx}]">`
+                                                                    item.billing_address.forEach(ele => {
+                                                                        appendedData +=`<option value="${ele.id}">${ele.address}</option>`
+                                                                    })
+                                                                    appendedData +=  `
+                                                                </select>
+                                                            </div>
                                                     <div class="col-md-2">
                                                 <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add" onClick="ShowModal('billing','${element.fr_no}',this)"></i></span>
                                                         </div>
@@ -108,7 +113,7 @@
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <x-input-box colGrid="3" name="mrc[${indx}]" value="${element.total_offer_mrc}" label="MRC" attr="readonly" />
+                                                <x-input-box colGrid="3" name="mrc[${indx}]" value="${element.grand_total}" label="MRC" attr="readonly" />
                                                 <x-input-box colGrid="3" name="otc[${indx}]" value="${element.total_offer_otc}" label="OTC" attr="readonly"/>
                                             </div>
                                         <div>
@@ -119,69 +124,74 @@
                                                     <th>Product/Service</th>
                                                     <th>Quantity</th>
                                                     <th>Unit</th>
-                                                    <th>Price</th>
-                                                    <th>Total Price</th>
-                                                    <th>Vat Percent</th>
-                                                    <th>Vat Amount</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Total Price</th> 
+                                                    <th>VAT</th>
+                                                    <th>Total Amount</th>
                                                 </thead>
                                                 <tbody>
                                                 `
-                    let total = 0;
+                    let total = 0; sub_total_vat = 0; sub_total_amount = 0;
                     element.costing.costing_products.forEach(itm => {
+                        let total_price = (Number(percentage) * Number(itm.rate) + Number(itm.rate)) * Number(itm.quantity);
+                        let total_amount = Number(itm.product_vat_amount) + total_price;
+                        total += total_price;
+                        sub_total_vat += Number(itm.product_vat_amount);
+                        sub_total_amount += total_amount;
                     appendedData += `<tr>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="product_name[${indx}][]" class="form-control text-center"
-                                                        id="service_name" readonly value="${itm.product.name}">
-                                                    <input type="hidden" name="product_id[${indx}][]" class="form-control text-center"
-                                                        id="service" readonly value="${itm.product_id}">
-                                                </div>
-                                            </td>
-                                            <td> 
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="quantity[${indx}][]" class="form-control text-right"
-                                                        id="quantity" readonly value="${itm.quantity}">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="unit[${indx}][]" class="form-control text-center"
-                                                        id="unit" readonly value="${itm.unit}">
-                                                </div>
-                                            </td>
-                                            <td class="d-none">
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="rate[${indx}][]"
-                                                        class="form-control text-right" readonly value="${itm.rate}">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="price[${indx}][]"
-                                                        class="form-control text-right price" readonly value="${(Number(percentage) * Number(itm.rate)) + Number(itm.rate)}">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_price[${indx}][]"
-                                                        class="form-control text-right total_price" readonly value="${((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity)}">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="vat_percent[${indx}][]"
-                                                        class="form-control text-right vat_percent" value="0">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="vat_amount[${indx}][]"
-                                                        class="form-control text-right vat_amount" readonly value="0">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        `
-                        total += ((Number(percentage) * Number(itm.rate)) + Number(itm.rate)) * Number(itm.quantity);
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="product_name[${indx}][]" class="form-control text-center"
+                                                    id="service_name" readonly value="${itm.product.name}">
+                                                <input type="hidden" name="product_id[${indx}][]" class="form-control text-center"
+                                                    id="service" readonly value="${itm.product_id}">
+                                            </div>
+                                        </td>
+                                        <td> 
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="quantity[${indx}][]" class="form-control text-right"
+                                                    id="quantity" readonly value="${itm.quantity}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="unit[${indx}][]" class="form-control text-center"
+                                                    id="unit" readonly value="${itm.unit}">
+                                            </div>
+                                        </td>
+                                        <td class="d-none">
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="rate[${indx}][]"
+                                                    class="form-control text-right" readonly value="${itm.rate}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="price[${indx}][]"
+                                                    class="form-control text-right price" readonly value="${((Number(percentage) * Number(itm.rate)) + Number(itm.rate)).toFixed(2)}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_price[${indx}][]"
+                                                    class="form-control text-right total_price" readonly value="${total_price.toFixed(2)}">
+                                            </div>
+                                        </td> 
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="vat_amount[${indx}][]"
+                                                    class="form-control text-right vat_amount" readonly value="${Number(itm.product_vat_amount).toFixed(2)}">
+                                            </div>
+                                        </td> 
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="vat_amount[${indx}][]"
+                                                    class="form-control text-right vat_amount" readonly value="${total_amount.toFixed(2)}">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    `
+                        
                         })
                     appendedData += `</tbody>
                                     <tfoot>
@@ -190,7 +200,17 @@
                                             <td style="text-align: center;">Total MRC</td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc[${indx}]" class="form-control text-right total_mrc" readonly value="${total}">
+                                                    <input type="text" name="total_mrc[${indx}]" class="form-control text-right total_mrc" readonly value="${total.toFixed(2)}">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="sub_total_vat[${indx}]" class="form-control text-right sub_total_vat" readonly value="${sub_total_vat.toFixed(2)}">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="sub_total_amount[${indx}]" class="form-control text-right sub_total_amount" readonly value="${sub_total_amount.toFixed(2)}">
                                                 </div>
                                             </td>
                                         </tr>
@@ -249,12 +269,12 @@
         //     $(this).closest('tr').find('.vat_amount').val(vat_tk);
         // })
 
-        $(document).on('keyup','.vat_percent',function(){
-            let mrc = Number($(this).closest('tr').find('.total_price').val());
-            let vat_percent = Number($(this).val());
-            let vat_tk = mrc * vat_percent / 100;
-            $(this).closest('tr').find('.vat_amount').val(vat_tk);
-        })
+        // $(document).on('keyup','.vat_percent',function(){
+        //     let mrc = Number($(this).closest('tr').find('.total_price').val());
+        //     let vat_percent = Number($(this).val());
+        //     let vat_tk = mrc * vat_percent / 100;
+        //     $(this).closest('tr').find('.vat_amount').val(vat_tk);
+        // })
 
 
     function updateAddress(){

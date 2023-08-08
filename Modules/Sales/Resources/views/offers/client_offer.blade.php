@@ -75,7 +75,7 @@
                                     @php
                                         $productPrice = number_format($product->product_price, 2);
                                         $totalProductPrice = $product->quantity * $productPrice;
-                                        $vat = number_format($totalProductPrice * ($product->product->vat / 100), 2);
+                                        $vat = $product->product_vat_amount;
                                         $total += $totalProductPrice + $vat;
                                         $total_mrc += $totalProductPrice + $vat;
                                     @endphp
@@ -86,22 +86,22 @@
                                         <td>{{ $productPrice }}</td>
                                         <td>{{ $totalProductPrice }}</td>
                                         <td>{{ $vat }}</td>
-                                        <td>{{ $totalProductPrice + $vat }}</td>
+                                        <td class="text-right"><b>@formatFloat($totalProductPrice + $vat)</b></td>
                                     </tr>
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td class="text-right" colspan="6">Total Product Price</td>
-                                    <td class="text-center">{{ $total }}</td>
+                                    <td class="text-right" colspan="6"><b>Total Product Price</b></td>
+                                    <td class="text-right"><b>@formatFloat($total )</b></td>
                                 </tr>
                                 <tr>
-                                    <td class="text-right" colspan="6">OTC</td>
-                                    <td class="text-center">{{ $data->total_offer_otc }}</td>
+                                    <td class="text-right" colspan="6"><b>OTC</b></td>
+                                    <td class="text-right"><b>@formatFloat($data->total_offer_otc )</b></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6" class="text-right">Total</td>
-                                    <td class="text-center">{{ $total + $data->total_offer_otc }}</td>
+                                    <td colspan="6" class="text-right"><b>Total</b></td>
+                                    <td class="text-right"><b>@formatFloat($total + $data->total_offer_otc)</b></td>
 
                                 </tr>
                             </tfoot>
