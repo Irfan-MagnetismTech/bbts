@@ -273,7 +273,7 @@
                                             <span>{{ $detail->vendor->name ?? '' }}</span>
                                         </td>
                                         <td>
-                                            <span>{{ $detail->pop->name }}</span>
+                                            <span>{{ $detail->pop->name ?? ''}}</span>
                                         </td>
                                         <td>
                                             <span>{{ $detail->ldp }}</span>

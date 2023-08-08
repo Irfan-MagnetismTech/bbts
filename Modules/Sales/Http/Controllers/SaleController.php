@@ -150,10 +150,17 @@ class SaleController extends Controller
      */
     public function destroy(Sale $sale)
     {
-        $this->uploadFile->deleteFile($sale->sla);
-        $this->uploadFile->deleteFile($sale->work_order);
-        $sale->delete();
-        return redirect()->route('sales.index')->with('success', 'Sales Deleted Successfully');
+        try {
+            DB::beginTransaction();
+            $this->uploadFile->deleteFile($sale->sla);
+            $this->uploadFile->deleteFile($sale->work_order);
+            $sale->delete();
+            DB::commit();
+            return redirect()->back()->with('success', 'Sales Deleted Successfully');
+        } catch (Exception $err) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $err->getMessage())->withInput();
+        }
     }
 
     private function makeRow($raw)
