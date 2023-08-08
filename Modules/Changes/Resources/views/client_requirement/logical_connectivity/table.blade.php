@@ -12,14 +12,13 @@
                 <th>Plan</th>
                 <th>Remarks</th>
                 <th>
-                    <button type="button" class="btn btn-sm btn-success" id="addProductRow"><i
-                            class="fas fa-plus"></i></button>
+                    Action
                 </th>
             </tr>
         </thead>
         <tbody class="productBody">
             @foreach ($logicalConnectivity->lines as $line)
-                <tr>
+                <tr class="product_details_row">
                     <td>
                         <input type="text" name="product_category[]" class="form-control product_category"
                             value="{{ $line->product_category }}">
@@ -37,18 +36,30 @@
                             value="{{ $line->product->unit }}">
                     </td>
                     <td>
-                        <input type="text" name="=plan[]" class="form-control unit" value="=">
+                        <input type="text" name="plan[]" class="form-control unit" value="">
                     </td>
                     <td>
                         <input type="text" name="remarks[]" class="form-control remarks"
                             value="{{ $line->remarks }}">
                     </td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-danger removeProductRow"><i
-                                class="fas fa-minus"></i></button>
+                        <button type="button" class="btn btn-sm btn-success" id="addProdRow"><i
+                                class="fas fa-plus"></i></button>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </div>
+<script>
+    $('#addProductRow').on('click', function() {
+        alert('fine')
+        addProductRow();
+    });
+
+    function addProductRow() {
+        $('.product_details_row').first().clone().appendTo('.productBody');
+        $('.product_details_row').last().find('input').val('');
+        $('.product_details_row').last().find('select').val('');
+    };
+</script>

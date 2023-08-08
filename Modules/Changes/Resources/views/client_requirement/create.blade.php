@@ -186,9 +186,100 @@
                         </div>
                     </div>
                     {{-- create a responsive table --}}
-                    <div class="row">
-                        <div id="logical-table" class="md-col-12 col-12"></div>
-                        <div id="physical-table" class="md-col-12 col-12"></div>
+                    <div class="row mt-3">
+                        <div id="logical-table" class="md-col-12 col-12" style="display:none">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="7">Product Details</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Product</th>
+                                            <th>Prev Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Plan</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="productBody">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="physical-table" class="md-col-12 col-12" style="display:none">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="7">Existing Link</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Link Type</th>
+                                            <th>Method</th>
+                                            <th>Vendor</th>
+                                            <th>BTS/POP</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="connectivityBody">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div id="logical-table-edit" class="md-col-12 col-12" style="display: none">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="7">New Product Details</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Product</th>
+                                            <th>Prev Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Plan</th>
+                                            <th>Remarks</th>
+                                            <th>
+                                                <button type="button" class="btn btn-sm btn-success addProductEdit"
+                                                    onclick="addProductEdit()"><i class="fas fa-plus"></i></button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="productEditBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div id="physical-table-edit" class="md-col-12 col-12" style="display: none">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="7">New / Update Connectivity Link</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Link Type</th>
+                                            <th>Method</th>
+                                            <th>Capacity(%)</th>
+                                            <th>Uptime Reg/SLA</th>
+                                            <th>Vendor</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="connectivityEditBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <button
                         class="py-2 btn btn-success float-right">{{ !empty($client_request->id) ? 'Update' : 'Save' }}</button>
@@ -200,45 +291,41 @@
 
         @section('script')
             <script>
-                // let products;
-                // $(document).on('change', '.category_id', function() {
-                //     console.log('fine')
-                //     var category_id = $(this).val();
-                //     var row = $(this).closest('tr').find('.product_id');
-                //     $.ajax({
-                //         url: "{{ route('get-products') }}",
-                //         data: {
-                //             category_id: category_id,
-                //             _token: "{{ csrf_token() }}"
-                //         },
-                //         success: function(data) {
-                //             products = data;
-                //             let html = '<option value="">Select Product</option>';
-                //             $.each(data, function(key, value) {
-                //                 html += '<option value="' + value.id + '">' + value.name + '</option>';
-                //             });
-                //             row.html(html);
-                //         }
-                //     });
-                // });
-
-                /* $(document).on('change', '.product_id', function() {
-                    var product_id = $(this).val();
-                    var row = $(this).closest('tr').find('.unit');
-                    products.find(function(product) {
-                        if (product.id == product_id) {
-                            row.val(product.unit);
-                        }
-                    });
-                }) */
-
-                $('#addProductRow').on('click', function() {
-                    addProductRow();
-                });
-
-                $('#addConnectivityRow').on('click', function() {
-                    addConnectivityRow();
-                });
+                function addProductEdit() {
+                    let table_row = `
+                            <tr class="product_details_row">
+                                <td>
+                                    <select name="product_category[]" class="form-control product_category">
+                                        <option value="">Select Category</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="product[]" class="form-control product">
+                                        <option value="">Select Product</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="capacity[]" class="form-control capacity" value="">
+                                </td>
+                                <td>
+                                    <input type="text" name="unit[]" class="form-control unit" value="">
+                                </td>
+                                <td>
+                                    <input type="text" name="plan[]" class="form-control unit" value="">
+                                </td>
+                                <td>
+                                    <input type="text" name="remarks[]" class="form-control remarks" value="">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-danger removeProductRow"><i class="fas fa-minus"></i></button>
+                                </td>
+                            </tr>
+                        `;
+                    $('.productEditBody').append(table_row);
+                };
 
                 function addProductRow() {
                     $('.product_details_row').first().clone().appendTo('.productBody');
@@ -285,6 +372,8 @@
                 $('#fr_no').on('change', function() {
                     var fr_no = $(this).val();
                     var client_no = $('#client_id').val();
+                    var logical_table = '';
+                    var physical_table = '';
                     $.ajax({
                         url: "{{ route('getLogicalConnectivityData') }}",
                         data: {
@@ -293,10 +382,124 @@
                             _token: "{{ csrf_token() }}"
                         },
                         success: function(data) {
-                            $('#logical-table').html(data.logical_table_data);
-                            $('#physical-table').html(data.physical_table_data);
+                            console.log(data)
+                            $.each(data.logical_connectivity.lines, function(key, value) {
+                                logical_table += `
+                                        <tr class="product_details_row">
+                                            <td>
+                                                <select name="product_category[]" class="form-control product_category">
+                                                    <option value="">Select Category</option>
+                                                    @foreach ($categories as $category)
+                                                        <option value="{{ $category->id }}" ${value.product_category === "{{ $category->name }}" ? 'selected' : ''}>{{ $category->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select name="product[]" class="form-control product">
+                                                    <option value="">Select Product</option>
+                                                    @foreach ($products->where('category_id') as $product)
+                                                        <option value="{{ $product->id }}" ${value.product_id == {{ $product->id }} ? 'selected' : ''}>{{ $product->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="capacity[]" class="form-control capacity" value="${value.quantity}">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="unit[]" class="form-control unit" value="${value.product.unit}">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="plan[]" class="form-control plan" value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="remarks[]" class="form-control remarks" value="${value.remarks}">
+                                            </td>
+                                        </tr>
+                                    `;
+                            });
+                            $('.productBody').html(logical_table);
+                            $.each(data.physical_connectivity.lines, function(key, value) {
+                                physical_table += `
+                                        <tr class="connectivity_details_row">
+                                            <td>
+                                                <input type="text" name="link_type[]" class="form-control link_type" value="${value.link_type}">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="method[]" class="form-control method" value="${value.method}">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="vendor[]" class="form-control vendor" value="${value?.connectivity_link?.vendor?.name}">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="bts_pop[]" class="form-control bts_pop" value="${value.pop}">
+                                            </td>
+                                            <td>
+                                                <a href="#" title="Edit" class="btn btn-sm btn-outline-warning physicalLinkEdit"><i class="fas fa-pen"></i></a>
+                                            </td>
+                                        </tr>
+                                    `;
+                            });
+                            $('.connectivityBody').html(physical_table);
+                            $('#logical-table').fadeIn();
+                            $('#physical-table').fadeIn();
+                            $('#logical-table-edit').fadeIn();
+                            $('#physical-table-edit').fadeIn();
                         }
                     });
+                });
+
+                $(document).on('change', '.product_category', function(e) {
+                    let category_id = $(this).val();
+                    console.log(category_id)
+                    let all_products = {!! json_encode($products) !!};
+                    let products = all_products.filter(product => product.category_id == category_id);
+                    console.log(products)
+                    let html = '<option value="">Select Product</option>';
+                    products.forEach(product => {
+                        html += `<option value="${product.id}">${product.name}</option>`;
+                    });
+                    $(this).closest('tr').find('.product').html(html);
+                });
+
+                $(document).on('change', '.product', function(e) {
+                    let products = {!! json_encode($products) !!};
+                    let product_id = $(this).val();
+                    let product = products.find(product => product.id == product_id);
+                    $(this).closest('tr').find('.unit').val(product.unit);
+                });
+
+                $(document).on('click', '.physicalLinkEdit', function(e) {
+                    e.preventDefault();
+                    let link_type = $(this).closest('tr').find('.link_type').val();
+                    let method = $(this).closest('tr').find('.method').val();
+                    let html = `
+                            <tr class="connectivity_details_row">
+                                <td>
+                                    <input type="text" name="link_type[]" class="form-control link_type" value="${link_type}">
+                                </td>
+                                <td>
+                                    <input type="text" name="method[]" class="form-control method" value="${method}">
+                                </td>
+                                <td>
+                                    <input type="text" name="connectivity_capacity[]" class="form-control connectivity_capacity" value="">
+                                </td>
+                                <td>
+                                    <input type="text" name="uptime_req[]" class="form-control uptime_req" value="">
+                                </td>
+                                <td>
+                                    <select name="vendor_id[]" class="form-control vendor_id">
+                                        <option value="">Select Vendor</option>
+                                        @foreach ($vendors as $vendor)
+                                            <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-danger removeConnectivityRow"><i class="fas fa-minus"></i></button>
+                                </td>
+                            </tr>
+                        `;
+                    $('.connectivityEditBody').append(html);
                 });
 
 

@@ -6,6 +6,9 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Changes\Entities\ClientRequirement;
+use Modules\Sales\Entities\Category;
+use Modules\Sales\Entities\Product;
+use Modules\Sales\Entities\Vendor;
 
 class ClientRequirementController extends Controller
 {
@@ -25,7 +28,10 @@ class ClientRequirementController extends Controller
      */
     public function create()
     {
-        return view('changes::client_requirement.create');
+        $products = Product::all();
+        $categories = Category::all();
+        $vendors = Vendor::all();
+        return view('changes::client_requirement.create', compact('products', 'categories', 'vendors'));
     }
 
     /**
