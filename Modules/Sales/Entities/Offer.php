@@ -47,4 +47,9 @@ class Offer extends Model
     {
         return $this->belongsTo(Costing::class, 'mq_no', 'mq_no');
     }
+
+    public function sale()
+    {
+        return $this->hasOne(Sale::class );
+    }
 }

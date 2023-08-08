@@ -507,7 +507,7 @@ class SaleController extends Controller
     }
 
     public function clientOffer($mq_no = null)
-    {
+    { 
         $offer = Offer::firstWhere('mq_no', $mq_no);
 
         $offerData = $offer->offerDetails->map(function ($item) {
