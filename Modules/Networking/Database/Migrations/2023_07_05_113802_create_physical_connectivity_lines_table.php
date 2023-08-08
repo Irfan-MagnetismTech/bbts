@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('method')->nullable();
             $table->string('pop')->nullable();
             $table->string('ldp')->nullable();
-            $table->string('link_id')->nullable();
+            $table->string('bbts_link_id')->nullable();
             $table->string('device_ip')->nullable();
             $table->string('port')->nullable();
             $table->string('vlan')->nullable();
