@@ -521,13 +521,19 @@ class SaleController extends Controller
             $item->total_product = $item->costing->costingProducts->sum(function ($item) {
                 return $item->rate * $item->quantity;
             });
-            $profit_percentage = $item->profit_percentage = (($item->total_offer_mrc / $item->total_product) * 100) - 100;
+            $offer_mrc = $item->total_offer_mrc ?? 0;
+            $product_amount = $item->offer_product_amount ?? 0;
+            $management_cost = $item->offer_management_cost ?? 0;
+            $total_mrc = $offer_mrc + $product_amount + $management_cost;
+            $profit_percentage = $item->profit_percentage = (($total_mrc / $item->total_product) * 100) - 100;
             $item->costing->costingProducts->map(function ($item) use ($profit_percentage) {
                 $item->product_price = ($item->rate * ($profit_percentage / 100)) + $item->rate;
                 return $item;
             });
+            // dump($item->toArray());
             return $item;
-        });
+        }); 
+        // dd();
 
         $costingProductEquipments = $offer->costing->costingProductEquipments->where('ownership', 'Client');
         $costingLinkEquipments = $offer->costing->costingLinkEquipments->where('ownership', 'Client');
