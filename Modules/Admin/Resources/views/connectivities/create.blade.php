@@ -147,7 +147,6 @@ legend {
                                     
                                     <x-input-box colGrid="12" name="from_location" label="From Location" value="{{$from_location}}" placeholder="POP"/>
                                     <input type="hidden" id="from_pop_id" name="from_pop_id" value="{{$from_pop_id}}">
-                                    
                                     <x-input-box colGrid="12" name="from_site" label="From Site" value="{{$from_site}}" placeholder="LDP"/> 
 
                                 </div>
@@ -295,7 +294,8 @@ legend {
                 });
       
                 $('.link_type').on('change',function(){
-                    $('#link_name').val('');
+                    emptyField();
+                    changeInput();
                 })
                 $('#link_name').on('keyup', function() {
                     if($('input[name="link_type"]:checked').val() === 'existing'){
@@ -398,18 +398,27 @@ legend {
                 
             })
             $('#link_type').on('change',function(){
-                emptyField();
+               
             })
-            $('.link_from').on('change',function(){
-                if($('input[name="link_from"]:checked').val() === 'bbts'){
-
+            $(document).ready(function(){
+                @if (!empty($connectivity->id))
+                    changeInput();
+                @endif
+            })
+            function changeInput(){
+                if($('input[name="link_type"]:checked').val() == 'new'){
+                    $('#bbts_link_id').parent().addClass('d-none');
                 }else{
-
+                    $('#bbts_link_id').parent().removeClass('d-none');
                 }
-            })
+            }
             function emptyField(){
                             $('#division_id').val(null);
                             $('#from_location').val(null).attr('value',null);
+                            $('#bbts_link_id').val(null).attr('value',null);
+                            $('#vendor').val(null).attr('value',null);
+                            $('#vendor_id').val(null).attr('value',null);
+                            $('#link_name').val(null).attr('value',null);
                             $('#from_site').val(null).attr('value',null);
                             $('#district_id').val(null).attr('value',null);
                             $('#thana_id').val(null).attr('value',null);
