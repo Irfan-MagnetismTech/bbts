@@ -200,7 +200,6 @@ class SaleController extends Controller
                     'price'             => $raw['price'][$key][$key1],
                     'total_price'       => $raw['total_price'][$key][$key1],
                     'vat_amount'        => $raw['vat_amount'][$key][$key1],
-                    'vat_percent'       => $raw['vat_percent'][$key][$key1],
                     'sale_id'           => $saleDetail[$key]['sale_id'],
                     'sale_detail_id'    => $saleDetail[$key]['id'],
                     'created_at'        => now(),
