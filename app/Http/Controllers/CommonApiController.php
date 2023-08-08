@@ -29,6 +29,8 @@ use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\Sale;
 use Modules\Sales\Entities\SaleDetail;
 use Modules\Sales\Entities\Vendor;
+use Modules\Sales\Entities\Product;
+use Modules\Sales\Entities\Category;
 
 class CommonApiController extends Controller
 {
@@ -454,21 +456,21 @@ class CommonApiController extends Controller
 
     public function getLogicalConnectivityData()
     {
-        $logicalConnectivity = LogicalConnectivity::with('lines')->where('client_no', request('client_no'))->where('fr_no', request('fr_no'))->orderBy('sale_id', 'desc')->first();
-        $physicalConnectivity = PhysicalConnectivity::with('lines')->where('client_no', request('client_no'))->where('fr_no', request('fr_no'))->orderBy('sale_id', 'desc')->first();
-        $logical_table_data = '';
-        $physical_table_data = '';
-        if ($logicalConnectivity) {
-            $logical_table_data = view('changes::client_requirement.logical_connectivity.table', compact('logicalConnectivity'))->render();
-        }
+        $logicalConnectivity = LogicalConnectivity::query()
+            ->with('lines.product')
+            ->whereClientNoAndFrNo(request('client_no'), request('fr_no'))
+            ->orderBy('sale_id', 'desc')
+            ->first();
 
-        if ($physicalConnectivity) {
-            $physical_table_data = view('changes::client_requirement.physical_connectivity.table', compact('physicalConnectivity'))->render();
-        }
+        $physicalConnectivity = PhysicalConnectivity::query()
+            ->with('lines.connectivityLink.vendor')
+            ->whereClientNoAndFrNo(request('client_no'), request('fr_no'))
+            ->orderBy('sale_id', 'desc')
+            ->first();
+
         return response()->json([
             'logical_connectivity' => $logicalConnectivity,
-            'logical_table_data' => $logical_table_data,
-            'physical_table_data' => $physical_table_data,
+            'physical_connectivity' => $physicalConnectivity,
         ]);
     }
 }
