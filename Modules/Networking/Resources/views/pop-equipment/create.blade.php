@@ -7,7 +7,7 @@
     $form_method = !empty($err) ? 'PUT' : 'POST';
     
     $date = old('date', !empty($err) ? $err->date : null);
-    $type = old('date', !empty($err) ? $err->type : null);
+    $type = old('type', !empty($err) ? $err->type : null);
     $purpose = old('purpose', !empty($err) ? $err->purpose : null);
     $assigned_person = old('assigned_person', !empty($err) ? $err->assigned_person : null);
     $reason_of_inactive = old('reason_of_inactive', !empty($err) ? $err->reason_of_inactive : null);
