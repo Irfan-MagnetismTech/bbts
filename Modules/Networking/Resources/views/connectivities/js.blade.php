@@ -4,7 +4,7 @@
         autoclose: true,
         todayHighlight: true,
         showOtherMonths: true
-    }).datepicker("setDate", new Date());
+    });
 
     /* Adds and removes quantity row on click */
     $("#physical_connectivity")

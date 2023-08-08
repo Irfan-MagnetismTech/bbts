@@ -21,12 +21,6 @@
     Client Connectivities
 @endsection
 
-
-@section('breadcrumb-button')
-    <a href="{{ route('physical-connectivities.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
-            class="fa fa-plus"></i></a>
-@endsection
-
 @section('sub-title')
     Total: {{ count($salesDetails) }}
 @endsection
@@ -43,7 +37,7 @@
                     <th>Connectivity Point</th>
                     <th>New/Existing</th>
                     <th>Delivery Date</th>
-                    <th>Commissioning Date</th> 
+                    <th>Commissioning Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -56,28 +50,28 @@
                         <td class="noWrapStyle">{{ $details->frDetails->connectivity_point }}</td>
                         <td></td>
                         <td>{{ $details->delivery_date }}</td>
-                        <td></td>   
+                        <td></td>
                         <td>
                             <span class="badge badge-info">
                                 <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id]) }}"
                                     class="text-white" target="_blank">Pyhsical Connectivity</a>
-                            </span> 
+                            </span>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-internet-connectivities.create', ['sale_id' => $details->sale_id]) }}"
                                     class="text-white" target="_blank">Internet</a>
-                            </span> 
+                            </span>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-vas-connectivities.create', ['sale_id' => $details->sale_id]) }}"
                                     class="text-white" target="_blank">VAS</a>
-                            </span> 
+                            </span>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-data-connectivities.create', ['sale_id' => $details->sale_id]) }}"
                                     class="text-white" target="_blank">Data</a>
-                            </span> 
+                            </span>
                             <span class="badge badge-info">
-                                <a href="{{ url("networking/connectivities/create/$details->fr_no") }}"
-                                    class="text-white" target="_blank">Details</a>
-                            </span> 
+                                <a href="{{ url("networking/connectivities/create/$details->fr_no") }}" class="text-white"
+                                    target="_blank">Details</a>
+                            </span>
                         </td>
                     </tr>
                 @endforeach
