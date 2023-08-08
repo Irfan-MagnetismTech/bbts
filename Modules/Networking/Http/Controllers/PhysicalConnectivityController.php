@@ -10,6 +10,7 @@ use Modules\Sales\Entities\Planning;
 use Modules\SCM\Entities\ScmChallan;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Admin\Entities\ConnectivityLink;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Termwind\Components\Dd;
@@ -35,7 +36,8 @@ class PhysicalConnectivityController extends Controller
      */
     public function create()
     {
-        return view('networking::physical-connectivities.create');
+        $connectivity_links = ConnectivityLink::latest()->get();
+        return view('networking::physical-connectivities.create', compact('connectivity_links'));
     }
 
     /**
