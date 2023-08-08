@@ -47,6 +47,9 @@ class ConnectivityLinkController extends Controller
         try {
             DB::beginTransaction();
             $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total', 'status', 'link_from');
+            if ($request->link_type == 'new') {
+                $connectivity_link['bbts_link_id'] = $this->generateUniqueId(ConnectivityLink::class, 'LINK');
+            }
             ConnectivityLink::create($connectivity_link);
             DB::commit();
             return redirect()->route('connectivity.index')->with('message', 'Data has been created successfully');
@@ -88,7 +91,7 @@ class ConnectivityLinkController extends Controller
     {
         try {
             DB::beginTransaction();
-            $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'bbts_link_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total', 'status', 'link_from');
+            $connectivity_link = $request->only('division_id', 'from_location', 'from_pop_id', 'to_pop_id', 'vendor_id', 'link_name', 'link_type', 'reference', 'to_location', 'from_site', 'district_id', 'to_site', 'thana_id', 'gps', 'teck_type', 'vendor_link_id', 'vendor_vlan', 'port', 'date_of_commissioning', 'date_of_termination', 'activation_date', 'remarks', 'capacity_type', 'existing_capacity', 'new_capacity', 'terrif_per_month', 'amount', 'vat_percent', 'vat', 'total', 'status', 'link_from');
             $connectivity->update($connectivity_link);
             DB::commit();
             return redirect()->route('connectivity.index')->with('message', 'Data has been updated successfully');
@@ -105,8 +108,13 @@ class ConnectivityLinkController extends Controller
      */
     public function destroy(ConnectivityLink $connectivity)
     {
-        $connectivity->delete();
-        return redirect()->back()->with('success', 'Data has been updated successfully');
+        try {
+            $connectivity->delete();
+            return redirect()->back()->with('success', 'Data has been updated successfully');
+        } catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($err->getMessage());
+        }
     }
 
     /**
@@ -208,5 +216,21 @@ class ConnectivityLinkController extends Controller
                 ];
             });
         return response()->json($vendors);
+    }
+
+
+    public function generateUniqueId($model, $prefix): string
+    {
+        $lastIndentData = $model::where('link_type', 'new')->latest()->first();
+        if ($lastIndentData) {
+            if (now()->format('Y') != date('Y', strtotime($lastIndentData->created_at))) {
+                return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;
+            } else {
+                $data = explode('-', $lastIndentData->bbts_link_id);
+                return strtoupper($prefix) . '-' . now()->format('Y') . '-' . $data[2] + 1;
+            }
+        } else {
+            return strtoupper($prefix) . '-' . now()->format('Y') . '-' . 1;
+        }
     }
 }
