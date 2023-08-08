@@ -20,9 +20,13 @@
 
 @php
     $is_old = old('commissioning_Date') ? true : false;
-    $form_heading = !empty($logicalConnectivityData) ? 'Update' : 'Add';
-    $form_url = !empty($logicalConnectivityData) ? route('errs.update', $logicalConnectivityData->id) : route('errs.store');
-    $form_method = !empty($logicalConnectivityData) ? 'PUT' : 'POST';
+    $form_heading = !empty($connectivity) ? 'Update' : 'Add';
+    $form_url = !empty($connectivity) ? '' : route('connectivities.store');
+    $form_method = !empty($connectivity) ? 'PUT' : 'POST';
+    
+    $sale_id = old('sale_id', !empty($connectivity) ? $connectivity->sale_id : $salesDetail->sale_id);
+    $commissioning_date = old('commissioning_date', !empty($connectivity) ? $connectivity->commissioning_date : today()->format('d-m-Y'));
+    
 @endphp
 
 @section('breadcrumb-button')
@@ -38,16 +42,18 @@
 
 @section('content')
     <div class="">
-        <form
-            action="{{ !empty($physicalConnectivity) ? route('physical-connectivities.update', @$physicalConnectivity->id) : route('physical-connectivities.store') }}"
-            method="post" class="custom-form">
+        <form action="{{ $form_url }}" method="{{ $form_method }}" class="custom-form">
             @csrf
             <br>
             <div class="row">
+                <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
+
                 <x-input-box colGrid="4" name="client_name" value="{{ $salesDetail->client->client_name }}"
                     label="Client Name" attr="disabled" />
+                <input type="hidden" value="{{ $salesDetail->client->client_no }}" name="client_no">
                 <x-input-box colGrid="4" name="client_type" value="{{ $salesDetail->frDetails->connectivity_point }}"
                     label="Connectivity Point" attr="disabled" />
+                <input type="hidden" value="{{ $salesDetail->fr_no }}" name="fr_no">
                 <x-input-box colGrid="4" name="client_type" value="{{ $salesDetail->frDetails->contact_name }}"
                     label="Contact Person" attr="disabled" />
                 <x-input-box colGrid="4" name="client_type" value="{{ $salesDetail->frDetails->contact_number }}"
@@ -58,20 +64,24 @@
                     label="Email" attr="disabled" />
                 <x-input-box colGrid="4" name="client_type" value="{{ $salesDetail->frDetails->lat }}" label="Latitude"
                     attr="disabled" />
-                <x-input-box colGrid="4" name="client_type" value="{{ $salesDetail->frDetails->long }}" label="Longitude"
-                    attr="disabled" />
+                <x-input-box colGrid="4" name="client_type" value="{{ $salesDetail->frDetails->long }}"
+                    label="Longitude" attr="disabled" />
                 <div class="form-group col-4">
                     <div class="form-item">
-                        <select class="form-control select2" name="attendant_engineer" id="attendant_engineer" required>
+                        <select class="form-control select2" name="attendant_engineer" id="attendant_engineer" required
+                            @if (!empty($connectivity)) disabled @endif>
                             <option value="">Select Engineer</option>
                             @foreach ($employees as $employee)
-                                <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                <option value="{{ $employee->id }}"
+                                    @if (!empty($connectivity->attendant_engineer)) @selected($connectivity->attendant_engineer == $employee->id) @endif>
+                                    {{ $employee->name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-                <x-input-box colGrid="4" name="commissioning_Date" class="date" value=""
-                    label="Commissioning Date" />
+                <x-input-box colGrid="4" name="commissioning_date" class="date" value="{{ $commissioning_date }}"
+                    label="Commissioning Date" attr="{{ !empty($connectivity) ? 'disabled' : '' }}" />
             </div>
 
             <h5 class="text-center p-2">NETWORK INFORMATION</h5>
@@ -574,13 +584,15 @@
                 </div>
             @endif
 
-            <div class="row">
-                <div class="offset-md-4 col-md-4 mt-2">
-                    <div class="input-group input-group-sm ">
-                        <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+            @if (empty($connectivity))
+                <div class="row">
+                    <div class="offset-md-4 col-md-4 mt-2">
+                        <div class="input-group input-group-sm ">
+                            <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </form>
     </div>
 
