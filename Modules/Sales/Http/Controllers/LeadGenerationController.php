@@ -149,12 +149,13 @@ class LeadGenerationController extends Controller
     public function getClientInformationForProfile(Request $request)
     {
         $main_leads = [];
-        //get client where match the request data
-        $lead_generations = LeadGeneration::where('client_no', 'like', '%' . $request->client_no . '%')->get();
+        //get client where match the request data 
+        $lead_generations = LeadGeneration::where('client_name', 'like', '%' . $request->client_name . '%')->orWhere('client_no', 'like', '%' . $request->client_name . '%')->get();
         foreach ($lead_generations as $lead_generation) {
             $main_leads[] = [
-                'label' => $lead_generation->client_no,
-                'value' => $lead_generation->client_name,
+                'label' => $lead_generation->client_name . ' ( ' . $lead_generation->client_no . ' )',
+                'client_name' => $lead_generation->client_name,
+                'value' => $lead_generation->client_no,
                 'lead_generation_id' => $lead_generation->id,
                 'location' => $lead_generation->address,
                 'division' => $lead_generation->division_id,
