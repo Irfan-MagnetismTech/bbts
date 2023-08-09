@@ -62,110 +62,102 @@
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="date" id="date" class="form-control" value="">
-                                <label for="date">Date <span class="text-danger">*</span></label>
+                                <input type="text" name="name_of_the_link" id="name_of_the_link" class="form-control" value="">
+                                <label for="name_of_the_link">Name Of The Link <span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="activation_date" id="activation_date" class="form-control"
+                                <input type="text" name="date" id="date" class="form-control"
                                     value="">
-                                <label for="activation_date">Activation Date <span class="text-danger">*</span></label>
+                                <label for="date">Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_id" id="client_id" class="form-control" value="">
-                                <label for="client_id">Client ID <span class="text-danger">*</span></label>
+                                <input type="text" name="mq_id" id="mq_id" class="form-control" value="">
+                                <label for="mq_id">MQ ID<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_name" id="client_name" class="form-control"
+                                <input type="text" name="fr_id" id="fr_id" class="form-control"
                                     value="" readonly>
-                                <label for="client_name">Client Name <span class="text-danger">*</span></label>
+                                <label for="fr_id">FR ID<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="date" id="date" class="form-control" value="">
-                                <label for="date">Date <span class="text-danger">*</span></label>
+                                <input type="text" name="client_gps" id="client_gps" class="form-control" value="">
+                                <label for="client_gps">Client GPS<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="activation_date" id="activation_date" class="form-control"
+                                <input type="text" name="requirement" id="requirement" class="form-control"
                                     value="">
-                                <label for="activation_date">Activation Date <span class="text-danger">*</span></label>
+                                <label for="requirement">Requirement<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_id" id="client_id" class="form-control" value="">
-                                <label for="client_id">Client ID <span class="text-danger">*</span></label>
+                                <input type="text" name="division" id="division" class="form-control" value="">
+                                <label for="division">Division<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_name" id="client_name" class="form-control"
+                                <input type="text" name="district" id="district" class="form-control"
                                     value="" readonly>
-                                <label for="client_name">Client Name <span class="text-danger">*</span></label>
+                                <label for="district">District<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="date" id="date" class="form-control" value="">
-                                <label for="date">Date <span class="text-danger">*</span></label>
+                                <input type="text" name="thana" id="thana" class="form-control" value="">
+                                <label for="thana">Thana<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="activation_date" id="activation_date" class="form-control"
+                                <input type="text" name="location" id="location" class="form-control"
                                     value="">
-                                <label for="activation_date">Activation Date <span class="text-danger">*</span></label>
+                                <label for="location">Location<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_id" id="client_id" class="form-control" value="">
-                                <label for="client_id">Client ID <span class="text-danger">*</span></label>
+                                <input type="text" name="surevey_attached" id="surevey_attached" class="form-control" value="">
+                                <label for="surevey_attached">Survey Attached<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_name" id="client_name" class="form-control"
+                                <input type="text" name="contact_name" id="contact_name" class="form-control"
                                     value="" readonly>
-                                <label for="client_name">Client Name <span class="text-danger">*</span></label>
+                                <label for="contact_name">Contact Name <span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="date" id="date" class="form-control" value="">
-                                <label for="date">Date <span class="text-danger">*</span></label>
+                                <input type="text" name="designation" id="designation" class="form-control" value="">
+                                <label for="designation">Designation <span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="activation_date" id="activation_date" class="form-control"
+                                <input type="text" name="contact_no" id="contact_no" class="form-control"
                                     value="">
-                                <label for="activation_date">Activation Date <span class="text-danger">*</span></label>
+                                <label for="contact_no">Contact No<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <select name="fr_no" id="fr_no" class="form-control">
+                                <select name="remarks" id="remarks" class="form-control">
                                     <option value="">Select FR No</option>
                                 </select>
-                                <label for="fr_no">FR No <span class="text-danger">*</span></label>
+                                <label for="remarks">Remarks <span class="text-danger">*</span></label>
                             </div>
-                        </div>
-                        {{-- file upload --}}
-                        <div class="md-col-3 col-3">
-                            <div class="form-item">
-                                <input type="text" name="reason" id="reason" class="form-control">
-                                <label for="fr_no">Reason <span class="text-danger">*</span></label>
-                            </div>
-
                         </div>
                     </div>
                     <div class="row mt-4">
@@ -176,7 +168,7 @@
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
-                                    <span>Temporary-Inactive</span>
+                                    <span>Method Change</span>
                                 </label>
                             </div>
                             <div class="checkbox-fade fade-in-primary">
@@ -185,7 +177,7 @@
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
-                                    <span>Permanent Inactive</span>
+                                    <span>Redundant Link</span>
                                 </label>
                             </div>
                             <div class="checkbox-fade fade-in-primary">
@@ -194,15 +186,564 @@
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
-                                    <span>Re-Inactive</span>
+                                    <span>Shifting</span>
                                 </label>
                             </div>
                         </div>
                     </div>
                     {{-- create a responsive table --}}
                     <div class="row">
-                        <div id="logical-table" class="md-col-12 col-12"></div>
-                        <div id="physical-table" class="md-col-12 col-12"></div>
+                        <div class="col-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <th>Product/Service</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Price</th>
+                                        <th>Total Price</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="product_name[][]" class="form-control text-center"
+                                                        id="service_name" readonly value="">
+                                                    <input type="hidden" name="product_id[][]" class="form-control text-center"
+                                                        id="service" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td> 
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="quantity[][]" class="form-control text-right"
+                                                        id="quantity" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="unit[][]" class="form-control text-center"
+                                                        id="unit" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="rate[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td class="d-none">
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="price[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="total_price[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="product_name[][]" class="form-control text-center"
+                                                        id="service_name" readonly value="">
+                                                    <input type="hidden" name="product_id[][]" class="form-control text-center"
+                                                        id="service" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td> 
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="quantity[][]" class="form-control text-right"
+                                                        id="quantity" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="unit[][]" class="form-control text-center"
+                                                        id="unit" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="rate[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td class="d-none">
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="price[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="total_price[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <th>Product/Service</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Price</th>
+                                        <th>Total Price</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="product_name[][]" class="form-control text-center"
+                                                        id="service_name" readonly value="">
+                                                    <input type="hidden" name="product_id[][]" class="form-control text-center"
+                                                        id="service" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td> 
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="quantity[][]" class="form-control text-right"
+                                                        id="quantity" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="unit[][]" class="form-control text-center"
+                                                        id="unit" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="rate[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td class="d-none">
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="price[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="total_price[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="product_name[][]" class="form-control text-center"
+                                                        id="service_name" readonly value="">
+                                                    <input type="hidden" name="product_id[][]" class="form-control text-center"
+                                                        id="service" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td> 
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="quantity[][]" class="form-control text-right"
+                                                        id="quantity" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="unit[][]" class="form-control text-center"
+                                                        id="unit" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="rate[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td class="d-none">
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="price[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="total_price[][]"
+                                                        class="form-control text-right" readonly value="">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <th>Product/Service</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Price</th>
+                                <th>Total Price</th>
+                                <th>Product/Service</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Price</th>
+                                <th>Total Price</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="product_name" class="form-control text-center"
+                                                id="service_name" readonly value="">
+                                            <input type="hidden" name="product_id" class="form-control text-center"
+                                                id="service" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td> 
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="quantity" class="form-control text-right"
+                                                id="quantity" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center"
+                                                id="unit" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td class="d-none">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="product_name" class="form-control text-center"
+                                                id="service_name" readonly value="">
+                                            <input type="hidden" name="product_id" class="form-control text-center"
+                                                id="service" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td> 
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="quantity" class="form-control text-right"
+                                                id="quantity" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center"
+                                                id="unit" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td class="d-none">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="product_name" class="form-control text-center"
+                                                id="service_name" readonly value="">
+                                            <input type="hidden" name="product_id" class="form-control text-center"
+                                                id="service" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td> 
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="quantity" class="form-control text-right"
+                                                id="quantity" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center"
+                                                id="unit" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td class="d-none">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="product_name" class="form-control text-center"
+                                                id="service_name" readonly value="">
+                                            <input type="hidden" name="product_id" class="form-control text-center"
+                                                id="service" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td> 
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="quantity" class="form-control text-right"
+                                                id="quantity" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center"
+                                                id="unit" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td class="d-none">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <th>Product/Service</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Price</th>
+                                <th>Total Price</th>
+                                <th>Product/Service</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th>Price</th>
+                                <th>Total Price</th>
+                                <th>Total Price</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="product_name" class="form-control text-center"
+                                                id="service_name" readonly value="">
+                                            <input type="hidden" name="product_id" class="form-control text-center"
+                                                id="service" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td> 
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="quantity" class="form-control text-right"
+                                                id="quantity" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center"
+                                                id="unit" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td class="d-none">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="product_name" class="form-control text-center"
+                                                id="service_name" readonly value="">
+                                            <input type="hidden" name="product_id" class="form-control text-center"
+                                                id="service" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td> 
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="quantity" class="form-control text-right"
+                                                id="quantity" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center"
+                                                id="unit" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td class="d-none">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="product_name" class="form-control text-center"
+                                                id="service_name" readonly value="">
+                                            <input type="hidden" name="product_id" class="form-control text-center"
+                                                id="service" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td> 
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="quantity" class="form-control text-right"
+                                                id="quantity" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center"
+                                                id="unit" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td class="d-none">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="product_name" class="form-control text-center"
+                                                id="service_name" readonly value="">
+                                            <input type="hidden" name="product_id" class="form-control text-center"
+                                                id="service" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td> 
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="quantity" class="form-control text-right"
+                                                id="quantity" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center"
+                                                id="unit" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td class="d-none">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" readonly value="">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <button
                         class="py-2 btn btn-success float-right">{{ !empty($client_request->id) ? 'Update' : 'Save' }}</button>
