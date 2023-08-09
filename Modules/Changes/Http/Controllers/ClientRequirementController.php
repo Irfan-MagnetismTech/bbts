@@ -36,7 +36,7 @@ class ClientRequirementController extends Controller
         $products = Product::all();
         $categories = Category::all();
         $vendors = Vendor::all();
-        return view('changes::client_requirement.create');
+        return view('changes::client_requirement.create', compact('products', 'categories', 'vendors'));
     }
 
     /**
