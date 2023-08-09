@@ -4,12 +4,8 @@ namespace Modules\Changes\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\Sales\Entities\Vendor;
-use Modules\Sales\Entities\Product;
-use Modules\Sales\Entities\Category;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Changes\Entities\ClientRequirement;
-use Modules\Sales\Entities\ConnectivityRequirement;
 
 class ClientRequirementController extends Controller
 {
@@ -19,8 +15,8 @@ class ClientRequirementController extends Controller
      */
     public function index()
     {
-        $connectivity_requirements = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails', 'lead_generation')->unmodified()->latest()->get();
-        return view('changes::try.index', compact('connectivity_requirements'));
+        $client_requirements = ClientRequirement::all();
+        return view('changes::client_requirements.index', compact('client_requirements'));
     }
 
     /**
@@ -29,7 +25,7 @@ class ClientRequirementController extends Controller
      */
     public function create()
     {
-        return view('changes::try.create');
+        return view('changes::client_requirement.create');
     }
 
     /**
