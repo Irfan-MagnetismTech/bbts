@@ -967,8 +967,8 @@
             // var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
             var product_total = parseInt(product_operation_cost) + parseInt(product_price);
             $(this).closest('tr').find('.product_operation_cost_total').val(product_total);
-            $('#total_product_cost').val(product_total); 
-            $('#total_mrc').val(product_total); 
+            // $('#total_product_cost').val(product_total); 
+            // $('#total_mrc').val(product_total); 
             productPartialTotal();
         });
 
@@ -996,6 +996,9 @@
             $('#product_total_cost').val(product_total_cost);
 
             $('#total_with_operation_amount').val(total_with_operation);
+
+            $('#total_product_cost').val(total_with_operation); 
+            $('#total_mrc').val(total_with_operation);
 
         }
 
@@ -1187,12 +1190,13 @@
                 const $this = $(this);
                 const plan_link_total_mrc = planLinkMainRows.find(
                     '.plan_equipment_total_mrc').val() || 0;
+                alert(plan_link_total_mrc);
                 total_mrc += parseFloat(plan_link_total_mrc);
 
                 total_equipment_investment += parseFloat(planLinkMainRows.find(
                     '.plan_equipment_total_inv').val()) || 0;
 
-                total_plan_equipment_otc = parseFloat(planLinkMainRows.find(
+                total_plan_equipment_otc += parseFloat(planLinkMainRows.find(
                     '.plan_equipment_otc').val()) || 0;
 
             }); 
