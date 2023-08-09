@@ -118,6 +118,13 @@
                         class="pcoded-mcaret"></span></a>
             </li>
         </ul>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('client-requirement-modification.index') ? 'active' : null }}">
+                <a href="{{ route('client-requirement-modification.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Changes List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
     </li>
     <li class="pcoded-hasmenu {{ request()->routeIs(['survey.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">

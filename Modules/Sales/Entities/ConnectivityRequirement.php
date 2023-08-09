@@ -37,4 +37,14 @@ class ConnectivityRequirement extends Model
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'from_location', 'id');
     }
+
+    public function scopeUnmodified($query)
+    {
+        return $query->where('is_modified', 0);
+    }
+
+    public function scopeModified($query)
+    {
+        return $query->where('is_modified', 1);
+    }
 }
