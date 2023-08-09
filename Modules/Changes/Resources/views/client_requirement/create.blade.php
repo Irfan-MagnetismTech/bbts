@@ -24,6 +24,33 @@
 
 @section('content-grid', null)
 
+@section('style')
+    <style>
+        .custom-loader {
+            border: 20px solid #f3f3f3;
+            border-top: 20px solid #3498db;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            margin-top: 100px;
+            display: none;
+            /* Hide the loader by default */
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+@endsection
+
 @section('content')
 
     {!! Form::open([
@@ -49,7 +76,7 @@
                     <div class="row">
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_id" id="client_id" class="form-control" value="">
+                                <input type="text" name="client_no" id="client_no" class="form-control" value="">
                                 <label for="client_id">Client ID <span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -84,17 +111,42 @@
                         {{-- file upload --}}
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="reason" id="reason" class="form-control">
-                                <label for="fr_no">Reason <span class="text-danger">*</span></label>
+                                <input type="text" name="connectivity_remarks" id="connectivity_remarks"
+                                    class="form-control">
+                                <label for="fr_no">Remarks <span class="text-danger">*</span></label>
                             </div>
-
                         </div>
+                        <div class="md-col-3 col-3" style="display: none;">
+                            <div class="form-item">
+                                <input type="text" name="from_date" id="from_date" class="form-control">
+                                <label for="fr_no">From date <span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+                        <div class="md-col-3 col-3" style="display: none;">
+                            <div class="form-item">
+                                <input type="text" name="to_date" id="to_date" class="form-control">
+                                <label for="fr_no">To date <span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+                        <div class="md-col-3 col-3" style="display: none;">
+                            <div class="form-item">
+                                <input type="text" name="existing_mrc" id="existing_mrc" class="form-control">
+                                <label for="fr_no">Existing MRC <span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+                        <div class="md-col-3 col-3" style="display: none;">
+                            <div class="form-item">
+                                <input type="text" name="decrease_mrc" id="decrease_mrc" class="form-control">
+                                <label for="fr_no">Decrease MRC<span class="text-danger">*</span></label>
+                            </div>
+                        </div>connectivity_
                     </div>
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Temporary-Inactive">
+                                    <input type="checkbox" name="change_type[]" id="temporary_inactive"
+                                        value="Temporary-Inactive">
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -103,7 +155,7 @@
                             </div>
                             <div class="checkbox-fade fade-in-primar  y">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Permanent Inactive">
+                                    <input type="checkbox" name="change_type[]" value="Permanent-Inactive">
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -139,7 +191,7 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="MRC Decrease">
+                                    <input type="checkbox" name="change_type[]" id="mrc_decrease" value="MRC-Decrease">
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -186,98 +238,84 @@
                         </div>
                     </div>
                     {{-- create a responsive table --}}
-                    <div class="row mt-3">
-                        <div id="logical-table" class="md-col-12 col-12" style="display:none">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="7">Product Details</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Category</th>
-                                            <th>Product</th>
-                                            <th>Prev Quantity</th>
-                                            <th>Unit</th>
-                                            <th>Plan</th>
-                                            <th>Remarks</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="productBody">
+                    {{-- jquery loader --}}
+                    <div id="loader" class="custom-loader"></div>
+                    <div id="main-content">
+                        <div class="row mt-3">
+                            <div id="logical-table" class="md-col-12 col-12" style="display:none">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="7">Product Details</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Category</th>
+                                                <th>Product</th>
+                                                <th>Prev Quantity</th>
+                                                <th>Unit</th>
+                                                <th>Plan</th>
+                                                <th>Remarks</th>
+                                                <th>
+                                                    <button type="button" class="btn btn-sm btn-success addProductEdit"
+                                                        onclick="addProductEdit()"><i class="fas fa-plus"></i></button>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="productBody">
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                        <div id="physical-table" class="md-col-12 col-12" style="display:none">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="7">Existing Link</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Link Type</th>
-                                            <th>Method</th>
-                                            <th>Vendor</th>
-                                            <th>BTS/POP</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="connectivityBody">
+                            <div id="physical-table" class="md-col-12 col-12" style="display:none">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="7">Existing Link</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Link Type</th>
+                                                <th>Method</th>
+                                                <th>Vendor</th>
+                                                <th>BTS/POP</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="connectivityBody">
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div id="logical-table-edit" class="md-col-12 col-12" style="display: none">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="7">New Product Details</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Category</th>
-                                            <th>Product</th>
-                                            <th>Prev Quantity</th>
-                                            <th>Unit</th>
-                                            <th>Plan</th>
-                                            <th>Remarks</th>
-                                            <th>
-                                                <button type="button" class="btn btn-sm btn-success addProductEdit"
-                                                    onclick="addProductEdit()"><i class="fas fa-plus"></i></button>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="productEditBody">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div id="physical-table-edit" class="md-col-12 col-12" style="display: none">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="7">New / Update Connectivity Link</th>
-                                        </tr>
-                                        <tr>
-                                            <th>Link Type</th>
-                                            <th>Method</th>
-                                            <th>Capacity(%)</th>
-                                            <th>Uptime Reg/SLA</th>
-                                            <th>Vendor</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="connectivityEditBody">
-                                    </tbody>
-                                </table>
+                        <div class="row mt-3">
+                            <div id="physical-table-edit" class="md-col-12 col-12" style="display: none">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="7">New / Update Connectivity Link</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Link Type</th>
+                                                <th>Method</th>
+                                                <th>Capacity(%)</th>
+                                                <th>Uptime Reg/SLA</th>
+                                                <th>Vendor</th>
+                                                <th>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-success addConnectivityEdit"
+                                                        onclick="addConnectivityEdit()"><i
+                                                            class="fas fa-plus"></i></button>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="connectivityEditBody">
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -314,7 +352,7 @@
                                     <input type="text" name="unit[]" class="form-control unit" value="">
                                 </td>
                                 <td>
-                                    <input type="text" name="plan[]" class="form-control unit" value="">
+                                    <input type="text" name="plan[]" class="form-control plan" value="">
                                 </td>
                                 <td>
                                     <input type="text" name="remarks[]" class="form-control remarks" value="">
@@ -324,22 +362,62 @@
                                 </td>
                             </tr>
                         `;
-                    $('.productEditBody').append(table_row);
+                    $('.productBody').append(table_row);
                 };
 
-                function addProductRow() {
-                    $('.product_details_row').first().clone().appendTo('.productBody');
-                    $('.product_details_row').last().find('input').val('');
-                    $('.product_details_row').last().find('select').val('');
+                $(document).on('click', '.removeProductRow', function(e) {
+                    e.preventDefault();
+                    $(this).closest('tr').remove();
+                });
+
+                function addConnectivityEdit() {
+                    let table_row = `
+                            <tr class="connectivity_details_row">
+                                <td>
+                                    <select name="link_type[]" class="form-control link_type">
+                                        <option value="">Select Link Type</option>
+                                        <option value="Primary">Primary</option>
+                                        <option value="Secondary">Secondary</option>
+                                        <option value="Tertiary">Tertiary</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="method[]" class="form-control method">
+                                        <option value="">Select Method</option>
+                                        <option value="Fiber">Fiber</option>
+                                        <option value="Radio">Radio</option>
+                                        <option value="GSM">GSM</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="connectivity_capacity[]" class="form-control connectivity_capacity" value="">
+                                </td>
+                                <td>
+                                    <input type="text" name="uptime_req[]" class="form-control uptime_req" value="">
+                                </td>
+                                <td>
+                                    <select name="vendor_id[]" class="form-control vendor_id">
+                                        <option value="">Select Vendor</option>
+                                        @foreach ($vendors as $vendor)
+                                            <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-danger removeConnectivityRow"><i class="fas fa-minus"></i></button>
+                                </td>
+                            </tr>
+                        `;
+                    $('.connectivityEditBody').append(table_row);
                 };
 
-                function addConnectivityRow() {
-                    $('.connectivity_details_row').first().clone().appendTo('.connectivityBody');
-                    $('.connectivity_details_row').last().find('input').val('');
-                    $('.connectivity_details_row').last().find('select').val('');
-                };
+                $(document).on('click', '.removeConnectivityRow', function(e) {
+                    e.preventDefault();
+                    $(this).closest('tr').remove();
+                });
 
-                $('#client_id').on('input', function() {
+
+                $('#client_no').on('input', function() {
                     var client_id = $(this).val();
                     var html = '<option value="">Select Fr No</option>';
                     $(this).autocomplete({
@@ -348,7 +426,6 @@
                                 url: "{{ route('searchClient') }}",
                                 data: {
                                     client_id: client_id,
-                                    _token: "{{ csrf_token() }}"
                                 },
                                 success: function(data) {
                                     response(data);
@@ -356,7 +433,7 @@
                             });
                         },
                         select: function(event, ui) {
-                            $('#client_id').val(ui.item.value).attr('value', ui.item.value);
+                            $('#client_no').val(ui.item.value).attr('value', ui.item.value);
                             $('#client_name').val(ui.item.label).attr('value', ui.item.label);
                             //foreach loop for fr no
                             $.each(ui.item.frDetails, function(key, value) {
@@ -370,8 +447,9 @@
                 });
 
                 $('#fr_no').on('change', function() {
+                    $('#loader').show();
                     var fr_no = $(this).val();
-                    var client_no = $('#client_id').val();
+                    var client_no = $('#client_no').val();
                     var logical_table = '';
                     var physical_table = '';
                     $.ajax({
@@ -382,7 +460,6 @@
                             _token: "{{ csrf_token() }}"
                         },
                         success: function(data) {
-                            console.log(data)
                             $.each(data.logical_connectivity.lines, function(key, value) {
                                 logical_table += `
                                         <tr class="product_details_row">
@@ -422,16 +499,26 @@
                                 physical_table += `
                                         <tr class="connectivity_details_row">
                                             <td>
-                                                <input type="text" name="link_type[]" class="form-control link_type" value="${value.link_type}">
+                                                <select class="form-control link_type">
+                                                    <option value="">Select Link Type</option>
+                                                    <option value="Primary" ${value.link_type === "Primary" ? 'selected' : ''}>Primary</option>
+                                                    <option value="Secondary" ${value.link_type === "Secondary" ? 'selected' : ''}>Secondary</option>
+                                                    <option value="Tertiary" ${value.link_type === "Tertiary" ? 'selected' : ''}>Tertiary</option>
+                                                </select>
                                             </td>
                                             <td>
-                                                <input type="text" name="method[]" class="form-control method" value="${value.method}">
+                                                <select class="form-control method">
+                                                    <option value="">Select Method</option>
+                                                    <option value="Fiber" ${value.method === "Fiber" ? 'selected' : ''}>Fiber</option>
+                                                    <option value="Radio" ${value.method === "Radio" ? 'selected' : ''}>Radio</option>
+                                                    <option value="GSM" ${value.method === "GSM" ? 'selected' : ''}>GSM</option>
+                                                </select>
                                             </td>
                                             <td>
-                                                <input type="text" name="vendor[]" class="form-control vendor" value="${value?.connectivity_link?.vendor?.name}">
+                                                <input type="text" class="form-control vendor" value="${value?.connectivity_link?.vendor?.name}">
                                             </td>
                                             <td>
-                                                <input type="text" name="bts_pop[]" class="form-control bts_pop" value="${value.pop}">
+                                                <input type="text" class="form-control bts_pop" value="${value.pop}">
                                             </td>
                                             <td>
                                                 <a href="#" title="Edit" class="btn btn-sm btn-outline-warning physicalLinkEdit"><i class="fas fa-pen"></i></a>
@@ -444,6 +531,7 @@
                             $('#physical-table').fadeIn();
                             $('#logical-table-edit').fadeIn();
                             $('#physical-table-edit').fadeIn();
+                            $('#loader').hide();
                         }
                     });
                 });
@@ -475,10 +563,20 @@
                     let html = `
                             <tr class="connectivity_details_row">
                                 <td>
-                                    <input type="text" name="link_type[]" class="form-control link_type" value="${link_type}">
+                                    <select name="link_type[]" class="form-control link_type">
+                                        <option value="">Select Link Type</option>
+                                        <option value="Primary" ${link_type === "Primary" ? 'selected' : ''}>Primary</option>
+                                        <option value="Secondary" ${link_type === "Secondary" ? 'selected' : ''}>Secondary</option>
+                                        <option value="Tertiary" ${link_type === "Tertiary" ? 'selected' : ''}>Tertiary</option>
+                                    </select>
                                 </td>
                                 <td>
-                                    <input type="text" name="method[]" class="form-control method" value="${method}">
+                                    <select name="method[]" class="form-control method">
+                                        <option value="">Select Method</option>
+                                        <option value="Fiber" ${method === "Fiber" ? 'selected' : ''}>Fiber</option>
+                                        <option value="Radio" ${method === "Radio" ? 'selected' : ''}>Radio</option>
+                                        <option value="GSM" ${method === "GSM" ? 'selected' : ''}>GSM</option>
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" name="connectivity_capacity[]" class="form-control connectivity_capacity" value="">
@@ -502,6 +600,25 @@
                     $('.connectivityEditBody').append(html);
                 });
 
+                $(document).on('change', '#mrc_decrease', function(e) {
+                    if ($(this).is(':checked')) {
+                        $('#existing_mrc').closest('.col-3').show();
+                        $('#mrc_decrease').closest('.col-3').show();
+                    } else {
+                        $('#existing_mrc').closest('.col-3').hide();
+                        $('#mrc_decrease').closest('.col-3').hide();
+                    }
+                });
+
+                $(document).on('change', '#temporary_inactive', function(e) {
+                    if ($(this).is(':checked')) {
+                        $('#from_date').closest('.col-3').show();
+                        $('#to_date').closest('.col-3').show();
+                    } else {
+                        $('#from_date').closest('.col-3').hide();
+                        $('#to_date').closest('.col-3').hide();
+                    }
+                })
 
                 $('#date, #activation_date').datepicker({
                     format: "dd-mm-yyyy",

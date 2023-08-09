@@ -22,6 +22,11 @@ return new class extends Migration
             $table->string('from_location')->nullable();
             $table->string('aggregation_type')->nullable();
             $table->date('date')->nullable();
+            $table->date('activation_date')->nullable();
+            $table->date('from_date')->nullable();
+            $table->date('to_date')->nullable();
+            $table->string('existing_mrc')->nullable();
+            $table->string('decrease_mrc')->nullable();
             $table->integer('user_id')->nullable();
             $table->string('branch_id')->nullable();
             $table->string('document')->nullable();
