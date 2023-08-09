@@ -66,33 +66,25 @@
                                         </div>
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[${indx}]" value="{{ $delivery_date ?? '' }}" label="Delivery Date" class="date"/>
-                                                <div class="col-md-2">
-                                                        <div class="row">
-                                                            <div class="col-md-10">
-                                                                <select name="billing_address_id[${indx}]">`
+                                                <div class="col-xl-2 col-md-2">
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <select name="billing_address_id[${indx}]" class="form-control">`
                                                                     item.billing_address.forEach(ele => {
                                                                         appendedData +=`<option value="${ele.id}">${ele.address}</option>`
                                                                     })
                                                                     appendedData +=  `
-                                                                </select>
-                                                            </div>
-                                                    <div class="col-md-2">
-                                                <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add" onClick="ShowModal('billing','${element.fr_no}',this)"></i></span>
-                                                        </div>
+                                                        </select>
+                                                        <label class="input-group-addon input-group-addon-manual"><i class="icofont icofont-ui-add" onClick="ShowModal('billing','${element.fr_no}',this)"></i></label>
                                                     </div>
                                                 </div>
-                                            <div class="col-2">
-                                                <div class="row">
-                                                    <div class="col-10">
-                                        <select name="collection_address_id[${indx}]">`
-                    item.collection_address.forEach(ele => {
-                        appendedData +=`<option value="${ele.id}">${ele.address}</option>`
-                    })
-                    appendedData +=   `</select>  
-                                                </div>
-                                                    <div class="col-md-2">
-                                                <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','${element.fr_no}',this)"></i></span>
-                                                        </div>
+                                                <div class="col-xl-2 col-md-2">
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <select name="collection_address_id[${indx}]" class="form-control">`
+                                                                item.collection_address.forEach(ele => {
+                                                                    appendedData +=`<option value="${ele.id}">${ele.address}</option>`
+                                                                })
+                                                                appendedData +=   `</select>  
+                                                        <label class="input-group-addon input-group-addon-manual"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','${element.fr_no}',this)"></i></label>
                                                     </div>
                                                 </div>
                                                 <x-input-box colGrid="3" name="bill_payment_date[${indx}]" label="Bill Payment Date" class="container" attr='readonly' value=""/>
@@ -255,11 +247,11 @@
             $('.checkbox').each((index, element) => { 
                 var checkbox = $(element);
                 if (checkbox.prop('checked')) {
-                    var totalMRCValue = Number($(checkbox).parent().parent().parent().parent().parent().parent().find('.total_mrc').val());
+                    var totalMRCValue = Number($(checkbox).parent().parent().parent().parent().parent().parent().parent().find('.total_mrc').val());
                     vvall += totalMRCValue;
                 }
             });
-            $('#grand_total').val(round(vvall));
+            $('#grand_total').val(vvall.toFixed(2));
         })
 
         // $(document).on('keyup','.vat_percent',function(){
@@ -324,7 +316,7 @@
                 });
     }
     function ShowModal(a,b,ds){
-        select_selector = $(ds).parent().parent().prev().find('select');
+        select_selector = $(ds).parent().parent().find('select');
         $("#modal-13").modal("show");
         $("#modal-13").addClass("md-show");
         $("#client_no_add").val($('#client_no').val());

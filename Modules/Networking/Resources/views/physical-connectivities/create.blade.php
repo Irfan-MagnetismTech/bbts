@@ -180,8 +180,15 @@
                                         value="{{ $physicalConnectivityLine->ldp }}" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="link_id[]" class="form-control link_id"
-                                        autocomplete="off" value="{{ $physicalConnectivityLine->link_id }}" readonly>
+                                    <select class="form-control select2 link_id" name="bbts_link_id[]">
+                                        <option value="" readonly selected>Select Link ID</option>
+                                        @forelse ($connectivity_links as $key => $value)
+                                            <option value="{{ $value->bbts_link_id }}" @selected($physicalConnectivityLine->bbts_link_id == $value->bbts_link_id)>
+                                                {{ $value->bbts_link_id }}
+                                            </option>
+                                        @empty
+                                        @endforelse
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" name="device_ip[]" class="form-control device_ip"

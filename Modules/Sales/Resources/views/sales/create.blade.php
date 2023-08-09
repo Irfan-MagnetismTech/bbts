@@ -59,6 +59,16 @@
 .container {
   position: relative;
 }
+
+.custom-form .input-group-addon-manual {
+    min-width: 22px!important;
+    max-width: 22px!important;
+    background-color: #007af5 !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+    color: white;
+    font-weight: 500;
+}
 </style>
 
     {!! Form::open([
@@ -143,32 +153,24 @@
                                     </div>
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[{{$key}}]" value="{{ $value->delivery_date ?? '' }}" label="Delivery Date" class="date"/>
-                                                <div class="col-md-2">
-                                                        <div class="row">
-                                                            <div class="col-md-10">
-                                                                <select name="billing_address_id[{{$key}}]">
-                                                                @foreach ($billing_address as $bil_key => $bil_val)
-                                                                    <option value="{{$bil_val->id}}" @if($bil_val->id == $value->billing_address_id)  selected  @endif>{{$bil_val->address}}</option>
-                                                                @endforeach
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Billing Address' id="add_billing"><i class="icofont icofont-ui-add" onClick="ShowModal('billing','{{$value->fr_no}}',this)"></i></span>
-                                                            </div>
-                                                        </div>
+                                                <div class="col-xl-2 col-md-2">
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <select name="billing_address_id[{{$key}}]" class="form-control">
+                                                            @foreach ($billing_address as $bil_key => $bil_val)
+                                                                <option value="{{$bil_val->id}}" @if($bil_val->id == $value->billing_address_id)  selected  @endif>{{$bil_val->address}}</option>
+                                                            @endforeach
+                                                        </select>  
+                                                        <label class="input-group-addon input-group-addon-manual" data-toggle="tooltip" title='Add Billing Address'><i class="icofont icofont-ui-add" onClick="ShowModal('billing','{{$value->fr_no}}',this)"></i></label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-2">
-                                                    <div class="row">
-                                                        <div class="col-md-10">
-                                                            <select name="collection_address_id[{{$key}}]">
-                                                                @foreach ($collection_address as $col_key => $col_val)
+                                                <div class="col-xl-2 col-md-2">
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <select name="collection_address_id[{{$key}}]" class="form-control">
+                                                            @foreach ($collection_address as $col_key => $col_val)
                                                                     <option value="{{$col_val->id}}" @if($col_val->id == $value->collection_address_id)  selected  @endif>{{$col_val->address}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <span class="btn btn-inverse btn-sm btn-outline-inverse btn-icon" data-toggle="tooltip" title='Add Collection Address' id="add_collection"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','{{$value->fr_no}}',this)"></i></span>
-                                                        </div>
+                                                            @endforeach
+                                                        </select>  
+                                                        <label class="input-group-addon input-group-addon-manual" data-toggle="tooltip" title='Add Collection Address'><i class="icofont icofont-ui-add" onClick="ShowModal('collection','{{$value->fr_no}}',this)"></i></label>
                                                     </div>
                                                 </div>
                                                 <x-input-box colGrid="3" name="bill_payment_date[{{$key}}]" value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date" class="container" attr='readonly'/>

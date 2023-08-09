@@ -200,7 +200,6 @@ class SaleController extends Controller
                     'price'             => $raw['price'][$key][$key1],
                     'total_price'       => $raw['total_price'][$key][$key1],
                     'vat_amount'        => $raw['vat_amount'][$key][$key1],
-                    'vat_percent'       => $raw['vat_percent'][$key][$key1],
                     'sale_id'           => $saleDetail[$key]['sale_id'],
                     'sale_detail_id'    => $saleDetail[$key]['id'],
                     'created_at'        => now(),
@@ -514,7 +513,7 @@ class SaleController extends Controller
     }
 
     public function clientOffer($mq_no = null)
-    { 
+    {
         $offer = Offer::firstWhere('mq_no', $mq_no);
 
         $offerData = $offer->offerDetails->map(function ($item) {
@@ -532,7 +531,7 @@ class SaleController extends Controller
             });
             // dump($item->toArray());
             return $item;
-        }); 
+        });
         // dd();
 
         $costingProductEquipments = $offer->costing->costingProductEquipments->where('ownership', 'Client');

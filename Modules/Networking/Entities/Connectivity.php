@@ -41,6 +41,8 @@ class Connectivity extends Model
 
     public function employee(): BelongsTo
     {
-        return $this->belongsTo(Employee::class, 'attendant_engineer', 'id');
+        return $this->belongsTo(Employee::class, 'attendant_engineer', 'id')->withDefault([
+            'name' => 'No data found'
+        ]);
     }
 }

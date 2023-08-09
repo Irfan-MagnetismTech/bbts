@@ -107,6 +107,8 @@
                             </tfoot>
                         </table>
                     </div>
+                    {{-- @dd($uniqueEquipments); --}}
+                    @if (!isset($uniqueEquipments))
                     <div class="col-12 mt-3">
                         <table class="table table-bordered">
                             <thead>
@@ -133,6 +135,8 @@
                             </tbody>
                         </table>
                     </div>
+                    @endif
+                    
                 </div>
             @endforeach
             <div class="float-right" style="margin-top: 20px;">
