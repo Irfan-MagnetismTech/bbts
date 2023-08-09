@@ -514,7 +514,7 @@ class SaleController extends Controller
     }
 
     public function clientOffer($mq_no = null)
-    { 
+    {
         $offer = Offer::firstWhere('mq_no', $mq_no);
 
         $offerData = $offer->offerDetails->map(function ($item) {
@@ -532,7 +532,7 @@ class SaleController extends Controller
             });
             // dump($item->toArray());
             return $item;
-        }); 
+        });
         // dd();
 
         $costingProductEquipments = $offer->costing->costingProductEquipments->where('ownership', 'Client');
