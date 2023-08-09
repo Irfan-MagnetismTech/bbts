@@ -75,14 +75,14 @@
                                 <tr>
                                     <th>Product</th>
                                     <th>Quantity</th>
-                                    <th>Rate</th>
                                     <th>Unit</th>
+                                    <th>Rate</th>
                                     <th>Amount</th>
-                                    <th>Vat(%)</th>
-                                    <th>Vat Amount</th>
                                     <th>Operation Cost</th>
                                     <th>Total Amount</th>
                                     <th>Price</th>
+                                    <th>Total</th>
+                                    <th>Vat Amount</th>
                                     <th>Total Price</th>
                                 </tr>
                             </thead>
@@ -91,106 +91,108 @@
                                     <tr class="product_details_row">
                                         <td>{{ $costing_product->product->name }}</td>
                                         <td>{{ $costing_product->quantity }}</td>
-                                        <td>{{ $costing_product->rate }}</td>
                                         <td>{{ $costing_product->unit }}</td>
-                                        <td>{{ $costing_product->sub_total }}</td>
-                                        <td>{{ $costing_product->product_vat }}</td>
-                                        <td>{{ $costing_product->product_vat_amount }}</td>
-                                        <td>{{ $costing_product->operation_cost }}</td>
-                                        <td>{{ $costing_product->operation_cost_total }}</td>
-                                        <td>{{ $costing_product->offer_price }}</td>
-                                        <td>{{ $costing_product->total }}</td>
+                                        <td>{{ $costing_product->rate }}</td>
+                                        <td class="text-right">@formatFloat($costing_product->sub_total)</td>
+                                        <td class="text-right">@formatFloat($costing_product->operation_cost)</td>
+                                        <td class="text-right">@formatFloat($costing_product->operation_cost_total)</td>
+                                        <td class="text-right">@formatFloat($costing_product->offer_price)</td>
+                                        <td class="text-right">@formatFloat($costing_product->total)</td>
+                                        <td class="text-right">@formatFloat($costing_product->product_vat_amount)</td>
+                                        <td class="text-right"><b>@formatFloat($costing_product->product_vat_amount + $costing_product->total)</b></td>
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="4" class="text-right">Total</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td colspan="4" class="text-right"> <b>Total</b></td>
+                                    <td class="text-right"> <b> @formatFloat($costing->costingProducts->sum('sub_total')) </b> </td>
+                                    <td class="text-right"> <b> @formatFloat($costing->costingProducts->sum('operation_cost')) </b> </td>
+                                    <td class="text-right"> <b> @formatFloat($costing->costingProducts->sum('operation_cost_total')) </b> </td>
+                                    <td class="text-right"> <b> </b> </td>
+                                    <td class="text-right"> <b> @formatFloat($total = $costing->costingProducts->sum('total')) </b> </td>
+                                    <td class="text-right"> <b> @formatFloat($vat = $costing->costingProducts->sum('product_vat_amount')) </b> </td>
+                                    <td class="text-right"> <b> @formatFloat($total + $vat)</b> </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="md-col-12 col-12">
-                    {{-- Connectivity Details --}}
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th colspan="6">Product Related Equipment</th>
-                                </tr>
-                                <tr>
-                                    <th>Link Type</th>
-                                    <th>Quantity</th>
-                                    <th>Unit</th>
-                                    <th>Ownership</th>
-                                    <th>Rate</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody class="connectivityBody">
-                                @foreach ($costing->costingProductEquipments as $product_equipment)
-                                    <tr class="connectivity_details_row">
-                                        <td>{{ $product_equipment->material->name ?? '' }}</td>
-                                        <td>{{ $product_equipment->quantity }}</td>
-                                        <td>{{ $product_equipment->unit }}</td>
-                                        <td>{{ $product_equipment->ownership }}</td>
-                                        <td>{{ $product_equipment->rate }}</td>
-                                        <td>{{ $product_equipment->total }}</td>
+                @if ($costing->costingProductEquipments()->exists())
+                    <div class="md-col-12 col-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th colspan="6">Product Related Equipment</th>
                                     </tr>
-                                @endforeach
-                                <tr>
-                                    <td colspan="5" class="text-right">Equipment Total</td>
-                                    <td>{{ $costing->equipment_wise_total }}</td>
-                                </tr>
+                                    <tr>
+                                        <th>Link Type</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Ownership</th>
+                                        <th>Rate</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="connectivityBody">
+                                    @foreach ($costing->costingProductEquipments as $product_equipment)
+                                        <tr class="connectivity_details_row">
+                                            <td>{{ $product_equipment->material->name ?? '' }}</td>
+                                            <td>{{ $product_equipment->quantity }}</td>
+                                            <td>{{ $product_equipment->unit }}</td>
+                                            <td>{{ $product_equipment->ownership }}</td>
+                                            <td>{{ $product_equipment->rate }}</td>
+                                            <td>{{ $product_equipment->total }}</td>
+                                        </tr>
+                                    @endforeach
+                                    <tr>
+                                        <td colspan="5" class="text-right">Equipment Total</td>
+                                        <td>{{ $costing->equipment_wise_total }}</td>
+                                    </tr>
 
-                                <tr>
-                                    <td colspan="5" class="text-right">Client Equipment Total
-                                    </td>
-                                    <td> {{ $costing->client_equipment_total }} </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-right">Partial Total</td>
-                                    <td> {{ $costing->equipment_partial_total }} </td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">Client Equipment Total
+                                        </td>
+                                        <td> {{ $costing->client_equipment_total }} </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">Partial Total</td>
+                                        <td> {{ $costing->equipment_partial_total }} </td>
+                                    </tr>
 
-                                <tr>
-                                    <td colspan="5" class="text-right">Deployment Cost</td>
-                                    <td> {{ $costing->equipment_deployment_cost }} </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-right">Interest</td>
-                                    <td>{{ $costing->equipment_interest }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-right">VAT</td>
-                                    <td>{{ $costing->equipment_vat }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-right">Tax</td>
-                                    <td>{{ $costing->equipment_tax }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-right">Total</td>
-                                    <td>{{ $costing->equipment_grand_total }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-right">OTC</td>
-                                    <td>{{ $costing->equipment_otc }}</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="5" class="text-right">ROI</td>
-                                    <td>{{ $costing->equipment_roi }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    <tr>
+                                        <td colspan="5" class="text-right">Deployment Cost</td>
+                                        <td> {{ $costing->equipment_deployment_cost }} </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">Interest</td>
+                                        <td>{{ $costing->equipment_interest }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">VAT</td>
+                                        <td>{{ $costing->equipment_vat }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">Tax</td>
+                                        <td>{{ $costing->equipment_tax }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">Total</td>
+                                        <td>{{ $costing->equipment_grand_total }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">OTC</td>
+                                        <td>{{ $costing->equipment_otc }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">ROI</td>
+                                        <td>{{ $costing->equipment_roi }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                @endif
+
             </div>
             <hr />
             <div class="text-center">
@@ -260,108 +262,58 @@
                                         <td>
                                             <span>{{ $link_equipment->rate ?? '' }}</span>
                                         </td>
-                                        <td>
-                                            <span>{{ $link_equipment->total ?? '' }}</span>
+                                        <td class="text-right">
+                                            <span><b>@formatFloat($link_equipment->total)</b></span>
                                         </td>
                                     </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan="5" class="text-right">Plan Equipment Total
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->plan_all_equipment_total }}</span>
-                                    </td>
+                                    <td colspan="5" class="text-right"> <b>Plan Equipment Total</b> </td>
+                                    <td class="text-right">
+                                        <span><b>{{ $costing_link->plan_all_equipment_total }}</b></span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="5" class="text-right">Client Equipment Total
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->plan_client_equipment_total }}</span>
-                                    </td>
+                                    <td colspan="5" class="text-right"> <b>Client Equipment Total</b> </td>
+                                    <td class="text-right">
+                                        <span><b>{{ $costing_link->plan_client_equipment_total }}</b></span></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="5" class="text-right">Total</td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->partial_total }}</span>
-                                    </td>
+                                    <td colspan="5" class="text-right"> <b>Total</b> </td>
+                                    <td class="text-right"><span><b>{{ $costing_link->partial_total }}</b></span> </td>
                                 </tr>
                                 <tr class="text-right">
-                                    <td colspan="3">
-                                        <span>OTC</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->otc }}</span>
-                                    </td>
-                                    <td>
-                                        <span>Deployment Cost</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->deployment_cost }}</span>
-                                    </td>
+                                    <td colspan="3"><span><b>OTC</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->otc }}</b></span></td>
+                                    <td><span><b>Deployment Cost</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->deployment_cost }}</b></span></td>
                                 </tr>
                                 <tr class="text-right">
-                                    <td colspan="3">
-                                        <span>ROI</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->roi }}</span>
-                                    </td>
-                                    <td>
-                                        <span>Interest</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->interest }}</span>
-                                    </td>
+                                    <td colspan="3"><span><b>ROI</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->roi }}</b></span></td>
+                                    <td><span><b>Interest</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->interest }}</b></span></td>
                                 </tr>
                                 <tr class="text-right">
-                                    <td colspan="3">
-                                        <span>Capacity</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->capacity }}</span>
-                                    </td>
-                                    <td>
-                                        <span>Total</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->grand_total }}</span>
-                                    </td>
+                                    <td colspan="3"><span><b>Capacity</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->capacity_amount }}</b></span></td>
+                                    <td><span><b>Total</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->grand_total }}</b></span></td>
                                 </tr>
                                 <tr class="text-right">
-                                    <td colspan="3">
-                                        <span>Operation Cost</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->operation_cost }}</span>
-                                    </td>
-                                    <td>
-                                        <span>VAT</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->vat }}</span>
-                                    </td>
+                                    <td colspan="3"><span><b>Operation Cost</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->operation_cost }}</b></span></td>
+                                    <td><span><b>VAT</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->vat }}</b></span></td>
                                 </tr>
                                 <tr class="text-right">
-                                    <td colspan="3">
-                                        <span>Total MRC</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->total_mrc }}</span>
-                                    </td>
-                                    <td>
-                                        <span>Tax</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->tax }}</span>
-                                    </td>
+                                    <td colspan="3"><span><b>Total MRC</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->total_mrc }}</b></span></td>
+                                    <td><span><b>Tax</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->tax }}</b></span></td>
                                 </tr>
                                 <tr class="text-right">
-                                    <td colspan="5">
-                                        <span>Total Inv</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{ $costing_link->total_mrc }}</span>
-                                    </td>
+                                    <td colspan="5"><span><b>Total Inv</b></span></td>
+                                    <td class="text-right"><span><b>{{ $costing_link->investment }}</b></span></td>
                                 </tr>
                             </tbody>
                         </table>

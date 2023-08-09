@@ -14,18 +14,17 @@
             <hr />
         </div>
     </div>
-    <div>
+    <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead>
                 <tr class="text-center">
                     <th>Connectivity Point Name</th>
                     <th>Total Inv</th>
                     <th>OTC</th>
-                    <th>Equipment Price</th>
+                    <th>Client Equipment</th>
                     <th>Total OTC</th>
                     <th>Product Cost</th>
                     <th>Monthly Cost</th>
-                    <th>Mgt Cost</th>
                     <th>Monthly Budget</th>
                     <th>Total Budget</th>
                     <th>Monthly Revenue</th>
@@ -50,14 +49,13 @@
                             $total_pnl += ($details->offerDetail->grand_total - $details->costing->management_cost_amount) * $details->costing->month;
                         @endphp
                         <tr>
-                            <td class="text-left">{{ $details->connectivity_point }} ({{ $details->fr_no }})</td>
+                            <td class="text-left">{{ $details->connectivity_point }} ({{ $details->fr_no }}) </td>
                             <td>{{ $details->costing->total_investment }}</td>
-                            <td>{{ $details->costing->total_otc }}</td>
+                            <td>{{ $details->offerDetail->total_otc }}</td>
                             <td>{{ $details->costing->equipment_price_for_client }}</td>
                             <td>{{ $details->costing->total_otc_with_client_equipment }}</td>
-                            <td>{{ $details->costing->product_total_cost }}</td>
-                            <td>{{ $details->costing->total_service_cost }}</td>
-                            <td>{{ $details->costing->management_cost_amount }}</td>
+                            <td>{{ $details->costing->product_total_cost + $details->costing->total_operation_cost }}</td>
+                            <td>{{ $details->costing->total_service_cost + $details->costing->management_cost_amount }}</td>
                             <td>{{ $details->costing->management_cost_total }}</td>
                             <td>{{ $details->costing->management_cost_total * $details->costing->month }}</td>
                             <td>{{ $details->offerDetail->grand_total }}</td>
