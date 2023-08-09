@@ -57,7 +57,7 @@ class PhysicalConnectivityController extends Controller
                     'method' => $request->method[$key],
                     'pop' => $request->pop[$key],
                     'ldp' => $request->ldp[$key],
-                    'link_id' => $request->link_id[$key],
+                    'bbts_link_id' => $request->bbts_link_id[$key],
                     'device_ip' => $request->device_ip[$key],
                     'port' => $request->port[$key],
                     'vlan' => $request->vlan[$key],
@@ -117,7 +117,9 @@ class PhysicalConnectivityController extends Controller
             ->where('fr_no', $physicalConnectivity->fr_no)
             ->first();
 
-        return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo'));
+        $connectivity_links = ConnectivityLink::latest()->get();
+
+        return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo', 'connectivity_links'));
     }
 
     /**
@@ -138,7 +140,7 @@ class PhysicalConnectivityController extends Controller
                     'method' => $request->method[$key],
                     'pop' => $request->pop[$key],
                     'ldp' => $request->ldp[$key],
-                    'link_id' => $request->link_id[$key],
+                    'bbts_link_id' => $request->bbts_link_id[$key],
                     'device_ip' => $request->device_ip[$key],
                     'port' => $request->port[$key],
                     'vlan' => $request->vlan[$key],

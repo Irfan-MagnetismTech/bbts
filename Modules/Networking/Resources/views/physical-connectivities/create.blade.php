@@ -180,7 +180,7 @@
                                         value="{{ $physicalConnectivityLine->ldp }}" readonly>
                                 </td>
                                 <td>
-                                    <select class="form-control select2 link_id" name="link_id[]">
+                                    <select class="form-control select2 link_id" name="bbts_link_id[]">
                                         <option value="" readonly selected>Select Link ID</option>
                                         @forelse ($connectivity_links as $key => $value)
                                             <option value="{{ $value->bbts_link_id }}" @selected($physicalConnectivityLine->bbts_link_id == $value->bbts_link_id)>
