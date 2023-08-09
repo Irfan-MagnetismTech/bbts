@@ -16,7 +16,7 @@
 @endphp
 
 @section('breadcrumb-title')
-    @if (!empty($logicalConnectivityInternet))
+    @if (!empty($   ))
         Edit
     @else
         Create
@@ -60,7 +60,7 @@
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
                         name="client_name" value="{{ $saleDetalis->client->client_name }}" readonly>
                     <input type="hidden" name="client_no" id="client_no"
-                        value="{{ $physicalConnectivityData->client_no }}">
+                        value="{{ @$physicalConnectivityData->client_no }}">
                 </div>
 
                 <div class="form-group col-3 client_type">
@@ -73,9 +73,9 @@
                     <label for="select2">Connectivity Point And FR</label>
                     <input type="text" class="form-control" id="connectivity_point1" name="connectivity_point1"
                         aria-describedby="connectivity_point1"
-                        value="{{ $physicalConnectivityData->connectivity_point . '_' . $physicalConnectivityData->fr_no }}"
+                        value="{{ @$physicalConnectivityData->connectivity_point . '_' . @$physicalConnectivityData->fr_no }}"
                         readonly>
-                    <input type="hidden" name="fr_no" id="fr_no" value="{{ $physicalConnectivityData->fr_no }}">
+                    <input type="hidden" name="fr_no" id="fr_no" value="{{ @$physicalConnectivityData->fr_no }}">
                 </div>
 
                 <div class="form-group col-3 contact_person">
@@ -282,7 +282,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($physicalConnectivityData->lines as $key => $line)
+                    @forelse (@$physicalConnectivityData?->lines as $key => $line)
                         <tr>
                             <td>
                                 <input type="text" name="link_type[]" class="form-control link_type"

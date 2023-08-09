@@ -38,7 +38,7 @@ class LogicalConnectivityInternetController extends Controller
             ->latest()
             ->first();
 
-        $physicalConnectivityData = PhysicalConnectivity::query()
+        @$physicalConnectivityData = PhysicalConnectivity::query()
             ->whereSaleId(request()->get('sale_id'))
             ->with('lines')
             ->latest()
@@ -58,13 +58,13 @@ class LogicalConnectivityInternetController extends Controller
 
         $logicalConnectivityInternet = LogicalConnectivity::query()
             ->where([
-                'fr_no' => $physicalConnectivityData->fr_no,
-                'client_no' => $physicalConnectivityData->client_no,
+                'fr_no' => @$physicalConnectivityData->fr_no,
+                'client_no' => @$physicalConnectivityData->client_no,
                 'product_category' => 'Internet'
             ])
             ->with('lines.product')
             ->latest()
-            ->first();
+            ->firstOrFail();
 
         if ($logicalConnectivityInternet) {
             $logicalConnectivityBandwidths = BandwidthDestribution::query()
@@ -82,7 +82,7 @@ class LogicalConnectivityInternetController extends Controller
             ->where('logical_connectivity_id', @$logicalConnectivityInternet->id)
             ->first();
 
-        return view('networking::logical-internet-connectivities.create', compact('saleDetalis', 'physicalConnectivityData', 'logicalConnectivityInternet', 'products', 'ips', 'ipv4Ips', 'ipv6Ips', 'logicalConnectivityBandwidths', 'facilityTypes' ?? [], 'clientFacility' ?? []));
+        return view('networking::logical-internet-connectivities.create', compact('saleDetalis', 'physicalConnectivityData', 'logicalConnectivityInternet', 'products', 'ips', 'ipv4Ips', 'ipv6Ips', 'logicalConnectivityBandwidths', 'facilityTypes', 'clientFacility'));
     }
 
     /**
