@@ -253,7 +253,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="total_roi_{{ $row_no }}"
-                                                                    value="{{ $details->costing->costingLinks->sum('roi') }}"
+                                                                    value="{{ $details->costing->costingLinks->sum('roi') + $details->costing->costingLinks->sum('capacity_amount') }}"
                                                                     class="form-control total_roi text-right"
                                                                     id="total_roi" readonly>
                                                             </div>
