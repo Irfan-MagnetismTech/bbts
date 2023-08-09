@@ -53,20 +53,20 @@ class ConnectivityController extends Controller
 
         $logicalConnectivities = LogicalConnectivity::with(['lines.product'])
             ->forProductCategories(['VAS', 'Data', 'Internet'])
-            ->whereClientNoAndFrNo($physicalConnectivity->client_no, $physicalConnectivity->fr_no)
+            ->whereClientNoAndFrNo(@$physicalConnectivity->client_no, @$physicalConnectivity->fr_no)
             ->latest()
             ->get()
             ->keyBy('product_category');
 
-        $facilityTypes = explode(',', $logicalConnectivities->get('Internet')->facility_type);
+        $facilityTypes = explode(',', $logicalConnectivities->get('Internet')?->facility_type);
 
         $logicalConnectivityBandwidths = BandwidthDestribution::query()
-            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')->id)
+            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')?->id)
             ->with('ip')
             ->get();
 
         $clientFacility = ClientFacility::query()
-            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')->id)
+            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')?->id)
             ->first();
 
         $connectivity = Connectivity::query()
