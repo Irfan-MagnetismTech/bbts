@@ -122,7 +122,7 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control"
-                                        value="{{ $physicalConnectivityLine->link_id }}" readonly>
+                                        value="{{ $physicalConnectivityLine->bbts_link_id }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control"

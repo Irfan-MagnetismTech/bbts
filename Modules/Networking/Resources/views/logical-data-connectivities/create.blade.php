@@ -234,8 +234,8 @@
                                     value="{{ $line->ldp }}" readonly>
                             </td>
                             <td>
-                                <input type="text" name="link_id[]" class="form-control link_id" autocomplete="off"
-                                    value="{{ $line->link_id }}" readonly>
+                                <input type="text" name="bbts_link_id[]" class="form-control bbts_link_id" autocomplete="off"
+                                    value="{{ $line->bbts_link_id }}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="device_ip[]" class="form-control device_ip"

@@ -11,6 +11,9 @@ class BandwidthDestribution extends Model
 
     public function ip()
     {
-        return $this->belongsTo(Ip::class);
+        return $this->belongsTo(Ip::class)->withDefault([
+            'ip' => 'No data found',
+            'address' => 'No data found',
+        ]);
     }
 }
