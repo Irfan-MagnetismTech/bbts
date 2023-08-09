@@ -79,6 +79,7 @@
                     );
                 }
                 appendNetworkInfoRow(data.sale_link_details);
+                $('.select2').select2();
             },
         });
     });
@@ -103,7 +104,7 @@
                                     autocomplete="off" value="">
                             </td>
                             <td>
-                                <select class="form-control select2 bbts_link_id" name="bbts_link_id[]">
+                                <select class="form-control select2 link_id" name="bbts_link_id[]">
                                     <option value="" readonly selected>Select Link ID</option>
                                     @forelse ($connectivity_links as $key => $value)
                                         <option value="{{ $value->bbts_link_id }}">
