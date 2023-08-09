@@ -145,7 +145,7 @@
                                                     class="form-control form-control-sm input product_price"
                                                     placeholder="Amount" value="" readonly>
                                             </span>
-                                        </td> 
+                                        </td>
                                         <td>
                                             <span>
                                                 <input type="number" name="product_operation_cost[]"
@@ -177,8 +177,10 @@
                                         <td>
                                             <span>
                                                 <input type="number" name="product_vat[]"
-                                                    class="form-control form-control-sm input product_vat" placeholder="Vat"
-                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->vat }}" step="0.01">
+                                                    class="form-control form-control-sm input product_vat"
+                                                    placeholder="Vat"
+                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->vat }}"
+                                                    step="0.01">
                                             </span>
                                         </td>
                                         <td>
@@ -205,12 +207,12 @@
                                                 class="form-control form-control-sm input" placeholder="Total Price"
                                                 value="" readonly step="0.01">
                                         </span>
-                                    </td> 
+                                    </td>
                                     <td>
                                         <span>
                                             <input type="number" name="total_operation_cost" id="total_operation_cost"
                                                 class="form-control form-control-sm input" placeholder="Total Cost"
-                                                value="" readonly step="0.01"> 
+                                                value="" readonly step="0.01">
                                         </span>
                                     </td>
                                     <td>
@@ -569,7 +571,7 @@
                                                         value="{{ $plan_link_equipment->material->name ?? '' }}">
                                                     <input type="hidden"
                                                         name="plan_equipment_material_id_{{ $row_no }}[]"
-                                                        value="{{ $plan_link_equipment->material->id ?? '' }}" >
+                                                        value="{{ $plan_link_equipment->material->id ?? '' }}">
                                             </td>
                                             <td>
                                                 <span>
@@ -997,7 +999,7 @@
 
             $('#total_with_operation_amount').val(total_with_operation);
 
-            $('#total_product_cost').val(total_with_operation); 
+            $('#total_product_cost').val(total_with_operation);
             $('#total_mrc').val(total_with_operation);
 
         }
@@ -1188,19 +1190,18 @@
 
             $('.plan_link_status:checked').each(function() {
                 const $this = $(this);
-                const plan_link_total_mrc = planLinkMainRows.find(
-                    '.plan_equipment_total_mrc').val() || 0;
-                alert(plan_link_total_mrc);
+                const plan_link_total_mrc = $this.(this).closest('.PlanLinkMainRow').find(
+                    '.plan_link_total_mrc').val();
                 total_mrc += parseFloat(plan_link_total_mrc);
 
-                total_equipment_investment += parseFloat(planLinkMainRows.find(
+                total_equipment_investment += parseFloat($this.(this).closest('.PlanLinkMainRow').find(
                     '.plan_equipment_total_inv').val()) || 0;
 
-                total_plan_equipment_otc += parseFloat(planLinkMainRows.find(
+                total_plan_equipment_otc += parseFloat($this.(this).closest('.PlanLinkMainRow').find(
                     '.plan_equipment_otc').val()) || 0;
 
-            }); 
-    
+            });
+
             const equipment_grand_total = parseInt($('#equipment_grand_total').val()) || 0;
             const total_investment = equipment_grand_total + total_equipment_investment;
             console.log('total_investment', total_investment)
@@ -1211,7 +1212,7 @@
             const equipment_roi = parseInt($('#equipment_roi').val()) || 0;
             const total_service_cost = (total_mrc + equipment_roi) || 0;
             $('#total_service_cost').val(total_service_cost);
-            
+
             const total_product_cost = parseInt($('#total_with_operation_amount').val()) || 0;
             $('#total_product_cost').val(total_product_cost);
             $('#total_mrc').val(total_service_cost + total_product_cost);
@@ -1224,14 +1225,14 @@
             var total_mrc = parseFloat($('#total_mrc').val());
             var total_mrc_amount = total_mrc * margin / 100;
             $('#management_cost_amount').val(total_mrc_amount);
-            
+
             var product_total_cost = parseFloat($('#product_total_cost').val());
             var management_cost_total = total_mrc + total_mrc_amount;
-            $('#management_cost_total').val(management_cost_total); 
- 
+            $('#management_cost_total').val(management_cost_total);
+
             var perchantage = (management_cost_total / product_total_cost) * 100 - 100;
             $('.product_rate').each(function() {
-                
+
                 var product_rate = parseFloat($(this).val());
                 var product_rate_perchantage = product_rate.toFixed(2) * (perchantage / 100);
                 var product_margin_rate = (product_rate + product_rate_perchantage).toFixed(2);
@@ -1241,9 +1242,10 @@
                 $(this).closest('tr').find('.product_offer_total').val(total_margin_amount.toFixed(2));
 
                 var vat_perchant = $(this).closest('tr').find('.product_vat').val();
-                var vat_amount = (total_margin_amount * vat_perchant) / 100; 
+                var vat_amount = (total_margin_amount * vat_perchant) / 100;
                 $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
-                $(this).closest('tr').find('.total_price').val((total_margin_amount + vat_amount).toFixed(2));
+                $(this).closest('tr').find('.total_price').val((total_margin_amount + vat_amount).toFixed(
+                    2));
             });
             var product_grand_total = $('.product_offer_total').get()
                 .reduce(function(sum, el) {
@@ -1256,7 +1258,7 @@
             var grand_total_price = $('.total_price').get()
                 .reduce(function(sum, el) {
                     return sum + parseFloat(el.value);
-                }, 0); 
+                }, 0);
 
             const client_equipment_total = parseFloat($('#client_equipment_total').val());
 
