@@ -33,6 +33,9 @@ class ClientRequirementController extends Controller
      */
     public function create()
     {
+        $products = Product::all();
+        $categories = Category::all();
+        $vendors = Vendor::all();
         return view('changes::client_requirement.create');
     }
 
