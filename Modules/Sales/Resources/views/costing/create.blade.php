@@ -1190,14 +1190,14 @@
 
             $('.plan_link_status:checked').each(function() {
                 const $this = $(this);
-                const plan_link_total_mrc = $this.(this).closest('.PlanLinkMainRow').find(
+                const plan_link_total_mrc = $(this).closest('.PlanLinkMainRow').find(
                     '.plan_link_total_mrc').val();
                 total_mrc += parseFloat(plan_link_total_mrc);
 
-                total_equipment_investment += parseFloat($this.(this).closest('.PlanLinkMainRow').find(
+                total_equipment_investment += parseFloat($(this).closest('.PlanLinkMainRow').find(
                     '.plan_equipment_total_inv').val()) || 0;
 
-                total_plan_equipment_otc += parseFloat($this.(this).closest('.PlanLinkMainRow').find(
+                total_plan_equipment_otc += parseFloat($(this).closest('.PlanLinkMainRow').find(
                     '.plan_equipment_otc').val()) || 0;
 
             });
