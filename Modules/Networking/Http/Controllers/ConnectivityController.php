@@ -41,7 +41,7 @@ class ConnectivityController extends Controller
         $salesDetail = SaleDetail::query()
             ->with('sale', 'client', 'frDetails')
             ->where('fr_no', $fr_no)
-            ->first();
+            ->firstOrFail();
 
         $employees = Employee::latest()->get();
 
@@ -49,7 +49,7 @@ class ConnectivityController extends Controller
             ->where('sale_id', $salesDetail->sale_id)
             ->with('lines')
             ->latest()
-            ->first();
+            ->firstOrFail();
 
         $logicalConnectivities = LogicalConnectivity::with(['lines.product'])
             ->forProductCategories(['VAS', 'Data', 'Internet'])
@@ -67,12 +67,12 @@ class ConnectivityController extends Controller
 
         $clientFacility = ClientFacility::query()
             ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')?->id)
-            ->first();
+            ->firstOrFail();
 
         $connectivity = Connectivity::query()
             ->with('employee')
             ->whereSaleId($salesDetail->sale_id)
-            ->first();
+            ->firstOrFail();
 
         return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityBandwidths', 'logicalConnectivities', 'facilityTypes', 'clientFacility', 'connectivity'));
     }

@@ -51,7 +51,7 @@
                         <tr>
                             <td class="text-left">{{ $details->connectivity_point }} ({{ $details->fr_no }}) </td>
                             <td>{{ $details->costing->total_investment }}</td>
-                            <td>{{ $details->offerDetail->total_otc }}</td>
+                            <td>{{ $details->offerDetail->total_offer_otc }}</td>
                             <td>{{ $details->costing->equipment_price_for_client }}</td>
                             <td>{{ $details->costing->total_otc_with_client_equipment }}</td>
                             <td>{{ $details->costing->product_total_cost + $details->costing->total_operation_cost }}</td>

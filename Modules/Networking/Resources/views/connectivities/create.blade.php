@@ -84,24 +84,24 @@
                     label="Commissioning Date" attr="{{ !empty($connectivity) ? 'disabled' : '' }}" />
             </div>
 
-            <h5 class="text-center p-2">NETWORK INFORMATION</h5>
-            <table class="table table-bordered" id="physical_connectivity">
-                <thead>
-                    <tr>
-                        <th> Link Type</th>
-                        <th> Method</th>
-                        <th> POP</th>
-                        <th>LDP</th>
-                        <th> Link ID </th>
-                        <th> Device IP </th>
-                        <th> PORT </th>
-                        <th> VLAN </th>
-                        <th> Connectivity Details </th>
-                        <th> Comment </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!empty($physicalConnectivity))
+            @if (!empty($physicalConnectivity))
+                <h5 class="text-center p-2">NETWORK INFORMATION</h5>
+                <table class="table table-bordered" id="physical_connectivity">
+                    <thead>
+                        <tr>
+                            <th> Link Type</th>
+                            <th> Method</th>
+                            <th> POP</th>
+                            <th>LDP</th>
+                            <th> Link ID </th>
+                            <th> Device IP </th>
+                            <th> PORT </th>
+                            <th> VLAN </th>
+                            <th> Connectivity Details </th>
+                            <th> Comment </th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @foreach ($physicalConnectivity->lines as $key => $physicalConnectivityLine)
                             <tr>
                                 <td>
@@ -122,7 +122,7 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control"
-                                        value="{{ $physicalConnectivityLine->link_id }}" readonly>
+                                        value="{{ $physicalConnectivityLine->bbts_link_id }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control"
@@ -146,21 +146,21 @@
                                 </td>
                             </tr>
                         @endforeach
-                    @endif
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            @endif
 
-            <h5 class="text-center p-2">Bandwidth Distribution </h5>
-            <table class="table table-bordered" id="bandwidth_distribution">
-                <thead>
-                    <tr>
-                        <th> IP Address</th>
-                        <th> Bandwidth</th>
-                        <th> Remarks </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!empty($logicalConnectivities->get('Internet')))
+            @if (!empty($logicalConnectivities->get('Internet')))
+                <h5 class="text-center p-2">Bandwidth Distribution </h5>
+                <table class="table table-bordered" id="bandwidth_distribution">
+                    <thead>
+                        <tr>
+                            <th> IP Address</th>
+                            <th> Bandwidth</th>
+                            <th> Remarks </th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @forelse ($logicalConnectivityBandwidths as $key => $bandwidth)
                             <tr>
                                 <td>
@@ -178,21 +178,21 @@
                             </tr>
                         @empty
                         @endforelse
-                    @endif
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            @endif
 
-            <h5 class="text-center p-2">VAS SERVICE</h5>
-            <table class="table table-bordered" id="vas_service">
-                <thead>
-                    <tr>
-                        <th> Product Name</th>
-                        <th> Number of User</th>
-                        <th> Remarks</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!empty($logicalConnectivities->get('VAS')))
+            @if (!empty($logicalConnectivities->get('VAS')))
+                <h5 class="text-center p-2">VAS SERVICE</h5>
+                <table class="table table-bordered" id="vas_service">
+                    <thead>
+                        <tr>
+                            <th> Product Name</th>
+                            <th> Number of User</th>
+                            <th> Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @foreach ($logicalConnectivities->get('VAS')->lines as $key => $line)
                             <tr>
                                 <td>
@@ -209,28 +209,28 @@
                                 </td>
                             </tr>
                         @endforeach
-                    @endif
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            @endif
 
-            <h5 class="text-center p-2">DATA SERVICE</h5>
-            <table class="table table-bordered" id="data_service">
-                <thead>
-                    <tr>
-                        <th> Product Name</th>
-                        <th>Data Type</th>
-                        <th>Bandwidth</th>
-                        <th>IP Adress ipv4</th>
-                        <th>IP Adress ipv6</th>
-                        <th> Subnet Mask</th>
-                        <th> Gateway</th>
-                        <th> VLAN</th>
-                        <th> User ID</th>
-                        <th> Password</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!empty($logicalConnectivities->get('Data')))
+            @if (!empty($logicalConnectivities->get('Data')))
+                <h5 class="text-center p-2">DATA SERVICE</h5>
+                <table class="table table-bordered" id="data_service">
+                    <thead>
+                        <tr>
+                            <th> Product Name</th>
+                            <th>Data Type</th>
+                            <th>Bandwidth</th>
+                            <th>IP Adress ipv4</th>
+                            <th>IP Adress ipv6</th>
+                            <th> Subnet Mask</th>
+                            <th> Gateway</th>
+                            <th> VLAN</th>
+                            <th> User ID</th>
+                            <th> Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @forelse ($logicalConnectivities->get('Data')?->lines as $key => $line)
                             <tr>
                                 <td>
@@ -267,27 +267,27 @@
                             </tr>
                         @empty
                         @endforelse
-                    @endif
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            @endif
 
-            <h5 class="text-center p-2">INTERNET SERVICE</h5>
-            <table class="table table-bordered" id="data_service">
-                <thead>
-                    <tr>
-                        <th> Product Name</th>
-                        <th>Bandwidth</th>
-                        <th>IP Adress ipv4</th>
-                        <th>IP Adress ipv6</th>
-                        <th> Subnet Mask</th>
-                        <th> Gateway</th>
-                        <th> VLAN</th>
-                        <th> User ID</th>
-                        <th> Password</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (!empty($logicalConnectivities->get('Internet')))
+            @if (!empty($logicalConnectivities->get('Internet')))
+                <h5 class="text-center p-2">INTERNET SERVICE</h5>
+                <table class="table table-bordered" id="data_service">
+                    <thead>
+                        <tr>
+                            <th> Product Name</th>
+                            <th>Bandwidth</th>
+                            <th>IP Adress ipv4</th>
+                            <th>IP Adress ipv6</th>
+                            <th> Subnet Mask</th>
+                            <th> Gateway</th>
+                            <th> VLAN</th>
+                            <th> User ID</th>
+                            <th> Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         @forelse ($logicalConnectivities->get('Internet')?->lines as $key => $line)
                             <tr>
                                 <td>
@@ -321,267 +321,269 @@
                             </tr>
                         @empty
                         @endforelse
-                    @endif
-                </tbody>
-            </table>
-
-            @if (in_array('dns', $facilityTypes))
-                <div class="row mt-4">
-                    <div class="form-group col-1">
-                        <label>&nbsp;</label>
-                        <div class="client_name">
-                            <div class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" value="dns" class="dns_checkbox" disabled
-                                        @checked(in_array('dns', $facilityTypes)) onclick="checkboxChange(this, dns_input_fields)">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">DNS</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-2 dns_domain">
-                        <label>Domain Name</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->dns_domain ?? '' }}">
-                    </div>
-
-                    <div class="form-group col-2 dns_mx_record">
-                        <label>Mx Record</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->dns_mx_record ?? '' }}"
-                            disabled>
-                    </div>
-
-                    <div class="form-group col-2 dns_a_record">
-                        <label>A Record</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->dns_a_record ?? '' }}"
-                            disabled>
-                    </div>
-
-                    <div class="form-group col-2 dns_reverse_record">
-                        <label>Reverse Record</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->dns_reverse_record ?? '' }}">
-                    </div>
-
-                    <div class="form-group col-2 dns_ip_address">
-                        <label>IP Address</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->dns_ip_address ?? '' }}"
-                            disabled>
-                    </div>
-                </div>
-            @endif
-            <hr>
-
-            @if (in_array('smtp', $facilityTypes))
-                <div class="row">
-                    <div class="form-group col-1">
-                        <label>&nbsp;</label>
-                        <div class="client_name">
-                            <div class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" value="smtp" class="smtp_checkbox" disabled
-                                        @checked(in_array('smtp', $facilityTypes)) onclick="checkboxChange(this, smtp_input_fields)">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">SMTP</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-2 smtp_domain">
-                        <label>Domain Name</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->smtp_domain ?? '' }}"
-                            disabled>
-                    </div>
-
-                    <div class="form-group col-2 smtp_server">
-                        <label>Server Name</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->smtp_server ?? '' }}"
-                            disabled>
-                    </div>
-                </div>
+                    </tbody>
+                </table>
             @endif
 
-            <hr>
-
-            @if (in_array('vpn', $facilityTypes))
-                <div class="row">
-                    <div class="form-group col-1">
-                        <label>&nbsp;</label>
-                        <div class="client_name">
-                            <div class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" value="vpn" class="vpn_checkbox" disabled
-                                        @checked(in_array('vpn', $facilityTypes)) onclick="checkboxChange(this, vpn_input_fields)">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">VPN</span>
-                                </label>
+            @if (!empty($facilityTypes))
+                @if (in_array('dns', $facilityTypes))
+                    <div class="row mt-4">
+                        <div class="form-group col-1">
+                            <label>&nbsp;</label>
+                            <div class="client_name">
+                                <div class="checkbox-fade fade-in-primary">
+                                    <label>
+                                        <input type="checkbox" value="dns" class="dns_checkbox" disabled
+                                            @checked(in_array('dns', $facilityTypes)) onclick="checkboxChange(this, dns_input_fields)">
+                                        <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span>
+                                        <span class="font-weight-bold">DNS</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group col-2 vpn_purpose">
-                        <label>Purpose Of Using VPN</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->vpn_purpose ?? '' }}"
-                            disabled>
-                    </div>
+                        <div class="form-group col-2 dns_domain">
+                            <label>Domain Name</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->dns_domain ?? '' }}">
+                        </div>
 
-                    <div class="form-group col-2 vpn_source_ip">
-                        <label>Source IP</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->vpn_source_ip ?? '' }}"
-                            disabled>
-                    </div>
+                        <div class="form-group col-2 dns_mx_record">
+                            <label>Mx Record</label>
+                            <input type="text" class="form-control"
+                                value="{{ $clientFacility->dns_mx_record ?? '' }}" disabled>
+                        </div>
 
-                    <div class="form-group col-2 vpn_destination_ip">
-                        <label>Destination IP</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->vpn_destination_ip ?? '' }}">
-                    </div>
+                        <div class="form-group col-2 dns_a_record">
+                            <label>A Record</label>
+                            <input type="text" class="form-control" value="{{ $clientFacility->dns_a_record ?? '' }}"
+                                disabled>
+                        </div>
 
-                    <div class="form-group col-2 vpn_bandwidth">
-                        <label>VPN Bandwidth (Mbps)</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->vpn_bandwidth ?? '' }}"
-                            disabled>
-                    </div>
+                        <div class="form-group col-2 dns_reverse_record">
+                            <label>Reverse Record</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->dns_reverse_record ?? '' }}">
+                        </div>
 
-                    <div class="form-group col-2 vpn_iig_name">
-                        <label>IIG Name</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->vpn_iig_name ?? '' }}"
-                            disabled>
-                    </div>
-
-                    <div class="form-group offset-md-1 col-2 vpn_tunnel_active_date">
-                        <label>VPN Tunnel Active Date</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->vpn_tunnel_active_date ?? '' }}">
-                    </div>
-
-                    <div class="form-group col-2 vpn_submission_date">
-                        <label>Submission Date</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->vpn_submission_date ?? '' }}">
-                    </div>
-
-                    <div class="form-group col-2 vpn_remarks">
-                        <label>Remarks</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->vpn_remarks ?? '' }}"
-                            disabled>
-                    </div>
-                </div>
-            @endif
-
-            <hr>
-
-            @if (in_array('vc', $facilityTypes))
-                <div class="row">
-                    <div class="form-group col-1">
-                        <label>&nbsp;</label>
-                        <div class="client_name">
-                            <div class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" value="vc" class="vc_checkbox" disabled
-                                        @checked(in_array('vc', $facilityTypes)) onclick="checkboxChange(this, vc_input_fields)">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">VC</span>
-                                </label>
-                            </div>
+                        <div class="form-group col-2 dns_ip_address">
+                            <label>IP Address</label>
+                            <input type="text" class="form-control"
+                                value="{{ $clientFacility->dns_ip_address ?? '' }}" disabled>
                         </div>
                     </div>
-                    <div class="form-group col-2 vc_issued_date">
-                        <label>Issued Date</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->vc_issued_date ?? '' }}">
-                    </div>
+                @endif
+                <hr>
 
-                    <div class="form-group col-2 vc_source_ip">
-                        <label>Source IP</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->vc_source_ip ?? '' }}"
-                            disabled>
-                    </div>
-
-                    <div class="form-group col-2 vc_destination_ip">
-                        <label>Destination IP</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->vc_destination_ip ?? '' }}">
-                    </div>
-
-                    <div class="form-group col-2 vc_iig_name">
-                        <label>IIG Name</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->vc_iig_name ?? '' }}"
-                            disabled>
-                    </div>
-
-                    <div class="form-group col-2 vc_itc_name">
-                        <label>ITC Name</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->vc_itc_name ?? '' }}"
-                            disabled>
-                    </div>
-
-                    <div class="form-group offset-md-1 col-2 vc_renewal_date">
-                        <label>Renewal Date</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->vc_renewal_date ?? '' }}">
-                    </div>
-
-                    <div class="form-group col-2 vc_remarks">
-                        <label>Remarks</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->vc_remarks ?? '' }}">
-                    </div>
-                </div>
-            @endif
-
-            <hr>
-
-            @if (in_array('bgp', $facilityTypes))
-                <div class="row">
-                    <div class="form-group col-1">
-                        <label>&nbsp;</label>
-                        <div class="client_name">
-                            <div class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" value="bgp" class="bgp_checkbox" disabled
-                                        @checked(in_array('bgp', $facilityTypes)) onclick="checkboxChange(this, bgp_input_fields)">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span class="font-weight-bold">BGP</span>
-                                </label>
+                @if (in_array('smtp', $facilityTypes))
+                    <div class="row">
+                        <div class="form-group col-1">
+                            <label>&nbsp;</label>
+                            <div class="client_name">
+                                <div class="checkbox-fade fade-in-primary">
+                                    <label>
+                                        <input type="checkbox" value="smtp" class="smtp_checkbox" disabled
+                                            @checked(in_array('smtp', $facilityTypes)) onclick="checkboxChange(this, smtp_input_fields)">
+                                        <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span>
+                                        <span class="font-weight-bold">SMTP</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="form-group col-2 smtp_domain">
+                            <label>Domain Name</label>
+                            <input type="text" class="form-control" value="{{ $clientFacility->smtp_domain ?? '' }}"
+                                disabled>
+                        </div>
 
-                    <div class="form-group col-2 bgp_primary_peering">
-                        <label>Primary Peering</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->bgp_primary_peering ?? '' }}">
+                        <div class="form-group col-2 smtp_server">
+                            <label>Server Name</label>
+                            <input type="text" class="form-control" value="{{ $clientFacility->smtp_server ?? '' }}"
+                                disabled>
+                        </div>
                     </div>
+                @endif
 
-                    <div class="form-group col-2 bgp_secondary_peering">
-                        <label>Secondary Peering</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->bgp_secondary_peering ?? '' }}">
-                    </div>
+                <hr>
 
-                    <div class="form-group col-2 bgp_client_prefix">
-                        <label>Client Prefix</label>
-                        <input type="text" class="form-control" disabled
-                            value="{{ $clientFacility->bgp_client_prefix ?? '' }}">
-                    </div>
+                @if (in_array('vpn', $facilityTypes))
+                    <div class="row">
+                        <div class="form-group col-1">
+                            <label>&nbsp;</label>
+                            <div class="client_name">
+                                <div class="checkbox-fade fade-in-primary">
+                                    <label>
+                                        <input type="checkbox" value="vpn" class="vpn_checkbox" disabled
+                                            @checked(in_array('vpn', $facilityTypes)) onclick="checkboxChange(this, vpn_input_fields)">
+                                        <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span>
+                                        <span class="font-weight-bold">VPN</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-2 vpn_purpose">
+                            <label>Purpose Of Using VPN</label>
+                            <input type="text" class="form-control" value="{{ $clientFacility->vpn_purpose ?? '' }}"
+                                disabled>
+                        </div>
 
-                    <div class="form-group col-2 bgp_client_as">
-                        <label>Client As</label>
-                        <input type="text" class="form-control" value="{{ $clientFacility->bgp_client_as ?? '' }}"
-                            disabled>
+                        <div class="form-group col-2 vpn_source_ip">
+                            <label>Source IP</label>
+                            <input type="text" class="form-control"
+                                value="{{ $clientFacility->vpn_source_ip ?? '' }}" disabled>
+                        </div>
+
+                        <div class="form-group col-2 vpn_destination_ip">
+                            <label>Destination IP</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->vpn_destination_ip ?? '' }}">
+                        </div>
+
+                        <div class="form-group col-2 vpn_bandwidth">
+                            <label>VPN Bandwidth (Mbps)</label>
+                            <input type="text" class="form-control"
+                                value="{{ $clientFacility->vpn_bandwidth ?? '' }}" disabled>
+                        </div>
+
+                        <div class="form-group col-2 vpn_iig_name">
+                            <label>IIG Name</label>
+                            <input type="text" class="form-control" value="{{ $clientFacility->vpn_iig_name ?? '' }}"
+                                disabled>
+                        </div>
+
+                        <div class="form-group offset-md-1 col-2 vpn_tunnel_active_date">
+                            <label>VPN Tunnel Active Date</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->vpn_tunnel_active_date ?? '' }}">
+                        </div>
+
+                        <div class="form-group col-2 vpn_submission_date">
+                            <label>Submission Date</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->vpn_submission_date ?? '' }}">
+                        </div>
+
+                        <div class="form-group col-2 vpn_remarks">
+                            <label>Remarks</label>
+                            <input type="text" class="form-control" value="{{ $clientFacility->vpn_remarks ?? '' }}"
+                                disabled>
+                        </div>
                     </div>
-                </div>
+                @endif
+
+                <hr>
+
+                @if (in_array('vc', $facilityTypes))
+                    <div class="row">
+                        <div class="form-group col-1">
+                            <label>&nbsp;</label>
+                            <div class="client_name">
+                                <div class="checkbox-fade fade-in-primary">
+                                    <label>
+                                        <input type="checkbox" value="vc" class="vc_checkbox" disabled
+                                            @checked(in_array('vc', $facilityTypes)) onclick="checkboxChange(this, vc_input_fields)">
+                                        <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span>
+                                        <span class="font-weight-bold">VC</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-2 vc_issued_date">
+                            <label>Issued Date</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->vc_issued_date ?? '' }}">
+                        </div>
+
+                        <div class="form-group col-2 vc_source_ip">
+                            <label>Source IP</label>
+                            <input type="text" class="form-control" value="{{ $clientFacility->vc_source_ip ?? '' }}"
+                                disabled>
+                        </div>
+
+                        <div class="form-group col-2 vc_destination_ip">
+                            <label>Destination IP</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->vc_destination_ip ?? '' }}">
+                        </div>
+
+                        <div class="form-group col-2 vc_iig_name">
+                            <label>IIG Name</label>
+                            <input type="text" class="form-control" value="{{ $clientFacility->vc_iig_name ?? '' }}"
+                                disabled>
+                        </div>
+
+                        <div class="form-group col-2 vc_itc_name">
+                            <label>ITC Name</label>
+                            <input type="text" class="form-control" value="{{ $clientFacility->vc_itc_name ?? '' }}"
+                                disabled>
+                        </div>
+
+                        <div class="form-group offset-md-1 col-2 vc_renewal_date">
+                            <label>Renewal Date</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->vc_renewal_date ?? '' }}">
+                        </div>
+
+                        <div class="form-group col-2 vc_remarks">
+                            <label>Remarks</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->vc_remarks ?? '' }}">
+                        </div>
+                    </div>
+                @endif
+
+                <hr>
+
+                @if (in_array('bgp', $facilityTypes))
+                    <div class="row">
+                        <div class="form-group col-1">
+                            <label>&nbsp;</label>
+                            <div class="client_name">
+                                <div class="checkbox-fade fade-in-primary">
+                                    <label>
+                                        <input type="checkbox" value="bgp" class="bgp_checkbox" disabled
+                                            @checked(in_array('bgp', $facilityTypes)) onclick="checkboxChange(this, bgp_input_fields)">
+                                        <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                        </span>
+                                        <span class="font-weight-bold">BGP</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-2 bgp_primary_peering">
+                            <label>Primary Peering</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->bgp_primary_peering ?? '' }}">
+                        </div>
+
+                        <div class="form-group col-2 bgp_secondary_peering">
+                            <label>Secondary Peering</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->bgp_secondary_peering ?? '' }}">
+                        </div>
+
+                        <div class="form-group col-2 bgp_client_prefix">
+                            <label>Client Prefix</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $clientFacility->bgp_client_prefix ?? '' }}">
+                        </div>
+
+                        <div class="form-group col-2 bgp_client_as">
+                            <label>Client As</label>
+                            <input type="text" class="form-control"
+                                value="{{ $clientFacility->bgp_client_as ?? '' }}" disabled>
+                        </div>
+                    </div>
+                @endif
             @endif
 
             @if (empty($connectivity))
