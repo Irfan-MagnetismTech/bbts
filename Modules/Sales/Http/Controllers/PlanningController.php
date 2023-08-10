@@ -32,7 +32,7 @@ class PlanningController extends Controller
      */
     public function index()
     {
-        $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')->get();
+        $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')->latest()->get();
         return view('sales::planning.index', compact('plans'));
     }
 

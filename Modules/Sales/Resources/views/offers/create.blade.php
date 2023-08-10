@@ -56,7 +56,7 @@
                         </div>
                         <x-input-box colGrid="3" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <div class="col-md-3 col-3">
-                            <input type="text" name="offer_validity" id="offer_validity" class="form-control date"
+                            <input type="text" name="offer_validity" id="offer_validity" class="form-control form-control-sm date"
                                 value="{{ $is_old ? old('offer_validity') : $costing->offer_validity ?? null }}"
                                 placeholder="Offer Validity" required>
 
@@ -171,7 +171,7 @@
                                                                     <input type="text"
                                                                         name="client_equipment_amount_{{ $row_no }}[]"
                                                                         value="{{ $link->plan_client_equipment_total }}"
-                                                                        class="form-control client_equipment_amount text-right"
+                                                                        class="form-control form-control-sm client_equipment_amount text-right"
                                                                         id="client_equipment_amount" readonly>
                                                                 </div>
                                                             </td>
@@ -181,7 +181,7 @@
                                                                     <input type="text"
                                                                         name="otc_{{ $row_no }}[]"
                                                                         value="{{ $link->otc }}"
-                                                                        class="form-control text-right" id="otc"
+                                                                        class="form-control form-control-sm text-right" id="otc"
                                                                         readonly>
                                                                 </div>
                                                             </td>
@@ -191,25 +191,27 @@
                                                                     <input type="text"
                                                                         name="mo_cost_{{ $row_no }}[]"
                                                                         value="{{ $link->roi + $link->capacity_amount }}"
-                                                                        class="form-control text-right" id="mo_cost"
+                                                                        class="form-control form-control-sm text-right" id="mo_cost"
                                                                         readonly>
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 <div
                                                                     class="input-group input-group-sm input-group-primary ">
-                                                                    <input type="text"
-                                                                        name="offer_otc_{{ $row_no }}[]"
-                                                                        class="form-control offer_otc text-right"
-                                                                        id="offer_otc">
-                                                                </div>
+                                                                    <input type="text"  name="offer_otc_{{ $row_no }}[]"
+                                                                        class="form-control form-control-sm offer_otc text-right" > 
+                                                                    <input type="hidden" class="link_invest" value="{{ $link->investment }}">
+                                                                    <input type="hidden" class="month" value="{{ $details->costing->month }}">
+                                                                    <input type="hidden" class="capacity_amount" value="{{ $link->capacity_amount }}">
+                                                                    <input type="hidden" class="operation_cost" value="{{ $link->operation_cost }}">
+                                                                </div> 
                                                             </td>
                                                             <td>
                                                                 <div
                                                                     class="input-group input-group-sm input-group-primary">
                                                                     <input type="text"
                                                                         name="total_cost_{{ $row_no }}[]"
-                                                                        class="form-control total_cost_otc text-right"
+                                                                        class="form-control form-control-sm total_cost_otc text-right"
                                                                         id="total_cost_otc" readonly>
                                                                 </div>
                                                             </td>
@@ -218,7 +220,7 @@
                                                                     class="input-group input-group-sm input-group-primary">
                                                                     <input type="text"
                                                                         name="offer_mrc_{{ $row_no }}[]"
-                                                                        class="form-control offer_mrc text-right"
+                                                                        class="form-control form-control-sm offer_mrc text-right"
                                                                         id="offer_mrc">
                                                                 </div>
                                                             </td>
@@ -233,7 +235,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="client_equipment_total_{{ $row_no }}"
-                                                                    class="form-control client_equipment_total text-right"
+                                                                    class="form-control form-control-sm client_equipment_total text-right"
                                                                     id="client_equipment_total"
                                                                     value="{{ $details->costing->costingLinks->sum('plan_client_equipment_total') }}"
                                                                     readonly>
@@ -243,7 +245,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="total_otc_{{ $row_no }}"
-                                                                    class="form-control total_otc text-right"
+                                                                    class="form-control form-control-sm total_otc text-right"
                                                                     id="total_otc[]"
                                                                     value="{{ $details->costing->costingLinks->sum('otc') }}"
                                                                     readonly>
@@ -254,7 +256,7 @@
                                                                 <input type="text"
                                                                     name="total_roi_{{ $row_no }}"
                                                                     value="{{ $details->costing->costingLinks->sum('roi') + $details->costing->costingLinks->sum('capacity_amount') }}"
-                                                                    class="form-control total_roi text-right"
+                                                                    class="form-control form-control-sm total_roi text-right"
                                                                     id="total_roi" readonly>
                                                             </div>
                                                         </td>
@@ -262,7 +264,7 @@
                                                             <div class="input-group input-group-sm input-group-primary ">
                                                                 <input type="text"
                                                                     name="total_offer_otc_{{ $row_no }}"
-                                                                    class="form-control total_offer_otc text-right"
+                                                                    class="form-control form-control-sm total_offer_otc text-right"
                                                                     id="total_offer_otc" readonly>
                                                             </div>
                                                         </td>
@@ -270,7 +272,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="grand_total_otc_{{ $row_no }}"
-                                                                    class="form-control grand_total_otc text-right"
+                                                                    class="form-control form-control-sm grand_total_otc text-right"
                                                                     id="grand_total_otc" readonly>
                                                             </div>
                                                         </td>
@@ -278,7 +280,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="total_offer_mrc_{{ $row_no }}"
-                                                                    class="form-control total_offer_mrc text-right"
+                                                                    class="form-control form-control-sm total_offer_mrc text-right"
                                                                     id="total_offer_mrc" readonly>
                                                             </div>
                                                         </td>
@@ -292,7 +294,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="product_equipment_price_{{ $row_no }}"
-                                                                    class="form-control product_equipment_price text-right"
+                                                                    class="form-control form-control-sm product_equipment_price text-right"
                                                                     id="product_equipment_price"
                                                                     value="{{ $details->costing->client_equipment_total }}"
                                                                     readonly>
@@ -302,7 +304,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="equipment_otc_{{ $row_no }}"
-                                                                    class="form-control text-right"
+                                                                    class="form-control form-control-sm text-right"
                                                                     value="{{ $details->costing->equipment_otc }}"
                                                                     id="equipment_otc" readonly>
                                                             </div>
@@ -312,7 +314,7 @@
                                                                 <input type="text"
                                                                     name="equipment_roi_{{ $row_no }}"
                                                                     value="{{ $details->costing->equipment_roi }}"
-                                                                    class="form-control text-right" id="equipment_roi"
+                                                                    class="form-control form-control-sm text-right" id="equipment_roi"
                                                                     readonly>
                                                             </div>
                                                         </td>
@@ -320,15 +322,17 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="equipment_offer_price_{{ $row_no }}"
-                                                                    class="form-control equipment_offer_price text-right"
+                                                                    class="form-control form-control-sm equipment_offer_price text-right"
                                                                     id="equipment_offer_price">
+                                                                <input type="hidden" class="month" value="{{ $details->costing->month }}">
+                                                                <input type="hidden" class="equipment_invest" value="{{ $details->costing->equipment_grand_total }}">
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="equipment_total_otc_{{ $row_no }}"
-                                                                    class="form-control equipment_total_otc text-right"
+                                                                    class="form-control form-control-sm equipment_total_otc text-right"
                                                                     id="equipment_total_otc" readonly>
                                                             </div>
                                                         </td>
@@ -336,7 +340,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="equipment_total_mrc_{{ $row_no }}"
-                                                                    class="form-control equipment_total_mrc text-right"
+                                                                    class="form-control form-control-sm equipment_total_mrc text-right"
                                                                     id="equipment_total_mrc">
                                                             </div>
                                                         </td>
@@ -351,7 +355,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="product_amount_{{ $row_no }}"
-                                                                    class="form-control product_price text-right"
+                                                                    class="form-control form-control-sm product_price text-right"
                                                                     value="{{ $details->costing->total_cost_amount }}"
                                                                     id="product_price" readonly>
                                                             </div>
@@ -361,7 +365,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="offer_product_amount_{{ $row_no }}"
-                                                                    class="form-control offer_product_amount text-right"
+                                                                    class="form-control form-control-sm offer_product_amount text-right"
                                                                     id="offer_product_amount">
                                                             </div>
                                                         </td>
@@ -376,7 +380,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="management_cost_{{ $row_no }}"
-                                                                    class="form-control management_cost text-right"
+                                                                    class="form-control form-control-sm management_cost text-right"
                                                                     value="{{ $details->costing->management_cost_amount }}"
                                                                     id="management_cost" readonly>
                                                             </div>
@@ -387,7 +391,7 @@
                                                                 <input type="text"
                                                                     name="offer_management_cost_{{ $row_no }}"
                                                                     value="{{ $details->costing->management_cost_amount ?? 0 }} "
-                                                                    class="form-control offer_management_cost text-right"
+                                                                    class="form-control form-control-sm offer_management_cost text-right"
                                                                     id="offer_management_cost" readonly>
                                                             </div>
                                                         </td>
@@ -401,7 +405,7 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="grand_total_{{ $row_no }}"
-                                                                    class="form-control grand_total text-right"
+                                                                    class="form-control form-control-sm grand_total text-right"
                                                                     id="grand_total" readonly>
                                                             </div>
                                                         </td>
@@ -414,7 +418,7 @@
                                 </div>
                             @endif
                         @endforeach
-                        <button class="py-2 btn btn-success">
+                        <button class="py-2 btn btn-success btn-block">
                             {{ !empty($lead_generation->id) ? 'Update' : 'Save' }}
                         </button>
                     </div>
