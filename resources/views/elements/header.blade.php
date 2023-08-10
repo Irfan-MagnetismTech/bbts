@@ -53,7 +53,7 @@
     @yield('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
     <style>
-        .form-control[readonly],
+            .form-control[readonly],
             .form-control[readonly="true"],
             .form-control[readonly="readonly"] {
             background: #edeaed !important;
