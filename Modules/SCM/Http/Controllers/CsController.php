@@ -70,10 +70,8 @@ class CsController extends Controller
      */
     public function store(CsRequest $request)
     {
-        // dd($request->all());
         try {
             $all_details = $this->getAllDetails($request->toArray());
-            // dd($all_details);
             DB::beginTransaction();
 
             $all_details['all_request']['cs_no'] = $this->csNo;
@@ -198,6 +196,7 @@ class CsController extends Controller
      */
     private function getAllDetails(array $request): array
     {
+        $cs_materials = [];
         foreach (array_keys($request['material_id']) as $material_key) {
             $cs_materials[] = [
                 'material_id' => $request['material_id'][$material_key],
@@ -205,6 +204,7 @@ class CsController extends Controller
             ];
         }
 
+        $cs_suppliers = [];
         foreach (array_keys($request['supplier_id']) as $supplier_key) {
             $cs_suppliers[] = [
                 'supplier_id'           => $request['supplier_id'][$supplier_key],

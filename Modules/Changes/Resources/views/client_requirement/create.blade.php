@@ -620,7 +620,7 @@
                     }
                 })
 
-                $('#date, #activation_date').datepicker({
+                $('#date, #activation_date, #from_date, #to_date').datepicker({
                     format: "dd-mm-yyyy",
                     autoclose: true,
                     todayHighlight: true,
