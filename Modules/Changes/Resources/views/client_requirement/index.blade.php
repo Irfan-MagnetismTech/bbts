@@ -56,6 +56,16 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
+                                    @if (!empty($client_requirement->planning) && !empty($client_requirement->survey))
+                                            <a href="{{ route('add-modified-costing', $client_requirement->id) }}"
+                                                class="btn btn-sm btn-success">Add Costing</a>
+                                    @elseif (!empty($client_requirement->survey))
+                                            <a href="{{ route('add-modified-planning', $client_requirement->id) }}"
+                                                class="btn btn-sm btn-success">Add Planning</a>
+                                    @else
+                                            <a href="{{ route('add-modified-survey', $client_requirement->id) }}"
+                                                class="btn btn-sm btn-success">Add Survey</a>
+                                    @endif
                                     <a href="{{ route('connectivity-requirement.show', $client_requirement->id) }}"
                                         data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i
                                             class="fas fa-eye"></i></a>

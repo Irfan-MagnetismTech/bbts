@@ -4,12 +4,15 @@ namespace Modules\Sales\Entities;
 
 use App\Models\Dataencoding\Thana;
 use Modules\Sales\Entities\Survey;
+use Modules\Sales\Entities\Vendor;
 use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\Planning;
 use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Division;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\OfferDetail;
 use Modules\Sales\Entities\SurveyDetail;
+use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\ConnectivityRequirement;
 
@@ -61,6 +64,11 @@ class FeasibilityRequirementDetail extends Model
     public function survey()
     {
         return $this->belongsTo(Survey::class, 'fr_no', 'fr_no');
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
 
     public function planning()

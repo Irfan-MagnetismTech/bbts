@@ -23,7 +23,7 @@ class ClientRequirementController extends Controller
      */
     public function index()
     {
-        $client_requirements = connectivityRequirement::where('is_modified', 1)->get();
+        $client_requirements = ConnectivityRequirement::modified()->get();
         return view('changes::client_requirement.index', compact('client_requirements'));
     }
 

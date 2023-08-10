@@ -15,6 +15,6 @@ class ConnectivityRequirementDetail extends Model
 
     public function vendor()
     {
-        return $this->hasOne(Vendor::class, 'id', 'vendor_id');
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
 }
