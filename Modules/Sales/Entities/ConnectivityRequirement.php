@@ -2,16 +2,41 @@
 
 namespace Modules\Sales\Entities;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Sales\Entities\ConnectivityRequirementDetail;
-use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Modules\Sales\Entities\ConnectivityRequirementDetail;
+use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
 
 class ConnectivityRequirement extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'client_no', 'fr_no', 'from_date', 'to_date', 'existing_mrc', 'decrease_mrc', 'connectivity_remarks', 'user_id', 'branch_id', 'date', 'change_type', 'activation_date', 'is_modified'
+    ];
+
+    private $dateField = ['activation_date', 'date', 'to_date', 'from_date'];
+
+    public function setAttribute($key, $value): void
+    {
+        if (in_array($key, $this->dateField)) {
+            $value = !empty($value) ? Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d') : null;
+        }
+
+        parent::setAttribute($key, $value);
+    }
+
+    public function getAttribute($key): mixed
+    {
+        $value = parent::getAttribute($key);
+
+        if (in_array($key, $this->dateField)) {
+            $value = !empty($value) ? Carbon::createFromFormat('Y-m-d', $value)->format('d-m-Y') : null;
+        }
+
+        return $value;
+    }
 
     public function connectivityRequirementDetails()
     {
