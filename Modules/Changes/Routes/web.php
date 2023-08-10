@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Changes\Http\Controllers\ClientRequirementController;
+use Modules\Changes\Http\Controllers\ClientPlanningModificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,5 +18,6 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
     Route::get('/', 'ChangesController@index');
     Route::resources([
         'client-requirement-modification' => ClientRequirementController::class,
+        'client-plan-modification' => ClientPlanningModificationController::class,
     ]);
 });
