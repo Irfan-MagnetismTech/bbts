@@ -408,3 +408,16 @@ select {
     font-weight: 100;
     line-height: 0.5;
 }
+
+.form-control[readonly],
+.form-control[readonly="true"],
+.form-control[readonly="readonly"] {
+    background: #edeaed !important;
+    opacity: 1;
+}
+
+.form-control[readonly]+label,
+.form-control[readonly="true"]+label,
+.form-control[readonly="readonly"]+label {
+    background: linear-gradient(to bottom, #ffffff 50%, #edeaed 50%) !important;
+}
