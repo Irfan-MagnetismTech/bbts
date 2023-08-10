@@ -2,12 +2,13 @@
 
 namespace Modules\Sales\Entities;
 
+use Modules\Sales\Entities\Client;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Sales\Entities\ConnectivityRequirementDetail;
-use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Modules\Sales\Entities\ConnectivityRequirementDetail;
+use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
 
 class ConnectivityRequirement extends Model
 {
@@ -26,6 +27,11 @@ class ConnectivityRequirement extends Model
     public function lead_generation()
     {
         return $this->belongsTo(LeadGeneration::class, 'client_no', 'client_no');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 
     public function FeasibilityRequirementDetail()
