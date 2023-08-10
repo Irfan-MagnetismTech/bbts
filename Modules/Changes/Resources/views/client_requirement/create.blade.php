@@ -139,7 +139,7 @@
                                 <input type="text" name="decrease_mrc" id="decrease_mrc" class="form-control">
                                 <label for="fr_no">Decrease MRC<span class="text-danger">*</span></label>
                             </div>
-                        </div>connectivity_
+                        </div>
                     </div>
                     <div class="row mt-4">
                         <div class="col-12">
@@ -603,10 +603,10 @@
                 $(document).on('change', '#mrc_decrease', function(e) {
                     if ($(this).is(':checked')) {
                         $('#existing_mrc').closest('.col-3').show();
-                        $('#mrc_decrease').closest('.col-3').show();
+                        $('#decrease_mrc').closest('.col-3').show();
                     } else {
                         $('#existing_mrc').closest('.col-3').hide();
-                        $('#mrc_decrease').closest('.col-3').hide();
+                        $('#decrease_mrc').closest('.col-3').hide();
                     }
                 });
 

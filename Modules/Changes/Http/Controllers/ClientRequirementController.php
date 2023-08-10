@@ -5,8 +5,6 @@ namespace Modules\Changes\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Contracts\Support\Renderable;
-use Modules\Changes\Entities\ClientRequirement;
-use Modules\Changes\Http\Requests\ClientRequirementRequest;
 use Modules\Sales\Entities\Category;
 use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\Vendor;
@@ -23,7 +21,7 @@ class ClientRequirementController extends Controller
      */
     public function index()
     {
-        $client_requirements = connectivityRequirement::where('is_modified', 1)->get();
+        $client_requirements = ConnectivityRequirement::where('is_modified', 1)->get();
         return view('changes::client_requirement.index', compact('client_requirements'));
     }
 
