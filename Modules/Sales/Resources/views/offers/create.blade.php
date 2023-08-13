@@ -229,8 +229,7 @@
 
                                                     <tr>
                                                         <td colspan="5" rowspan="5"></td>
-                                                        <td colspan="2" style="text-align: right;">Link wise Total
-                                                        </td>
+                                                        <td colspan="2" style="text-align: right;">Link wise Total </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
@@ -286,10 +285,8 @@
                                                         </td>
                                                     </tr>
 
-                                                    <tr>
-
-                                                        <td colspan="2" style="text-align: right;">Product
-                                                            Equipment</td>
+                                                    <tr> 
+                                                        <td colspan="2" style="text-align: right;">Product Equipment</td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"

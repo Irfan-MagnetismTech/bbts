@@ -37,7 +37,8 @@
                     let offer_mrc = element.total_offer_mrc ?? 0;
                     let product_amount = element.offer_product_amount ?? 0;
                     let management_cost = element.management_cost ?? 0;
-                    let total_mrc = offer_mrc + product_amount + management_cost;
+                    let total_mrc = offer_mrc + product_amount + management_cost + element.equipment_total_mrc;
+ 
                     var percentage = (total_mrc / element.costing.product_total_cost) - 1; 
                     appendedData += `<div class="card">
                                         <div class="card-body">
@@ -125,6 +126,7 @@
                                                 `
                     let total = 0; sub_total_vat = 0; sub_total_amount = 0;
                     element.costing.costing_products.forEach(itm => {
+                        // console.log(percentage, itm.rate, itm.quantity);
                         let total_price = (Number(percentage) * Number(itm.rate) + Number(itm.rate)) * Number(itm.quantity);
                         let total_amount = Number(itm.product_vat_amount) + total_price;
                         total += total_price;
@@ -192,7 +194,7 @@
                                             <td style="text-align: center;">Total MRC</td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc[${indx}]" class="form-control text-right total_mrc" readonly value="${total.toFixed(2)}">
+                                                    <input type="text" name="total_mrc[${indx}]" class="form-control text-right total_mrc" readonly value="${total.toFixed(2)} ">
                                                 </div>
                                             </td>
                                             <td>
