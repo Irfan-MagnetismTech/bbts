@@ -6,6 +6,23 @@
     $form_heading = 'Create';
     $form_url = route('planning.store');
     $form_method = 'POST';
+    $client_no = $is_old ? old('client_no') : $connectivity_requirement->lead_generation->client_no;
+    $client_name = $is_old ? old('client_name') : $connectivity_requirement->lead_generation->client_name;
+    $client_address = $is_old ? old('client_address') : $connectivity_requirement->lead_generation->address;
+    $client_division = $is_old ? old('client_division') : $connectivity_requirement->lead_generation->division->name;
+    $client_district = $is_old ? old('client_district') : $connectivity_requirement->lead_generation->district->name;
+    $client_thana = $is_old ? old('client_thana') : $connectivity_requirement->lead_generation->thana->name;
+    $client_landmark = $is_old ? old('client_landmark') : $connectivity_requirement->lead_generation->landmark;
+    $client_lat_long = $is_old ? old('client_lat_long') : $connectivity_requirement->lead_generation->lat_long;
+    $client_contact_person = $is_old ? old('client_contact_person') : $connectivity_requirement->lead_generation->contact_person;
+    $client_contact_no = $is_old ? old('client_contact_no') : $connectivity_requirement->lead_generation->contact_no;
+    $client_email = $is_old ? old('client_email') : $connectivity_requirement->lead_generation->email;
+    $client_website = $is_old ? old('client_website') : $connectivity_requirement->lead_generation->website;
+    $client_document = $is_old ? old('client_document') : $connectivity_requirement->lead_generation->document;
+    $change_type = $is_old ? old('change_type') : json_decode($connectivity_requirement->change_type) ?? [];
+    $requirement_details = $is_old ? old('requirement_details') : $connectivity_requirement->connectivityRequirementDetails;
+    $product_details = $is_old ? old('product_details') : $connectivity_requirement->connectivityProductRequirementDetails;
+    $fr_no = $is_old ? old('fr_no') : $connectivity_requirement->fr_no;
 @endphp
 @section('style')
     <style>
@@ -62,37 +79,37 @@
                             <table class="table custom_table table-bordered" style="font-size: 12px;">
                                 <tr>
                                     <th class="table_label">Client Name</th>
-                                    <td></td>
+                                    <td>{{ $client_name }}</td>
                                     <th class="table_label">Address</th>
-                                    <td></td>
+                                    <td>{{ $client_address }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Division</th>
-                                    <td></td>
+                                    <td>{{ $client_division }}</td>
                                     <th class="table_label">District</th>
-                                    <td></td>
+                                    <td>{{ $client_district }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Thana</th>
-                                    <td></td>
+                                    <td>{{ $client_thana }}</td>
                                     <th class="table_label">Landmark</th>
-                                    <td></td>
+                                    <td>{{ $client_landmark }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Lat-Long</th>
-                                    <td></td>
+                                    <td>{{ $client_lat_long }}</td>
                                     <th class="table_label">Contact Person</th>
-                                    <td></td>
+                                    <td>{{ $client_contact_person }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact No</th>
-                                    <td></td>
+                                    <td>{{ $client_contact_no }}</td>
                                     <th class="table_label">Email</th>
-                                    <td></td>
+                                    <td>{{ $client_email }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Website</th>
-                                    <td></td>
+                                    <td>{{ $client_website }}</td>
                                     <th class="table_label">Document</th>
                                     <td>
                                         {{-- @if ($lead_generation->document)
@@ -111,7 +128,7 @@
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
                                     <input type="checkbox" name="change_type[]" id="temporary_inactive"
-                                        value="Temporary-Inactive">
+                                        @if (in_array('Temporary-Inactive', $change_type)) checked @endif value="Temporary-Inactive">
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -120,7 +137,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primar  y">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Permanent-Inactive">
+                                    <input type="checkbox" name="change_type[]" value="Permanent-Inactive"
+                                        id="permanent_inactive" @if (in_array('Permanent-Inactive', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -129,7 +147,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Re-Inactive">
+                                    <input type="checkbox" name="change_type[]" value="Re-Inactive" id="re_inactive"
+                                        @if (in_array('Re-Inactive', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -138,7 +157,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="B/W Increase/Decrease">
+                                    <input type="checkbox" name="change_type[]" value="B/W Increase/Decrease"
+                                        id="bw_increase_decrease" @if (in_array('B/W Increase/Decrease', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -147,7 +167,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="IP Increase/Decrease">
+                                    <input type="checkbox" name="change_type[]" value="IP Increase/Decrease"
+                                        id="ip_increase_decrease" @if (in_array('IP Increase/Decrease', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -156,7 +177,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" id="mrc_decrease" value="MRC-Decrease">
+                                    <input type="checkbox" name="change_type[]" id="mrc_decrease" value="MRC-Decrease"
+                                        @if (in_array('MRC-Decrease', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -166,7 +188,8 @@
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
                                     <input type="checkbox" name="change_type[]"
-                                        value="Price Increase/Decrease with BW Change">
+                                        value="Price Increase/Decrease with BW Change" id="price_increase_decrease"
+                                        @if (in_array('Price Increase/Decrease with BW Change', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -175,7 +198,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Method Change">
+                                    <input type="checkbox" name="change_type[]" value="Method Change" id="method_change"
+                                        @if (in_array('Method Change', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -184,7 +208,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Redundant Link">
+                                    <input type="checkbox" name="change_type[]" value="Redundant Link" id="redundant_link"
+                                        @if (in_array('Redundant Link', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -193,7 +218,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Shifting">
+                                    <input type="checkbox" name="change_type[]" value="Shifting" id="shifting"
+                                        @if (in_array('Shifting', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -228,6 +254,34 @@
                                         </tr>
                                     </thead>
                                     <tbody id="particular_body">
+                                        @foreach ($product_details as $product_detail)
+                                            <tr>
+                                                <td>
+                                                    <input type="hidden" name="detail_id[]" id="detail_id"
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $product_detail->id ?? '' }}">
+                                                    <span
+                                                        class="form-control form-control-sm">{{ $product_detail->product->name ?? '' }}</span>
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        class="form-control form-control-sm">{{ $product_detail->capacity ?? '' }}</span>
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="plan[]" id="plan"
+                                                        class="form-control form-control-sm" value="">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="remarks[]" class="form-control"
+                                                        value="{{ $product_detail->remarks }}" />
+                                                </td>
+                                                <td>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-danger removeParticularRow"><i
+                                                            class="fas fa-minus"></i></button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -575,11 +629,10 @@
                             </div>
                         </div>
                     </div>
-                    <input type="hidden" id="client_no" name="client_no" value="">
-                    <input type="hidden" id="fr_no" name="fr_no" value="">
+                    <input type="hidden" id="client_no" name="client_no" value="{{ $client_no }}">
+                    <input type="hidden" id="fr_no" name="fr_no" value="{{ $fr_no }}">
                 </div>
-                <button
-                    class="py-2 btn btn-success float-right">{{ !empty($connectivity_requirement->id) ? 'Update' : 'Save' }}</button>
+                <button class="py-2 btn btn-success float-right">Save</button>
             </div>
         </div>
         {!! Form::close() !!}
@@ -587,5 +640,225 @@
     @endsection
 
     @section('script')
+        <script>
+            let plan_equipment_html = '';
+            $('#addEquipmentRow').on('click', function() {
+                addEquipmentRow();
+            });
 
+            function addEquipmentRow() {
+                let check_first_row = $('.equipment_row').first();
+                if (check_first_row.length !== 0) {
+                    console.log('not empty');
+                    $('.equipment_row').first().clone().appendTo('#equipment_body');
+                    $('.equipment_row').last().find('input').val('');
+                    $('.equipment_row').last().find('select').val('');
+                } else {
+                    console.log('empty');
+                    console.log(plan_equipment_html);
+                    $('#equipment_body').append('<tr>' + plan_equipment_html + '</tr>');
+                }
+                // $('.equipment_row').first().clone().appendTo('#equipment_body');
+                // $('.equipment_row').last().find('input').val('');
+                // $('.equipment_row').last().find('select').val('');
+            };
+
+
+            $(document).on('click', '.removeEquipmentRow', function() {
+                let count = $('.equipment_row').length;
+                if (count > 1) {
+                    $(this).closest('tr').remove();
+                } else {
+                    plan_equipment_html = $(this).closest('tr').html();
+                    $(this).closest('tr').remove();
+                }
+            });
+
+            $('#date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
+
+            function optionChange(event) {
+                let option = $(event.target).val();
+                var link_type = $(event.target).closest('.main_link').find('.link_type').val();
+                let client_id = $('#client_no').val();
+                let fr_no = $('#fr_no').val();
+                $.ajax({
+                    url: "{{ route('get-modify-survey-details') }}",
+                    data: {
+                        option: option,
+                        link_type: link_type,
+                        client_id: client_id,
+                        fr_no: fr_no,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $(event.target).closest('.main_link').find('input[name^="link_vendor_"]').val(data?.vendor
+                            ?.name);
+                        $(event.target).closest('.main_link').find('input[name^="link_vender_id_"]').val(data
+                            ?.vendor
+                            ?.id);
+                        $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(data
+                            .status);
+                        $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_"]').val(data
+                            .pop.name);
+                        $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val(
+                            data.pop
+                            .id);
+                        $(event.target).closest('.main_link').find('input[name^="last_mile_connectivity_method_"]')
+                            .val(data
+                                .method);
+                        $(event.target).closest('.main_link').find('input[name^="connectivity_long_"]').val(data
+                            .long);
+                        $(event.target).closest('.main_link').find('input[name^="connectivity_lat_"]').val(data
+                            .lat);
+                        $(event.target).closest('.main_link').find('input[name^="distance_"]').val(data.distance);
+                        $(event.target).closest('.main_link').find('input[name^="gps_"]').val(data.gps);
+                        $(event.target).closest('.main_link').find('input[name^="connectivity_point_"]').val(data
+                            .bts_pop_ldp)
+                        // $(event.target).closest('.main_link').find('.link_vendor').html(data.vendor);
+                        // $(event.target).closest('.main_link').find('.availability_status').html(data.status);
+                        // $(event.target).closest('.main_link').find('.link_connecting_pop').html(data.bts_pop_ldp);
+                        // $(event.target).closest('.main_link').find('.last_mile_connectivity_method').html(data
+                        //     .method);
+                        // $(event.target).closest('.main_link').find('.connectivity_lat_long').html(data.gps);
+                        // $(event.target).closest('.main_link').find('.distance').val(data.distance);
+                        // $(event.target).closest('.main_link').find('.gps').val(data.gps);
+                        // $(event.target).closest('.main_link').find('.connectivity_point').val(data.bts_pop_ldp)
+                    }
+                });
+            }
+
+            function addLinkEquipmentRow(event) {
+                var $table = $(event).closest('.table-bordered');
+                var $clone = $table.find('tbody tr:first').clone();
+                $clone.find('input').val('');
+                $clone.find('select').val('');
+                $table.find('tbody').append($clone);
+            }
+
+            function removeLinkEquipmentRow(event) {
+                var $table = $(event).closest('.table-bordered');
+                var $tr = $table.find('tbody tr');
+                if ($tr.length > 1) {
+                    $(event).closest('tr').remove();
+                }
+            }
+            $('#addLinkRow').on('click', function() {
+                addLinkRow();
+            });
+
+            function addLinkRow() {
+                var clonedRow = $('.main_link').first().clone();
+                var count_row = $('.main_link').length;
+                var link_no = parseInt(count_row) + 1;
+                $('#total_key').val(link_no);
+
+                clonedRow.find('input, select').val('').attr('name', function(index, name) {
+                    var underscoreIndex = name.lastIndexOf('_');
+                    if (underscoreIndex !== -1) {
+                        var baseName = name.substring(0, underscoreIndex);
+                        var fieldName = name.substring(underscoreIndex + 1);
+                        if (fieldName.includes('[]')) {
+                            return baseName + '_' + link_no + '[]';
+                        } else {
+                            return baseName + '_' + link_no;
+                        }
+                    }
+                });
+                clonedRow.find('#addLinkEquipmentRow').attr('id', 'addLinkEquipmentRow_' + link_no);
+                clonedRow.find('#removeLinkEquipmentRow').attr('id', 'removeLinkEquipmentRow_' + link_no);
+                clonedRow.find('.link_no').html(link_no);
+                clonedRow.appendTo('#link_container');
+                var $equipmentRow = clonedRow.find('.link_equipment_table').children('tr').length;
+                console.log($equipmentRow);
+                if ($equipmentRow > 1) {
+                    clonedRow.find('.link_equipment_table tr').not(':first').remove();
+                }
+            }
+
+            function removeLinkRow(event) {
+                var count = $('.main_link').length;
+                if (count > 1) {
+                    $(event).closest('.main_link').remove();
+                }
+            }
+
+            $(document).on('change', '.equipment_id', function() {
+                var equipment_id = $(this).val();
+                var equiments = {!! json_encode($materials) !!};
+                var find_equipment = equiments.find(x => x.id == equipment_id);
+                console.log(find_equipment);
+                $(this).closest('tr').find('.unit').val(find_equipment.unit);
+            });
+
+            $(document).on('change', '.link_material_id', function() {
+                var material_id = $(this).val();
+                var materials = {!! json_encode($materials) !!};
+                var find_material = materials.find(x => x.id == material_id);
+                $(this).closest('tr').find('.link_unit').val(find_material.unit);
+            });
+
+            let link_array = [];
+
+            $('.existing_infrastructure').on('change', function() {
+                var this_event = $(this);
+                var value = this_event.val();
+                let pop_id = this_event.closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val();
+
+                if (value == 'Existing') {
+                    $.ajax({
+                        url: "{{ route('get-existing-link-list') }}",
+                        data: {
+                            pop_id: pop_id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            this_event.closest('.main_link').find('.link_list').css('display', 'block');
+                            var html = '<option value="">Select Link</option>';
+                            $.each(data, function(key, item) {
+                                $.each(item, function(key, value) {
+                                    link_array.push(value);
+                                    html += '<option value="' + value.bbts_link_id + '">' +
+                                        value.bbts_link_id + '</option>';
+                                });
+                            });
+                            this_event.closest('.main_link').find('.existing_infrastructure_link').html(
+                                html);
+                        }
+                    });
+                } else {
+                    this_event.closest('.main_link').find('.link_list').css('display', 'none');
+                }
+            });
+
+            $('.existing_infrastructure_link').on('change', function() {
+                console.log(link_array);
+                var this_event = $(this);
+                var value = this_event.val();
+
+                // Filter the link_array to find the link with the selected 'bbts_link_id'
+                var link = link_array.filter(function(item) {
+                    return item.bbts_link_id == value;
+                });
+
+                // Sort the link array based on the 'created_at' date in descending order (latest date first)
+                link.sort(function(a, b) {
+                    // Convert the dates to JavaScript Date objects for comparison
+                    const dateA = new Date(a.created_at);
+                    const dateB = new Date(b.created_at);
+                    // Sort in descending order
+                    return dateB - dateA;
+                });
+
+                // Access the link with the latest date (first element of the sorted array)
+                const latestLink = link[0];
+                console.log('latestLink', latestLink);
+                this_event.closest('.main_link').find('.existing_transmission_capacity').val(latestLink.capacity).attr(
+                    'value', latestLink.capacity);
+            });
+        </script>
     @endsection
