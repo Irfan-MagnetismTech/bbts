@@ -4,6 +4,8 @@ namespace Modules\Sales\Entities;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\ConnectivityRequirementDetail;
@@ -37,42 +39,42 @@ class ConnectivityRequirement extends Model
         return $value;
     }
 
-    public function connectivityRequirementDetails()
+    public function connectivityRequirementDetails(): HasMany
     {
         return $this->hasMany(ConnectivityRequirementDetail::class);
     }
 
-    public function connectivityProductRequirementDetails()
+    public function connectivityProductRequirementDetails(): HasMany
     {
         return $this->hasMany(ConnectivityProductRequirementDetail::class);
     }
 
-    public function lead_generation()
+    public function lead_generation(): BelongsTo
     {
         return $this->belongsTo(LeadGeneration::class, 'client_no', 'client_no');
     }
 
-    public function client()
+    public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 
-    public function FeasibilityRequirementDetail()
+    public function FeasibilityRequirementDetail(): BelongsTo
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
     }
 
-    public function fromLocation()
+    public function fromLocation(): BelongsTo
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'from_location', 'id');
     }
 
-    public function scopeUnmodified($query)
+    public function scopeUnmodified($query): mixed
     {
         return $query->where('is_modified', 0);
     }
 
-    public function scopeModified($query)
+    public function scopeModified($query): mixed
     {
         return $query->where('is_modified', 1);
     }

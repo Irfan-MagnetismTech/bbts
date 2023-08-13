@@ -2,18 +2,20 @@
 
 namespace Modules\Changes\Http\Controllers;
 
+use Mpdf\Tag\Dd;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Database\QueryException;
-use Modules\Sales\Entities\Category;
-use Modules\Sales\Entities\Product;
-use Modules\Sales\Entities\Vendor;
 use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\Vendor;
+use Modules\Sales\Entities\Product;
+use Modules\Sales\Entities\Category;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Database\QueryException;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\ConnectivityRequirement;
-use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\ConnectivityRequirementDetail;
-use Mpdf\Tag\Dd;
+use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
 
 class ClientRequirementController extends Controller
 {
@@ -23,7 +25,7 @@ class ClientRequirementController extends Controller
      */
     public function index()
     {
-        $client_requirements = ConnectivityRequirement::modified()->get();
+        $client_requirements = ConnectivityRequirement::modified()->latest()->get();
         return view('changes::client_requirement.index', compact('client_requirements'));
     }
 
@@ -49,15 +51,70 @@ class ClientRequirementController extends Controller
         return $this->storeOrUpdate($request);
     }
 
-    protected function storeOrUpdate($request, ConnectivityRequirement $requirement = null)
+    /**
+     * Show the specified resource.
+     * @param int $id
+     * @return Renderable
+     */
+    public function show($id)
+    {
+        return view('changes::show');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     * @param int $id
+     * @return Renderable
+     */
+    public function edit(ConnectivityRequirement $clientRequirementModification)
+    {
+        $products = Product::all();
+        $categories = Category::all();
+        $vendors = Vendor::all();
+        $frList = FeasibilityRequirementDetail::where('client_no', $clientRequirementModification->client_no)->pluck('fr_no', 'id');
+
+        return view('changes::client_requirement.create', compact('products', 'categories', 'vendors', 'clientRequirementModification', 'frList'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     * @param Request $request
+     * @param int $id
+     * @return Renderable
+     */
+    public function update(Request $request, ConnectivityRequirement $clientRequirementModification)
+    {
+        return $this->storeOrUpdate($request, $clientRequirementModification);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     * @param int $id
+     * @return Renderable
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    /**
+     * Creating or updating the connectivity requirement
+     * 
+     * @param Request $request
+     * @param ConnectivityRequirement|null $requirement
+     * @return RedirectResponse
+     * 
+     * @throws QueryException
+     */
+    protected function storeOrUpdate($request, ConnectivityRequirement $clientRequirementModification = null): RedirectResponse
     {
         $requestedData = collect($request->all());
-        $parentData = $requestedData->merge($this->extractParentData($request))->toArray();
+        $parentData = $requestedData->merge($this->extraParentData($request))->toArray();
 
         try {
             DB::beginTransaction();
 
-            $requirement = $this->createOrUpdateConnectivityRequirement($parentData, $requirement);
+            $requirement = $this->createOrUpdateConnectivityRequirement($parentData, $clientRequirementModification);
 
             $productRequirementData = $this->extractProductRequirementData($parentData);
             $requirement->connectivityProductRequirementDetails()->createMany($productRequirementData);
@@ -71,11 +128,17 @@ class ClientRequirementController extends Controller
         } catch (QueryException $e) {
             DB::rollback();
 
-            return $this->handleErrorAndRedirectBack($e, $parentData);
+            return redirect()->back()->with('error', $e->getMessage())->withInput();
         }
     }
 
-    protected function extractParentData($request)
+    /**
+     * Adding extra data to the parent data
+     * 
+     * @param Request $request
+     * @return array
+     */
+    protected function extraParentData($request): array
     {
         return [
             'user_id' => auth()->id() ?: '',
@@ -85,19 +148,32 @@ class ClientRequirementController extends Controller
         ];
     }
 
-    protected function createOrUpdateConnectivityRequirement(array $parentData, ConnectivityRequirement $requirement = null)
+    /**
+     * Creating or updating the connectivity requirement
+     * 
+     * @param array $parentData
+     * @param ConnectivityRequirement|null $requirement
+     * @return ConnectivityRequirement
+     */
+    protected function createOrUpdateConnectivityRequirement(array $parentData, ConnectivityRequirement $clientRequirementModification = null)
     {
-        if (!$requirement) {
+        if (!$clientRequirementModification) {
             return ConnectivityRequirement::create($parentData);
         } else {
-            $requirement->update($parentData);
-            $requirement->connectivityProductRequirementDetails()->delete();
-            $requirement->connectivityRequirementDetails()->delete();
-            return $requirement;
+            $clientRequirementModification->update($parentData);
+            $clientRequirementModification->connectivityProductRequirementDetails()->delete();
+            $clientRequirementModification->connectivityRequirementDetails()->delete();
+            return $clientRequirementModification;
         }
     }
 
-    protected function extractProductRequirementData($request)
+    /**
+     * Creating product requirement lines data
+     * 
+     * @param $request
+     * @return array
+     */
+    protected function extractProductRequirementData($request): array
     {
         $data = [];
         foreach ($request['plan'] as $key => $plan) {
@@ -113,7 +189,13 @@ class ClientRequirementController extends Controller
         return $data;
     }
 
-    protected function extractRequirementDetailsData($request)
+    /**
+     * Creating requirement lines data
+     * 
+     * @param $request
+     * @return array
+     */
+    protected function extractRequirementDetailsData($request): array
     {
         $data = [];
         foreach ($request['link_type'] as $key => $link_type) {
@@ -130,56 +212,15 @@ class ClientRequirementController extends Controller
         return $data;
     }
 
-    protected function redirectToIndexWithMessage(ConnectivityRequirement $requirement)
-    {
-        $message = 'Connectivity Requirement ' . ($requirement->wasRecentlyCreated ? 'Created' : 'Updated') . ' Successfully';
-        return redirect()->route('client-requirement-modification.index')->with('success', $message);
-    }
-
-    protected function handleErrorAndRedirectBack(QueryException $e)
-    {
-        return redirect()->back()->with('error', $e->getMessage())->withInput();
-    }
-
-
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Redirecting to index page with message
+     * 
+     * @param ConnectivityRequirement $clientRequirementModification
+     * @return RedirectResponse
      */
-    public function show($id)
+    protected function redirectBackWithMessage(ConnectivityRequirement $clientRequirementModification): RedirectResponse
     {
-        return view('changes::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('changes::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, ConnectivityRequirement $requirement)
-    {
-        return $this->storeOrUpdate($request, $requirement);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        $message = 'Connectivity Requirement ' . ($clientRequirementModification->wasRecentlyCreated ? 'Created' : 'Updated') . ' Successfully';
+        return redirect()->back()->with('success', $message);
     }
 }

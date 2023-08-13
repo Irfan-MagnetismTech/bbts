@@ -3,10 +3,19 @@
 
 @php
     $is_old = old() ? true : false;
-    $form_heading = !empty($requirement_modification->id) ? 'Update' : 'Add';
-    $form_url = !empty($requirement_modification->id) ? route('client-requirement-modification.update', $requirement_modification->id) : route('client-requirement-modification.store');
-    $form_method = !empty($requirement_modification->id) ? 'PUT' : 'POST';
-@endphp
+    $form_heading = !empty($clientRequirementModification->id) ? 'Update' : 'Add';
+    $form_url = !empty($clientRequirementModification->id) ? route('client-requirement-modification.update', $clientRequirementModification->id) : route('client-requirement-modification.store');
+    $form_method = !empty($clientRequirementModification->id) ? 'PUT' : 'POST';
+
+    $client_no = !empty($clientRequirementModification) ? $clientRequirementModification->client_no : (old('client_no') ? old('client_no') : '');
+    $client_name = !empty($clientRequirementModification) ? $clientRequirementModification->client->client_name : (old('client_name') ? old('client_name') : '');
+    $date = !empty($clientRequirementModification) ? $clientRequirementModification->date : (old('date') ? old('date') : '');
+    $activation_date = !empty($clientRequirementModification) ? $clientRequirementModification->activation_date : (old('activation_date') ? old('activation_date') : '');
+    $fr_no = !empty($clientRequirementModification) ? $clientRequirementModification->fr_no : (old('fr_no') ? old('fr_no') : '');
+    $connectivity_remarks = !empty($clientRequirementModification) ? $clientRequirementModification->connectivity_remarks : (old('connectivity_remarks') ? old('connectivity_remarks') : '');
+    $change_type = json_decode($clientRequirementModification->change_type);
+
+    @endphp
 
 @section('breadcrumb-title')
     {{ ucfirst($form_heading) }} Client Requirement Modification
@@ -69,34 +78,31 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        @php
-                            
-                        @endphp
                     </div>
                     <div class="row">
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_no" id="client_no" class="form-control" value="">
+                                <input type="text" name="client_no" id="client_no" class="form-control" value="{{ $client_no }}">
                                 <label for="client_id">Client ID <span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
                                 <input type="text" name="client_name" id="client_name" class="form-control"
-                                    value="" readonly>
+                                    value="{{ $client_name }}" readonly>
                                 <label for="client_name">Client Name <span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="date" id="date" class="form-control" value="">
+                                <input type="text" name="date" id="date" class="form-control" value="{{ $date }}">
                                 <label for="date">Date <span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        <div class="md-col-3 col-3">
+                        <div class="md-col-3 col-3">z
                             <div class="form-item">
                                 <input type="text" name="activation_date" id="activation_date" class="form-control"
-                                    value="">
+                                    value="{{ $activation_date }}">
                                 <label for="activation_date">Activation Date <span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -104,19 +110,24 @@
                             <div class="form-item">
                                 <select name="fr_no" id="fr_no" class="form-control">
                                     <option value="">Select FR No</option>
+                                    @if(!empty($clientRequirementModification))
+                                        @foreach($frList as $fr_no)
+                                            <option value="{{ $fr_no }}" @selected($fr_no == $fr_no)>{{ $fr_no }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                                 <label for="fr_no">FR No <span class="text-danger">*</span></label>
                             </div>
-                        </div>
-                        {{-- file upload --}}
+                        </div>                        
                         <div class="md-col-3 col-3">
                             <div class="form-item">
                                 <input type="text" name="connectivity_remarks" id="connectivity_remarks"
-                                    class="form-control">
+                                    class="form-control" value="{{ $connectivity_remarks }}">
                                 <label for="fr_no">Remarks <span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        <div class="md-col-3 col-3" style="display: none;">
+                        
+                        <div class="md-col-3 col-3" @if(in_array('Shifting', $change_type))style="display: none;">
                             <div class="form-item">
                                 <input type="text" name="from_date" id="from_date" class="form-control">
                                 <label for="fr_no">From date <span class="text-danger">*</span></label>
@@ -323,14 +334,16 @@
                         class="py-2 btn btn-success float-right">{{ !empty($client_request->id) ? 'Update' : 'Save' }}</button>
                 </div>
             </div>
-            {!! Form::close() !!}
+        </div>
+    </div>
+    {!! Form::close() !!}
 
-        @endsection
+@endsection
 
-        @section('script')
-            <script>
-                function addProductEdit() {
-                    let table_row = `
+@section('script')
+    <script>
+        function addProductEdit() {
+            let table_row = `
                             <tr class="product_details_row">
                                 <td>
                                     <select name="product_category[]" class="form-control product_category">
@@ -362,16 +375,16 @@
                                 </td>
                             </tr>
                         `;
-                    $('.productBody').append(table_row);
-                };
+            $('.productBody').append(table_row);
+        };
 
-                $(document).on('click', '.removeProductRow', function(e) {
-                    e.preventDefault();
-                    $(this).closest('tr').remove();
-                });
+        $(document).on('click', '.removeProductRow', function(e) {
+            e.preventDefault();
+            $(this).closest('tr').remove();
+        });
 
-                function addConnectivityEdit() {
-                    let table_row = `
+        function addConnectivityEdit() {
+            let table_row = `
                             <tr class="connectivity_details_row">
                                 <td>
                                     <select name="link_type[]" class="form-control link_type">
@@ -408,60 +421,60 @@
                                 </td>
                             </tr>
                         `;
-                    $('.connectivityEditBody').append(table_row);
-                };
+            $('.connectivityEditBody').append(table_row);
+        };
 
-                $(document).on('click', '.removeConnectivityRow', function(e) {
-                    e.preventDefault();
-                    $(this).closest('tr').remove();
-                });
+        $(document).on('click', '.removeConnectivityRow', function(e) {
+            e.preventDefault();
+            $(this).closest('tr').remove();
+        });
 
 
-                $('#client_no').on('input', function() {
-                    var client_id = $(this).val();
-                    var html = '<option value="">Select Fr No</option>';
-                    $(this).autocomplete({
-                        source: function(request, response) {
-                            $.ajax({
-                                url: "{{ route('searchClient') }}",
-                                data: {
-                                    client_id: client_id,
-                                },
-                                success: function(data) {
-                                    response(data);
-                                }
-                            });
-                        },
-                        select: function(event, ui) {
-                            $('#client_no').val(ui.item.value).attr('value', ui.item.value);
-                            $('#client_name').val(ui.item.label).attr('value', ui.item.label);
-                            //foreach loop for fr no
-                            $.each(ui.item.frDetails, function(key, value) {
-                                html += '<option value="' + value + '">' + value +
-                                    '</option>';
-                            });
-                            $('#fr_no').html(html);
-                            return false;
-                        }
-                    });
-                });
-
-                $('#fr_no').on('change', function() {
-                    $('#loader').show();
-                    var fr_no = $(this).val();
-                    var client_no = $('#client_no').val();
-                    var logical_table = '';
-                    var physical_table = '';
+        $('#client_no').on('input', function() {
+            var client_id = $(this).val();
+            var html = '<option value="">Select Fr No</option>';
+            $(this).autocomplete({
+                source: function(request, response) {
                     $.ajax({
-                        url: "{{ route('getLogicalConnectivityData') }}",
+                        url: "{{ route('searchClient') }}",
                         data: {
-                            fr_no: fr_no,
-                            client_no: client_no,
-                            _token: "{{ csrf_token() }}"
+                            client_id: client_id,
                         },
                         success: function(data) {
-                            $.each(data.logical_connectivity.lines, function(key, value) {
-                                logical_table += `
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $('#client_no').val(ui.item.value).attr('value', ui.item.value);
+                    $('#client_name').val(ui.item.label).attr('value', ui.item.label);
+                    //foreach loop for fr no
+                    $.each(ui.item.frDetails, function(key, value) {
+                        html += '<option value="' + value + '">' + value +
+                            '</option>';
+                    });
+                    $('#fr_no').html(html);
+                    return false;
+                }
+            });
+        });
+
+        $('#fr_no').on('change', function() {
+            $('#loader').show();
+            var fr_no = $(this).val();
+            var client_no = $('#client_no').val();
+            var logical_table = '';
+            var physical_table = '';
+            $.ajax({
+                url: "{{ route('getLogicalConnectivityData') }}",
+                data: {
+                    fr_no: fr_no,
+                    client_no: client_no,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    $.each(data.logical_connectivity.lines, function(key, value) {
+                        logical_table += `
                                         <tr class="product_details_row">
                                             <td>
                                                 <select name="product_category[]" class="form-control product_category">
@@ -493,10 +506,10 @@
                                             </td>
                                         </tr>
                                     `;
-                            });
-                            $('.productBody').html(logical_table);
-                            $.each(data.physical_connectivity.lines, function(key, value) {
-                                physical_table += `
+                    });
+                    $('.productBody').html(logical_table);
+                    $.each(data.physical_connectivity.lines, function(key, value) {
+                        physical_table += `
                                         <tr class="connectivity_details_row">
                                             <td>
                                                 <select class="form-control link_type">
@@ -525,42 +538,42 @@
                                             </td>
                                         </tr>
                                     `;
-                            });
-                            $('.connectivityBody').html(physical_table);
-                            $('#logical-table').fadeIn();
-                            $('#physical-table').fadeIn();
-                            $('#logical-table-edit').fadeIn();
-                            $('#physical-table-edit').fadeIn();
-                            $('#loader').hide();
-                        }
                     });
-                });
+                    $('.connectivityBody').html(physical_table);
+                    $('#logical-table').fadeIn();
+                    $('#physical-table').fadeIn();
+                    $('#logical-table-edit').fadeIn();
+                    $('#physical-table-edit').fadeIn();
+                    $('#loader').hide();
+                }
+            });
+        });
 
-                $(document).on('change', '.product_category', function(e) {
-                    let category_id = $(this).val();
-                    console.log(category_id)
-                    let all_products = {!! json_encode($products) !!};
-                    let products = all_products.filter(product => product.category_id == category_id);
-                    console.log(products)
-                    let html = '<option value="">Select Product</option>';
-                    products.forEach(product => {
-                        html += `<option value="${product.id}">${product.name}</option>`;
-                    });
-                    $(this).closest('tr').find('.product').html(html);
-                });
+        $(document).on('change', '.product_category', function(e) {
+            let category_id = $(this).val();
+            console.log(category_id)
+            let all_products = {!! json_encode($products) !!};
+            let products = all_products.filter(product => product.category_id == category_id);
+            console.log(products)
+            let html = '<option value="">Select Product</option>';
+            products.forEach(product => {
+                html += `<option value="${product.id}">${product.name}</option>`;
+            });
+            $(this).closest('tr').find('.product').html(html);
+        });
 
-                $(document).on('change', '.product', function(e) {
-                    let products = {!! json_encode($products) !!};
-                    let product_id = $(this).val();
-                    let product = products.find(product => product.id == product_id);
-                    $(this).closest('tr').find('.unit').val(product.unit);
-                });
+        $(document).on('change', '.product', function(e) {
+            let products = {!! json_encode($products) !!};
+            let product_id = $(this).val();
+            let product = products.find(product => product.id == product_id);
+            $(this).closest('tr').find('.unit').val(product.unit);
+        });
 
-                $(document).on('click', '.physicalLinkEdit', function(e) {
-                    e.preventDefault();
-                    let link_type = $(this).closest('tr').find('.link_type').val();
-                    let method = $(this).closest('tr').find('.method').val();
-                    let html = `
+        $(document).on('click', '.physicalLinkEdit', function(e) {
+            e.preventDefault();
+            let link_type = $(this).closest('tr').find('.link_type').val();
+            let method = $(this).closest('tr').find('.method').val();
+            let html = `
                             <tr class="connectivity_details_row">
                                 <td>
                                     <select name="link_type[]" class="form-control link_type">
@@ -597,34 +610,34 @@
                                 </td>
                             </tr>
                         `;
-                    $('.connectivityEditBody').append(html);
-                });
+            $('.connectivityEditBody').append(html);
+        });
 
-                $(document).on('change', '#mrc_decrease', function(e) {
-                    if ($(this).is(':checked')) {
-                        $('#existing_mrc').closest('.col-3').show();
-                        $('#decrease_mrc').closest('.col-3').show();
-                    } else {
-                        $('#existing_mrc').closest('.col-3').hide();
-                        $('#decrease_mrc').closest('.col-3').hide();
-                    }
-                });
+        $(document).on('change', '#mrc_decrease', function(e) {
+            if ($(this).is(':checked')) {
+                $('#existing_mrc').closest('.col-3').show();
+                $('#decrease_mrc').closest('.col-3').show();
+            } else {
+                $('#existing_mrc').closest('.col-3').hide();
+                $('#decrease_mrc').closest('.col-3').hide();
+            }
+        });
 
-                $(document).on('change', '#temporary_inactive', function(e) {
-                    if ($(this).is(':checked')) {
-                        $('#from_date').closest('.col-3').show();
-                        $('#to_date').closest('.col-3').show();
-                    } else {
-                        $('#from_date').closest('.col-3').hide();
-                        $('#to_date').closest('.col-3').hide();
-                    }
-                })
+        $(document).on('change', '#temporary_inactive', function(e) {
+            if ($(this).is(':checked')) {
+                $('#from_date').closest('.col-3').show();
+                $('#to_date').closest('.col-3').show();
+            } else {
+                $('#from_date').closest('.col-3').hide();
+                $('#to_date').closest('.col-3').hide();
+            }
+        })
 
-                $('#date, #activation_date, #from_date, #to_date').datepicker({
-                    format: "dd-mm-yyyy",
-                    autoclose: true,
-                    todayHighlight: true,
-                    showOtherMonths: true
-                }).datepicker("setDate", new Date());
-            </script>
-        @endsection
+        $('#date, #activation_date, #from_date, #to_date').datepicker({
+            format: "dd-mm-yyyy",
+            autoclose: true,
+            todayHighlight: true,
+            showOtherMonths: true
+        }).datepicker("setDate", new Date());
+    </script>
+@endsection
