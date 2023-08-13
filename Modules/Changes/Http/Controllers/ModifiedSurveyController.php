@@ -7,6 +7,7 @@ use Modules\Admin\Entities\Pop;
 use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\Vendor;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Networking\Entities\PhysicalConnectivityLines;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
@@ -38,7 +39,11 @@ class ModifiedSurveyController extends Controller
         $grouped_previous_qty = $previous_qty->groupBy('product_id');
         $pops = Pop::get();
         $vendors = Vendor::get();
-        return view('changes::modified_servey.create', compact('connectivity_requirement', 'grouped_qty', 'grouped_previous_qty', 'grouped_current_qty'));
+        $existingConnections = PhysicalConnectivityLines::query()
+            ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
+                return $qr->where('fr_no', $connectivity_requirement->fr_no);
+            })->get();
+        return view('changes::modified_servey.create', compact('connectivity_requirement', 'grouped_qty', 'grouped_previous_qty', 'grouped_current_qty', 'existingConnections'));
     }
 
     /**

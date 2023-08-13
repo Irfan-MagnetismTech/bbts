@@ -3,6 +3,8 @@
 namespace Modules\Sales\Entities;
 
 use Carbon\Carbon;
+use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\Planning;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
@@ -60,6 +62,11 @@ class ConnectivityRequirement extends Model
     public function FeasibilityRequirementDetail()
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
+    }
+
+    public function planning()
+    {
+        return $this->belongsTo(Planning::class, 'fr_no', 'fr_no');
     }
 
     public function fromLocation()

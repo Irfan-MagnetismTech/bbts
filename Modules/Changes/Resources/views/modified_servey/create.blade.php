@@ -266,9 +266,9 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="product_name[]" class="form-control text-center"
-                                                        readonly value="{{ isset($grouped_current_qty[$key]) ? $grouped_current_qty[$key]->first()->product->name : $grouped_previous_qty[$key]->first()->product->name}}">
+                                                        readonly value="{{ isset($grouped_current_qty[$key]) ? $grouped_current_qty[$key]->first()->product->name : $grouped_previous_qty[$key]->first()?->product?->name ?? ''}}">
                                                     <input type="hidden" name="product_id[]" class="form-control text-center"
-                                                        readonly value="{{ isset($grouped_current_qty[$key]) ? $grouped_current_qty[$key]->first()->product_id : $grouped_previous_qty[$key]->first()->product_id}}">
+                                                        readonly value="{{ isset($grouped_current_qty[$key]) ? $grouped_current_qty[$key]->first()->product_id : $grouped_previous_qty[$key]->first()?->product_id ?? ''}}">
                                                 </div>
                                             </td>
                                             <td>
@@ -286,7 +286,7 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="unit[]" class="form-control text-center"
-                                                        id="unit" readonly value="{{$value->first()->product->unit}}">
+                                                        id="unit" readonly value="{{$value->first()?->product?->unit ?? ''}}">
                                                 </div>
                                             </td>
                                             <td>
@@ -318,52 +318,51 @@
                                 <th>Distance</th>
                                 <th>Current Capacity</th>
                                 <th>Remarks</th>
-                                <th>Action</th>
+                                <th><i class="btn btn-primary btn-sm fa fa-plus add_existing_row"></i></th>
                             </thead>
-                            <tbody>
-                                <tr>
+                            <tbody class="existingBody">
+                                @foreach ($existingConnections as $key => $value )
+                                <tr class="product_existing_row">
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" readonly value="">
-                                            <input type="hidden" name="product_id" class="form-control text-center"
-                                                id="service" readonly value="">
+                                                id="service_name" readonly value="{{$value->link_type}}">
                                         </div>
                                     </td>
                                     <td> 
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" readonly value="">
+                                                id="quantity" readonly value="Existing">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="unit" class="form-control text-center"
-                                                id="unit" readonly value="">
+                                                id="unit" readonly value="{{$value->connectivityLink->vendor->name}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="rate"
-                                                class="form-control text-right" readonly value="">
+                                                class="form-control text-right" readonly value="{{$value->method}}">
                                         </div>
                                     </td>
                                     <td class="d-none">
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="price"
-                                                class="form-control text-right" readonly value="">
+                                                class="form-control text-right" readonly value="{{$value->ldp}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="total_price"
-                                                class="form-control text-right" readonly value="">
+                                                class="form-control text-right" readonly value="{{$value->connectivityLink->gps}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" readonly value="">
+                                                id="service_name" readonly value="{{$value->connectivityLink->gps}}">
                                             <input type="hidden" name="product_id" class="form-control text-center"
                                                 id="service" readonly value="">
                                         </div>
@@ -371,13 +370,13 @@
                                     <td> 
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" readonly value="">
+                                                id="quantity" readonly value="{{$value->physicalConnectivity->planning->finalSurveyDetail->distance ?? 0}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="unit" class="form-control text-center"
-                                                id="unit" readonly value="">
+                                                id="unit" readonly value="{{$value->physicalConnectivity->planning->finalSurveyDetail->current_capacity ?? 0}}">
                                         </div>
                                     </td>
                                     <td>
@@ -391,80 +390,12 @@
                                             <input type="text" name="price"
                                                 class="form-control text-right" readonly value="">
                                         </div>
+                                    </td>
+                                    <td>
+                                        <i class="btn btn-danger btn-sm fa fa-minus remove_existing_row"></i>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" readonly value="">
-                                            <input type="hidden" name="product_id" class="form-control text-center"
-                                                id="service" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td> 
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="unit" class="form-control text-center"
-                                                id="unit" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="rate"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td class="d-none">
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="price"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="total_price"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" readonly value="">
-                                            <input type="hidden" name="product_id" class="form-control text-center"
-                                                id="service" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td> 
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="unit" class="form-control text-center"
-                                                id="unit" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="rate"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td class="d-none">
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="price"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -484,165 +415,86 @@
                                 <th>Distance</th>
                                 <th>Current Capacity</th>
                                 <th>Remarks</th>
-                                <th>Action</th>
+                                <th><i class="btn btn-primary btn-sm fa fa-plus add_requirement_row"></i></th>
                             </thead>
-                            <tbody>
-                                <tr>
+                            <tbody class="requirementBody">
+                                @foreach ($connectivity_requirement->connectivityRequirementDetails as $key => $value )
+                                    
+                                @endforeach
+                                <tr class="requirement_details_row">
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" readonly value="">
-                                            <input type="hidden" name="product_id" class="form-control text-center"
-                                                id="service" readonly value="">
+                                                id="service_name" value="{{$value->link_type}}">
                                         </div>
                                     </td>
                                     <td> 
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" readonly value="">
+                                                id="quantity" value="">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="unit" class="form-control text-center"
-                                                id="unit" readonly value="">
+                                                id="unit" value="">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="rate"
-                                                class="form-control text-right" readonly value="">
+                                                class="form-control text-right" value="{{$value->sla}}">
                                         </div>
                                     </td>
                                     <td class="d-none">
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="price"
-                                                class="form-control text-right" readonly value="">
+                                                class="form-control text-right" value="{{$value->method}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="total_price"
-                                                class="form-control text-right" readonly value="">
+                                                class="form-control text-right" value="{{$value->vendor->name}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" readonly value="">
+                                                id="service_name" value="">
                                             <input type="hidden" name="product_id" class="form-control text-center"
-                                                id="service" readonly value="">
+                                                id="service" value="">
                                         </div>
                                     </td>
                                     <td> 
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" readonly value="">
+                                                id="quantity" value="">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="unit" class="form-control text-center"
-                                                id="unit" readonly value="">
+                                                id="unit" value="">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="rate"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td class="d-none">
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="price"
-                                                class="form-control text-right" readonly value="">
+                                                class="form-control text-right" value="{{$value->connectivity_capacity}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="total_price"
-                                                class="form-control text-right" readonly value="">
+                                                class="form-control text-right" value="">
                                         </div>
+                                    </td>
+                                    <td>
+                                        <i class="btn btn-danger btn-sm fa fa-minus remove_requirement_row"></i>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" readonly value="">
-                                            <input type="hidden" name="product_id" class="form-control text-center"
-                                                id="service" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td> 
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="unit" class="form-control text-center"
-                                                id="unit" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="rate"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td class="d-none">
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="price"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="total_price"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" readonly value="">
-                                            <input type="hidden" name="product_id" class="form-control text-center"
-                                                id="service" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td> 
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="unit" class="form-control text-center"
-                                                id="unit" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="rate"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td class="d-none">
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="price"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="total_price"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
-                                </tr>
+                               
                             </tbody>
                         </table>
                     </div>
@@ -688,24 +540,30 @@
                     });
                 }) */
 
-                $('#addProductRow').on('click', function() {
-                    addProductRow();
+                $('.add_existing_row').on('click', function() {
+                    addExistingRow();
+                });
+                $(document).on('click','.remove_existing_row', function() {
+                    $(this).closest('tr').remove();
                 });
 
-                $('#addConnectivityRow').on('click', function() {
-                    addConnectivityRow();
+                $('.add_requirement_row').on('click', function() {
+                    addRequirementRow();
+                });
+                $(document).on('click','.remove_requirement_row', function() {
+                    $(this).closest('tr').remove();
                 });
 
-                function addProductRow() {
-                    $('.product_details_row').first().clone().appendTo('.productBody');
-                    $('.product_details_row').last().find('input').val('');
-                    $('.product_details_row').last().find('select').val('');
+                function addExistingRow() {
+                    $('.product_existing_row').first().clone().appendTo('.existingBody');
+                    $('.product_existing_row').last().find('input').val('').attr('readonly',false);
+                    $('.product_existing_row').last().find('select').val('').attr('readonly',false);
                 };
 
-                function addConnectivityRow() {
-                    $('.connectivity_details_row').first().clone().appendTo('.connectivityBody');
-                    $('.connectivity_details_row').last().find('input').val('');
-                    $('.connectivity_details_row').last().find('select').val('');
+                function addRequirementRow() {
+                    $('.requirement_details_row').first().clone().appendTo('.requirementBody');
+                    $('.requirement_details_row').last().find('input').val('');
+                    $('.requirement_details_row').last().find('select').val('');
                 };
 
                 $('#client_id').on('input', function() {

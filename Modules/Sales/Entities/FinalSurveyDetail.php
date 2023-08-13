@@ -3,7 +3,9 @@
 namespace Modules\Sales\Entities;
 
 use Modules\Admin\Entities\Pop;
+use Modules\Sales\Entities\PlanLink;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\SurveyDetail;
 
 class FinalSurveyDetail extends Model
 {
