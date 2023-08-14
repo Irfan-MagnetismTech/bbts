@@ -192,13 +192,14 @@ class ClientPlanningModificationController extends Controller
                 $planLink->save();
 
                 $survey = Survey::where('fr_no', $request->fr_no)
-                    ->where('client_no', $request->client_no)
+                    ->where('client_no', $request->client_no)->where('is_modified', 1)->latest()
                     ->first();
 
                 $surveyDetails = SurveyDetail::where('survey_id', $survey->id)
                     ->where('link_type', $linkType)
                     ->where('option', request("option_{$i}"))
                     ->first();
+
 
                 $finalSurveyData = [
                     'link_no' => $surveyDetails->link_no ?? '',
