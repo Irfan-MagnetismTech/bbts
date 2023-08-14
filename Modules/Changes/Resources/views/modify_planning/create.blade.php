@@ -4,7 +4,7 @@
 @php
     $is_old = old() ? true : false;
     $form_heading = 'Create';
-    $form_url = route('planning.store');
+    $form_url = route('client-plan-modification.store');
     $form_method = 'POST';
     $client_no = $is_old ? old('client_no') : $connectivity_requirement->lead_generation->client_no;
     $client_name = $is_old ? old('client_name') : $connectivity_requirement->lead_generation->client_name;

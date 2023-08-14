@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('plannings', function (Blueprint $table) {
             $table->id();
+            $table->integer('connectivity_requirement_id')->nullable();
             $table->string('client_no');
             $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
             $table->string('mq_no')->nullable();
