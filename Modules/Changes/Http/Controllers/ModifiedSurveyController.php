@@ -28,17 +28,12 @@ class ModifiedSurveyController extends Controller
      */
     public function create($id)
     {
-        // $fr_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->find($fr_id);
-        $all_fr_list = FeasibilityRequirementDetail::get();
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('id', $id)->first();
         $current_qty = $connectivity_requirement->connectivityProductRequirementDetails;
         $previous_qty = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('fr_no', $connectivity_requirement->fr_no)->latest()->first()->connectivityProductRequirementDetails;
-        $merged_qty = $previous_qty->merge($current_qty);
-        $grouped_qty = $merged_qty->groupBy('product_id');
+        $grouped_qty = $previous_qty->merge($current_qty)->groupBy('product_id');
         $grouped_current_qty = $current_qty->groupBy('product_id');
         $grouped_previous_qty = $previous_qty->groupBy('product_id');
-        $pops = Pop::get();
-        $vendors = Vendor::get();
         $existingConnections = PhysicalConnectivityLines::query()
             ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
                 return $qr->where('fr_no', $connectivity_requirement->fr_no);

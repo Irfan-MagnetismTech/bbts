@@ -161,33 +161,17 @@
                     </div>
                     <div class="row mt-4">
                         <div class="col-12">
-                            <div class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" name="change_type[]" value="Temporary-Inactive">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span>Method Change</span>
-                                </label>
-                            </div>
-                            <div class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" name="change_type[]" value="Permanent Inactive">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span>Redundant Link</span>
-                                </label>
-                            </div>
-                            <div class="checkbox-fade fade-in-primary">
-                                <label>
-                                    <input type="checkbox" name="change_type[]" value="Re-Inactive">
-                                    <span class="cr">
-                                        <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                    </span>
-                                    <span>Shifting</span>
-                                </label>
-                            </div>
+                            @php
+                                $checkbox = ["Method Change","Redundant Link","Shifting"];
+                            @endphp
+                           @foreach (json_decode($connectivity_requirement->change_type) as $element) 
+                                @if (in_array($element, $checkbox)) 
+                                <div class="label-main">
+                                    <label class="label label-primary badge-md" style="background:linear-gradient(90deg,#BFF098 , #6FD6FF);color:rgba(0, 0, 0, 0.641)!important;font-weight:500">{{$element}}</label>
+                                </div>
+                                
+                                @endif
+                           @endforeach
                         </div>
                     </div>
                     {{-- create a responsive table --}}
@@ -309,6 +293,9 @@
                         </div>
                         <table class="table table-bordered table-striped">
                             <thead>
+                                @if(in_array("Method Change", json_decode($connectivity_requirement->change_type)))
+                                        <th>Method Change</th>
+                                @endif
                                 <th>Link Type</th>
                                 <th>Existing / New</th>
                                 <th>Method</th>
@@ -322,10 +309,17 @@
                             <tbody class="existingBody">
                                 @foreach ($existingConnections as $key => $value )
                                 <tr class="product_existing_row">
+                                    @if(in_array("Method Change", json_decode($connectivity_requirement->change_type)))
+                                        <td>
+                                            <input type="checkbox" class="checkbox" value="method_change" name="checked[{{$key}}]">
+                                        </td>
+                                    @endif
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="product_name" class="form-control text-center"
                                                 id="service_name" readonly value="{{$value->link_type}}">
+                                            <input type="hidden" name="product_name" class="form-control text-center"
+                                                id="service_name" readonly value="{{$value->bbts_link_id}}">
                                         </div>
                                     </td>
                                     <td> 
@@ -346,24 +340,15 @@
                                                 class="form-control text-right" readonly value="{{$value->method}}">
                                         </div>
                                     </td>
-                                    <td class="d-none">
+                                    <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="price"
                                                 class="form-control text-right" readonly value="{{$value->ldp}}">
                                         </div>
-                                    </td>
-                                    <td>
+                                    </td>                                    <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="total_price"
                                                 class="form-control text-right" readonly value="{{$value->connectivityLink->gps}}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" readonly value="{{$value->connectivityLink->gps}}">
-                                            <input type="hidden" name="product_id" class="form-control text-center"
-                                                id="service" readonly value="">
                                         </div>
                                     </td>
                                     <td> 
@@ -384,12 +369,6 @@
                                                 class="form-control text-right" readonly value="">
                                         </div>
                                     </td>
-                                    <td class="d-none">
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="price"
-                                                class="form-control text-right" readonly value="">
-                                        </div>
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -397,7 +376,8 @@
                     </div>
                     <div class="table-responsive">
                         <div class="tableHeading">
-                            <h5> <span> &#10070; </span> New Requirement Survey <span>&#10070;</span> </h5>
+                            <h5> <span>
+                                &#10070;</span> New Requirement Survey <span>&#10070;</span> </h5>
                         </div>
                         <table class="table table-bordered table-striped">
                             <thead>
@@ -411,73 +391,69 @@
                                 <th>Distance</th>
                                 <th>Current Capacity</th>
                                 <th>Remarks</th>
-                                <th><i class="btn btn-primary btn-sm fa fa-plus add_requirement_row"></i></th>
                             </thead>
                             <tbody class="requirementBody">
                                 @foreach ($connectivity_requirement->connectivityRequirementDetails as $key => $value )
-                                    
-                               
+                               @php
+                                   $type = ['Primary','Secondary','Tertiary'];
+                                   $option_type = ['Option 1'];
+                               @endphp
                                 <tr class="requirement_details_row">
+                                    @if(!in_Array($value->link_type,$existingConnections->pluck('link_type')->toArray()))
                                     <td>
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="product_name" class="form-control text-center"
-                                                id="service_name" value="{{$value->link_type}}">
-                                        </div>
+                                        <select name="" id="" class="form-control link_type">
+                                            @foreach ($type as $key=>$val )
+                                                <option value="{{$val}}" @selected($val==$value->link_type)>{{$val}}</option>
+                                            @endforeach
+                                        </select>
                                     </td>
                                     <td> 
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" value="">
-                                        </div>
+                                        <select name="" id="" class="form-control option_type">
+                                            @foreach ($option_type as $key=>$val )
+                                                <option value="{{$val}}">{{$val}}</option>
+                                            @endforeach
+                                        </select>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="unit" class="form-control text-center"
-                                                id="unit" value="">
+                                            <input type="text" name="unit" class="form-control text-center method"
+                                                id="unit" value="Existing">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="rate"
-                                                class="form-control text-right" value="{{$value->sla}}">
+                                                class="form-control text-right vendor" value="{{$value->sla}}">
                                         </div>
                                     </td>
-                                    <td class="d-none">
+                                    <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="price"
-                                                class="form-control text-right" value="{{$value->method}}">
+                                                class="form-control text-right bts" value="{{$value->method}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="total_price"
-                                                class="form-control text-right" value="{{$value->vendor->name}}">
+                                                class="form-control text-right gps" value="{{$value->vendor->name}}">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="product_name" class="form-control text-center"
+                                            <input type="text" name="product_name" class="form-control text-center distance"
                                                 id="service_name" value="">
-                                            <input type="hidden" name="product_id" class="form-control text-center"
-                                                id="service" value="">
-                                        </div>
-                                    </td>
-                                    <td> 
-                                        <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="quantity" class="form-control text-right"
-                                                id="quantity" value="">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="unit" class="form-control text-center"
+                                            <input type="text" name="unit" class="form-control text-center capacity"
                                                 id="unit" value="">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="rate"
-                                                class="form-control text-right" value="{{$value->connectivity_capacity}}">
+                                                class="form-control text-right remarks" value="{{$value->connectivity_capacity}}">
                                         </div>
                                     </td>
                                     <td>
@@ -486,9 +462,7 @@
                                                 class="form-control text-right" value="">
                                         </div>
                                     </td>
-                                    <td>
-                                        <i class="btn btn-danger btn-sm fa fa-minus remove_requirement_row"></i>
-                                    </td>
+                                    @endif
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -504,37 +478,7 @@
 
         @section('script')
             <script>
-                // let products;
-                // $(document).on('change', '.category_id', function() {
-                //     console.log('fine')
-                //     var category_id = $(this).val();
-                //     var row = $(this).closest('tr').find('.product_id');
-                //     $.ajax({
-                //         url: "{{ route('get-products') }}",
-                //         data: {
-                //             category_id: category_id,
-                //             _token: "{{ csrf_token() }}"
-                //         },
-                //         success: function(data) {
-                //             products = data;
-                //             let html = '<option value="">Select Product</option>';
-                //             $.each(data, function(key, value) {
-                //                 html += '<option value="' + value.id + '">' + value.name + '</option>';
-                //             });
-                //             row.html(html);
-                //         }
-                //     });
-                // });
-
-                /* $(document).on('change', '.product_id', function() {
-                    var product_id = $(this).val();
-                    var row = $(this).closest('tr').find('.unit');
-                    products.find(function(product) {
-                        if (product.id == product_id) {
-                            row.val(product.unit);
-                        }
-                    });
-                }) */
+                
 
 
                 $('.add_requirement_row').on('click', function() {
@@ -551,56 +495,82 @@
                 };
 
                 function addRequirementRow() {
-                    $('.requirement_details_row').first().clone().appendTo('.requirementBody');
-                    $('.requirement_details_row').last().find('input').val('');
-                    $('.requirement_details_row').last().find('select').val('');
-                };
+                               var adad = `<tr class="requirement_details_row">
+                                    <td>
+                                        <select name="" id="" class="form-control link_type">
+                                            @foreach ($type as $key=>$val )
+                                                <option value="{{$val}}">{{$val}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td> 
+                                        <select name="" id="" class="form-control option_type">
+                                            @foreach ($option_type as $key=>$val )
+                                                <option value="{{$val}}">{{$val}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center method"
+                                                id="unit" value="Existing">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right vendor" value="{{$value->sla}}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="price"
+                                                class="form-control text-right bts" value="{{$value->method}}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right gps" value="{{$value->vendor->name}}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="product_name" class="form-control text-center distance"
+                                                id="service_name" value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="unit" class="form-control text-center capacity"
+                                                id="unit" value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="rate"
+                                                class="form-control text-right remarks" value="{{$value->connectivity_capacity}}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="total_price"
+                                                class="form-control text-right" value="">
+                                        </div>
+                                    </td>
+                                </tr>`
+                                $('.requirementBody').append(adad);
+                             };
 
-                $('#client_id').on('input', function() {
-                    var client_id = $(this).val();
-                    var html = '<option value="">Select Fr No</option>';
-                    $(this).autocomplete({
-                        source: function(request, response) {
-                            $.ajax({
-                                url: "{{ route('searchClient') }}",
-                                data: {
-                                    client_id: client_id,
-                                    _token: "{{ csrf_token() }}"
-                                },
-                                success: function(data) {
-                                    response(data);
-                                }
-                            });
-                        },
-                        select: function(event, ui) {
-                            $('#client_id').val(ui.item.value).attr('value', ui.item.value);
-                            $('#client_name').val(ui.item.label).attr('value', ui.item.label);
-                            //foreach loop for fr no
-                            $.each(ui.item.frDetails, function(key, value) {
-                                html += '<option value="' + value + '">' + value +
-                                    '</option>';
-                            });
-                            $('#fr_no').html(html);
-                            return false;
-                        }
-                    });
-                });
+                
 
-                $('#fr_no').on('change', function() {
-                    var fr_no = $(this).val();
-                    var client_no = $('#client_id').val();
-                    $.ajax({
-                        url: "{{ route('getLogicalConnectivityData') }}",
-                        data: {
-                            fr_no: fr_no,
-                            client_no: client_no,
-                            _token: "{{ csrf_token() }}"
-                        },
-                        success: function(data) {
-                            $('#logical-table').html(data.logical_table_data);
-                            $('#physical-table').html(data.physical_table_data);
-                        }
-                    });
+                $(document).on('change','.checkbox', function() {
+                    if($(this).prop("checked") == true){
+                        addRequirementRow();
+                    }else{
+                        
+                    }
+                   
                 });
 
 
