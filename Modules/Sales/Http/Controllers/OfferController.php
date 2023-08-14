@@ -167,7 +167,6 @@ class OfferController extends Controller
     function createOfferDetails($offer, $requestData)
     {
         $offerDetails = [];
-
         for ($i = 1; $i <= $requestData['row_no']; $i++) {
             $offerDetails[] = [
                 'offer_id' => $offer->id,
@@ -189,8 +188,7 @@ class OfferController extends Controller
                 'management_cost' => $requestData['management_cost_' . $i],
                 'offer_management_cost' => $requestData['offer_management_cost_' . $i],
                 'grand_total' => $requestData['grand_total_' . $i],
-            ];
-
+            ]; 
             $offerLinks = $this->createOfferLinks($offer, $requestData, $i);
             $offerDetails[$i - 1]['offerLinks'] = $offerLinks;
         }

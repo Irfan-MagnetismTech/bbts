@@ -374,7 +374,7 @@
                                                                 class="form-control form-control-sm input"
                                                                 placeholder="Interest"
                                                                 value="{{ $costing->equipment_perchantage_interest }}"
-                                                                readonly>
+                                                                >
                                                         </span>
                                                     </div>
                                                     <div class="col-6">
