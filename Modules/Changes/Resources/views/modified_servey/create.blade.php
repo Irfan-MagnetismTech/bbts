@@ -318,7 +318,6 @@
                                 <th>Distance</th>
                                 <th>Current Capacity</th>
                                 <th>Remarks</th>
-                                <th><i class="btn btn-primary btn-sm fa fa-plus add_existing_row"></i></th>
                             </thead>
                             <tbody class="existingBody">
                                 @foreach ($existingConnections as $key => $value )
@@ -391,9 +390,6 @@
                                                 class="form-control text-right" readonly value="">
                                         </div>
                                     </td>
-                                    <td>
-                                        <i class="btn btn-danger btn-sm fa fa-minus remove_existing_row"></i>
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -420,7 +416,7 @@
                             <tbody class="requirementBody">
                                 @foreach ($connectivity_requirement->connectivityRequirementDetails as $key => $value )
                                     
-                                @endforeach
+                               
                                 <tr class="requirement_details_row">
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
@@ -494,7 +490,7 @@
                                         <i class="btn btn-danger btn-sm fa fa-minus remove_requirement_row"></i>
                                     </td>
                                 </tr>
-                               
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -540,12 +536,6 @@
                     });
                 }) */
 
-                $('.add_existing_row').on('click', function() {
-                    addExistingRow();
-                });
-                $(document).on('click','.remove_existing_row', function() {
-                    $(this).closest('tr').remove();
-                });
 
                 $('.add_requirement_row').on('click', function() {
                     addRequirementRow();
