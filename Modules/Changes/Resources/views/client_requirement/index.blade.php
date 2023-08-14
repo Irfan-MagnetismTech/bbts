@@ -14,8 +14,6 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('client-requirement-modification.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
     Total: {{ count($client_requirements) }}
