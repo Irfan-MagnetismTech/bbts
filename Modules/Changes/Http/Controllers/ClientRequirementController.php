@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\ConnectivityRequirement;
+use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\ConnectivityRequirementDetail;
 use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
@@ -72,8 +73,14 @@ class ClientRequirementController extends Controller
         $categories = Category::all();
         $vendors = Vendor::all();
         $frList = FeasibilityRequirementDetail::where('client_no', $clientRequirementModification->client_no)->pluck('fr_no', 'id');
+               
+        $physicalConnectivity = PhysicalConnectivity::query()
+            ->with('lines.connectivityLink.vendor')
+            ->whereClientNoAndFrNo($clientRequirementModification->client_no,$clientRequirementModification->fr_no)
+            ->orderBy('sale_id', 'desc')
+            ->first();
 
-        return view('changes::client_requirement.create', compact('products', 'categories', 'vendors', 'clientRequirementModification', 'frList'));
+        return view('changes::client_requirement.create', compact('products', 'categories', 'vendors', 'clientRequirementModification', 'frList', 'physicalConnectivity'));
     }
 
     /**

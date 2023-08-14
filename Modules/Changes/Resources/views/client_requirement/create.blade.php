@@ -2,20 +2,25 @@
 @section('title', 'Client Requirement Modification')
 
 @php
+    $mod = !empty($clientRequirementModification) ? $clientRequirementModification : null;
     $is_old = old() ? true : false;
-    $form_heading = !empty($clientRequirementModification->id) ? 'Update' : 'Add';
-    $form_url = !empty($clientRequirementModification->id) ? route('client-requirement-modification.update', $clientRequirementModification->id) : route('client-requirement-modification.store');
-    $form_method = !empty($clientRequirementModification->id) ? 'PUT' : 'POST';
-
-    $client_no = !empty($clientRequirementModification) ? $clientRequirementModification->client_no : (old('client_no') ? old('client_no') : '');
-    $client_name = !empty($clientRequirementModification) ? $clientRequirementModification->client->client_name : (old('client_name') ? old('client_name') : '');
-    $date = !empty($clientRequirementModification) ? $clientRequirementModification->date : (old('date') ? old('date') : '');
-    $activation_date = !empty($clientRequirementModification) ? $clientRequirementModification->activation_date : (old('activation_date') ? old('activation_date') : '');
-    $fr_no = !empty($clientRequirementModification) ? $clientRequirementModification->fr_no : (old('fr_no') ? old('fr_no') : '');
-    $connectivity_remarks = !empty($clientRequirementModification) ? $clientRequirementModification->connectivity_remarks : (old('connectivity_remarks') ? old('connectivity_remarks') : '');
-    $change_type = json_decode($clientRequirementModification->change_type);
-
-    @endphp
+    $form_heading = !empty($mod->id) ? 'Update' : 'Add';
+    $form_url = !empty($mod->id) ? route('client-requirement-modification.update', $mod->id) : route('client-requirement-modification.store');
+    $form_method = !empty($mod->id) ? 'PUT' : 'POST';
+    
+    $client_no = !empty($mod) ? $mod->client_no : (old('client_no') ? old('client_no') : '');
+    $client_name = !empty($mod) ? $mod->client->client_name : (old('client_name') ? old('client_name') : '');
+    $date = !empty($mod) ? $mod->date : (old('date') ? old('date') : today()->format('d-m-Y'));
+    $activation_date = !empty($mod) ? $mod->activation_date : (old('activation_date') ? old('activation_date') : today()->format('d-m-Y'));
+    $fr_no = !empty($mod) ? $mod->fr_no : (old('fr_no') ? old('fr_no') : '');
+    $connectivity_remarks = !empty($mod) ? $mod->connectivity_remarks : (old('connectivity_remarks') ? old('connectivity_remarks') : '');
+    $change_types = !empty($mod) ? json_decode($mod->change_type) : [];
+    $from_date = !empty($mod) ? $mod->from_date : (old('from_date') ? old('from_date') : today()->format('d-m-Y'));
+    $to_date = !empty($mod) ? $mod->to_date : (old('to_date') ? old('to_date') : today()->format('d-m-Y'));
+    $existing_mrc = !empty($mod) ? $mod->existing_mrc : (old('existing_mrc') ? old('existing_mrc') : '');
+    $decrease_mrc = !empty($mod) ? $mod->decrease_mrc : (old('decrease_mrc') ? old('decrease_mrc') : '');
+    
+@endphp
 
 @section('breadcrumb-title')
     {{ ucfirst($form_heading) }} Client Requirement Modification
@@ -82,7 +87,8 @@
                     <div class="row">
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_no" id="client_no" class="form-control" value="{{ $client_no }}">
+                                <input type="text" name="client_no" id="client_no" class="form-control"
+                                    value="{{ $client_no }}">
                                 <label for="client_id">Client ID <span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -95,11 +101,12 @@
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="date" id="date" class="form-control" value="{{ $date }}">
+                                <input type="text" name="date" id="date" class="form-control"
+                                    value="{{ $date }}">
                                 <label for="date">Date <span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        <div class="md-col-3 col-3">z
+                        <div class="md-col-3 col-3">
                             <div class="form-item">
                                 <input type="text" name="activation_date" id="activation_date" class="form-control"
                                     value="{{ $activation_date }}">
@@ -110,15 +117,16 @@
                             <div class="form-item">
                                 <select name="fr_no" id="fr_no" class="form-control">
                                     <option value="">Select FR No</option>
-                                    @if(!empty($clientRequirementModification))
-                                        @foreach($frList as $fr_no)
-                                            <option value="{{ $fr_no }}" @selected($fr_no == $fr_no)>{{ $fr_no }}</option>
+                                    @if (!empty($mod))
+                                        @foreach ($frList as $fr_no)
+                                            <option value="{{ $fr_no }}" @selected($fr_no == $fr_no)>
+                                                {{ $fr_no }}</option>
                                         @endforeach
                                     @endif
                                 </select>
                                 <label for="fr_no">FR No <span class="text-danger">*</span></label>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
                                 <input type="text" name="connectivity_remarks" id="connectivity_remarks"
@@ -126,28 +134,32 @@
                                 <label for="fr_no">Remarks <span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        
-                        <div class="md-col-3 col-3" @if(in_array('Shifting', $change_type))style="display: none;">
+
+                        <div class="md-col-3 col-3" {!! in_array('Temporary-Inactive', $change_types) ? 'style="display: block;"' : 'style="display: none;"' !!}>
                             <div class="form-item">
-                                <input type="text" name="from_date" id="from_date" class="form-control">
+                                <input type="text" name="from_date" id="from_date" class="form-control"
+                                    value="{{ $from_date }}">
                                 <label for="fr_no">From date <span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        <div class="md-col-3 col-3" style="display: none;">
+                        <div class="md-col-3 col-3" {!! in_array('Temporary-Inactive', $change_types) ? 'style="display: block;"' : 'style="display: none;"' !!}>
                             <div class="form-item">
-                                <input type="text" name="to_date" id="to_date" class="form-control">
+                                <input type="text" name="to_date" id="to_date" class="form-control"
+                                    value="{{ $to_date }}">
                                 <label for="fr_no">To date <span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        <div class="md-col-3 col-3" style="display: none;">
+                        <div class="md-col-3 col-3" {!! in_array('MRC-Decrease', $change_types) ? 'style="display: block;"' : 'style="display: none;"' !!}>
                             <div class="form-item">
-                                <input type="text" name="existing_mrc" id="existing_mrc" class="form-control">
+                                <input type="text" name="existing_mrc" id="existing_mrc" class="form-control"
+                                    value="{{ $existing_mrc }}">
                                 <label for="fr_no">Existing MRC <span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        <div class="md-col-3 col-3" style="display: none;">
+                        <div class="md-col-3 col-3" {!! in_array('MRC-Decrease', $change_types) ? 'style="display: block;"' : 'style="display: none;"' !!}>
                             <div class="form-item">
-                                <input type="text" name="decrease_mrc" id="decrease_mrc" class="form-control">
+                                <input type="text" name="decrease_mrc" id="decrease_mrc" class="form-control"
+                                    value="{{ $decrease_mrc }}">
                                 <label for="fr_no">Decrease MRC<span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -157,7 +169,7 @@
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
                                     <input type="checkbox" name="change_type[]" id="temporary_inactive"
-                                        value="Temporary-Inactive">
+                                        value="Temporary-Inactive" @checked(in_array('Temporary-Inactive', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -166,7 +178,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primar  y">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Permanent-Inactive">
+                                    <input type="checkbox" name="change_type[]" value="Permanent-Inactive"
+                                        @checked(in_array('Temporary-Inactive', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -175,7 +188,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Re-Inactive">
+                                    <input type="checkbox" name="change_type[]" value="Re-Inactive"
+                                        @checked(in_array('Re-Inactive', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -184,7 +198,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="B/W Increase/Decrease">
+                                    <input type="checkbox" name="change_type[]" value="B/W Increase/Decrease"
+                                        @checked(in_array('B/W Increase/Decrease', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -193,7 +208,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="IP Increase/Decrease">
+                                    <input type="checkbox" name="change_type[]" value="IP Increase/Decrease"
+                                        @checked(in_array('IP Increase/Decrease', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -202,7 +218,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" id="mrc_decrease" value="MRC-Decrease">
+                                    <input type="checkbox" name="change_type[]" id="mrc_decrease" value="MRC-Decrease"
+                                        @checked(in_array('MRC-Decrease', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -212,7 +229,7 @@
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
                                     <input type="checkbox" name="change_type[]"
-                                        value="Price Increase/Decrease with BW Change">
+                                        value="Price Increase/Decrease with BW Change" @checked(in_array('Price Increase/Decrease with BW Change', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -221,7 +238,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Method Change">
+                                    <input type="checkbox" name="change_type[]" value="Method Change"
+                                        @checked(in_array('Method Change', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -230,7 +248,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Redundant Link">
+                                    <input type="checkbox" name="change_type[]" value="Redundant Link"
+                                        @checked(in_array('Redundant Link', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -239,7 +258,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Shifting">
+                                    <input type="checkbox" name="change_type[]" value="Shifting"
+                                        @checked(in_array('Shifting', $change_types))>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -253,7 +273,7 @@
                     <div id="loader" class="custom-loader"></div>
                     <div id="main-content">
                         <div class="row mt-3">
-                            <div id="logical-table" class="md-col-12 col-12" style="display:none">
+                            <div id="logical-table" class="md-col-12 col-12" {!! !empty($mod->connectivityProductRequirementDetails) ? 'style="display:block"' : 'style="display:none"' !!}>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped">
                                         <thead>
@@ -274,12 +294,62 @@
                                             </tr>
                                         </thead>
                                         <tbody class="productBody">
-
+                                            @if (!empty($mod->connectivityProductRequirementDetails))
+                                                @foreach ($mod->connectivityProductRequirementDetails as $product)
+                                                    <tr>
+                                                        <td>
+                                                            <select name="category[]" class="form-control category">
+                                                                <option value="">Select Category</option>
+                                                                @foreach ($categories as $category)
+                                                                    <option value="{{ $category->id }}"
+                                                                        @if ($category->id == $product->category_id) selected @endif>
+                                                                        {{ $category->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select name="product[]" class="form-control product">
+                                                                <option value="">Select Product</option>
+                                                                @foreach ($products as $data)
+                                                                    <option value="{{ $data->id }}"
+                                                                        @if ($data->id == $product->product_id) selected @endif>
+                                                                        {{ $data->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="prev_quantity[]"
+                                                                class="form-control prev_quantity"
+                                                                value="{{ $product->prev_quantity }}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="unit[]"
+                                                                class="form-control unit"
+                                                                value="{{ $product->product->unit }}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="plan[]"
+                                                                class="form-control plan"
+                                                                value="{{ $product->capacity }}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="remarks[]"
+                                                                class="form-control remarks"
+                                                                value="{{ $product->remarks }}">
+                                                        </td>
+                                                        <td>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-danger removeProductRow"><i
+                                                                    class="fas fa-minus"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div id="physical-table" class="md-col-12 col-12" style="display:none">
+                            <div id="physical-table" class="md-col-12 col-12" {!! !empty($physicalConnectivity) ? 'style="display:block"' : 'style="display:none"' !!}>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped">
                                         <thead>
@@ -295,14 +365,54 @@
                                             </tr>
                                         </thead>
                                         <tbody class="connectivityBody">
-
+                                            @if (!empty($physicalConnectivity))
+                                                @foreach ($physicalConnectivity->lines as $line)
+                                                    <tr class="connectivity_details_row">
+                                                        <td>
+                                                            <select class="form-control link_type">
+                                                                <option value="">Select Link Type</option>
+                                                                <option value="Primary" @selected($line->link_type === 'Primary')>
+                                                                    Primary</option>
+                                                                <option value="Secondary" @selected($line->link_type === 'Secondary')>
+                                                                    Secondary</option>
+                                                                <option value="Tertiary" @selected($line->link_type === 'Tertiary')>
+                                                                    Tertiary</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control method">
+                                                                <option value="">Select Method</option>
+                                                                <option value="Fiber" @selected($line->method === 'Fiber')>Fiber
+                                                                </option>
+                                                                <option value="Radio" @selected($line->method === 'Radio')>Radio
+                                                                </option>
+                                                                <option value="GSM" @selected($line->method === 'GSM')>GSM
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control vendor"
+                                                                value="{{ $line->connectivityLink->vendor->name }}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control bts_pop"
+                                                                value="{{ $line->pop }}">
+                                                        </td>
+                                                        <td>
+                                                            <a href="#" title="Edit"
+                                                                class="btn btn-sm btn-outline-warning physicalLinkEdit"><i
+                                                                    class="fas fa-pen"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div id="physical-table-edit" class="md-col-12 col-12" style="display: none">
+                            <div id="physical-table-edit" class="md-col-12 col-12" {!! !empty($mod->connectivityRequirementDetails) ? 'style="display:block"' : 'style="display:none"' !!}>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped">
                                         <thead>
@@ -324,6 +434,56 @@
                                             </tr>
                                         </thead>
                                         <tbody class="connectivityEditBody">
+                                            @if (!empty($mod->connectivityRequirementDetails))
+                                                @foreach ($mod->connectivityRequirementDetails as $details)
+                                                    <tr class="connectivity_details_row">
+                                                        <td>
+                                                            <select name="link_type[]" class="form-control link_type">
+                                                                <option value="">Select Link Type</option>
+                                                                <option value="Primary" @selected($details->link_type === 'Primary')>
+                                                                    Primary</option>
+                                                                <option value="Secondary" @selected($details->link_type === 'Secondary')>
+                                                                    Secondary</option>
+                                                                <option value="Tertiary" @selected($details->link_type === 'Tertiary')>
+                                                                    Tertiary</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select name="method[]" class="form-control method">
+                                                                <option value="">Select Method</option>
+                                                                <option value="Fiber" @selected($details->method === 'Fiber')>Fiber
+                                                                </option>
+                                                                <option value="Radio" @selected($details->method === 'Radio')>Radio
+                                                                </option>
+                                                                <option value="GSM" @selected($details->method === 'GSM')>GSM
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="connectivity_capacity[]"
+                                                                class="form-control connectivity_capacity" value="{{ $details->connectivity_capacity }}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" name="uptime_req[]"
+                                                                class="form-control uptime_req" value="{{ $details->sla }}">
+                                                        </td>
+                                                        <td>
+                                                            <select name="vendor_id[]" class="form-control vendor_id">
+                                                                <option value="">Select Vendor</option>
+                                                                @foreach ($vendors as $vendor)
+                                                                    <option value="{{ $vendor->id }}">
+                                                                        {{ $vendor->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button"
+                                                                class="btn btn-sm btn-danger removeConnectivityRow"><i
+                                                                    class="fas fa-minus"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
                                         </tbody>
                                     </table>
                                 </div>
@@ -341,303 +501,5 @@
 @endsection
 
 @section('script')
-    <script>
-        function addProductEdit() {
-            let table_row = `
-                            <tr class="product_details_row">
-                                <td>
-                                    <select name="product_category[]" class="form-control product_category">
-                                        <option value="">Select Category</option>
-                                        @foreach ($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="product[]" class="form-control product">
-                                        <option value="">Select Product</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="text" name="capacity[]" class="form-control capacity" value="">
-                                </td>
-                                <td>
-                                    <input type="text" name="unit[]" class="form-control unit" value="">
-                                </td>
-                                <td>
-                                    <input type="text" name="plan[]" class="form-control plan" value="">
-                                </td>
-                                <td>
-                                    <input type="text" name="remarks[]" class="form-control remarks" value="">
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-danger removeProductRow"><i class="fas fa-minus"></i></button>
-                                </td>
-                            </tr>
-                        `;
-            $('.productBody').append(table_row);
-        };
-
-        $(document).on('click', '.removeProductRow', function(e) {
-            e.preventDefault();
-            $(this).closest('tr').remove();
-        });
-
-        function addConnectivityEdit() {
-            let table_row = `
-                            <tr class="connectivity_details_row">
-                                <td>
-                                    <select name="link_type[]" class="form-control link_type">
-                                        <option value="">Select Link Type</option>
-                                        <option value="Primary">Primary</option>
-                                        <option value="Secondary">Secondary</option>
-                                        <option value="Tertiary">Tertiary</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="method[]" class="form-control method">
-                                        <option value="">Select Method</option>
-                                        <option value="Fiber">Fiber</option>
-                                        <option value="Radio">Radio</option>
-                                        <option value="GSM">GSM</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="text" name="connectivity_capacity[]" class="form-control connectivity_capacity" value="">
-                                </td>
-                                <td>
-                                    <input type="text" name="uptime_req[]" class="form-control uptime_req" value="">
-                                </td>
-                                <td>
-                                    <select name="vendor_id[]" class="form-control vendor_id">
-                                        <option value="">Select Vendor</option>
-                                        @foreach ($vendors as $vendor)
-                                            <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-danger removeConnectivityRow"><i class="fas fa-minus"></i></button>
-                                </td>
-                            </tr>
-                        `;
-            $('.connectivityEditBody').append(table_row);
-        };
-
-        $(document).on('click', '.removeConnectivityRow', function(e) {
-            e.preventDefault();
-            $(this).closest('tr').remove();
-        });
-
-
-        $('#client_no').on('input', function() {
-            var client_id = $(this).val();
-            var html = '<option value="">Select Fr No</option>';
-            $(this).autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ route('searchClient') }}",
-                        data: {
-                            client_id: client_id,
-                        },
-                        success: function(data) {
-                            response(data);
-                        }
-                    });
-                },
-                select: function(event, ui) {
-                    $('#client_no').val(ui.item.value).attr('value', ui.item.value);
-                    $('#client_name').val(ui.item.label).attr('value', ui.item.label);
-                    //foreach loop for fr no
-                    $.each(ui.item.frDetails, function(key, value) {
-                        html += '<option value="' + value + '">' + value +
-                            '</option>';
-                    });
-                    $('#fr_no').html(html);
-                    return false;
-                }
-            });
-        });
-
-        $('#fr_no').on('change', function() {
-            $('#loader').show();
-            var fr_no = $(this).val();
-            var client_no = $('#client_no').val();
-            var logical_table = '';
-            var physical_table = '';
-            $.ajax({
-                url: "{{ route('getLogicalConnectivityData') }}",
-                data: {
-                    fr_no: fr_no,
-                    client_no: client_no,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    $.each(data.logical_connectivity.lines, function(key, value) {
-                        logical_table += `
-                                        <tr class="product_details_row">
-                                            <td>
-                                                <select name="product_category[]" class="form-control product_category">
-                                                    <option value="">Select Category</option>
-                                                    @foreach ($categories as $category)
-                                                        <option value="{{ $category->id }}" ${value.product_category === "{{ $category->name }}" ? 'selected' : ''}>{{ $category->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select name="product[]" class="form-control product">
-                                                    <option value="">Select Product</option>
-                                                    @foreach ($products->where('category_id') as $product)
-                                                        <option value="{{ $product->id }}" ${value.product_id == {{ $product->id }} ? 'selected' : ''}>{{ $product->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="text" name="capacity[]" class="form-control capacity" value="${value.quantity}">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="unit[]" class="form-control unit" value="${value.product.unit}">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="plan[]" class="form-control plan" value="">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="remarks[]" class="form-control remarks" value="${value.remarks}">
-                                            </td>
-                                        </tr>
-                                    `;
-                    });
-                    $('.productBody').html(logical_table);
-                    $.each(data.physical_connectivity.lines, function(key, value) {
-                        physical_table += `
-                                        <tr class="connectivity_details_row">
-                                            <td>
-                                                <select class="form-control link_type">
-                                                    <option value="">Select Link Type</option>
-                                                    <option value="Primary" ${value.link_type === "Primary" ? 'selected' : ''}>Primary</option>
-                                                    <option value="Secondary" ${value.link_type === "Secondary" ? 'selected' : ''}>Secondary</option>
-                                                    <option value="Tertiary" ${value.link_type === "Tertiary" ? 'selected' : ''}>Tertiary</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select class="form-control method">
-                                                    <option value="">Select Method</option>
-                                                    <option value="Fiber" ${value.method === "Fiber" ? 'selected' : ''}>Fiber</option>
-                                                    <option value="Radio" ${value.method === "Radio" ? 'selected' : ''}>Radio</option>
-                                                    <option value="GSM" ${value.method === "GSM" ? 'selected' : ''}>GSM</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control vendor" value="${value?.connectivity_link?.vendor?.name}">
-                                            </td>
-                                            <td>
-                                                <input type="text" class="form-control bts_pop" value="${value.pop}">
-                                            </td>
-                                            <td>
-                                                <a href="#" title="Edit" class="btn btn-sm btn-outline-warning physicalLinkEdit"><i class="fas fa-pen"></i></a>
-                                            </td>
-                                        </tr>
-                                    `;
-                    });
-                    $('.connectivityBody').html(physical_table);
-                    $('#logical-table').fadeIn();
-                    $('#physical-table').fadeIn();
-                    $('#logical-table-edit').fadeIn();
-                    $('#physical-table-edit').fadeIn();
-                    $('#loader').hide();
-                }
-            });
-        });
-
-        $(document).on('change', '.product_category', function(e) {
-            let category_id = $(this).val();
-            console.log(category_id)
-            let all_products = {!! json_encode($products) !!};
-            let products = all_products.filter(product => product.category_id == category_id);
-            console.log(products)
-            let html = '<option value="">Select Product</option>';
-            products.forEach(product => {
-                html += `<option value="${product.id}">${product.name}</option>`;
-            });
-            $(this).closest('tr').find('.product').html(html);
-        });
-
-        $(document).on('change', '.product', function(e) {
-            let products = {!! json_encode($products) !!};
-            let product_id = $(this).val();
-            let product = products.find(product => product.id == product_id);
-            $(this).closest('tr').find('.unit').val(product.unit);
-        });
-
-        $(document).on('click', '.physicalLinkEdit', function(e) {
-            e.preventDefault();
-            let link_type = $(this).closest('tr').find('.link_type').val();
-            let method = $(this).closest('tr').find('.method').val();
-            let html = `
-                            <tr class="connectivity_details_row">
-                                <td>
-                                    <select name="link_type[]" class="form-control link_type">
-                                        <option value="">Select Link Type</option>
-                                        <option value="Primary" ${link_type === "Primary" ? 'selected' : ''}>Primary</option>
-                                        <option value="Secondary" ${link_type === "Secondary" ? 'selected' : ''}>Secondary</option>
-                                        <option value="Tertiary" ${link_type === "Tertiary" ? 'selected' : ''}>Tertiary</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="method[]" class="form-control method">
-                                        <option value="">Select Method</option>
-                                        <option value="Fiber" ${method === "Fiber" ? 'selected' : ''}>Fiber</option>
-                                        <option value="Radio" ${method === "Radio" ? 'selected' : ''}>Radio</option>
-                                        <option value="GSM" ${method === "GSM" ? 'selected' : ''}>GSM</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="text" name="connectivity_capacity[]" class="form-control connectivity_capacity" value="">
-                                </td>
-                                <td>
-                                    <input type="text" name="uptime_req[]" class="form-control uptime_req" value="">
-                                </td>
-                                <td>
-                                    <select name="vendor_id[]" class="form-control vendor_id">
-                                        <option value="">Select Vendor</option>
-                                        @foreach ($vendors as $vendor)
-                                            <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-danger removeConnectivityRow"><i class="fas fa-minus"></i></button>
-                                </td>
-                            </tr>
-                        `;
-            $('.connectivityEditBody').append(html);
-        });
-
-        $(document).on('change', '#mrc_decrease', function(e) {
-            if ($(this).is(':checked')) {
-                $('#existing_mrc').closest('.col-3').show();
-                $('#decrease_mrc').closest('.col-3').show();
-            } else {
-                $('#existing_mrc').closest('.col-3').hide();
-                $('#decrease_mrc').closest('.col-3').hide();
-            }
-        });
-
-        $(document).on('change', '#temporary_inactive', function(e) {
-            if ($(this).is(':checked')) {
-                $('#from_date').closest('.col-3').show();
-                $('#to_date').closest('.col-3').show();
-            } else {
-                $('#from_date').closest('.col-3').hide();
-                $('#to_date').closest('.col-3').hide();
-            }
-        })
-
-        $('#date, #activation_date, #from_date, #to_date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());
-    </script>
+    @include('changes::client_requirement.js')
 @endsection
