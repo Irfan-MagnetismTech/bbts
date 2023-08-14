@@ -132,7 +132,7 @@ class SaleController extends Controller
             $saleService = $this->makeServiceRow($request->all(), $saleDetail);
             $sale->saleLinkDetails()->delete();
             $sale->saleProductDetails()->delete();
-            $saleLink = $this->makeLinkRow($request->all(), $saleDetail);
+            $saleLink = $this->makeLinkRow($request->all(), $saleDetail, true);
             SaleLinkDetail::insert($saleLink);
             SaleProductDetail::insert($saleService);
             DB::commit();
@@ -185,12 +185,12 @@ class SaleController extends Controller
         return $data;
     }
 
-    private function makeServiceRow($raw, $saleDetail)
+    private function makeServiceRow($raw, $saleDetail, $includeCreatedAt = false)
     {
         $data = [];
         foreach ($raw['fr_no'] as $key => $value) {
             foreach ($raw['product_name'][$key] as $key1 => $value) {
-                $data[] = [
+                $rowData = [
                     'product_name'      => $raw['product_name'][$key][$key1],
                     'fr_no'             => $raw['fr_no'][$key],
                     'product_id'        => $raw['product_id'][$key][$key1],
@@ -202,30 +202,36 @@ class SaleController extends Controller
                     'vat_amount'        => $raw['vat_amount'][$key][$key1],
                     'sale_id'           => $saleDetail[$key]['sale_id'],
                     'sale_detail_id'    => $saleDetail[$key]['id'],
-                    'created_at'        => now(),
                     'updated_at'        => now()
                 ];
+                if ($includeCreatedAt) {
+                    $rowData['created_at'] = now();
+                }
+                $data[] = $rowData;
             }
         }
         return $data;
     }
 
 
-    private function makeLinkRow($raw, $saleDetail)
+    private function makeLinkRow($raw, $saleDetail, $includeCreatedAt = false)
     {
         $data = [];
         foreach ($raw['fr_no'] as $key => $value) {
             foreach ($raw['link_no'][$key] as $key1 => $value) {
-                $data[] = [
+                $rowData = [
                     'link_no'           => $raw['link_no'][$key][$key1],
                     'client_no'         => $raw['client_no'],
                     'link_type'         => $raw['link_type'][$key][$key1],
                     'fr_no'             => $raw['fr_no'][$key],
                     'sale_id'           => $saleDetail[$key]['sale_id'],
                     'sale_detail_id'    => $saleDetail[$key]['id'],
-                    'created_at'        => now(),
                     'updated_at'        => now()
                 ];
+                if ($includeCreatedAt) {
+                    $rowData['created_at'] = now();
+                }
+                $data[] = $rowData;
             }
         }
         return $data;
