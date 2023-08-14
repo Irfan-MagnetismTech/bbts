@@ -231,239 +231,255 @@
                             </table>
                         </div>
                     </div>
-                    <div class="md-col-12 col-12">
-                        {{-- Connectivity Details --}}
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th colspan="6">Product Related Equipment</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Link Type</th>
-                                        <th>Quantity</th>
-                                        <th>Unit</th>
-                                        <th>Ownership</th>
-                                        <th>Rate</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="connectivityBody">
-                                    @foreach ($costing->costingProductEquipments as $product_equipment)
-                                        <tr class="connectivity_details_row">
-                                            <input hidden type="text" name="costing_product_equipment_id[]"
-                                                value="{{ $product_equipment->id }}">
-                                            <td>
-                                                <span>
-                                                    <input type="text" name="material[]" id="material"
-                                                        class="form-control form-control-sm input" placeholder="Link Type"
-                                                        value="{{ $product_equipment->material->name ?? '' }}" readonly>
-                                                    <input type="hidden" name="material_id[]" id="material_id "
-                                                        class="form-control form-control-sm input" placeholder="Link Type"
-                                                        value="{{ $product_equipment->material->id ?? '' }}" readonly>
-                                                </span>
+                    @if ($costing->costingProductEquipments->isNotEmpty())
+                        <div class="md-col-12 col-12">
+                            {{-- Connectivity Details --}}
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6">Product Related Equipment</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Link Type</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Ownership</th>
+                                            <th>Rate</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="connectivityBody">
+                                        @foreach ($costing->costingProductEquipments as $product_equipment)
+                                            <tr class="connectivity_details_row">
+                                                <input hidden type="text" name="costing_product_equipment_id[]"
+                                                    value="{{ $product_equipment->id }}">
+                                                <td>
+                                                    <span>
+                                                        <input type="text" name="material[]" id="material"
+                                                            class="form-control form-control-sm input"
+                                                            placeholder="Link Type"
+                                                            value="{{ $product_equipment->material->name ?? '' }}"
+                                                            readonly>
+                                                        <input type="hidden" name="material_id[]" id="material_id "
+                                                            class="form-control form-control-sm input"
+                                                            placeholder="Link Type"
+                                                            value="{{ $product_equipment->material->id ?? '' }}" readonly>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        <input type="number" name="equipment_quantity[]"
+                                                            class="form-control form-control-sm input equipment_quantity"
+                                                            placeholder="Quantity"
+                                                            value="{{ $product_equipment->quantity }}" readonly>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        <input type="text" name="equipment_unit[]"
+                                                            class="form-control form-control-sm input equipment_unit"
+                                                            placeholder="Unit" value="{{ $product_equipment->unit }}"
+                                                            readonly>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <select name="equipment_ownership[]"
+                                                        class="form-control form-control-sm input equipment_ownership">
+                                                        <option value="BBTS"
+                                                            @if ($product_equipment->ownership == 'BBTS') selected @endif>
+                                                            BBTS</option>
+                                                        <option value="Client"
+                                                            @if ($product_equipment->ownership == 'Client') selected @endif>
+                                                            Client</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="equipment_rate[]"
+                                                        class="form-control form-control-sm input equipment_rate"
+                                                        placeholder="Rate" value="{{ $product_equipment->rate }}">
+                                                </td>
+                                                <td>
+                                                    <span>
+                                                        <input type="number" name="equipment_total[]"
+                                                            class="form-control form-control-sm input equipment_total"
+                                                            placeholder="Total" value="{{ $product_equipment->total }}">
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">Equipment
+                                                Total
                                             </td>
                                             <td>
                                                 <span>
-                                                    <input type="number" name="equipment_quantity[]"
-                                                        class="form-control form-control-sm input equipment_quantity"
-                                                        placeholder="Quantity" value="{{ $product_equipment->quantity }}"
-                                                        readonly>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    <input type="text" name="equipment_unit[]"
-                                                        class="form-control form-control-sm input equipment_unit"
-                                                        placeholder="Unit" value="{{ $product_equipment->unit }}"
-                                                        readonly>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <select name="equipment_ownership[]"
-                                                    class="form-control form-control-sm input equipment_ownership">
-                                                    <option value="BBTS"
-                                                        @if ($product_equipment->ownership == 'BBTS') selected @endif>
-                                                        BBTS</option>
-                                                    <option value="Client"
-                                                        @if ($product_equipment->ownership == 'Client') selected @endif>
-                                                        Client</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="number" name="equipment_rate[]"
-                                                    class="form-control form-control-sm input equipment_rate"
-                                                    placeholder="Rate" value="{{ $product_equipment->rate }}">
-                                            </td>
-                                            <td>
-                                                <span>
-                                                    <input type="number" name="equipment_total[]"
-                                                        class="form-control form-control-sm input equipment_total"
-                                                        placeholder="Total" value="{{ $product_equipment->total }}">
+                                                    <input type="number" name="equipment_wise_total"
+                                                        id="equipment_wise_total"
+                                                        class="form-control form-control-sm input"
+                                                        placeholder="Total Amount"
+                                                        value="{{ $costing->equipment_wise_total }}" readonly>
                                                 </span>
                                             </td>
                                         </tr>
-                                    @endforeach
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">Equipment Total
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="equipment_wise_total"
-                                                    id="equipment_wise_total" class="form-control form-control-sm input"
-                                                    placeholder="Total Amount"
-                                                    value="{{ $costing->equipment_wise_total }}" readonly>
-                                            </span>
-                                        </td>
-                                    </tr>
 
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">Client Equipment
-                                            Total
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="client_equipment_total"
-                                                    id="client_equipment_total" class="form-control form-control-sm input"
-                                                    placeholder="Total Amount"
-                                                    value="{{ $costing->client_equipment_total }}" </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">Partial Total</td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="equipment_partial_total"
-                                                    id="equipment_partial_total"
-                                                    class="form-control form-control-sm input" placeholder="Total Amount"
-                                                    value="{{ $costing->equipment_partial_total }}" </span>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">Client
+                                                Equipment
+                                                Total
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    <input type="number" name="client_equipment_total"
+                                                        id="client_equipment_total"
+                                                        class="form-control form-control-sm input"
+                                                        placeholder="Total Amount"
+                                                        value="{{ $costing->client_equipment_total }}" </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">Partial Total
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    <input type="number" name="equipment_partial_total"
+                                                        id="equipment_partial_total"
+                                                        class="form-control form-control-sm input"
+                                                        placeholder="Total Amount"
+                                                        value="{{ $costing->equipment_partial_total }}" </span>
+                                            </td>
+                                        </tr>
 
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">Deployment Cost
-                                        </td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="equipment_deployment_cost"
-                                                    id="equipment_deployment_cost"
-                                                    class="form-control form-control-sm input"
-                                                    placeholder="Deployment Cost"
-                                                    value="{{ $costing->equipment_deployment_cost }}" </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">Interest</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <span>
-                                                        <input type="number" name="equipment_perchantage_interest"
-                                                            id="equipment_perchantage_interest"
-                                                            class="form-control form-control-sm input"
-                                                            placeholder="Interest"
-                                                            value="{{ $costing->equipment_perchantage_interest }}"
-                                                            readonly>
-                                                    </span>
-                                                </div>
-                                                <div class="col-6">
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">Deployment
+                                                Cost
+                                            </td>
+                                            <td>
+                                                <span>
+                                                    <input type="number" name="equipment_deployment_cost"
+                                                        id="equipment_deployment_cost"
+                                                        class="form-control form-control-sm input"
+                                                        placeholder="Deployment Cost"
+                                                        value="{{ $costing->equipment_deployment_cost }}" </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">Interest</td>
+                                            <td>
+                                                <div class="row">
                                                     <div class="col-6">
                                                         <span>
-                                                            <input type="number" name="equipment_interest"
-                                                                id="equipment_interest"
+                                                            <input type="number" name="equipment_perchantage_interest"
+                                                                id="equipment_perchantage_interest"
                                                                 class="form-control form-control-sm input"
                                                                 placeholder="Interest"
-                                                                value="{{ $costing->equipment_interest }}" readonly>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">VAT</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <span>
-                                                        <input type="number" name="equipment_perchantage_vat"
-                                                            id="equipment_perchantage_vat"
-                                                            class="form-control form-control-sm input" placeholder="VAT"
-                                                            value="{{ $costing->equipment_perchantage_vat }}" </span>
-                                                </div>
-                                                <div class="col-6">
-                                                    <div class="col-6">
-                                                        <span>
-                                                            <input type="number" name="equipment_vat" id="equipment_vat"
-                                                                class="form-control form-control-sm input"
-                                                                placeholder="VAT" value="{{ $costing->equipment_vat }}"
+                                                                value="{{ $costing->equipment_perchantage_interest }}"
                                                                 readonly>
                                                         </span>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">Tax</td>
-                                        <td>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <span>
-                                                        <input type="number" name="equipment_perchantage_tax"
-                                                            id="equipment_perchantage_tax"
-                                                            class="form-control form-control-sm input" placeholder="Tax"
-                                                            value="{{ $costing->equipment_perchantage_tax }}">
-                                                    </span>
-                                                </div>
-                                                <div class="col-6">
                                                     <div class="col-6">
-                                                        <span>
-                                                            <input type="number" name="equipment_tax" id="equipment_tax"
-                                                                class="form-control form-control-sm input"
-                                                                placeholder="Tax" value="{{ $costing->equipment_tax }}"
-                                                                readonly>
-                                                        </span>
+                                                        <div class="col-6">
+                                                            <span>
+                                                                <input type="number" name="equipment_interest"
+                                                                    id="equipment_interest"
+                                                                    class="form-control form-control-sm input"
+                                                                    placeholder="Interest"
+                                                                    value="{{ $costing->equipment_interest }}" readonly>
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">Total</td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="equipment_grand_total"
-                                                    id="equipment_grand_total" class="form-control form-control-sm input"
-                                                    placeholder="Total" value="{{ $costing->equipment_grand_total }}"
-                                                    readonly>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">OTC</td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="equipment_otc" id="equipment_otc"
-                                                    class="form-control form-control-sm input" placeholder="OTC"
-                                                    value="{{ $costing->equipment_otc }}" readonly>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5" class="text-right" style="font-size: 14px;">ROI</td>
-                                        <td>
-                                            <span>
-                                                <input type="number" name="equipment_roi" id="equipment_roi"
-                                                    class="form-control form-control-sm input" placeholder="ROI"
-                                                    value="{{ $costing->equipment_roi }}" readonly>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">VAT</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <span>
+                                                            <input type="number" name="equipment_perchantage_vat"
+                                                                id="equipment_perchantage_vat"
+                                                                class="form-control form-control-sm input"
+                                                                placeholder="VAT"
+                                                                value="{{ $costing->equipment_perchantage_vat }}" </span>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="col-6">
+                                                            <span>
+                                                                <input type="number" name="equipment_vat"
+                                                                    id="equipment_vat"
+                                                                    class="form-control form-control-sm input"
+                                                                    placeholder="VAT"
+                                                                    value="{{ $costing->equipment_vat }}" readonly>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">Tax</td>
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <span>
+                                                            <input type="number" name="equipment_perchantage_tax"
+                                                                id="equipment_perchantage_tax"
+                                                                class="form-control form-control-sm input"
+                                                                placeholder="Tax"
+                                                                value="{{ $costing->equipment_perchantage_tax }}">
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="col-6">
+                                                            <span>
+                                                                <input type="number" name="equipment_tax"
+                                                                    id="equipment_tax"
+                                                                    class="form-control form-control-sm input"
+                                                                    placeholder="Tax"
+                                                                    value="{{ $costing->equipment_tax }}" readonly>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">Total</td>
+                                            <td>
+                                                <span>
+                                                    <input type="number" name="equipment_grand_total"
+                                                        id="equipment_grand_total"
+                                                        class="form-control form-control-sm input" placeholder="Total"
+                                                        value="{{ $costing->equipment_grand_total }}" readonly>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">OTC</td>
+                                            <td>
+                                                <span>
+                                                    <input type="number" name="equipment_otc" id="equipment_otc"
+                                                        class="form-control form-control-sm input" placeholder="OTC"
+                                                        value="{{ $costing->equipment_otc }}" readonly>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="font-size: 14px;">ROI</td>
+                                            <td>
+                                                <span>
+                                                    <input type="number" name="equipment_roi" id="equipment_roi"
+                                                        class="form-control form-control-sm input" placeholder="ROI"
+                                                        value="{{ $costing->equipment_roi }}" readonly>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             @endif
             <hr />
@@ -891,16 +907,19 @@
                                     <span style="font-size:14px;">Margin</span>
                                 </td>
                                 <td>
-                                    <input type="number" name="management_perchantage" id="management_perchantage"
+                                    <input type="number" step=".1" name="management_perchantage"
+                                        id="management_perchantage"
                                         class="form-control form-control-sm text-center margin input" placeholder="Margin"
                                         value="{{ $costing->management_perchantage }}">
                                 </td>
                                 <td>
-                                    <input type="number" name="management_cost_amount" id="management_cost_amount"
+                                    <input type="number" step=".1" name="management_cost_amount"
+                                        id="management_cost_amount"
                                         class="form-control form-control-sm text-center management_cost_amount input"
                                         placeholder="Margin Amount" value="{{ $costing->management_cost_amount }}" </td>
                                 <td>
-                                    <input type="number" name="management_cost_total" id="management_cost_total"
+                                    <input type="number" step=".1" name="management_cost_total"
+                                        id="management_cost_total"
                                         class="form-control form-control-sm text-center management_cost_total input"
                                         placeholder="Margin Amount" value="{{ $costing->management_cost_total }}" </td>
                             </tr>
@@ -909,7 +928,7 @@
                                     <span style="font-size:14px;">Equipment Price for Client</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="equipment_price_for_client"
+                                    <input type="number" step=".1" name="equipment_price_for_client"
                                         id="equipment_price_for_client"
                                         class="form-control form-control-sm text-center equipment_price_for_client input"
                                         placeholder="Equipment Price for Client"
@@ -920,7 +939,7 @@
                                     <span style="font-size:14px;">Total OTC</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_otc_with_client_equipment"
+                                    <input type="number" step=".1" name="total_otc_with_client_equipment"
                                         id="total_otc_with_client_equipment"
                                         class="form-control form-control-sm text-center total_otc_with_client_equipment input"
                                         placeholder="Total OTC" value="{{ $costing->total_otc_with_client_equipment }}"
@@ -953,19 +972,20 @@
             var product_quantity = $(this).closest('tr').find('.product_quantity').val();
             var product_total = product_rate * product_quantity;
             $(this).closest('tr').find('.product_price').val(product_total);
-            var vat_perchant = $(this).closest('tr').find('.product_vat').val();
-            var vat_amount = (product_total * vat_perchant) / 100;
-            $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
+            // var vat_perchant = $(this).closest('tr').find('.product_vat').val();
+            // var vat_amount = (product_total * vat_perchant) / 100;
+            // $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
             productPartialTotal();
         });
 
         $('.product_operation_cost').on('keyup', function() {
             var product_operation_cost = $(this).val();
             var product_price = $(this).closest('tr').find('.product_price').val();
-            var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
-            var product_total = parseInt(product_operation_cost) + parseInt(product_price) + parseInt(vat_amount);
+            // var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
+            var product_total = parseInt(product_operation_cost) + parseInt(product_price);
             $(this).closest('tr').find('.product_operation_cost_total').val(product_total);
-            $('#total_product_cost').val(product_total);
+            // $('#total_product_cost').val(product_total); 
+            // $('#total_mrc').val(product_total); 
             productPartialTotal();
         });
 
@@ -993,6 +1013,9 @@
             $('#product_total_cost').val(product_total_cost);
 
             $('#total_with_operation_amount').val(total_with_operation);
+
+            $('#total_product_cost').val(total_with_operation);
+            $('#total_mrc').val(total_with_operation);
 
         }
 
@@ -1046,6 +1069,7 @@
         }
 
         $('#calculate_data').on('click', function() {
+            // alert('fine')
             equipmentPartialTotal()
         })
 
@@ -1160,8 +1184,8 @@
             var plan_equipment_otc = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_otc').val();
             var plan_equipment_total_inv = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_inv').val();
             var plan_equipment_month = $('#month').val();
-            var plan_equipment_roi = (parseInt(plan_equipment_total_inv) - parseInt(plan_equipment_otc)) / parseInt(
-                plan_equipment_month);
+            var plan_equipment_roi = ((parseInt(plan_equipment_total_inv) - parseInt(plan_equipment_otc)) / parseInt(
+                plan_equipment_month)).toFixed(2);
             $(event).closest('.PlanLinkMainRow').find('.plan_equipment_roi').val(plan_equipment_roi);
             var capacity_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_capacity').val();
             var plan_equipment_operation_cost = $(event).closest('.PlanLinkMainRow').find(
@@ -1181,35 +1205,33 @@
 
             $('.plan_link_status:checked').each(function() {
                 const $this = $(this);
-                const plan_link_total_mrc = planLinkMainRows.find(
-                    '.plan_equipment_total_mrc').val() || 0;
+                const plan_link_total_mrc = $this.closest('.PlanLinkMainRow').find(
+                    '.plan_equipment_total_mrc').val();
                 total_mrc += parseFloat(plan_link_total_mrc);
 
-                total_equipment_investment += parseFloat(planLinkMainRows.find(
+                total_equipment_investment += parseFloat($(this).closest('.PlanLinkMainRow').find(
                     '.plan_equipment_total_inv').val()) || 0;
 
-                total_plan_equipment_otc = parseFloat(planLinkMainRows.find(
+                total_plan_equipment_otc += parseFloat($(this).closest('.PlanLinkMainRow').find(
                     '.plan_equipment_otc').val()) || 0;
 
             });
-            console.log('total_mrc', total_mrc)
-            console.log('total_equipment_investment', total_equipment_investment)
-            console.log('total_plan_equipment_otc', total_plan_equipment_otc)
 
-            $('#total_mrc').val(total_mrc);
+            console.log('total_mrc', total_mrc)
+
             const equipment_grand_total = parseInt($('#equipment_grand_total').val()) || 0;
             const total_investment = equipment_grand_total + total_equipment_investment;
-            console.log('total_investment', total_investment)
             $('#total_investment').val(total_investment);
             const total_equipment_otc = parseInt($('#equipment_otc').val()) || 0;
             total_otc = total_plan_equipment_otc + total_equipment_otc;
             $('#total_otc').val(total_otc);
             const equipment_roi = parseInt($('#equipment_roi').val()) || 0;
-            const total_service_cost = total_mrc + equipment_roi;
+            const total_service_cost = (total_mrc + equipment_roi) || 0;
             $('#total_service_cost').val(total_service_cost);
 
             const total_product_cost = parseInt($('#total_with_operation_amount').val()) || 0;
             $('#total_product_cost').val(total_product_cost);
+            $('#total_mrc').val(total_service_cost + total_product_cost);
         });
 
 
@@ -1219,23 +1241,41 @@
             var total_mrc = parseFloat($('#total_mrc').val());
             var total_mrc_amount = total_mrc * margin / 100;
             $('#management_cost_amount').val(total_mrc_amount);
+
+            var product_total_cost = parseFloat($('#product_total_cost').val());
             var management_cost_total = total_mrc + total_mrc_amount;
             $('#management_cost_total').val(management_cost_total);
-            var product_total_cost = parseFloat($('#total_product_cost').val());
+
             var perchantage = (management_cost_total / product_total_cost) * 100 - 100;
             $('.product_rate').each(function() {
+
                 var product_rate = parseFloat($(this).val());
-                var product_rate_perchantage = product_rate.toFixed(2) * perchantage / 100;
+                var product_rate_perchantage = product_rate.toFixed(2) * (perchantage / 100);
                 var product_margin_rate = (product_rate + product_rate_perchantage).toFixed(2);
                 $(this).closest('tr').find('.offer_price').val(product_margin_rate);
                 var total_margin_amount = product_margin_rate * parseFloat($(this).closest('tr').find(
                     '.product_quantity').val());
                 $(this).closest('tr').find('.product_offer_total').val(total_margin_amount.toFixed(2));
+
+                var vat_perchant = $(this).closest('tr').find('.product_vat').val();
+                var vat_amount = (total_margin_amount * vat_perchant) / 100;
+                $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
+                $(this).closest('tr').find('.total_price').val((total_margin_amount + vat_amount).toFixed(
+                    2));
             });
             var product_grand_total = $('.product_offer_total').get()
                 .reduce(function(sum, el) {
                     return sum + parseFloat(el.value);
                 }, 0);
+            var total_vat = $('.product_vat_amount').get()
+                .reduce(function(sum, el) {
+                    return sum + parseFloat(el.value);
+                }, 0);
+            var grand_total_price = $('.total_price').get()
+                .reduce(function(sum, el) {
+                    return sum + parseFloat(el.value);
+                }, 0);
+
             const client_equipment_total = parseFloat($('#client_equipment_total').val());
 
             //client equipment total
@@ -1258,6 +1298,8 @@
             let total_equipment_otc = equipment_otc + plan_equipment_otc + equipment_price_for_client
             $('#total_otc_with_client_equipment').val(total_equipment_otc);
             $('#product_grand_total').val(product_grand_total.toFixed(2));
+            $('#total_vat').val(total_vat.toFixed(2));
+            $('#grand_total_price').val(grand_total_price.toFixed(2));
         });
 
         //This is button function for add new row in plan link
