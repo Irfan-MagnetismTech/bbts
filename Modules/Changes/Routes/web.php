@@ -30,7 +30,7 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
     // Route::get('add-modified-planning/{id}', [PlanningController::class, 'create'])->name('add-modified-planning');
     // Route::get('add-modified-costing/{id}', [CostingController::class, 'create'])->name('add-modified-costing');
     // Route::get('add-modified-offer/{id}', [OfferController::class, 'create'])->name('add-modified-offer');
-    Route::get('client-plan-modification/{fr_no}/create', [ClientPlanningModificationController::class, 'create'])->name('client-requirement-modification.create');
+    Route::get('client-plan-modification/{connectivity_requirement_id}/create', [ClientPlanningModificationController::class, 'create'])->name('client-requirement-modification.create');
     Route::get('get-modify-survey-details', [ClientPlanningModificationController::class, 'getModifySurveyDetails'])->name('get-modify-survey-details');
     Route::get('costing-modification/{fr_no}/create', [CostingModificationController::class, 'create'])->name('costing-modification.create');
 });

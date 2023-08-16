@@ -134,7 +134,7 @@
                                                 <td style="width:30%">
                                                     <input type="hidden" name="detail_id[]" id="detail_id"
                                                         class="form-control form-control-sm"
-                                                        value="{{ $service_plan->id ?? '' }}">
+                                                        value="{{ $service_plan->connectivityProductRequirementDetails->id ?? '' }}">
                                                     <span
                                                         class="form-control form-control-sm">{{ $service_plan->connectivityProductRequirementDetails->product->name ?? '' }}</span>
 
