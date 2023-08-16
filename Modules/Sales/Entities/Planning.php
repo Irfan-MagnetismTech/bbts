@@ -47,4 +47,9 @@ class Planning extends Model
     {
         return $this->hasOne(Costing::class, 'fr_no', 'fr_no');
     }
+
+    public function ConnectivityRequirement()
+    {
+        return $this->hasOne(ConnectivityRequirement::class, 'id', 'connectivity_requirement_id');
+    }
 }
