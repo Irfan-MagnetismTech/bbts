@@ -2,6 +2,8 @@
 
 namespace Modules\Changes\Http\Controllers;
 
+use Doctrine\DBAL\Query\QueryException;
+use Modules\Changes\Services\PlanningDataSet;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -24,29 +26,44 @@ use Modules\Sales\Entities\SurveyDetail;
 
 class ClientPlanningModificationController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        return view('changes::index');
+        $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')->where('is_modified', 1)->latest()->get();
+        return view('changes::modify_planning.index', compact('plans'));
     }
 
     /**
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create($fr_no = null)
+
+    public function create($connectivity_requirement_id = null)
     {
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails')->where('fr_no', $fr_no)->where('is_modified', 1)->latest()->first();
-        $lead_generation = LeadGeneration::where('client_no', $connectivity_requirement->client_no)->first();
-        $particulars = Product::get();
-        $materials = Material::get();
-        $brands = Brand::get();
-        $vendors = Vendor::get();
-        return view('changes::modify_planning.create', compact('connectivity_requirement', 'lead_generation', 'particulars', 'materials', 'brands', 'vendors'));
+        try {
+            // Retrieve the connectivity requirement with its related data
+            $connectivity_requirement = ConnectivityRequirement::with([
+                'connectivityRequirementDetails',
+                'connectivityProductRequirementDetails',
+                'lead_generation.division',
+                'lead_generation.district',
+                'lead_generation.thana',
+            ])->where('id', $connectivity_requirement_id)
+                ->where('is_modified', 1)
+                ->latest()
+                ->firstOrFail();
+
+            $data = PlanningDataSet::setData($old = null, $connectivity_requirement, $plan = null);
+            return view('changes::modify_planning.create', $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error fetching data.');
+        }
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -59,21 +76,28 @@ class ClientPlanningModificationController extends Controller
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
         $plan_data['is_modified'] = 1;
-        DB::beginTransaction();
 
-        $plan = Planning::create($plan_data);
+        try {
+            DB::beginTransaction();
 
-        $this->createOrUpdateServicePlans($request, $plan);
+            $plan = Planning::create($plan_data);
 
-        $this->createOrUpdateEquipmentPlans($request, $plan);
+            $this->createOrUpdateServicePlans($request, $plan);
 
-        if ($request->total_key > 0) {
-            $this->createOrUpdatePlanLinks($request, $plan);
+            $this->createOrUpdateEquipmentPlans($request, $plan);
+
+            if ($request->total_key > 0) {
+                $this->createOrUpdatePlanLinks($request, $plan);
+            }
+
+            DB::commit();
+            return redirect()->route('planning.index')->with('success', 'Planning created successfully');
+        } catch (\Exception $e) {
+            $old = $request->input();
+            $data = PlanningDataSet::setData($old, $connectivity_requirement = null, $plan = null);
+            DB::rollback();
+            return view('changes::modify_planning.create', $data)->with('error', 'Error saving data.');
         }
-
-        DB::commit();
-
-        return redirect()->route('planning.index')->with('success', 'Planning created successfully');
     }
 
     /**
@@ -93,7 +117,9 @@ class ClientPlanningModificationController extends Controller
      */
     public function edit($id)
     {
-        return view('changes::edit');
+        $plan = Planning::with('lead_generation', 'planLinks', 'equipmentPlans', 'servicePlans.connectivityProductRequirementDetails.product','servicePlans.product', 'ConnectivityRequirement')->where('id', $id)->first();
+        $data = PlanningDataSet::setData($old = null, $connectivity_requirement = null, $plan);
+        return view('changes::modify_planning.create', $data);
     }
 
     /**
@@ -104,7 +130,26 @@ class ClientPlanningModificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $plan_data = $request->only('fr_no', 'client_no');
+        $plan_data['date'] = date('Y-m-d');
+        $plan_data['user_id'] = auth()->user()->id ?? '';
+        $plan_data['is_modified'] = 1;
+        DB::beginTransaction();
+        try {
+            $update_plan = Planning::where('id', $id)->update($plan_data);
+            $plan = Planning::find($id);
+            $this->deleteRequestedItems($request->delete_plan_link_id, $request->delete_equipment_plan_id, $request->delete_link_equipment_id);
+            $this->createOrUpdateServicePlans($request, $plan);
+            $this->createOrUpdateEquipmentPlans($request, $plan);
+            if ($request->total_key > 0) {
+                $this->createOrUpdatePlanLinks($request, $plan);
+            }
+            DB::commit();
+            return redirect()->route('client-plan-modification.index')->with('success', 'Planning updated successfully');
+        } catch (QueryException $e) {
+            DB::rollback();
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -114,8 +159,14 @@ class ClientPlanningModificationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            Planning::findOrFail($id)->delete();
+            return redirect()->back()->with('success', 'Planning deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error deleting data.');
+        }
     }
+
 
     public function getModifySurveyDetails(Request $request)
     {
@@ -249,6 +300,29 @@ class ClientPlanningModificationController extends Controller
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private function deleteRequestedItems($delete_plan_link_id, $delete_equipment_plan_id, $delete_link_equipment_id)
+    {
+        $delete_plan_link_id = json_decode($delete_plan_link_id);
+        if ($delete_plan_link_id) {
+            foreach ($delete_plan_link_id as $key => $plan_link_id) {
+                PlanLink::where('id', $plan_link_id)->delete();
+            }
+        }
+
+        $delete_equipment_plan_id = json_decode($delete_equipment_plan_id);
+        if ($delete_equipment_plan_id) {
+            foreach ($delete_equipment_plan_id as $key => $equipment_plan_id) {
+                EquipmentPlan::where('id', $equipment_plan_id)->delete();
+            }
+        }
+        $link_equipment_id_array = json_decode($delete_link_equipment_id);
+        if (!empty($link_equipment_id_array)) {
+            foreach ($link_equipment_id_array as $key => $equipment_array) {
+                PlanLinkEquipment::where('id', $equipment_array->link_equipment_id)->where('plan_link_id', $equipment_array->plan_link_id)->delete();
             }
         }
     }

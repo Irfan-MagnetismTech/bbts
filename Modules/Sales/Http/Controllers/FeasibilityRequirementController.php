@@ -92,7 +92,6 @@ class FeasibilityRequirementController extends Controller
             return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
         } catch (\Exception $e) {
             DB::rollback();
-
             // Handle the exception or display an error message
             return back()->with('error', $e->getMessage());
         }
