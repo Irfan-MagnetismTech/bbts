@@ -25,7 +25,7 @@ class SaleDetail extends Model
      */
     public function getDeliveryDateAttribute($input)
     {
-        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y') ?: null;
     }
 
     /**
