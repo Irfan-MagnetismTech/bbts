@@ -12,8 +12,8 @@
         }
 
         /* th{
-                                border: 1px solid black!important;
-                            } */
+                                                border: 1px solid black!important;
+                                            } */
     </style>
 @endsection
 
@@ -160,7 +160,7 @@
                                 <td colspan="3">Investment Budget Per Month</td>
                                 <td>{{ $details->costing->total_mrc }}</td>
                             </tr>
-                            <tr>
+                            <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
                                 <td colspan="3" class="text-right">12 months total Revenue Budget</td>
                                 <td>{{ number_format($product_grand_total * $details->costing->month, 2) }}
                                 </td>
@@ -168,13 +168,14 @@
                                 <td>{{ number_format($details->costing->total_mrc * $details->costing->month, 2) }}
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="10" class="text-right">Total PNL</td>
+                            <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
+                                <td colspan="8" rowspan="2"></td>
+                                <td colspan="2" class="text-right">Total PNL</td>
                                 <td>{{ $details->costing->total_mrc * $details->costing->month - $product_grand_total * $details->costing->month }}
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="10" class="text-right">Per Month PNL</td>
+                            <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
+                                <td colspan="2" class="text-right">Per Month PNL</td>
                                 <td>{{ ($details->costing->total_mrc * $details->costing->month - $product_grand_total * $details->costing->month) / 12 }}
                                 </td>
                             </tr>
