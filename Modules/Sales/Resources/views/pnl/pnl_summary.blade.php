@@ -8,12 +8,12 @@
 @section('content-grid', null)
 
 @section('content')
-    <div class="row mb-1">
+    {{-- <div class="row mb-1">
         <div class="col-12 text-center">
             <h2>PNL Summary</h2>
             <hr />
         </div>
-    </div>
+    </div> --}}
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead>
@@ -28,70 +28,81 @@
                     <th>Total Monthly Cost</th>
                     <th>Yearly Cost</th>
                     <th>Monthly Revenue</th>
-                    <th>Total Revenue</th>
+                    <th>Yearly Revenue</th>
                     <th>Monthly PNL</th>
-                    <th>Total PNL</th>
+                    <th>Yearly PNL</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
+                $total_investment = 0;
                 $total_budget = 0;
                 $total_revenue = 0;
                 $total_monthly_pnl = 0;
                 $total_pnl = 0;
                 $grand_total_monthly_cost = 0;
+                $total_yearly_pnl = 0;
+                $grand_total_otc = 0;
+                $total_product_cost = 0;
+                $sum_of_monthly_cost = 0;
                 ?>
                 @foreach ($feasibility_requirement->feasibilityRequirementDetails as $details)
                     @if ($details->costing)
                         @php
                             $month = $details->costing->month;
                             $total_otc = $details->offerDetail->total_offer_otc;
-                            $total_monthly_pnl += $details->offerDetail->grand_total - $details->costing->management_cost_amount;
-                            $total_pnl += ($details->offerDetail->grand_total - $details->costing->management_cost_amount) * $month;
-                            $total_inv = $details->costing->costingLinks->sum('investment');
+                            $investment = $details->costing->costingLinks->sum('investment');
                             $product_cost = $details->costing->product_total_cost + $details->costing->total_operation_cost;
-                            $monthly_cost = ($total_inv - $total_otc) / $month + $details->costing->costingLinks->sum('capacity_amount');
-                            $total_monthly_cost = $monthly_cost + $product_cost; 
+                            $monthly_cost = ($investment - $total_otc) / $month + $details->costing->costingLinks->sum('capacity_amount');
+                            $total_monthly_cost = $monthly_cost + $product_cost;
+                            $monthly_revenue = $details->offerDetail->grand_total;
+                            $total_investment += $investment;
+                            $grand_total_otc += $total_otc;
+                            $total_product_cost += $product_cost;
+                            $sum_of_monthly_cost += $monthly_cost;
                             $total_budget += $total_monthly_cost;
                             $grand_total_monthly_cost += $total_monthly_cost * $month;
-                            $monthly_revenue = $details->offerDetail->grand_total;
-                            $total_revenue += $monthly_revenue ;
+                            $total_revenue += $monthly_revenue;
+                            $monthly_pnl = $monthly_revenue - $total_monthly_cost;
+                            $total_monthly_pnl += $monthly_pnl;
+                            $total_yearly_pnl += $monthly_pnl * $month;
                         @endphp
-                        <tr> 
+                        <tr>
                             <td class="text-left">{{ $details->connectivity_point }} ({{ $details->fr_no }}) </td>
-                            <td class="text-right">@formatFloat($total_inv + ($details->costing->equipment_grand_total - $details->costing->equipment_price_for_client))</td>
-                            <td>{{ $total_otc }}</td>
-                            <td>{{ $details->costing->equipment_price_for_client }}</td>
-                            <td>{{ $details->costing->equipment_price_for_client + $details->offerDetail->total_offer_otc }}
+                            <td class="text-right">@formatFloat($investment + ($details->costing->equipment_grand_total - $details->costing->equipment_price_for_client))</td>
+                            <td class="text-right">{{ $total_otc }}</td>
+                            <td class="text-right">{{ $details->costing->equipment_price_for_client }}</td>
+                            <td class="text-right">
+                                {{ $details->costing->equipment_price_for_client + $details->offerDetail->total_offer_otc }}
                             </td>
                             <td class="text-right">@formatFloat($product_cost)</td>
                             <td class="text-right">@formatFloat($monthly_cost)</td>
                             <td class="text-right">@formatFloat($total_monthly_cost)</td>
-                            <td class="text-right">@formatFloat($total_monthly_cost * $month)</td> 
-                            <td class="text-right">@formatFloat($monthly_revenue)</td> 
-                            <td class="text-right">@formatFloat($monthly_revenue * $month)</td>  
-                            <td>{{ $details->offerDetail->grand_total - $details->costing->management_cost_amount }} </td>
-                            <td>{{ ($details->offerDetail->grand_total - $details->costing->management_cost_amount) * $month }}
+                            <td class="text-right">@formatFloat($total_monthly_cost * $month)</td>
+                            <td class="text-right">@formatFloat($monthly_revenue)</td>
+                            <td class="text-right">@formatFloat($monthly_revenue * $month)</td>
+                            <td class="text-right">@formatFloat($monthly_pnl)</td>
+                            <td class="text-right">@formatFloat($monthly_pnl * $month)</td>
                             </td>
-                        </tr> 
+                        </tr>
                     @endif
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="4" class="text-right"> <b>Total</b> </td>
-                    {{-- <td class="text-center">{{ $details->costing->sum('total_otc_with_client_equipment') }}</td> --}}
-                    <td colspan="2"></td>
-                    {{-- <td class="text-center">{{ $details->costing->sum('management_cost_amount') }}</td> --}}
-
+                    <td colspan="" class="text-right"> <b>Total</b> </td>
+                    <td class="text-right"><b>@formatFloat($total_investment)</b></td>
                     <td></td>
+                    <td></td>
+                    <td class="text-right"><b>@formatFloat($grand_total_otc)</b></td>
+                    <td class="text-right"><b>@formatFloat($total_product_cost)</b></td>
+                    <td class="text-right"><b>@formatFloat($sum_of_monthly_cost)</b></td>
                     <td class="text-right"><b>@formatFloat($total_budget)</b></td>
-                    <td class="text-right"><b>@formatFloat($grand_total_monthly_cost)</b></td> 
+                    <td class="text-right"><b>@formatFloat($grand_total_monthly_cost)</b></td>
                     <td class="text-right"><b>@formatFloat($total_revenue)</b></td>
                     <td class="text-right"><b>@formatFloat($total_monthly_pnl)</b></td>
-                    <td class="text-right"><b>@formatFloat($total_pnl)</b></td> 
-                    <td class="text-right"><b>@formatFloat($total_pnl)</b></td> 
-
+                    <td class="text-right"><b>@formatFloat($total_monthly_pnl)</b></td>
+                    <td class="text-right"><b>@formatFloat($total_yearly_pnl)</b></td>
                 </tr>
             </tfoot>
         </table>
