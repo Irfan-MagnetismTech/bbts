@@ -68,7 +68,7 @@
                                         data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i
                                             class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('connectivity-requirement.edit', $client_requirement->id) }}"
+                                    <a href="{{ route('client-requirement-modification.edit', $client_requirement->id) }}"
                                         data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
                                             class="fas fa-pen"></i></a>
 
