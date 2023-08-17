@@ -49,6 +49,7 @@ class ClientRequirementController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         return $this->storeOrUpdate($request);
     }
 
@@ -91,6 +92,7 @@ class ClientRequirementController extends Controller
      */
     public function update(Request $request, ConnectivityRequirement $clientRequirementModification)
     {
+        // dd($request->all());
         return $this->storeOrUpdate($request, $clientRequirementModification);
     }
 
@@ -131,7 +133,7 @@ class ClientRequirementController extends Controller
 
             DB::commit();
 
-            return $this->redirectToIndexWithMessage($requirement);
+            return $this->redirectWithSuccessMessage($requirement);
         } catch (QueryException $e) {
             DB::rollback();
 
@@ -188,6 +190,7 @@ class ClientRequirementController extends Controller
                 $data[] = [
                     'category_id' => $request['product_category'][$key],
                     'product_id' => $request['product'][$key],
+                    'prev_quantity' => $request['prev_quantity'][$key],
                     'capacity' => $plan,
                     'remarks' => $request['remarks'][$key],
                 ];
@@ -225,9 +228,9 @@ class ClientRequirementController extends Controller
      * @param ConnectivityRequirement $clientRequirementModification
      * @return RedirectResponse
      */
-    protected function redirectBackWithMessage(ConnectivityRequirement $clientRequirementModification): RedirectResponse
+    protected function redirectWithSuccessMessage(ConnectivityRequirement $clientRequirementModification): RedirectResponse
     {
         $message = 'Connectivity Requirement ' . ($clientRequirementModification->wasRecentlyCreated ? 'Created' : 'Updated') . ' Successfully';
-        return redirect()->back()->with('success', $message);
+        return redirect()->route('client-requirement-modification.index')->with('success', $message);
     }
 }

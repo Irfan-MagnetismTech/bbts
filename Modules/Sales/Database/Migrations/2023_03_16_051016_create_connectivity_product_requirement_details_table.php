@@ -21,6 +21,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->integer('category_id')->nullable();
             $table->integer('product_id')->nullable();
+            $table->string('prev_quantity')->nullable();
             $table->string('capacity')->nullable();
             $table->string('remarks')->nullable();
             $table->timestamps();

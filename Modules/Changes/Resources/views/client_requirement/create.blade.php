@@ -88,8 +88,11 @@
                     {{-- jquery loader --}}
                     <div id="loader" class="custom-loader"></div>
                     <div id="main-content">
-                        @include('changes::client_requirement.products')
-                        @include('changes::client_requirement.links')
+                        <div class="row mt-3">
+                            @include('changes::client_requirement.products')
+                            @include('changes::client_requirement.existing_links')
+                            @include('changes::client_requirement.links')
+                        </div>
                     </div>
                     <button class="py-2 btn btn-success float-right">
                         {{ !empty($client_request->id) ? 'Update' : 'Save' }}
