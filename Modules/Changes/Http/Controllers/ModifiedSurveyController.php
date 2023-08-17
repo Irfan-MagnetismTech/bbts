@@ -10,6 +10,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Networking\Entities\PhysicalConnectivityLines;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Modules\Sales\Entities\Survey;
 
 class ModifiedSurveyController extends Controller
 {
@@ -90,5 +91,12 @@ class ModifiedSurveyController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    public function getOptionForSurvey($fr_no)
+    {
+        $datas = Survey::where('fr_no', $fr_no)->get();
+        return response()->json($datas);
     }
 }

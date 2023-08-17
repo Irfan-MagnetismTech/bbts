@@ -332,6 +332,8 @@
                                                 class="form-control text-right existing_method" readonly value="{{$value->method}}">
                                             <input type="hidden" name="existing_bbts_link_id[]"
                                                 class="form-control existing_bbts_link_id" readonly value="{{$value->bbts_link_id}}">
+                                            <input type="hidden" name="existing_fr_no[]"
+                                                class="form-control existing_fr_no" readonly value="{{$value->physicalConnectivity->fr_no}}">
                                         </div>
                                     </td>
                                     <td>
@@ -389,7 +391,7 @@
                                 @foreach ($connectivity_requirement->connectivityRequirementDetails as $key => $value )
                                @php
                                    $type = ['Primary','Secondary','Tertiary'];
-                                   $option_type = ['Option 1'];
+                                   $option_type = ['Option 1','Option 2','Option 3'];
                                @endphp
                                 <tr class="requirement_details_row">
                                     @if(!in_Array($value->link_type,$existingConnections->pluck('link_type')->toArray()))
@@ -484,12 +486,12 @@
                     $('.product_existing_row').last().find('select').val('').attr('readonly',false);
                 };
 
-                function addRequirementRow(bbts_link_id,distance,gps,bts,vendor_id,vendor_name,method,link_type) {
+                function addRequirementRow(bbts_link_id,distance,gps,bts,vendor_id,vendor_name,method,fr_no,link_type,instance) {
                                var adad = `<tr class="requirement_details_row">
                                     <td>
                                         <select name="new_link_type[]" class="form-control new_link_type">
-                                            @foreach ($type as $key => $val )
-                                                <option value="{{$val}}" ${link_type === {{$val}} ? 'selected' : ''}>{{$val}}</option>
+                                            @foreach ($type as $key => $val)
+                                                <option value="{{$val}}">{{$val}}</option>
                                             @endforeach
                                         </select>
                                     </td>
@@ -551,9 +553,33 @@
                                     </td>
                                 </tr>`
                                 $('.requirementBody').append(adad);
+                                appendOption(fr_no,link_type,instance);
+                                console.log($(instance).closest('tr').html());
                              };
 
                 
+                function appendOption(fr_no,link_type,instance){
+                        $.ajax({
+                        url: `changes/get-option-for-survey/${fr_no}`,
+                        type: "get",
+                        dataType: "json",
+                        data: {
+                            fr_no
+                        },
+                        success: function (data) {
+                            if (data.length > 0) {
+                                // successcallback(data);
+                                console.log(data);
+                            } else {
+                                // if (failcallback && typeof failcallback === "function") {
+                                //     failcallback();
+                                // }
+                            }
+                            return false;
+                        },
+                    });
+
+                }
 
                 $(document).on('change','.checkbox', function() {
                     if($(this).prop("checked") == true){
@@ -564,15 +590,19 @@
                         let existing_bts = $(this).closest('tr').find('.existing_bts').val();
                         let existing_vendor_id = $(this).closest('tr').find('.existing_vendor_id').val();
                         let existing_vendor_name = $(this).closest('tr').find('.existing_vendor_name').val();
+                        let existing_fr_no = $(this).closest('tr').find('.existing_fr_no').val();
                         let existing_method = $(this).closest('tr').find('.existing_method').val();
-                        var c = $('.requirement_details_row').each(function(){
-                           var bbts_id = $(this).find('.bbts_link_id').val();
-                        })
-                        addRequirementRow(existing_bbts_link_id,existing_distance,existing_gps,existing_gps,existing_bts,existing_vendor_id,existing_vendor_name,existing_method,existing_link_type);
+                        // var c = $('.requirement_details_row').each(function(){
+                        //    var bbts_id = $(this).find('.new_bbts_link_id').val();
+                        // })
+                        addRequirementRow(existing_bbts_link_id,existing_distance,existing_gps,existing_gps,existing_bts,existing_vendor_id,existing_vendor_name,existing_method,existing_fr_no,existing_link_type,this);
                     }else{
-                        let bbtd_link_id = $(this).closest('tr').find('.existing_bbts_link_id').val();
-                        var c = $('.requirement_details_row').each(function(){
-                           var bbts_id = $(this).find('.new_bbts_link_id').closest('tr').remove();
+                        var bbtd_link_id = $(this).closest('tr').find('.existing_bbts_link_id').val();
+                        var c = $('.requirement_details_row').each(function(el){
+                           var bbts_id = $(this).find('.new_bbts_link_id').val();
+                           if(bbtd_link_id == bbts_id){
+                                $(this).find('.new_bbts_link_id').closest('tr').remove();
+                           }
                         })
                     }
                 });
