@@ -27,5 +27,9 @@ class AppServiceProvider extends ServiceProvider
         Blade::directive('formatFloat', function ($expression) {
             return "<?php echo number_format($expression, 2); ?>";
         });
+
+        Blade::directive('formatInt', function ($expression) {
+            return "<?php echo number_format($expression); ?>";
+        });
     }
 }

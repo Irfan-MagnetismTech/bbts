@@ -12,15 +12,15 @@
         }
 
         /* th{
-                                                border: 1px solid black!important;
-                                            } */
+                                                        border: 1px solid black!important;
+                                                    } */
     </style>
 @endsection
 
 @section('content-grid', null)
 
 @section('content')
-    <div>
+    <div class="table-responsive">
         @foreach ($feasibility_requirement->feasibilityRequirementDetails as $details)
             @if ($details->costing && $details->costing->saleDetail)
                 <table class="table table-bordered">
@@ -97,21 +97,22 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <?php $equipment_roi =0; ?>
                             @if ($details->costing->costingProductEquipments()->exists())
                                 <?php
                                 $equipment_investment = $details->costing->equipment_grand_total - $details->costing->equipment_price_for_client;
-                                $equipment_roi = ($equipment_investment - $details->offerDetail->equipment_otc) / 12;
+                                $equipment_roi = ($equipment_investment - $details->offerDetail->equipment_offer_price) / 12;
                                 ?>
                                 <tr>
-                                    <td>Product Equipment</td>
-                                    <td>{{ $details->costing->equipment_partial_total }}</td>
-                                    <td>{{ $details->costing->equipment_deployment_cost }}</td>
+                                    <td>Product Equipment</td> 
+                                    <td class="text-right">@formatInt($details->costing->equipment_partial_total)</td>
+                                    <td class="text-right">@formatInt($details->costing->equipment_deployment_cost)</td>
                                     <td>{{ $details->costing->equipment_interest }}</td>
                                     <td>{{ $details->costing->equipment_vat }}</td>
                                     <td>{{ $details->costing->equipment_tax }}</td>
-                                    <td>{{ $equipment_investment }}</td>
-                                    <td>{{ $details->offerDetail->equipment_otc }}</td>
-                                    <td>{{ $equipment_roi }}</td>
+                                    <td class="text-right">@formatFloat($equipment_investment)</td>
+                                    <td class="text-right">{{ $details->offerDetail->product_equipment_price }}</td>
+                                    <td class="text-right">{{ $equipment_roi }}</td>
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -125,12 +126,12 @@
                                 @endphp
                                 <tr>
                                     <td>{{ $link->link_type }}</td>
-                                    <td>{{ $link->partial_total }}</td>
-                                    <td>{{ $link->deployment_cost }}</td>
+                                    <td class="text-right">@formatInt($link->partial_total)</td>
+                                    <td class="text-right">@formatFloat($link->deployment_cost)</td>
                                     <td>{{ $link->interest }}</td>
                                     <td>{{ $link->vat }}</td>
                                     <td>{{ $link->tax }}</td>
-                                    <td class="text-right">{{ $link->investment }}</td>
+                                    <td class="text-right">@formatFloat($link->investment)</td>
                                     <td class="text-right">@formatFloat($link->offerLink->offer_otc)</td>
                                     <td class="text-right">@formatFloat($link_roi)</td>
                                     <td class="text-right">{{ $link->transmission_capacity }} X
@@ -138,46 +139,47 @@
                                     <td class="text-right">@formatFloat($link->capacity_amount)</td>
                                 </tr>
                             @endforeach
+                            <?php 
+                                $total_roi = $total_link_roi + $equipment_roi;
+                                $capacity_amount = $details->costing->costingLinks->sum('capacity_amount');
+                                $monthly_cost = $total_roi + $capacity_amount + $details->costing->costingProducts->sum('operation_cost_total');
+                            ?>
                             <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
-                                <td colspan="" class="text-right">Total</td>
-                                <td colspan="" class="text-right">Total</td>
-                                <td colspan="" class="text-right">Total</td>
-                                <td colspan="" class="text-right">Total</td>
-                                <td colspan="" class="text-right">Total</td>
-                                <td colspan="" class="text-right">Total</td>
-                                <td>{{ $details->costing->costingLinks->sum('investment') }}</td>
-                                <td>{{ $details->costing->costingLinks->sum('otc') }}</td>
-                                <td>@formatFloat($total_link_roi)</td>
-                                <td>10000</td>
-                                <td>10000</td>
+                                <td class="text-right">Total</td>
+                                <td class="text-right">@formatInt($details->costing->costingLinks->sum('partial_total') + $details->costing->equipment_partial_total)</td>
+                                <td class="text-right">@formatInt($details->costing->equipment_deployment_cost + $details->costing->costingLinks->sum('deployment_cost'))</td>
+                                <td >@formatFloat($details->costing->costingLinks->sum('interest') + $details->costing->equipment_interest)</td>
+                                <td >@formatFloat($details->costing->costingLinks->sum('vat') + $details->costing->equipment_vat)</td>
+                                <td >@formatFloat($details->costing->costingLinks->sum('tax') + $details->costing->equipment_tax)</td>
+                                <td class="text-right">@formatFloat($details->costing->costingLinks->sum('investment') + $details->costing->equipment_partial_total)</td>
+                                <td class="text-right">@formatFloat( $details->offerDetail->total_offer_otc)</td>
+                                <td class="text-right">@formatFloat($total_roi)</td>
+                                <td></td>
+                                <td class="text-right">@formatFloat($capacity_amount)</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
-                                <td colspan="3" rowspan="2"></td>
+                                <td colspan="4" rowspan="4"></td>
                                 <td colspan="3" class="text-right">Revenue Per Month</td>
-                                <td>{{ number_format($product_grand_total, 2) }}</td>
-                                <td colspan="3">Investment Budget Per Month</td>
-                                <td>{{ $details->costing->total_mrc }}</td>
+                                <td class="text-right">@formatFloat($product_grand_total)</td>
+                                <td colspan="2" class="text-right">Investment Budget Per Month</td>
+                                <td class="text-right">@formatFloat($monthly_cost)</td>
                             </tr>
                             <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
-                                <td colspan="3" class="text-right">12 months total Revenue Budget</td>
-                                <td>{{ number_format($product_grand_total * $details->costing->month, 2) }}
-                                </td>
-                                <td colspan="3">12 months total Investment Budget</td>
-                                <td>{{ number_format($details->costing->total_mrc * $details->costing->month, 2) }}
-                                </td>
+                                <td colspan="3" class="text-right">12 Months Total Revenue Budget</td>
+                                <td class="text-right">@formatFloat($product_grand_total * $details->costing->month)</td>
+                                <td colspan="2" class="text-right">12 Months Total Investment Budget</td>
+                                <td class="text-right">@formatFloat($monthly_cost * $details->costing->month)</td>
                             </tr>
                             <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
-                                <td colspan="8" rowspan="2"></td>
-                                <td colspan="2" class="text-right">Total PNL</td>
-                                <td>{{ $details->costing->total_mrc * $details->costing->month - $product_grand_total * $details->costing->month }}
-                                </td>
-                            </tr>
-                            <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
+                                <td colspan="4" rowspan="2"></td>
                                 <td colspan="2" class="text-right">Per Month PNL</td>
-                                <td>{{ ($details->costing->total_mrc * $details->costing->month - $product_grand_total * $details->costing->month) / 12 }}
-                                </td>
+                                <td class="text-right">@formatFloat($product_grand_total - $monthly_cost)</td>
+                            </tr>
+                            <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
+                                <td colspan="2" class="text-right">Total PNL</td>
+                                <td class="text-right">@formatFloat(($product_grand_total - $monthly_cost) * $details->costing->month)</td>
                             </tr>
                         </tfoot>
                     </table>

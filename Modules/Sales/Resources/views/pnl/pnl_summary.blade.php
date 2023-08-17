@@ -53,7 +53,7 @@
                             $total_otc = $details->offerDetail->total_offer_otc;
                             $investment = $details->costing->costingLinks->sum('investment');
                             $product_cost = $details->costing->product_total_cost + $details->costing->total_operation_cost;
-                            $monthly_cost = ($investment - $total_otc) / $month + $details->costing->costingLinks->sum('capacity_amount');
+                            $monthly_cost = ($investment - $total_otc) / $month + $details->costing->costingLinks->sum('capacity_amount') + $details->offerDetail->equipment_total_mrc;
                             $total_monthly_cost = $monthly_cost + $product_cost;
                             $monthly_revenue = $details->offerDetail->grand_total;
                             $total_investment += $investment;
