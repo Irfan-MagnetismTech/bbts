@@ -16,7 +16,7 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="capacity[]" class="form-control capacity" value="">
+                                <input type="text" name="prev_quantity[]" class="form-control prev_quantity" value="">
                             </td>
                             <td>
                                 <input type="text" name="unit[]" class="form-control unit" value="">
@@ -150,7 +150,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" name="capacity[]" class="form-control capacity" value="${value.quantity}">
+                                            <input type="text" name="prev_quantity[]" class="form-control prev_quantity" value="${value.quantity}">
                                         </td>
                                         <td>
                                             <input type="text" name="unit[]" class="form-control unit" value="${value.product.unit}">
