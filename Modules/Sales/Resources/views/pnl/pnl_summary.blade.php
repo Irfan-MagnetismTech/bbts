@@ -3,6 +3,7 @@
 
 @section('breadcrumb-title')
     PNL Summary
+    <span style="position: fixed; right:20px">skfsk</span>
 @endsection
 
 @section('content-grid', null)
