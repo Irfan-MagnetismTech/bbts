@@ -40,6 +40,7 @@ class BillGenerateController extends Controller
     public function create($client_no)
     {
         $BillLocations = BillingOtcBill::where('client_no', $client_no)->get();
+        // dd($BillLocations);
         $BillingAddresses = BillingAddress::where('client_no', $client_no)->orderBy('created_at')->get();
         return view('billing::billGenerate.create', compact('BillLocations', 'BillingAddresses'));
     }

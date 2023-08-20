@@ -32,6 +32,7 @@ class LogicalConnectivityInternetController extends Controller
      */
     public function create()
     {
+        // dd('ff');
         $saleDetalis = SaleDetail::query()
             ->whereSaleId(request()->get('sale_id'))
             ->with('client', 'frDetails')
@@ -51,6 +52,7 @@ class LogicalConnectivityInternetController extends Controller
             ->with('product')
             ->get()
             ->unique('product_id');
+        // dd($products);
 
         $ips = Ip::latest()->get();
         $ipv4Ips = Ip::where('ip_type', 'IPv4')->latest()->get();
@@ -64,7 +66,8 @@ class LogicalConnectivityInternetController extends Controller
             ])
             ->with('lines.product')
             ->latest()
-            ->firstOrFail();
+            ->first();
+        // dd($logicalConnectivityInternet->toArray());    
 
         if ($logicalConnectivityInternet) {
             $logicalConnectivityBandwidths = BandwidthDestribution::query()
