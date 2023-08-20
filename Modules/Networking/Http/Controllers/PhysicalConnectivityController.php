@@ -37,7 +37,33 @@ class PhysicalConnectivityController extends Controller
     public function create()
     {
         $connectivity_links = ConnectivityLink::latest()->get();
-        return view('networking::physical-connectivities.create', compact('connectivity_links'));
+
+        if (request()->get('sale_id')) {
+            $physicalConnectivity = PhysicalConnectivity::query()
+            ->whereSaleIdAndFrNo(request()->get('sale_id'))
+            ->with('lines')
+            ->latest()
+            ->first();
+            // dd($physicalConnectivity);
+
+            $feasibility_details = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $physicalConnectivity->fr_no)->first();
+
+            $challanInfo = ScmChallan::query()
+                ->where('fr_no', $physicalConnectivity->fr_no)
+                ->get();
+
+            $connectivity_points = FeasibilityRequirementDetail::query()
+                ->where('client_no', $physicalConnectivity->client_no)
+                ->get();
+
+            $clientInfo = FeasibilityRequirementDetail::query()
+                ->where('fr_no', $physicalConnectivity->fr_no)
+                ->first();
+
+            $connectivity_links = ConnectivityLink::latest()->get();
+        }
+
+        return view('networking::physical-connectivities.create', compact('connectivity_links', 'physicalConnectivity', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
 
     /**
