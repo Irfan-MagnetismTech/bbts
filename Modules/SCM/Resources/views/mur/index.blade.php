@@ -29,6 +29,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Type</th>
+                    <th>Name</th>
                     <th>Purpose</th>
                     <th>Date</th>
                     <th>Mur No</th>
@@ -39,6 +40,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Type</th>
+                    <th>Name</th>
                     <th>Purpose</th>
                     <th>Date</th>
                     <th>Mur No</th>
@@ -50,6 +52,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $scmMur->type }}</td>
+                        <td class="text-center">{{ $scmMur->client->client_name ?? '' }} - {{ $scmMur->pop->name ?? '' }} - {{ $scmMur->feasibilityRequirementDetail->connectivity_point ?? '' }}</td>
                         <td class="text-center">{{ $scmMur->purpose }}</td>
                         <td class="text-center">{{ $scmMur->date }}</td>
                         <td class="text-center">{{ $scmMur->mur_no }}</td>

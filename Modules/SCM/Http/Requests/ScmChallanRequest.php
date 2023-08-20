@@ -23,7 +23,7 @@ class ScmChallanRequest extends FormRequest
             'pop_id'             => 'required_if:type,pop',
             'client_no'          => 'required_if:type,client',
             'fr_no'              => 'required_if:type,client',
-            'link_no'            => 'required_if:type,client,equipment_type,Link',
+            // 'link_no'            => 'required_if:type,client,equipment_type,Link',
         ];
     }
 

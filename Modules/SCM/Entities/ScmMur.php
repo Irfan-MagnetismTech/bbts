@@ -10,6 +10,7 @@ use Modules\SCM\Entities\ScmChallan;
 use Modules\SCM\Entities\ScmMurLine;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 class ScmMur extends Model
@@ -42,6 +43,11 @@ class ScmMur extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
+
+    public function feasibilityRequirementDetail()
+    {
+        return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no','fr_no')->withDefault('');
     }
 
     public function branch()
