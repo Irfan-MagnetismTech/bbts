@@ -2,14 +2,9 @@
 @section('title', 'Planning')
 
 @php
-    $is_old = old() ? true : false;
-    $form_heading = 'Create';
-    $form_url = route('client-plan-modification.store');
-    $form_method = 'POST';
-    $is_old = old('client_id') ? true : false;
-    $form_heading = $plan_links->isNotEmpty() ? 'Update' : 'Add';
-    $form_url = $plan_links->isNotEmpty() ? route('client-plan-modification.update', $id) : route('client-plan-modification.store');
-    $form_method = $plan_links->isNotEmpty() ? 'PUT' : 'POST';
+    $form_heading = $type == 'create' ? 'Add' : 'Update';
+    $form_url = $type == 'create' ? route('client-plan-modification.store') : route('client-plan-modification.update', $id);
+    $form_method = $type == 'create' ? 'POST' : 'PUT';
 @endphp
 @section('style')
     <style>
@@ -244,25 +239,26 @@
                                         @foreach ($product_details as $product_detail)
                                             <tr>
                                                 <input type="hidden" name="service_plan_id[]"
-                                                    value="{{ $product_detail->id ?? '' }}">
+                                                    value="{{ $product_detail['id'] ?? '' }}">
                                                 <td>
                                                     <input type="hidden" name="detail_id[]" id="detail_id"
                                                         class="form-control form-control-sm"
-                                                        value="{{ $product_detail->connectivityProductRequirementDetails->id ?? '' }}">
+                                                        value="{{ $product_detail['connectivity_product_requirement_details_id'] ?? '' }}">
                                                     <span
-                                                        class="form-control form-control-sm">{{ $product_detail->connectivityProductRequirementDetails->product->name ?? '' }}</span>
+                                                        class="form-control form-control-sm">{{ $product_detail['product_name'] ?? '' }}</span>
                                                 </td>
                                                 <td>
                                                     <span
-                                                        class="form-control form-control-sm">{{ $product_detail->capacity ?? '' }}</span>
+                                                        class="form-control form-control-sm">{{ $product_detail['capacity'] ?? '' }}</span>
                                                 </td>
                                                 <td>
                                                     <input type="text" name="plan[]" id="plan"
-                                                        class="form-control form-control-sm" value="">
+                                                        class="form-control form-control-sm"
+                                                        value="{{ $product_detail['plan'] ?? '' }}">
                                                 </td>
                                                 <td>
                                                     <input type="text" name="remarks[]" class="form-control"
-                                                        value="{{ $product_detail->remarks }}" />
+                                                        value="{{ $product_detail['remarks'] ?? '' }}" />
                                                 </td>
                                                 <td>
                                                     <button type="button"
@@ -275,7 +271,56 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="md-col-12 col-12">
+                        <div class="md-col-5 col-5" id='EquipmentPlan'>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="7">Existing Equipment Plan</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Equipment Name</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Brand</th>
+                                            <th>Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="equipment_body">
+                                        @if (!empty($previous_products))
+                                            @foreach ($previous_products->lines as $previous_product)
+                                                <tr class="equipment_row">
+                                                    <td>
+                                                        <input type="readonly" name="equipment_name[]"
+                                                            class="form-control form-control-sm"
+                                                            value="{{ $previous_product->material->name ?? '' }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="readonly" class="form-control form-control-sm"
+                                                            value="{{ $previous_product->quantity ?? '' }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="readonly" class="form-control form-control-sm unit"
+                                                            value="{{ $previous_product->material->unit ?? '' }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="readonly" class="form-control form-control-sm brand"
+                                                            value="{{ $previous_product->brand->name ?? '' }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="equipment_remarks[]"
+                                                            id="equipment_remarks"
+                                                            class="form-control form-control-sm equipment_remarks"
+                                                            value="{{ $previous_product->remarks ?? '' }}">
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="md-col-7 col-7" id='EquipmentPlan'>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <thead>
@@ -296,48 +341,63 @@
                                         </tr>
                                     </thead>
                                     <tbody id="equipment_body">
-                                        <tr class="equipment_row">
-                                            <td>
-                                                <select name="equipment_id[]" id="equipment_id"
-                                                    class="form-control form-control-sm equipment_id">
-                                                    <option value="">Select Equipment</option>
-                                                    @foreach ($materials as $material)
-                                                        <option value="{{ $material->id }}">
-                                                            {{ $material->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="text" name="quantity[]" id="quantity"
-                                                    class="form-control form-control-sm" value="">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="unit[]" id="unit"
-                                                    class="form-control form-control-sm unit" value="">
-                                            </td>
-                                            <td>
-                                                <select name="brand_id[]" id="brand_id"
-                                                    class="form-control form-control-sm brand_id">
-                                                    <option value="">Select Brand</option>
-                                                    @foreach ($brands as $brand)
-                                                        <option value="{{ $brand->id }}">
-                                                            {{ $brand->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="text" name="model[]" id="model"
-                                                    class="form-control form-control-sm model" value="">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="equipment_remarks[]" id="equipment_remarks"
-                                                    class="form-control form-control-sm equipment_remarks" value="">
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
-                                                        class="fas fa-trash"></i></button>
-                                            </td>
-                                        </tr>
+                                        @if (!empty($equipment_plans))
+                                            @foreach ($equipment_plans as $equipment_plan)
+                                                <tr class="equipment_row">
+                                                    <input type="hidden" name="equipment_plan_id[]"
+                                                        value="{{ $equipment_plan->id ?? '' }}">
+                                                    <td>
+                                                        <select name="equipment_id[]" id="equipment_id"
+                                                            class="form-control form-control-sm equipment_id">
+                                                            <option value="">Select Equipment</option>
+                                                            @foreach ($materials as $material)
+                                                                <option value="{{ $material->id }}"
+                                                                    {{ $equipment_plan->material_id == $material->id ? 'selected' : '' }}>
+                                                                    {{ $material->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="quantity[]" id="quantity"
+                                                            class="form-control form-control-sm"
+                                                            value="{{ $equipment_plan->quantity ?? '' }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="unit[]" id="unit"
+                                                            class="form-control form-control-sm unit"
+                                                            value="{{ $equipment_plan->unit ?? '' }}">
+                                                    </td>
+                                                    <td>
+                                                        <select name="brand_id[]" id="brand_id"
+                                                            class="form-control form-control-sm brand_id">
+                                                            <option value="">Select Brand</option>
+                                                            @foreach ($brands as $brand)
+                                                                <option value="{{ $brand->id }}"
+                                                                    {{ $equipment_plan->brand_id == $brand->id ? 'selected' : '' }}>
+                                                                    {{ $brand->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="model[]" id="model"
+                                                            class="form-control form-control-sm model"
+                                                            value="{{ $equipment_plan->model ?? '' }}">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="equipment_remarks[]"
+                                                            id="equipment_remarks"
+                                                            class="form-control form-control-sm equipment_remarks"
+                                                            value="{{ $equipment_plan->remarks ?? '' }}">
+                                                    </td>
+                                                    <td>
+                                                        <button type="button"
+                                                            class="btn btn-sm btn-danger removeEquipmentRow"><i
+                                                                class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endif
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -356,7 +416,8 @@
                     </div>
                     <hr />
                     <div id="link_container">
-                        @if ($plan_links->isNotEmpty())
+                        @if ($plan_links)
+                        @dd($plan_links)
                             <input type="hidden" name="total_key" id="total_key" value="{{ $plan_links->count() }}">
                             @foreach ($plan_links as $key => $plan_link)
                                 <div class="main_link">
@@ -599,7 +660,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="link_equipment_table">
-                                                    @foreach ($plan_link->PlanLinkEquipments as $plan_equipment)
+                                                    @foreach ($equipment_plans as $plan_equipment)
                                                         <tr>
                                                             <input type="hidden"
                                                                 name="plan_link_equipment_id_{{ $total_key }}[]"

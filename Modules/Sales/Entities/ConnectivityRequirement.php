@@ -83,4 +83,9 @@ class ConnectivityRequirement extends Model
     {
         return $query->where('is_modified', 1);
     }
+
+    public function survey()
+    {
+        return $this->hasOne(Survey::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
+    }
 }

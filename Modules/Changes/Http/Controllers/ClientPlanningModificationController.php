@@ -22,7 +22,8 @@ use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\ServicePlan;
 use Modules\Sales\Entities\Survey;
 use Modules\Sales\Entities\SurveyDetail;
-
+use Modules\SCM\Entities\ScmMrr;
+use Modules\SCM\Entities\ScmMur;
 
 class ClientPlanningModificationController extends Controller
 {
@@ -58,8 +59,15 @@ class ClientPlanningModificationController extends Controller
                 ->firstOrFail();
 
             $data = PlanningDataSet::setData($old = null, $connectivity_requirement, $plan = null);
+            $previous_products = ScmMur::with('lines')->where('client_no', $connectivity_requirement->client_no)->where('fr_no', $connectivity_requirement->fr_no)->where('link_no', '=', null)->first();
+            $modify_survey = Survey::where('connectivity_requirement_id', $connectivity_requirement_id)->where('is_modified', 1)->latest()->first();
+            $modify_survey_detail_links = SurveyDetail::where('survey_id', $modify_survey->id)->pluck('link_no')->toArray();
+            $previous_link_equipments = ScmMur::where('client_no', $connectivity_requirement->client_no)->where('fr_no', $connectivity_requirement->fr_no)->whereIn('link_no', $modify_survey_detail_links)->get();
+            $data['previous_products'] = $previous_products;
+            $data['previous_link_equipments'] = $previous_link_equipments;
             return view('changes::modify_planning.create', $data);
         } catch (\Exception $e) {
+            dd($e);
             return redirect()->back()->with('error', 'Error fetching data.');
         }
     }
@@ -91,7 +99,7 @@ class ClientPlanningModificationController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('planning.index')->with('success', 'Planning created successfully');
+            return redirect()->route('client-plan-modification.index')->with('success', 'Planning created successfully');
         } catch (\Exception $e) {
             $old = $request->input();
             $data = PlanningDataSet::setData($old, $connectivity_requirement = null, $plan = null);
@@ -117,7 +125,7 @@ class ClientPlanningModificationController extends Controller
      */
     public function edit($id)
     {
-        $plan = Planning::with('lead_generation', 'planLinks', 'equipmentPlans', 'servicePlans.connectivityProductRequirementDetails.product','servicePlans.product', 'ConnectivityRequirement')->where('id', $id)->first();
+        $plan = Planning::with('lead_generation', 'planLinks', 'equipmentPlans', 'servicePlans.connectivityProductRequirementDetails.product', 'servicePlans.product', 'ConnectivityRequirement')->where('id', $id)->first();
         $data = PlanningDataSet::setData($old = null, $connectivity_requirement = null, $plan);
         return view('changes::modify_planning.create', $data);
     }

@@ -247,6 +247,7 @@
                     <hr />
                     <div id="link_container">
                         <div class="main_link">
+                            <input type="hidden" name="plan_link_no_1" value="">
                             <div class="row">
                                 <div class="col-md-11 col-11">
                                     <h5 class="text-center mb-2">Link <span class="link_no">1</span></h5>
@@ -616,6 +617,8 @@
                     },
                     success: function(data) {
                         console.log(data);
+                        $(event.target).closest('.main_link').find('input[name^="plan_link_no_"]').val(data
+                            ?.link_no);
                         $(event.target).closest('.main_link').find('input[name^="link_vendor_"]').val(data?.vendor
                             ?.name);
                         $(event.target).closest('.main_link').find('input[name^="link_vender_id_"]').val(data
