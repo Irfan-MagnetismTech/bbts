@@ -431,23 +431,26 @@ class SaleController extends Controller
 
                 $otc_data = BillingOtcBill::create($otc);
                 $otc_data->lines()->createMany($otc_lines_data);
-                $material_array[$key]['parent']['main'] = [
-                    "client_no"         => $values->client_no,
-                    "fr_no"             => $values->fr_no,
-                    "type"              => 'client',
-                    "requisition_by"    => auth()->id(),
-                    "branch_id"         => 1,
-                    "date"              => now()->format('d-m-Y'),
-                ];
-                foreach ($values->equipmentPlans as $key2 => $values2) {
-                    $material_array[$key]['parent']['child'][] = [
-                        "material_id"   => $values2->material_id,
-                        "item_code"     => $values2->material->code,
-                        "brand_id"      => $values2->brand_id,
-                        "quantity"      => $values2->quantity,
-                        "model"         => $values2->model,
+                if (count($values->equipmentPlans)) {
+                    $material_array[$key]['parent']['main'] = [
+                        "client_no"         => $values->client_no,
+                        "fr_no"             => $values->fr_no,
+                        "type"              => 'client',
+                        "requisition_by"    => auth()->id(),
+                        "branch_id"         => 1,
+                        "date"              => now()->format('d-m-Y'),
                     ];
+                    foreach ($values->equipmentPlans as $key2 => $values2) {
+                        $material_array[$key]['parent']['child'][] = [
+                            "material_id"   => $values2->material_id,
+                            "item_code"     => $values2->material->code,
+                            "brand_id"      => $values2->brand_id,
+                            "quantity"      => $values2->quantity,
+                            "model"         => $values2->model,
+                        ];
+                    }
                 }
+
                 foreach ($values->planLinks as $key2 => $values2) {
                     $material_array[$key]['link'][$key2]['main'] = [
                         "client_no"         => $values->client_no,
@@ -473,15 +476,17 @@ class SaleController extends Controller
             $currentYear = now()->format('Y');
             $mrsNoCounter = $lastMRSId ? $lastMRSId->id + 1 : 1;
             foreach ($material_array as $key => $value) {
-                $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
-                $mrsNoCounter++;
-                $value['parent']['main']['mrs_no'] = $mrsNo;
-                $reqq = ScmRequisition::create($value['parent']['main']);
-                $reqChildItems = collect($value['parent']['child'])->map(function ($child) use ($reqq) {
-                    $child['req_key'] = $reqq->id . '-' . $child['item_code'];
-                    return $child;
-                });
-                $reqq->scmRequisitiondetails()->createMany($reqChildItems);
+                if (isset($value['parent'])) {
+                    $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
+                    $mrsNoCounter++;
+                    $value['parent']['main']['mrs_no'] = $mrsNo;
+                    $reqq = ScmRequisition::create($value['parent']['main']);
+                    $reqChildItems = collect($value['parent']['child'])->map(function ($child) use ($reqq) {
+                        $child['req_key'] = $reqq->id . '-' . $child['item_code'];
+                        return $child;
+                    });
+                    $reqq->scmRequisitiondetails()->createMany($reqChildItems);
+                }
                 foreach ($value['link'] as $key1 => $value1) {
                     $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
                     $mrsNoCounter++;
