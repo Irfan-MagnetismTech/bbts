@@ -18,7 +18,7 @@
     $challan_no = old('challan_no', !empty($materialReceive) ? $materialReceive->challan_no : null);
     $challan_date = old('challan_date', !empty($materialReceive) ? $materialReceive->challan_date : null);
 
-
+    
 
 @endphp
 
@@ -35,7 +35,18 @@
         .input-group-info .input-group-addon {
             background-color: #04748a!important;
                 }
-        
+                .bootstrap-tagsinput {
+                /* ... other properties ... */
+                    max-width: 200px!important; /* Ensure it doesn't exceed its container */
+                    display: flex!important; /* Use flex display */
+                    flex-wrap: wrap!important; /* Allow tags to wrap to the next line */
+                }
+
+                .bootstrap-tagsinput .tag {
+                    margin-bottom: 4px!important; /* Adjust spacing below tags */
+                }
+
+               
     </style>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
 @endsection
@@ -211,7 +222,7 @@
                         <input type="text" name="description[]" class="form-control description" autocomplete="off" value="{{ $description[$key]  }}">
                     </td>
                     <td>
-                        <div class="tags_add_multiple">
+                        <div class="tags_add_multiple select2container">
                             <input class="" type="text" name="sl_code[]" value="{{$sl_code[$key]}}" data-role="tagsinput" data-max-tags="{{ $max_tag }}">
                         </div>
                     </td>
@@ -356,7 +367,7 @@
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off">
                             </td>
                             <td>
-                                <div class="tags_add_multiple">
+                                <div class="tags_add_multiple select2container">
                                     <input class="" type="text" name="sl_code[]" value="111" data-role="tagsinput">
                                 </div>
                             </td>

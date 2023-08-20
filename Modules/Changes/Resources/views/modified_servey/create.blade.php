@@ -164,14 +164,15 @@
                             @php
                                 $checkbox = ["Method Change","Redundant Link","Shifting"];
                             @endphp
-                           @foreach (json_decode($connectivity_requirement->change_type) as $element) 
-                                @if (in_array($element, $checkbox)) 
-                                <div class="label-main">
-                                    <label class="label label-primary badge-md" style="background:linear-gradient(90deg,#BFF098 , #6FD6FF);color:rgba(0, 0, 0, 0.641)!important;font-weight:500">{{$element}}</label>
-                                </div>
-                                
-                                @endif
-                           @endforeach
+                            @if ($connectivity_requirement->change_type != NULL) 
+                                @foreach (json_decode($connectivity_requirement->change_type) as $element) 
+                                        @if (in_array($element, $checkbox)) 
+                                        <div class="label-main">
+                                            <label class="label label-primary badge-md" style="background:linear-gradient(90deg,#BFF098 , #6FD6FF);color:rgba(0, 0, 0, 0.641)!important;font-weight:500">{{$element}}</label>
+                                        </div>
+                                        @endif
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                     {{-- create a responsive table --}}
@@ -302,7 +303,7 @@
                             <tbody class="existingBody">
                                 @foreach ($existingConnections as $key => $value )
                                 <tr class="product_existing_row">
-                                    @if((in_array("Method Change", json_decode($connectivity_requirement->change_type))) && (in_Array($value->link_type,$connectivity_requirement->connectivityRequirementDetails->pluck('link_type')->toArray())))
+                                    @if(($connectivity_requirement->change_type != NULL) && (in_array("Method Change", json_decode($connectivity_requirement->change_type))) && (in_Array($value->link_type,$connectivity_requirement->connectivityRequirementDetails->pluck('link_type')->toArray())))
                                         <td>
                                             <input type="checkbox" class="checkbox" value="method_change" name="checked[{{$key}}]">
                                         </td>
