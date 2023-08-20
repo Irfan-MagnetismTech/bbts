@@ -658,7 +658,7 @@
                                 <select class="form-control model select2" name="model[${indx}]">
                                 </select>
                             </td>
-                            <td class="select2container">
+                            <td class="select2container float">
                                 <select class="form-control serial_code select2" name="serial_code[${indx}][]" multiple="multiple">
 
                                 </select>
