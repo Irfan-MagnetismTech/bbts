@@ -267,5 +267,55 @@
         } else {
             console.log('link_container is not empty');
         }
+
+        let equipment_plan = `
+                <tr class="equipment_row">
+                    <td>
+                        <select name="equipment_id[]" id="equipment_id"
+                            class="form-control form-control-sm equipment_id">
+                            <option value="">Select Equipment</option>
+                            @foreach ($materials as $material)
+                                <option value="{{ $material->id }}">
+                                    {{ $material->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="quantity[]" id="quantity"
+                            class="form-control form-control-sm" value="">
+                    </td>
+                    <td>
+                        <input type="text" name="unit[]" id="unit"
+                            class="form-control form-control-sm unit" value="">
+                    </td>
+                    <td>
+                        <select name="brand_id[]" id="brand_id"
+                            class="form-control form-control-sm brand_id">
+                            <option value="">Select Brand</option>
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}">
+                                    {{ $brand->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="model[]" id="model"
+                            class="form-control form-control-sm model" value="">
+                    </td>
+                    <td>
+                        <input type="text" name="equipment_remarks[]" id="equipment_remarks"
+                            class="form-control form-control-sm equipment_remarks" value="">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
+                                class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+        `;
+        if ($('#EquipmentPlan').find('.equipment_row').length == 0) {
+            $('#equipment_body').append(equipment_plan);
+        } else {
+            console.log('equipment_container is not empty');
+        }
     });
 </script>
