@@ -9,6 +9,7 @@ use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\ClientDetail;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 
 class ScmRequisition extends Model
@@ -29,6 +30,11 @@ class ScmRequisition extends Model
     public function setDateAttribute($input)
     {
         !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
+    }
+
+    public function feasibilityRequirementDetail()
+    {
+        return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no','fr_no');
     }
 
     public function scmRequisitiondetails()

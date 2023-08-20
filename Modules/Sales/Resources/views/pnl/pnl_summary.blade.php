@@ -3,18 +3,30 @@
 
 @section('breadcrumb-title')
     PNL Summary
-    <span style="position: fixed; right:20px">skfsk</span>
+    <span style="position: fixed; right:20px"></span>
+@endsection
+
+@section('style')
+    <style>
+        td {
+            border: 1px solid rgb(183, 186, 187) !important;
+        }
+
+        /* th{
+                    border: 1px solid black!important;
+                } */
+    </style>
 @endsection
 
 @section('content-grid', null)
 
 @section('content')
-    {{-- <div class="row mb-1">
+    <div class="row mb-1">
         <div class="col-12 text-center">
-            <h2>PNL Summary</h2>
-            <hr />
+            <h2>{{ $feasibility_requirement->lead_generation->client_name }}</h2>
+            {{-- <hr /> --}}
         </div>
-    </div> --}}
+    </div>
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead>
@@ -90,7 +102,7 @@
                 @endforeach
             </tbody>
             <tfoot>
-                <tr>
+                <tr style="font-weight: bold!important; 45ound-color: #e3ecf6d8!important; ">
                     <td colspan="" class="text-right"> <b>Total</b> </td>
                     <td class="text-right"><b>@formatFloat($total_investment)</b></td>
                     <td></td>

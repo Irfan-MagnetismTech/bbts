@@ -29,6 +29,7 @@
                     <th>#SL</th>
                     <th>MRS No</th>
                     <th>Type</th>
+                    <th>Connectivity Point</th>
                     <th>Requisition By</th>
                     <th>Date</th>
                     <th>Action</th>
@@ -39,6 +40,7 @@
                     <th>#SL</th>
                     <th>MRS No</th>
                     <th>Type</th>
+                    <th>Connectivity Point</th>
                     <th>Requisition By</th>
                     <th>Date</th>
                     <th>Action</th>
@@ -50,6 +52,7 @@
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $requisition->mrs_no }}</td>
                         <td class="text-center">{{ ucfirst($requisition->type) }} {{($requisition->type == 'client') ? ('( '. $requisition->client?->client_name . ' :: ' . $requisition->fr_no . ' )') : ''}}  {{($requisition->type == 'pop') ? ('( '. $requisition->pop?->name. ' )') : ''}}</td>
+                        <td class="text-center">{{ $requisition->feasibilityRequirementDetail->connectivity_point ?? '' }}</td>
                         <td class="text-center">{{ ucfirst($requisition->requisitionBy->name) }}</td>
                         <td class="text-center">{{ $requisition->date }}</td>
                         <td>
