@@ -16,7 +16,7 @@
     $client_name = old('client_name', !empty($challan) ? $challan?->client?->client_name : null);
     $equipment_type = old('equipment_type', !empty($challan) ? $challan?->equipment_type : null);
     $client_no = old('client_no', !empty($challan) ? $challan?->client?->client_no : null);
-    $client_address = old('client_address', !empty($challan) ? $challan?->client?->location : null);
+    $client_address = old('client_address', !empty($challan) ? $challan?->feasibilityRequirementDetail?->location : null);
     $branch_id = old('branch_id', !empty($challan) ? $challan->branch_id : null);
     $branch_name = old('branch_id', !empty($challan) ? $challan?->branch?->name : null);
     $pop_id = old('pop_id', !empty($challan) ? $challan->pop_id : null);

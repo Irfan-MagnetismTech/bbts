@@ -11,6 +11,7 @@ use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\StockLedger;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\ClientDetail;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\SCM\Entities\ScmChallanLine;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Http\Traits\StockLedgerTrait;
@@ -39,6 +40,11 @@ class ScmChallan extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
+
+    public function feasibilityRequirementDetail()
+    {
+        return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no','fr_no');
     }
 
     public function branch()

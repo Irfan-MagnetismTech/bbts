@@ -40,7 +40,7 @@ class PhysicalConnectivityController extends Controller
 
         if (request()->get('sale_id')) {
             $physicalConnectivity = PhysicalConnectivity::query()
-            ->whereSaleIdAndFrNo(request()->get('sale_id'))
+            ->whereSaleId(request()->get('sale_id'))
             ->with('lines')
             ->latest()
             ->first();
