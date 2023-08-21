@@ -8,6 +8,7 @@ use Modules\Sales\Entities\FinalSurveyDetail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Link;
+use Modules\SCM\Entities\ScmMur;
 
 class PhysicalConnectivityLines extends Model
 {
@@ -21,5 +22,10 @@ class PhysicalConnectivityLines extends Model
     public function physicalConnectivity(): BelongsTo
     {
         return $this->belongsTo(PhysicalConnectivity::class);
+    }
+
+    public function scmMur()
+    {
+        return $this->hasOne(ScmMur::class, 'link_no', 'link_no');
     }
 }
