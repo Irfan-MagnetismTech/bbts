@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('physical_connectivity_lines', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('physical_connectivity_id');
+            $table->string('link_no')->nullable();
             $table->string('link_type')->nullable();
             $table->string('method')->nullable();
             $table->string('pop')->nullable();

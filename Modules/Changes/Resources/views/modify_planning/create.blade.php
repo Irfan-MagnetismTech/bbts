@@ -271,7 +271,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="md-col-5 col-5" id='EquipmentPlan'>
+                        <div class="md-col-5 col-5">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped">
                                     <thead>
@@ -286,10 +286,10 @@
                                             <th>Remarks</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="equipment_body">
+                                    <tbody>
                                         @if (!empty($previous_products))
                                             @foreach ($previous_products->lines as $previous_product)
-                                                <tr class="equipment_row">
+                                                <tr>
                                                     <td>
                                                         <input type="readonly" name="equipment_name[]"
                                                             class="form-control form-control-sm"
@@ -403,6 +403,165 @@
                         </div>
                     </div>
                     <hr />
+                    <div class="table-responsive">
+                        <div class="tableHeading">
+                            <h5> <span> &#10070; </span> Existing Connection <span>&#10070;</span> </h5>
+                        </div>
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <th>Link Type</th>
+                                <th>Method</th>
+                                <th>Vendor</th>
+                                <th>BTS/POP/LDP</th>
+                                <th>Current Capacity</th>
+                                <th>View Link Equipment</th>
+                            </thead>
+                            <tbody class="existingBody">
+                                @foreach ($existingConnections as $key => $value)
+                                    <tr class="product_existing_row">
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="existing_link_type[]"
+                                                    class="form-control text-center existing_link_type" readonly
+                                                    value="{{ $value->link_type }}">
+                                                <input type="hidden" name="existing_bbts_link_id[]"
+                                                    class="form-control text-center existing_bbts_link_id" readonly
+                                                    value="{{ $value->bbts_link_id }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="existing_method[]"
+                                                    class="form-control text-right existing_method" readonly
+                                                    value="{{ $value->method }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="existing_vendor_name[]"
+                                                    class="form-control text-center existing_vendor_name" readonly
+                                                    value="{{ $value->connectivityLink->vendor->name }}">
+                                                <input type="hidden" name="existing_vendor_id[]"
+                                                    class="form-control text-center existing_vendor_id"
+                                                    value="{{ $value->connectivityLink->vendorid }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="existing_method[]"
+                                                    class="form-control text-right existing_method" readonly
+                                                    value="{{ $value->method }}">
+                                                <input type="hidden" name="existing_bbts_link_id[]"
+                                                    class="form-control existing_bbts_link_id" readonly
+                                                    value="{{ $value->bbts_link_id }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="existing_current_capacity[]"
+                                                    class="form-control text-center existing_current_capacity" readonly
+                                                    value="{{ $value->physicalConnectivity->planning->finalSurveyDetail->current_capacity ?? 0 }}">
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-success existingLinkEquipment"
+                                                data-toggle="modal"
+                                                data-target="#existingLinkEquipmentModal{{ $value->id }}"><i
+                                                    class="fas fa-eye"></i></button>
+                                            {{-- Link Equipment Product list --}}
+                                            <div class="modal fade bd-example-modal-lg"
+                                                id="existingLinkEquipmentModal{{ $value->id }}" tabindex="-1"
+                                                role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-primary">
+                                                            <h5 class="modal-title text-white" id="myLargeModalLabel">
+                                                                Link Equipment List</h5>
+                                                            <button type="button" class="close text-white"
+                                                                data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body" id="existingLinkEquipmentBody">
+                                                            <table class="table table-bordered table-striped">
+                                                                <thead>
+                                                                    <th>Equipment</th>
+                                                                    <th>Quantity</th>
+                                                                    <th>Unit</th>
+                                                                    <th>Brand</th>
+                                                                    <th>Model</th>
+                                                                    <th>Remarks</th>
+                                                                </thead>
+                                                                <tbody id="link_product_list">
+                                                                    @if (!empty($value->scmMur->lines))
+                                                                        @foreach ($value->scmMur->lines as $existing_product)
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <input type="text"
+                                                                                        name="existing_product[]"
+                                                                                        id="existing_product"
+                                                                                        class="form-control form-control-sm existing_product"
+                                                                                        value="{{ $existing_product->material->name ?? '' }}"
+                                                                                        readonly>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text"
+                                                                                        name="existing_product_quantity[]"
+                                                                                        id="existing_product_quantity"
+                                                                                        class="form-control form-control-sm existing_product_quantity"
+                                                                                        value="{{ $existing_product->quantity ?? '' }}"
+                                                                                        readonly>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text"
+                                                                                        name="existing_product_unit[]"
+                                                                                        id="existing_product_unit"
+                                                                                        class="form-control form-control-sm existing_product_unit"
+                                                                                        value="{{ $existing_product->unit ?? '' }}"
+                                                                                        readonly>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text"
+                                                                                        name="existing_product_brand[]"
+                                                                                        id="existing_product_brand"
+                                                                                        class="form-control form-control-sm existing_product_brand"
+                                                                                        value="{{ $existing_product->brand->name ?? '' }}"
+                                                                                        readonly>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text"
+                                                                                        name="existing_product_model[]"
+                                                                                        id="existing_product_model"
+                                                                                        class="form-control form-control-sm existing_product_model"
+                                                                                        value="{{ $existing_product->model ?? '' }}"
+                                                                                        readonly>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text"
+                                                                                        name="existing_product_remarks[]"
+                                                                                        id="existing_product_remarks"
+                                                                                        class="form-control form-control-sm existing_product_remarks"
+                                                                                        value="{{ $existing_product->remarks ?? '' }}"
+                                                                                        readonly>
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    @endif
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {{-- Link Equipment Product list --}}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr />
                     <div class="row">
                         <input type="hidden" id="client_id" name="client_id" value="">
                         <input type="hidden" name="total_key" id="total_key" value="1">
@@ -417,7 +576,7 @@
                     <hr />
                     <div id="link_container">
                         @if ($plan_links)
-                        @dd($plan_links)
+                            @dd($plan_links)
                             <input type="hidden" name="total_key" id="total_key" value="{{ $plan_links->count() }}">
                             @foreach ($plan_links as $key => $plan_link)
                                 <div class="main_link">
@@ -993,5 +1152,17 @@
                 this_event.closest('.main_link').find('.existing_transmission_capacity').val(latestLink.capacity).attr(
                     'value', latestLink.capacity);
             });
+
+            function getLinkProductList(link_products) {
+                console.log('link_products', link_products);
+                var link_product_table = '';
+                $.each(link_products, function(key, item) {
+                    link_product_table += '<tr>' +
+                        '<td>' + item.product_name + '</td>' +
+                        '<td>' + item.quantity + '</td>' +
+                        '<td>' + item.unit + '</td>' +
+                        '</tr>';
+                });
+            }
         </script>
     @endsection
