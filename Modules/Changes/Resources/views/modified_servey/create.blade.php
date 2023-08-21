@@ -1,15 +1,15 @@
 @extends('layouts.backend-layout')
-@section('title', 'Client Requirement Modification')
+@section('title', 'Survey Modification')
 
 @php
     $is_old = old() ? true : false;
     $form_heading = !empty($requirement_modification->id) ? 'Update' : 'Add';
-    $form_url = !empty($requirement_modification->id) ? route('client-requirement-modification.update', $requirement_modification->id) : route('client-requirement-modification.store');
+    $form_url = !empty($requirement_modification->id) ? route('survey-modification.update', $requirement_modification->id) : route('survey-modification.store');
     $form_method = !empty($requirement_modification->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
-    {{ ucfirst($form_heading) }} Client Requirement Modification
+    {{ ucfirst($form_heading) }} Survey Modification
 @endsection
 
 @section('breadcrumb-button')
@@ -50,7 +50,9 @@
                     <div class="row">
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="client_id" id="client_id" class="form-control client_id" value="{{$connectivity_requirement->client_no}}">
+                                <input type="text" name="client_no" id="client_no" class="form-control client_no" value="{{$connectivity_requirement->client_no}}">
+                                <input type="hidden" name="connectivity_requirement_id" id="connectivity_requirement_id" class="form-control connectivity_requirement_id" value="{{$connectivity_requirement->id}}">
+                                <input type="hidden" name="feasibility_requirement_details_id" id="feasibility_requirement_details_id" class="form-control feasibility_requirement_details_id" value="{{$connectivity_requirement->FeasibilityRequirementDetail->id}}">
                                 <label for="client_id">Client ID <span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -75,15 +77,15 @@
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="mq_id" id="mq_id" class="form-control" value="{{$connectivity_requirement->FeasibilityRequirementDetail->feasibilityRequirement->mq_no}}">
-                                <label for="mq_id">MQ ID<span class="text-danger">*</span></label>
+                                <input type="text" name="mq_no" id="mq_no" class="form-control" value="{{$connectivity_requirement->FeasibilityRequirementDetail->feasibilityRequirement->mq_no}}">
+                                <label for="mq_no">MQ ID<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="fr_id" id="fr_id" class="form-control fr_id"
+                                <input type="text" name="fr_no" id="fr_no" class="form-control fr_no"
                                     value="{{$connectivity_requirement->fr_no}}" readonly>
-                                <label for="fr_id">FR ID<span class="text-danger">*</span></label>
+                                <label for="fr_no">FR ID<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
@@ -153,9 +155,9 @@
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
-                                <input type="text" name="remarks" id="remarks" class="form-control"
+                                <input type="text" name="survey_remarks" id="survey_remarks" class="form-control"
                                 value="">
-                                <label for="remarks">Remarks <span class="text-danger">*</span></label>
+                                <label for="survey_remarks">Remarks <span class="text-danger">*</span></label>
                             </div>
                         </div>
                     </div>
@@ -383,7 +385,8 @@
                                 <th>Method</th>
                                 <th>Vendor</th>
                                 <th>BTS/POP/LDP</th>
-                                <th>GPS</th>
+                                <th>Lat</th>
+                                <th>Long</th>
                                 <th>Distance</th>
                                 <th>Current Capacity</th>
                                 <th>Remarks</th>
@@ -417,13 +420,6 @@
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="new_sla[]"
-                                                class="form-control text-right new_sla" value="{{$value->sla}}">
-                                           
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="new_method[]"
                                                 class="form-control text-right new_method" value="{{$value->method}}">
                                         </div>
@@ -443,13 +439,25 @@
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="new_gps[]" class="form-control text-center new_gps" value="">
+                                            <input type="text" name="new_lat[]" class="form-control text-center new_lat" value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="new_long[]" class="form-control text-center new_long" value="">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="new_distance[]"
-                                                class="form-control text-right new_distance" value="{{$value->connectivity_capacity}}">
+                                                class="form-control text-right new_distance" value="">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="new_current_capacity[]"
+                                                class="form-control text-right new_current_capacity" value="{{$value->connectivity_capacity}}">
+                                           
                                         </div>
                                     </td>
                                     <td>
@@ -537,7 +545,7 @@
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <input type="text" name="new_gps[]" class="form-control text-center new_gps" value="${gps}">
+                                            <input type="text" name="new_gps[]" class="form-control text-center new_gps" value="">
                                         </div>
                                     </td>
                                     <td>
@@ -587,7 +595,6 @@
                         let existing_bbts_link_id = $(this).closest('tr').find('.existing_bbts_link_id').val();
                         let existing_link_type = $(this).closest('tr').find('.existing_link_type').find(':selected').val();
                         let existing_distance = $(this).closest('tr').find('.existing_distance').val();
-                        let existing_gps = $(this).closest('tr').find('.existing_gps').val();
                         let existing_bts = $(this).closest('tr').find('.existing_bts').val();
                         let existing_vendor_id = $(this).closest('tr').find('.existing_vendor_id').val();
                         let existing_vendor_name = $(this).closest('tr').find('.existing_vendor_name').val();
@@ -596,7 +603,7 @@
                         // var c = $('.requirement_details_row').each(function(){
                         //    var bbts_id = $(this).find('.new_bbts_link_id').val();
                         // })
-                        addRequirementRow(existing_bbts_link_id,existing_distance,existing_gps,existing_gps,existing_bts,existing_vendor_id,existing_vendor_name,existing_method,existing_fr_no,existing_link_type,this);
+                        addRequirementRow(existing_bbts_link_id,existing_distance,existing_gps,existing_bts,existing_vendor_id,existing_vendor_name,existing_method,existing_fr_no,existing_link_type,this);
                     }else{
                         var bbtd_link_id = $(this).closest('tr').find('.existing_bbts_link_id').val();
                         var c = $('.requirement_details_row').each(function(el){
