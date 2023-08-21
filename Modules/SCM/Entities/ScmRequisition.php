@@ -37,6 +37,11 @@ class ScmRequisition extends Model
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no','fr_no');
     }
 
+    public function challan()
+    {
+        return $this->hasOne(ScmChallan::class, 'scm_requisition_id','id');
+    }
+
     public function scmRequisitiondetails()
     {
         return $this->hasMany(ScmRequisitionDetail::class);

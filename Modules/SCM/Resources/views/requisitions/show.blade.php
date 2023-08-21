@@ -31,6 +31,10 @@
                                 <td> <strong>Client Name</strong> </td>
                                 <td> {{ ucfirst($requisition->client?->client_name ?? '') }}</td>
                             </tr>
+                            <tr>
+                                <td> <strong>Connectivity Point</strong> </td>
+                                <td> {{ ucfirst($requisition->feasibilityRequirementDetail?->connectivity_point ?? '') }} - {{ $requisition->feasibilityRequirementDetail?->fr_no }}</td>
+                            </tr>
                         @endif
                         @if ($requisition?->type == 'pop')
                             <tr>
