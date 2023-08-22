@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Brand;
+use Modules\Networking\Entities\PhysicalConnectivityLines;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\EquipmentPlan;
 use Modules\Sales\Entities\FinalSurveyDetail;
@@ -60,11 +61,12 @@ class ClientPlanningModificationController extends Controller
 
             $data = PlanningDataSet::setData($old = null, $connectivity_requirement, $plan = null);
             $previous_products = ScmMur::with('lines')->where('client_no', $connectivity_requirement->client_no)->where('fr_no', $connectivity_requirement->fr_no)->where('link_no', '=', null)->first();
-            $modify_survey = Survey::where('connectivity_requirement_id', $connectivity_requirement_id)->where('is_modified', 1)->latest()->first();
-            $modify_survey_detail_links = SurveyDetail::where('survey_id', $modify_survey->id)->pluck('link_no')->toArray();
-            $previous_link_equipments = ScmMur::where('client_no', $connectivity_requirement->client_no)->where('fr_no', $connectivity_requirement->fr_no)->whereIn('link_no', $modify_survey_detail_links)->get();
+            $existingConnections = PhysicalConnectivityLines::query()
+                ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
+                    return $qr->where('fr_no', $connectivity_requirement->fr_no)->where('is_modified', 0);
+                })->get();
+            $data['existingConnections'] = $existingConnections;
             $data['previous_products'] = $previous_products;
-            $data['previous_link_equipments'] = $previous_link_equipments;
             return view('changes::modify_planning.create', $data);
         } catch (\Exception $e) {
             dd($e);
@@ -80,7 +82,7 @@ class ClientPlanningModificationController extends Controller
      */
     public function store(Request $request)
     {
-        $plan_data = $request->only('fr_no', 'client_no');
+        $plan_data = $request->only('fr_no', 'client_no', 'connectivity_requirement_id');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
         $plan_data['is_modified'] = 1;
@@ -127,6 +129,13 @@ class ClientPlanningModificationController extends Controller
     {
         $plan = Planning::with('lead_generation', 'planLinks', 'equipmentPlans', 'servicePlans.connectivityProductRequirementDetails.product', 'servicePlans.product', 'ConnectivityRequirement')->where('id', $id)->first();
         $data = PlanningDataSet::setData($old = null, $connectivity_requirement = null, $plan);
+        $previous_products = ScmMur::with('lines')->where('client_no', $plan->client_no)->where('fr_no', $plan->fr_no)->where('link_no', '=', null)->first();
+        $existingConnections = PhysicalConnectivityLines::query()
+            ->whereHas('physicalConnectivity', function ($qr) use ($plan) {
+                return $qr->where('fr_no', $plan->fr_no)->where('is_modified', 0);
+            })->get();
+        $data['existingConnections'] = $existingConnections;
+        $data['previous_products'] = $previous_products;
         return view('changes::modify_planning.create', $data);
     }
 
@@ -138,7 +147,7 @@ class ClientPlanningModificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $plan_data = $request->only('fr_no', 'client_no');
+        $plan_data = $request->only('fr_no', 'client_no', 'connectivity_requirement_id');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
         $plan_data['is_modified'] = 1;
@@ -178,7 +187,7 @@ class ClientPlanningModificationController extends Controller
 
     public function getModifySurveyDetails(Request $request)
     {
-        $survey = Survey::where('client_no', $request->client_id)->where('fr_no', $request->fr_no)->where('is_modified', 1)->latest()->first();
+        $survey = Survey::where('client_no', $request->client_id)->where('fr_no', $request->fr_no)->where('is_modified', 1)->where('connectivity_requirement_id', $request->connectivity_requirement_id)->first();
         if ($survey) {
             $surveyDetails = SurveyDetail::with('vendor', 'pop')->where('survey_id', $survey->id)->where('link_type', $request->link_type)->where('option', $request->option)->first();
             return response()->json($surveyDetails);
@@ -251,7 +260,7 @@ class ClientPlanningModificationController extends Controller
                 $planLink->save();
 
                 $survey = Survey::where('fr_no', $request->fr_no)
-                    ->where('client_no', $request->client_no)->where('is_modified', 1)->latest()
+                    ->where('client_no', $request->client_no)->where('is_modified', 1)->where('connectivity_requirement_id', $plan->connectitvity_requirement_id)->latest()
                     ->first();
 
                 $surveyDetails = SurveyDetail::where('survey_id', $survey->id)

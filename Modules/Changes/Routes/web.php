@@ -1,4 +1,5 @@
 <?php
+namespace Modules\Changes;
 
 use Illuminate\Support\Facades\Route;
 use Modules\Sales\Http\Controllers\OfferController;
@@ -25,6 +26,7 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
         'client-requirement-modification' => ClientRequirementController::class,
         'client-plan-modification' => ClientPlanningModificationController::class,
         'costing-modification' => CostingModificationController::class,
+        'survey-modification' => ModifiedSurveyController::class,
     ]);
     Route::get('add-modified-survey/{fr_id?}', [ModifiedSurveyController::class, 'create'])->name('add-modified-survey');
     // Route::get('add-modified-planning/{id}', [PlanningController::class, 'create'])->name('add-modified-planning');
@@ -33,4 +35,6 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
     Route::get('client-plan-modification/{connectivity_requirement_id}/create', [ClientPlanningModificationController::class, 'create'])->name('client-requirement-modification.create');
     Route::get('get-modify-survey-details', [ClientPlanningModificationController::class, 'getModifySurveyDetails'])->name('get-modify-survey-details');
     Route::get('costing-modification/{fr_no}/create', [CostingModificationController::class, 'create'])->name('costing-modification.create');
+
+    Route::get('get-option-for-survey/{fr_no}', [ModifiedSurveyController::class, 'getOptionForSurvey'])->name('getOptionForSurvey');
 });

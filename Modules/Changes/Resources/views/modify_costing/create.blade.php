@@ -4,7 +4,7 @@
 @php
     $is_old = old('client_id') ? true : false;
     $form_heading = !empty($costing->id) ? 'Update' : 'Add';
-    $form_url = !empty($costing->id) ? route('survey.update', $costing->id) : route('costing.store');
+    $form_url = !empty($costing->id) ? route('costing-modification.update', $costing->id) : route('costing-modification.store');
     $form_method = !empty($costing->id) ? 'PUT' : 'POST';
 @endphp
 
@@ -42,7 +42,7 @@
                     $location = $is_old ? old('location') : $planning->feasibilityRequirementDetail->connectivity_point;
                     $fr_no = $is_old ? old('fr_no') : $planning->feasibilityRequirementDetail->fr_no;
                     $fr_id = $is_old ? old('fr_id') : $planning->feasibilityRequirementDetail->id;
-                    $mq_no = $is_old ? old('mq_no') : $planning->feasibilityRequirementDetail->feasibilityRequirement->mq_no;
+                    $connectivity_requirement_id = $is_old ? old('connectivity_requirement_id') : $planning->connectivity_requirement_id;
                     
                 @endphp
                 {{-- exiting or new radio button --}}
@@ -78,7 +78,8 @@
                 </div>
                 <input type="hidden" name="fr_id" value="{{ $fr_id }}">
                 <input type="hidden" name="fr_no" value="{{ $fr_no }}">
-                <input type="hidden" name="mq_no" value="{{ $mq_no }}">
+                <input type="hidden" name="connectivity_requirement_id" value="{{ $connectivity_requirement_id }}">
+
             </div>
             <div class="row">
                 <div class="md-col-12 col-12">
@@ -826,16 +827,59 @@
                 </div>
             @endforeach
             <hr />
-            <div class="text-center">
-                <h5>FR Wise Cost Calculation</h5>
-            </div>
-            <hr />
+
             <div class="row p-0 m-0">
-                <div class="col-3 col-md-3">
-                    <button type="button" class="btn btn-outline-primary btn-sm" id="calculate_data">Calculate
-                        Data</button>
+                {{-- <div class="col-3 col-md-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>Connectivity Point Name</th>
+                                    <th>PNL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pnl_summary_data['pnl_data'] as $summary)
+                                    <tr class="text-center">
+                                        <td>{{ $summary['connectivity_point'] }}</td>
+                                        <td>{{ $summary['pnl'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div> --}}
+                <div class="col-5 col-md-5">
+                    <div class="text-center">
+                        <h5>Existing Connection Info</h5>
+                    </div>
+                    <hr />
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <tbody>
+                                <tr class="text-center">
+                                <tr class="text-center">
+                                    <th>Connected Month</th>
+                                    <td>{{ $pnl_summary_data['connection_month'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Revenue Amount</th>
+                                    <td>{{ $pnl_summary_data['total_revenue'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Total FR</th>
+                                    <td>{{ $pnl_summary_data['total_fr'] }}</td>
+                                </tr>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="col-6 col-md-6">
+                <div class="col-7 col-md-7">
+                    <div class="text-center">
+                        <h5>FR Wise Cost Calculation</h5>
+                    </div>
+                    <hr />
                     <table class="table table-bordered w-full">
                         <tbody>
                             <tr>
@@ -932,8 +976,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div class="col-3 col-md-3">
                 </div>
             </div>
         </div>

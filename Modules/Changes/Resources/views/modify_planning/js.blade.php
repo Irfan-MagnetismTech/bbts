@@ -78,9 +78,9 @@
                                         <select name="link_availability_status_1" id="link_availability_status"
                                             class="form-control form-control-sm link_availability_status">
                                             <option value="">Select Vendor</option>
-                                            {{-- @foreach ($vendors as $vendor)
+                                            @foreach ($vendors as $vendor)
                                                 <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
-                                            @endforeach --}}
+                                            @endforeach
                                         </select>
                                         <label for="type">New Transmission Link</label>
                                     </div>
