@@ -61,7 +61,7 @@
                                 <nobr>
                                     <a href="{{ route('material-utilizations.show', $scmMur->id) }}" data-toggle="tooltip"
                                                 title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    @if (!$scmMur->isDeleteable())
+                                    {{-- @if (!$scmMur->isDeleteable()) --}}
                                         <a href="{{ route('material-utilizations.edit', $scmMur->id) }}"
                                             data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
                                                 class="fas fa-pen"></i></a>
@@ -73,7 +73,7 @@
                                             <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                     class="fas fa-trash"></i></button>
                                         </form>
-                                    @endif
+                                    {{-- @endif --}}
                                 </nobr>
                             </div>
                         </td>

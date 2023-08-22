@@ -13,6 +13,8 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Admin\Entities\ConnectivityLink;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Modules\Sales\Entities\SaleDetail;
+use PharIo\Manifest\Url;
 use Termwind\Components\Dd;
 
 class PhysicalConnectivityController extends Controller
@@ -36,34 +38,51 @@ class PhysicalConnectivityController extends Controller
      */
     public function create()
     {
+        // dd(request()->get('sale_id'), request()->get('fr_no'));
+        // dd(request()->fullUrl());
+
         $connectivity_links = ConnectivityLink::latest()->get();
+        Session::put('physicalConnectivityEditUrl', request()->fullUrl());
+
+        // dd('fr_no');
+        $sale_id = request()->get('sale_id');
 
         if (request()->get('sale_id')) {
-            $physicalConnectivity = PhysicalConnectivity::query()
-            ->whereSaleId(request()->get('sale_id'))
-            ->with('lines')
+            $saleDetails = SaleDetail::with('saleLinkDetails')
+            ->where('fr_no', request()->get('fr_no'))
+            ->where('sale_id',request()->get('sale_id'))
             ->latest()
-            ->first();
+            ->first();         
+
+            // $physicalConnectivity = PhysicalConnectivity::query()
+            // ->whereSaleId(request()->get('sale_id'))
+            // ->with('lines')
+            // ->latest()
+            // ->first();
+
             // dd($physicalConnectivity);
 
-            $feasibility_details = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $physicalConnectivity->fr_no)->first();
+            // $feasibility_details = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $physicalConnectivity->fr_no)->first();
 
-            $challanInfo = ScmChallan::query()
-                ->where('fr_no', $physicalConnectivity->fr_no)
-                ->get();
+            // $challanInfo = ScmChallan::query()
+            //     ->where('fr_no', $physicalConnectivity->fr_no)
+            //     ->get();
+            // dd($saleDetails->client_no);
 
             $connectivity_points = FeasibilityRequirementDetail::query()
-                ->where('client_no', $physicalConnectivity->client_no)
+                ->where('client_no', $saleDetails->client_no)
                 ->get();
+                // dd($connectivity_points);
 
-            $clientInfo = FeasibilityRequirementDetail::query()
-                ->where('fr_no', $physicalConnectivity->fr_no)
-                ->first();
+            // $clientInfo = FeasibilityRequirementDetail::query()
+            //     ->where('fr_no', $physicalConnectivity->fr_no)
+            //     ->first();
 
             $connectivity_links = ConnectivityLink::latest()->get();
         }
 
-        return view('networking::physical-connectivities.create', compact('connectivity_links', 'physicalConnectivity', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo'));
+        return view('networking::physical-connectivities.create', compact('connectivity_points','saleDetails','connectivity_links'));
+        // return view('networking::physical-connectivities.create', compact('connectivity_links','saleDetails', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
 
     /**
@@ -74,6 +93,8 @@ class PhysicalConnectivityController extends Controller
     public function store(Request $request)
     {
         try {
+
+            dd('gg');
             DB::beginTransaction();
 
             $dataList = [];

@@ -53,7 +53,7 @@
                         <td></td>
                         <td>
                             <span class="badge badge-info">
-                                <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id]) }}"
+                                <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                     class="text-white" target="_blank">Pyhsical Connectivity</a>
                             </span>
                             <span class="badge badge-info">

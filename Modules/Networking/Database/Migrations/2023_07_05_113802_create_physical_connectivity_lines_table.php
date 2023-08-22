@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('physical_connectivity_id');
             $table->string('link_type')->nullable();
+            $table->string('link_no')->nullable();
             $table->string('method')->nullable();
             $table->string('pop')->nullable();
             $table->string('ldp')->nullable();
