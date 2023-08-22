@@ -102,6 +102,8 @@
                                     </td>
                                 </tr>
                             </table>
+                            <input type="hidden" id="connectivity_requirement_id" name="connectivity_requirement_id"
+                                value="{{ $connectivity_requirement_id }}">
                         </div>
                     </div>
                     <hr />
@@ -222,10 +224,11 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th colspan="5">Service Plan for </th>
+                                            <th colspan="6">Service Plan for </th>
                                         </tr>
                                         <tr>
                                             <th>Particulars</th>
+                                            <th>Existing Capacity</th>
                                             <th>Client Req.</th>
                                             <th>Plan</th>
                                             <th>Remarks</th>
@@ -246,6 +249,10 @@
                                                         value="{{ $product_detail['connectivity_product_requirement_details_id'] ?? '' }}">
                                                     <span
                                                         class="form-control form-control-sm">{{ $product_detail['product_name'] ?? '' }}</span>
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        class="form-control form-control-sm">{{ $product_detail['prev_quantity'] ?? '' }}</span>
                                                 </td>
                                                 <td>
                                                     <span
@@ -576,7 +583,6 @@
                     <hr />
                     <div id="link_container">
                         @if ($plan_links)
-                            @dd($plan_links)
                             <input type="hidden" name="total_key" id="total_key" value="{{ $plan_links->count() }}">
                             @foreach ($plan_links as $key => $plan_link)
                                 <div class="main_link">
@@ -677,13 +683,12 @@
                                                 <select name="link_availability_status_{{ $total_key }}"
                                                     id="link_availability_status"
                                                     class="form-control form-control-sm link_availability_status">
-                                                    <option value="">Select Status</option>
-                                                    <option value="Available"
-                                                        {{ $plan_link->link_availability_status == 'Available' ? 'selected' : '' }}>
-                                                        Available</option>
-                                                    <option value="Not Available"
-                                                        {{ $plan_link->link_availability_status == 'Not Available' ? 'selected' : '' }}>
-                                                        Not Available</option>
+                                                    <option value="">Select Vendor</option>
+                                                    @foreach ($vendors as $vendor)
+                                                        <option value="{{ $vendor->id }}"
+                                                            {{ $plan_link->link_availability_status == $vendor->id ? 'selected' : '' }}>
+                                                            {{ $vendor->name }}</option>
+                                                    @endforeach
                                                 </select>
                                                 <label for="type">New Transmission Link</label>
                                             </div>
@@ -960,6 +965,7 @@
                 var link_type = $(event.target).closest('.main_link').find('.link_type').val();
                 let client_id = $('#client_no').val();
                 let fr_no = $('#fr_no').val();
+                let connectivity_requirement_id = $('#connectivity_requirement_id').val();
                 $.ajax({
                     url: "{{ route('get-modify-survey-details') }}",
                     data: {
@@ -967,6 +973,7 @@
                         link_type: link_type,
                         client_id: client_id,
                         fr_no: fr_no,
+                        connectivity_requirement_id: connectivity_requirement_id
                     },
                     success: function(data) {
                         console.log(data);

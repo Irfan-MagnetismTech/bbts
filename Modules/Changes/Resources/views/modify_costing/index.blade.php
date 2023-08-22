@@ -42,6 +42,7 @@
                     <th>#SL</th>
                     <th>Client Name</th>
                     <th>Client id</th>
+                    <th>MQ No</th>
                     <th>FR No</th>
                     <th>Per month Investment</th>
                     <th>Per month Revenue</th>
@@ -54,6 +55,7 @@
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $costing->lead_generation->client_name }}</td>
                         <td>{{ $costing->client_no }}</td>
+                        <td>{{ $costing->mq_no }}</td>
                         <td>{{ $costing->planning->feasibilityRequirementDetail->connectivity_point }}
                             ({{ $costing->fr_no }})
                         </td>
@@ -62,13 +64,13 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('costing.show', $costing->id) }}" data-toggle="tooltip"
+                                    <a href="{{ route('costing-modification.show', $costing->id) }}" data-toggle="tooltip"
                                         title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('costing.edit', $costing->id) }}" data-toggle="tooltip"
+                                    <a href="{{ route('costing-modification.edit', $costing->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ route('costing.destroy', $costing->id) }}" method="POST"
+                                    <form action="{{ route('costing-modification.destroy', $costing->id) }}" method="POST"
                                         class="d-inline" id="deleteClientProfile">
                                         @csrf
                                         @method('DELETE')

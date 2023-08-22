@@ -12,22 +12,25 @@ class PlanningDataSet
     public static function setData($old, $connectivity_requirement, $plan)
     {
         $change_type = $connectivity_requirement ? json_decode($connectivity_requirement->change_type) : json_decode($plan->ConnectivityRequirement->change_type);
+        
         $details = [];
         if ($connectivity_requirement) {
             foreach ($connectivity_requirement->connectivityProductRequirementDetails as $key => $value) {
                 $details[$key]['id'] = '';
                 $details[$key]['product_id'] = $value->product_id;
+                $details[$key]['prev_quantity'] = $value->prev_quantity;
                 $details[$key]['product_name'] = $value->product->name;
                 $details[$key]['category_id'] = $value->category_id;
                 $details[$key]['capacity'] = $value->capacity;
                 $details[$key]['remarks'] = $value->remarks;
                 $details[$key]['plan'] = '';
-                $details[$key]['connectivity_product_requirement_details_id'] = $value['id'];
+                $details[$key]['connectivity_product_requirement_details_id'] = $value->id;
             }
         } elseif ($plan) {
             foreach ($plan->servicePlans as $key => $value) {
                 $details[$key]['id'] = $value->id;
                 $details[$key]['product_id'] = $value->connectivityProductRequirementDetails->product_id;
+                $details[$key]['prev_quantity'] = $value->connectivityProductRequirementDetails->prev_quantity;
                 $details[$key]['product_name'] = $value->connectivityProductRequirementDetails->product->name;
                 $details[$key]['category_id'] = $value->connectivityProductRequirementDetails->category_id;
                 $details[$key]['capacity'] = $value->connectivityProductRequirementDetails->capacity;
@@ -42,7 +45,7 @@ class PlanningDataSet
         $planLinks = $connectivity_requirement ? $connectivity_requirement->planLinks : $plan->planLinks;
         $data = [
             'id' => $plan ? $plan->id : '',
-            'connectivity_requirement_id' =>  $connectivity_requirement ?? $plan->connectivity_requirement_id,
+            'connectivity_requirement_id' =>  $connectivity_requirement->id ?? $plan->connectivity_requirement_id,
             'type' => $connectivity_requirement ? 'create' : 'edit',
             'client_no' => $old ? $old['client_no'] : $lead_generation->client_no ?? '',
             'client_name' => $old ? $old['client_name'] : $lead_generation->client_name ?? '',
