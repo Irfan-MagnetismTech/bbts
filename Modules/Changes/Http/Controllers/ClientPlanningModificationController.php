@@ -82,7 +82,7 @@ class ClientPlanningModificationController extends Controller
      */
     public function store(Request $request)
     {
-        $plan_data = $request->only('fr_no', 'client_no');
+        $plan_data = $request->only('fr_no', 'client_no', 'connectivity_requirement_id');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
         $plan_data['is_modified'] = 1;
@@ -147,7 +147,7 @@ class ClientPlanningModificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $plan_data = $request->only('fr_no', 'client_no');
+        $plan_data = $request->only('fr_no', 'client_no', 'connectivity_requirement_id');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
         $plan_data['is_modified'] = 1;
@@ -187,7 +187,7 @@ class ClientPlanningModificationController extends Controller
 
     public function getModifySurveyDetails(Request $request)
     {
-        $survey = Survey::where('client_no', $request->client_id)->where('fr_no', $request->fr_no)->where('is_modified', 1)->latest()->first();
+        $survey = Survey::where('client_no', $request->client_id)->where('fr_no', $request->fr_no)->where('is_modified', 1)->where('connectivity_requirement_id', $request->connectivity_requirement_id)->first();
         if ($survey) {
             $surveyDetails = SurveyDetail::with('vendor', 'pop')->where('survey_id', $survey->id)->where('link_type', $request->link_type)->where('option', $request->option)->first();
             return response()->json($surveyDetails);
@@ -260,7 +260,7 @@ class ClientPlanningModificationController extends Controller
                 $planLink->save();
 
                 $survey = Survey::where('fr_no', $request->fr_no)
-                    ->where('client_no', $request->client_no)->where('is_modified', 1)->latest()
+                    ->where('client_no', $request->client_no)->where('is_modified', 1)->where('connectivity_requirement_id', $plan->connectitvity_requirement_id)->latest()
                     ->first();
 
                 $surveyDetails = SurveyDetail::where('survey_id', $survey->id)
