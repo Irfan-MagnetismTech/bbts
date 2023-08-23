@@ -16,7 +16,7 @@ use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
 class ConnectivityRequirement extends Model
 {
     protected $fillable = [
-        'client_no', 'fr_no', 'from_date', 'to_date', 'existing_mrc', 'decrease_mrc', 'connectivity_remarks', 'user_id', 'branch_id', 'date', 'change_type', 'activation_date', 'is_modified'
+        'client_no', 'fr_no', 'mq_no', 'from_date', 'to_date', 'existing_mrc', 'decrease_mrc', 'connectivity_remarks', 'user_id', 'branch_id', 'date', 'change_type', 'activation_date', 'is_modified'
     ];
 
     private $dateField = ['activation_date', 'date', 'to_date', 'from_date'];
