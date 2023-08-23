@@ -52,9 +52,9 @@
                         <td>{{ $details->delivery_date }}</td>
                         <td></td>
                         <td>
-                            <span class="badge badge-info">
+                            <span class="badge badge-primary">
                                 <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
-                                    class="text-white" target="_blank">Pyhsical Connectivity</a>
+                                    class="text-white" target="_blank">Physical Connectivity</a>
                             </span>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-internet-connectivities.create', ['sale_id' => $details->sale_id]) }}"
@@ -68,7 +68,7 @@
                                 <a href="{{ route('logical-data-connectivities.create', ['sale_id' => $details->sale_id]) }}"
                                     class="text-white" target="_blank">Data</a>
                             </span>
-                            <span class="badge badge-info">
+                            <span class="badge badge-warning">
                                 <a href="{{ url("networking/connectivities/create/$details->fr_no") }}" class="text-white"
                                     target="_blank">Details</a>
                             </span>
