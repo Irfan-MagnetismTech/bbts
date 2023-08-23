@@ -271,12 +271,12 @@
                                             <tr class="product_details_row">
                                                 <td>
                                                     <span>
-                                                        {{ $connectivityProductRequirementDetail->category->name }}
+                                                        {{ $connectivityProductRequirementDetail?->category?->name }}
                                                     </span>
                                                 </td>
                                                 <td>
                                                     <span>
-                                                        {{ $connectivityProductRequirementDetail->product->name }}
+                                                        {{ $connectivityProductRequirementDetail?->product?->name }}
                                                     </span>
                                                 </td>
                                                 <td>
@@ -286,7 +286,7 @@
                                                 </td>
                                                 <td>
                                                     <span>
-                                                        {{ $connectivityProductRequirementDetail->product->unit }}
+                                                        {{ $connectivityProductRequirementDetail?->product?->unit }}
                                                     </span>
                                                 </td>
                                                 <td>
