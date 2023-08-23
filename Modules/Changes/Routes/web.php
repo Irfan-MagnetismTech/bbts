@@ -9,6 +9,7 @@ use Modules\Changes\Http\Controllers\ModifiedSurveyController;
 use Modules\Changes\Http\Controllers\ClientRequirementController;
 use Modules\Changes\Http\Controllers\ClientPlanningModificationController;
 use Modules\Changes\Http\Controllers\CostingModificationController;
+use Modules\Changes\Http\Controllers\SaleModificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,6 +28,7 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
         'client-plan-modification' => ClientPlanningModificationController::class,
         'costing-modification' => CostingModificationController::class,
         'survey-modification' => ModifiedSurveyController::class,
+        'sales-modification' => SaleModificationController::class,
     ]);
     Route::get('add-modified-survey/{fr_id?}', [ModifiedSurveyController::class, 'create'])->name('add-modified-survey');
     // Route::get('add-modified-planning/{id}', [PlanningController::class, 'create'])->name('add-modified-planning');
@@ -35,6 +37,5 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
     Route::get('client-plan-modification/{connectivity_requirement_id}/create', [ClientPlanningModificationController::class, 'create'])->name('client-requirement-modification.create');
     Route::get('get-modify-survey-details', [ClientPlanningModificationController::class, 'getModifySurveyDetails'])->name('get-modify-survey-details');
     Route::get('costing-modification/{fr_no}/create', [CostingModificationController::class, 'create'])->name('costing-modification.create');
-
     Route::get('get-option-for-survey/{fr_no}', [ModifiedSurveyController::class, 'getOptionForSurvey'])->name('getOptionForSurvey');
 });

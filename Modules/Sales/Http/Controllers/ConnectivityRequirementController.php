@@ -53,7 +53,6 @@ class ConnectivityRequirementController extends Controller
         $data = $request->only('date', 'client_no', 'from_location', 'aggregation_type', 'fr_no');
         $data['user_id'] = auth()->id() ?: '';
         $data['branch_id'] = auth()->user()->branch_id ?: '';
-        $data['date'] = date('Y-m-d', strtotime($request->date));
         $data['mq_no'] = optional(FeasibilityRequirement::where('client_no', $data['client_no'])->first())->mq_no;
 
         DB::beginTransaction();
@@ -114,7 +113,7 @@ class ConnectivityRequirementController extends Controller
 
         foreach ($connectivity_requirement->connectivityProductRequirementDetails as $key => $connectivityProductRequirementDetail) {
             $product_select[] = $connectivityProductRequirementDetail->category->products->pluck('id', 'name');
-            $product_unit[] = $connectivityProductRequirementDetail->product->unit;
+            $product_unit[] = $connectivityProductRequirementDetail?->product?->unit;
         }
         $connectivity_requirement->product_unit = $product_unit;
         $connectivity_requirement->product_select = $product_select;
@@ -136,7 +135,6 @@ class ConnectivityRequirementController extends Controller
         $connectivity_requirement_data = $request->only('date', 'client_no', 'from_location', 'aggregation_type', 'fr_no');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? '';
-        $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
         $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_no', $connectivity_requirement_data['client_no'])->first()->mq_no;
         if ($request->hasFile('document')) {
             $file_name = CommonService::UpdatefileUpload($request->file('document'), 'uploads/connectivity_details', $connectivity_requirement->document);
