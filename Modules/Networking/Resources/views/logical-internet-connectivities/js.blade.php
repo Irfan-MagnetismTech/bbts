@@ -156,12 +156,50 @@
     //on checkbox check enable input box and on uncheck disable input box
     function checkboxChange(e, inputFields) {
         if (e.checked) {
-            $(inputFields).prop('disabled', false);
+            // $(inputFields).prop('disabled', false);
+            $('.input-field').removeClass('d-none');
         } else {
-            $(inputFields).prop('disabled', true);
+            // $(inputFields).prop('disabled', true);
+            $('.input-field').addClass('d-none');
         }
     }
-
+    function checkboxChange1(e, inputFields) {
+        if (e.checked) {
+            // $(inputFields).prop('disabled', false);
+            $('.input-field-1').removeClass('d-none');
+        } else {
+            // $(inputFields).prop('disabled', true);
+            $('.input-field-1').addClass('d-none');
+        }
+    }
+    function checkboxChange2(e, inputFields) {
+        if (e.checked) {
+            // $(inputFields).prop('disabled', false);
+            $('.input-field-2').removeClass('d-none');
+        } else {
+            // $(inputFields).prop('disabled', true);
+            $('.input-field-2').addClass('d-none');
+        }
+    }
+    function checkboxChange3(e, inputFields) {
+        if (e.checked) {
+            // $(inputFields).prop('disabled', false);
+            $('.input-field-3').removeClass('d-none');
+        } else {
+            // $(inputFields).prop('disabled', true);
+            $('.input-field-3').addClass('d-none');
+        }
+    }
+    
+    function checkboxChange5(e, inputFields) {
+        if (e.checked) {
+            // $(inputFields).prop('disabled', false);
+            $('.input-field-5').removeClass('d-none');
+        } else {
+            // $(inputFields).prop('disabled', true);
+            $('.input-field-5').addClass('d-none');
+        }
+    }
     //initialize datepicker
     $('.date').datepicker({
         format: "dd-mm-yyyy",
