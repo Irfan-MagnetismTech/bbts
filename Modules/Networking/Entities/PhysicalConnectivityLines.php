@@ -28,4 +28,9 @@ class PhysicalConnectivityLines extends Model
     {
         return $this->hasOne(ScmMur::class, 'link_no', 'link_no');
     }
+
+    public function finalSurveyDetails()
+    {
+        return $this->hasOne(FinalSurveyDetail::class, 'link_no', 'link_no');
+    }
 }

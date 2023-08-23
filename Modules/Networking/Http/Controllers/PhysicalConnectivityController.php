@@ -37,14 +37,10 @@ class PhysicalConnectivityController extends Controller
      * @return Renderable
      */
     public function create()
-    {
-        // dd(request()->get('sale_id'), request()->get('fr_no'));
-        // dd(request()->fullUrl());
-
+    { 
         $connectivity_links = ConnectivityLink::latest()->get();
         Session::put('physicalConnectivityEditUrl', request()->fullUrl());
-
-        // dd('fr_no');
+ 
         $sale_id = request()->get('sale_id');
 
         if (request()->get('sale_id')) {
@@ -64,9 +60,9 @@ class PhysicalConnectivityController extends Controller
 
             // $feasibility_details = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $physicalConnectivity->fr_no)->first();
 
-            // $challanInfo = ScmChallan::query()
-            //     ->where('fr_no', $physicalConnectivity->fr_no)
-            //     ->get();
+            $challanInfo = ScmChallan::query()
+                ->where('fr_no', $saleDetails->fr_no)
+                ->get();
             // dd($saleDetails->client_no);
 
             $connectivity_points = FeasibilityRequirementDetail::query()
@@ -81,7 +77,7 @@ class PhysicalConnectivityController extends Controller
             $connectivity_links = ConnectivityLink::latest()->get();
         }
 
-        return view('networking::physical-connectivities.create', compact('connectivity_points','saleDetails','connectivity_links'));
+        return view('networking::physical-connectivities.create', compact('challanInfo','connectivity_points','saleDetails','connectivity_links'));
         // return view('networking::physical-connectivities.create', compact('connectivity_links','saleDetails', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
 
@@ -94,7 +90,7 @@ class PhysicalConnectivityController extends Controller
     {
         try {
 
-            dd('gg');
+            // dd('gg');
             DB::beginTransaction();
 
             $dataList = [];
@@ -102,6 +98,7 @@ class PhysicalConnectivityController extends Controller
                 $dataList[] = [
                     'link_type' => $value,
                     'method' => $request->method[$key],
+                    'link_no' => $request->link_no[$key],
                     'pop' => $request->pop[$key],
                     'ldp' => $request->ldp[$key],
                     'bbts_link_id' => $request->bbts_link_id[$key],

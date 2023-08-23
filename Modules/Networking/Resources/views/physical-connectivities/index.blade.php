@@ -50,32 +50,32 @@
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->link_type }}</span> <br>
+                            {{ $line->link_type }} <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->pop }}</span> <br>
+                            {{ $line->pop }} <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->ldp }}</span> <br>
+                                {{ $line->ldp }} <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->device_ip }}</span> <br>
+                                {{ $line->device_ip }} <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->port }}</span> <br>
+                                {{ $line->port }} <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->vlan }}</span> <br>
+                                {{ $line->vlan }} <br>
                             @endforeach
                         </td>
                         {{-- <td>

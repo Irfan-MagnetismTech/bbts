@@ -10,11 +10,12 @@
     $client_name = old('client_name', !empty($physicalConnectivity) ? $physicalConnectivity?->client?->client_name : $saleDetails->client->client_name);
     $client_no = old('client_no', !empty($physicalConnectivity) ? $physicalConnectivity?->client_no : $saleDetails->client_no);
     $client_type = old('client_type', !empty($physicalConnectivity) ? $physicalConnectivity?->client?->client_type : $saleDetails->client->client_type);
-    $client_link_no = old('client_link_no', !empty($physicalConnectivity) ? $physicalConnectivity?->link_no : null);
     $connectivity_point = old('connectivity_point', !empty($physicalConnectivity) ? $physicalConnectivity->fr_no : $saleDetails->fr_no);
     
     $Connectivity_links = old('link_type', !empty($physicalConnectivity) ?  $physicalConnectivity->lines : $saleDetails->saleLinkDetails);
-
+    // $link_no = old('link_no', !empty($physicalConnectivity) ? $physicalConnectivity?->link_no : $physicalConnectivity->finalSurveyDetails?->link_no);
+    
+    // $challanInfo = !empty($physicalConnectivity) ?  $physicalConnectivity->lines : $saleDetails->saleLinkDetails;
     $contact_person = old('contact_person', !empty($physicalConnectivity) ? $feasibility_details->contact_name : $saleDetails->feasibilityRequirementDetails->contact_name);
     $contact_number = old('contact_number', !empty($physicalConnectivity) ? $feasibility_details->contact_number : $saleDetails->feasibilityRequirementDetails->contact_number);
     $email = old('email', !empty($physicalConnectivity) ? $feasibility_details->contact_email : $saleDetails->feasibilityRequirementDetails->contact_email);
@@ -171,6 +172,7 @@
                                     <input type="text" name="method[]" class="form-control method" autocomplete="off"
                                         value="{{ $physicalConnectivityLine->finalSurveyDetails->method ?? '' }}"
                                         readonly>
+                                    <input type="hidden" name="link_no[]" value="{{ $physicalConnectivityLine->finalSurveyDetails?->link_no }}">
                                 </td>
                                 <td>
                                     <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
@@ -222,14 +224,16 @@
                 </tbody>
             </table>
 
-            @if (!empty($physicalConnectivity))
+            {{-- @if (!empty($physicalConnectivity)) --}}
                 <h6>Material Utilizations</h6>
-                @forelse (@$challanInfo as $challan)
-                    <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}"
+                @forelse ($challanInfo as $challan)  
+                    @if ($challan->mur()->doesntExist())
+                        <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}"
                         data-toggle="tooltip" title="Challan" class="btn btn-primary">{{ $challan->challan_no }}</a>
+                    @endif 
                 @empty
                 @endforelse
-            @endif
+            {{-- @endif --}}
 
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
