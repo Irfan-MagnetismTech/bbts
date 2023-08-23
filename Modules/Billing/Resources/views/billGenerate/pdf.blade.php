@@ -145,7 +145,9 @@
         @page {
         header: page-header;
         footer: page-footer;
+        margin: 120px 60px 0px 60px;
         }
+
     </style>
 </head>
 
