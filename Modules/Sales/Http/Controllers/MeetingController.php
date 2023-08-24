@@ -17,7 +17,7 @@ class MeetingController extends Controller
      */
     public function index()
     {
-        $meetings = Meeting::with('client')->get();
+        $meetings = Meeting::with('client')->latest()->get();
         return view('sales::meeting.index', compact('meetings'));
     }
 

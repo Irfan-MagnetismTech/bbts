@@ -469,15 +469,15 @@
                         }
                     });
 
-                    $('#client_id').on('input', function() {
-                        var client_id = $(this).val();
-                        console.log(client_id)
+                    $('#client_id, #client_name').on('input', function() {
+                        var search = $(this).val();
+                        console.log(search)
                         $(this).autocomplete({
                             source: function(request, response) {
                                 $.ajax({
                                     url: "{{ route('get-client') }}",
                                     data: {
-                                        client_id: client_id,
+                                        search: search,
                                         _token: "{{ csrf_token() }}"
                                     },
                                     success: function(data) {
@@ -486,8 +486,8 @@
                                 });
                             },
                             select: function(event, ui) {
-                                $('#client_id').val(ui.item.label).attr('value', ui.item.label);
-                                $('#client_name').val(ui.item.value).attr('value', ui.item.value);
+                                $('#client_id').val(ui.item.client_no).attr('value', ui.item.client_no);
+                                $('#client_name').val(ui.item.client_name).attr('value', ui.item.client_name);
                                 $('#lead_generation_id').val(ui.item.lead_generation_id).attr('value', ui.item
                                     .lead_generation_id);
                                 return false;

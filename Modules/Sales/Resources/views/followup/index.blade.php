@@ -26,6 +26,7 @@
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th>SL</th>
                     <th>Client Name</th>
                     <th>Address</th>
                     <th>Activity Date</th>
@@ -41,6 +42,7 @@
             <tbody>
                 @foreach ($followups as $followup)
                     <tr>
+                        <td> {{ $loop->index + 1 }} </td>
                         <td>{{ $followup->client->client_name }}</td>
                         <td>{{ $followup->client->address }}</td>
                         <td>{{ $followup->activity_date }}</td>

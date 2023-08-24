@@ -573,7 +573,7 @@
                         @endforeach
                     </div>
                     {{-- create a responsive table --}}
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-md-12">
                             <hr />
                             <div class="text-center">
@@ -609,7 +609,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <input type="hidden" id="client_no" name="client_no"
                         value="{{ $plan->lead_generation->client_no }}">
                     <input type="hidden" id="fr_no" name="fr_no" value="{{ $plan->fr_no }}">

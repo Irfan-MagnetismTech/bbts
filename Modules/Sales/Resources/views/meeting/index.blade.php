@@ -24,6 +24,7 @@
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th>SL</th>
                     <th>Client Name</th>
                     <th>Visit Date</th>
                     <th>Time of Work Started</th>
@@ -38,6 +39,7 @@
             <tbody>
                 @foreach ($meetings as $meeting)
                     <tr>
+                        <td> {{ $loop->index + 1 }} </td>
                         <td>{{ $meeting->client->client_name ?? '' }}</td>
                         <td>{{ $meeting->visit_date }}</td>
                         <td>{{ $meeting->meeting_start_time }}</td>
@@ -45,7 +47,17 @@
                         <td>{{ $meeting->client->contact_person ?? '' }}</td>
                         <td>{{ $meeting->client->contact_no ?? '' }}</td>
                         <td>{{ $meeting->purpose }}</td>
-                        <td>{{ $meeting->status }}</td>
+                        <td>
+                            @if ($meeting->status == 'Re-Schedule')
+                                <span class="badge badge-pill badge-info">{{ $meeting->status }}</span>
+                            @elseif ($meeting->status == 'Pending')
+                                <span class="badge badge-pill badge-warning">{{ $meeting->status }}</span>
+                            @elseif($meeting->status == 'Accept')
+                                <span class="badge badge-pill badge-success">{{ $meeting->status }}</span>
+                            @elseif($meeting->status == 'Cancel')
+                                <span class="badge badge-pill badge-danger">{{ $meeting->status }}</span>
+                            @endif
+                        </td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
@@ -73,6 +85,7 @@
             </tbody>
             <tfoot>
                 <tr>
+                    <th>SL</th>
                     <th>Client Name</th>
                     <th>Visit Date</th>
                     <th>Time of Work Started</th>
