@@ -60,8 +60,8 @@
                                 <td class="text-right">@formatFloat($product->sub_total)</td>
                                 <td class="text-right">@formatFloat($product->operation_cost)</td>
                                 <td class="text-right">@formatFloat($product->operation_cost_total)</td>
-                                <td class="text-right">@formatFloat($product?->sale_product?->price ?? '')</td>
-                                <td class="text-right">@formatFloat($product?->sale_product?->total_price ?? '')</td>
+                                {{-- <td class="text-right">@formatFloat($product?->sale_product?->price ?? 0)</td> --}}
+                                {{-- <td class="text-right">@formatFloat($product?->sale_product?->total_price ?? '')</td> --}}
                             </tr>
                         @endforeach
                     </tbody>
@@ -120,10 +120,11 @@
 
                             @php $total_link_roi = 0; @endphp
                             @foreach ($details->costing->costingLinks as $link)
-                                @php
+                                <?php 
                                     $link_roi = ($link->investment - $link->offerLink->offer_otc) / 12;
                                     $total_link_roi += $link_roi;
-                                @endphp
+                                    ?>
+
                                 <tr>
                                     <td>{{ $link->link_type }}</td>
                                     <td class="text-right">@formatInt($link->partial_total)</td>
@@ -138,7 +139,7 @@
                                         {{ $link->rate }}</td>
                                     <td class="text-right">@formatFloat($link->capacity_amount)</td>
                                 </tr>
-                            @endforeach
+                            @endforeach 
                             <?php 
                                 $total_roi = $total_link_roi + $equipment_roi;
                                 $capacity_amount = $details->costing->costingLinks->sum('capacity_amount');
