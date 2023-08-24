@@ -33,16 +33,16 @@ class LogicalConnectivityInternetController extends Controller
     public function create()
     {
         $saleDetalis = SaleDetail::query()
-            ->whereSaleId(request()->get('sale_id'))
+            ->whereSaleIdAndFrNo(request()->get('sale_id'), request()->get('fr_no'))
             ->with('client', 'frDetails')
-            ->latest()
             ->first();
 
         @$physicalConnectivityData = PhysicalConnectivity::query()
-            ->whereSaleId(request()->get('sale_id'))
+            ->whereSaleIdAndFrNo($saleDetalis->sale_id, $saleDetalis->fr_no)
             ->with('lines')
             ->latest()
             ->first();
+            // dd($physicalConnectivityData);
 
         $products = SaleProductDetail::query()
             ->whereHas('product.category', function ($query) use ($physicalConnectivityData) {

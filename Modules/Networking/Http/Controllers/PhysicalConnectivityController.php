@@ -37,18 +37,17 @@ class PhysicalConnectivityController extends Controller
      * @return Renderable
      */
     public function create()
-    { 
+    {
         $connectivity_links = ConnectivityLink::latest()->get();
         Session::put('physicalConnectivityEditUrl', request()->fullUrl());
- 
+
         $sale_id = request()->get('sale_id');
 
         if (request()->get('sale_id')) {
-            $saleDetails = SaleDetail::with('saleLinkDetails')
-            ->where('fr_no', request()->get('fr_no'))
-            ->where('sale_id',request()->get('sale_id'))
-            ->latest()
-            ->first();         
+            $saleDetails = SaleDetail::query()
+                ->with('saleLinkDetails')
+                ->whereSaleIdAndFrNo(request()->get('sale_id'), request()->get('fr_no'))
+                ->first();
 
             // $physicalConnectivity = PhysicalConnectivity::query()
             // ->whereSaleId(request()->get('sale_id'))
@@ -68,7 +67,7 @@ class PhysicalConnectivityController extends Controller
             $connectivity_points = FeasibilityRequirementDetail::query()
                 ->where('client_no', $saleDetails->client_no)
                 ->get();
-                // dd($connectivity_points);
+            // dd($connectivity_points);
 
             // $clientInfo = FeasibilityRequirementDetail::query()
             //     ->where('fr_no', $physicalConnectivity->fr_no)
@@ -77,7 +76,7 @@ class PhysicalConnectivityController extends Controller
             $connectivity_links = ConnectivityLink::latest()->get();
         }
 
-        return view('networking::physical-connectivities.create', compact('challanInfo','connectivity_points','saleDetails','connectivity_links'));
+        return view('networking::physical-connectivities.create', compact('challanInfo', 'connectivity_points', 'saleDetails', 'connectivity_links'));
         // return view('networking::physical-connectivities.create', compact('connectivity_links','saleDetails', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
 

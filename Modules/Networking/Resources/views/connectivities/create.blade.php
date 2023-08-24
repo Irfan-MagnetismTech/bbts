@@ -373,8 +373,8 @@
                                 value="{{ $clientFacility->dns_ip_address ?? '' }}" disabled>
                         </div>
                     </div>
+                    <hr>
                 @endif
-                <hr>
 
                 @if (in_array('smtp', $facilityTypes))
                     <div class="row">
@@ -405,9 +405,8 @@
                                 disabled>
                         </div>
                     </div>
+                    <hr>
                 @endif
-
-                <hr>
 
                 @if (in_array('vpn', $facilityTypes))
                     <div class="row">
@@ -474,9 +473,8 @@
                                 disabled>
                         </div>
                     </div>
+                    <hr>
                 @endif
-
-                <hr>
 
                 @if (in_array('vc', $facilityTypes))
                     <div class="row">
@@ -537,9 +535,8 @@
                                 value="{{ $clientFacility->vc_remarks ?? '' }}">
                         </div>
                     </div>
+                    <hr>
                 @endif
-
-                <hr>
 
                 @if (in_array('bgp', $facilityTypes))
                     <div class="row">

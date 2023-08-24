@@ -57,15 +57,15 @@
                                     class="text-white" target="_blank">Physical Connectivity</a>
                             </span>
                             <span class="badge badge-info">
-                                <a href="{{ route('logical-internet-connectivities.create', ['sale_id' => $details->sale_id]) }}"
+                                <a href="{{ route('logical-internet-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                     class="text-white" target="_blank">Internet</a>
                             </span>
                             <span class="badge badge-info">
-                                <a href="{{ route('logical-vas-connectivities.create', ['sale_id' => $details->sale_id]) }}"
+                                <a href="{{ route('logical-vas-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                     class="text-white" target="_blank">VAS</a>
                             </span>
                             <span class="badge badge-info">
-                                <a href="{{ route('logical-data-connectivities.create', ['sale_id' => $details->sale_id]) }}"
+                                <a href="{{ route('logical-data-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                     class="text-white" target="_blank">Data</a>
                             </span>
                             <span class="badge badge-warning">
