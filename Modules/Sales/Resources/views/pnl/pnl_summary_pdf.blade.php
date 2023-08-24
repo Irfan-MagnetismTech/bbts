@@ -1,37 +1,103 @@
-@extends('layouts.backend-layout')
-@section('title', 'PNL')
+<!DOCTYPE html>
+<html>
 
-@section('breadcrumb-title')
-    PNL Summary
-    <span style="position: fixed; right:20px"></span>
-@endsection
-
-@section('style')
+<head>
     <style>
-        td {
-            border: 1px solid rgb(183, 186, 187) !important;
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            margin: 20px !important;
+            padding: 20px !important;
         }
 
-        /* th{
-                    border: 1px solid black!important;
-                } */
+        table {
+            font-size: 10px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        table,
+        td,
+        th {
+            padding: 5px;
+            border-collapse: collapse;
+            border: 1px solid #000;
+
+        }
+
+        #orderinfo-table tr td {
+            border: 1px solid #000000;
+        }
+
+        #orderinfo-table2 tr td {
+            border: 1px solid #000000;
+            text-align: left;
+        }
+
+        @page {
+            header: page-header;
+            footer: page-footer;
+            margin: 120px 50px 50px 50px;
+        }
     </style>
-@endsection
+</head>
 
-@section('content-grid', null)
-
-@section('content')
-    <div class="row mb-1">
-        <div class="col-12 text-center">
-            <h2>{{ $feasibility_requirement->lead_generation->client_name }}</h2>
-        </div>
-        <div class="col-12 text-right">
-            <a class="btn btn-outline-success" style="transition: 0.5s" href="{{ route('generate_pnl_summary_pdf', $mq_no) }}">Generate Pdf</a>
-        </div>
+<body>
+<htmlpageheader name="page-header">
+    <div>
+        &nbsp;
     </div>
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead>
+    <div>
+        &nbsp;
+    </div>
+    <div style="width: 100%; text-align: center">
+        <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
+        <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+    </div>
+</htmlpageheader>
+
+<html-separator />
+<div>
+    &nbsp;
+</div>
+    <div style="width: 100%;">
+        <div style="text-align: center">
+            <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 20px auto">
+                {{ $feasibility_requirement->lead_generation->client_name }}</h2>
+        </div>
+        <table id="orderinfo-table">
+                <thead>
                 <tr class="text-center">
                     <th>Connectivity Point Name</th>
                     <th>Total Inv</th>
@@ -47,8 +113,8 @@
                     <th>Monthly PNL</th>
                     <th>Yearly PNL</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 <?php
                 $total_investment = 0;
                 $total_budget = 0;
@@ -102,8 +168,8 @@
                         </tr>
                     @endif
                 @endforeach
-            </tbody>
-            <tfoot>
+                </tbody>
+                <tfoot>
                 <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
                     <td colspan="" class="text-right"> <b>Total</b> </td>
                     <td class="text-right"><b>@formatFloat($total_investment)</b></td>
@@ -119,32 +185,47 @@
                     <td class="text-right"><b>@formatFloat($total_monthly_pnl)</b></td>
                     <td class="text-right"><b>@formatFloat($total_yearly_pnl)</b></td>
                 </tr>
-            </tfoot>
+                </tfoot>
         </table>
     </div>
-    <div class="d-flex" style="margin-top: 20px; justify-content: space-around">
-        <a class="btn btn-outline-success" style="transition: 0.5s" href="{{ route('pnl-details', $mq_no) }}">Details</a>
-        <a class="btn btn-outline-success"
-            @if ($sale->finance_approval == 'Not Approved') href="{{ route('pnl-approve-by-finance', $mq_no) }}" @else href="#" title="Approved By {{ $sale?->financeApprovedBy?->name }}" @endif
-            style="transition: 0.5s">Finance {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
-        <a class="btn btn-outline-success"
-            @if ($sale->cmo_approval == 'Not Approved') href="{{ route('pnl-approve-by-cmo', $mq_no) }}" @else href="#" title="Approved By {{ $sale?->cmoApprovedBy?->name }}" @endif
-            style="transition: 0.5s" href="{{ route('pnl-approve-by-cmo', $mq_no) }}">CMO
-            {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
-        <a class="btn btn-outline-success"
-            @if ($sale->management_approval == 'Not Approved') href="{{ route('pnl-approve-by-management', $mq_no) }}" @else href="{{ route('pnl-approve-by-management', $mq_no) }}" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @endif
-            style="transition: 0.5s" href="{{ route('pnl-approve-by-management', $mq_no) }}">Management
-            {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
-    </div>
-@endsection
 
-@section('script')
-    @if (Session::has('success'))
-        <script type="text/javascript">
-            Toast.fire({
-                icon: 'success',
-                title: '{!! Session::get('success') !!}',
-            })
-        </script>
-    @endif
-@endsection
+<htmlpagefooter name="page-footer">
+    <div class=" text-xs justify-between">
+        <div>
+            <div style="width:24%; float:left; margin-left: 5px;">
+                <div>
+                    <div class="text-center"> </div>
+                    <hr class="w-32 border-gray-700" />
+                    <div class="text-center">Prepared By</div>
+                </div>
+            </div>
+            <div style="width:24%; float:left; margin-left: 5px;">
+                <div>
+
+                    <hr class="w-32 border-gray-700" />
+                    <div class="text-center">Client Sign</div>
+                </div>
+            </div>
+            <div style="width:24%; float:left; margin-left: 5px;">
+                <div>
+
+                    <hr class="w-32 border-gray-700" />
+                    <div class="text-center">Driver Sign</div>
+                </div>
+            </div>
+            <div style="width:24%; float:left; margin-left: 5px;">
+                <div>
+                    <div class="text-center"></div>
+                    <hr class="w-32 border-gray-700" />
+                    <div class="text-center">MD</div>
+                </div>
+            </div>
+
+        </div>
+        <div>
+            &nbsp;
+        </div>
+    </div>
+</htmlpagefooter>
+</body>
+</html>
