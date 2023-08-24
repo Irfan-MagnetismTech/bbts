@@ -31,6 +31,8 @@ use Modules\Sales\Http\Controllers\OfferController;
 Route::prefix('sales')->middleware(['auth'])->group(function () {
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
+    require __DIR__ . '/saiful.php';
+
     Route::resources([
         'lead-generation' => LeadGenerationController::class,
         'meeting' => MeetingController::class,

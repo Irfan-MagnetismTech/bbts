@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use PDF;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -558,5 +559,17 @@ class SaleController extends Controller
         });
 
         return view('sales::offers.client_offer', compact('mq_no', 'offer', 'offerData', 'uniqueEquipments'));
+    }
+    public function pdf($mq_no = null)
+    {
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')
+            ->where('mq_no', $mq_no)->first();
+
+        return PDF::loadView('sales::pnl.pnl_summary_pdf', ['feasibility_requirement' => $feasibility_requirement], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'PNL Summary',
+        ])->stream('summary.pdf');
+        return view('sales::pnl.pnl_summary_pdf', compact('feasibility_requirement'));
     }
 }
