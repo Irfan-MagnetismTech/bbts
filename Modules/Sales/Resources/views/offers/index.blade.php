@@ -24,6 +24,7 @@
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
+                    <th>SL</th>
                     <th>Client No</th>
                     <th>Client Name</th>
                     <th>MQ No</th>
@@ -34,6 +35,7 @@
             <tbody>
                 @foreach ($offers as $offer)
                     <tr>
+                        <td>{{ $loop->index + 1 }}</td>
                         <td>{{ $offer->lead_generation->client_no }}</td>
                         <td>{{ $offer->lead_generation->client_name }}</td>
                         <td>{{ $offer->mq_no }}</td>
@@ -64,6 +66,7 @@
             </tbody>
             <tfoot>
                 <tr>
+                    <th>SL</th>
                     <th>Client No</th>
                     <th>Client Name</th>
                     <th>MQ No</th>
