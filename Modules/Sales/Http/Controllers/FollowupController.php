@@ -20,7 +20,7 @@ class FollowupController extends Controller
      */
     public function index()
     {
-        $followups = Followup::with('meeting', 'client')->get();
+        $followups = Followup::with('meeting', 'client')->latest()->get();
         return view('sales::followup.index', compact('followups'));
     }
 

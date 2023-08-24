@@ -128,7 +128,7 @@
                         </div>
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
-                                <select class="form-control" name="client_no" id="client_id">
+                                <select class="form-control select2" name="client_no" id="client_id">
                                     <option value="">Select Client</option>
                                     @if (!empty($clients))
                                         @foreach ($clients as $client)

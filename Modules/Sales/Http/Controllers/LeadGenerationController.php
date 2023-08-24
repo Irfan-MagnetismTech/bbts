@@ -126,11 +126,12 @@ class LeadGenerationController extends Controller
     {
         $main_leads = [];
         //get client where match the request data
-        $lead_generations = LeadGeneration::where('client_no', 'like', '%' . $request->client_id . '%')->get();
+        $lead_generations = LeadGeneration::where('client_no', 'like', '%' . $request->search . '%')->where('status', 'Accept')->orWhere('client_name', 'like', '%' . $request->search . '%')->get();
         foreach ($lead_generations as $lead_generation) {
             $main_leads[] = [
-                'label' => $lead_generation->client_no,
-                'value' => $lead_generation->client_name,
+                'label' => $lead_generation->client_name . ' ( ' . $lead_generation->client_no . ' )',
+                'client_no' => $lead_generation->client_no,
+                'client_name' => $lead_generation->client_name,
                 'lead_generation_id' => $lead_generation->id,
             ];
         }
