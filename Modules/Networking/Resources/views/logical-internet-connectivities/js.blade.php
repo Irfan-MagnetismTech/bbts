@@ -167,9 +167,10 @@
         if (e.checked) {
             // $(inputFields).prop('disabled', false);
             $('.input-field-1').removeClass('d-none');
+            $('.input-field-1').addClass('input-transition');
         } else {
             // $(inputFields).prop('disabled', true);
-            $('.input-field-1').addClass('d-none');
+            $('.input-field-1').addClass('d-none input-transition');
         }
     }
     function checkboxChange2(e, inputFields) {
@@ -188,6 +189,15 @@
         } else {
             // $(inputFields).prop('disabled', true);
             $('.input-field-3').addClass('d-none');
+        }
+    }
+    function checkboxChange4(e, inputFields) {
+        if (e.checked) {
+            // $(inputFields).prop('disabled', false);
+            $('.input-field-4').removeClass('d-none');
+        } else {
+            // $(inputFields).prop('disabled', true);
+            $('.input-field-4').addClass('d-none');
         }
     }
     
