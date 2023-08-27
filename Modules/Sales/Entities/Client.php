@@ -40,12 +40,12 @@ class Client extends Model
 
     public function billingAddress()
     {
-        return $this->hasOne(BillingAddress::class, 'client_id', 'id');
+        return $this->hasMany(BillingAddress::class, 'client_id', 'id');
     }
 
     public function collectionAddress()
     {
-        return $this->hasOne(CollectionAddress::class, 'client_id', 'id');
+        return $this->hasMany(CollectionAddress::class, 'client_id', 'id');
     }
 
     public function division()
@@ -71,5 +71,10 @@ class Client extends Model
     public function feasibility_requirement_details()
     {
         return $this->hasMany(FeasibilityRequirementDetail::class, 'client_no', 'client_no');
+    }
+
+    public function feasibility_requirement()
+    {
+        return $this->hasMany(FeasibilityRequirement::class, 'client_no', 'client_no');
     }
 }
