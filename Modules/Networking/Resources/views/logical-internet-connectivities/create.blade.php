@@ -117,14 +117,14 @@
                     <div class="col-auto">
                         <div class="">
                             <input class="" type="radio" name="shared_type" id="dedicatedRadio" value="dedicated"
-                                @checked(@$logicalConnectivityInternet->shared_type == 'dedicated' || old('shared_type') == 'dedicated') required>
+                                @checked(@$logicalConnectivityInternet->shared_type == 'dedicated' || old('shared_type') == 'dedicated') >
                             <label class="form-check-label" for="dedicatedRadio">Dedicated</label>
                         </div>
                     </div>
                     <div class="col-auto">
                         <div class="">
                             <input class="" type="radio" name="shared_type" id="sharedRadio" value="shared"
-                                @checked(@$logicalConnectivityInternet->shared_type == 'shared' || old('shared_type') == 'shared') required>
+                                @checked(@$logicalConnectivityInternet->shared_type == 'shared' || old('shared_type') == 'shared') >
                             <label class="form-check-label" for="sharedRadio">Shared</label>
                         </div>
                     </div>
@@ -229,7 +229,7 @@
                         @forelse ($logicalConnectivityBandwidths as $key => $bandwidth)
                             <tr>
                                 <td>
-                                    <select name="ip_address[]" class="form-control select2" required>
+                                    <select name="ip_address[]" class="form-control select2" >
                                         <option value="" slected disable>Select IP Address</option>
                                         @foreach ($ips as $ip)
                                             <option value="{{ $ip->id }}" @selected($ip_address[$key] == $ip->id)>
@@ -272,7 +272,7 @@
                         <th> Link Type</th>
                         <th> Method</th>
                         <th> POP</th>
-                        <th>LDP</th>
+                        <th> LDP</th>
                         <th> Link ID </th>
                         <th> Device IP </th>
                         <th> PORT </th>
@@ -282,6 +282,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    
                     @forelse (@$physicalConnectivityData?->lines as $key => $line)
                         <tr>
                             <td>

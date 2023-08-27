@@ -49,8 +49,8 @@
                         <td>{{ $details->fr_no }}</td>
                         <td class="noWrapStyle">{{ $details->frDetails->connectivity_point }}</td>
                         <td></td>
-                        <td>{{ $details->delivery_date }}</td>
-                        <td></td>
+                        <td>{{ $details->delivery_date ? $details->delivery_date : '' }}</td>
+                        <td>{{ $details->connectivities ? $details->connectivities->commissioning_date : '' }}</td>
                         <td>
                             <span class="badge badge-primary">
                                 <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"

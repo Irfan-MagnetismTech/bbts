@@ -24,25 +24,25 @@
                     <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off" required>
                 </td>
                 <td>
-                    <input type="text" name="ip_ipv4[]" class="form-control ip_ipv4" autocomplete="off" required>
+                    <input type="text" name="ip_ipv4[]" class="form-control ip_ipv4" autocomplete="off" >
                 </td>
                 <td>
-                    <input type="text" name="ip_ipv6[]" class="form-control ip_ipv6" autocomplete="off" required>
+                    <input type="text" name="ip_ipv6[]" class="form-control ip_ipv6" autocomplete="off" >
                 </td>
                 <td>
-                    <input type="text" name="subnetmask[]" class="form-control subnetmask" autocomplete="off" required>
+                    <input type="text" name="subnetmask[]" class="form-control subnetmask" autocomplete="off" >
                 </td>
                 <td>
-                    <input type="text" name="gateway[]" class="form-control gateway" autocomplete="off" required>
+                    <input type="text" name="gateway[]" class="form-control gateway" autocomplete="off" >
                 </td>
                 <td>
-                    <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off" required>
+                    <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off" >
                 </td>
                 <td>
-                    <input type="text" name="mrtg_user[]" class="form-control mrtg_user" autocomplete="off" required>
+                    <input type="text" name="mrtg_user[]" class="form-control mrtg_user" autocomplete="off" >
                 </td>
                 <td>
-                    <input type="text" name="mrtg_pass[]" class="form-control mrtg_pass" autocomplete="off" required>
+                    <input type="text" name="mrtg_pass[]" class="form-control mrtg_pass" autocomplete="off" >
                 </td>
                 ${(row_index > 0) ? 
                 `<td>

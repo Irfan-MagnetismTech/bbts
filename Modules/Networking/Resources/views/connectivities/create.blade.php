@@ -15,7 +15,40 @@
         .input-group-info .input-group-addon {
             /*background-color: #04748a!important;*/
         }
-    </style>
+
+        fieldset {
+         display: block!important;
+         margin-left: 2px!important;
+         margin-right: 2px!important;
+         padding-left: 0.75em!important;
+         padding-bottom: 0%!important;
+         padding-right: 0.75em!important;
+         border: #1a1111 2px silid;
+         border: 2px black (internal value)!important;
+        } 
+
+        legend {
+        color: white!important;
+        display: block!important;
+        width: 90%!important;
+        max-width: 100%!important;
+        font-size: 0.7rem!important;
+        line-height: inherit!important;
+        font-weight: 100!important;
+        color: inherit!important;
+        white-space: normal!important;
+        margin-bottom:0%!important; 
+        padding-bottom:0%!important; 
+        }
+        .section-label {
+            background: #ffffff;
+            margin-left: 25px;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 0, 10px, 0, 10px;
+            transition: 0.3s;
+        }
+    </style> 
 @endsection
 
 @php
@@ -85,20 +118,22 @@
             </div>
 
             @if (!empty($physicalConnectivity))
-                <h5 class="text-center p-2">NETWORK INFORMATION</h5>
                 <table class="table table-bordered" id="physical_connectivity">
                     <thead>
                         <tr>
-                            <th> Link Type</th>
-                            <th> Method</th>
-                            <th> POP</th>
-                            <th>LDP</th>
-                            <th> Link ID </th>
-                            <th> Device IP </th>
-                            <th> PORT </th>
-                            <th> VLAN </th>
-                            <th> Connectivity Details </th>
-                            <th> Comment </th>
+                            <th colspan="10" style="background-color: #8ecae6!important;  color:black">Network Information</th>
+                        </tr>
+                        <tr>
+                            <th style="background-color:#057097!important"> Link Type</th>
+                            <th style="background-color:#057097!important"> Method</th>
+                            <th style="background-color:#057097!important"> POP</th>
+                            <th style="background-color:#057097!important"> LDP</th>
+                            <th style="background-color:#057097!important"> Link ID </th>
+                            <th style="background-color:#057097!important"> Device IP </th>
+                            <th style="background-color:#057097!important"> PORT </th>
+                            <th style="background-color:#057097!important"> VLAN </th>
+                            <th style="background-color:#057097!important"> Connectivity Details </th>
+                            <th style="background-color:#057097!important"> Comment </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -148,48 +183,18 @@
                         @endforeach
                     </tbody>
                 </table>
-            @endif
-
-            @if (!empty($logicalConnectivities->get('Internet')))
-                <h5 class="text-center p-2">Bandwidth Distribution </h5>
-                <table class="table table-bordered" id="bandwidth_distribution">
-                    <thead>
-                        <tr>
-                            <th> IP Address</th>
-                            <th> Bandwidth</th>
-                            <th> Remarks </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($logicalConnectivityBandwidths as $key => $bandwidth)
-                            <tr>
-                                <td>
-                                    <input type="text" class="form-control" value="{{ $bandwidth->ip->address }}"
-                                        readonly>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" value="{{ $bandwidth->bandwidth }}"
-                                        readonly>
-                                </td>
-                                <td>
-                                    <input type="text" class="form-control" value="{{ $bandwidth->remarks }}"
-                                        readonly>
-                                </td>
-                            </tr>
-                        @empty
-                        @endforelse
-                    </tbody>
-                </table>
-            @endif
+            @endif 
 
             @if (!empty($logicalConnectivities->get('VAS')))
-                <h5 class="text-center p-2">VAS SERVICE</h5>
                 <table class="table table-bordered" id="vas_service">
                     <thead>
                         <tr>
-                            <th> Product Name</th>
-                            <th> Number of User</th>
-                            <th> Remarks</th>
+                            <th colspan="3" style="background-color: #ded6d1!important; color:black">Network Information</th>
+                        </tr>
+                        <tr>
+                            <th style="background-color:#057097!important"> Product Name</th>
+                            <th style="background-color:#057097!important"> Number of User</th>
+                            <th style="background-color:#057097!important"> Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -214,20 +219,22 @@
             @endif
 
             @if (!empty($logicalConnectivities->get('Data')))
-                <h5 class="text-center p-2">DATA SERVICE</h5>
                 <table class="table table-bordered" id="data_service">
                     <thead>
                         <tr>
-                            <th> Product Name</th>
-                            <th>Data Type</th>
-                            <th>Bandwidth</th>
-                            <th>IP Adress ipv4</th>
-                            <th>IP Adress ipv6</th>
-                            <th> Subnet Mask</th>
-                            <th> Gateway</th>
-                            <th> VLAN</th>
-                            <th> User ID</th>
-                            <th> Password</th>
+                            <th colspan="10" style="background-color: #b8bedd!important; color:black">Data Service</th>
+                        </tr>
+                        <tr>
+                            <th style="background-color:#1B6B93!important"> Product Name</th>
+                            <th style="background-color:#057097!important">Data Type</th>
+                            <th style="background-color:#057097!important">Bandwidth</th>
+                            <th style="background-color:#057097!important">IP Adress ipv4</th>
+                            <th style="background-color:#057097!important">IP Adress ipv6</th>
+                            <th style="background-color:#057097!important"> Subnet Mask</th>
+                            <th style="background-color:#057097!important"> Gateway</th>
+                            <th style="background-color:#057097!important"> VLAN</th>
+                            <th style="background-color:#057097!important"> User ID</th>
+                            <th style="background-color:#057097!important"> Password</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -272,19 +279,21 @@
             @endif
 
             @if (!empty($logicalConnectivities->get('Internet')))
-                <h5 class="text-center p-2">INTERNET SERVICE</h5>
                 <table class="table table-bordered" id="data_service">
                     <thead>
                         <tr>
-                            <th> Product Name</th>
-                            <th>Bandwidth</th>
-                            <th>IP Adress ipv4</th>
-                            <th>IP Adress ipv6</th>
-                            <th> Subnet Mask</th>
-                            <th> Gateway</th>
-                            <th> VLAN</th>
-                            <th> User ID</th>
-                            <th> Password</th>
+                            <th colspan="9" style="background-color: #a8dadc!important; color:black">Internet Service </th>
+                        </tr>
+                        <tr>
+                            <th style="background-color:#057097!important"> Product Name</th>
+                            <th style="background-color:#057097!important">Bandwidth</th>
+                            <th style="background-color:#057097!important">IP Adress ipv4</th>
+                            <th style="background-color:#057097!important">IP Adress ipv6</th>
+                            <th style="background-color:#057097!important"> Subnet Mask</th>
+                            <th style="background-color:#057097!important"> Gateway</th>
+                            <th style="background-color:#057097!important"> VLAN</th>
+                            <th style="background-color:#057097!important"> User ID</th>
+                            <th style="background-color:#057097!important"> Password</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -317,6 +326,40 @@
                                 </td>
                                 <td>
                                     <input type="text" class="form-control" value="{{ $line->mrtg_pass }}" readonly>
+                                </td>
+                            </tr>
+                        @empty
+                        @endforelse
+                    </tbody>
+                </table>
+            @endif
+
+            @if (!empty($logicalConnectivities->get('Internet')))
+                <table class="table table-bordered" id="bandwidth_distribution">
+                    <thead>
+                        <tr>
+                            <th colspan="9" style="background-color: #d8f3dc!important; color:black">Bandwidth Distribution </th>
+                        </tr>
+                        <tr>
+                            <th style="background-color:#057097!important"> IP Address</th>
+                            <th style="background-color:#057097!important"> Bandwidth</th>
+                            <th style="background-color:#057097!important"> Remarks </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($logicalConnectivityBandwidths as $key => $bandwidth)
+                            <tr>
+                                <td >
+                                    <input type="text" class="form-control" value="{{ $bandwidth->ip->address }}"
+                                        readonly>
+                                </td>
+                                <td >
+                                    <input type="text" class="form-control" value="{{ $bandwidth->bandwidth }}"
+                                        readonly>
+                                </td>
+                                <td >
+                                    <input type="text" class="form-control" value="{{ $bandwidth->remarks }}"
+                                        readonly>
                                 </td>
                             </tr>
                         @empty

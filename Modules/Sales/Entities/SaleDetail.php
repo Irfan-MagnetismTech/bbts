@@ -14,6 +14,7 @@ use Modules\Networking\Entities\CCSchedule;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Networking\Entities\Connectivity;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class SaleDetail extends Model
@@ -25,7 +26,9 @@ class SaleDetail extends Model
      */
     public function getDeliveryDateAttribute($input)
     {
-        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y') ?: null;
+        if(!empty($input)){
+            return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y') ?: null;
+        }
     }
 
     /**
@@ -39,7 +42,12 @@ class SaleDetail extends Model
     public function saleLinkDetails()
     {
         return $this->hasMany(SaleLinkDetail::class, 'sale_detail_id', 'id');
-    }
+    } 
+
+    public function connectivities()
+    {
+        return $this->hasOne(Connectivity::class, 'fr_no', 'fr_no')->where('is_modify', '0');
+    } 
 
     public function saleProductDetails()
     {

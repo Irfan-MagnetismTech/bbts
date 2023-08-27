@@ -16,7 +16,7 @@
                     <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off" required>
                 </td>
                 <td>
-                    <select name="ip_ipv4[]" class="form-control select2 ip_ipv4" required>
+                    <select name="ip_ipv4[]" class="form-control select2 ip_ipv4" >
                         <option value="" slected disable>Select IP Address</option>
                         @foreach ($ipv4Ips as $ip)
                             <option value="{{ $ip->address }}">{{ $ip->address }}</option>
@@ -24,7 +24,7 @@
                     </select>
                 </td>
                 <td>
-                    <select name="ip_ipv6[]" class="form-control select2 ip_ipv6" required>
+                    <select name="ip_ipv6[]" class="form-control select2 ip_ipv6" >
                         <option value="" slected disable>Select IP Address</option>
                         @foreach ($ipv6Ips as $ip)
                             <option value="{{ $ip->address }}">{{ $ip->address }}</option>
@@ -32,19 +32,19 @@
                     </select>
                 </td>
                 <td>
-                    <input type="text" name="subnetmask[]" class="form-control subnetmask" autocomplete="off" required>
+                    <input type="text" name="subnetmask[]" class="form-control subnetmask" autocomplete="off">
                 </td>
                 <td>
-                    <input type="text" name="gateway[]" class="form-control gateway" autocomplete="off" required>
+                    <input type="text" name="gateway[]" class="form-control gateway" autocomplete="off">
                 </td>
                 <td>
-                    <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off" required>
+                    <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off">
                 </td>
                 <td>
-                    <input type="text" name="mrtg_user[]" class="form-control mrtg_user" autocomplete="off" required>
+                    <input type="text" name="mrtg_user[]" class="form-control mrtg_user" autocomplete="off" >
                 </td>
                 <td>
-                    <input type="text" name="mrtg_pass[]" class="form-control mrtg_pass" autocomplete="off" required>
+                    <input type="text" name="mrtg_pass[]" class="form-control mrtg_pass" autocomplete="off" >
                 </td>
                 ${(row_index > 0) ? 
                 `<td>

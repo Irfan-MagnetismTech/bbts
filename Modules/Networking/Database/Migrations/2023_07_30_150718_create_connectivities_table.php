@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('fr_no');
             $table->integer('attendant_engineer')->nullable();
             $table->date('commissioning_date')->nullable();
+            $table->integer('is_modify')->default('0');
+            $table->integer('billing_date')->nullable();
             $table->timestamps();
         });
     }
