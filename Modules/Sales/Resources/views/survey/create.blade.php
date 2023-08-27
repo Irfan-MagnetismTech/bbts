@@ -84,6 +84,16 @@
                                 $current_capacities = $survey->surveyDetails->pluck('current_capacity')->toArray();
                                 $remarks = $survey->surveyDetails->pluck('remarks')->toArray();
                                 $details_ids = $survey->surveyDetails->pluck('id')->toArray();
+                                $contact_person = $is_old ? old('contact_person') : $survey->feasibilityRequirementDetails->contact_name ?? '';
+                                $contact_number = $is_old ? old('contact_number') : $survey->feasibilityRequirementDetails->contact_number ?? '';
+                                $contact_email = $is_old ? old('contact_email') : $survey->feasibilityRequirementDetails->contact_email ?? '';
+                                $contact_designation = $is_old ? old('contact_designation') : $survey->feasibilityRequirementDetails->contact_designation ?? '';
+                                $connectivity_remarks = $is_old ? old('connectivity_remarks') : $survey->feasibilityRequirementDetails->connectivity_remarks ?? '';
+                            }else{
+                                $contact_person = $is_old ? old('contact_person') : $fr_detail->contact_name ?? '';
+                                $contact_number = $is_old ? old('contact_number') : $fr_detail->contact_number ?? '';
+                                $contact_email = $is_old ? old('contact_email') : $fr_detail->contact_email ?? '';
+                                $contact_designation = $is_old ? old('contact_designation') : $fr_detail->contact_designation ?? '';
                             }
                             
                             $client_name = $is_old ? old('client_name') : $survey->lead_generation->client_name ?? $fr_detail->feasibilityRequirement->lead_generation->client_name;
@@ -100,11 +110,11 @@
                             $district = $is_old ? old('district') : $survey->feasibilityRequirementDetails->district ?? $fr_detail->district;
                             $thana = $is_old ? old('upazila') : $survey->feasibilityRequirementDetails->thana ?? $fr_detail->thana;
                             $location = $is_old ? old('location') : $survey->feasibilityRequirementDetails->location ?? $fr_detail->location;
-                            $contact_person = $is_old ? old('contact_person') : $survey->feasibilityRequirementDetails->contact_name ?? $fr_detail->contact_name;
-                            $contact_number = $is_old ? old('contact_number') : $survey->feasibilityRequirementDetails->contact_number ?? $fr_detail->contact_number;
-                            $contact_email = $is_old ? old('contact_email') : $survey->feasibilityRequirementDetails->contact_email ?? $fr_detail->contact_email;
-                            $contact_designation = $is_old ? old('contact_designation') : $survey->feasibilityRequirementDetails->contact_designation ?? $fr_detail->contact_designation;
-                            $connectivity_remarks = $is_old ? old('connectivity_remarks') : $survey->feasibilityRequirementDetails->connectivity_remarks ?? '';
+                            $connectivity_remarks = $is_old ? old('connectivity_remarks') : $connectivity_remarks ?? '';
+                            $contact_person = $is_old ? old('contact_person') : $contact_person ?? '';
+                            $contact_number = $is_old ? old('contact_number') : $contact_number ?? '';
+                            $contact_email = $is_old ? old('contact_email') : $contact_email ?? '';
+                            $contact_designation = $is_old ? old('contact_designation') : $contact_designation ?? '';
                             // dd($client_name);
                             $statuses = $is_old ? old('status') : $statuses ?? [];
                             $methods = $is_old ? old('method') : $methods ?? [];

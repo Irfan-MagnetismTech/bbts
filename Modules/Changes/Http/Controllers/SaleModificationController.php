@@ -20,6 +20,7 @@ use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Billing\Entities\BillingOtcBill;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\CostingLinkEquipment;
@@ -42,10 +43,11 @@ class SaleModificationController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function create($connectivity_requirement_id)
     {
+        $costing = Costing::with('costingProducts', 'costingProductEquipments', 'costingLinks.costingLinkEquipments')->where('connectivity_requirement_id', $connectivity_requirement_id)->first();
         $divisions = Division::latest()->get();
-        return view('changes::modify_sales.create', compact('divisions'));
+        return view('changes::modify_sales.create', compact('divisions', 'costing'));
     }
 
     /**
@@ -98,4 +100,48 @@ class SaleModificationController extends Controller
     {
         //
     }
+
+    // public function getClientInfoForSalesModificationFR()
+    // {
+    //     $results = Client::query()
+    //         ->with('feasibility_requirement.feasibilityRequirementDetails')
+    //         ->where('client_name', 'LIKE', '%' . request('search') . '%')
+    //         ->limit(15)
+    //         ->get()
+    //         ->map(function ($item) {
+    //             return $item->feasibility_requirement->map(function ($fr) use ($item) {
+    //                 return [
+    //                     'value' => $item->client_name,
+    //                     'label' => $item->client_name . ' (' . ($fr->mq_no ?? '') . ')',
+    //                     'client_no' => $item->client_no,
+    //                     'client_id' => $item->id,
+    //                     'mq_no' => $fr->mq_no,
+    //                     'details' => $fr->feasibilityRequirementDetails->pluck('fr_no', 'fr_no')
+    //                 ];
+    //             });
+    //         })->flatten(1);
+
+
+    //     return response()->json($results);
+
+    //     //     $items = Offer::query()
+    //     //     ->with(['client', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])
+    //     //     ->whereHas('client', function ($qr) {
+    //     //         return $qr->where('client_name', 'like', '%' . request()->search . '%');
+    //     //     })
+    //     //     ->get()
+    //     //     ->map(fn ($item) => [
+    //     //         'value'                 => $item->client->client_name,
+    //     //         'label'                 => $item->client->client_name . ' ( ' . ($item?->mq_no ?? '') . ' )',
+    //     //         'client_no'             => $item->client_no,
+    //     //         'client_id'             => $item->client->id,
+    //     //         'offer_id'              => $item->id,
+    //     //         'mq_no'                 => $item->mq_no,
+    //     //         'billing_address'       => BillingAddress::where('client_no', $item->client_no)->get(),
+    //     //         'collection_address'    => CollectionAddress::where('client_no', $item->client_no)->get(),
+    //     //         'details'               => $item->offerDetails
+    //     //     ]);
+    //     // return response()->json($items);
+    // }
+
 }
