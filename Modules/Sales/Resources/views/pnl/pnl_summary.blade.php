@@ -22,13 +22,14 @@
 
 @section('content')
     <div class="row mb-1">
-        <div class="col-12 text-center">
-            <h2>{{ $feasibility_requirement->lead_generation->client_name }}</h2>
+        <div class="col-10 text-center">
+            <h3>{{ $feasibility_requirement->lead_generation->client_name }}</h3>
         </div>
-        <div class="col-12 text-right">
+        <div class="col-2 text-right">
             <a class="btn btn-outline-success" style="transition: 0.5s" href="{{ route('generate_pnl_summary_pdf', $mq_no) }}">Generate Pdf</a>
         </div>
     </div>
+
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead>
