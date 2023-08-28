@@ -76,6 +76,7 @@
     })
 
     $('#account_holder').on('keyup', function() {
+
         let myObject = {}
         jquaryUiAjax(this, "{{ route('get_employees') }}", uiList, myObject);
 

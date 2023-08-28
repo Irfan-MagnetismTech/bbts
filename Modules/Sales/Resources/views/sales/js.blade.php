@@ -1,8 +1,9 @@
 <script src="{{ asset('js/custom-function.js') }}"></script>
 <script>
     var select_selector;
-    function initializeDate(){
-            $('.date').datepicker({
+
+    function initializeDate() {
+        $('.date').datepicker({
             format: "dd-mm-yyyy",
             autoclose: true,
             todayHighlight: true,
@@ -12,35 +13,36 @@
 
     initializeDate();
 
-    function selectTwo(){
+    function selectTwo() {
         $('.bankList').select2({
-        placeholder: 'Select an option'
+            placeholder: 'Select an option'
         });
     }
-   
+
     selectTwo();
 
     $('#client_name').on('keyup', function() {
-            let myObject = {}
-            jquaryUiAjax(this, "{{ route('get_client_info_for_sales') }}", uiList, myObject);
+        let myObject = {}
+        jquaryUiAjax(this, "{{ route('get_client_info_for_sales') }}", uiList, myObject);
 
-            function uiList(item) {
-                $('#client_name').val(item.value).attr('value', item.value);
-                $('#client_no').val(item.client_no).attr('value', item.client_no);
-                $('#client_id').val(item.client_id).attr('value', item.client_id);
-                $('#mq_no').val(item.mq_no).attr('value', item.mq_no);
-                $('#offer_id').val(item.offer_id).attr('value', item.offer_id);
-                var indx = $('.checkbox').length;
-                $('#fr_details').empty();
-                var appendedData = '';
-                item.details.forEach(element => {
-                    let offer_mrc = element.total_offer_mrc ?? 0;
-                    let product_amount = element.offer_product_amount ?? 0;
-                    let management_cost = element.management_cost ?? 0;
-                    let total_mrc = offer_mrc + product_amount + management_cost + element.equipment_total_mrc;
- 
-                    var percentage = (total_mrc / element.costing.product_total_cost) - 1; 
-                    appendedData += `<div class="card">
+        function uiList(item) {
+            $('#client_name').val(item.value).attr('value', item.value);
+            $('#client_no').val(item.client_no).attr('value', item.client_no);
+            $('#client_id').val(item.client_id).attr('value', item.client_id);
+            $('#mq_no').val(item.mq_no).attr('value', item.mq_no);
+            $('#offer_id').val(item.offer_id).attr('value', item.offer_id);
+            var indx = $('.checkbox').length;
+            $('#fr_details').empty();
+            var appendedData = '';
+            item.details.forEach(element => {
+                let offer_mrc = element.total_offer_mrc ?? 0;
+                let product_amount = element.offer_product_amount ?? 0;
+                let management_cost = element.management_cost ?? 0;
+                let total_mrc = offer_mrc + product_amount + management_cost + element
+                    .equipment_total_mrc;
+
+                var percentage = (total_mrc / element.costing.product_total_cost) - 1;
+                appendedData += `<div class="card">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-3">
@@ -57,23 +59,25 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-9">`
-                    element.offer_links.forEach(elmnt => {
-                                        appendedData += `<span>${elmnt.link_type}</span>
+                element.offer_links.forEach(elmnt => {
+                    appendedData += `<span>${elmnt.link_type}</span>
                                         <input type="hidden" name="link_no[${indx}][]"value="${elmnt.link_no}">
                                         <input type="hidden" name="link_type[${indx}][]"value="${elmnt.link_type}">`
-                                    })
+                })
 
-                    appendedData += `</div>
+                appendedData +=
+                    `</div>
                                         </div>
                                             <div class="row">
                                                 <x-input-box colGrid="3" name="delivery_date[${indx}]" value="{{ $delivery_date ?? '' }}" label="Delivery Date" class="date"/>
                                                 <div class="col-xl-2 col-md-2">
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="billing_address_id[${indx}]" class="form-control">`
-                                                                    item.billing_address.forEach(ele => {
-                                                                        appendedData +=`<option value="${ele.id}">${ele.address}</option>`
-                                                                    })
-                                                                    appendedData +=  `
+                item.billing_address.forEach(ele => {
+                    appendedData += `<option value="${ele.id}">${ele.address}</option>`
+                })
+                appendedData +=
+                    `
                                                         </select>
                                                         <label class="input-group-addon input-group-addon-manual"><i class="icofont icofont-ui-add" onClick="ShowModal('billing','${element.fr_no}',this)"></i></label>
                                                     </div>
@@ -81,10 +85,10 @@
                                                 <div class="col-xl-2 col-md-2">
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="collection_address_id[${indx}]" class="form-control">`
-                                                                item.collection_address.forEach(ele => {
-                                                                    appendedData +=`<option value="${ele.id}">${ele.address}</option>`
-                                                                })
-                                                                appendedData +=   `</select>  
+                item.collection_address.forEach(ele => {
+                    appendedData += `<option value="${ele.id}">${ele.address}</option>`
+                })
+                appendedData += `</select>  
                                                         <label class="input-group-addon input-group-addon-manual"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','${element.fr_no}',this)"></i></label>
                                                     </div>
                                                 </div>
@@ -124,14 +128,17 @@
                                                 </thead>
                                                 <tbody>
                                                 `
-                    let total = 0; sub_total_vat = 0; sub_total_amount = 0;
-                    element.costing.costing_products.forEach(itm => {
-                        // console.log(percentage, itm.rate, itm.quantity);
-                        let total_price = (Number(percentage) * Number(itm.rate) + Number(itm.rate)) * Number(itm.quantity);
-                        let total_amount = Number(itm.product_vat_amount) + total_price;
-                        total += total_price;
-                        sub_total_vat += Number(itm.product_vat_amount);
-                        sub_total_amount += total_amount;
+                let total = 0;
+                sub_total_vat = 0;
+                sub_total_amount = 0;
+                element.costing.costing_products.forEach(itm => {
+                    // console.log(percentage, itm.rate, itm.quantity);
+                    let total_price = (Number(percentage) * Number(itm.rate) + Number(itm
+                        .rate)) * Number(itm.quantity);
+                    let total_amount = Number(itm.product_vat_amount) + total_price;
+                    total += total_price;
+                    sub_total_vat += Number(itm.product_vat_amount);
+                    sub_total_amount += total_amount;
                     appendedData += `<tr>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
@@ -179,15 +186,15 @@
                                         </td> 
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="vat_amount[${indx}][]"
-                                                    class="form-control text-right vat_amount" readonly value="${total_amount.toFixed(2)}">
+                                                <input type="text" name="total_amount[${indx}][]"
+                                                    class="form-control text-right total_amount" readonly value="${total_amount.toFixed(2)}">
                                             </div>
                                         </td>
                                     </tr>
                                     `
-                        
-                        })
-                    appendedData += `</tbody>
+
+                })
+                appendedData += `</tbody>
                                     <tfoot>
                                         <tr>
                                             <td colspan="3" style="text-align: left;"></td>
@@ -214,116 +221,118 @@
                     </div>
                 </div> `
                 indx++
-                });
-                $('#fr_details').append(appendedData);
-                initializeDate();
-                selectTwo();
-                return false;
-            }
-        })
-        
-        $('#mq_id').on('keyup', function() {
-            let myObject = {}
-            jquaryUiAjax(this, "{{ route('get_frs_based_on_mq') }}", uiList, myObject);
-
-            function uiList(item) {
-                $('#client_name').val(item.client_name).attr('value',item.client_name);
-                $('#client_no').val(item.client_no).attr('value',item.client_no);
-                return false;
-            }
-        })
-
-        $('#account_holder').on('keyup', function() {
-            let myObject = {}
-            jquaryUiAjax(this, "{{ route('get_employees') }}", uiList, myObject);
-
-            function uiList(item) {
-                $('#account_holder').val(item.label).attr('value',item.label);
-                $('#employee_id').val(item.id).attr('value',item.id);
-                return false;
-            }
-        })
-
-        $(document).on('change','.checkbox',function(){
-            var vvall = 0;
-            $('.checkbox').each((index, element) => { 
-                var checkbox = $(element);
-                if (checkbox.prop('checked')) {
-                    var totalMRCValue = Number($(checkbox).parent().parent().parent().parent().parent().parent().parent().find('.total_mrc').val());
-                    vvall += totalMRCValue;
-                }
             });
-            $('#grand_total').val(vvall.toFixed(2));
-        })
+            $('#fr_details').append(appendedData);
+            initializeDate();
+            selectTwo();
+            return false;
+        }
+    })
 
-        // $(document).on('keyup','.vat_percent',function(){
-        //     let mrc = Number($(this).closest('tr').prev().find('.total_mrc').val());
-        //     let vat_percent = Number($(this).val());
-        //     let vat_tk = mrc * vat_percent / 100;
-        //     $(this).closest('tr').find('.vat_amount').val(vat_tk);
-        // })
+    $('#mq_id').on('keyup', function() {
+        let myObject = {}
+        jquaryUiAjax(this, "{{ route('get_frs_based_on_mq') }}", uiList, myObject);
 
-        // $(document).on('keyup','.vat_percent',function(){
-        //     let mrc = Number($(this).closest('tr').find('.total_price').val());
-        //     let vat_percent = Number($(this).val());
-        //     let vat_tk = mrc * vat_percent / 100;
-        //     $(this).closest('tr').find('.vat_amount').val(vat_tk);
-        // })
+        function uiList(item) {
+            $('#client_name').val(item.client_name).attr('value', item.client_name);
+            $('#client_no').val(item.client_no).attr('value', item.client_no);
+            return false;
+        }
+    })
+
+    $('#account_holder').on('keyup', function() {
+        let myObject = {}
+        jquaryUiAjax(this, "{{ route('get_employees') }}", uiList, myObject);
+
+        function uiList(item) {
+            $('#account_holder').val(item.label).attr('value', item.label);
+            $('#employee_id').val(item.id).attr('value', item.id);
+            return false;
+        }
+    })
+
+    $(document).on('change', '.checkbox', function() {
+        var vvall = 0;
+        $('.checkbox').each((index, element) => {
+            var checkbox = $(element);
+            if (checkbox.prop('checked')) {
+                var totalMRCValue = Number($(checkbox).parent().parent().parent().parent().parent()
+                    .parent().parent().find('.total_mrc').val());
+                vvall += totalMRCValue;
+            }
+        });
+        $('#grand_total').val(vvall.toFixed(2));
+    })
+
+    // $(document).on('keyup','.vat_percent',function(){
+    //     let mrc = Number($(this).closest('tr').prev().find('.total_mrc').val());
+    //     let vat_percent = Number($(this).val());
+    //     let vat_tk = mrc * vat_percent / 100;
+    //     $(this).closest('tr').find('.vat_amount').val(vat_tk);
+    // })
+
+    // $(document).on('keyup','.vat_percent',function(){
+    //     let mrc = Number($(this).closest('tr').find('.total_price').val());
+    //     let vat_percent = Number($(this).val());
+    //     let vat_tk = mrc * vat_percent / 100;
+    //     $(this).closest('tr').find('.vat_amount').val(vat_tk);
+    // })
 
 
-    function updateAddress(){
+    function updateAddress() {
         var form_data = {
-                '_token': $('meta[name="csrf-token"]').attr('content'),
-                };
+            '_token': $('meta[name="csrf-token"]').attr('content'),
+        };
 
-            $('.modal_data').each(function(index, element) {
+        $('.modal_data').each(function(index, element) {
             var name = $(element).attr('name');
             var value = $(element).is('select') ? $(element).find('option:selected').val() : $(element).val();
             form_data[name] = value;
-            });
-            fetch("{{ route('updateAddress') }}", {
+        });
+        fetch("{{ route('updateAddress') }}", {
                 method: 'POST',
                 headers: {
-                'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(form_data),
-                })
-                .then(function(response) {
-                    if (!response.ok) {
-                        console.log("not okay", response.responseJSON);
-                    }
-                    return response.json();
-                })
-                .then(function(data) {
-                     // handle success response
-                     if (data.status == 'success') {
-                        opt = ``;
-                            data.listdata.forEach(function(itm) {
-                                opt += `<option value="${itm.id}">${itm.address}</option>`;
-                        });
-                            select_selector.html('');
-                            select_selector.html(opt);
-                            $("#modal-13").modal("hide");
-                            $("#modal-13").removeClass("md-show");
-                    } else {
-                        $('#errorlist').empty();
-                        $('#errorlist').removeClass('d-none');
-                        $.each(data, function(key, value) {
-                            $('#errorlist').append('<p>' + value + '</p>');
-                        });
-                    }
-                })
-                .catch(function(error) {
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    console.log("not okay", response.responseJSON);
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                // handle success response
+                if (data.status == 'success') {
+                    opt = ``;
+                    data.listdata.forEach(function(itm) {
+                        opt += `<option value="${itm.id}">${itm.address}</option>`;
+                    });
+                    select_selector.html('');
+                    select_selector.html(opt);
+                    $("#modal-13").modal("hide");
+                    $("#modal-13").removeClass("md-show");
+                } else {
+                    $('#errorlist').empty();
+                    $('#errorlist').removeClass('d-none');
+                    $.each(data, function(key, value) {
+                        $('#errorlist').append('<p>' + value + '</p>');
+                    });
+                }
+            })
+            .catch(function(error) {
                 console.error("Error saving form data:", error);
-                });
+            });
     }
-    function ShowModal(a,b,ds){
+
+    function ShowModal(a, b, ds) {
         select_selector = $(ds).parent().parent().find('select');
         $("#modal-13").modal("show");
         $("#modal-13").addClass("md-show");
         $("#client_no_add").val($('#client_no').val());
         $("#fr").val(b);
-        if(a == 'billing'){
+        if (a == 'billing') {
             let prev_elmnt = $('#payment_method_add').closest('tr').prev();
             $('#title').html('Billing Address');
             $('#update_type').val('billing');
@@ -342,7 +351,7 @@
                     </td>
                 </tr>
             `);
-        }else{
+        } else {
             let prev_elmnt = $('#submission_by_add').closest('tr').prev();
             $('#title').html('Collection Address');
             $('#update_type').val('collection');
@@ -362,47 +371,48 @@
                 </tr>
             `);
         }
-    //     let myObject = {
-    //     'client_no': $('#client_no').val()
-    // };
+        //     let myObject = {
+        //     'client_no': $('#client_no').val()
+        // };
 
-    // function successcallback(dataa) {
-    //     console.log(dataa);
-    // }
+        // function successcallback(dataa) {
+        //     console.log(dataa);
+        // }
 
-    // function failcallback() {
-    //     console.log('error');
-    // }
+        // function failcallback() {
+        //     console.log('error');
+        // }
 
-    // jquaryAjaxCall("{{ route('test_test_test') }}", myObject, successcallback);
+        // jquaryAjaxCall("{{ route('test_test_test') }}", myObject, successcallback);
     }
 
-    function HideModal(){
+    function HideModal() {
         $("#modal-13").modal("hide");
         $("#modal-13").removeClass("md-show");
     }
 
     associativeDropdown("{{ route('get-districts') }}", 'division_id', '#division_id', '#district_id', 'get', null)
     associativeDropdown("{{ route('get-thanas') }}", 'district_id', '#district_id', '#thana_id', 'get', null)
-       
-    var day_picker_selector;
-        $(document).ready(function () {
-            $(document).on('click','.container',function(){
-                day_picker_selector = $(this);
-                $('.box').css('left',(($(this).offset().left) - 50)+'px').css('top',(($(this).offset().top)-150)+'px');
-            })
-            $(document).on('click','.day_td',function(){
-                day_picker_selector.val($(this).text());
-                $('.box').css('left','-1000px');
-            })
-       
-            $(document).on('click', function(event) {
-                var $table = $('.box');
-                var $inpt = $('.container');
-                if (!$table.is(event.target) && !$table.has(event.target).length && !$inpt.is(event.target) && !$inpt.has(event.target).length) {
-                    $('.box').css('left','-1000px');
-                }
-            });
-    });
 
+    var day_picker_selector;
+    $(document).ready(function() {
+        $(document).on('click', '.container', function() {
+            day_picker_selector = $(this);
+            $('.box').css('left', (($(this).offset().left) - 50) + 'px').css('top', (($(this).offset()
+                .top) - 150) + 'px');
+        })
+        $(document).on('click', '.day_td', function() {
+            day_picker_selector.val($(this).text());
+            $('.box').css('left', '-1000px');
+        })
+
+        $(document).on('click', function(event) {
+            var $table = $('.box');
+            var $inpt = $('.container');
+            if (!$table.is(event.target) && !$table.has(event.target).length && !$inpt.is(event
+                .target) && !$inpt.has(event.target).length) {
+                $('.box').css('left', '-1000px');
+            }
+        });
+    });
 </script>

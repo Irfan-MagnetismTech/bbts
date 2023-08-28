@@ -14,6 +14,7 @@ use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\Planning;
 use App\Models\Dataencoding\Division;
 use App\Models\Dataencoding\Employee;
+use Exception;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\QueryException;
 use Modules\SCM\Entities\ScmRequisition;
@@ -33,6 +34,10 @@ class SaleModificationController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+    function __construct(private UploadService $uploadFile)
+    {
+    }
+
     public function index()
     {
         $sales = Sale::where('is_modified', 1)->get();
@@ -57,7 +62,24 @@ class SaleModificationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
+            $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale');
+            $data['work_order'] = $this->uploadFile->handleFile($request->work_order, 'sales/sale');
+            $sale = Sale::create($data);
+            $detailsData = $this->makeRow($request->all(), $sale->id);
+            $saleDetail = SaleDetail::create($detailsData);
+            $saleService = $this->makeServiceRow($request->all(), $saleDetail);
+            $saleLink = $this->makeLinkRow($request->all(), $saleDetail);
+            SaleLinkDetail::insert($saleLink);
+            SaleProductDetail::insert($saleService);
+            DB::commit();
+            return redirect()->route('sales.index')->with('success', 'Sales Created Successfully');
+        } catch (Exception $err) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $err->getMessage())->withInput();
+        }
     }
 
     /**
@@ -101,47 +123,73 @@ class SaleModificationController extends Controller
         //
     }
 
-    // public function getClientInfoForSalesModificationFR()
-    // {
-    //     $results = Client::query()
-    //         ->with('feasibility_requirement.feasibilityRequirementDetails')
-    //         ->where('client_name', 'LIKE', '%' . request('search') . '%')
-    //         ->limit(15)
-    //         ->get()
-    //         ->map(function ($item) {
-    //             return $item->feasibility_requirement->map(function ($fr) use ($item) {
-    //                 return [
-    //                     'value' => $item->client_name,
-    //                     'label' => $item->client_name . ' (' . ($fr->mq_no ?? '') . ')',
-    //                     'client_no' => $item->client_no,
-    //                     'client_id' => $item->id,
-    //                     'mq_no' => $fr->mq_no,
-    //                     'details' => $fr->feasibilityRequirementDetails->pluck('fr_no', 'fr_no')
-    //                 ];
-    //             });
-    //         })->flatten(1);
+    private function makeRow($raw, $sale_id)
+    {
+        $data = [
+            'sale_id'               => $sale_id,
+            'checked'               => (isset($raw['checked']) && isset($raw['checked'])) ? 1 : 0,
+            'fr_no'                 => $raw['fr_no'],
+            'costing_id'            => $raw['costing_id'],
+            'client_no'             => $raw['client_no'],
+            'delivery_date'         => $raw['delivery_date'],
+            'billing_address_id'    => $raw['billing_address_id'],
+            'collection_address_id' => $raw['collection_address_id'],
+            'bill_payment_date'     => $raw['bill_payment_date'],
+            'payment_status'        => $raw['payment_status'],
+            'mrc'                   => $raw['mrc'],
+            'otc'                   => $raw['otc'],
+            'total_mrc'             => $raw['total_mrc']
+        ];
+        return $data;
+    }
+
+    private function makeServiceRow($raw, $saleDetail, $includeCreatedAt = false)
+    {
+        $data = [];
+        foreach ($raw['product_name'] as $key => $value) {
+            $rowData = [
+                'product_name'      => $raw['product_name'][$key],
+                'fr_no'             => $raw['fr_no'],
+                'product_id'        => $raw['product_id'][$key],
+                'quantity'          => $raw['quantity'][$key],
+                'unit'              => $raw['unit'][$key],
+                'rate'              => $raw['rate'][$key],
+                'price'             => $raw['price'][$key],
+                'total_price'       => $raw['total_price'][$key],
+                'vat_amount'        => $raw['vat_amount'][$key],
+                'vat_percent'       => $raw['vat_percent'][$key],
+                'total_amount'      => $raw['total_amount'][$key],
+                'sale_id'           => $saleDetail['sale_id'],
+                'sale_detail_id'    => $saleDetail['id'],
+                'updated_at'        => now()
+            ];
+            if ($includeCreatedAt) {
+                $rowData['created_at'] = now();
+            }
+            $data[] = $rowData;
+        }
+        return $data;
+    }
 
 
-    //     return response()->json($results);
-
-    //     //     $items = Offer::query()
-    //     //     ->with(['client', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])
-    //     //     ->whereHas('client', function ($qr) {
-    //     //         return $qr->where('client_name', 'like', '%' . request()->search . '%');
-    //     //     })
-    //     //     ->get()
-    //     //     ->map(fn ($item) => [
-    //     //         'value'                 => $item->client->client_name,
-    //     //         'label'                 => $item->client->client_name . ' ( ' . ($item?->mq_no ?? '') . ' )',
-    //     //         'client_no'             => $item->client_no,
-    //     //         'client_id'             => $item->client->id,
-    //     //         'offer_id'              => $item->id,
-    //     //         'mq_no'                 => $item->mq_no,
-    //     //         'billing_address'       => BillingAddress::where('client_no', $item->client_no)->get(),
-    //     //         'collection_address'    => CollectionAddress::where('client_no', $item->client_no)->get(),
-    //     //         'details'               => $item->offerDetails
-    //     //     ]);
-    //     // return response()->json($items);
-    // }
-
+    private function makeLinkRow($raw, $saleDetail, $includeCreatedAt = false)
+    {
+        $data = [];
+        foreach ($raw['link_no'] as $key1 => $value) {
+            $rowData = [
+                'link_no'           => $raw['link_no'][$key1],
+                'client_no'         => $raw['client_no'],
+                'link_type'         => $raw['link_type'][$key1],
+                'fr_no'             => $raw['fr_no'],
+                'sale_id'           => $saleDetail['sale_id'],
+                'sale_detail_id'    => $saleDetail['id'],
+                'updated_at'        => now()
+            ];
+            if ($includeCreatedAt) {
+                $rowData['created_at'] = now();
+            }
+            $data[] = $rowData;
+        }
+        return $data;
+    }
 }
