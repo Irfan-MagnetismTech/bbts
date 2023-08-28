@@ -2,7 +2,14 @@
 @section('title', 'PNL Details')
 
 @section('breadcrumb-title')
-    PNL Details
+    <div class="row mb-1">
+    <div class="col-10 text-left">
+        <h4>PNL Details</h4>
+    </div>
+    <div class="col-2 text-right">
+        <a class="btn btn-outline-success" style="transition: 0.5s" href="{{ route('generate_pnl_details_pdf', $mq_no) }}">Generate Pdf</a>
+    </div>
+    </div>
 @endsection
 
 @section('style')
@@ -12,8 +19,8 @@
         }
 
         /* th{
-                                                        border: 1px solid black!important;
-                                                    } */
+              border: 1px solid black!important;
+         } */
     </style>
 @endsection
 
@@ -104,7 +111,7 @@
                                 $equipment_roi = ($equipment_investment - $details->offerDetail->equipment_offer_price) / 12;
                                 ?>
                                 <tr>
-                                    <td>Product Equipment</td> 
+                                    <td>Product Equipment</td>
                                     <td class="text-right">@formatInt($details->costing->equipment_partial_total)</td>
                                     <td class="text-right">@formatInt($details->costing->equipment_deployment_cost)</td>
                                     <td>{{ $details->costing->equipment_interest }}</td>
@@ -120,8 +127,8 @@
 
                             @php $total_link_roi = 0; @endphp
                             @foreach ($details->costing->costingLinks as $link)
-                                <?php 
-                                    $link_roi = ($link->investment - $link->offerLink->offer_otc) / 12;
+                                <?php
+                                    $link_roi = ($link->investment - $link->offerLink?->offer_otc) / 12;
                                     $total_link_roi += $link_roi;
                                     ?>
 
@@ -133,14 +140,14 @@
                                     <td>{{ $link->vat }}</td>
                                     <td>{{ $link->tax }}</td>
                                     <td class="text-right">@formatFloat($link->investment)</td>
-                                    <td class="text-right">@formatFloat($link->offerLink->offer_otc)</td>
+                                    <td class="text-right">@formatFloat($link->offerLink?->offer_otc)</td>
                                     <td class="text-right">@formatFloat($link_roi)</td>
                                     <td class="text-right">{{ $link->transmission_capacity }} X
                                         {{ $link->rate }}</td>
                                     <td class="text-right">@formatFloat($link->capacity_amount)</td>
                                 </tr>
-                            @endforeach 
-                            <?php 
+                            @endforeach
+                            <?php
                                 $total_roi = $total_link_roi + $equipment_roi;
                                 $capacity_amount = $details->costing->costingLinks->sum('capacity_amount');
                                 $monthly_cost = $total_roi + $capacity_amount + $details->costing->costingProducts->sum('operation_cost_total');

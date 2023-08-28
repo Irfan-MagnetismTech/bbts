@@ -560,7 +560,7 @@ class SaleController extends Controller
 
         return view('sales::offers.client_offer', compact('mq_no', 'offer', 'offerData', 'uniqueEquipments'));
     }
-    public function pdf($mq_no = null)
+    public function pnlSummaryPdf($mq_no = null)
     {
         $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')
             ->where('mq_no', $mq_no)->first();
@@ -571,5 +571,27 @@ class SaleController extends Controller
             'title'                      => 'PNL Summary',
         ])->stream('summary.pdf');
         return view('sales::pnl.pnl_summary_pdf', compact('feasibility_requirement'));
+    }
+    public function pnlDetailsPdf($mq_no = null)
+    {
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing.costingProducts')
+            ->where('mq_no', $mq_no)->first();
+        $feasibility_requirement?->feasibilityRequirementDetails->map(function ($item) {
+            if ($item->costing) {
+                $item->costing->costingProducts->map(function ($item) {
+                    $item->sale_product = SaleProductDetail::where('product_id', $item->product_id)->where('fr_no', $item->fr_no)->first();
+                    return $item;
+                });
+                return $item;
+            }
+            return $item;
+        });
+
+        return PDF::loadView('sales::pnl.pnl_details_pdf', ['feasibility_requirement' => $feasibility_requirement], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'PNL Details',
+        ])->stream('details.pdf');
+        return view('sales::pnl.pnl_details_pdf', compact('feasibility_requirement'));
     }
 }
