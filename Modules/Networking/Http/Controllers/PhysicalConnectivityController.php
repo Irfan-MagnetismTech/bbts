@@ -75,10 +75,9 @@ class PhysicalConnectivityController extends Controller
             //     ->first();
             $physicalConnectivityLink = PhysicalConnectivityLines::where('bbts_link_id', '!=', 'null')->pluck('bbts_link_id');
             $connectivity_links = ConnectivityLink::whereNotIn('bbts_link_id', $physicalConnectivityLink)
-                // ->latest()
+                ->latest()
                 ->get();
             // dd($connectivity_links);
-            //  $connectivity_links = ConnectivityLink::latest()->get();
         }
 
         return view('networking::physical-connectivities.create', compact('challanInfo', 'connectivity_points', 'saleDetails', 'connectivity_links'));
@@ -165,7 +164,10 @@ class PhysicalConnectivityController extends Controller
             ->where('fr_no', $physicalConnectivity->fr_no)
             ->first();
 
-        $connectivity_links = ConnectivityLink::latest()->get();
+        $physicalConnectivityLink = PhysicalConnectivityLines::where('bbts_link_id', '!=', 'null')->pluck('bbts_link_id');
+        $connectivity_links = ConnectivityLink::whereNotIn('bbts_link_id', $physicalConnectivityLink)
+            ->latest()
+            ->get();
     
 
         return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo', 'connectivity_links'));
