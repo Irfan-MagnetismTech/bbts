@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Survey List')
+@section('title', ' Final Survey List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Survey List
+   Final Survey List
 @endsection
 
 @section('style')
@@ -18,7 +18,7 @@
             class="fas fa-plus"></i></a> --}}
 @endsection
 @section('sub-title')
-    Total: {{ count($surveys) }}
+    Total: {{ count($finalSurveyDetails) }}
 @endsection
 
 
@@ -46,29 +46,18 @@
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($surveys as $key => $survey)
+                @foreach ($finalSurveyDetails as $key => $finalSurveyDetails)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $survey->lead_generation->client_name }}</td>
-                        <td>{{ $survey->client_no }}</td>
-                        <td>{{ $survey->mq_no }}</td>
-                        <td>{{ $survey->feasibilityRequirementDetails->connectivity_point ?? '' }} ({{ $survey->fr_no }})</td>
+                        <td>{{ $finalSurveyDetails->lead_generation->client_name }}</td>
+                        <td>{{ $finalSurveyDetails->client_no }}</td>
+                        <td>{{ $finalSurveyDetails->mq_no }}</td>
+                        <td>{{ $finalSurveyDetails->feasibilityRequirementDetails->connectivity_point ?? '' }} ({{ $finalSurveyDetails->fr_no }})</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('survey.show', $survey->id) }}" data-toggle="tooltip" title="Details"
+                                    <a href="{{ route('final-survey-details-show', $finalSurveyDetails->id) }}" data-toggle="tooltip" title="Final Survey Details"
                                         class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-
-                                    <a href="{{ route('survey.edit', $survey->id) }}" data-toggle="tooltip" title="Edit"
-                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-
-                                    <form action="{{ route('survey.destroy', $survey->id) }}" method="POST"
-                                        class="d-inline" id="deleteClientProfile">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
                                 </nobr>
                             </div>
                         </td>

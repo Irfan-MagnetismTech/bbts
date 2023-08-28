@@ -58,7 +58,9 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('get-products', [ProductController::class, 'getProducts'])->name('get-products');
     Route::get('add-survey/{fr_id?}', [SurveyController::class, 'create'])->name('add-survey');
     Route::get('get-client-fr-list', [FeasibilityRequirementController::class, 'getClientFrList'])->name('get-client-fr-list');
-    Route::get('get-survey-details', [SurveyController::class, 'getSurveyDetails'])->name('get-survey-details');
+    Route::get('get-survey-details-list', [SurveyController::class, 'getSurveyDetailsList'])->name('get-survey-details');
+    Route::get('final-survey-details', [SurveyController::class, 'finalSurveyDetailsList'])->name('final-survey-details-list');
+    Route::get('final-survey-details/{id}', [SurveyController::class, 'finalSurveyDetailsShow'])->name('final-survey-details-show');
     // Route::get('sales-dashboard', [SalesController::class, 'salesDashboard'])->name('sales-dashboard');
     // Route::get('sales-admin-dashboard', [SalesController::class, 'salesAdminDashboard'])->name('sales-admin-dashboard');
     Route::get('lead-generation-update-status/{id}', [LeadGenerationController::class, 'updateStatus'])->name('lead-generation.status.update');

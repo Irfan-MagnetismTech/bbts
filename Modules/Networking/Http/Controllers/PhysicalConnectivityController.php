@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Admin\Entities\ConnectivityLink;
 use Modules\Networking\Entities\PhysicalConnectivity;
+use Modules\Networking\Entities\PhysicalConnectivityLines;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\SaleDetail;
 use PharIo\Manifest\Url;
@@ -72,8 +73,12 @@ class PhysicalConnectivityController extends Controller
             // $clientInfo = FeasibilityRequirementDetail::query()
             //     ->where('fr_no', $physicalConnectivity->fr_no)
             //     ->first();
-
-            $connectivity_links = ConnectivityLink::latest()->get();
+            $physicalConnectivityLink = PhysicalConnectivityLines::where('bbts_link_id', '!=', 'null')->pluck('bbts_link_id');
+            $connectivity_links = ConnectivityLink::whereNotIn('bbts_link_id', $physicalConnectivityLink)
+                // ->latest()
+                ->get();
+            // dd($connectivity_links);
+            //  $connectivity_links = ConnectivityLink::latest()->get();
         }
 
         return view('networking::physical-connectivities.create', compact('challanInfo', 'connectivity_points', 'saleDetails', 'connectivity_links'));
@@ -161,6 +166,7 @@ class PhysicalConnectivityController extends Controller
             ->first();
 
         $connectivity_links = ConnectivityLink::latest()->get();
+    
 
         return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo', 'connectivity_links'));
     }

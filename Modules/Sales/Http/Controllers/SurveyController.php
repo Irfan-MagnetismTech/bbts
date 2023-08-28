@@ -190,4 +190,19 @@ class SurveyController extends Controller
         }
         return response()->json(['message' => 'No Survey Found']);
     }
+
+    public function finalSurveyDetailsList()
+    {
+        $finalSurveyDetails = Survey::with('surveyDetails.finalSurveyDetails')->latest()->get();
+        // dd($finalSurveyDetails);
+        return view('sales::survey.final-survey-details-list', compact('finalSurveyDetails'));
+    }
+    public function finalSurveyDetailsShow($id)
+    {
+        $finalSurveyDetails = Survey::with('surveyDetails.finalSurveyDetails')->findOrFail($id);
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $finalSurveyDetails ->fr_no)->first();
+        // dd($finalSurveyDetails->surveyDetails->finalSurveyDetails->link_type);
+        // dd($finalSurveyDetails->surveyDetails);
+        return view('sales::survey.final-survey-details-show', compact('finalSurveyDetails', 'connectivity_requirement'));
+    }
 }
