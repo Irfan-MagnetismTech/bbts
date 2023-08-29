@@ -55,7 +55,7 @@
                         <td>{{ $connectivity_requirement->client_no }}</td>
                         <td>{{ $connectivity_requirement->mq_no }}</td>
                         <td>{{ $connectivity_requirement->fr_no }}</td>
-                        <td>{{ $connectivity_requirement->FeasibilityRequirementDetail->connectivity_point }}</td>
+                        <td>{{ $connectivity_requirement->FeasibilityRequirementDetail->connectivity_point ?? '' }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

@@ -57,7 +57,7 @@
                         <td>{{ $plan->client_no }}</td>
                         <td>{{ $plan->mq_no }}</td>
                         <td>{{ $plan->fr_no }}</td>
-                        <td>{{ $plan->feasibilityRequirementDetail->connectivity_point }}</td>
+                        <td>{{ $plan->feasibilityRequirementDetail->connectivity_point ?? '' }}</td>
                         <td>
                             @foreach ($plan->planLinks as $link)
                                 {{ $link->method }}<br>

@@ -54,7 +54,7 @@
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $costing->lead_generation->client_name }}</td>
                         <td>{{ $costing->client_no }}</td>
-                        <td>{{ $costing->planning->feasibilityRequirementDetail->connectivity_point }}
+                        <td>{{ $costing->planning->feasibilityRequirementDetail->connectivity_point ?? '' }}
                             ({{ $costing->fr_no }})
                         </td>
                         <td>{{ number_format($costing->total_investment / $costing->month, 2) }}</td>
@@ -62,8 +62,8 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('costing.show', $costing->id) }}" data-toggle="tooltip"
-                                        title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('costing.show', $costing->id) }}" data-toggle="tooltip" title="Details"
+                                        class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
                                     <a href="{{ route('costing.edit', $costing->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
