@@ -69,6 +69,10 @@
             display: block;
             text-align: center;
             position: relative;
+            padding-top: 20px;
+        }
+        #logo h5{
+            
         }
 
 
@@ -137,6 +141,7 @@
         .col-2-5 {
             width: 20%;
             float: left;
+          
         }
         .col-4 {
             float: left;
@@ -154,14 +159,14 @@
 <body>
     <htmlpageheader name="page-header">
     <div>
-        <div id="logo" class="pdflogo">
+        <div id="logo" class="pdflogo" >
             <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
             <div class="clearfix"></div>
-            <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+            <h4>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h4>
         </div>
 
         <div>
-            <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
+            <h2 style="text-align: center; background-color: #98acc3; width: 20%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
                 {{$billData->bill_type}}</h2>
         </div>
     </div>
