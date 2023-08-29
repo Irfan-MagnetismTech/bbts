@@ -74,11 +74,11 @@
                 </td>
                 <td>
                     <input type="text" name="bandwidth[]" class="form-control bandwidth"
-                        autocomplete="off" value="{{ $line->bandwidth }}">
+                        autocomplete="off" value="{{ @$line->bandwidth }}">
                 </td>
                 <td>
                     <input type="text" name="remarks[]" class="form-control remarks"
-                        autocomplete="off" value="{{ $line->remarks }}">
+                        autocomplete="off" value="{{ @$line->remarks }}">
                 </td>
                 ${(row_index > 0) ? 
                 `<td>

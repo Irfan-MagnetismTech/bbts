@@ -4,7 +4,6 @@ namespace Modules\Networking\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Modules\Admin\Entities\Ip;
-use Modules\Admin\Entities\Bank;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\SaleDetail;
@@ -36,6 +35,7 @@ class LogicalConnectivityInternetController extends Controller
             ->whereSaleIdAndFrNo(request()->get('sale_id'), request()->get('fr_no'))
             ->with('client', 'frDetails')
             ->first();
+            // dd($saleDetalis);
 
         @$physicalConnectivityData = PhysicalConnectivity::query()
             ->whereSaleIdAndFrNo($saleDetalis->sale_id, $saleDetalis->fr_no)

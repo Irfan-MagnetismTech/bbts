@@ -73,9 +73,9 @@
                     <label for="select2">Connectivity Point And FR</label>
                     <input type="text" class="form-control" id="connectivity_point1" name="connectivity_point1"
                         aria-describedby="connectivity_point1"
-                        value="{{ @$physicalConnectivityData->connectivity_point . '_' . @$physicalConnectivityData->fr_no }}"
+                        value="{{ @$physicalConnectivityData->frDetails->connectivity_point . '_' . @$physicalConnectivityData->frDetails->fr_no }}"
                         readonly>
-                    <input type="hidden" name="fr_no" id="fr_no" value="{{ @$physicalConnectivityData->fr_no }}">
+                    <input type="hidden" name="fr_no" id="fr_no" value="{{ @$physicalConnectivityData->frDetails->fr_no }}">
                 </div>
 
                 <div class="form-group col-3 contact_person">
@@ -282,53 +282,54 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
-                    @forelse (@$physicalConnectivityData?->lines as $key => $line)
-                        <tr>
-                            <td>
-                                <input type="text" name="link_type[]" class="form-control link_type"
-                                    autocomplete="off" value="{{ $line->link_type }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="method[]" class="form-control method" autocomplete="off"
-                                    value="{{ $line->method }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
-                                    value="{{ $line->pop }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
-                                    value="{{ $line->ldp }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="bbts_link_id[]" class="form-control bbts_link_id" autocomplete="off"
-                                    value="{{ $line->bbts_link_id }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="device_ip[]" class="form-control device_ip"
-                                    autocomplete="off" value="{{ $line->device_ip }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="port[]" class="form-control port" autocomplete="off"
-                                    value="{{ $line->port }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
-                                    value="{{ $line->vlan }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="connectivity_details[]"
-                                    class="form-control connectivity_details" autocomplete="off"
-                                    value="{{ $line->connectivity_details }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control comment" autocomplete="off"
-                                    value="{{ $line->comment }}" readonly>
-                            </td>
-                        </tr>
-                    @empty
-                    @endforelse
+                    @if (!empty($physicalConnectivityData))                  
+                        @forelse (@$physicalConnectivityData?->lines as $key => $line)
+                            <tr>
+                                <td>
+                                    <input type="text" name="link_type[]" class="form-control link_type"
+                                        autocomplete="off" value="{{ $line->link_type }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="method[]" class="form-control method" autocomplete="off"
+                                        value="{{ $line->method }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
+                                        value="{{ $line->pop }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
+                                        value="{{ $line->ldp }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="bbts_link_id[]" class="form-control bbts_link_id" autocomplete="off"
+                                        value="{{ $line->bbts_link_id }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="device_ip[]" class="form-control device_ip"
+                                        autocomplete="off" value="{{ $line->device_ip }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="port[]" class="form-control port" autocomplete="off"
+                                        value="{{ $line->port }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
+                                        value="{{ $line->vlan }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="connectivity_details[]"
+                                        class="form-control connectivity_details" autocomplete="off"
+                                        value="{{ $line->connectivity_details }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control comment" autocomplete="off"
+                                        value="{{ $line->comment }}" readonly>
+                                </td>
+                            </tr>
+                        @empty
+                        @endforelse
+                    @endif
                 </tbody>
             </table>
 
