@@ -110,8 +110,7 @@
                 </div>
             </div>
 
-            <h5 class="text-center p-2">INTERNET SERVICE</h5>
-
+            <h5 class="text-center p-2">INTERNET SERVICE</h5> 
             <div class="container mb-2">
                 <div class="row justify-content-end">
                     <div class="col-auto">
