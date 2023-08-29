@@ -31,6 +31,7 @@ return new class extends Migration
             $table->float('total', 8, 2)->nullable();
             $table->float('vat_percent', 8, 2)->default(0);
             $table->float('vat_amount', 8, 2)->default(0);
+            $table->float('total_amount', 8, 2)->default(0);
             $table->date('delivery_date')->nullable();
             $table->timestamps();
         });
