@@ -82,7 +82,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td>Address</td>0
+                            <td>Address</td>
                             <td>
                                 <input type="text" id="address_add" name="address_add"
                                     class="modal_data form-control form-control-sm" />
