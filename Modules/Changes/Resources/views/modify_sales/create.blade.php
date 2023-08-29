@@ -4,7 +4,7 @@
 @php
     $is_old = old('client_no') ? true : false;
     $form_heading = !empty($sale->id) ? 'Update' : 'Add';
-    $form_url = !empty($sale->id) ? route('sales.update', $sale->id) : route('sales.store');
+    $form_url = !empty($sale->id) ? route('sales-modification.update', $sale->id) : route('sales-modification.store');
     $form_method = !empty($sale->id) ? 'PUT' : 'POST';
 @endphp
 
@@ -13,7 +13,8 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('sales.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('sales-modification.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -25,8 +26,8 @@
 @section('content')
     <style>
         /* #calculation_table.table-bordered td, .table-bordered th{
-                                                                                                                                                                                            border: 1px solid gainsboro!important;
-                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                border: 1px solid gainsboro!important;
+                                                                                                                                                                                                                            } */
         #dv {
             background-color: #f6f9f9 !important;
             color: #191818 !important;
@@ -44,6 +45,8 @@
 
         .day_td {
             cursor: pointer;
+            padding: 5px;
+            border: 1px solid yellowgreen;
         }
 
         .day_td:hover {
@@ -70,6 +73,10 @@
             padding-right: 4px !important;
             color: white;
             font-weight: 500;
+        }
+
+        .bg-secondary {
+            background-color: #e5f0fc !important;
         }
     </style>
 
@@ -145,15 +152,15 @@
                                 </div>
                                 <div class="col-9">
                                     @foreach ($costing->costingLinks as $key => $link)
-                                        <input type="hidden" name="link_no[${indx}][]"value="{{ $link->link_no }}">
-                                        <input type="hidden" name="link_type[${indx}][]"value="{{ $link->link_type }}">
+                                        <input type="hidden" name="link_no[]"value="{{ $link->link_no }}">
+                                        <input type="hidden" name="link_type[]"value="{{ $link->link_type }}">
                                     @endforeach
                                 </div>
                             </div>
                             <div class="row">
                                 <x-input-box colGrid="3" name="delivery_date" value="{{ $delivery_date ?? '' }}"
                                     label="Delivery Date" class="date" />
-                                <div class="col-xl-2 col-md-2">
+                                <div class="col-xl-3 col-md-3">
                                     <div class="input-group input-group-sm input-group-primary">
                                         <select name="billing_address_id" class="form-control">
 
@@ -167,9 +174,9 @@
                                                 onClick="ShowModal('billing','{{ $costing->fr_no }}',this)"></i></label>
                                     </div>
                                 </div>
-                                <div class="col-xl-2 col-md-2">
+                                <div class="col-xl-3 col-md-3">
                                     <div class="input-group input-group-sm input-group-primary">
-                                        <select name="collection_address_id[${indx}]" class="form-control">
+                                        <select name="collection_address_id" class="form-control">
                                             @foreach ($costing->client->collectionAddress as $collection_address)
                                                 <option value="{{ $collection_address->id }}">
                                                     {{ $collection_address->address }}</option>
@@ -279,15 +286,18 @@
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="vat_amount[${indx}][]"
+                                                        <input type="text" name="vat_amount[]"
                                                             class="form-control text-right vat_amount" readonly
                                                             value="{{ $costing_product->product_vat_amount }}">
+                                                        <input type="hidden" name="vat_percent[]"
+                                                            class="form-control text-right vat_percent" readonly
+                                                            value="{{ $costing_product->product_vat }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="vat_amount[${indx}][]"
-                                                            class="form-control text-right vat_amount" readonly
+                                                        <input type="text" name="total_amount[]"
+                                                            class="form-control text-right total_amount" readonly
                                                             value="{{ $total_amount }}">
                                                     </div>
                                                 </td>
@@ -300,21 +310,21 @@
                                             <td style="text-align: center;">Total MRC</td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc[${indx}]"
+                                                    <input type="text" name="total_mrc"
                                                         class="form-control text-right total_mrc" readonly
                                                         value="{{ $total }}">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="sub_total_vat[${indx}]"
+                                                    <input type="text" name="sub_total_vat"
                                                         class="form-control text-right sub_total_vat" readonly
                                                         value="{{ $sub_total_vat }}">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="sub_total_amount[${indx}]"
+                                                    <input type="text" name="sub_total_amount"
                                                         class="form-control text-right sub_total_amount" readonly
                                                         value="{{ $sub_total_amount }}">
                                                 </div>
