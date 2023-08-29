@@ -41,7 +41,7 @@
                             </td>
                             <td>
                                 <input type="text" class="form-control vendor"
-                                    value="{{ $line->connectivityLink->vendor->name }}">
+                                    value="{{ $line->connectivityLink->vendor->name ?? ''}}">
                             </td>
                             <td>
                                 <input type="text" class="form-control bts_pop" value="{{ $line->pop }}">
