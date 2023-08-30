@@ -367,17 +367,6 @@
                                             <td class="running_vendor_pop" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Link Availability Status</th>
-                                            <td class="availability_status" style="width:30%">
-                                                <input type="text" name="availability_status_1"
-                                                    id="availability_status"
-                                                    class="form-control form-control-sm availability_status_1"
-                                                    style="height: 25px !important" value="">
-                                            </td>
-                                            <th>Connecting POP Running Vendor Capacity</th>
-                                            <td class="running_vendor_capacity" style="width:30%"></td>
-                                        </tr>
-                                        <tr>
                                             <th>Link Connectivity POP</th>
                                             <td class="link_connecting_pop" style="width:30%">
                                                 <input type="text" name="link_connecting_pop_1"
@@ -387,8 +376,8 @@
                                                 <input type="hidden" name="link_connecting_pop_id_1"
                                                     id="link_connecting_pop_id" class="link_connecting_pop_id_1">
                                             </td>
-                                            <th>Zone Area Running NTTN Vendor</th>
-                                            <td class="nttn_vendor_zone" style="width:30%"></td>
+                                            <th>Connecting POP Running Vendor Capacity</th>
+                                            <td class="running_vendor_capacity" style="width:30%"></td>
                                         </tr>
                                         <tr>
                                             <th>Last Mile Connectivity Method</th>
@@ -398,8 +387,8 @@
                                                     class="form-control form-control-sm last_mile_connectivity_method_1"
                                                     style="height: 25px !important" value="">
                                             </td>
-                                            <th>Zone Area Running NTTN BW</th>
-                                            <td class="running_nttn_bw" style="width:30%"></td>
+                                            <th>Zone Area Running NTTN Vendor</th>
+                                            <td class="nttn_vendor_zone" style="width:30%"></td>
                                         </tr>
                                         <tr>
                                             <th>Last Connectivity Point Latitute</th>
@@ -409,8 +398,8 @@
                                                     class="form-control form-control-sm connectivity_lat_1"
                                                     style="height: 25px !important" value="">
                                             </td>
-                                            <th>Connectivity Route</th>
-                                            <td class="connectivity_route" style="width:30%"></td>
+                                            <th>Zone Area Running NTTN BW</th>
+                                            <td class="running_nttn_bw" style="width:30%"></td>
                                         </tr>
                                         <tr>
                                             <th>Last Connectivity Point Longitute</th>
@@ -420,6 +409,8 @@
                                                     class="form-control form-control-sm connectivity_long_1"
                                                     style="height: 25px !important" value="">
                                             </td>
+                                            <th>Connectivity Route</th>
+                                            <td class="connectivity_route" style="width:30%"></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -623,6 +614,10 @@
                         $(event.target).closest('.main_link').find('input[name^="link_vender_id_"]').val(data
                             ?.vendor
                             ?.id);
+                        //set existing_infrastructure_ select box value
+                        $(event.target).closest('.main_link').find('select[name^="existing_infrastructure_"]').val(
+                            data
+                            ?.status);
                         $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(data
                             .status);
                         $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_"]').val(data

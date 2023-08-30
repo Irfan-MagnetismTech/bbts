@@ -35,7 +35,7 @@ class SaleController extends Controller
     {
     }
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource.-
      * @return Renderable
      */
     public function index()
@@ -249,7 +249,7 @@ class SaleController extends Controller
             ->get()
             ->map(fn ($item) => [
                 'value'                 => $item->client->client_name,
-                'label'                 => $item->client->client_name . ' ( ' . ($item?->mq_no ?? '') . ' )',
+                'label'                 => $item->client->client_name . ' ( ' . ($item->mq_no ?? '') . ' )',
                 'client_no'             => $item->client_no,
                 'client_id'             => $item->client->id,
                 'offer_id'              => $item->id,
@@ -269,9 +269,9 @@ class SaleController extends Controller
             ->get()
             ->map(fn ($item) => [
                 'value'        => $item->mq_no,
-                'label'        => $item->mq_no . '( ' . ($item?->client?->client_name ?? '') . ' )',
+                'label'        => $item->mq_no . '( ' . ($item->client->client_name ?? '') . ' )',
                 'client_no'    => $item->client_no,
-                'client_name'  => $item?->client?->client_name,
+                'client_name'  => $item->client->client_name ?? '',
                 'offer_id'     => $item->id,
                 'mq_no'        => $item->mq_no
             ]);
