@@ -6,11 +6,10 @@
     $form_heading = !empty($requirement_modification->id) ? 'Update' : 'Add';
     $form_url = !empty($requirement_modification->id) ? route('survey-modification.update', $requirement_modification->id) : route('survey-modification.store');
     $form_method = !empty($requirement_modification->id) ? 'PUT' : 'POST';
-
-    if (!empty($survey)) { 
+    
+    if (!empty($survey)) {
         $selected_vendors = $survey->surveyDetails->pluck('vendor')->toArray();
-     
-    } 
+    }
     $selected_vendors = $is_old ? old('vendor') : $selected_vendors ?? [];
     $methods = $is_old ? old('method') : $methods ?? [];
 @endphp
@@ -379,7 +378,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="input-group input-group-sm input-group-primary"> 
+                                            <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="existing_vendor_name[]"
                                                     class="form-control text-center existing_vendor_name" readonly
                                                     value="{{ $value->connectivityLink->vendor->name ?? '' }}">
@@ -462,13 +461,14 @@
                                 <th>Remarks</th>
                             </thead>
                             <tbody class="requirementBody">
+                                {{-- @dd($connectivity_requirement->connectivityRequirementDetails); --}}
                                 @foreach ($connectivity_requirement->connectivityRequirementDetails as $key => $value)
                                     @php
                                         $type = ['Primary', 'Secondary', 'Tertiary'];
                                         $option_type = ['Option 1', 'Option 2', 'Option 3'];
                                     @endphp
                                     <tr class="requirement_details_row">
-                                        @if (!in_Array($value->link_type, $existingConnections->pluck('link_type')->toArray()))
+                                        {{-- @if (!in_Array($value->link_type, $existingConnections->pluck('link_type')->toArray())) --}}
                                             <td>
                                                 <select name="new_link_type[]" class="form-control new_link_type">
                                                     @foreach ($type as $key => $val)
@@ -497,21 +497,22 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="method[]" id="method" class="form-control">
                                                         <option value="">Select Method</option>
-                                                        <option value="Fiber">Fiber</option>
-                                                        <option value="Radio">Radio</option>
-                                                        <option value="GSM">GSM</option>
+                                                        <option value="Fiber" @selected($value->method === 'Fiber')>Fiber
+                                                        </option>
+                                                        <option value="Radio" @selected($value->method === 'Radio')>Radio
+                                                        </option>
+                                                        <option value="GSM" @selected($value->method === 'GSM')>GSM
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </td>
                                             <td>
                                                 {{-- @dd($selected_vendors); --}}
-                                                <div class="input-group input-group-sm input-group-primary"> 
+                                                <div class="input-group input-group-sm input-group-primary">
                                                     <select name="vendor[]" id="vendor" class="form-control">
                                                         <option value="">Select Vendor</option>
                                                         @foreach ($vendors as $vendor)
-                                                            <option value="{{ $vendor->id }}"
-                                                                {{-- {{ $selected_vendors[$key] == $vendor->id ? 'selected' : '' }} --}}
-                                                                >
+                                                            <option value="{{ $vendor->id }}" {{-- {{ $selected_vendors[$key] == $vendor->id ? 'selected' : '' }} --}}>
                                                                 {{ $vendor->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -522,7 +523,8 @@
                                                     <select name="pop[]" class="form-control pop" title="">
                                                         <option value="">Select POP</option>
                                                         @foreach ($pops as $pop)
-                                                            <option value="{{ $pop->id }}">{{ $pop->name }}</option>
+                                                            <option value="{{ $pop->id }}">{{ $pop->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                     <div class="custom-tooltip">
@@ -532,8 +534,8 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="ldp[]" id="ldp" class="form-control"
-                                                    placeholder="LDP">
+                                                    <input type="text" name="ldp[]" id="ldp"
+                                                        class="form-control" placeholder="LDP">
                                                 </div>
                                             </td>
                                             <td>
@@ -558,7 +560,7 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="new_current_capacity[]"
                                                         class="form-control text-right new_current_capacity"
-                                                        value="{{ $value->connectivity_capacity }}">
+                                                        >
 
                                                 </div>
                                             </td>
@@ -568,7 +570,7 @@
                                                         class="form-control text-right new_remarks" value="">
                                                 </div>
                                             </td>
-                                        @endif
+                                        {{-- @endif --}}
                                     </tr>
                                 @endforeach
                             </tbody>
