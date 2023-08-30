@@ -35,6 +35,8 @@ class ModifiedSurveyController extends Controller
      */
     public function create($id)
     {
+        $pops = Pop::get();
+        $vendors = Vendor::get(); 
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('id', $id)->first();
         $current_qty = $connectivity_requirement->connectivityProductRequirementDetails;
         $previous_qty = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('fr_no', $connectivity_requirement->fr_no)->latest()->first()->connectivityProductRequirementDetails;
@@ -45,7 +47,7 @@ class ModifiedSurveyController extends Controller
             ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
                 return $qr->where('fr_no', $connectivity_requirement->fr_no);
             })->get();
-        return view('changes::modified_servey.create', compact('connectivity_requirement', 'grouped_qty', 'grouped_previous_qty', 'grouped_current_qty', 'existingConnections'));
+        return view('changes::modified_servey.create', compact('pops','vendors','connectivity_requirement', 'grouped_qty', 'grouped_previous_qty', 'grouped_current_qty', 'existingConnections'));
     }
 
     /**
@@ -84,7 +86,7 @@ class ModifiedSurveyController extends Controller
                 $connectivity_requirement_details['long'] = $request->new_long[$key];
                 $connectivity_requirement_details['distance'] = $request->new_distance[$key];
                 $connectivity_requirement_details['current_capacity'] = $request->new_current_capacity[$key];
-                $connectivity_requirement_details['remarks'] = $request->survey_remarks[$key];
+                // $connectivity_requirement_details['remarks'] = $request->survey_remarks[$key];
                 SurveyDetail::create($connectivity_requirement_details);
             }
             DB::commit();

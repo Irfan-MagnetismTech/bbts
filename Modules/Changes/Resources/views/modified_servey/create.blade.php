@@ -6,6 +6,13 @@
     $form_heading = !empty($requirement_modification->id) ? 'Update' : 'Add';
     $form_url = !empty($requirement_modification->id) ? route('survey-modification.update', $requirement_modification->id) : route('survey-modification.store');
     $form_method = !empty($requirement_modification->id) ? 'PUT' : 'POST';
+
+    if (!empty($survey)) { 
+        $selected_vendors = $survey->surveyDetails->pluck('vendor')->toArray();
+     
+    } 
+    $selected_vendors = $is_old ? old('vendor') : $selected_vendors ?? [];
+    $methods = $is_old ? old('method') : $methods ?? [];
 @endphp
 
 @section('breadcrumb-title')
@@ -372,7 +379,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="input-group input-group-sm input-group-primary">
+                                            <div class="input-group input-group-sm input-group-primary"> 
                                                 <input type="text" name="existing_vendor_name[]"
                                                     class="form-control text-center existing_vendor_name" readonly
                                                     value="{{ $value->connectivityLink->vendor->name ?? '' }}">
@@ -446,7 +453,8 @@
                                 <th>Existing / New</th>
                                 <th>Method</th>
                                 <th>Vendor</th>
-                                <th>BTS/POP/LDP</th>
+                                <th>POP</th>
+                                <th>LDP</th>
                                 <th>Lat</th>
                                 <th>Long</th>
                                 <th>Distance</th>
@@ -478,31 +486,54 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_status[]"
-                                                        class="form-control text-center new_status" value="New">
+                                                    <select name="status[]" id="status" class="form-control">
+                                                        <option value="">Select Status</option>
+                                                        <option value="Existing">Existing</option>
+                                                        <option value="New">New</option>
+                                                    </select>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_method[]"
-                                                        class="form-control text-right new_method"
-                                                        value="{{ $value->method }}">
+                                                    <select name="method[]" id="method" class="form-control">
+                                                        <option value="">Select Method</option>
+                                                        <option value="Fiber">Fiber</option>
+                                                        <option value="Radio">Radio</option>
+                                                        <option value="GSM">GSM</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{-- @dd($selected_vendors); --}}
+                                                <div class="input-group input-group-sm input-group-primary"> 
+                                                    <select name="vendor[]" id="vendor" class="form-control">
+                                                        <option value="">Select Vendor</option>
+                                                        @foreach ($vendors as $vendor)
+                                                            <option value="{{ $vendor->id }}"
+                                                                {{-- {{ $selected_vendors[$key] == $vendor->id ? 'selected' : '' }} --}}
+                                                                >
+                                                                {{ $vendor->name }}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_vendor_name[]"
-                                                        class="form-control text-right new_vendor_name"
-                                                        value="{{ $value->vendor->name ?? '' }}">
-                                                    <input type="hidden" name="new_vendor_id[]"
-                                                        class="form-control text-right new_vendor_id"
-                                                        value="{{ $value->vendor_id ?? ''}}">
+                                                    <select name="pop[]" class="form-control pop" title="">
+                                                        <option value="">Select POP</option>
+                                                        @foreach ($pops as $pop)
+                                                            <option value="{{ $pop->id }}">{{ $pop->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    <div class="custom-tooltip">
+                                                        {{-- <span class="custom-tooltip-text">Tooltip content</span> --}}
+                                                    </div>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_bts[]"
-                                                        class="form-control text-center new_bts" value="">
+                                                    <input type="text" name="ldp[]" id="ldp" class="form-control"
+                                                    placeholder="LDP">
                                                 </div>
                                             </td>
                                             <td>
