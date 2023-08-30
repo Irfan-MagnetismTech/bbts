@@ -57,42 +57,39 @@
                 <div class="card-body">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <h5 class="text-center">Client Information</h5>
-                            <hr />
+                            <h5 class="text-center">Client Information</h5> 
                             <table class="table custom_table table-bordered" style="font-size: 12px;">
                                 <tr>
                                     <th class="table_label">Client Name</th>
-                                    <td>{{ $lead_generation->client_name }}</td>
-                                    <th class="table_label">Address</th>
-                                    <td>{{ $lead_generation->address }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Division</th>
-                                    <td>{{ $lead_generation->division->name ?? '' }}</td>
-                                    <th class="table_label">District</th>
-                                    <td>{{ $lead_generation->district->name ?? '' }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Thana</th>
-                                    <td>{{ $lead_generation->thana->name ?? '' }}</td>
+                                    <td>{{ $lead_generation->client_name }}</td> 
                                     <th class="table_label">Landmark</th>
                                     <td>{{ $lead_generation->landmark }}</td>
-                                </tr>
+                                    <th class="table_label">Division</th>
+                                    <td>{{ $lead_generation->division->name ?? '' }}</td>
+                                </tr> 
                                 <tr>
-                                    <th class="table_label">Lat-Long</th>
-                                    <td>{{ $lead_generation->lat_long }}</td>
                                     <th class="table_label">Contact Person</th>
                                     <td>{{ $lead_generation->contact_person }}</td>
+                                    <th class="table_label">Lat-Long</th>
+                                    <td>{{ $lead_generation->lat }} - {{ $lead_generation->long }}</td> 
+                                    <th class="table_label">District</th>
+                                    <td>{{ $lead_generation->district->name ?? '' }}</td> 
+                                    
+                                    
+                                    
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact No</th>
                                     <td>{{ $lead_generation->contact_no }}</td>
-                                    <th class="table_label">Email</th>
-                                    <td>{{ $lead_generation->email }}</td>
-                                </tr>
-                                <tr>
                                     <th class="table_label">Website</th>
                                     <td>{{ $lead_generation->website }}</td>
+                                    <th class="table_label">Thana</th>
+                                    <td>{{ $lead_generation->thana->name ?? '' }}</td> 
+                                    
+                                </tr>
+                                <tr>
+                                    <th class="table_label">Email</th>
+                                    <td>{{ $lead_generation->email }}</td>
                                     <th class="table_label">Document</th>
                                     <td>
                                         @if ($lead_generation->document)
@@ -100,8 +97,10 @@
                                                 target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
                                                     class="fas fa-eye"></i></a>
                                         @endif
-                                    </td>
-                                </tr>
+                                    </td> 
+                                    <th class="table_label">Address</th>
+                                    <td>{{ $lead_generation->address }}</td>
+                                </tr> 
                             </table>
                         </div>
                     </div>

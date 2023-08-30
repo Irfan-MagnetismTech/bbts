@@ -23,11 +23,14 @@ class CCScheduleController extends Controller
     public function index()
     {
         $salesDetails = SaleDetail::query()
-            ->with('sale', 'client', 'frDetails', 'ccSchedule')
+            ->with('sale', 'client', 'frDetails', 'ccSchedule') 
+            ->whereHas('sale', function ($query) {
+                $query->where('management_approved_by', '!=', null);
+            })
             ->latest()
             ->get()
             ->map(function ($saleDetail) {
-                $saleDetail->ccSchedule->approved_type = explode(',', $saleDetail->ccSchedule->approved_type);
+                // $saleDetail->ccSchedule->approved_type = explode(',', $saleDetail->ccSchedule->approved_type);
                 return $saleDetail;
             });
 
@@ -48,7 +51,7 @@ class CCScheduleController extends Controller
             ->whereFrNo(request()->fr_no)
             ->latest()
             ->first();
-
+        // dd($salesDetails);
 
         $ccSchedules = CCSchedule::query()
             ->whereClientNoAndFrNo($salesDetails->client_no, $salesDetails->fr_no)

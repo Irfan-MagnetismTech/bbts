@@ -61,6 +61,12 @@
                 </li>
             </ul>
         </li>
+        <li class="pcoded-submenu {{ request()->routeIs(['cc-schedules.*']) ? 'active pcoded-trigger' : null }}">
+            <a href="{{ route('cc-schedules.index') }}">
+                <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>            
+                <span>Activition Proccess</span>
+            </a>
+        </li>
     </ul>
 <div class="pcoded-navigation-label text-uppercase bg-primary">Networking</div>
 <ul class="pcoded-item pcoded-left-item">

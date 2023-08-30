@@ -44,7 +44,7 @@
                     <th>New/Existing</th>
                     <th>Delivery Date</th>
                     <th>Commissioning Date</th>
-                    <th>Status</th>
+                    <th>PNL Approved</th>
                     <th>Connectivity Status</th>
                     <th>Action</th>
                 </tr>
@@ -61,7 +61,8 @@
                         <td>{{ $details->delivery_date }}</td>
                         <td></td>
                         <td class="noWrapStyle">
-                            <span class="checkbox-fade">
+                            {{ $details->sale->approval_date }}
+                            {{-- <span class="checkbox-fade">
                                 <label>
                                     <input type="checkbox" disabled @checked($details->sale->management_approval == 'Approved')>
                                     <span class="cr">
@@ -69,13 +70,13 @@
                                     </span>
                                     <span class="font-weight-bold">PNL</span>
                                 </label>
-                            </span>
+                            </span> --}}
 
-                            <x-checkbox arrayValue="nttn" label="NTTN/Service" :sale="$details" />
+                            {{-- <x-checkbox arrayValue="nttn" label="NTTN/Service" :sale="$details" />
                             <x-checkbox arrayValue="cr" label="Client" :sale="$details" />
                             <x-checkbox arrayValue="er" label="Equipment" :sale="$details" />
                             <x-checkbox arrayValue="fo" label="Field Ops" :sale="$details" />
-                            <x-checkbox arrayValue="schedule" label="Schedule" :sale="$details" />
+                            <x-checkbox arrayValue="schedule" label="Schedule" :sale="$details" /> --}}
                         </td>
                         <td class="noWrapStyle">
                             <span class="checkbox-fade">
