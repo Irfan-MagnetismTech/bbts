@@ -13,6 +13,7 @@ use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Networking\Entities\BandwidthDestribution;
 use Modules\Networking\Entities\CCSchedule;
+use Modules\Networking\Entities\Connectivity;
 
 class CCScheduleController extends Controller
 {
@@ -23,17 +24,23 @@ class CCScheduleController extends Controller
     public function index()
     {
         $salesDetails = SaleDetail::query()
-            ->with('sale', 'client', 'frDetails', 'ccSchedule') 
+            ->with('sale', 'client', 'frDetails', 'ccSchedule')
             ->whereHas('sale', function ($query) {
                 $query->where('management_approved_by', '!=', null);
             })
             ->latest()
             ->get()
             ->map(function ($saleDetail) {
-                // $saleDetail->ccSchedule->approved_type = explode(',', $saleDetail->ccSchedule->approved_type);
+                $saleDetail['physical_connectivity'] = PhysicalConnectivity::query()
+                    ->where('fr_no', $saleDetail->fr_no)->where('is_modified', '0')
+                    ->first() ? true : false;
+                $saleDetail['logical_connectivity'] = LogicalConnectivity::query()
+                    ->where('fr_no', $saleDetail->fr_no)->where('is_modified', '0')
+                    ->first() ? true : false;
+                $saleDetail['commissioning_date'] = $saleDetail->connectivities->commissioning_date ?? null;
+                $saleDetail['billing_date'] = $saleDetail->connectivities->billing_date ?? null;
                 return $saleDetail;
             });
-
         return view('networking::cc-schedules.index', compact('salesDetails'));
     }
 
@@ -134,4 +141,5 @@ class CCScheduleController extends Controller
     {
         //
     }
+
 }
