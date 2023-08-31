@@ -8,10 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\BbtsGlobalService;
+use Carbon\Carbon;
 use Modules\Billing\Entities\BillGenerate;
 use Modules\Sales\Entities\BillingAddress;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Billing\Entities\BillingOtcBill;
+use Modules\Networking\Entities\Connectivity;
+use Modules\Sales\Entities\Sale;
 
 class BillGenerateController extends Controller
 {
@@ -147,5 +150,32 @@ class BillGenerateController extends Controller
             }
         }
         return $row;
+    }
+
+    public function updateBillingDate(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $connectivity = Connectivity::find($request->connectivity_id);
+            $connectivity->billing_date = Carbon::parse($request->billing_date)->format('Y-m-d');
+            $connectivity->save();
+            DB::commit();
+            $sale = Sale::with('saleDetails')->where('id', $request->sale_id)->first();
+            $data = $request->only('client_no', 'date', 'billing_address_id', 'bill_type', 'amount');
+            $data = [
+                'client_no' => $sale->client_no,
+                'date' => Carbon::parse($request->billing_date)->format('Y-m-d'),
+                'billing_address_id' => $sale->saleDetails[0]->billing_address_id,
+                'bill_type' => 'Broken Days Bill',
+                'amount' => $sale->grand_total,
+                'user_id' => Auth()->id(),
+                'bill_no' => $this->billNo,
+            ];
+
+            return response()->json(['success' => true, 'message' => 'Billing date updated successfully.']);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 }

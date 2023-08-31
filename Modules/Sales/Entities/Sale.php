@@ -57,6 +57,16 @@ class Sale extends Model
         return $this->hasMany(SaleProductDetail::class, 'sale_id', 'id');
     }
 
+    public function physicalConnectivity()
+    {
+        return $this->hasMany(PhysicalConnectivity::class, 'sale_id', 'id');
+    }
+
+    public function logicalConnectivity()
+    {
+        return $this->hasMany(LogicalConnectivity::class, 'sale_id', 'id');
+    }
+
     protected static function booted(): void
     {
         static::deleting(function (Sale $sale) {
