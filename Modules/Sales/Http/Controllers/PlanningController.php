@@ -202,7 +202,7 @@ class PlanningController extends Controller
             if ($linkType !== null) {
                 $planLinkData = [
                     'link_type' => $linkType,
-                    'link_no' => request("link_no_{$i}"),
+                    'link_no' => request("plan_link_no_{$i}"),
                     'existing_infrastructure' => request("existing_infrastructure_{$i}"),
                     'existing_infrastructure_link' => request("existing_infrastructure_link_{$i}"),
                     'option' => request("option_{$i}"),

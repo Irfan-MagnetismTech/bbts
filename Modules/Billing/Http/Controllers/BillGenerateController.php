@@ -172,10 +172,32 @@ class BillGenerateController extends Controller
                 'bill_no' => $this->billNo,
             ];
 
+            $bill_generate = BillGenerate::create($data);
+            $getRow = $this->getBrokenDaysRow($sale->saleProductDetails, $request->billing_date);
+            $bill_generate->lines()->createMany($getRow);
+
             return response()->json(['success' => true, 'message' => 'Billing date updated successfully.']);
         } catch (Exception $e) {
             DB::rollBack();
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
+    }
+
+    public function getBrokenDaysRow($saleProductDetails, $billing_date)
+    {
+        $row = [];
+        foreach ($saleProductDetails as $key => $value) {
+            $row[] = [
+                'fr_no' => $value->fr_no,
+                'otc_bill_id' => $value->otc_bill_id,
+                'particular' => $value->product_name,
+                'total_amount' => $value->total_price,
+                'net_amount' => $value->net_amount,
+                'billing_address_id' => $value->billing_address_id,
+                'bill_type' => 'Broken Days Bill',
+                'billing_date' => Carbon::parse($billing_date)->format('Y-m-d'),
+            ];
+        }
+        return $row;
     }
 }
