@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Http\Requests\FeasibilityRequirementRequest;
+use App\Exports\FeasibilityRequirementExport;
+use App\Imports\FeasibilityRequirementImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FeasibilityRequirementController extends Controller
 {
@@ -44,8 +47,12 @@ class FeasibilityRequirementController extends Controller
 
     public function store(FeasibilityRequirementRequest $request)
     {
+        // dd($request->all());
         DB::beginTransaction();
-
+        if ($request->file) {
+            $additionalData = $request;
+            Excel::import(new FeasibilityRequirementImport($additionalData), $request->file('file'));
+        }
         try {
             $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id');
             $data['user_id'] = auth()->user()->id;
@@ -89,7 +96,7 @@ class FeasibilityRequirementController extends Controller
 
             DB::commit();
 
-            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
+            return redirect()->route('feasibility-requirement.create')->with('success', 'Feasibility Requirement Created Successfully');
         } catch (\Exception $e) {
             DB::rollback();
             // Handle the exception or display an error message
@@ -204,5 +211,9 @@ class FeasibilityRequirementController extends Controller
         $feasibility_requirement = FeasibilityRequirement::where('client_id', $request->client_id)->first();
         $feasibility_requirement_details = FeasibilityRequirementDetail::select('id', 'link_name', 'fr_no')->where('feasibility_requirement_id', $feasibility_requirement->id)->get();
         return response()->json($feasibility_requirement_details);
+    }
+    public function exportFeasibilityRequirement()
+    {
+        return Excel::download(new FeasibilityRequirementExport, 'feasibility-requirement-details.xlsx');
     }
 }

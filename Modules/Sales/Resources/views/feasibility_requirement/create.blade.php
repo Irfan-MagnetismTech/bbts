@@ -13,6 +13,7 @@
 @endsection
 
 @section('breadcrumb-button')
+    <a href="{{ route('export-feasibility-requirement') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-file-excel"></i> Download template</a>
     <a href="{{ route('feasibility-requirement.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
@@ -354,11 +355,18 @@
                                 </tbody>
                             </table>
                         </div>
+                        <input type="file" name="file" class="form-control" />
                         <button
                             class="py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
-                    </div>
+
                 </div>
                 {!! Form::close() !!}
+                {{-- <div class="mt-3">
+                    <form method="POST" encType="multipart/form-data" action="{{route('import-feasibility-requirement')}}">
+                        <input type="file">
+                    </form>
+                    <button type="submit" class="mt-3 btn btn-success">Submit</button>
+                </div> --}}
             @endsection
 
             @section('script')
