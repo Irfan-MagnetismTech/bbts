@@ -197,12 +197,24 @@ class PlanningController extends Controller
 
     private function createOrUpdatePlanLinks($request, $plan)
     {
+
         for ($i = 1; $i <= $request->total_key; $i++) {
             $linkType = request("link_type_{$i}");
+            $survey = Survey::where('fr_no', $request->fr_no)
+                ->where('client_no', $request->client_no)
+                ->first();
+
+            $surveyDetails = SurveyDetail::where('survey_id', $survey->id)
+                ->where('link_type', $linkType)
+                ->where('option', request("option_{$i}"))
+                ->first();
+
+            $finalSurveyId = request("final_survey_id_{$i}");
+            $finalSurvey = FinalSurveyDetail::find($finalSurveyId);
             if ($linkType !== null) {
                 $planLinkData = [
                     'link_type' => $linkType,
-                    'link_no' => request("plan_link_no_{$i}"),
+                    'link_no' => $surveyDetails ? $surveyDetails->link_no : $finalSurvey->link_no ?? $request->fr_no . '-' . substr($linkType, 0, 1) . $i,
                     'existing_infrastructure' => request("existing_infrastructure_{$i}"),
                     'existing_infrastructure_link' => request("existing_infrastructure_link_{$i}"),
                     'option' => request("option_{$i}"),
@@ -220,18 +232,9 @@ class PlanningController extends Controller
                 $planLink->fill($planLinkData);
                 $planLink->save();
 
-                $survey = Survey::where('fr_no', $request->fr_no)
-                    ->where('client_no', $request->client_no)
-                    ->first();
-
-                $surveyDetails = SurveyDetail::where('survey_id', $survey->id)
-                    ->where('link_type', $linkType)
-                    ->where('option', request("option_{$i}"))
-                    ->first();
-
                 $finalSurveyData = [
                     'link_no' => $surveyDetails->link_no ?? '',
-                    'vendor_id' => request("link_vender_id_{$i}"),
+                    'vendor_id' => request("link_vender_id_{$i}") ?? '',
                     'link_type' => $linkType,
                     'method' => request("last_mile_connectivity_method_{$i}"),
                     'option' => request("option_{$i}"),
@@ -246,9 +249,7 @@ class PlanningController extends Controller
                     'plan_link_id' => $planLink->id,
                 ];
 
-                $finalSurveyId = request("final_survey_id_{$i}");
                 $finalSurvey = $finalSurveyId ? FinalSurveyDetail::find($finalSurveyId) : new FinalSurveyDetail();
-
                 $finalSurvey->fill($finalSurveyData);
                 $finalSurvey->save();
 
