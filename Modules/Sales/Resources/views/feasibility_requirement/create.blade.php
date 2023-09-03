@@ -98,7 +98,7 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2">Name of the Link</th>
+                                        <th rowspan="2">Name of the Link hh</th>
                                         <th rowspan="2">Agreegation Type</th>
                                         <th colspan="6">Connectivity Address</th>
                                         <th colspan="5">Local Contact Details</th>
