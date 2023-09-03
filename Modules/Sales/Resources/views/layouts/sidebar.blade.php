@@ -138,6 +138,11 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
+            <li class="{{ request()->routeIs('survey-modification.index') ? 'active' : null }}">
+                <a href="{{ route('survey-modification.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Modify List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
         </ul>
     </li>
     <li class="pcoded-hasmenu {{ request()->routeIs(['planning.*']) ? 'active pcoded-trigger' : null }}">

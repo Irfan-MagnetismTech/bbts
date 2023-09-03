@@ -6,17 +6,43 @@
     $form_heading = !empty($requirement_modification->id) ? 'Update' : 'Add';
     $form_url = !empty($requirement_modification->id) ? route('survey-modification.update', $requirement_modification->id) : route('survey-modification.store');
     $form_method = !empty($requirement_modification->id) ? 'PUT' : 'POST';
-
-    if (!empty($survey)) { 
-        $selected_vendors = $survey->surveyDetails->pluck('vendor')->toArray();
-     
-    } 
-    $selected_vendors = $is_old ? old('vendor') : $selected_vendors ?? [];
+    
     $methods = $is_old ? old('method') : $methods ?? [];
+    
 @endphp
 
 @section('breadcrumb-title')
     {{ ucfirst($form_heading) }} Survey Modification
+@endsection
+@section('style')
+    <style>
+        .custom-tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .custom-tooltip .custom-tooltip-text {
+            visibility: hidden;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 5px;
+            border-radius: 4px;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .custom-tooltip:hover .custom-tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
 @endsection
 
 @section('breadcrumb-button')
@@ -91,13 +117,7 @@
                                 <label for="date">Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        <div class="md-col-3 col-3">
-                            <div class="form-item">
-                                <input type="text" name="mq_no" id="mq_no" class="form-control"
-                                    value="{{ $connectivity_requirement->FeasibilityRequirementDetail->feasibilityRequirement->mq_no }}">
-                                <label for="mq_no">MQ ID<span class="text-danger">*</span></label>
-                            </div>
-                        </div>
+                        
                         <div class="md-col-3 col-3">
                             <div class="form-item">
                                 <input type="text" name="fr_no" id="fr_no" class="form-control fr_no"
@@ -379,7 +399,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="input-group input-group-sm input-group-primary"> 
+                                            <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="existing_vendor_name[]"
                                                     class="form-control text-center existing_vendor_name" readonly
                                                     value="{{ $value->connectivityLink->vendor->name ?? '' }}">
@@ -462,56 +482,84 @@
                                 <th>Remarks</th>
                             </thead>
                             <tbody class="requirementBody">
-                                @foreach ($connectivity_requirement->connectivityRequirementDetails as $key => $value)
-                                    @php
-                                        $type = ['Primary', 'Secondary', 'Tertiary'];
-                                        $option_type = ['Option 1', 'Option 2', 'Option 3'];
-                                    @endphp
-                                    <tr class="requirement_details_row">
-                                        @if (!in_Array($value->link_type, $existingConnections->pluck('link_type')->toArray()))
+                                {{-- @dd($connectivity_requirement->connectivityRequirementDetails); --}}
+                                @if (!empty($link_types))
+                                    @foreach ($link_types as $key => $link_type)
+                                        <tr class="feasibility_details_row">
                                             <td>
-                                                <select name="new_link_type[]" class="form-control new_link_type">
-                                                    @foreach ($type as $key => $val)
-                                                        <option value="{{ $val }}" @selected($val == $value->link_type)>
-                                                            {{ $val }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    @if (!empty($details_ids[$key]))
+                                                        <input type="hidden" name="details_id[]"
+                                                            value="{{ $details_ids[$key] }}">
+                                                    @endif
+                                                    <select name="link_type[]" id="link_type" class="form-control">
+                                                        <option value="">Select Link Type</option>
+                                                        <option value="Primary"
+                                                            {{ $link_type == 'Primary' ? 'selected' : '' }}>
+                                                            Primary</option>
+                                                        <option value="Secondary"
+                                                            {{ $link_type == 'Secondary' ? 'selected' : '' }}>
+                                                            Secondary</option>
+                                                        <option value="Tertiary"
+                                                            {{ $link_type == 'Tertiary' ? 'selected' : '' }}>
+                                                            Tertiary</option>
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td>
-                                                <select name="new_option[]" class="form-control new_option">
-                                                    @foreach ($option_type as $key => $val)
-                                                        <option value="{{ $val }}">{{ $val }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <select name="option[]" id="option" class="form-control">
+                                                        <option value="">Select Option</option>
+                                                        <option value="Option 1"
+                                                            {{ $options[$key] == 'Option 1' ? 'selected' : '' }}>
+                                                            Option 1</option>
+                                                        <option value="Option 2"
+                                                            {{ $options[$key] == 'Option 2' ? 'selected' : '' }}>
+                                                            Option 2</option>
+                                                        <option value="Option 3"
+                                                            {{ $options[$key] == 'Option 3' ? 'selected' : '' }}>
+                                                            Option 3</option>
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="status[]" id="status" class="form-control">
                                                         <option value="">Select Status</option>
-                                                        <option value="Existing">Existing</option>
-                                                        <option value="New">New</option>
+                                                        <option value="Existing"
+                                                            {{ $statuses[$key] == 'Existing' ? 'selected' : '' }}>
+                                                            Existing</option>
+                                                        <option value="New"
+                                                            {{ $statuses[$key] == 'New' ? 'selected' : '' }}>New</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td colspan="2">
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <select name="pop[]" id="pop" class="form-control pop">
+                                                        <option value="">Select POP</option>
+                                                        @foreach ($pops as $pop)
+                                                            <option value="{{ $pop->id }}"
+                                                                {{ $selected_pops[$key] == $pop->id ? 'selected' : '' }}>
+                                                                {{ $pop->name }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="method[]" id="method" class="form-control">
-                                                        <option value="">Select Method</option>
-                                                        <option value="Fiber">Fiber</option>
-                                                        <option value="Radio">Radio</option>
-                                                        <option value="GSM">GSM</option>
-                                                    </select>
+                                                    <input type="text" name="ldp[]" id="ldp"
+                                                        class="form-control" placeholder="LDP"
+                                                        value="{{ $ldps[$key] }}">
                                                 </div>
                                             </td>
                                             <td>
-                                                {{-- @dd($selected_vendors); --}}
-                                                <div class="input-group input-group-sm input-group-primary"> 
+                                                <div class="input-group input-group-sm input-group-primary">
                                                     <select name="vendor[]" id="vendor" class="form-control">
                                                         <option value="">Select Vendor</option>
                                                         @foreach ($vendors as $vendor)
                                                             <option value="{{ $vendor->id }}"
-                                                                {{-- {{ $selected_vendors[$key] == $vendor->id ? 'selected' : '' }} --}}
-                                                                >
+                                                                {{ $selected_vendors[$key] == $vendor->id ? 'selected' : '' }}>
                                                                 {{ $vendor->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -519,58 +567,179 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="pop[]" class="form-control pop" title="">
-                                                        <option value="">Select POP</option>
-                                                        @foreach ($pops as $pop)
-                                                            <option value="{{ $pop->id }}">{{ $pop->name }}</option>
-                                                        @endforeach
+                                                    <select name="method[]" id="method" class="form-control">
+                                                        <option value="">Select Method</option>
+                                                        <option value="Fiber"
+                                                            {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber
+                                                        </option>
+                                                        <option value="Radio"
+                                                            {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio
+                                                        </option>
+                                                        <option value="GSM"
+                                                            {{ $methods[$key] == 'GSM' ? 'selected' : '' }}>GSM</option>
                                                     </select>
-                                                    <div class="custom-tooltip">
-                                                        {{-- <span class="custom-tooltip-text">Tooltip content</span> --}}
-                                                    </div>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="ldp[]" id="ldp" class="form-control"
-                                                    placeholder="LDP">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_lat[]"
-                                                        class="form-control text-center new_lat" value="">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_long[]"
-                                                        class="form-control text-center new_long" value="">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_distance[]"
-                                                        class="form-control text-right new_distance" value="">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_current_capacity[]"
-                                                        class="form-control text-right new_current_capacity"
-                                                        value="{{ $value->connectivity_capacity }}">
 
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="lat[]" id="lat"
+                                                        class="form-control" placeholder="Latitude"
+                                                        value="{{ $lat[$key] }}">
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="long[]" id="long"
+                                                        class="form-control" placeholder="long"
+                                                        value="{{ $long[$key] }}">
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="distance[]" id="distance"
+                                                        class="form-control" placeholder="Distance"
+                                                        value="{{ $distances[$key] }}">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_remarks[]"
-                                                        class="form-control text-right new_remarks" value="">
+                                                    <input type="text" name="current_capacity[]" id="current_capacity"
+                                                        class="form-control" placeholder="Current Capacity"
+                                                        value="{{ $current_capacities[$key] }}">
                                                 </div>
                                             </td>
-                                        @endif
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="remarks[]" id="remarks"
+                                                        class="form-control" placeholder="Remarks"
+                                                        value="{{ $remarks[$key] }}">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button type="button"
+                                                    @if (!empty($details_ids[$key])) details_attr="{{ $details_ids[$key] }}" @endif
+                                                    class="btn btn-sm btn-danger removeRow">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                @foreach ($connectivity_requirement->connectivityRequirementDetails as $key1 => $value)
+                                    @php
+                                        $type = ['Primary', 'Secondary', 'Tertiary'];
+                                        $option_type = ['Option 1', 'Option 2', 'Option 3'];
+                                    @endphp
+                                    <tr class="requirement_details_row">
+                                        {{-- @if (!in_Array($value->link_type, $existingConnections->pluck('link_type')->toArray())) --}}
+                                        <td>
+                                            <select name="new_link_type[]" class="form-control new_link_type">
+                                                @foreach ($type as $key => $val)
+                                                    <option value="{{ $val }}" @selected($val == $value->link_type)>
+                                                        {{ $val }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="new_option[]" class="form-control new_option">
+                                                @foreach ($option_type as $key => $val)
+                                                    <option value="{{ $val }}">{{ $val }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <select name="status[]" id="status" class="form-control">
+                                                    <option value="">Select Status</option>
+                                                    <option value="Existing">Existing</option>
+                                                    <option value="New">New</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <select name="method[]" id="method" class="form-control">
+                                                    <option value="">Select Method</option>
+                                                    <option value="Fiber" @selected($value->method === 'Fiber')>Fiber
+                                                    </option>
+                                                    <option value="Radio" @selected($value->method === 'Radio')>Radio
+                                                    </option>
+                                                    <option value="GSM" @selected($value->method === 'GSM')>GSM
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{-- @dd($selected_vendors); --}}
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <select name="vendor[]" id="vendor" class="form-control">
+                                                    <option value="">Select Vendor</option>
+                                                    @foreach ($vendors as $vendor)
+                                                        <option value="{{ $vendor->id }}" {{-- {{ $selected_vendors[$key] == $vendor->id ? 'selected' : '' }} --}}>
+                                                            {{ $vendor->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <select name="pop[]" class="form-control pop" title="" data-key="
+                                                {{$key1}}">
+                                                    <option value="">Select POP</option>
+                                                    @foreach ($pops as $pop)
+                                                        <option value="{{ $pop->id }}">{{ $pop->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="custom-tooltip">
+                                                    <span class="custom-tooltip-text">Tooltip content</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="ldp[]" id="ldp" class="form-control"
+                                                    placeholder="LDP">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="new_lat[]"
+                                                    class="form-control text-center new_lat" value="">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="new_long[]"
+                                                    class="form-control text-center new_long" value="">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="new_distance[]"
+                                                    class="form-control text-right new_distance" value="">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" id='new_current_capacity_{{$key1}}'  name="new_current_capacity[]"
+                                                    class="myInputField myInputField_{{$key1}} form-control text-right new_current_capacity">
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="new_remarks[]"
+                                                    class="form-control text-right new_remarks" value="">
+                                            </div>
+                                        </td>
+                                        {{-- @endif --}}
                                     </tr>
                                 @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -727,5 +896,43 @@
                     todayHighlight: true,
                     showOtherMonths: true
                 }).datepicker("setDate", new Date());
+                $('.pop').on('change', function() {
+                    console.log('pop')
+                    var e = $(this)
+                    let key1 = parseInt($(this).data('key'));
+                    // alert(key1);
+                    var pop_id = e.val();
+                    $.ajax({
+                        url: "{{ route('get-pop-details') }}",
+                        data: {
+                            pop_id: pop_id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            let totalCapacity = 0;
+
+                            data.connectivity_links.forEach(function(connectivity_link) {
+                                totalCapacity += parseInt(connectivity_link
+                                .capacity); // Ensure capacity is treated as an integer
+                            });
+
+                            console.log("Total Capacity:", totalCapacity);
+                            $(`#new_current_capacity_${key1}`).val(totalCapacity);
+                            console.log($(`#new_current_capacity_${key1}`).val());
+                            var html = '';
+                            $.each(data, function(key, value) {
+                                $.each(value, function(key, value) {
+                                    html += 'Vendor: ' + value.vendor_name + ' | Pop Name: ' +
+                                        value
+                                        .from_pop_name +
+                                        ' | Capacity:' +
+                                        value.capacity + '\n';
+                                });
+                            });
+
+                            e.attr('title', html);
+                        }
+                    });
+                })
             </script>
         @endsection
