@@ -917,7 +917,7 @@
     @endsection
 
     @section('script')
-        @include('changes::modify_planning.js')
+
         <script>
             let plan_equipment_html = '';
             $('#addEquipmentRow').on('click', function() {
@@ -1103,7 +1103,7 @@
 
             let link_array = [];
 
-            $('.existing_infrastructure').on('change', function() {
+            $(document).on('change', '.existing_infrastructure', function() {
                 var this_event = $(this);
                 var value = this_event.val();
                 let pop_id = this_event.closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val();
@@ -1134,7 +1134,7 @@
                 }
             });
 
-            $('.existing_infrastructure_link').on('change', function() {
+            $(document).on('change', '.existing_infrastructure_link', function() {
                 console.log(link_array);
                 var this_event = $(this);
                 var value = this_event.val();
@@ -1172,4 +1172,5 @@
                 });
             }
         </script>
+        @include('changes::modify_planning.js')
     @endsection
