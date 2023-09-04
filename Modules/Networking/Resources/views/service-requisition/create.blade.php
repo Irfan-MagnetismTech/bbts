@@ -35,8 +35,8 @@
     $form_method = !empty($service_requisition) ? 'PUT' : 'POST';
     
     $type = old('type', !empty($service_requisition) ? $service_requisition->type : null);
-    $from = old('from', !empty($service_requisition) ? $service_requisition->fromPop->name : null);
-    $to = old('to', !empty($service_requisition) ? $service_requisition->toPop->name : null);
+    $from = old('from', !empty($service_requisition) ? ($service_requisition->fromPop->name ?? null) : null);
+    $to = old('to', !empty($service_requisition) ? ($service_requisition->toPop->name ?? null) : null);
     $from_pop_id = old('from_pop_id', !empty($service_requisition) ? $service_requisition->from_pop_id : null);
     $to_pop_id = old('to_pop_id', !empty($service_requisition) ? $service_requisition->to_pop_id : null);
     $capacity_type = old('capacity_type', !empty($service_requisition) ? $service_requisition->capacity_type : null);
@@ -50,11 +50,10 @@
     $client_no = old('client_no', !empty($service_requisition) ? $service_requisition?->client_no : null);
     $required_date = old('required_date', !empty($service_requisition) ? $service_requisition?->required_date : today()->format('d-m-Y'));
     $date = old('date', !empty($service_requisition) ? $service_requisition?->date : today()->format('d-m-Y'));
-    $vendor = old('vendor', !empty($service_requisition) ? $service_requisition?->vendor->name : null);
+    $vendor = old('vendor', !empty($service_requisition) ? ($service_requisition?->vendor->name ?? null) : null);
     $vendor_id = old('vendor_id', !empty($service_requisition) ? $service_requisition?->vendor_id : null);
     $remark = old('remark', !empty($service_requisition) ? $service_requisition?->remark : null);
-@endphp
-
+@endphp 
 @section('breadcrumb-title')
     {{ $form_heading }} Service Requisition
 @endsection
