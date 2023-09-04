@@ -8,6 +8,7 @@ use Modules\Sales\Entities\FeasibilityRequirementDetail;
 class FeasibilityRequirement extends Model
 {
     protected $guarded = [];
+    // protected $fillable = ['client_no', 'is_existing', 'date', 'lead_generation_id', 'user_id', 'branch_id', 'is_modified'];
 
     public function feasibilityRequirementDetails()
     {
