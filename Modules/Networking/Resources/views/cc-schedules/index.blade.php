@@ -133,7 +133,7 @@
                             @if (!empty($details?->connectivities?->id))
                                 <span class="badge badge-info">
                                     <a href="#" style="color: white"
-                                        onclick="updateBillingDate({{ $details?->connectivities?->id }}, {{ $details->sale_id }})">Billing</a>
+                                        onclick="updateBillingDate({{ $details?->connectivities?->id }}, {{ $details->sale_id }}, '{{ $details->fr_no }}')">Billing</a>
                                 </span>
                             @endif
                         </td>
@@ -159,10 +159,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input id="billingDate" type="date" class="form-control" name="billing_date" required
-                        autocomplete="billing_date" autofocus>
+                    <input id="billingDate" type="date" class="form-control" name="billing_date" required>
                     <input type="hidden" name="connectivity_id" id="connectivity_id">
                     <input type="hidden" name="sale_id" id="sale_id">
+                    <input type="hidden" name="fr_no" id="fr_no">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -175,16 +175,19 @@
 
 @section('script')
     <script>
-        function updateBillingDate(connectivity_id, sale_id) {
+        function updateBillingDate(connectivity_id, sale_id, fr_no) {
             $('#exampleModal').modal('show');
             $('#connectivity_id').val(connectivity_id);
             $('#sale_id').val(sale_id);
+            $('#fr_no').val(fr_no);
+
         }
 
         $('#updateBilling').click(function(e) {
             var billingDate = $('#billingDate').val();
             var connectivityId = $('#connectivity_id').val();
             var saleId = $('#sale_id').val();
+            var frNo = $('#fr_no').val();
             $.ajax({
                 url: "{{ route('connectivities.billing.date.update', '') }}",
                 type: 'POST',
@@ -192,7 +195,8 @@
                     "_token": "{{ csrf_token() }}",
                     "billing_date": billingDate,
                     "connectivity_id": connectivityId,
-                    "sale_id": saleId
+                    "sale_id": saleId,
+                    "fr_no": frNo
                 },
                 success: function(data) {
                     $('#exampleModal').modal('hide');

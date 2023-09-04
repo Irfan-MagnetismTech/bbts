@@ -43,14 +43,14 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->type }}</td>
-                        <td>{{ $item->fromPop->name }}</td>
-                        <td>{{ $item->toPop->name }}</td>
+                        <td>{{ $item->fromPop->name ?? '' }}</td>
+                        <td>{{ $item->toPop->name ?? ''}}</td>
                         <td>{{ $item->capacity_type }}</td>
                         <td>{{ $item->capacity }}</td>
                         <td>{{ $item->client->client_name }}</td>
                         <td>{{ $item->date }}</td>
                         <td>{{ $item->required_date }}</td>
-                        <td>{{ $item->vendor->name }}</td>
+                        <td>{{ $item->vendor->name ?? '' }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

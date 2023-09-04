@@ -20,7 +20,7 @@ class NetServiceRequisitionController extends Controller
      */
     public function index()
     {
-        $datas = NetServiceRequisition::all();
+        $datas = NetServiceRequisition::latest()->get();
         return view('networking::service-requisition.index', compact('datas'));
     }
 
@@ -43,6 +43,7 @@ class NetServiceRequisitionController extends Controller
     {
         try {
             DB::beginTransaction();
+            // dd($request->all());
             $datas = $request->only('type', 'fr_no', 'from_pop_id', 'to_pop_id', 'capacity_type', 'capacity', 'client_no', 'date', 'required_date', 'vendor_id', 'remark');
             $dataList = [];
             foreach ($request->service_id as $key => $value) {
