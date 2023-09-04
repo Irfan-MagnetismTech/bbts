@@ -13,6 +13,8 @@
 @endsection
 
 @section('breadcrumb-button')
+    <a href="{{ route('export-feasibility-requirement') }}" class="btn btn-out-dashed btn btn-sm btn-danger"><i
+            class="fas fa-file-excel"></i> Download template</a>
     <a href="{{ route('feasibility-requirement.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
@@ -95,10 +97,10 @@
                             <hr>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
+                            <table class="table table-bordered table-striped feasibility-requirement">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2">Name of the Link</th>
+                                        <th rowspan="2">Name of the Link hh</th>
                                         <th rowspan="2">Agreegation Type</th>
                                         <th colspan="6">Connectivity Address</th>
                                         <th colspan="5">Local Contact Details</th>
@@ -354,145 +356,169 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <input id="csv-file" type="file" name="file" class="form-control d-none" />
+
+                        <button class="mt-2 py-2 btn btn-danger mr-3" id="toggle-csv" type="button">Upload Csv</button>
+                        <button class="mt-2 py-2 btn btn-danger mr-3 d-none" id="upload-via-table" type="button">Upload via table</button>
                         <button
-                            class="py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
+                            class=" mt-2 py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
                     </div>
+                    {!! Form::close() !!}
+                    {{-- <div class="mt-3">
+                    <form method="POST" encType="multipart/form-data" action="{{route('import-feasibility-requirement')}}">
+                        <input type="file">
+                    </form>
+                    <button type="submit" class="mt-3 btn btn-success">Submit</button> --}}
                 </div>
-                {!! Form::close() !!}
-            @endsection
+                @endsection
 
-            @section('script')
-                <script>
-                    // $('#division').on('change', function() {
-                    //     var division_id = $(this).val();
-                    //     $.ajax({
-                    //         url: "{{ route('get-districts') }}",
-                    //         data: {
-                    //             division_id: division_id,
-                    //             _token: "{{ csrf_token() }}"
-                    //         },
-                    //         success: function(data) {
-                    //             $('#district').html(data);
-                    //         }
-                    //     });
-                    // });
+                @section('script')
+                    <script>
+                        // $('#division').on('change', function() {
+                        //     var division_id = $(this).val();
+                        //     $.ajax({
+                        //         url: "{{ route('get-districts') }}",
+                        //         data: {
+                        //             division_id: division_id,
+                        //             _token: "{{ csrf_token() }}"
+                        //         },
+                        //         success: function(data) {
+                        //             $('#district').html(data);
+                        //         }
+                        //     });
+                        // });
 
-                    //get districts by last class selected division
-                    $(document).on('change', '.division', function() {
-                        var division_id = $(this).val();
-                        var row = $(this).closest('tr').find('select[name="district_id[]"]').val('');
-                        $.ajax({
-                            url: "{{ route('get-districts') }}",
-                            data: {
-                                division_id: division_id,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(data) {
-                                row.empty();
-                                row.append('<option value="">Select District</option>');
-                                data.forEach(element => {
-                                    row.append('<option value="' + element.id + '">' + element.text +
-                                        '</option>');
-                                });
-                            }
+                        //get districts by last class selected division
+                        $(document).on('change', '.division', function() {
+                            var division_id = $(this).val();
+                            var row = $(this).closest('tr').find('select[name="district_id[]"]').val('');
+                            $.ajax({
+                                url: "{{ route('get-districts') }}",
+                                data: {
+                                    division_id: division_id,
+                                    _token: "{{ csrf_token() }}"
+                                },
+                                success: function(data) {
+                                    row.empty();
+                                    row.append('<option value="">Select District</option>');
+                                    data.forEach(element => {
+                                        row.append('<option value="' + element.id + '">' + element.text +
+                                            '</option>');
+                                    });
+                                }
+                            });
                         });
-                    });
 
-                    //get thanas by last class selected district
-                    $(document).on('change', '.district_name', function() {
-                        var district_id = $(this).val();
-                        var row = $(this).closest('tr').find('select[name="thana_id[]"]');
-                        $.ajax({
-                            url: "{{ route('get-thanas') }}",
-                            data: {
-                                district_id: district_id,
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(data) {
-                                row.empty();
-                                row.append('<option value="">Select District</option>');
-                                data.forEach(element => {
-                                    row.append('<option value="' + element.id + '">' + element.text +
-                                        '</option>');
-                                });
-                            }
+                        //get thanas by last class selected district
+                        $(document).on('change', '.district_name', function() {
+                            var district_id = $(this).val();
+                            var row = $(this).closest('tr').find('select[name="thana_id[]"]');
+                            $.ajax({
+                                url: "{{ route('get-thanas') }}",
+                                data: {
+                                    district_id: district_id,
+                                    _token: "{{ csrf_token() }}"
+                                },
+                                success: function(data) {
+                                    row.empty();
+                                    row.append('<option value="">Select District</option>');
+                                    data.forEach(element => {
+                                        row.append('<option value="' + element.id + '">' + element.text +
+                                            '</option>');
+                                    });
+                                }
+                            });
                         });
-                    });
 
 
 
-                    $('#addRow').on('click', function() {
-                        addRow();
-                    });
-
-                    function addRow() {
-                        $('.feasibility_details_row').first().clone().appendTo('.feasibiltyBody');
-                        $('.feasibility_details_row').last().find('input').val('');
-                        $('.feasibility_details_row').last().find('select').val('');
-                    };
-
-                    $(document).keydown(function(event) {
-                        if (event.ctrlKey && event.key === 'Insert') {
-                            event.preventDefault();
+                        $('#addRow').on('click', function() {
                             addRow();
-                        }
-                    });
+                        });
 
-                    $(document).keydown(function(event) {
-                        if (event.ctrlKey && event.key === 'Delete') {
-                            event.preventDefault();
-                            if ($('.feasibility_details_row').length > 1) {
-                                $('.feasibility_details_row').last().remove();
-                            }
-                        }
-                    });
+                        function addRow() {
+                            $('.feasibility_details_row').first().clone().appendTo('.feasibiltyBody');
+                            $('.feasibility_details_row').last().find('input').val('');
+                            $('.feasibility_details_row').last().find('select').val('');
+                        };
 
-                    $(document).on('click', '.removeRow', function() {
-                        let count = $('.feasibility_details_row').length;
-                        if (count > 1) {
-                            $(this).closest('tr').remove();
-                            //get attr_one value 
-                            var attr_one = $(this).attr('attr_one');
-                            //if attr_one value is not empty then delete from database
-                            if (attr_one != '') {
-                                $.ajax({
-                                    url: "{{ route('delete-feasibility-requirement-details') }}",
-                                    data: {
-                                        id: attr_one,
-                                        _token: "{{ csrf_token() }}"
-                                    },
-                                    success: function(data) {
-                                        console.log(data);
-                                    }
-                                });
-                            }
-                        }
-                    });
-
-                    $('#client_id, #client_name').on('input', function() {
-                        var search = $(this).val();
-                        console.log(search)
-                        $(this).autocomplete({
-                            source: function(request, response) {
-                                $.ajax({
-                                    url: "{{ route('get-client') }}",
-                                    data: {
-                                        search: search,
-                                        _token: "{{ csrf_token() }}"
-                                    },
-                                    success: function(data) {
-                                        response(data);
-                                    }
-                                });
-                            },
-                            select: function(event, ui) {
-                                $('#client_id').val(ui.item.client_no).attr('value', ui.item.client_no);
-                                $('#client_name').val(ui.item.client_name).attr('value', ui.item.client_name);
-                                $('#lead_generation_id').val(ui.item.lead_generation_id).attr('value', ui.item
-                                    .lead_generation_id);
-                                return false;
+                        $(document).keydown(function(event) {
+                            if (event.ctrlKey && event.key === 'Insert') {
+                                event.preventDefault();
+                                addRow();
                             }
                         });
-                    });
-                </script>
-            @endsection
+
+                        $(document).keydown(function(event) {
+                            if (event.ctrlKey && event.key === 'Delete') {
+                                event.preventDefault();
+                                if ($('.feasibility_details_row').length > 1) {
+                                    $('.feasibility_details_row').last().remove();
+                                }
+                            }
+                        });
+
+                        $(document).on('click', '.removeRow', function() {
+                            let count = $('.feasibility_details_row').length;
+                            if (count > 1) {
+                                $(this).closest('tr').remove();
+                                //get attr_one value 
+                                var attr_one = $(this).attr('attr_one');
+                                //if attr_one value is not empty then delete from database
+                                if (attr_one != '') {
+                                    $.ajax({
+                                        url: "{{ route('delete-feasibility-requirement-details') }}",
+                                        data: {
+                                            id: attr_one,
+                                            _token: "{{ csrf_token() }}"
+                                        },
+                                        success: function(data) {
+                                            console.log(data);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+                        $('#client_id, #client_name').on('input', function() {
+                            var search = $(this).val();
+                            console.log(search)
+                            $(this).autocomplete({
+                                source: function(request, response) {
+                                    $.ajax({
+                                        url: "{{ route('get-client') }}",
+                                        data: {
+                                            search: search,
+                                            _token: "{{ csrf_token() }}"
+                                        },
+                                        success: function(data) {
+                                            response(data);
+                                        }
+                                    });
+                                },
+                                select: function(event, ui) {
+                                    $('#client_id').val(ui.item.client_no).attr('value', ui.item.client_no);
+                                    $('#client_name').val(ui.item.client_name).attr('value', ui.item.client_name);
+                                    $('#lead_generation_id').val(ui.item.lead_generation_id).attr('value', ui.item
+                                        .lead_generation_id);
+                                    return false;
+                                }
+                            });
+                        });
+                        $('#toggle-csv').click(function() {
+                            $('.feasibility-requirement').addClass('d-none');
+                            $('#csv-file').removeClass('d-none');
+                            $('#upload-via-table').removeClass('d-none');
+                            $('#toggle-csv').addClass('d-none');
+                            console.log('Button clicked! Logging to console.');
+                        });
+                        $('#upload-via-table').click(function() {
+                            $('.feasibility-requirement').removeClass('d-none');
+                            $('#csv-file').addClass('d-none');
+                            $('#upload-via-table').addClass('d-none');
+                            $('#toggle-csv').removeClass('d-none');
+                            console.log('Button clicked! Logging to console.');
+                        });
+                    </script>
+                @endsection
