@@ -5,7 +5,7 @@
     $form_heading = !empty($challan) ? 'Update' : 'Add';
     $form_url = !empty($challan) ? route('challans.update', $challan->id) : route('challans.store');
     $form_method = !empty($challan) ? 'PUT' : 'POST';
-    
+
     $date = old('date', !empty($challan) ? $challan->date : null);
     $type = old('date', !empty($challan) ? $challan->type : null);
     $scm_requisition_id = old('scm_requisition_id', !empty($challan) ? $challan->scm_requisition_id : null);
@@ -22,7 +22,7 @@
     $pop_id = old('pop_id', !empty($challan) ? $challan->pop_id : null);
     $pop_name = old('pop_name', !empty($challan) ? $challan?->pop?->name : null);
     $pop_address = old('pop_address', !empty($challan) ? $challan?->pop?->address : null);
-    
+
 @endphp
 
 @section('breadcrumb-title')
@@ -162,10 +162,7 @@
                     @endforeach
                 @endif
             </select>
-
-
         </div>
-
 
         <div class="form-group col-3 link_no">
             <label for="link_no">Link No:</label>
@@ -182,13 +179,12 @@
                 @endif
             </select>
         </div>
+
         <div class="form-group col-3 client_no">
             <label for="client_no">Client No:</label>
             <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
                 readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
-
         </div>
-
 
         <div class="form-group col-3 client_address">
             <label for="client_address">Client Address:</label>
@@ -240,11 +236,11 @@
                 $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
                 $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                 $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
-                
+
                 $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
                 $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
                 $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
-                
+
             @endphp
             @foreach ($Challan_Lines as $key => $Challan_Line)
                 <tr>
@@ -359,7 +355,7 @@
             todayHighlight: true,
             showOtherMonths: true
         }).datepicker("setDate", new Date());;
-        
+
         /* Append row */
         $(document).ready(function() {
             @if (empty($challan) && empty(old('material_name')))
@@ -387,11 +383,11 @@
                             </td>
                             <td class="form-group">
                                 <select class="form-control material_name select2" name="material_name[${indx}]">
-                                    <option value="" readonly selected>Select Material</option>                  
+                                    <option value="" readonly selected>Select Material</option>
                                 </select>
-                                <input type="hidden" name="item_code[${indx}]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[${indx}]" class="form-control material_type" autocomplete="off"> 
-                            </td>                            
+                                <input type="hidden" name="item_code[${indx}]" class="form-control item_code" autocomplete="off">
+                                <input type="hidden" name="material_type[${indx}]" class="form-control material_type" autocomplete="off">
+                            </td>
                             <td>
                                 <select class="form-control brand select2" name="brand[${indx}]">
                                     <option value="" readonly selected>Select Brand</option>
@@ -411,7 +407,7 @@
                             </td>
                             <td>
                                 <input name="unit[${indx}]" class="form-control unit" readonly autocomplete="off" type="text">
-                            </td> 
+                            </td>
                             <td>
                                 <input class="form-control available_quantity" name="available_quantity[${indx}]" aria-describedby="available_quantity" readonly>
                             </td>
@@ -514,7 +510,7 @@
             })
 
         });
-        
+
         @if($form_method=='PUT')
 
         $(document).on('DOMNodeInserted', '#branch_id', function() {
@@ -785,7 +781,7 @@
                     (elemmtn).find('.quantity').val(avaiable_quantity);
                 });
             }
-        });        
+        });
     </script>
 
     <script src="{{ asset('js/search-client.js') }}"></script>

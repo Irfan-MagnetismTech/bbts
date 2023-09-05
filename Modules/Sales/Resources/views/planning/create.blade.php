@@ -722,6 +722,7 @@
             let link_array = [];
 
             $('.existing_infrastructure').on('change', function() {
+                alert('hello')
                 var this_event = $(this);
                 var value = this_event.val();
                 let pop_id = this_event.closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val();

@@ -329,6 +329,16 @@
                                             <label for="type">Link Status</label>
                                         </div>
                                     </div>
+                                    <div class="col-3 col-md-3 mt-3 link_list" style="display: none;">
+                                        <div class="form-item">
+                                            <select name="existing_infrastructure_link_1"
+                                                id="existing_infrastructure_link"
+                                                class="form-control form-control-sm existing_infrastructure_link">
+                                                <option value="">Select Link</option>
+                                            </select>
+                                            <label for="type">Link List</label>
+                                        </div>
+                                    </div>
                                     <div class="md-col-3 col-3">
                                         <div class="form-item">
                                             <input type="text"
@@ -667,10 +677,14 @@
                             .name);
                         $(event.target).closest('.main_link').find('input[name^="link_vendor_id_"]').val(data.vendor
                             .id);
-                        $(event.target).closest('.main_link').find('select[name^="existing_infrastructure_"]').val(data?.status);
-                        $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(data.status);
-                        $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_"]').val(data.pop.name);
-                        $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val(data.pop.id);
+                        $(event.target).closest('.main_link').find('select[name^="existing_infrastructure_"]').val(
+                            data?.status);
+                        $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(data
+                            .status);
+                        $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_"]').val(data
+                            .pop.name);
+                        $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val(
+                            data.pop.id);
                         $(event.target).closest('.main_link').find('input[name^="last_mile_connectivity_method_"]')
                             .val(data
                                 .method);
@@ -784,6 +798,63 @@
                 var find_material = materials.find(x => x.id == material_id);
                 console.log(find_material);
                 $(this).closest('tr').find('.link_unit').val(find_material.unit);
+            });
+            let link_array = [];
+            $('.existing_infrastructure').on('change', function() {
+                var this_event = $(this);
+                var value = this_event.val();
+                let pop_id = this_event.closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val();
+
+                if (value == 'Existing') {
+                    $.ajax({
+                        url: "{{ route('get-existing-link-list') }}",
+                        data: {
+                            pop_id: pop_id,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        success: function(data) {
+                            this_event.closest('.main_link').find('.link_list').css('display', 'block');
+                            var html = '<option value="">Select Link</option>';
+                            $.each(data, function(key, item) {
+                                $.each(item, function(key, value) {
+                                    link_array.push(value);
+                                    html += '<option value="' + value.bbts_link_id + '">' +
+                                        value.bbts_link_id + '</option>';
+                                });
+                            });
+                            console.log(html)
+                            this_event.closest('.main_link').find('.existing_infrastructure_link').html(
+                                html);
+                        }
+                    });
+                } else {
+                    this_event.closest('.main_link').find('.link_list').css('display', 'none');
+                }
+            });
+
+            $('.existing_infrastructure_link').on('change', function() {
+                var this_event = $(this);
+                var value = this_event.val();
+
+                // Filter the link_array to find the link with the selected 'bbts_link_id'
+                var link = link_array.filter(function(item) {
+                    return item.bbts_link_id == value;
+                });
+
+                // Sort the link array based on the 'created_at' date in descending order (latest date first)
+                link.sort(function(a, b) {
+                    // Convert the dates to JavaScript Date objects for comparison
+                    const dateA = new Date(a.created_at);
+                    const dateB = new Date(b.created_at);
+                    // Sort in descending order
+                    return dateB - dateA;
+                });
+
+                // Access the link with the latest date (first element of the sorted array)
+                const latestLink = link[0];
+                console.log('latestLink', latestLink);
+                this_event.closest('.main_link').find('.existing_transmission_capacity').val(latestLink.capacity).attr(
+                    'value', latestLink.capacity);
             });
         </script>
     @endsection

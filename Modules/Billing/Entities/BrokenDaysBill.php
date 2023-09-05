@@ -3,6 +3,7 @@
 namespace Modules\Billing\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\SaleProductDetail;
 
 class BrokenDaysBill extends Model
 {
@@ -11,5 +12,9 @@ class BrokenDaysBill extends Model
     public function BrokenDaysBillDetails()
     {
         return $this->hasMany(BrokenDaysBillDetail::class, 'broken_days_bill_id', 'id');
+    }
+    public function saleProductDetails()
+    {
+        return $this->hasMany(SaleProductDetail::class, 'sale_detail_id', 'id');
     }
 }

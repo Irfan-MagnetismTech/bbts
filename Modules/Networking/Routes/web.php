@@ -2,9 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Billing\Http\Controllers\BillGenerateController;
+use Modules\Networking\Http\Controllers\NetworkingController;
+use Modules\Billing\Http\Controllers\BrokenDaysBillController;
 use Modules\Networking\Http\Controllers\ConnectivityController;
 use Modules\Networking\Http\Controllers\NetPopEquipmentController;
-use Modules\Networking\Http\Controllers\NetworkingController;
 use Modules\Networking\Http\Controllers\PhysicalConnectivityController;
 
 /*
@@ -24,7 +25,7 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('connectivity-list', [NetworkingController::class, 'connectivityList'])->name('connectivity-list');
 
     Route::get('connectivities/create/{fr_id?}', [ConnectivityController::class, 'create'])->name('connectivities.create');
-    Route::post('connectivities-billing-date-update', [BillGenerateController::class, 'updateBillingDate'])->name('connectivities.billing.date.update');
+    Route::post('connectivities-billing-date-update', [BrokenDaysBillController::class, 'updateBillingDate'])->name('connectivities.billing.date.update');
     // Route::get('add-survey/{fr_id?}', [SurveyController::class, 'create'])->name('add-survey');
 
     Route::resource('connectivities', ConnectivityController::class);

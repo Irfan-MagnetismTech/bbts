@@ -8,6 +8,8 @@ use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Vendor;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Networking\Entities\NetServiceRequisitionLine;
+use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class NetServiceRequisition extends Model
 {
@@ -37,6 +39,11 @@ class NetServiceRequisition extends Model
         }
 
         return $value;
+    }
+
+    public function feasibilityRequirmentDetail()
+    {
+        return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no','fr_no');
     }
 
     public function fromPop()

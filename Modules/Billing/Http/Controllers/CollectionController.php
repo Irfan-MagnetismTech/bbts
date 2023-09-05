@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Modules\Billing\Entities\Collection;
 use Modules\Billing\Entities\BillGenerate;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\SaleProductDetail;
 
 class CollectionController extends Controller
 {
@@ -159,13 +160,33 @@ class CollectionController extends Controller
     public function get_client()
     {
         $items = Client::query()
+            ->with('feasibility_requirement_details')
             ->where('client_name', 'like', '%' . request()->search . '%')
             ->get()
             ->map(fn ($item) => [
                 'value'                 => $item->client_name,
                 'label'                 => $item->client_name,
                 'client_no'             => $item->client_no,
-                'client_id'             => $item->id
+                'client_id'             => $item->id,
+                'feasibility_requirement_details' => $item->feasibility_requirement_details
+            ]);
+        return response()->json($items);
+    }
+    public function get_fr_product()
+    {
+        $items = SaleProductDetail::query()
+            ->where('fr_no', request()->fr_no)
+            ->get()
+            ->map(fn ($item) => [
+                'product_id'                 => $item->product_id,
+                'product_name'                 => $item->product_name,
+                'quantity'                 => $item->quantity,
+                'unit'                 => $item->unit,
+                'fr_no'                 => $item->fr_no,
+                'rate'                 => $item->rate,
+                'price'                 => $item->price,
+                'vat_amount'                 => $item->vat_amount,
+                'total_price'                 => $item->total_price,
             ]);
         return response()->json($items);
     }

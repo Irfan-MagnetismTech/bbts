@@ -16,7 +16,7 @@
 
 @section('sub-title')
     Total: {{ count($datas) }} 
-    <x-warning-paragraph name="ERR" />
+    {{-- <x-warning-paragraph name="ERR" /> --}}
 @endsection
 
 @section('content')
@@ -32,6 +32,7 @@
                     <th>Capacity Type</th>
                     <th>Capacity</th>
                     <th>Client</th>
+                    <th>Lat-Long</th>
                     <th>Date</th>
                     <th>Required Date</th>
                     <th>Vendor</th>
@@ -47,7 +48,8 @@
                         <td>{{ $item->toPop->name ?? ''}}</td>
                         <td>{{ $item->capacity_type }}</td>
                         <td>{{ $item->capacity }}</td>
-                        <td>{{ $item->client->client_name }}</td>
+                        <td>{{ $item->client->client_name ?? '' }} - {{ $item->feasibilityRequirmentDetail->connectivity_point ?? '' }}</td>
+                        <td>{{ $item->feasibilityRequirmentDetail->lat ?? ''}}-{{ $item->feasibilityRequirmentDetail->long ?? '' }}</td>
                         <td>{{ $item->date }}</td>
                         <td>{{ $item->required_date }}</td>
                         <td>{{ $item->vendor->name ?? '' }}</td>
