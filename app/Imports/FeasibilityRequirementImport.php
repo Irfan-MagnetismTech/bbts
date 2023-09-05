@@ -13,14 +13,13 @@ use App\Models\Dataencoding\Thana;
 class FeasibilityRequirementImport implements ToCollection
 {
     /**
-    * @param Collection $collection
-    */
+     * @param Collection $collection
+     */
     private $additionalData;
 
     public function __construct($additionalData)
     {
         $this->additionalData = $additionalData;
-
     }
     public function collection(Collection $collection)
     {
@@ -50,25 +49,25 @@ class FeasibilityRequirementImport implements ToCollection
             $division = Division::where('name', $detail[2])->first();
             $district = District::where('name', $detail[3])->first();
             $thana = Thana::where('name', $detail[4])->first();
-            
+
             $details[] = [
-                'feasibility_requirement_id' => $feasibilityRequirement->id, 
+                'feasibility_requirement_id' => $feasibilityRequirement->id,
                 'aggregation_type' => $detail[1],
                 'client_no' => $feasibilityRequirement->client_no,
                 'fr_no' => $frNo,
-                'connectivity_point'=> $detail[0],
+                'connectivity_point' => $detail[0],
                 'division_id' => $division->id,
                 'district_id' => $district->id,
                 'thana_id' => $thana->id,
                 'location' => $detail[5],
                 'lat' => $detail[6],
                 'long' => $detail[7],
-                'contact_name' =>$detail[8],
+                'contact_name' => $detail[8],
                 'contact_designation' => $detail[9],
                 'contact_number' => $detail[10],
                 'contact_email' => $detail[11],
             ];
-        }  
+        }
         $feasibilityRequirement->feasibilityRequirementDetails()->createMany($details);
     }
 }

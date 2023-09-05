@@ -96,16 +96,14 @@ class FeasibilityRequirementController extends Controller
 
                 $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
                 DB::commit();
-
-
-                return redirect()->route('feasibility-requirement.create')->with('success', 'Feasibility Requirement Created Successfully');
+                return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
             } catch (\Exception $e) {
                 DB::rollback();
                 // Handle the exception or display an error message
                 return back()->with('error', $e->getMessage());
             }
         }
-        return redirect()->route('feasibility-requirement.create')->with('success', 'Feasibility Requirement Created Successfully');
+        return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
     }
 
 
@@ -143,11 +141,19 @@ class FeasibilityRequirementController extends Controller
     public function update(FeasibilityRequirement $feasibility_requirement, FeasibilityRequirementRequest $request)
     {
         //  dd($request->all());
+         if ($request->file) {
+            $additionalData = $request;
+            $feasibilityRequirement = $feasibility_requirement;
+            Excel::import(new FeasibilityRequirementImportUpdate($additionalData, $feasibilityRequirement), $request->file('file'));
+            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
+        }
+        else{
         $data = $request->only('client_no', 'is_existing', 'date');
         $data['user_id'] = auth()->user()->id;
         $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
         $feasibility_requirement->update($data);
+        // dd($feasibility_requirement);
 
         foreach ($request->connectivity_point as $key => $link) {
             $detailId = $request['detail_id'][$key] ?? null;
@@ -174,7 +180,6 @@ class FeasibilityRequirementController extends Controller
                     $feasibility->update($detailsData);
                 }
             } else {
-                dd('fine');
                 $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
 
                 if ($maxFrNo) {
@@ -182,22 +187,17 @@ class FeasibilityRequirementController extends Controller
                     $frSerial = intval($frArray[count($frArray) - 1]) + 1;
                     $frNo .= $frSerial;
                 } else {
-                    $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
-
-                    if ($maxFrNo) {
-                        $frArray = explode('-', $maxFrNo);
-                        $frSerial = intval($frArray[count($frArray) - 1]) + 1;
-                        $frNo .= $frSerial;
-                    } else {
-                        $frNo .= '1';
-                    }
-                    $detailsData['fr_no'] = $frNo;
-                    $feasibility_requirement->feasibilityRequirementDetails()->create($detailsData);
+                    $frNo .= '1';
                 }
+                $detailsData['fr_no'] = $frNo;
+                $feasibility_requirement->feasibilityRequirementDetails()->create($detailsData);
             }
-
-            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
         }
+
+        return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
+
+        }
+        
     }
 
     /**
