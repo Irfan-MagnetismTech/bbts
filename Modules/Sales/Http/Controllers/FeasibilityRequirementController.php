@@ -14,6 +14,7 @@ use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Http\Requests\FeasibilityRequirementRequest;
 use App\Exports\FeasibilityRequirementExport;
 use App\Imports\FeasibilityRequirementImport;
+use App\Imports\FeasibilityRequirementImportUpdate;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FeasibilityRequirementController extends Controller
@@ -48,7 +49,6 @@ class FeasibilityRequirementController extends Controller
     public function store(FeasibilityRequirementRequest $request)
     {
         // dd($request->all());
-
         if ($request->file) {
             $additionalData = $request;
             Excel::import(new FeasibilityRequirementImport($additionalData), $request->file('file'));
@@ -143,49 +143,59 @@ class FeasibilityRequirementController extends Controller
     public function update(FeasibilityRequirement $feasibility_requirement, FeasibilityRequirementRequest $request)
     {
         //  dd($request->all());
-        $data = $request->only('client_no', 'is_existing', 'date');
-        $data['user_id'] = auth()->user()->id;
-        $data['branch_id'] = auth()->user()->branch_id ?? '1';
+        if ($request->file) {
+            $additionalData = $request;
+            $feasibilityRequirement = $feasibility_requirement;
+            Excel::import(new FeasibilityRequirementImportUpdate($additionalData, $feasibilityRequirement), $request->file('file'));
+            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
+        } else {
+            // dd($feasibility_requirement);
+            $data = $request->only('client_no', 'is_existing', 'date');
+            $data['user_id'] = auth()->user()->id;
+            $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
-        $feasibility_requirement->update($data);
+            $feasibility_requirement->update($data);
 
-        foreach ($request->connectivity_point as $key => $link) {
-            $detailId = $request['detail_id'][$key];
-            $frNo = 'fr' . '-' . $data['client_no'] . '-';
-            $detailsData = [
-                'connectivity_point' => $request['connectivity_point'][$key],
-                'client_no' => $data['client_no'],
-                'aggregation_type' => $request['aggregation_type'][$key],
-                'division_id' => $request['division_id'][$key],
-                'district_id' => $request['district_id'][$key],
-                'thana_id' => $request['thana_id'][$key],
-                'location' => $request['location'][$key],
-                'lat' => $request['lat'][$key],
-                'long' => $request['long'][$key],
-                'contact_name' => $request['contact_name'][$key],
-                'contact_designation' => $request['contact_designation'][$key],
-                'contact_number' => $request['contact_number'][$key],
-                'contact_email' => $request['contact_email'][$key],
-            ];
+            foreach ($request->connectivity_point as $key => $link) {
+                $detailId = $request['detail_id'][$key];
+                // dd($detailId );
+                $frNo = 'fr' . '-' . $data['client_no'] . '-';
+                $detailsData = [
+                    'connectivity_point' => $request['connectivity_point'][$key],
+                    'client_no' => $data['client_no'],
+                    'aggregation_type' => $request['aggregation_type'][$key],
+                    'division_id' => $request['division_id'][$key],
+                    'district_id' => $request['district_id'][$key],
+                    'thana_id' => $request['thana_id'][$key],
+                    'location' => $request['location'][$key],
+                    'lat' => $request['lat'][$key],
+                    'long' => $request['long'][$key],
+                    'contact_name' => $request['contact_name'][$key],
+                    'contact_designation' => $request['contact_designation'][$key],
+                    'contact_number' => $request['contact_number'][$key],
+                    'contact_email' => $request['contact_email'][$key],
+                ];
 
-            if ($detailId) {
-                FeasibilityRequirementDetail::find($detailId)->update($detailsData);
-            } else {
-                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
+                if ($detailId) {
 
-                if ($maxFrNo) {
-                    $frArray = explode('-', $maxFrNo);
-                    $frSerial = intval($frArray[count($frArray) - 1]) + 1;
-                    $frNo .= $frSerial;
+                    FeasibilityRequirementDetail::find($detailId)->update($detailsData);
                 } else {
-                    $frNo .= '1';
-                }
-                $detailsData['fr_no'] = $frNo;
-                $feasibility_requirement->feasibilityRequirementDetails()->create($detailsData);
-            }
-        }
+                    $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
 
-        return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
+                    if ($maxFrNo) {
+                        $frArray = explode('-', $maxFrNo);
+                        $frSerial = intval($frArray[count($frArray) - 1]) + 1;
+                        $frNo .= $frSerial;
+                    } else {
+                        $frNo .= '1';
+                    }
+                    $detailsData['fr_no'] = $frNo;
+                    $feasibility_requirement->feasibilityRequirementDetails()->create($detailsData);
+                }
+            }
+
+            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
+        }
     }
 
     /**

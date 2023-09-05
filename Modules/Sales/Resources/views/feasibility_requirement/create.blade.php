@@ -13,7 +13,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('export-feasibility-requirement') }}" class="btn btn-out-dashed btn btn-sm btn-danger"><i
+    <a href="{{ route('export-feasibility-requirement') }}" class="btn btn-out-dashed btn btn-sm btn-success"><i
             class="fas fa-file-excel"></i> Download template</a>
     <a href="{{ route('feasibility-requirement.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
@@ -359,8 +359,8 @@
 
                         <input id="csv-file" type="file" name="file" class="form-control d-none" />
 
-                        <button class="mt-2 py-2 btn btn-danger mr-3" id="toggle-csv" type="button">Upload Csv</button>
-                        <button class="mt-2 py-2 btn btn-danger mr-3 d-none" id="upload-via-table" type="button">Upload via table</button>
+                        <button class="mt-2 py-2 btn btn-warning mr-3" id="toggle-csv" type="button">Upload Csv</button>
+                        <button class="mt-2 py-2 btn btn-warning mr-3 d-none" id="upload-via-table" type="button">Upload via table</button>
                         <button
                             class=" mt-2 py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
                     </div>
