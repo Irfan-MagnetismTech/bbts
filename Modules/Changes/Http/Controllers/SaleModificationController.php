@@ -23,10 +23,12 @@ use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Billing\Entities\BillingOtcBill;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\CollectionAddress;
+use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\CostingLinkEquipment;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\CostingProductEquipment;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class SaleModificationController extends Controller
 {
@@ -191,5 +193,77 @@ class SaleModificationController extends Controller
             $data[] = $rowData;
         }
         return $data;
+    }
+
+    public function getFrWisePnlReport($fr_no)
+    {
+        $connectivityRequirements = ConnectivityRequirement::where('fr_no', $fr_no)->get();
+        $total_investment = 0;
+        $total_budget = 0;
+        $total_revenue = 0;
+        $total_monthly_pnl = 0;
+        $total_pnl = 0;
+        $grand_total_monthly_cost = 0;
+        $total_yearly_pnl = 0;
+        $grand_total_otc = 0;
+        $total_product_cost = 0;
+        $sum_of_monthly_cost = 0;
+        $pnl_data = [];
+        foreach ($connectivityRequirements as $connectivityRequirement) {
+            if ($connectivityRequirement->is_modified == '0') {
+                if ($connectivityRequirement->costing) {
+                    $month = $connectivityRequirement->costing->month;
+                    $total_otc = $connectivityRequirement->offerDetail->total_offer_otc;
+                    $investment = $connectivityRequirement->costing->costingLinks->sum('investment');
+                    $product_cost = $connectivityRequirement->costing->product_total_cost + $connectivityRequirement->costing->total_operation_cost;
+                    $monthly_cost = ($investment - $total_otc) / $month + $connectivityRequirement->costing->costingLinks->sum('capacity_amount') + $details->offerDetail->equipment_total_mrc;
+                    $total_monthly_cost = $monthly_cost + $product_cost;
+                    $monthly_revenue = $connectivityRequirement->offerDetail->grand_total;
+                    $total_investment += $investment;
+                    $grand_total_otc += $total_otc;
+                    $total_product_cost += $product_cost;
+                    $sum_of_monthly_cost += $monthly_cost;
+                    $total_budget += $total_monthly_cost;
+                    $grand_total_monthly_cost += $total_monthly_cost * $month;
+                    $total_revenue += $monthly_revenue;
+                    $monthly_pnl = $monthly_revenue - $total_monthly_cost;
+                    $total_monthly_pnl += $monthly_pnl;
+                    $total_yearly_pnl += $monthly_pnl * $month;
+                    $data = [
+                        'connectivity_point' => $connectivityRequirement->connectivity_point,
+                        'pnl' => $monthly_pnl
+                    ];
+                }
+                array_push($pnl_data, $data);
+            } else {
+                $costing = Costing::where('connectivity_requirement_id', $connectivityRequirement->id)->first();
+                if ($costing) {
+                    $month = $costing->month;
+                    $total_otc = $connectivityRequirement->offerDetail->total_offer_otc;
+                    $investment = $costing->costingLinks->sum('investment');
+                    $product_cost = $costing->product_total_cost + $costing->total_operation_cost;
+                    $monthly_cost = ($investment - $total_otc) / $month + $costing->costingLinks->sum('capacity_amount') + $connectivityRequirement->offerDetail->equipment_total_mrc;
+                    $total_monthly_cost = $monthly_cost + $product_cost;
+                    $monthly_revenue = $connectivityRequirement->offerDetail->grand_total;
+                    $total_investment += $investment;
+                    $grand_total_otc += $total_otc;
+                    $total_product_cost += $product_cost;
+                    $sum_of_monthly_cost += $monthly_cost;
+                    $total_budget += $total_monthly_cost;
+                    $grand_total_monthly_cost += $total_monthly_cost * $month;
+                    $total_revenue += $monthly_revenue;
+                    $monthly_pnl = $monthly_revenue - $total_monthly_cost;
+                    $total_monthly_pnl += $monthly_pnl;
+                    $total_yearly_pnl += $monthly_pnl * $month;
+                    $data = [
+                        'connectivity_point' => $connectivityRequirement->connectivity_point,
+                        'pnl' => $monthly_pnl
+                    ];
+                    array_push($pnl_data, $data);
+                }
+            }
+        }
+
+        return $pnl_data;
     }
 }

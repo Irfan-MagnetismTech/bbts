@@ -139,7 +139,7 @@ class FeasibilityRequirementController extends Controller
         $feasibility_requirement->update($data);
 
         foreach ($request->connectivity_point as $key => $link) {
-            $detailId = $request['detail_id'][$key];
+            $detailId = $request['detail_id'][$key] ?? null;
             $frNo = 'fr' . '-' . $data['client_no'] . '-';
             $detailsData = [
                 'connectivity_point' => $request['connectivity_point'][$key],
@@ -158,7 +158,10 @@ class FeasibilityRequirementController extends Controller
             ];
 
             if ($detailId) {
-                FeasibilityRequirementDetail::find($detailId)->update($detailsData);
+                $feasibility = FeasibilityRequirementDetail::find($detailId);
+                if ($feasibility) {
+                    $feasibility->update($detailsData);
+                }
             } else {
                 $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
 
