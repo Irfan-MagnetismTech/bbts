@@ -857,7 +857,10 @@
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover">
                             <tbody>
-                                <tr class="text-center">
+                                <tr>
+                                    <th>Total FR</th>
+                                    <td>{{ $pnl_summary_data['total_fr'] }}</td>
+                                </tr>
                                 <tr class="text-center">
                                     <th>Connected Month</th>
                                     <td>{{ $pnl_summary_data['connection_month'] }}</td>
@@ -867,9 +870,11 @@
                                     <td>{{ $pnl_summary_data['total_revenue'] }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Total FR</th>
-                                    <td>{{ $pnl_summary_data['total_fr'] }}</td>
-                                </tr>
+                                    <th>PNL Summary</th>
+                                    <td>
+                                        <a href="{{ route('get-fr-wise-pnl-report', $planning->fr_no) }}" target="_blank"
+                                            class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

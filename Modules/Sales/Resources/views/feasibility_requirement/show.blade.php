@@ -32,7 +32,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="tableHeading">
-                    <h5> <span> &#10070; </span> Feasibility Requirement <span>&#10070;</span> </h5>
+                    <h5> <span> &#10070; </span> Feasibility Requirement yfayfftztf <span>&#10070;</span> </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">

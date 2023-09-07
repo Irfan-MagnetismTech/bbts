@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Http\Requests\FeasibilityRequirementRequest;
+use App\Exports\FeasibilityRequirementExport;
+use App\Imports\FeasibilityRequirementImport;
+use App\Imports\FeasibilityRequirementImportUpdate;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FeasibilityRequirementController extends Controller
 {
@@ -44,57 +48,62 @@ class FeasibilityRequirementController extends Controller
 
     public function store(FeasibilityRequirementRequest $request)
     {
-        DB::beginTransaction();
+        // dd($request->all());
+        if ($request->file) {
+            $additionalData = $request;
+            Excel::import(new FeasibilityRequirementImport($additionalData), $request->file('file'));
+        } else {
+            try {
+                DB::beginTransaction();
+                $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id');
+                $data['user_id'] = auth()->user()->id;
+                $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
-        try {
-            $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id');
-            $data['user_id'] = auth()->user()->id;
-            $data['branch_id'] = auth()->user()->branch_id ?? '1';
+                $maxMqNo = FeasibilityRequirement::where('client_no', $data['client_no'])->max('mq_no');
+                $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($maxMqNo ? (explode('-', $maxMqNo)[3] + 1) : '1');
 
-            $maxMqNo = FeasibilityRequirement::where('client_no', $data['client_no'])->max('mq_no');
-            $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($maxMqNo ? (explode('-', $maxMqNo)[3] + 1) : '1');
+                $feasibilityRequirement = FeasibilityRequirement::create($data);
 
-            $feasibilityRequirement = FeasibilityRequirement::create($data);
+                $feasibilityDetails = [];
+                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
+                if ($maxFrNo) {
+                    $frArray = explode('-', $maxFrNo);
+                    $fr_serial = intval($frArray[count($frArray) - 1]) + 1;
+                } else {
+                    $fr_serial = 1;
+                }
 
-            $feasibilityDetails = [];
-            $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
-            if ($maxFrNo) {
-                $frArray = explode('-', $maxFrNo);
-                $fr_serial = intval($frArray[count($frArray) - 1]) + 1;
-            } else {
-                $fr_serial = 1;
+                foreach ($request['connectivity_point'] as $key => $connectivityPoint) {
+                    $frNo = 'fr' . '-' . $data['client_no'] . '-' . $fr_serial;
+                    $fr_serial++;
+                    $feasibilityDetails[] = [
+                        'connectivity_point' => $connectivityPoint,
+                        'aggregation_type' => $request['aggregation_type'][$key],
+                        'client_no' => $data['client_no'],
+                        'fr_no' => $frNo,
+                        'division_id' => $request['division_id'][$key],
+                        'district_id' => $request['district_id'][$key],
+                        'thana_id' => $request['thana_id'][$key],
+                        'location' => $request['location'][$key],
+                        'lat' => $request['lat'][$key],
+                        'long' => $request['long'][$key],
+                        'contact_name' => $request['contact_name'][$key],
+                        'contact_designation' => $request['contact_designation'][$key],
+                        'contact_number' => $request['contact_number'][$key],
+                        'contact_email' => $request['contact_email'][$key],
+                    ];
+                }
+
+                $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
+                DB::commit();
+                return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
+            } catch (\Exception $e) {
+                DB::rollback();
+                // Handle the exception or display an error message
+                return back()->with('error', $e->getMessage());
             }
-
-            foreach ($request['connectivity_point'] as $key => $connectivityPoint) {
-                $frNo = 'fr' . '-' . $data['client_no'] . '-' . $fr_serial;
-                $fr_serial++;
-                $feasibilityDetails[] = [
-                    'connectivity_point' => $connectivityPoint,
-                    'aggregation_type' => $request['aggregation_type'][$key],
-                    'client_no' => $data['client_no'],
-                    'fr_no' => $frNo,
-                    'division_id' => $request['division_id'][$key],
-                    'district_id' => $request['district_id'][$key],
-                    'thana_id' => $request['thana_id'][$key],
-                    'location' => $request['location'][$key],
-                    'lat' => $request['lat'][$key],
-                    'long' => $request['long'][$key],
-                    'contact_name' => $request['contact_name'][$key],
-                    'contact_designation' => $request['contact_designation'][$key],
-                    'contact_number' => $request['contact_number'][$key],
-                    'contact_email' => $request['contact_email'][$key],
-                ];
-            }
-            $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
-
-            DB::commit();
-
-            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
-        } catch (\Exception $e) {
-            DB::rollback();
-            // Handle the exception or display an error message
-            return back()->with('error', $e->getMessage());
         }
+        return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
     }
 
 
@@ -132,14 +141,22 @@ class FeasibilityRequirementController extends Controller
     public function update(FeasibilityRequirement $feasibility_requirement, FeasibilityRequirementRequest $request)
     {
         //  dd($request->all());
+         if ($request->file) {
+            $additionalData = $request;
+            $feasibilityRequirement = $feasibility_requirement;
+            Excel::import(new FeasibilityRequirementImportUpdate($additionalData, $feasibilityRequirement), $request->file('file'));
+            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
+        }
+        else{
         $data = $request->only('client_no', 'is_existing', 'date');
         $data['user_id'] = auth()->user()->id;
         $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
         $feasibility_requirement->update($data);
+        // dd($feasibility_requirement);
 
         foreach ($request->connectivity_point as $key => $link) {
-            $detailId = $request['detail_id'][$key];
+            $detailId = $request['detail_id'][$key] ?? null;
             $frNo = 'fr' . '-' . $data['client_no'] . '-';
             $detailsData = [
                 'connectivity_point' => $request['connectivity_point'][$key],
@@ -158,7 +175,10 @@ class FeasibilityRequirementController extends Controller
             ];
 
             if ($detailId) {
-                FeasibilityRequirementDetail::find($detailId)->update($detailsData);
+                $feasibility = FeasibilityRequirementDetail::find($detailId);
+                if ($feasibility) {
+                    $feasibility->update($detailsData);
+                }
             } else {
                 $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
 
@@ -175,6 +195,9 @@ class FeasibilityRequirementController extends Controller
         }
 
         return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
+
+        }
+        
     }
 
     /**
@@ -204,5 +227,9 @@ class FeasibilityRequirementController extends Controller
         $feasibility_requirement = FeasibilityRequirement::where('client_id', $request->client_id)->first();
         $feasibility_requirement_details = FeasibilityRequirementDetail::select('id', 'link_name', 'fr_no')->where('feasibility_requirement_id', $feasibility_requirement->id)->get();
         return response()->json($feasibility_requirement_details);
+    }
+    public function exportFeasibilityRequirement()
+    {
+        return Excel::download(new FeasibilityRequirementExport, 'feasibility-requirement-details.xlsx');
     }
 }

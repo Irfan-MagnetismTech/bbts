@@ -4,9 +4,9 @@ namespace Modules\SCM\Http\Controllers;
 
 use Modules\Admin\Entities\Unit;
 use Illuminate\Routing\Controller;
-use Modules\SCM\Entities\Supplier;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use Modules\SCM\Entities\Supplier;
 use Modules\SCM\Http\Requests\SupplierRequest;
 
 class SupplierController extends Controller
