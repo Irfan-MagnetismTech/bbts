@@ -31,7 +31,7 @@ class BillGenerate extends Model
      */
     public function setDateAttribute($input)
     {
-        !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
+//        !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
     }
 
     public function lines()

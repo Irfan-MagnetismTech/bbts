@@ -172,24 +172,6 @@ class CollectionController extends Controller
             ]);
         return response()->json($items);
     }
-    public function get_fr_product()
-    {
-        $items = SaleProductDetail::query()
-            ->where('fr_no', request()->fr_no)
-            ->get()
-            ->map(fn ($item) => [
-                'product_id'                 => $item->product_id,
-                'product_name'                 => $item->product_name,
-                'quantity'                 => $item->quantity,
-                'unit'                 => $item->unit,
-                'fr_no'                 => $item->fr_no,
-                'rate'                 => $item->rate,
-                'price'                 => $item->price,
-                'vat_amount'                 => $item->vat_amount,
-                'total_price'                 => $item->total_price,
-            ]);
-        return response()->json($items);
-    }
 
     public function get_bill()
     {
