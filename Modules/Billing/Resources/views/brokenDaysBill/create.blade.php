@@ -42,6 +42,7 @@
                                 $date = $is_old ? old('date') : $brokenDaysBill->date ?? null;
                                 $fr_no = $is_old ? old('fr_no') : $brokenDaysBill->fr_no ?? null;
                                 $bill_no = $is_old ? old('bill_no') : $brokenDaysBill->bill_no ?? null;
+                                $billing_date = $is_old ? old('billing_date') : $brokenDaysBill->billing_date ?? null;
                                 $days = $is_old ? old('days') : $brokenDaysBill->days ?? null;
                                 $total_amount = $is_old ? old('total_amount') : $brokenDaysBill->total_amount ?? null;
                         @endphp
@@ -76,13 +77,13 @@
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="bill_no" id="bill_no" autocomplete="off" required value="{{$bill_no}}">
-                                <label for="bill_no">Bill No<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="billing_date" id="billing_date" autocomplete="off" readonly required value="{{$billing_date}}">
+                                <label for="billing_date">Billing Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="days" id="days" autocomplete="off" required value="{{$days}}">
+                                <input type="number" class="form-control" name="days" id="days" autocomplete="off" required value="{{$days}}">
                                 <label for="days">Days<span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -189,5 +190,6 @@
 
 
                     <script src="{{ asset('js/get-fr-product.js') }}"></script>
+                    <script src="{{ asset('js/get-fr-bill-date.js') }}"></script>
                     <script src="{{ asset('js/get-client.js') }}"></script>
 @endsection

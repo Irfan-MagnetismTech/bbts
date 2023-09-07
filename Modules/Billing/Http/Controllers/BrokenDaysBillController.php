@@ -62,7 +62,7 @@ class BrokenDaysBillController extends Controller
 
             $billGenerateData = [
                 'client_no' => $bill->client_no,
-                'date' => $request->date,
+                'date' => $bill->date,
                 'bill_no' => $bill->bill_no,
                 'bill_type' => $bill->type,
                 'amount' => $bill->total_amount,
@@ -253,6 +253,18 @@ class BrokenDaysBillController extends Controller
                 'price'                 => $item->price,
                 'vat_amount'                 => $item->vat_amount,
                 'total_price'                 => $item->total_price,
+            ]);
+        return response()->json($items);
+    }
+
+    public function get_fr_bill_date()
+    {
+        $items = Connectivity::query()
+            ->where('fr_no', request()->fr_no)
+            ->get()
+            ->map(fn ($item) => [
+                'client_no'                 => $item->client_no,
+                'billing_date'                 => $item->billing_date,
             ]);
         return response()->json($items);
     }
