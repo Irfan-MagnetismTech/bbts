@@ -7,13 +7,13 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Services\BbtsGlobalService;
-use Modules\Billing\Entities\BillingOtcBill;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Billing\Entities\BillGenerate;
 use Modules\Billing\Entities\BillGenerateLine;
 use Modules\Billing\Entities\BrokenDaysBill;
 use Modules\Networking\Entities\Connectivity;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Sale;
 use Modules\Sales\Entities\SaleProductDetail;
 
@@ -62,7 +62,7 @@ class BrokenDaysBillController extends Controller
 
             $billGenerateData = [
                 'client_no' => $bill->client_no,
-                'date' => $bill->date,
+                'date' => $request->date,
                 'bill_no' => $bill->bill_no,
                 'bill_type' => $bill->type,
                 'amount' => $bill->total_amount,
@@ -220,6 +220,22 @@ class BrokenDaysBillController extends Controller
             ];
         }
         return $row;
+    }
+
+    public function get_client()
+    {
+        $items = Client::query()
+            ->with('saleDetails')
+            ->where('client_name', 'like', '%' . request()->search . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value'                 => $item->client_name,
+                'label'                 => $item->client_name,
+                'client_no'             => $item->client_no,
+                'client_id'             => $item->id,
+                'saleDetails' => $item->saleDetails
+            ]);
+        return response()->json($items);
     }
 
     public function get_fr_product()

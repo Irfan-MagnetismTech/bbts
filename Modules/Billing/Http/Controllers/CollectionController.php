@@ -157,22 +157,6 @@ class CollectionController extends Controller
         return $row;
     }
 
-    public function get_client()
-    {
-        $items = Client::query()
-            ->with('feasibility_requirement_details')
-            ->where('client_name', 'like', '%' . request()->search . '%')
-            ->get()
-            ->map(fn ($item) => [
-                'value'                 => $item->client_name,
-                'label'                 => $item->client_name,
-                'client_no'             => $item->client_no,
-                'client_id'             => $item->id,
-                'feasibility_requirement_details' => $item->feasibility_requirement_details
-            ]);
-        return response()->json($items);
-    }
-
     public function get_bill()
     {
         $items = BillGenerate::query()
