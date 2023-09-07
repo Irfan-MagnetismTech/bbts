@@ -7,6 +7,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Services\BbtsGlobalService;
+use Modules\Billing\Entities\BillingOtcBill;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Modules\Billing\Entities\BillGenerate;
@@ -61,7 +62,7 @@ class BrokenDaysBillController extends Controller
 
             $billGenerateData = [
                 'client_no' => $bill->client_no,
-                'date' => $request->date,
+                'date' => $bill->date,
                 'bill_no' => $bill->bill_no,
                 'bill_type' => $bill->type,
                 'amount' => $bill->total_amount,
