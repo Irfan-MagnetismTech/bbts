@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('bill_no')->nullable();
             $table->string('type')->comment('new/existing');
             $table->integer('days')->nullable();
+            $table->double('total_amount', 8, 2)->nullable();
             $table->bigInteger('user_id')->nullable();
             $table->bigInteger('branch_id')->nullable();
             $table->timestamps();
