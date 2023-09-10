@@ -47,6 +47,7 @@ class SupplierController extends Controller
      */
     public function store(SupplierRequest $request)
     {
+        // dd($request->all());
         try {
             $data = $request->all();
             Supplier::create($data);
