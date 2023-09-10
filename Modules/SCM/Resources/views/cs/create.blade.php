@@ -74,13 +74,13 @@
                                 {{ Form::text('effective_date', $effective_date, ['class' => 'form-control', 'id' => 'effective_date', 'autocomplete' => 'off', 'placeholder' => 'Effective Date', 'required', 'readonly']) }}
                             </div>
                         </div>
-                        <div class="col-xl-4 col-md-4">
+                        {{-- <div class="col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="expiry_date">Expiry Date<span
                                         class="text-danger">*</span></label>
                                 {{ Form::text('expiry_date', $expiry_date, ['class' => 'form-control', 'id' => 'expiry_date', 'autocomplete' => 'off', 'placeholder' => 'Expiry Date', 'required', 'readonly']) }}
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="mt-1 col-xl-12 col-md-12">
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="remarks">Remarks</label>

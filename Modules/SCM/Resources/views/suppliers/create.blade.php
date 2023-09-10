@@ -62,16 +62,16 @@
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="address-1">Supplier Address-1 <span class="text-danger">*</span></label>
+                        <label class="input-group-addon" for="address-1">Address-1 <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="address-1" name="address_1"
-                            placeholder="Enter supplier address-1" value="{{ old('address_1') ?? ($supplier->address_1 ?? '') }}" required>
+                            placeholder="Enter address-1" value="{{ old('address_1') ?? ($supplier->address_1 ?? '') }}" required>
                     </div>
                 </div>
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="address-2">Supplier Address-2 <span class="text-danger">*</span></label>
+                        <label class="input-group-addon" for="address-2">Address-2 <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="address-1" name="address_2"
-                            placeholder="Enter supplier address-2" value="{{ old('address_2') ?? ($supplier->address_2 ?? '') }}" required>
+                            placeholder="Enter address-2" value="{{ old('address_2') ?? ($supplier->address_2 ?? '') }}" required>
                     </div>
                 </div>
                 <div class="col-12">
