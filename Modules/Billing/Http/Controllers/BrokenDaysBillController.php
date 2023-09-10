@@ -33,7 +33,8 @@ class BrokenDaysBillController extends Controller
 
     public function index()
     {
-        return view('billing::index');
+        $datas = BrokenDaysBill::get();
+        return view('billing::brokenDaysBill.index', compact('datas'));
     }
 
     /**

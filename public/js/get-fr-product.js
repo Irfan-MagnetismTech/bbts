@@ -65,5 +65,5 @@ function calculateTotalAmount(){
     $(".total_amount").each(function () {
         totalAmount += parseFloat($(this).val() ? $(this).val() : 0);
     })
-    $('#net_total_amount').val(totalAmount);
+    $('#net_total_amount').val(totalAmount.toFixed(2));
 }
