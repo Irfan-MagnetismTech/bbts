@@ -56,8 +56,9 @@ class BrokenDaysBillController extends Controller
             DB::beginTransaction();
             $data = $request->only('client_no', 'fr_no', 'date', 'bill_no', 'type', 'days', 'total_amount','user_id');
             $data['user_id'] = Auth()->id();
+            $data['bill_no'] = $this->brokenDaysBillNo;
             $data['type'] = 'Broken Days Bill';
-            $data['total_amount'] = $request->net_total_amount;
+            $data['total_amount'] = $request->payable_amount;
             $bill = BrokenDaysBill::create($data);
 
             $billGenerateData = [
@@ -225,7 +226,7 @@ class BrokenDaysBillController extends Controller
     public function get_client()
     {
         $items = Client::query()
-            ->with('saleDetails')
+            ->with('saleDetails.feasibilityRequirementDetails')
             ->where('client_name', 'like', '%' . request()->search . '%')
             ->get()
             ->map(fn ($item) => [

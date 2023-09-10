@@ -91,7 +91,7 @@
                             <div class="form-item">
                                 <input type="date" name="date" id="date" class="form-control"
                                        value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off" value="{{$date}}">
-                                <label for="client_type">Date<span class="text-danger">*</span></label>
+                                <label for="date">Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
                     </div>
@@ -124,6 +124,7 @@
                                     $total_prices = old('total_price', !empty($brokenDaysBill) ? $brokenDaysBill->BrokenDaysBillDetails->pluck('total_price') : []);
                                     $total_amounts = old('total_amount', !empty($brokenDaysBill) ? $brokenDaysBill->BrokenDaysBillDetails->pluck('total_amount') : []);
                                     $net_total_amount=0;
+                                    $payable_amount=0;
                                 @endphp
 
                                 @foreach ($product_names as $key => $product_name)
@@ -171,6 +172,15 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="6" class="text-right">Payable Amount</td>
+                                    <td>
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <input type="text" name="payable_amount" class="form-control"
+                                                   id="payable_amount" autocomplete="off" placeholder="Payable Amount" readonly value="{{$payable_amount}}">
+                                        </div>
+                                    </td>
+                                </tr>
                                 </tfoot>
                             </table>
                             <div class="row">
@@ -192,4 +202,5 @@
                     <script src="{{ asset('js/get-fr-product.js') }}"></script>
                     <script src="{{ asset('js/get-fr-bill-date.js') }}"></script>
                     <script src="{{ asset('js/get-client.js') }}"></script>
+                    <script src="{{ asset('js/get-bdb-payable-amount.js') }}"></script>
 @endsection
