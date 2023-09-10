@@ -38,6 +38,8 @@ class ModifiedSurveyController extends Controller
      */
     public function create($id)
     {
+        // $survey = Survey::with('surveyDetails')->where('id',51)->first();
+        // dd($survey);
         $pops = Pop::get();
         $vendors = Vendor::get(); 
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('id', $id)->first();
@@ -120,10 +122,11 @@ class ModifiedSurveyController extends Controller
      */
     public function edit($id)
     { 
-        $survey = Survey::where('id',$id)->first();
+        $survey = Survey::with('surveyDetails')->where('id',$id)->first();
+        // dd($survey);
         $pops = Pop::get();
         $vendors = Vendor::get(); 
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('id', $id)->first();
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('id', $survey->connectivity_requirement_id)->first();
         // dd($connectivity_requirement);
         $current_qty = $connectivity_requirement->connectivityProductRequirementDetails;
         $previous_qty = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('fr_no', $connectivity_requirement->fr_no)->latest()->first()->connectivityProductRequirementDetails;
@@ -145,9 +148,9 @@ class ModifiedSurveyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      dd($request->all());
+      return redirect()->route('survey.index')->with('success', 'Survey Updaated Successfully');
     }
-
     /**
      * Remove the specified resource from storage.
      * @param int $id
