@@ -29,7 +29,6 @@ class ModifiedSurveyController extends Controller
     {
         $surveys = Survey::with('surveyDetails', 'lead_generation')->where('is_modified', '=', 1)->latest()->get();
         return view('changes::modified_servey.index', compact('surveys'));
-   
     }
 
     /**
@@ -41,7 +40,7 @@ class ModifiedSurveyController extends Controller
         // $survey = Survey::with('surveyDetails')->where('id',51)->first();
         // dd($survey);
         $pops = Pop::get();
-        $vendors = Vendor::get(); 
+        $vendors = Vendor::get();
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('id', $id)->first();
         // dd($connectivity_requirement);
         $current_qty = $connectivity_requirement->connectivityProductRequirementDetails;
@@ -53,7 +52,7 @@ class ModifiedSurveyController extends Controller
             ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
                 return $qr->where('fr_no', $connectivity_requirement->fr_no);
             })->get();
-        return view('changes::modified_servey.create', compact('pops','vendors','connectivity_requirement', 'grouped_qty', 'grouped_previous_qty', 'grouped_current_qty', 'existingConnections'));
+        return view('changes::modified_servey.create', compact('pops', 'vendors', 'connectivity_requirement', 'grouped_qty', 'grouped_previous_qty', 'grouped_current_qty', 'existingConnections'));
     }
 
     /**
@@ -98,7 +97,7 @@ class ModifiedSurveyController extends Controller
                 SurveyDetail::create($connectivity_requirement_details);
             }
             DB::commit();
-            return redirect()->route('survey.index')->with('success', 'Survey Created Successfully');
+            return redirect()->route('survey-modification.index')->with('success', 'Survey Modification Created Successfully');
         } catch (QueryException $e) {
             DB::rollback();
             return redirect()->back()->withInput()->with('error', $e->getMessage());
@@ -121,11 +120,11 @@ class ModifiedSurveyController extends Controller
      * @return Renderable
      */
     public function edit($id)
-    { 
-        $survey = Survey::with('surveyDetails')->where('id',$id)->first();
+    {
+        $survey = Survey::with('surveyDetails')->where('id', $id)->first();
         // dd($survey);
         $pops = Pop::get();
-        $vendors = Vendor::get(); 
+        $vendors = Vendor::get();
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('id', $survey->connectivity_requirement_id)->first();
         // dd($connectivity_requirement);
         $current_qty = $connectivity_requirement->connectivityProductRequirementDetails;
@@ -137,7 +136,7 @@ class ModifiedSurveyController extends Controller
             ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
                 return $qr->where('fr_no', $connectivity_requirement->fr_no);
             })->get();
-        return view('changes::modified_servey.create', compact('survey','pops','vendors','connectivity_requirement', 'grouped_qty', 'grouped_previous_qty', 'grouped_current_qty', 'existingConnections'));
+        return view('changes::modified_servey.create', compact('survey', 'pops', 'vendors', 'connectivity_requirement', 'grouped_qty', 'grouped_previous_qty', 'grouped_current_qty', 'existingConnections'));
     }
 
     /**
@@ -148,8 +147,32 @@ class ModifiedSurveyController extends Controller
      */
     public function update(Request $request, $id)
     {
-      dd($request->all());
-      return redirect()->route('survey.index')->with('success', 'Survey Updaated Successfully');
+        // dd($request->all());
+        $details = [];
+        $survey = Survey::findOrFail($id);
+        foreach ($request->link_type as $key => $value) {
+            $details[] = [
+                'survey_id' => $survey->id,
+                'link_type' => $value,
+                'link_no' => $survey['fr_no'] . '-' . substr($value, 0, 1) . $key + 1,
+                'option' => $request->option[$key],
+                'status' => $request->status[$key],
+                'method' => $request->method[$key],
+                'vendor_id' => $request->vendor[$key],
+                'pop_id' => $request->pop[$key],
+                'ldp' => $request->ldp[$key],
+                'lat' => $request->lat[$key],
+                'long' => $request->long[$key],
+                'distance' => $request->distance[$key],
+                'current_capacity' => $request->capacity[$key],
+                'remarks' => $request->new_remarks[$key]
+            ];
+        }
+        $survey->surveyDetails()->delete();
+        $survey->surveyDetails()->createMany($details);
+
+
+        return redirect()->route('survey-modification.index')->with('success', 'Survey Modification Updaated Successfully');
     }
     /**
      * Remove the specified resource from storage.
