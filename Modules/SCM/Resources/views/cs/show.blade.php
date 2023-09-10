@@ -28,11 +28,13 @@
                     <tr>
 
                         <td> <strong>Remarks</strong> </td>
-                        <td><strong>
-                        @foreach( $csProjects as  $csProject)
-                          {{ $csProject->project->name}}<br>
-                        @endforeach
-                            </strong></td>
+                        <td>
+{{--                            <strong>--}}
+{{--                        @foreach( $csProjects as  $csProject)--}}
+{{--                          {{ $csProject->project->name}}<br>--}}
+{{--                        @endforeach--}}
+{{--                            </strong>--}}
+                        </td>
                     </tr>
                     </tbody>
                 </table>

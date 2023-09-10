@@ -99,7 +99,28 @@ class CsController extends Controller
      */
     public function show(Cs $c)
     {
-        abort(404);
+        $comparativestatement=$c;
+        $csMaterials = [];
+
+        foreach (array_keys($c['material_id']) as $material_key) {
+            $csMaterials[] = [
+                'material_id' => $c['material_id'][$material_key],
+                'brand_id'    => $c['brand_id'][$material_key],
+            ];
+        }
+
+        $csSuppliers = [];
+        foreach (array_keys($c['supplier_id']) as $supplier_key) {
+            $csSuppliers[] = [
+                'supplier_id'           => $c['supplier_id'][$supplier_key],
+                'quotation_no'         => $c['quotation_no'][$supplier_key],
+                'vat_tax'               => $c['vat_tax'][$supplier_key],
+                'credit_period'         => $c['credit_period'][$supplier_key],
+                'is_checked'            => in_array($c['supplier_id'][$supplier_key], $c['checked_supplier']) ? true : false,
+            ];
+        }
+
+        return view('scm::cs.show', compact('comparativestatement', 'csMaterials', 'csSuppliers'));
     }
 
     /**
