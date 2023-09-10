@@ -62,11 +62,40 @@
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="address">Supplier Address <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="address" name="address"
-                            placeholder="Enter supplier address" value="{{ old('address') ?? ($supplier->address ?? '') }}" required>
+                        <label class="input-group-addon" for="address-1">Supplier Address-1 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address-1" name="address_1"
+                            placeholder="Enter supplier address-1" value="{{ old('address_1') ?? ($supplier->address_1 ?? '') }}" required>
                     </div>
                 </div>
+                <div class="col-12">
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="address-2">Supplier Address-2 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address-1" name="address_2"
+                            placeholder="Enter supplier address-2" value="{{ old('address_2') ?? ($supplier->address_2 ?? '') }}" required>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="bin-no">Bin No<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="bin-no" name="bin_no"
+                            placeholder="Enter bin no" value="{{ old('bin_no') ?? ($supplier->bin_no ?? '') }}" required>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="tin-no">Tin No<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="tin-no" name="tin_no"
+                            placeholder="Enter tin no" value="{{ old('tin_no') ?? ($supplier->tin_no ?? '') }}" required>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="mobile-no">Mobile No<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="mobile-no" name="mobile_no"
+                            placeholder="Enter mobile no" value="{{ old('mobile_no') ?? ($supplier->mobile_no ?? '') }}" required>
+                    </div>
+                </div>
+
             </div>
 
 

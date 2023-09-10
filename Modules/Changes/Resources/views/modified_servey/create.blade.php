@@ -508,7 +508,7 @@
                             <tbody class="requirementBody">
                                 {{-- @dd($connectivity_requirement->connectivityRequirementDetails); --}}
                                 @if (!empty($survey))
-                                    @foreach ($link_types as $key => $link_type)
+                                    @foreach ($link_types as $key1 => $link_type)
                                         <tr class="feasibility_details_row">
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
@@ -535,13 +535,13 @@
                                                     <select name="option[]" id="option" class="form-control">
                                                         <option value="">Select Option</option>
                                                         <option value="Option 1"
-                                                            {{ $options[$key] == 'Option 1' ? 'selected' : '' }}>
+                                                            {{ $options[$key1] == 'Option 1' ? 'selected' : '' }}>
                                                             Option</option>
                                                         <option value="Option 2"
-                                                            {{ $options[$key] == 'Option 2' ? 'selected' : '' }}>
+                                                            {{ $options[$key1] == 'Option 2' ? 'selected' : '' }}>
                                                             Option 2</option>
                                                         <option value="Option 3"
-                                                            {{ $options[$key] == 'Option 3' ? 'selected' : '' }}>
+                                                            {{ $options[$key1] == 'Option 3' ? 'selected' : '' }}>
                                                             Option 3</option>
                                                     </select>
                                                 </div>
@@ -551,10 +551,10 @@
                                                     <select name="status[]" id="status" class="form-control">
                                                         <option value="">Select Status</option>
                                                         <option value="Existing"
-                                                            {{ $statuses[$key] == 'Existing' ? 'selected' : '' }}>
+                                                            {{ $statuses[$key1] == 'Existing' ? 'selected' : '' }}>
                                                             Existing</option>
                                                         <option value="New"
-                                                            {{ $statuses[$key] == 'New' ? 'selected' : '' }}>New</option>
+                                                            {{ $statuses[$key1] == 'New' ? 'selected' : '' }}>New</option>
                                                     </select>
                                                 </div>
                                             </td>
@@ -563,13 +563,13 @@
                                                     <select name="method[]" id="method" class="form-control">
                                                         <option value="">Select Method</option>
                                                         <option value="Fiber"
-                                                            {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber
+                                                            {{ $methods[$key1] == 'Fiber' ? 'selected' : '' }}>Fiber
                                                         </option>
                                                         <option value="Radio"
-                                                            {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio
+                                                            {{ $methods[$key1] == 'Radio' ? 'selected' : '' }}>Radio
                                                         </option>
                                                         <option value="GSM"
-                                                            {{ $methods[$key] == 'GSM' ? 'selected' : '' }}>GSM</option>
+                                                            {{ $methods[$key1] == 'GSM' ? 'selected' : '' }}>GSM</option>
                                                     </select>
                                                 </div>
                                             </td>
@@ -579,7 +579,7 @@
                                                         <option value="">Select Vendor</option>
                                                         @foreach ($vendors as $vendor)
                                                             <option value="{{ $vendor->id }}"
-                                                                @selected($vendor->id == $selected_vendors[$key]['id'])>
+                                                                @selected($vendor->id == $selected_vendors[$key1]['id'])>
                                                                 {{ $vendor->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -587,11 +587,12 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="pop[]" id="pop" class="form-control pop">
+                                                    <select name="pop[]" id="pop" class="form-control pop"  data-key="
+                                                    {{ $key1 }}">
                                                         <option value="">Select POP</option>
                                                         @foreach ($pops as $pop)
                                                             <option value="{{ $pop->id }}"
-                                                                @selected($pop->id == $selected_pops[$key]['id'])>
+                                                                @selected($pop->id == $selected_pops[$key1]['id'])>
                                                                 {{ $pop->name }}</option>
                                                         @endforeach
                                                     </select>
@@ -604,7 +605,7 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="ldp[]" id="ldp"
                                                         class="form-control" placeholder="LDP"
-                                                        value="{{ $ldps[$key] }}">
+                                                        value="{{ $ldps[$key1] }}">
                                                 </div>
                                             </td>
 
@@ -612,7 +613,7 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="lat[]" id="lat"
                                                         class="form-control" placeholder="Latitude"
-                                                        value="{{ $lat[$key] }}">
+                                                        value="{{ $lat[$key1] }}">
                                                 </div>
                                             </td>
 
@@ -620,7 +621,7 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="long[]" id="long"
                                                         class="form-control" placeholder="long"
-                                                        value="{{ $long[$key] }}">
+                                                        value="{{ $long[$key1] }}">
                                                 </div>
                                             </td>
 
@@ -628,21 +629,22 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="distance[]" id="distance"
                                                         class="form-control" placeholder="Distance"
-                                                        value="{{ $distances[$key] }}">
+                                                        value="{{ $distances[$key1] }}">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="current_capacity[]" id="current_capacity"
-                                                        class="form-control" placeholder="Current Capacity"
-                                                        value="{{ $current_capacities[$key] }}">
+                                                    <input type="text" name="capacity[]" id='new_current_capacity_{{ $key1 }}'
+                                                    class="myInputField myInputField_{{ $key1 }} form-control text-right new_current_capacity"  placeholder="Capacity"
+                                                        value="{{ $current_capacities[$key1] }}">
                                                 </div>
                                             </td>
+        
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="remarks[]" id="remarks"
+                                                    <input type="text" name="new_remarks[]"
                                                         class="form-control" placeholder="Remarks"
-                                                        value="{{ $remarks[$key] }}">
+                                                        value="{{ $remarks[$key1] }}">
                                                 </div>
                                             </td>
                                             <td>
