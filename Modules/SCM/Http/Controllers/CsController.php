@@ -8,6 +8,8 @@ use Modules\SCM\Entities\Cs;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\SCM\Entities\CsMaterial;
+use Modules\SCM\Entities\CsSupplier;
 use Modules\SCM\Entities\Material;
 use Illuminate\Database\QueryException;
 use Modules\SCM\Http\Requests\CsRequest;
@@ -99,7 +101,11 @@ class CsController extends Controller
      */
     public function show(Cs $c)
     {
-        abort(404);
+        $comparativestatement=$c;
+        $csMaterials = CsMaterial::latest()->get();
+        $csSuppliers = CsSupplier::latest()->get();
+
+        return view('scm::cs.show', compact('comparativestatement', 'csMaterials', 'csSuppliers'));
     }
 
     /**

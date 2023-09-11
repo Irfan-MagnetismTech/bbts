@@ -3,6 +3,8 @@
 namespace Modules\Billing\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\SaleProductDetail;
 
 class BrokenDaysBill extends Model
@@ -13,8 +15,9 @@ class BrokenDaysBill extends Model
     {
         return $this->hasMany(BrokenDaysBillDetail::class, 'broken_days_bill_id', 'id');
     }
-    public function saleProductDetails()
+
+    public function client(): BelongsTo
     {
-        return $this->hasMany(SaleProductDetail::class, 'sale_detail_id', 'id');
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 }

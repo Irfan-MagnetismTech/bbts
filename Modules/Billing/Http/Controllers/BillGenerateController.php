@@ -34,7 +34,8 @@ class BillGenerateController extends Controller
      */
     public function index()
     {
-        $datas = BillGenerate::where('bill_type', 'OTC')->get();
+//        $datas = BillGenerate::where('bill_type', 'OTC')->get();
+        $datas = BillGenerate::get();
         return view('billing::billGenerate.index', compact('datas'));
     }
 

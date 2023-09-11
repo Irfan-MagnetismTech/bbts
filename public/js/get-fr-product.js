@@ -16,6 +16,7 @@ $(document).on("change", "#fr_no", function () {
                 $.each(data, function(key, value) {
                     addRow(value)
                 });
+                calculateTotalAmount();
             } else {
                 // Handle the case where no data is returned or an error occurs
                 console.log("No data found or an error occurred.");
@@ -25,28 +26,30 @@ $(document).on("change", "#fr_no", function () {
 });
 
 function addRow(value) {
+    const totalAmount = (parseFloat(value.vat_amount) + parseFloat(value.total_price)).toFixed(2);
+
     let row = `<tr>
                             <td>
                                 <input name="product_name[]" class="form-control product_name" readonly autocomplete="off" type="text" value="${value.product_name}" readonly>
                                 <input name="product_id[]" class="form-control product_id" readonly autocomplete="off" type="hidden" value="${value.product_id}">
                             </td>
                             <td>
-                                <input name="quantity[]" class="form-control quantity" autocomplete="off" type="text" value="${value.quantity}" readonl>
+                                <input name="quantity[]" class="form-control quantity" autocomplete="off" type="text" value="${value.quantity}" readonly>
                             </td>
                             <td>
                                 <input name="unit[]" class="form-control unit" autocomplete="off" type="text" value="${value.unit}" readonly>
                             </td>
                             <td>
-                                <input name="rate[]" class="form-control rate" autocomplete="off" type="text" value="${value.rate}" readonly>
-                            </td>
-                            <td>
-                                <input name="price[]" class="form-control price" autocomplete="off" type="text" value="${value.price}" readonly>
-                            </td>
-                            <td>
-                                <input name="vat_amount[]" class="form-control vat_amount" autocomplete="off" type="text" value="${value.vat_amount}" readonly>
+                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" type="text" value="${value.price}" readonly>
                             </td>
                             <td>
                                 <input name="total_price[]" class="form-control total_price" autocomplete="off" type="text" value="${value.total_price}" readonly>
+                            </td>
+                            <td>
+                                <input name="vat[]" class="form-control vat" autocomplete="off" type="text" value="${value.vat_amount}" readonly>
+                            </td>
+                            <td>
+                                <input name="total_amount[]" class="form-control total_amount" autocomplete="off" type="text" value="${totalAmount}" readonly>
                             </td>
                         </tr>
                     `;
@@ -55,4 +58,12 @@ function addRow(value) {
 
 function emptyRow() {
     $('#errTable tbody').empty();
+}
+
+function calculateTotalAmount(){
+    var totalAmount = 0;
+    $(".total_amount").each(function () {
+        totalAmount += parseFloat($(this).val() ? $(this).val() : 0);
+    })
+    $('#net_total_amount').val(totalAmount.toFixed(2));
 }

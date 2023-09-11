@@ -23,16 +23,17 @@ class BillGenerate extends Model
      */
     public function getDateAttribute($input)
     {
-        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+//        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+        return !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y') : null;
     }
 
     /**
      * @param $input
      */
-    public function setDateAttribute($input)
-    {
-        !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
-    }
+//    public function setDateAttribute($input)
+//    {
+////         !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
+//    }
 
     public function lines()
     {

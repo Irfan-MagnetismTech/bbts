@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ url('comparativestatements') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('cs.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -28,11 +28,13 @@
                     <tr>
 
                         <td> <strong>Remarks</strong> </td>
-                        <td><strong>
-                        @foreach( $csProjects as  $csProject)
-                          {{ $csProject->project->name}}<br>
-                        @endforeach
-                            </strong></td>
+                        <td>
+{{--                            <strong>--}}
+{{--                        @foreach( $csProjects as  $csProject)--}}
+{{--                          {{ $csProject->project->name}}<br>--}}
+{{--                        @endforeach--}}
+{{--                            </strong>--}}
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -74,18 +76,18 @@
                                     @endif
                                 </strong>
                             </td>
-                            <td>{{$csMaterial->material->unit->name}}</td>
+                            <td>{{$csMaterial->material->unit?? ''}}</td>
 
                             @foreach( $csSuppliers as  $csSupplier)
                                 <td>
 
                                     <?php
-                                        $priceData = \Illuminate\Support\Facades\DB::table('cs_prices')
-                                            ->where('supplier_id',$csSupplier->id)
-                                                        ->where('material_id',$csMaterial->id)
+                                        $priceData = \Illuminate\Support\Facades\DB::table('cs_material_suppliers')
+                                            ->where('cs_supplier_id',$csSupplier->id)
+                                                        ->where('cs_material_id',$csMaterial->id)
                                             ->first();
                                     ?>
-                                    @money($priceData->price ?? '' )
+                                    {{$priceData->price ?? ''}}
 
                                 </td>
                             @endforeach
@@ -95,29 +97,29 @@
                     <tr>
                         <td style="background-color: #0C4A77;;color: white;"><strong>Terms & Condiitions</strong></td>
                     </tr>
-                    <tr>
-                        <td>Grade</td>
-                        <td></td>
+{{--                    <tr>--}}
+{{--                        <td>Grade</td>--}}
+{{--                        <td></td>--}}
 
-                        @foreach( $csSuppliers as  $csSupplier)
-                            <td>
-                            <?php
-                            $gradeData = \Illuminate\Support\Facades\DB::table('cs_conditions')
-                                ->where('supplier_id',$csSupplier->id)
-                                ->first();
-                            ?>
-                            {{$gradeData->grade ?? '' }}
-                            </td>
-                        @endforeach
+{{--                        @foreach( $csSuppliers as  $csSupplier)--}}
+{{--                            <td>--}}
+{{--                            <?php--}}
+{{--                            $gradeData = \Illuminate\Support\Facades\DB::table('cs_conditions')--}}
+{{--                                ->where('supplier_id',$csSupplier->id)--}}
+{{--                                ->first();--}}
+{{--                            ?>--}}
+{{--                            {{$gradeData->grade ?? '' }}--}}
+{{--                            </td>--}}
+{{--                        @endforeach--}}
 
-                    </tr>
+{{--                    </tr>--}}
                     <tr>
                         <td>Vat & Tax</td>
                         <td></td>
                         @foreach( $csSuppliers as  $csSupplier)
                             <td>
                                 <?php
-                                $vatData = \Illuminate\Support\Facades\DB::table('cs_conditions')
+                                $vatData = \Illuminate\Support\Facades\DB::table('cs_suppliers')
                                     ->where('supplier_id',$csSupplier->id)
                                     ->first();
                                 ?>
@@ -131,7 +133,7 @@
                         @foreach( $csSuppliers as  $csSupplier)
                             <td>
                                 <?php
-                                $creditData = \Illuminate\Support\Facades\DB::table('cs_conditions')
+                                $creditData = \Illuminate\Support\Facades\DB::table('cs_suppliers')
                                     ->where('supplier_id',$csSupplier->id)
                                     ->first();
                                 ?>
@@ -140,52 +142,52 @@
                             </td>
                         @endforeach
                     </tr>
-                    <tr>
-                        <td>Material Availability</td>
-                        <td></td>
-                        @foreach( $csSuppliers as  $csSupplier)
-                            <td>
-                                <?php
-                                $availabilityData = \Illuminate\Support\Facades\DB::table('cs_conditions')
-                                    ->where('supplier_id',$csSupplier->id)
-                                    ->first();
-                                ?>
-                                {{$availabilityData->material_availability ?? '' }}
+{{--                    <tr>--}}
+{{--                        <td>Material Availability</td>--}}
+{{--                        <td></td>--}}
+{{--                        @foreach( $csSuppliers as  $csSupplier)--}}
+{{--                            <td>--}}
+{{--                                <?php--}}
+{{--                                $availabilityData = \Illuminate\Support\Facades\DB::table('cs_conditions')--}}
+{{--                                    ->where('supplier_id',$csSupplier->id)--}}
+{{--                                    ->first();--}}
+{{--                                ?>--}}
+{{--                                {{$availabilityData->material_availability ?? '' }}--}}
 
-                            </td>
-                        @endforeach
-                    </tr>
+{{--                            </td>--}}
+{{--                        @endforeach--}}
+{{--                    </tr>--}}
 
-                    <tr>
-                        <td>Delivery Condition</td>
-                        <td></td>
-                        @foreach( $csSuppliers as  $csSupplier)
-                            <td>
-                                <?php
-                                $deliveryData = \Illuminate\Support\Facades\DB::table('cs_conditions')
-                                    ->where('supplier_id',$csSupplier->id)
-                                    ->first();
-                                ?>
-                                {{$deliveryData->delivery_condition ?? '' }}
+{{--                    <tr>--}}
+{{--                        <td>Delivery Condition</td>--}}
+{{--                        <td></td>--}}
+{{--                        @foreach( $csSuppliers as  $csSupplier)--}}
+{{--                            <td>--}}
+{{--                                <?php--}}
+{{--                                $deliveryData = \Illuminate\Support\Facades\DB::table('cs_conditions')--}}
+{{--                                    ->where('supplier_id',$csSupplier->id)--}}
+{{--                                    ->first();--}}
+{{--                                ?>--}}
+{{--                                {{$deliveryData->delivery_condition ?? '' }}--}}
 
-                            </td>
-                        @endforeach
-                    </tr>
-                    <tr>
-                        <td>Lead Time Required by Supplier</td>
-                        <td></td>
-                        @foreach( $csSuppliers as  $csSupplier)
-                            <td>
-                                <?php
-                                $requiredTimeData = \Illuminate\Support\Facades\DB::table('cs_conditions')
-                                    ->where('supplier_id',$csSupplier->id)
-                                    ->first();
-                                ?>
-                                {{$requiredTimeData->required_time ?? '' }}
+{{--                            </td>--}}
+{{--                        @endforeach--}}
+{{--                    </tr>--}}
+{{--                    <tr>--}}
+{{--                        <td>Lead Time Required by Supplier</td>--}}
+{{--                        <td></td>--}}
+{{--                        @foreach( $csSuppliers as  $csSupplier)--}}
+{{--                            <td>--}}
+{{--                                <?php--}}
+{{--                                $requiredTimeData = \Illuminate\Support\Facades\DB::table('cs_conditions')--}}
+{{--                                    ->where('supplier_id',$csSupplier->id)--}}
+{{--                                    ->first();--}}
+{{--                                ?>--}}
+{{--                                {{$requiredTimeData->required_time ?? '' }}--}}
 
-                            </td>
-                        @endforeach
-                    </tr>
+{{--                            </td>--}}
+{{--                        @endforeach--}}
+{{--                    </tr>--}}
                     </tbody>
                 </table>  <!-- supplier table  -->
             </div>

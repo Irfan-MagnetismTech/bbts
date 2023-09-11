@@ -18,7 +18,11 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('email')->nullable();
-            $table->string('address')->nullable();
+            $table->string('mobile_no')->nullable();
+            $table->string('address_1')->nullable();
+            $table->string('address_2')->nullable();
+            $table->string('bin_no')->nullable();
+            $table->string('tin_no')->nullable();
             $table->timestamps();
         });
     }

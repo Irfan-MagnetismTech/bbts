@@ -21,8 +21,8 @@ $(document).on("keyup focus", "#client_name", function () {
             $("#fr_no").html("");
             var link_options = '<option value="">Select Option</option>';
 
-            ui.item.feasibility_requirement_details.forEach(function (element) {
-                link_options += `<option value="${element.fr_no}">${element.fr_no}</option>`;
+            ui.item.saleDetails.forEach(function (element) {
+                link_options += `<option value="${element.fr_no}">${element.feasibility_requirement_details.connectivity_point} ( ${element.fr_no} )</option>`;
             });
             client_details = ui.item.details;
             $("#fr_no").html(link_options);

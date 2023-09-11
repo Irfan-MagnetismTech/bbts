@@ -2,21 +2,20 @@
 
 namespace Modules\Billing\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Services\BbtsGlobalService;
-use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Modules\Billing\Entities\BillGenerate;
 use Modules\Billing\Entities\BillGenerateLine;
-use Modules\Billing\Entities\BillingOtcBill;
 use Modules\Billing\Entities\BrokenDaysBill;
 use Modules\Networking\Entities\Connectivity;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Sale;
-
-
+use Modules\Sales\Entities\SaleProductDetail;
 
 class BrokenDaysBillController extends Controller
 {
@@ -34,7 +33,8 @@ class BrokenDaysBillController extends Controller
 
     public function index()
     {
-        return view('billing::index');
+        $datas = BrokenDaysBill::get();
+        return view('billing::brokenDaysBill.index', compact('datas'));
     }
 
     /**
@@ -53,7 +53,42 @@ class BrokenDaysBillController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->only('client_no', 'fr_no', 'date', 'bill_no', 'type', 'days', 'total_amount','user_id');
+            $data['user_id'] = Auth()->id();
+            $data['bill_no'] = $this->brokenDaysBillNo;
+            $data['type'] = 'Broken Days Bill';
+            $data['total_amount'] = $request->payable_amount;
+            $bill = BrokenDaysBill::create($data);
+
+            $billGenerateData = [
+                'client_no' => $bill->client_no,
+                'date' => $bill->date,
+                'bill_no' => $bill->bill_no,
+                'bill_type' => $bill->type,
+                'amount' => $bill->total_amount,
+                'user_id' => $bill->user_id,
+            ];
+
+            $billGenerate = BillGenerate::create($billGenerateData);
+
+            $getProducts = [];
+            $getBillGenerateProducts = [];
+            foreach ($request->product_name as $key => $val) {
+                $getProducts[] = $this->getProductData($request, $key);
+                $getBillGenerateProducts[] = $this->getBillGenerateProductData($request, $key, $bill);
+            }
+
+            $bill->BrokenDaysBillDetails()->createMany($getProducts);
+            $billGenerate->lines()->createMany($getBillGenerateProducts);
+
+            DB::commit();
+            return redirect()->route('broken-days-bills.create')->with('message', 'Data has been created successfully');
+        } catch (Exception $error) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($error->getMessage());
+        }
     }
 
     /**
@@ -187,5 +222,79 @@ class BrokenDaysBillController extends Controller
             ];
         }
         return $row;
+    }
+
+    public function get_client()
+    {
+        $items = Client::query()
+            ->with('saleDetails.feasibilityRequirementDetails')
+            ->where('client_name', 'like', '%' . request()->search . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value'                 => $item->client_name,
+                'label'                 => $item->client_name,
+                'client_no'             => $item->client_no,
+                'client_id'             => $item->id,
+                'saleDetails' => $item->saleDetails
+            ]);
+        return response()->json($items);
+    }
+
+    public function get_fr_product()
+    {
+        $items = SaleProductDetail::query()
+            ->where('fr_no', request()->fr_no)
+            ->get()
+            ->map(fn ($item) => [
+                'product_id'                 => $item->product_id,
+                'product_name'                 => $item->product_name,
+                'quantity'                 => $item->quantity,
+                'unit'                 => $item->unit,
+                'fr_no'                 => $item->fr_no,
+                'rate'                 => $item->rate,
+                'price'                 => $item->price,
+                'vat_amount'                 => $item->vat_amount,
+                'total_price'                 => $item->total_price,
+            ]);
+        return response()->json($items);
+    }
+
+    public function get_fr_bill_date()
+    {
+        $items = Connectivity::query()
+            ->where('fr_no', request()->fr_no)
+            ->get()
+            ->map(fn ($item) => [
+                'client_no'                 => $item->client_no,
+                'billing_date'                 => $item->billing_date,
+            ]);
+        return response()->json($items);
+    }
+
+    private function getProductData($request, $key)
+    {
+        return [
+            'product_id'        => $request->product_id[$key],
+            'quantity'          => $request->quantity[$key],
+            'unit_price'          => $request->unit_price[$key],
+            'vat'          => $request->vat[$key],
+            'total_price'       => $request->total_price[$key],
+            'total_amount'       => $request->total_amount[$key],
+        ];
+    }
+
+    private function getBillGenerateProductData($request, $key, $bill)
+    {
+        return [
+            'broken_days_bill_id'        => $bill->id,
+            'fr_no'        => $bill->fr_no,
+            'bill_type'        => $bill->type,
+            'product_id'        => $request->product_id[$key],
+            'quantity'          => $request->quantity[$key],
+            'unit_price'          => $request->unit_price[$key],
+            'vat'          => $request->vat[$key],
+            'total_price'       => $request->total_price[$key],
+            'total_amount'       => $request->total_amount[$key],
+        ];
     }
 }
