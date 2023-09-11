@@ -14,7 +14,7 @@ class Offer extends Model
 {
     protected $guarded = [];
 
-    protected $fillable = ['client_no', 'mq_no', 'offer_validity'];
+    protected $fillable = ['client_no', 'mq_no', 'offer_validity', 'is_modified', 'connectivity_requirement_id'];
 
     public function client()
     {
@@ -50,6 +50,11 @@ class Offer extends Model
 
     public function sale()
     {
-        return $this->hasOne(Sale::class );
+        return $this->hasOne(Sale::class);
+    }
+
+    public function connectivityRequirementModification()
+    {
+        return $this->hasOne(ConnectivityRequirement::class, 'id', 'connectivity_requirement_id');
     }
 }

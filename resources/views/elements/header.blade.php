@@ -53,18 +53,18 @@
     @yield('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
     <style>
-            .form-control[readonly],
-            .form-control[readonly="true"],
-            .form-control[readonly="readonly"] {
+        .form-control[readonly],
+        .form-control[readonly="true"],
+        .form-control[readonly="readonly"] {
             background: #edeaed !important;
             opacity: 1;
-            }
+        }
 
-            .form-control[readonly]+label,
-            .form-control[readonly="true"]+label,
-            .form-control[readonly="readonly"]+label {
+        .form-control[readonly]+label,
+        .form-control[readonly="true"]+label,
+        .form-control[readonly="readonly"]+label {
             background: linear-gradient(to bottom, #ffffff 50%, #edeaed 50%) !important;
-            }
+        }
     </style>
 </head>
 

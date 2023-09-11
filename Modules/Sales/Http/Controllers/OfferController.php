@@ -21,7 +21,7 @@ class OfferController extends Controller
      */
     public function index()
     {
-        $offers = Offer::with('offerDetails.offerLinks')->latest()->get();
+        $offers = Offer::with('offerDetails.offerLinks')->where('is_modified', 0)->latest()->get();
         return view('sales::offers.index', compact('offers'));
     }
 
@@ -98,15 +98,14 @@ class OfferController extends Controller
     public function destroy(Offer $offer)
     {
         try {
-            if($offer->sale()->exists()){
+            if ($offer->sale()->exists()) {
                 return redirect()->route('offers.index')->with('message', 'Please delete Sales Data first');
-            }
-            else{
+            } else {
                 $offer->delete();
-            } 
+            }
 
             return redirect()->route('offers.index')->with('message', 'Offer Deleted Successfully');
-        } catch (Exception $err) { 
+        } catch (Exception $err) {
             return redirect()->back()->with('error', $err->getMessage())->withInput();
         }
     }
@@ -188,7 +187,7 @@ class OfferController extends Controller
                 'management_cost' => $requestData['management_cost_' . $i],
                 'offer_management_cost' => $requestData['offer_management_cost_' . $i],
                 'grand_total' => $requestData['grand_total_' . $i],
-            ]; 
+            ];
             $offerLinks = $this->createOfferLinks($offer, $requestData, $i);
             $offerDetails[$i - 1]['offerLinks'] = $offerLinks;
         }
