@@ -88,12 +88,17 @@ class ConnectivityRequirement extends Model
 
     public function survey()
     {
-        return $this->hasOne(Survey::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
+        return $this->hasOne(Survey::class, 'fr_no', 'fr_no');
     }
 
     public function costing()
     {
-        return $this->hasOne(Costing::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
+        return $this->hasOne(Costing::class, 'fr_no', 'fr_no');
+    }
+
+    public function costingByConnectivity()
+    {
+        return $this->hasOne(Costing::class, 'connectivity_requirement_id', 'id');
     }
 
     public function offerDetail()

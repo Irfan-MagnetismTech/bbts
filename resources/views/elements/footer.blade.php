@@ -46,4 +46,3 @@
     })
 </script>
 @yield('script')
-
