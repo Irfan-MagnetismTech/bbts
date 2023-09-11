@@ -2,22 +2,27 @@
 @section('title', 'Materials')
 
 @section('breadcrumb-title')
-    @if($formType == 'edit')  Edit  @else  Create  @endif
+    @if ($formType == 'edit')
+        Edit
+    @else
+        Create
+    @endif
     Materials Info
 @endsection
 
 @section('style')
     <style>
-        .input-group-addon{
+        .input-group-addon {
             min-width: 120px;
         }
-        .input-group-info .input-group-addon{
+
+        .input-group-info .input-group-addon {
             /*background-color: #04748a!important;*/
         }
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('materials.index')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('materials.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -38,7 +43,8 @@
 
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="name">Material Name <span class="text-danger">*</span></label>
+                        <label class="input-group-addon" for="name">Material Name <span
+                                class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="name" name="name"
                             placeholder="Enter material name" value="{{ old('name') ?? ($material->name ?? '') }}" required>
                     </div>
@@ -69,6 +75,18 @@
                                     {{ (old('type') ?? ($material->type ?? '')) == $type ? 'selected' : '' }}>
                                     {{ $type }}
                                 </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="category-name">Category <span
+                                class="text-danger">*</span></label>
+                        <select class="form-control" id="category-name" name="category_id" required>
+                            <option value="">Select Category</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" {{ $category->id == $material->category_id ? 'selected' : '' }}>{{ $category->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -112,6 +130,32 @@
         $(document).ready(function() {
             $('#dataTable').DataTable({
                 stateSave: true
+            });
+        });
+    </script>
+    <script>
+        function logSelectedCategory(option) {
+            console.log(option.value);
+        }
+    </script>
+    <script>
+        // Add an event listener using jQuery
+        $(document).ready(function() {
+            $('#category-name').on('change', function() {
+                // Get the selected option's value
+                var selectedOption = $(this).val();
+                console.log(selectedOption);
+                $.ajax({
+                    url: "{{ route('get-unique-code') }}",
+                    data: {
+                        id: selectedOption,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(data) {
+                        // console.log(data);
+                        $('#code').val(data);
+                    }
+                });
             });
         });
     </script>

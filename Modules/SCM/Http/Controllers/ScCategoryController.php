@@ -5,6 +5,9 @@ namespace Modules\SCM\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\SCM\Entities\ScCategory;
+use Illuminate\Database\QueryException;
+use Modules\SCM\Http\Requests\ScCategoryRequest;
 
 class ScCategoryController extends Controller
 {
@@ -14,7 +17,10 @@ class ScCategoryController extends Controller
      */
     public function index()
     {
-        return view('scm::index');
+        $categories = ScCategory::latest()->get();
+        // dd($categories);
+
+        return view('scm::sc-categories.index', compact('categories'));
     }
 
     /**
@@ -23,7 +29,8 @@ class ScCategoryController extends Controller
      */
     public function create()
     {
-        return view('scm::create');
+        $formType = "create";
+        return view('scm::sc-categories.create', compact('formType'));
     }
 
     /**
@@ -31,9 +38,15 @@ class ScCategoryController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(ScCategoryRequest $request)
     {
-        //
+        try {
+            $data = $request->all();
+            ScCategory::create($data);
+            return redirect()->route('sc-categories.index')->with('message', 'Data has been inserted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('sc-categories.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -53,7 +66,11 @@ class ScCategoryController extends Controller
      */
     public function edit($id)
     {
-        return view('scm::edit');
+        $category = ScCategory::findOrfail($id);
+        $formType = "edit";
+        $categories = ScCategory::latest()->get();
+
+        return view('scm::sc-categories.create', compact('formType', 'categories', 'category'));
     }
 
     /**
@@ -62,9 +79,16 @@ class ScCategoryController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(ScCategoryRequest $request, $id)
     {
-        //
+      $category = ScCategory::findOrfail($id);
+      try {
+        $data = $request->all();
+        $category->update($data);
+        return redirect()->route('sc-categories.index')->with('message', 'Data has been updated successfully');
+    } catch (QueryException $e) {
+        return redirect()->route('sc-categories.create')->withInput()->withErrors($e->getMessage());
+    }
     }
 
     /**
@@ -74,6 +98,12 @@ class ScCategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $category = ScCategory::findOrfail($id);
+        try {
+            $category->delete();
+            return redirect()->route('sc-categories.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
+            return redirect()->route('sc-categories.index')->withErrors($e->getMessage());
+        }
     }
 }

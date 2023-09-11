@@ -28,6 +28,11 @@
                         class="pcoded-mcaret"></span></a>
             </li>
             @endcan
+            <li class="{{ request()->routeIs('sc-categories.*') ? 'active' : null }}">
+                <a href="{{ route('sc-categories.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Categories</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
             <li class="{{ request()->routeIs('couriers.*') ? 'active' : null }}">
                 <a href="{{ route('couriers.create') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Couriers</span><span

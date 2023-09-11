@@ -7,7 +7,10 @@ use Illuminate\Routing\Controller;
 use Modules\SCM\Entities\Material;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
+use Modules\SCM\Entities\ScCategory;
 use Modules\SCM\Http\Requests\MaterialRequest;
+use Illuminate\Http\Request;
+use Modules\SCM\Entities\CsMaterial;
 
 class MaterialController extends Controller
 {
@@ -37,8 +40,9 @@ class MaterialController extends Controller
         $units = Unit::latest()->get();
 
         $types = ['Drum', 'Item'];
+        $categories = ScCategory::latest()->get();
 
-        return view('scm::materials.create', compact('materials', 'formType', 'types', 'units'));
+        return view('scm::materials.create', compact('materials', 'formType', 'types', 'units', 'categories'));
     }
 
     /**
@@ -49,6 +53,7 @@ class MaterialController extends Controller
      */
     public function store(MaterialRequest $request)
     {
+        // dd($request->all());
         try {
             $data = $request->all();
             Material::create($data);
@@ -79,10 +84,12 @@ class MaterialController extends Controller
     {
         $formType = "edit";
         $materials = Material::latest()->get();
+        // dd($material);
         $units = Unit::latest()->get();
 
         $types = ['Drum', 'Item'];
-        return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units'));
+        $categories = ScCategory::latest()->get();
+        return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units', 'categories'));
     }
 
     /**
@@ -117,5 +124,21 @@ class MaterialController extends Controller
         } catch (QueryException $e) {
             return redirect()->route('materials.index')->withErrors($e->getMessage());
         }
+    }
+    public function getUniqueCode(Request $request)
+    {
+        $category = ScCategory::findOrfail($request->id);
+        $firstThreeCharacters = substr($category->name, 0, 3);
+        do {
+            // Generate 3 random digits
+            $randomDigits = mt_rand(100, 999);
+            // Concatenate the first 3 characters and the random digits
+            $result = $firstThreeCharacters . '-' . $randomDigits;
+
+            // Check if the result already exists in the CsMaterial model's column
+            $exists = Material::where('code', $result)->exists();
+        } while ($exists);
+
+        return $result;
     }
 }
