@@ -7,11 +7,13 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\Offer;
 use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class OfferModificationController extends Controller
 {
@@ -21,18 +23,18 @@ class OfferModificationController extends Controller
      */
     public function index()
     {
-        $offers = Offer::with('offerDetails.offerLinks')->latest()->get();
-        return view('sales::offers.index', compact('offers'));
+        $offers = Offer::with('offerDetails.offerLinks')->where('is_modified', 1)->latest()->get();
+        return view('changes::modify_offer.index', compact('offers'));
     }
 
     /**
      * Show the form for creating a new resource.
      * @return Renderable                                                                  
      */
-    public function create($mq_no = null)
+    public function create($connectivity_requirement_id = null)
     {
-        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')->where('mq_no', $mq_no)->first();
-        return view('sales::offers.create', compact('feasibility_requirement'));
+        $connectivity_requirement = ConnectivityRequirement::with('costingByConnectivity')->where('id', $connectivity_requirement_id)->first();
+        return view('changes::modify_offer.create', compact('connectivity_requirement'));
     }
 
     /**
@@ -44,9 +46,8 @@ class OfferModificationController extends Controller
     {
         $data = $request->all();
         try {
-
             $offer = $this->createOffer($data);
-            return redirect()->route('offers.index')->with('success', 'Offer created successfully.');
+            return redirect()->route('offer-modification.index')->with('success', 'Offer created successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -69,8 +70,8 @@ class OfferModificationController extends Controller
      */
     public function edit($id)
     {
-        $offer = Offer::with('offerDetails.offerLinks')->find($id);
-        return view('sales::offers.edit', compact('offer'));
+        $offer = Offer::with('offerDetails.offerLinks', 'connectivityRequirementModification')->find($id);
+        return view('changes::modify_offer.edit', compact('offer'));
     }
 
     /**
@@ -123,12 +124,11 @@ class OfferModificationController extends Controller
 
         try {
             DB::beginTransaction();
-
+            $requestData['is_modified'] = 1;
             $offer = Offer::create($requestData);
-            $offerDetails = $this->createOfferDetails($offer, $requestData);
-            $details = $offer->offerDetails()->createMany($offerDetails)->each(function ($offerDetail, $key) use ($offerDetails) {
-                $offerDetail->offerLinks()->createMany($offerDetails[$key]['offerLinks']);
-            });
+            $offerDetail = $this->createOfferDetails($offer, $requestData);
+            $details = $offer->offerDetails()->create($offerDetail);
+            $details->offerLinks()->createMany($offerDetail['offerLinks']);
             DB::commit();
 
             return $offer;
@@ -148,14 +148,10 @@ class OfferModificationController extends Controller
             $offer = Offer::find($id);
             $offer->update($requestData);
             $offerDetails = $this->createOfferDetails($offer, $requestData);
-
             $details = $offer->offerDetails()->delete();
-            $details = $offer->offerDetails()->createMany($offerDetails)->each(function ($offerDetail, $key) use ($offerDetails) {
-                $offerDetail->offerLinks()->delete();
-                $offerDetail->offerLinks()->createMany($offerDetails[$key]['offerLinks']);
-            });
+            $details = $offer->offerDetails()->create($offerDetails);
+            $details->offerLinks()->createMany($offerDetails['offerLinks']);
             DB::commit();
-
             return $offer;
         } catch (\Exception $e) {
             DB::rollback();
@@ -165,61 +161,60 @@ class OfferModificationController extends Controller
 
     function createOfferDetails($offer, $requestData)
     {
-        $offerDetails = [];
-        for ($i = 1; $i <= $requestData['row_no']; $i++) {
-            $offerDetails[] = [
-                'offer_id' => $offer->id,
-                'fr_no' => $requestData['fr_no_' . $i],
-                'client_equipment_total' => $requestData['client_equipment_total_' . $i],
-                'total_otc' => $requestData['total_otc_' . $i],
-                'total_roi' => $requestData['total_roi_' . $i],
-                'total_offer_otc' => $requestData['total_offer_otc_' . $i],
-                'grand_total_otc' => $requestData['grand_total_otc_' . $i],
-                'total_offer_mrc' => $requestData['total_offer_mrc_' . $i],
-                'product_equipment_price' => $requestData['product_equipment_price_' . $i],
-                'equipment_otc' => $requestData['equipment_otc_' . $i],
-                'equipment_roi' => $requestData['equipment_roi_' . $i],
-                'equipment_offer_price' => $requestData['equipment_offer_price_' . $i],
-                'equipment_total_otc' => $requestData['equipment_total_otc_' . $i],
-                'equipment_total_mrc' => $requestData['equipment_total_mrc_' . $i],
-                'product_amount' => $requestData['product_amount_' . $i],
-                'offer_product_amount' => $requestData['offer_product_amount_' . $i],
-                'management_cost' => $requestData['management_cost_' . $i],
-                'offer_management_cost' => $requestData['offer_management_cost_' . $i],
-                'grand_total' => $requestData['grand_total_' . $i],
-            ];
-            $offerLinks = $this->createOfferLinks($offer, $requestData, $i);
-            $offerDetails[$i - 1]['offerLinks'] = $offerLinks;
-        }
+        $offerDetails = [
+            'offer_id' => $offer->id,
+            'fr_no' => $requestData['fr_no'],
+            'client_equipment_total' => $requestData['client_equipment_total'],
+            'link_invest' => $requestData['link_invest'],
+            'month' => $requestData['month'],
+            'capacity_amount' => $requestData['capacity_amount'],
+            'operation_cost' => $requestData['operation_cost'],
+            'total_otc' => $requestData['total_otc'],
+            'total_roi' => $requestData['total_roi'],
+            'total_offer_otc' => $requestData['total_offer_otc'],
+            'grand_total_otc' => $requestData['grand_total_otc'],
+            'total_offer_mrc' => $requestData['total_offer_mrc'],
+            'product_equipment_price' => $requestData['product_equipment_price'],
+            'equipment_otc' => $requestData['equipment_otc'],
+            'equipment_roi' => $requestData['equipment_roi'],
+            'equipment_offer_price' => $requestData['equipment_offer_price'],
+            'equipment_total_otc' => $requestData['equipment_total_otc'],
+            'equipment_total_mrc' => $requestData['equipment_total_mrc'],
+            'product_amount' => $requestData['product_amount'],
+            'offer_product_amount' => $requestData['offer_product_amount'],
+            'management_cost' => $requestData['management_cost'],
+            'offer_management_cost' => $requestData['offer_management_cost'],
+            'grand_total' => $requestData['grand_total'],
+        ];
+        $offerLinks = $this->createOfferLinks($offer, $requestData);
+        $offerDetails['offerLinks'] = $offerLinks;
         return $offerDetails;
     }
 
-    function createOfferLinks($offer, $requestData, $index)
+    function createOfferLinks($offer, $requestData)
     {
         $offerLinks = [];
-        $linkStatuses = $requestData['link_status' . "_" . $index] ?? [];
-        if (!empty($requestData['link_no' . '_' . $index])) {
-            foreach ($requestData['link_no' . '_' . $index] as $key => $linkNo) {
-
+        $linkStatuses = $requestData['link_status'] ?? [];
+        if (!empty($requestData['link_no'])) {
+            foreach ($requestData['link_no'] as $key => $linkNo) {
                 $linkStatus = $linkStatuses[$key] ?? 0;
-
                 $offerLinks[] = [
                     'offer_id' => $offer->id,
-                    'link_no' => $requestData['link_no' . '_' . $index][$key] ?? '',
-                    'link_type' => $requestData['link_type' . "_" . $index][$key] ?? '',
-                    'link_status' => $requestData['link_status' . "_" . $index][$key] ?? '0',
-                    'option' => $requestData['option' . "_" . $index][$key] ?? '',
-                    'connectivity_status' => $requestData['connectivity_status' . "_" . $index][$key] ?? '',
-                    'method' => $requestData['method' . "_" . $index][$key] ?? '',
-                    'vendor' => $requestData['vendor' . "_" . $index][$key] ?? '',
-                    'bts_pop_ldp' => $requestData['bts_pop_ldp' . "_" . $index][$key] ?? '',
-                    'distance' => $requestData['distance' . "_" . $index][$key] ?? '',
-                    'client_equipment_amount' => $requestData['client_equipment_amount' . "_" . $index][$key] ?? '',
-                    'otc' => $requestData['otc' . "_" . $index][$key] ?? '',
-                    'mo_cost' => $requestData['mo_cost' . "_" . $index][$key] ?? '',
-                    'offer_otc' => $requestData['offer_otc' . "_" . $index][$key] ?? '',
-                    'total_cost' => $requestData['total_cost' . "_" . $index][$key] ?? '',
-                    'offer_mrc' => $requestData['offer_mrc' . "_" . $index][$key] ?? '',
+                    'link_no' => $requestData['link_no'][$key] ?? '',
+                    'link_type' => $requestData['link_type'][$key] ?? '',
+                    'link_status' => $requestData['link_status'][$key] ?? '0',
+                    'option' => $requestData['option'][$key] ?? '',
+                    'connectivity_status' => $requestData['connectivity_status'][$key] ?? '',
+                    'method' => $requestData['method'][$key] ?? '',
+                    'vendor' => $requestData['vendor'][$key] ?? '',
+                    'bts_pop_ldp' => $requestData['bts_pop_ldp'][$key] ?? '',
+                    'distance' => $requestData['distance'][$key] ?? '',
+                    'client_equipment_amount' => $requestData['client_equipment_amount'][$key] ?? '',
+                    'otc' => $requestData['otc'][$key] ?? '',
+                    'mo_cost' => $requestData['mo_cost'][$key] ?? '',
+                    'offer_otc' => $requestData['offer_otc'][$key] ?? '',
+                    'total_cost' => $requestData['total_cost'][$key] ?? '',
+                    'offer_mrc' => $requestData['offer_mrc'][$key] ?? '',
                 ];
             }
         }
