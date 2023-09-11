@@ -97,7 +97,7 @@
                         <label class="input-group-addon" for="code">Code <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="code" name="code"
                             placeholder="Enter material code" value="{{ old('code') ?? ($material->code ?? '') }}"
-                            required>
+                            required disabled >
                     </div>
                 </div>
             </div>

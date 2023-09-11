@@ -9,15 +9,30 @@
         placeholder: 'Select an option'
     });
 
+    // $('.offer_otc').on('input', function() {
+    //     // calculateOtc($(this));
+    //     var offer_otc = $(this).val();
+    //     var client_equipment_amount = $(this).closest('tr').find('.client_equipment_amount').val();
+    //     var total_amount = parseFloat(offer_otc) + parseFloat(client_equipment_amount);
+    //     $(this).closest('tr').find('.total_cost_otc').val(total_amount);
+    //     $(this).val(offer_otc);
+    //     calculateTotalOtc($(this));
+    // });
     $('.offer_otc').on('input', function() {
-        // calculateOtc($(this));
-        var offer_otc = $(this).val();
-        var client_equipment_amount = $(this).closest('tr').find('.client_equipment_amount').val();
-        var total_amount = parseFloat(offer_otc) + parseFloat(client_equipment_amount);
-        $(this).closest('tr').find('.total_cost_otc').val(total_amount);
-        $(this).val(offer_otc);
-        calculateTotalOtc($(this));
-    });
+    // calculateOtc($(this));
+    var offer_otc = parseFloat($(this).val());
+    offer_otc = isNaN(offer_otc) ? 0 : offer_otc;
+
+    var client_equipment_amount = parseFloat($(this).closest('tr').find('.client_equipment_amount').val());
+    client_equipment_amount = isNaN(client_equipment_amount) ? 0 : client_equipment_amount;
+
+    var total_amount = offer_otc + client_equipment_amount;
+    $(this).closest('tr').find('.total_cost_otc').val(total_amount);
+    
+    $(this).val(offer_otc); // Optional: Set the value to the parsed offer_otc value
+    calculateTotalOtc($(this));
+});
+
 
 
 
