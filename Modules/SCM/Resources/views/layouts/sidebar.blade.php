@@ -2,7 +2,7 @@
 <ul class="pcoded-item pcoded-left-item">
     {{-- @hasanyrole('super-admin|admin') --}}
     <li
-        class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'couriers.*']) ? 'active pcoded-trigger' : null }}">
+        class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'couriers.*', 'sc-categories.*' ]) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
             <span class="pcoded-mtext">Configurations</span>
@@ -12,6 +12,11 @@
             <li class="{{ request()->routeIs('units.*') ? 'active' : null }}">
                 <a href="{{ route('units.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Units</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+            <li class="{{ request()->routeIs('sc-categories.*') ? 'active' : null }}">
+                <a href="{{ route('sc-categories.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Categories</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
             @can('material-view')
@@ -28,11 +33,6 @@
                         class="pcoded-mcaret"></span></a>
             </li>
             @endcan
-            <li class="{{ request()->routeIs('sc-categories.*') ? 'active' : null }}">
-                <a href="{{ route('sc-categories.index') }}"> <span class="pcoded-micon"><i
-                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Categories</span><span
-                        class="pcoded-mcaret"></span></a>
-            </li>
             <li class="{{ request()->routeIs('couriers.*') ? 'active' : null }}">
                 <a href="{{ route('couriers.create') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Couriers</span><span
