@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('connectivity_requirement_id')->nullable();
             $table->string('client_no');
-            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
+            $table->integer('is_modified')->default(0);
             $table->string('mq_no')->nullable();
             $table->string('fr_no')->nullable();
             $table->date('date')->nullable();

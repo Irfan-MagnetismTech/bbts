@@ -15,8 +15,15 @@ return new class extends Migration
     {
         Schema::create('offer_links', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('offer_id')->constrained('offers')->onDelete('cascade');
-            $table->foreignId('offer_details_id')->constrained('offer_details')->onDelete('cascade');
+            $table->unsignedBigInteger('offer_id');
+            $table->unsignedBigInteger('offer_details_id');
+            $table->foreign('offer_id')->references('id')->on('offers')->onDelete('cascade');
+            $table->foreign('offer_details_id')->references('id')->on('offer_details')->onDelete('cascade');
+
+            // $table->foreign('feasibility_requirement_id', 'fk_feasibility_req_details_feasibility_req_id')
+            //     ->references('id')->on('feasibility_requirements')
+            //     ->onDelete('cascade');
+
             $table->string('link_id')->nullable();
             $table->string('link_type')->nullable();
             $table->string('link_status')->nullable();

@@ -70,7 +70,7 @@ class IndentController extends Controller
             return redirect()->route('indents.index')->with('message', 'Indents created successfully');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors($e->getMessage());;
+            return redirect()->back()->withErrors($e->getMessage());
         }
     }
 
@@ -81,6 +81,7 @@ class IndentController extends Controller
      */
     public function show(Indent $indent)
     {
+        // dd($indent->indentLines);
         return view('scm::indents.show', compact('indent'));
     }
 
