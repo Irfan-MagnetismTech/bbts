@@ -30,7 +30,11 @@
                     <th>Name</th>
                     <th>Contact Person</th>
                     <th>Email</th>
-                    <th>Address</th>
+                    <th>Address-1</th>
+                    <th>Address-2</th>
+                    <th>Bin No</th>
+                    <th>Tin No</th>
+                    <th>Mobile No</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -40,7 +44,11 @@
                     <th>Name</th>
                     <th>Contact Person</th>
                     <th>Email</th>
-                    <th>Address</th>
+                    <th>Address-1</th>
+                    <th>Address-2</th>
+                    <th>Bin No</th>
+                    <th>Tin No</th>
+                    <th>Mobile No</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -51,7 +59,11 @@
                         <td class="text-center">{{ $supplier->name }}</td>
                         <td class="text-center">{{ $supplier->contact_person ?? '' }}</td>
                         <td class="text-center">{{ $supplier->email }}</td>
-                        <td class="text-center">{{ $supplier->address }}</td>
+                        <td class="text-center">{{ $supplier->address_1 }}</td>
+                        <td class="text-center">{{ $supplier->address_2}}</td>
+                        <td class="text-center">{{ $supplier->bin_no}}</td>
+                        <td class="text-center">{{ $supplier->tin_no}}</td>
+                        <td class="text-center">{{ $supplier->mobile_no}}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
