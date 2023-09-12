@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('connectivity_requirement_id')->nullable();
             $table->unsignedBigInteger('fr_id');
-            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
+            $table->integer('is_modified')->default(0);
             $table->string('fr_no');
             $table->string('mq_no');
             $table->string('client_no');

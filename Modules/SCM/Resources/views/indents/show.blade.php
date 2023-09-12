@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-button')
-<a href="{{ route('indents.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
+    <a href="{{ route('indents.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', null)
@@ -36,17 +36,26 @@
     </div>
 
     <div class="table-responsive">
-        <table id="example" class="table table-striped table-bordered">
+        <table id="example" class="table table-bordered">
             <thead>
                 <tr>
                     <th>PRS</th>
+                    <th>Material Name</th>
+                    <th>Quantity</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($indent->indentLines as $key => $value)
-                    <tr>
+                    <tr class="text-left">
                         <td> {{ $value->scmPurchaseRequisition->prs_no }} </td>
                     </tr>
+                    @foreach ($value->scmPurchaseRequisition->scmPurchaseRequisitionDetails as $key => $scmPurchaseRequisitionDetail)
+                        <tr class="text-left">
+                            <td></td>
+                            <td> {{ $scmPurchaseRequisitionDetail->material->name }} </td>
+                            <td> {{ $scmPurchaseRequisitionDetail->quantity }} </td>
+                        </tr>
+                    @endforeach
                 @endforeach
             </tbody>
         </table>

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('collection_address_id')->nullable();
             $table->string('fr_no')->nullable();
             $table->integer('costing_id')->nullable();
-            $table->string('checked')->nullable();
+            // $table->string('checked')->nullable();
             $table->float('total_mrc', 8, 2)->nullable();
             $table->string('bill_payment_date')->nullable();
             $table->string('checked')->default(0);

@@ -19,4 +19,9 @@ class IndentLine extends Model
     {
         return $this->belongsTo(ScmPurchaseRequisition::class, 'scm_purchase_requisition_id');
     }
+
+    // public function scmPurchaseRequisitions()
+    // {
+    //     return $this->hasMany(ScmPurchaseRequisition::class, 'scm_purchase_requisition_id','id');
+    // }
 }

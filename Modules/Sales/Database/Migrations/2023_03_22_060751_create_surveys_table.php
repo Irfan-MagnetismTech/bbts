@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('feasibility_requirement_details_id');
             $table->bigInteger('connectivity_requirement_id')->nullable();
-            $table->integer('is_modified')->default(0)->comment([0 => 'not modified', 1 => 'modified']);
+            $table->integer('is_modified')->default(0);
             $table->string('fr_no');
             $table->string('client_no');
             $table->string('lead_generation_id')->nullable();

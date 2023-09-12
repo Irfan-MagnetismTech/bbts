@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('final_survey_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('survey_detail_id')->constrained('survey_details')->onDelete('cascade');
+            $table->unsignedBigInteger('survey_detail_id');
             $table->bigInteger('planning_id')->nullable();
             $table->bigInteger('plan_link_id')->nullable();
             $table->string('link_type')->nullable();
@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('distance')->nullable();
             $table->string('current_capacity')->nullable();
             $table->string('remarks')->nullable();
+            // $table->foreign('survey_detail_id')->references('id')->on('survey_details')->onDelete('cascade');
             $table->timestamps();
         });
     }
