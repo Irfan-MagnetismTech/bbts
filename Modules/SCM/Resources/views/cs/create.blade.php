@@ -43,7 +43,7 @@
                         @php
                             $cs_no = $is_old ? old('cs_no') : $cs->cs_no ?? null;
                             $effective_date = $is_old ? old('effective_date') : $cs->effective_date ?? null;
-                            $expiry_date = $is_old ? old('expiry_date') : $cs->expiry_date ?? null;
+                            /*$expiry_date = $is_old ? old('expiry_date') : $cs->expiry_date ?? null;*/
                             $remarks = $is_old ? old('remarks') : $cs->remarks ?? null;
                         @endphp
                         @if (!empty($cs_no))
@@ -334,14 +334,14 @@
                     <td>
                         <input type="text" name="unit[]" class="form-control unit text-center" readOnly tabindex="-1">
                     </td>
-                    <td> 
+                    <td>
                         <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
                             <option value="">Select Brand</option>
                             @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}" @selected($brand->id == @$brand_id[$key])>{{ $brand->name }}</option>
                             @endforeach
                         </select>
-                    </td>                  
+                    </td>
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
                     </td>
@@ -371,7 +371,7 @@
                     </td>
                     <td>
                         <input type="text" name="quotation_no[]"  class="form-control text-center quotation_no" placeholder="Quotation No." autocomplete="off" required>
-                    </td> 
+                    </td>
                     <td>
                         <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax text-center" required>
                             @foreach ($Taxes as $data)
@@ -381,7 +381,7 @@
                     </td>
                     <td>
                         <input type="text" name="credit_period[]"  class="form-control credit_period text-center" placeholder="Credit Period" autocomplete="off" required>
-                    </td>                
+                    </td>
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
                     </td>

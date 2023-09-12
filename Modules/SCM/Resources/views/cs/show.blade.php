@@ -23,19 +23,8 @@
                     <tbody class="text-left">
                     <tr style="background-color: #0C4A77;;color: white;"><td> <strong>Cs No.</strong> </td> <td> <strong>CS#{{ $comparativestatement->id}}</strong></td></tr>
                     <tr><td> <strong>Effective Date</strong> </td> <td>  {{ $comparativestatement->effective_date}}</td></tr>
-                    <tr><td> <strong>Expiry Date</strong> </td> <td>  {{ $comparativestatement->expiry_date}}</td></tr>
+{{--                    <tr><td> <strong>Expiry Date</strong> </td> <td>  {{ $comparativestatement->expiry_date}}</td></tr>--}}
                     <tr><td> <strong>Remarks</strong> </td> <td>  {{ $comparativestatement->remarks}}</td></tr>
-                    <tr>
-
-                        <td> <strong>Remarks</strong> </td>
-                        <td>
-{{--                            <strong>--}}
-{{--                        @foreach( $csProjects as  $csProject)--}}
-{{--                          {{ $csProject->project->name}}<br>--}}
-{{--                        @endforeach--}}
-{{--                            </strong>--}}
-                        </td>
-                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -54,17 +43,20 @@
                         <th width="300px">Material Name</th>
                         <th> unit</th>
                         @foreach( $csSuppliers as  $csSupplier)
-                            <th>
-                                {{$csSupplier->supplier->name}}
-                                <br>{{$csSupplier->supplier->address}}
-                                <br>{{$csSupplier->supplier->contact}}
-                                <br>Price Collected by {{$csSupplier->collection_way}}
-                            </th>
+                            @if($csSupplier->cs_id == $comparativestatement->id)
+                                <th>
+                                    {{$csSupplier->supplier->name}}
+                                    <br>{{$csSupplier->supplier->address}}
+                                    <br>{{$csSupplier->supplier->contact}}
+                                    <br>Price Collected by {{$csSupplier->collection_way}}
+                                </th>
+                            @endif
                         @endforeach
                     </tr>
                     </thead>
                     <tbody>
                     @foreach( $csMaterials as $csMaterial)
+                        @if($csMaterial->cs_id == $comparativestatement->id)
                         <tr>
                             <td>
                                 <strong>{{$csMaterial->material->name}}
@@ -79,8 +71,8 @@
                             <td>{{$csMaterial->material->unit?? ''}}</td>
 
                             @foreach( $csSuppliers as  $csSupplier)
+                                @if($csSupplier->cs_id == $comparativestatement->id)
                                 <td>
-
                                     <?php
                                         $priceData = \Illuminate\Support\Facades\DB::table('cs_material_suppliers')
                                             ->where('cs_supplier_id',$csSupplier->id)
@@ -88,15 +80,15 @@
                                             ->first();
                                     ?>
                                     {{$priceData->price ?? ''}}
-
                                 </td>
+                                @endif
                             @endforeach
-
                         </tr>
+                        @endif
                     @endforeach
-                    <tr>
-                        <td style="background-color: #0C4A77;;color: white;"><strong>Terms & Condiitions</strong></td>
-                    </tr>
+{{--                    <tr>--}}
+{{--                        <td style="background-color: #0C4A77;;color: white;"><strong>Terms & Condiitions</strong></td>--}}
+{{--                    </tr>--}}
 {{--                    <tr>--}}
 {{--                        <td>Grade</td>--}}
 {{--                        <td></td>--}}
@@ -117,29 +109,34 @@
                         <td>Vat & Tax</td>
                         <td></td>
                         @foreach( $csSuppliers as  $csSupplier)
+                            @if($csSupplier->cs_id == $comparativestatement->id)
                             <td>
                                 <?php
                                 $vatData = \Illuminate\Support\Facades\DB::table('cs_suppliers')
-                                    ->where('supplier_id',$csSupplier->id)
+                                    ->where('supplier_id',$csSupplier->supplier_id)
+                                    ->where('cs_id',$csSupplier->cs_id)
                                     ->first();
                                 ?>
                                 {{$vatData->vat_tax ?? '' }}
                             </td>
+                            @endif
                         @endforeach
                     </tr>
                     <tr>
                         <td>Credit Period</td>
                         <td></td>
                         @foreach( $csSuppliers as  $csSupplier)
+                            @if($csSupplier->cs_id == $comparativestatement->id)
                             <td>
                                 <?php
                                 $creditData = \Illuminate\Support\Facades\DB::table('cs_suppliers')
-                                    ->where('supplier_id',$csSupplier->id)
+                                    ->where('supplier_id',$csSupplier->supplier_id)
+                                    ->where('cs_id',$csSupplier->cs_id)
                                     ->first();
                                 ?>
                                 {{$creditData->credit_period ?? '' }}
-
                             </td>
+                            @endif
                         @endforeach
                     </tr>
 {{--                    <tr>--}}

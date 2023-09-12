@@ -39,10 +39,10 @@ class Cs extends Model
     /**
      * @param $input
      */
-    public function getExpiryDateAttribute($input)
-    {
-        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
-    }
+//    public function getExpiryDateAttribute($input)
+//    {
+//        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+//    }
 
     /**
      * @param $input
