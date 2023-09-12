@@ -101,7 +101,7 @@
 
                 <div class="form-group col-3 fr_no">
                     <label for="select2">FR No</label>
-                    <select class="form-control select2" id="fr_no" name="fr_no">
+                    <select class="form-control select2" id="fr_no" multiple="multiple" name="fr_no">
                         <option value="" readonly selected>Select FR No</option>
                         @if ($form_method == 'POST')
                             <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
