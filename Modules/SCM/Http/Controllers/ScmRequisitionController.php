@@ -56,14 +56,15 @@ class ScmRequisitionController extends Controller
      */
     public function store(ScmRequisitionRequest $request)
     {
+    // dd($request->all());
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'client_no', 'fr_no', 'link_no', 'date', 'branch_id');
+                $requestData = $request->only('type', 'client_no', 'fr_no', 'link_no', 'date', 'branch_id', 'remarks');
             } elseif (request()->type == 'warehouse') {
-                $requestData = $request->only('type', 'date', 'branch_id');
+                $requestData = $request->only('type', 'date', 'branch_id', 'remarks');
             } else {
-                $requestData = $request->only('type', 'date', 'branch_id', 'pop_id');
+                $requestData = $request->only('type', 'date', 'branch_id', 'pop_id', 'remarks');
             }
 
             $lastMRSId = ScmRequisition::latest()->first();
@@ -149,11 +150,11 @@ class ScmRequisitionController extends Controller
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'date', 'branch_id', 'client_no', 'fr_no', 'link_no',);
+                $requestData = $request->only('type', 'date', 'branch_id', 'client_no', 'fr_no', 'link_no', 'remarks');
             } elseif (request()->type == 'warehouse') {
-                $requestData = $request->only('type', 'date', 'branch_id');
+                $requestData = $request->only('type', 'date', 'branch_id', 'remarks');
             } else {
-                $requestData = $request->only('type', 'date', 'branch_id', 'pop_id');
+                $requestData = $request->only('type', 'date', 'branch_id', 'pop_id', 'remarks');
             }
             $requestData['requisition_by'] = auth()->id();
 

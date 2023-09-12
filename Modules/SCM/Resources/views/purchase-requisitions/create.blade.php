@@ -101,7 +101,7 @@
 
                 <div class="form-group col-3 fr_no">
                     <label for="select2">FR No</label>
-                    <select class="form-control select2" id="fr_no" name="fr_no">
+                    <select class="form-control select2" id="fr_no" multiple="multiple" name="fr_no">
                         <option value="" readonly selected>Select FR No</option>
                         @if ($form_method == 'POST')
                             <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
@@ -116,7 +116,7 @@
                     </select>
                 </div>
 
-                <div class="form-group col-3 link_no">
+                {{-- <div class="form-group col-3 link_no">
                     <label for="link_no">Link No:</label>
                     <select class="form-control select2" id="link_no" name="link_no">
                         <option value="" readonly selected>Select Link No</option>
@@ -131,7 +131,7 @@
                             @endforelse
                         @endif
                     </select>
-                </div>
+                </div> --}}
 
                 <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>

@@ -20,7 +20,7 @@ class ScmRequisitionRequest extends FormRequest
             'client_no' => 'required_if:type,client',
             'fr_no' => 'required_if:type,client',
             'link_no' => 'required_if:type,client',
-            'material_id.*' => 'required',
+            'material_id.*' => 'sometimes',
             'brand_id.*' => 'required',
         ];
     }
