@@ -15,6 +15,7 @@ use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Http\Requests\SupplierRequest;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
 use Modules\SCM\Http\Requests\ScmPurchaseRequisitionRequest;
+use Illuminate\Http\Request;
 
 class ScmPurchaseRequisitionController extends Controller
 {
@@ -58,10 +59,14 @@ class ScmPurchaseRequisitionController extends Controller
      */
     public function store(ScmPurchaseRequisitionRequest $request)
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
+            $fr_no = json_encode($request->fr_no);
+            // dd($fr_no);
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'prs_type', 'client_no', 'date', 'fr_no', 'link_no', 'assessment_no');
+                $requestData = $request->only('type', 'prs_type', 'client_no', 'date','link_no', 'assessment_no');
+                $requestData['fr_no'] = $fr_no; 
             } else {
                 $requestData = $request->only('type', 'prs_type', 'date');
             }
@@ -141,8 +146,10 @@ class ScmPurchaseRequisitionController extends Controller
     {
         try {
             DB::beginTransaction();
+                $fr_no = json_encode($request->fr_no);
             if (request()->type == 'client') {
-                $requestData = $request->only('type', 'prs_type', 'client_no', 'date', 'fr_no', 'link_no', 'assessment_no');
+                $requestData = $request->only('type', 'prs_type', 'client_no', 'date', 'link_no', 'assessment_no');
+                $requestData['fr_no'] = $fr_no;
             } else {
                 $requestData = $request->only('type', 'prs_type', 'date');
             }

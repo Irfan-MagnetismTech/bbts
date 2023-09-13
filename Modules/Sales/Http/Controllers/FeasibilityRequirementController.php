@@ -16,6 +16,7 @@ use App\Exports\FeasibilityRequirementExport;
 use App\Imports\FeasibilityRequirementImport;
 use App\Imports\FeasibilityRequirementImportUpdate;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Admin\Entities\Branch;
 
 class FeasibilityRequirementController extends Controller
 {
@@ -36,7 +37,8 @@ class FeasibilityRequirementController extends Controller
     public function create()
     {
         $divisions = Division::all();
-        return view('sales::feasibility_requirement.create', compact('divisions'));
+        $branches = Branch::all();
+        return view('sales::feasibility_requirement.create', compact('divisions', 'branches'));
     }
 
     /**
@@ -81,6 +83,7 @@ class FeasibilityRequirementController extends Controller
                         'aggregation_type' => $request['aggregation_type'][$key],
                         'client_no' => $data['client_no'],
                         'fr_no' => $frNo,
+                        'branch_id' => $request['branch_id'][$key],
                         'division_id' => $request['division_id'][$key],
                         'district_id' => $request['district_id'][$key],
                         'thana_id' => $request['thana_id'][$key],
@@ -127,9 +130,10 @@ class FeasibilityRequirementController extends Controller
     {
         $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails',)->find($id);
         $divisions = Division::all();
+        $branches = Branch::all();
         $districts = District::whereIn('division_id', $feasibility_requirement->feasibilityRequirementDetails->pluck('division_id'))->get();
         $thanas = Thana::whereIn('district_id', $feasibility_requirement->feasibilityRequirementDetails->pluck('district_id'))->get();
-        return view('sales::feasibility_requirement.create', compact('feasibility_requirement', 'divisions', 'districts', 'thanas'));
+        return view('sales::feasibility_requirement.create', compact('feasibility_requirement', 'branches', 'divisions', 'districts', 'thanas'));
     }
 
     /**
@@ -162,6 +166,7 @@ class FeasibilityRequirementController extends Controller
                 'connectivity_point' => $request['connectivity_point'][$key],
                 'client_no' => $data['client_no'],
                 'aggregation_type' => $request['aggregation_type'][$key],
+                'branch_id' => $request['branch_id'][$key],
                 'division_id' => $request['division_id'][$key],
                 'district_id' => $request['district_id'][$key],
                 'thana_id' => $request['thana_id'][$key],
