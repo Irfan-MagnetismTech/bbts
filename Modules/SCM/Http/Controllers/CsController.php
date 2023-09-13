@@ -4,6 +4,7 @@ namespace Modules\SCM\Http\Controllers;
 
 use App\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
+use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\SCM\Entities\Cs;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
@@ -274,4 +275,13 @@ class CsController extends Controller
     //         return redirect()->back()->withInput()->withErrors($e->getMessage());
     //     }
     // }
+
+    public function generateCsPdf($id = null)
+    {
+        $comparativeStatement = Cs::where('id', $id)->first();
+        $csMaterials = CsMaterial::latest()->get();
+        $csSuppliers = CsSupplier::latest()->get();
+
+        return view('scm::cs.pdf', compact('comparativeStatement', 'csMaterials', 'csSuppliers'));
+    }
 }
