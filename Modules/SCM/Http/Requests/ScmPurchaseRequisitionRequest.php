@@ -17,9 +17,9 @@ class ScmPurchaseRequisitionRequest extends FormRequest
             'type' => 'required',
             'date' => 'required|date',
             'client_no' => 'required_if:type,client',
-            'fr_no' => 'required_if:type,fr',
+            'fr_no' => 'required|array',
             'link_no' => 'required_if:type,link',
-            'material_id.*' => 'required',
+            // 'material_id.*' => 'required',
             'brand_id.*' => 'required',
         ];
     }

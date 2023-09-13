@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->date('date')->nullable();
             $table->string('client_no')->nullable();
-            $table->string('fr_no')->nullable();
+            $table->json('fr_no')->nullable();
             $table->string('link_no')->nullable();
             $table->string('assessment_no')->nullable();
             $table->integer('requisition_by');

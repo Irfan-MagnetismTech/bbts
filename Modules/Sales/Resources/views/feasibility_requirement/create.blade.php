@@ -103,9 +103,10 @@
                                         <th rowspan="2">Name of the Link hh</th>
                                         <th rowspan="2">Agreegation Type</th>
                                         <th colspan="6">Connectivity Address</th>
-                                        <th colspan="5">Local Contact Details</th>
+                                        <th colspan="6">Local Contact Details</th>
                                     </tr>
                                     <tr>
+                                        <th>Branch</th>
                                         <th>Division</th>
                                         <th>District</th>
                                         <th>Thana</th>
@@ -150,6 +151,21 @@
                                                             <option value="Branch"
                                                                 {{ $item->aggregation_type == 'Branch' ? 'selected' : '' }}>
                                                                 Branch</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <select name="branch_id[]" class="form-control branch"
+                                                            id="branch" autocomplete="off"
+                                                            placeholder="Select Branch">
+                                                            <option value="">Select Branch</option>
+                                                            @foreach ($branches as $branch)
+                                                                <option value="{{ $branch->id }}"
+                                                                    {{ $item->branch_id == $branch->id ? 'selected' : '' }}>
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </td>
@@ -272,6 +288,19 @@
                                                         <option value="DC">DC</option>
                                                         <option value="DR">DR</option>
                                                         <option value="Branch">Branch</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <select name="branch_id[]" class="form-control branch"
+                                                        id="branch" autocomplete="off" placeholder="Select Dranch">
+                                                        <option value="">Select Division</option>
+                                                        @foreach ($branches as $branch)
+                                                            <option value="{{ $branch->id }}">
+                                                                {{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </td>

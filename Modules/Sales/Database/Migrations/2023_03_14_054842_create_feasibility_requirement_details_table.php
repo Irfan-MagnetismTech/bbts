@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('fr_no')->nullable();
             $table->string('connectivity_point')->nullable();
             $table->string('agreegation_type')->nullable();
+            $table->integer('branch_id')->nullable();
             $table->integer('division_id')->nullable();
             $table->integer('district_id')->nullable();
             $table->integer('thana_id')->nullable();
