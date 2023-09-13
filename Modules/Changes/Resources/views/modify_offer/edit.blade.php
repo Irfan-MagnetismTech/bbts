@@ -53,7 +53,7 @@
                         <x-input-box colGrid="3" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <div class="col-md-3 col-3">
                             <input type="text" name="offer_validity" id="offer_validity" class="form-control date"
-                                value="{{ $is_old ? old('offer_validity') : $offer->offer_validity }}"
+                                value="{{ $is_old ? old('offer_validity') : date('d/m/Y', strtotime($offer->offer_validity)) }}"
                                 placeholder="Offer Validity" required>
 
                         </div>

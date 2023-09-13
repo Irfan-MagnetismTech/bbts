@@ -52,9 +52,9 @@ class SaleModificationController extends Controller
      */
     public function create($connectivity_requirement_id)
     {
-        $costing = Costing::with('costingProducts', 'costingProductEquipments', 'costingLinks.costingLinkEquipments')->where('connectivity_requirement_id', $connectivity_requirement_id)->first();
+        $offer = Offer::with(['client', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])->where('connectivity_requirement_id', $connectivity_requirement_id)->first();
         $divisions = Division::latest()->get();
-        return view('changes::modify_sales.create', compact('divisions', 'costing'));
+        return view('changes::modify_sales.create', compact('divisions', 'offer'));
     }
 
     /**
