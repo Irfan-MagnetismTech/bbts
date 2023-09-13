@@ -85,7 +85,7 @@ class OfferModificationController extends Controller
         $data = $request->all();
         try {
             $offer = $this->updateOffer($data, $id);
-            return redirect()->route('offers.index')->with('success', 'Offer created successfully.');
+            return redirect()->route('offer-modification.index')->with('success', 'Offer updated successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -126,6 +126,7 @@ class OfferModificationController extends Controller
             DB::beginTransaction();
             $requestData['is_modified'] = 1;
             $offer = Offer::create($requestData);
+
             $offerDetail = $this->createOfferDetails($offer, $requestData);
             $details = $offer->offerDetails()->create($offerDetail);
             $details->offerLinks()->createMany($offerDetail['offerLinks']);
@@ -141,10 +142,9 @@ class OfferModificationController extends Controller
     function updateOffer($requestData, $id)
     {
         $offer = null;
-
+        $requestData['is_modified'] = 1;
         try {
             DB::beginTransaction();
-
             $offer = Offer::find($id);
             $offer->update($requestData);
             $offerDetails = $this->createOfferDetails($offer, $requestData);
@@ -164,14 +164,14 @@ class OfferModificationController extends Controller
         $offerDetails = [
             'offer_id' => $offer->id,
             'fr_no' => $requestData['fr_no'],
-            'client_equipment_total' => $requestData['client_equipment_total'],
-            'link_invest' => $requestData['link_invest'],
-            'month' => $requestData['month'],
-            'capacity_amount' => $requestData['capacity_amount'],
-            'operation_cost' => $requestData['operation_cost'],
-            'total_otc' => $requestData['total_otc'],
-            'total_roi' => $requestData['total_roi'],
-            'total_offer_otc' => $requestData['total_offer_otc'],
+            'client_equipment_total' => $requestData['client_equipment_total']  ?? '',
+            'link_invest' => $requestData['link_invest'] ?? '',
+            'month' => $requestData['month']  ?? '',
+            'capacity_amount' => $requestData['capacity_amount']  ?? '',
+            'operation_cost' => $requestData['operation_cost']  ?? '',
+            'total_otc' => $requestData['total_otc']  ?? '',
+            'total_roi' => $requestData['total_roi']  ?? '',
+            'total_offer_otc' => $requestData['total_offer_otc']  ?? '',
             'grand_total_otc' => $requestData['grand_total_otc'],
             'total_offer_mrc' => $requestData['total_offer_mrc'],
             'product_equipment_price' => $requestData['product_equipment_price'],
