@@ -4,6 +4,7 @@ namespace Modules\SCM\Http\Controllers;
 
 use App\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\SCM\Entities\Cs;
 use Modules\Admin\Entities\Brand;
@@ -11,6 +12,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\SCM\Entities\CsMaterial;
 use Modules\SCM\Entities\CsSupplier;
+use Modules\SCM\Entities\Indent;
 use Modules\SCM\Entities\Material;
 use Illuminate\Database\QueryException;
 use Modules\SCM\Http\Requests\CsRequest;
@@ -283,5 +285,16 @@ class CsController extends Controller
         $csSuppliers = CsSupplier::latest()->get();
 
         return view('scm::cs.pdf', compact('comparativeStatement', 'csMaterials', 'csSuppliers'));
+    }
+    public function getIndentNo()
+    {
+        $items = Indent::query()
+            ->where('indent_no', 'like', '%' . request()->search . '%')
+            ->get()
+            ->map(fn ($item) => [
+                'value'                 => $item->indent_no,
+                'label'                 => $item->indent_no
+            ]);
+        return response()->json($items);
     }
 }
