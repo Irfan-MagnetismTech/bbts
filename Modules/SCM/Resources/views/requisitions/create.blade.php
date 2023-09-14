@@ -64,6 +64,13 @@
                             POP
                         </label>
                     </div>
+                    <div class="form-check-inline">
+                        <label class="form-check-label" for="general">
+                            <input type="radio" class="form-check-input radioButton" id="general" name="type"
+                                value="general" @checked(@$requisition->type == 'general' || old('type') == 'general')>
+                            General
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,11 +88,12 @@
                 </select>
             </div>
 
-            
+
             <div class="form-group col-3 client_name">
                 <label for="client_name">Client Name:</label>
                 <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
-                    name="client_name" value="{{ old('client_name') ?? ($requisition->client->client_name ?? '') }}" placeholder="Search...">
+                    name="client_name" value="{{ old('client_name') ?? ($requisition->client->client_name ?? '') }}"
+                    placeholder="Search...">
             </div>
 
             <div class="form-group col-3 fr_no">
@@ -139,11 +147,6 @@
                 <input class="form-control" id="date" name="date" aria-describedby="date"
                     value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
             </div>
-            <div class="form-group col-3">
-                <label for="client_no">Remarks</label>
-                <input type="text" class="form-control" id="remarks" aria-describedby="remarks" name="remarks"
-                   value="{{ old('remarks') ?? (@$requisition->remarks ?? '') }}">
-            </div>
             <div class="form-group col-3 pop_id" style="display: none">
                 <label for="select2">Pop Name</label>
                 <select class="form-control select2" id="pop_id" name="pop_id">
@@ -155,6 +158,19 @@
                         @endforeach
                     @endif
                 </select>
+            </div>
+            <div class="form-group col-3 employee">
+                {{-- @dd($requisition) --}}
+                <input type="hidden" id="employee_id" name="employee_id"
+                    value="{{ !empty($requisition->employee) ? $requisition->employee->id : '' }}">
+                <label for="employee">Employee</label>
+                <input type="text" class="form-control" id="employee" aria-describedby="employee" name="employee"
+                    value="{{ old('employee') ?? (@$requisition->employee->name ?? '') }}" placeholder="Search...">
+            </div>
+            <div class="form-group col-3">
+                <label for="client_no">Remarks</label>
+                <input type="text" class="form-control" id="remarks" aria-describedby="remarks" name="remarks"
+                    value="{{ old('remarks') ?? (@$requisition->remarks ?? '') }}">
             </div>
         </div>
 
@@ -180,7 +196,7 @@
                     $item_code = old('item_code', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.code') : []);
                     $unit = old('unit', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.unit') : []);
                     $description = old('description', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('description') : []);
-                    $current_stock = old('current_stock', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('material.current_stock') : []);
+                    $current_stock = old('current_stock', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('current_stock') : []);
                     $quantity = old('quantity', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('quantity') : []);
                     $brand_id = old('brand_id', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('brand_id') : []);
                     $model = old('model', !empty($requisition) ? $requisition->scmRequisitiondetails->pluck('model') : []);
@@ -205,8 +221,8 @@
                                 autocomplete="off" value="{{ $description[$key] }}">
                         </td>
                         <td class="current_stock" style="display: none">
-                            <input type="text" class="form-control current_stock" autocomplete="off" readonly
-                                value="{{ @$current_stock[$key] }}">
+                            <input type="text" name="current_stock[]" class="form-control current_stock" autocomplete="off" readonly
+                                value="{{ $current_stock[$key] }}">
                         </td>
 
                         <td>
