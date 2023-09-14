@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Entities;
 
+use App\Models\Dataencoding\Employee;
 use Carbon\Carbon;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\User;
@@ -65,6 +66,10 @@ class ScmRequisition extends Model
     public function pop()
     {
         return $this->belongsTo(Pop::class);
+    }
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
     }
 
     public function requisitionBy()

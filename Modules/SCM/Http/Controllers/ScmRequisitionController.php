@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use App\Models\Dataencoding\Employee;
 use Termwind\Components\Dd;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\Brand;
@@ -15,6 +16,7 @@ use Modules\Sales\Entities\ClientDetail;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Http\Requests\SupplierRequest;
 use Modules\SCM\Http\Requests\ScmRequisitionRequest;
+use Illuminate\Http\Request;
 
 class ScmRequisitionController extends Controller
 {
@@ -63,8 +65,14 @@ class ScmRequisitionController extends Controller
                 $requestData = $request->only('type', 'client_no', 'fr_no', 'link_no', 'date', 'branch_id', 'remarks');
             } elseif (request()->type == 'warehouse') {
                 $requestData = $request->only('type', 'date', 'branch_id', 'remarks');
+            } elseif (request()->type == 'general') {
+                $requestData = $request->only('type', 'date', 'branch_id', 'employee_id', 'pop_id', 'remarks');
+                // dd($request->employee_id);
+                // dd($requestData);
             } else {
                 $requestData = $request->only('type', 'date', 'branch_id', 'pop_id', 'remarks');
+                // dd($request->empolyee_id);
+             
             }
 
             $lastMRSId = ScmRequisition::latest()->first();
@@ -78,8 +86,9 @@ class ScmRequisitionController extends Controller
                 $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . 1;
             }
             $requestData['requisition_by'] = auth()->id();
-            $requisition = ScmRequisition::create($requestData);
+            // dd($requestData);
 
+            $requisition = ScmRequisition::create($requestData);
             $requisitionDetails = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
@@ -91,6 +100,7 @@ class ScmRequisitionController extends Controller
                     'brand_id' => $request->brand_id[$key],
                     'model' => $request->model[$key],
                     'purpose' => $request->purpose[$key],
+                    'current_stock' => $request->current_stock[$key],
                 ];
             }
 
@@ -124,6 +134,7 @@ class ScmRequisitionController extends Controller
      */
     public function edit(ScmRequisition $requisition)
     {
+        // dd($requisition->employee_id);
         $formType = "edit";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
@@ -153,8 +164,14 @@ class ScmRequisitionController extends Controller
                 $requestData = $request->only('type', 'date', 'branch_id', 'client_no', 'fr_no', 'link_no', 'remarks');
             } elseif (request()->type == 'warehouse') {
                 $requestData = $request->only('type', 'date', 'branch_id', 'remarks');
+            } elseif (request()->type == 'general') {
+                $requestData = $request->only('type', 'date', 'branch_id', 'employee_id', 'pop_id', 'remarks');
+                // dd($request->employee_id);
+                // dd($requestData);
             } else {
                 $requestData = $request->only('type', 'date', 'branch_id', 'pop_id', 'remarks');
+                // dd($request->empolyee_id);
+             
             }
             $requestData['requisition_by'] = auth()->id();
 
@@ -171,6 +188,7 @@ class ScmRequisitionController extends Controller
                     'brand_id' => $request->brand_id[$key],
                     'model' => $request->model[$key],
                     'purpose' => $request->purpose[$key],
+                    'current_stock' => $request->current_stock[$key],
                 ];
             }
 
