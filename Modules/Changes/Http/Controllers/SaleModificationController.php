@@ -52,9 +52,16 @@ class SaleModificationController extends Controller
      */
     public function create($connectivity_requirement_id)
     {
-        $offer = Offer::with(['client', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])->where('connectivity_requirement_id', $connectivity_requirement_id)->first();
+        $connectivity = ConnectivityRequirement::find($connectivity_requirement_id);
+        $frNo = $connectivity->fr_no;
+        $oldSale = Sale::whereHas('saleDetails', function ($query) use ($frNo) {
+            $query->where('fr_no', $frNo);
+        })->with(['saleDetails' => function ($query) use ($frNo) {
+            $query->where('fr_no', $frNo);
+        }])
+            ->first();
         $divisions = Division::latest()->get();
-        return view('changes::modify_sales.create', compact('divisions', 'offer'));
+        return view('changes::modify_sales.create', compact('divisions', 'connectivity_requirement_id', 'oldSale'));
     }
 
     /**
@@ -265,5 +272,20 @@ class SaleModificationController extends Controller
         }
 
         return $pnl_data;
+    }
+
+    public function getClientInfoForSales()
+    {
+        $offer = Offer::query()
+            ->with(['client:id,client_name,client_no', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])
+            ->where('connectivity_requirement_id', request()->connectivity_requirement_id)
+            ->first();
+
+
+        $offer['billing_address'] = BillingAddress::where('client_no', $offer->client_no)->get();
+        $offer['collection_address'] = CollectionAddress::where('client_no', $offer->client_no)->get();
+        $offer->toArray();
+
+        return response()->json($offer);
     }
 }

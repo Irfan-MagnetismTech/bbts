@@ -4,17 +4,16 @@
 @php
     $is_old = old('client_no') ? true : false;
     $form_heading = !empty($sale->id) ? 'Update' : 'Add';
-    $form_url = !empty($sale->id) ? route('sales-modification.update', $sale->id) : route('sales-modification.store');
+    $form_url = !empty($sale->id) ? route('sales.update', $sale->id) : route('sales.store');
     $form_method = !empty($sale->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
-    {{ ucfirst($form_heading) }} Sale Modification
+    {{ ucfirst($form_heading) }} Sale
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('sales-modification.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-database"></i></a>
+    <a href="{{ route('sales.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -26,8 +25,8 @@
 @section('content')
     <style>
         /* #calculation_table.table-bordered td, .table-bordered th{
-                                                                                                                                                                                                                                border: 1px solid gainsboro!important;
-                                                                                                                                                                                                                            } */
+                                                    border: 1px solid gainsboro!important;
+                                                } */
         #dv {
             background-color: #f6f9f9 !important;
             color: #191818 !important;
@@ -45,8 +44,6 @@
 
         .day_td {
             cursor: pointer;
-            padding: 5px;
-            border: 1px solid yellowgreen;
         }
 
         .day_td:hover {
@@ -74,10 +71,6 @@
             color: white;
             font-weight: 500;
         }
-
-        .bg-secondary {
-            background-color: #e5f0fc !important;
-        }
     </style>
 
     {!! Form::open([
@@ -91,251 +84,425 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="tableHeading">
-                    <h5> <span> &#10070; </span> Sale Modification <span>&#10070;</span> </h5>
+                    <h5> <span> &#10070; </span> Sale <span>&#10070;</span> </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         @php
-                            $client_name = $is_old ? old('client_name') : $costing->client->client_name ?? null;
-                            $client_id = $is_old ? old('client_id') : $costing->client->id ?? null;
-                            $client_no = $is_old ? old('client_no') : $costing->client_no ?? null;
-                            $fr_no = $is_old ? old('fr_no') : $costing->fr_no ?? null;
-                            $effective_date = $is_old ? old('effective_date') : null;
-                            $account_holder = $is_old ? old('account_holder') : null;
-                            $employee_id = $is_old ? old('employee_id') : null;
-                            $remarks = $is_old ? old('remarks') : null;
+                            $client_name = $is_old ? old('client_name') : $sale->client->client_name ?? null;
+                            $client_id = $is_old ? old('client_id') : $sale->client->id ?? null;
+                            $client_no = $is_old ? old('client_no') : $sale->client_no ?? null;
+                            $effective_date = $is_old ? old('effective_date') : $sale->effective_date ?? today()->format('d-m-Y');
+                            $account_holder = $is_old ? old('account_holder') : $sale->account_holder ?? null;
+                            $employee_id = $is_old ? old('employee_id') : $sale->employee_id ?? null;
+                            $offer_id = $is_old ? old('offer_id') : $sale->offer_id ?? null;
+                            $remarks = $is_old ? old('remarks') : $sale->remarks ?? null;
+                            $mq_no = $is_old ? old('mq_no') : $sale->mq_no ?? null;
                             $contract_duration = $is_old ? old('contract_duration') : $sale->contract_duration ?? null;
+                            $work_order = $is_old ? old('work_order') : $sale->work_order ?? null;
                             $sla = $is_old ? old('sla') : $sale->sla ?? null;
-                            $grand_total = $is_old ? old('grand_total') : 0;
+                            $wo_no = $is_old ? old('wo_no') : $sale->wo_no ?? null;
+                            $grand_total = $is_old ? old('grand_total') : $sale->grand_total ?? 0;
+                            
                         @endphp
                         <x-input-box colGrid="4" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <x-input-box colGrid="4" name="client_no" value="{{ $client_no }}" label="Client Id" />
                         <x-input-box colGrid="4" name="account_holder" value="{{ $account_holder }}"
                             label="Account Holder" />
                         <input type="hidden" id="employee_id" name="employee_id" value="{{ $employee_id }}">
-                        <x-input-box colGrid="4" name="fr_no" value="{{ $fr_no }}" label="FR No" />
+                        <x-input-box colGrid="4" name="offer_id" value="{{ $offer_id }}" label="Offer Id" />
                         <x-input-box colGrid="4" name="remarks" value="{{ $remarks }}" label="Remarks" />
+                        <x-input-box colGrid="4" name="mq_no" value="{{ $mq_no }}" label="MQ No" />
                         <x-input-box colGrid="4" name="contract_duration" value="{{ $contract_duration }}"
                             label="Contract Duration" />
                         <x-input-box colGrid="4" name="effective_date" class="date" value="{{ $effective_date }}"
                             label="Effective Date" />
+                        <x-input-box colGrid="4" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
                         <x-input-box colGrid="4" type="file" name="sla" label="SLA" value="" />
+                        <x-input-box colGrid="4" type="file" name="work_order" label="Work Order" value="" />
+
+
                     </div>
                 </div>
             </div>
-            <div id='fr_details'>
-                @if (isset($costing))
-                    @php
-                        $offer_mrc = $costing->total_mrc ?? 0;
-                        $product_amount = $costing->total_product_cost ?? 0;
-                        $management_cost = $costing->management_cost_amount ?? 0;
-                        $total_mrc = $offer_mrc + $product_amount + $management_cost + $costing->equipment_total_mrc ?? 0;
-                    @endphp
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-3">
-                                    <div class="checkbox-fade fade-in-primary">
-                                        <label>
-                                            <input type="checkbox" class="checkbox" value="Primary" name="checked[${indx}]">
-                                            <span class="cr">
-                                                <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                            </span>
-                                            <span>{{ $costing->feasibilityRequirementDetail->connectivity_point }} -
-                                                ({{ $costing->fr_no }})</span>
-                                            <input type="hidden" class="fr_no" name="fr_no"
-                                                value="{{ $costing->fr_no }}">
-                                            <input type="hidden" class="costing_id" name="costing_id"
-                                                value="{{ $costing->id }}">
-                                        </label>
+            <h6>Old Sale Details</h6>
+            <div id='old_fr_details'>
+                @if (isset($oldSale) && count($oldSale->saleDetails))
+                    @foreach ($oldSale->saleDetails as $key => $value)
+                        @php
+                            $percent = $value->offerDetails->total_offer_mrc / $value->offerDetails->costing->product_total_cost - 1;
+                        @endphp
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="checkbox-fade fade-in-primary">
+                                            <label>
+                                                <input type="checkbox" class="checkbox" value="Primary"
+                                                    name="checked[{{ $key }}]"
+                                                    @if ($value->checked == 1) checked=True @endif>
+                                                <span class="cr">
+                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                </span>
+                                                <span>{{ $value->frDetails->connectivity_point }} ( {{ $value->fr_no }}
+                                                    )</span>
+                                                <input type="hidden" class="fr_no" name="fr_no[{{ $key }}]"
+                                                    value="{{ $value->fr_no }}">
+                                                <input type="hidden" class="costing_id"
+                                                    name="costing_id[{{ $key }}]"
+                                                    value="{{ $value->costing_id }}">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-9">
+                                        @foreach ($value->saleLinkDetails as $link_key => $link_value)
+                                            <span>{{ $link_value->link_type }}</span>
+                                            <input type="hidden"
+                                                name="link_no[{{ $key }}][]"value="{{ $link_value->link_no }}">
+                                            <input type="hidden"
+                                                name="link_type[{{ $key }}][]"value="{{ $link_value->link_type }}">
+                                        @endforeach
                                     </div>
                                 </div>
-                                <div class="col-9">
-                                    @foreach ($costing->costingLinks as $key => $link)
-                                        <input type="hidden" name="link_no[]"value="{{ $link->link_no }}">
-                                        <input type="hidden" name="link_type[]"value="{{ $link->link_type }}">
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="row">
-                                <x-input-box colGrid="3" name="delivery_date" value="{{ $delivery_date ?? '' }}"
-                                    label="Delivery Date" class="date" />
-                                <div class="col-xl-3 col-md-3">
-                                    <div class="input-group input-group-sm input-group-primary">
-                                        <select name="billing_address_id" class="form-control">
+                                <div class="row">
+                                    <x-input-box colGrid="3" name="delivery_date[{{ $key }}]"
+                                        value="{{ $value->delivery_date ?? '' }}" label="Delivery Date" class="date" />
+                                    <x-input-box colGrid="3" name="bill_payment_date[{{ $key }}]"
+                                        value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date"
+                                        class="container" attr='readonly' />
 
-                                            @foreach ($costing->client->billingAddress as $billing_address)
-                                                <option value="{{ $billing_address->id }}">{{ $billing_address->address }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <label class="input-group-addon input-group-addon-manual"><i
-                                                class="icofont icofont-ui-add"
-                                                onClick="ShowModal('billing','{{ $costing->fr_no }}',this)"></i></label>
+                                    <div class="col-3">
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" for="prepaid">
+                                                <input type="radio" class="form-check-input payment_status"
+                                                    id="prepaid" name="payment_status[{{ $key }}]"
+                                                    value="prepaid" @checked(@$value->payment_status == 'prepaid' || ($form_method == 'POST' && !old()))>
+                                                Prepaid
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" for="postpaid">
+                                                <input type="radio" class="form-check-input payment_status"
+                                                    id="postpaid" name="payment_status[{{ $key }}]"
+                                                    value="postpaid" @checked(@$value->payment_status == 'postpaid')>
+                                                Postpaid
+                                            </label>
+                                        </div>
                                     </div>
+                                    <x-input-box colGrid="3" name="mrc[{{ $key }}]"
+                                        value="{{ $value->mrc }}" label="MRC" attr="readonly" />
+                                    <x-input-box colGrid="3" name="otc[{{ $key }}]"
+                                        value="{{ $value->otc }}" label="OTC" attr="readonly" />
                                 </div>
-                                <div class="col-xl-3 col-md-3">
-                                    <div class="input-group input-group-sm input-group-primary">
-                                        <select name="collection_address_id" class="form-control">
-                                            @foreach ($costing->client->collectionAddress as $collection_address)
-                                                <option value="{{ $collection_address->id }}">
-                                                    {{ $collection_address->address }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label class="input-group-addon input-group-addon-manual"><i
-                                                class="icofont icofont-ui-add"
-                                                onClick="ShowModal('collection','{{ $costing->fr_no }}',this)"></i></label>
-                                    </div>
-                                </div>
-                                <x-input-box colGrid="3" name="bill_payment_date" label="Bill Payment Date"
-                                    class="container" attr='readonly' value="" />
-                                <div class="col-3">
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label" for="prepaid">
-                                            <input type="radio" class="form-check-input payment_status" id="prepaid"
-                                                name="payment_status" value="prepaid" checked>
-                                            Prepaid
-                                        </label>
-                                    </div>
+                                <div>
 
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label" for="prepaid">
-                                            <input type="radio" class="form-check-input payment_status" id="prepaid"
-                                                name="payment_status" value="postpaid">
-                                            Postpaid
-                                        </label>
-                                    </div>
                                 </div>
-                                <x-input-box colGrid="3" name="mrc" value="{{ $costing->total_mrc ?? 0 }}"
-                                    label="MRC" attr="readonly" />
-                                <x-input-box colGrid="3" name="otc" value="{{ $costing->total_otc ?? 0 }}"
-                                    label="OTC" attr="readonly" />
-                            </div>
-                            <div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <th>Product/Service</th>
-                                        <th>Quantity</th>
-                                        <th>Unit</th>
-                                        <th>Unit Price</th>
-                                        <th>Total Price</th>
-                                        <th>VAT</th>
-                                        <th>Total Amount</th>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $total = 0;
-                                            $sub_total_vat = 0;
-                                            $sub_total_amount = 0;
-                                        @endphp
-                                        @foreach ($costing->costingProducts as $key => $costing_product)
-                                            @php
-                                                $total_price = ($costing_product->vat_percentage * $costing_product->rate + $costing_product->rate) * $costing_product->quantity;
-                                                $total_amount = $costing_product->product_vat_amount + $total_price;
-                                                $total += $total_price;
-                                                $sub_total_vat += $costing_product->product_vat_amount;
-                                                $sub_total_amount += $total_amount;
-                                            @endphp
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <th>Product/Service</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Price</th>
+                                            <th>Total Price</th>
+                                            <th>Vat Percent</th>
+                                            <th>Vat Amount</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($value->saleProductDetails as $key1 => $val)
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text"
+                                                                name="product_name[{{ $key }}][]"
+                                                                class="form-control text-center" id="service_name"
+                                                                readonly value="{{ $val->product_name }}">
+                                                            <input type="hidden"
+                                                                name="product_id[{{ $key }}][]"
+                                                                class="form-control text-center" id="service" readonly
+                                                                value="{{ $val->product_id }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text" name="quantity[{{ $key }}][]"
+                                                                class="form-control text-right" id="quantity" readonly
+                                                                value="{{ $val->quantity }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text" name="unit[{{ $key }}][]"
+                                                                class="form-control text-center" id="unit" readonly
+                                                                value="{{ $val->unit }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text" name="rate[{{ $key }}][]"
+                                                                class="form-control text-right" readonly
+                                                                value="{{ $val->rate }}">
+                                                        </div>
+                                                    </td>
+                                                    <td class="d-none">
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text" name="price[{{ $key }}][]"
+                                                                class="form-control text-right" readonly
+                                                                value="{{ $percent * $val->rate + $val->rate }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text"
+                                                                name="total_price[{{ $key }}][]"
+                                                                class="form-control text-right" readonly
+                                                                value="{{ ($percent * $val->rate + $val->rate) * $val->quantity }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text"
+                                                                name="vat_percent[{{ $key }}][]"
+                                                                class="form-control text-right vat_percent"
+                                                                value="0">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text"
+                                                                name="vat_amount[{{ $key }}][]"
+                                                                class="form-control text-right vat_amount" readonly
+                                                                value="0">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
                                             <tr>
+                                                <td colspan="3" style="text-align: left;"></td>
+                                                <td style="text-align: center;">Total MRC</td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="product_name[]"
-                                                            class="form-control text-center" id="service_name" readonly
-                                                            value="{{ $costing_product->product->name }}">
-                                                        <input type="hidden" name="product_id[]"
-                                                            class="form-control text-center" id="service" readonly
-                                                            value="{{ $costing_product->product->id }}">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="quantity[]"
-                                                            class="form-control text-right" id="quantity" readonly
-                                                            value="{{ $costing_product->quantity }}">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="unit[]"
-                                                            class="form-control text-center" id="unit" readonly
-                                                            value="{{ $costing_product->product->unit }}">
-                                                    </div>
-                                                </td>
-                                                <td class="d-none">
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="rate[]"
-                                                            class="form-control text-right" readonly
-                                                            value="{{ $costing_product->rate }}">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="price[]"
-                                                            class="form-control text-right price" readonly
-                                                            value="{{ $costing_product->rate }}">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="total_price[]"
-                                                            class="form-control text-right total_price" readonly
-                                                            value="{{ $total_price }}">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="vat_amount[]"
-                                                            class="form-control text-right vat_amount" readonly
-                                                            value="{{ $costing_product->product_vat_amount }}">
-                                                        <input type="hidden" name="vat_percent[]"
-                                                            class="form-control text-right vat_percent" readonly
-                                                            value="{{ $costing_product->product_vat }}">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="total_amount[]"
-                                                            class="form-control text-right total_amount" readonly
-                                                            value="{{ $total_amount }}">
+                                                        <input type="text" name="total_mrc[{{ $key }}]"
+                                                            class="form-control text-right total_mrc" readonly
+                                                            value="{{ $value->total_mrc }}">
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="3" style="text-align: left;"></td>
-                                            <td style="text-align: center;">Total MRC</td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc"
-                                                        class="form-control text-right total_mrc" readonly
-                                                        value="{{ $total }}">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="sub_total_vat"
-                                                        class="form-control text-right sub_total_vat" readonly
-                                                        value="{{ $sub_total_vat }}">
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="sub_total_amount"
-                                                        class="form-control text-right sub_total_amount" readonly
-                                                        value="{{ $sub_total_amount }}">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
                 @endif
+            </div>
+            <h6>Modification Sale Details</h6>
+            <div id='fr_details'>
+                @if (isset($sale) && count($sale->saleDetails))
+                    @foreach ($sale->saleDetails as $key => $value)
+                        @php
+                            $percent = $value->offerDetails->total_offer_mrc / $value->offerDetails->costing->product_total_cost - 1;
+                        @endphp
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="checkbox-fade fade-in-primary">
+                                            <label>
+                                                <input type="checkbox" class="checkbox" value="Primary"
+                                                    name="checked[{{ $key }}]"
+                                                    @if ($value->checked == 1) checked=True @endif>
+                                                <span class="cr">
+                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                </span>
+                                                <span>{{ $value->frDetails->connectivity_point }} ( {{ $value->fr_no }}
+                                                    )</span>
+                                                <input type="hidden" class="fr_no" name="fr_no[{{ $key }}]"
+                                                    value="{{ $value->fr_no }}">
+                                                <input type="hidden" class="costing_id"
+                                                    name="costing_id[{{ $key }}]"
+                                                    value="{{ $value->costing_id }}">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-9">
+                                        @foreach ($value->saleLinkDetails as $link_key => $link_value)
+                                            <span>{{ $link_value->link_type }}</span>
+                                            <input type="hidden"
+                                                name="link_no[{{ $key }}][]"value="{{ $link_value->link_no }}">
+                                            <input type="hidden"
+                                                name="link_type[{{ $key }}][]"value="{{ $link_value->link_type }}">
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <x-input-box colGrid="3" name="delivery_date[{{ $key }}]"
+                                        value="{{ $value->delivery_date ?? '' }}" label="Delivery Date"
+                                        class="date" />
+                                    <div class="col-xl-2 col-md-2">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <select name="billing_address_id[{{ $key }}]" class="form-control">
+                                                @foreach ($billing_address as $bil_key => $bil_val)
+                                                    <option value="{{ $bil_val->id }}"
+                                                        @if ($bil_val->id == $value->billing_address_id) selected @endif>
+                                                        {{ $bil_val->address }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label class="input-group-addon input-group-addon-manual"
+                                                data-toggle="tooltip" title='Add Billing Address'><i
+                                                    class="icofont icofont-ui-add"
+                                                    onClick="ShowModal('billing','{{ $value->fr_no }}',this)"></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-2 col-md-2">
+                                        <div class="input-group input-group-sm input-group-primary">
+                                            <select name="collection_address_id[{{ $key }}]"
+                                                class="form-control">
+                                                @foreach ($collection_address as $col_key => $col_val)
+                                                    <option value="{{ $col_val->id }}"
+                                                        @if ($col_val->id == $value->collection_address_id) selected @endif>
+                                                        {{ $col_val->address }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label class="input-group-addon input-group-addon-manual"
+                                                data-toggle="tooltip" title='Add Collection Address'><i
+                                                    class="icofont icofont-ui-add"
+                                                    onClick="ShowModal('collection','{{ $value->fr_no }}',this)"></i></label>
+                                        </div>
+                                    </div>
+                                    <x-input-box colGrid="3" name="bill_payment_date[{{ $key }}]"
+                                        value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date"
+                                        class="container" attr='readonly' />
+
+                                    <div class="col-3">
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" for="prepaid">
+                                                <input type="radio" class="form-check-input payment_status"
+                                                    id="prepaid" name="payment_status[{{ $key }}]"
+                                                    value="prepaid" @checked(@$value->payment_status == 'prepaid' || ($form_method == 'POST' && !old()))>
+                                                Prepaid
+                                            </label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <label class="form-check-label" for="postpaid">
+                                                <input type="radio" class="form-check-input payment_status"
+                                                    id="postpaid" name="payment_status[{{ $key }}]"
+                                                    value="postpaid" @checked(@$value->payment_status == 'postpaid')>
+                                                Postpaid
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <x-input-box colGrid="3" name="mrc[{{ $key }}]"
+                                        value="{{ $value->mrc }}" label="MRC" attr="readonly" />
+                                    <x-input-box colGrid="3" name="otc[{{ $key }}]"
+                                        value="{{ $value->otc }}" label="OTC" attr="readonly" />
+                                </div>
+                                <div>
+
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <th>Product/Service</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Price</th>
+                                            <th>Total Price</th>
+                                            <th>Vat Percent</th>
+                                            <th>Vat Amount</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($value->saleProductDetails as $key1 => $val)
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text"
+                                                                name="product_name[{{ $key }}][]"
+                                                                class="form-control text-center" id="service_name"
+                                                                readonly value="{{ $val->product_name }}">
+                                                            <input type="hidden"
+                                                                name="product_id[{{ $key }}][]"
+                                                                class="form-control text-center" id="service" readonly
+                                                                value="{{ $val->product_id }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text" name="quantity[{{ $key }}][]"
+                                                                class="form-control text-right" id="quantity" readonly
+                                                                value="{{ $val->quantity }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text" name="unit[{{ $key }}][]"
+                                                                class="form-control text-center" id="unit" readonly
+                                                                value="{{ $val->unit }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text" name="rate[{{ $key }}][]"
+                                                                class="form-control text-right" readonly
+                                                                value="{{ $val->rate }}">
+                                                        </div>
+                                                    </td>
+                                                    <td class="d-none">
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text" name="price[{{ $key }}][]"
+                                                                class="form-control text-right" readonly
+                                                                value="{{ $percent * $val->rate + $val->rate }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text"
+                                                                name="total_price[{{ $key }}][]"
+                                                                class="form-control text-right" readonly
+                                                                value="{{ ($percent * $val->rate + $val->rate) * $val->quantity }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text"
+                                                                name="vat_percent[{{ $key }}][]"
+                                                                class="form-control text-right vat_percent"
+                                                                value="0">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text"
+                                                                name="vat_amount[{{ $key }}][]"
+                                                                class="form-control text-right vat_amount" readonly
+                                                                value="0">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="3" style="text-align: left;"></td>
+                                                <td style="text-align: center;">Total MRC</td>
+                                                <td>
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <input type="text" name="total_mrc[{{ $key }}]"
+                                                            class="form-control text-right total_mrc" readonly
+                                                            value="{{ $value->total_mrc }}">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+
             </div>
             <div>
                 <div class="card">
@@ -363,10 +530,11 @@
         </div>
 
         {!! Form::close() !!}
-        @include('changes::modify_sales.model')
-        @include('changes::modify_sales.day-table')
+        @include('sales::sales.model')
+        @include('sales::sales.day-table')
 
     @endsection
+
     @section('script')
         @include('changes::modify_sales.js')
     @endsection
