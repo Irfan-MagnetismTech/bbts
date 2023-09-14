@@ -15,12 +15,11 @@
 </style>
 
 @php
-    
     $is_old = old('supplier_name') ? true : false;
     $form_heading = !empty($pop) ? 'Update' : 'Add';
     $form_url = !empty($pop) ? route('pops.update', $pop->id) : route('pops.store');
     $form_method = !empty($pop) ? 'PUT' : 'POST';
-    
+
     $name = old('name', !empty($pop) ? $pop->name : null);
     $type = old('type', !empty($pop) ? $pop->type : null);
     $division_id = old('division_id', !empty($pop) ? $pop->division_id : null);
@@ -29,7 +28,16 @@
     $address = old('address', !empty($pop) ? $pop->address : null);
     $branch_id = old('branch_id', !empty($pop) ? $pop->branch_id : null);
     $latLong = old('lat_long', !empty($pop) ? $pop->lat_long : null);
+    $room_size = old('room_size', !empty($pop) ? $pop->room_size : null);
+    $tower = old('tower', !empty($pop) ? $pop->tower : null);
+    $tower_height = old('tower_height', !empty($pop) ? $pop->tower_height : null);
+    $electric_meter_no = old('electric_meter_no', !empty($pop) ? $pop->electric_meter_no : null);
+    $deed_duration = old('deed_duration', !empty($pop) ? $pop->deed_duration : null);
+    $renewal_condition = old('renewal_condition', !empty($pop) ? $pop->renewal_condition : null);
+    $renewal_date = old('renewal_date', !empty($pop) ? $pop->renewal_date : today()->format('d-m-Y'));
     $owners_name = old('owners_name', !empty($pop) ? $pop->owners_name : null);
+    $owners_nid = old('owners_nid', !empty($pop) ? $pop->owners_nid : null);
+    $owners_address = old('owners_address', !empty($pop) ? $pop->owners_address : null);
     $contact_person = old('contact_person', !empty($pop) ? $pop->contact_person : null);
     $designation = old('designation', !empty($pop) ? $pop->designation : null);
     $contact_no = old('contact_no', !empty($pop) ? $pop->contact_no : null);
@@ -45,16 +53,17 @@
     $rent = old('rent', !empty($pop) ? $pop->rent : null);
     $advance_reduce = old('advance_reduce', !empty($pop) ? $pop->advance_reduce : null);
     $monthly_rent = old('monthly_rent', !empty($pop) ? $pop->monthly_rent : null);
-    $paymet_method = old('paymet_method', !empty($pop) ? $pop->paymet_method : null);
+    $payment_method = old('payment_method', !empty($pop) ? $pop->payment_method : null);
     $bank_id = old('bank_id', !empty($pop) ? $pop->bank_id : null);
     $account_no = old('account_no', !empty($pop) ? $pop->account_no : null);
     $payment_date = old('payment_date', !empty($pop) ? $pop->payment_date : today()->format('d-m-Y'));
     $routing_no = old('routing_no', !empty($pop) ? $pop->routing_no : null);
     $remarks = old('remarks', !empty($pop) ? $pop->remarks : null);
     $attached_file = old('attached_file', !empty($pop) ? $pop->attached_file : null);
-    
+
     $particular_ids = old('particular_id', !empty($pop) ? $pop->popLines->pluck('particular_id') : []);
     $amounts = old('amount', !empty($pop) ? $pop->popLines->groupBy('particular_id') : []);
+    $total_rent = old('total_rent', !empty($pop) ? $pop->total_rent : null);
 @endphp
 
 @section('breadcrumb-title')
@@ -155,14 +164,41 @@
                 @endforeach
             </select>
         </div>
-
+        <div class="col-md-3">
+            <div class="
+                     mt-2 mb-4">
+                <label class="mr-2" for="yes">Tower</label>
+                <div class="form-check-inline">
+                    <label class="form-check-label" for="yes">
+                        <input type="radio" class="form-check-input radioButton" id="yes" name="tower"
+                               value="yes" @checked(@$signboard == 'yes' || ($form_method == 'POST' && !old()))>
+                        Yes
+                    </label>
+                </div>
+                <div class="form-check-inline">
+                    <label class="form-check-label" for="no">
+                        <input type="radio" class="form-check-input radioButton" id="no" name="tower"
+                               value="no" @checked(@$signboard == 'no')>
+                        No
+                    </label>
+                </div>
+            </div>
+        </div>
+        <x-input-box colGrid="3" name="tower_height" value="{{ $tower_height }}" label="Tower Height (m)" />
         <x-input-box colGrid="3" name="lat_long" value="{{ $latLong }}" label="Lat/Long" />
+        <x-input-box colGrid="3" name="room_size" value="{{ $room_size }}" label="Room Size" />
+        <x-input-box colGrid="3" name="electric_meter_no" value="{{ $electric_meter_no }}" label="Electric Meter No" />
         <x-input-box colGrid="3" name="owners_name" value="{{ $owners_name }}" label="Owners Name" />
+        <x-input-box colGrid="3" name="owners_nid" value="{{ $owners_nid }}" label="Owners NID" />
+        <x-input-box colGrid="3" name="owners_address" value="{{ $owners_address }}" label="Owners Address" />
         <x-input-box colGrid="3" name="contact_person" value="{{ $contact_person }}" label="Contact Person" />
         <x-input-box colGrid="3" name="designation" value="{{ $designation }}" label="Designation" />
         <x-input-box colGrid="3" type="number" name="contact_no" value="{{ $contact_no }}" label="Contact No." />
         <x-input-box colGrid="3" name="email" value="{{ $email }}" label="Email Address" />
         <x-input-box colGrid="3" name="description" value="{{ $description }}" label="Description" />
+        <x-input-box colGrid="3" name="deed_duration" value="{{ $deed_duration }}" label="Deed Duration" />
+        <x-input-box colGrid="3" name="renewal_condition" value="{{ $renewal_condition }}" label="Renewal Condition" />
+        <x-input-box colGrid="3" name="renewal_date" class="date" value="{{ $renewal_date }}" label="Renewal Date" />
         <x-input-box colGrid="3" name="approval_date" class="date" value="{{ $approval_date }}"
             label="Approval Date" />
         <x-input-box colGrid="3" name="btrc_approval_date" class="date" value="{{ $btrc_approval_date }}"
@@ -200,12 +236,12 @@
     <div class="row mb-2">
         <x-input-box colGrid="3" type="number" name="advance_amount" value="{{ $advance_amount }}"
             label="Advance Amount" />
-        <x-input-box colGrid="3" type="number" name="rent" value="{{ $rent }}" label="Rent" />
+        <x-input-box colGrid="3" type="number" name="rent" value="{{ $rent }}" label="Rent" class="rent" />
         <x-input-box colGrid="3" type="number" name="advance_reduce" value="{{ $advance_reduce }}"
-            label="Advance Reduce" />
-        <x-input-box colGrid="3" type="number" name="monthly_rent" value="{{ $monthly_rent }}"
-            label="Monthly Rent" />
-        <x-input-box colGrid="3" name="paymet_method" value="{{ $paymet_method }}" label="Paymet Method" />
+                     label="Advance Reduce" class="advance_reduce" />
+        <x-input-box colGrid="3" type="number" name="monthly_rent" value="{{ $monthly_rent ?? 0 }}"
+                     label="Monthly Rent" class="monthly_rent" />
+        <x-input-box colGrid="3" name="payment_method" value="{{ $payment_method }}" label="Payment Method" />
         <div class="col-md-3">
             <select class="form-control bankList" id="bank_id" name="bank_id" required>
                 <option value="">Select Bank</option>
@@ -250,13 +286,24 @@
                                 {{ $particular->name }}
                                 <input type="hidden" name="particular_id[]" value="{{ $particular->id }}">
                             </td>
-                            <td><input type="number" class="form-control form-control-sm"
-                                    value="{{ isset($amounts[$particular->id]) ? $amounts[$particular->id][0]->amount : 0 }}"
-                                    name="amount[]">
+                            <td>
+                                <input type="number" class="form-control form-control-sm amount"
+                                       value="{{ isset($amounts[$particular->id]) ? $amounts[$particular->id][0]->amount : 0 }}"
+                                       name="amount[]"
+                                       data-amount="{{ isset($amounts[$particular->id]) ? $amounts[$particular->id][0]->amount : 0 }}">
                             </td>
+
                         </tr>
                     @endforeach
-                </tbody>
+                    <tr>
+                        <td><b>Total Rent</b></td>
+                        <td>
+                            <div class="input-group input-group-sm input-group-primary">
+                                <input type="text" name="total_rent" class="form-control"
+                                       id="total_rent" autocomplete="off" placeholder="0" readonly value="{{$total_rent}}">
+                            </div>
+                        </td>
+                    </tr>
             </table>
         </div>
     </div>
@@ -272,4 +319,46 @@
 
 @section('script')
     @include('admin::pops.js')
+
+    <script>
+        $(document).ready(function () {
+            $(document).on("keyup focus", ".amount", function () {
+                calculateTotalAmount();
+            });
+
+            function calculateTotalAmount() {
+                var amount = 0;
+                $(".amount").each(function () {
+                    amount += parseFloat($(this).val()) || 0;
+                });
+
+                $('#total_rent').val(amount.toFixed(2));
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var rentInput = $(".rent");
+            var advanceReduceInput = $(".advance_reduce");
+            var monthlyRentInput = $(".monthly_rent");
+
+            rentInput.on("keyup", function () {
+                calculateMonthlyRent();
+            });
+
+            advanceReduceInput.on("keyup", function () {
+                calculateMonthlyRent();
+            });
+
+            function calculateMonthlyRent() {
+                var rentValue = parseFloat(rentInput.val()) || 0;
+                var advanceReduceValue = parseFloat(advanceReduceInput.val()) || 0;
+                var monthlyRent = rentValue - advanceReduceValue;
+
+                monthlyRentInput.val(monthlyRent.toFixed(2));
+            }
+        });
+    </script>
+
 @endsection
