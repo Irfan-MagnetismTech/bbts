@@ -16,7 +16,7 @@
 
 @php
     $is_old = old('supplier_name') ? true : false;
-    $form_heading = !empty($pop) ? 'Update' : 'Add';
+    $form_heading = !empty($pop) ? 'Show' : 'Add';
     $form_url = !empty($pop) ? route('pops.update', $pop->id) : route('pops.store');
     $form_method = !empty($pop) ? 'PUT' : 'POST';
 
@@ -126,7 +126,7 @@
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="district_id" name="district_id" required>
                     <option value="">Select district</option>
-                    @if ($formType == 'edit')
+                    @if ($formType == 'show')
                         @foreach (@$districts as $district)
                             <option value="{{ $district->id }}" {{ $district_id == $district->id ? 'selected' : '' }}>
                                 {{ $district->name }}
@@ -141,7 +141,7 @@
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="thana_id" name="thana_id" required>
                     <option value="">Select thana</option>
-                    @if ($formType == 'edit')
+                    @if ($formType == 'show')
                         @foreach (@$thanas as $thana)
                             <option value="{{ $thana->id }}" {{ $thana_id == $thana->id ? 'selected' : '' }}>
                                 {{ $thana->name }}
@@ -152,10 +152,10 @@
             </div>
         </div>
 
-        <x-input-box colGrid="3" name="address" value="{{ $address }}" label="Address" />
+        <x-input-box colGrid="3" name="address" value="{{ $address }}" label="Address" readonly/>
 
         <div class="form-group col-3">
-            <select name="branch_id" id="branch_id" class="form-control select2">
+            <select name="branch_id" id="branch_id" class="form-control select2" readonly>
                 <option value="" selected disabled>Search Branch</option>
                 @foreach ($branches as $branch)
                     <option value="{{ $branch->id }}" {{ $branch_id == $branch->id ? 'selected' : '' }}>
@@ -168,14 +168,14 @@
             <div class="
                      mt-2 mb-4">
                 <label class="mr-2" for="yes">Tower</label>
-                <div class="form-check-inline">
+                <div class="form-check-inline" readonly>
                     <label class="form-check-label" for="yes">
                         <input type="radio" class="form-check-input radioButton" id="yes" name="tower"
                                value="yes" @checked(@$signboard == 'yes' || ($form_method == 'POST' && !old()))>
                         Yes
                     </label>
                 </div>
-                <div class="form-check-inline">
+                <div class="form-check-inline" readonly>
                     <label class="form-check-label" for="no">
                         <input type="radio" class="form-check-input radioButton" id="no" name="tower"
                                value="no" @checked(@$signboard == 'no')>
@@ -184,44 +184,44 @@
                 </div>
             </div>
         </div>
-        <x-input-box colGrid="3" name="tower_height" value="{{ $tower_height }}" label="Tower Height (m)" />
-        <x-input-box colGrid="3" name="lat_long" value="{{ $latLong }}" label="Lat/Long" />
-        <x-input-box colGrid="3" name="room_size" value="{{ $room_size }}" label="Room Size" />
-        <x-input-box colGrid="3" name="electric_meter_no" value="{{ $electric_meter_no }}" label="Electric Meter No" />
-        <x-input-box colGrid="3" name="owners_name" value="{{ $owners_name }}" label="Owners Name" />
-        <x-input-box colGrid="3" name="owners_nid" value="{{ $owners_nid }}" label="Owners NID" />
-        <x-input-box colGrid="3" name="owners_address" value="{{ $owners_address }}" label="Owners Address" />
-        <x-input-box colGrid="3" name="contact_person" value="{{ $contact_person }}" label="Contact Person" />
-        <x-input-box colGrid="3" name="designation" value="{{ $designation }}" label="Designation" />
-        <x-input-box colGrid="3" type="number" name="contact_no" value="{{ $contact_no }}" label="Contact No." />
-        <x-input-box colGrid="3" name="email" value="{{ $email }}" label="Email Address" />
-        <x-input-box colGrid="3" name="description" value="{{ $description }}" label="Description" />
-        <x-input-box colGrid="3" name="deed_duration" value="{{ $deed_duration }}" label="Deed Duration" />
-        <x-input-box colGrid="3" name="renewal_condition" value="{{ $renewal_condition }}" label="Renewal Condition" />
-        <x-input-box colGrid="3" name="renewal_date" class="date" value="{{ $renewal_date }}" label="Renewal Date" />
+        <x-input-box colGrid="3" name="tower_height" value="{{ $tower_height }}" label="Tower Height (m)" readonly="" readonly/>
+        <x-input-box colGrid="3" name="lat_long" value="{{ $latLong }}" label="Lat/Long" readonly/>
+        <x-input-box colGrid="3" name="room_size" value="{{ $room_size }}" label="Room Size" readonly/>
+        <x-input-box colGrid="3" name="electric_meter_no" value="{{ $electric_meter_no }}" label="Electric Meter No" readonly/>
+        <x-input-box colGrid="3" name="owners_name" value="{{ $owners_name }}" label="Owners Name" readonly/>
+        <x-input-box colGrid="3" name="owners_nid" value="{{ $owners_nid }}" label="Owners NID" readonly/>
+        <x-input-box colGrid="3" name="owners_address" value="{{ $owners_address }}" label="Owners Address" readonly/>
+        <x-input-box colGrid="3" name="contact_person" value="{{ $contact_person }}" label="Contact Person" readonly/>
+        <x-input-box colGrid="3" name="designation" value="{{ $designation }}" label="Designation" readonly/>
+        <x-input-box colGrid="3" type="number" name="contact_no" value="{{ $contact_no }}" label="Contact No." readonly/>
+        <x-input-box colGrid="3" name="email" value="{{ $email }}" label="Email Address" readonly/>
+        <x-input-box colGrid="3" name="description" value="{{ $description }}" label="Description" readonly/>
+        <x-input-box colGrid="3" name="deed_duration" value="{{ $deed_duration }}" label="Deed Duration" readonly/>
+        <x-input-box colGrid="3" name="renewal_condition" value="{{ $renewal_condition }}" label="Renewal Condition" readonly/>
+        <x-input-box colGrid="3" name="renewal_date" class="date" value="{{ $renewal_date }}" label="Renewal Date" readonly/>
         <x-input-box colGrid="3" name="approval_date" class="date" value="{{ $approval_date }}"
-            label="Approval Date" />
+            label="Approval Date" readonly/>
         <x-input-box colGrid="3" name="btrc_approval_date" class="date" value="{{ $btrc_approval_date }}"
-            label="BTRC Approval Date" />
+            label="BTRC Approval Date" readonly/>
         <x-input-box colGrid="3" name="commissioning_date" class="date" value="{{ $commissioning_date }}"
-            label="Commissioning Date" />
+            label="Commissioning Date" readonly/>
         <x-input-box colGrid="3" name="termination_date" class="date" value="{{ $termination_date }}"
-            label="Termination Date" />
+            label="Termination Date" readonly/>
         <x-input-box colGrid="3" name="website_published_date" class="date" value="{{ $website_published_date }}"
-            label="Website Published Date" />
+            label="Website Published Date" readonly/>
 
         <div class="col-md-3">
             <div class="
                      mt-2 mb-4">
                 <label class="mr-2" for="yes">Signboard</label>
-                <div class="form-check-inline">
+                <div class="form-check-inline" readonly>
                     <label class="form-check-label" for="yes">
                         <input type="radio" class="form-check-input radioButton" id="yes" name="signboard"
                             value="yes" @checked(@$signboard == 'yes' || ($form_method == 'POST' && !old()))>
                         Yes
                     </label>
                 </div>
-                <div class="form-check-inline">
+                <div class="form-check-inline" readonly>
                     <label class="form-check-label" for="no">
                         <input type="radio" class="form-check-input radioButton" id="no" name="signboard"
                             value="no" @checked(@$signboard == 'no')>
@@ -235,15 +235,15 @@
     <p class="text-center h5">Billing Information</p>
     <div class="row mb-2">
         <x-input-box colGrid="3" type="number" name="advance_amount" value="{{ $advance_amount }}"
-            label="Advance Amount" />
-        <x-input-box colGrid="3" type="number" name="rent" value="{{ $rent }}" label="Rent" class="rent" />
+            label="Advance Amount" readonly/>
+        <x-input-box colGrid="3" type="number" name="rent" value="{{ $rent }}" label="Rent" class="rent" readonly/>
         <x-input-box colGrid="3" type="number" name="advance_reduce" value="{{ $advance_reduce }}"
-                     label="Advance Reduce" class="advance_reduce" />
+                     label="Advance Reduce" class="advance_reduce" readonly/>
         <x-input-box colGrid="3" type="number" name="monthly_rent" value="{{ $monthly_rent ?? 0 }}"
-                     label="Monthly Rent" class="monthly_rent" />
-        <x-input-box colGrid="3" name="payment_method" value="{{ $payment_method }}" label="Payment Method" />
+                     label="Monthly Rent" class="monthly_rent" readonly/>
+        <x-input-box colGrid="3" name="payment_method" value="{{ $payment_method }}" label="Payment Method" readonly/>
         <div class="col-md-3">
-            <select class="form-control bankList" id="bank_id" name="bank_id" required>
+            <select class="form-control bankList" id="bank_id" name="bank_id" required readonly>
                 <option value="">Select Bank</option>
                 @foreach (@$banks as $bank)
                     <option value="{{ $bank->id }}" {{ $bank_id == $bank->id ? 'selected' : '' }}>
@@ -252,13 +252,13 @@
                 @endforeach
             </select>
         </div>
-        <x-input-box colGrid="3" name="account_no" value="{{ $account_no }}" label="Account No" />
+        <x-input-box colGrid="3" name="account_no" value="{{ $account_no }}" label="Account No" readonly/>
         <x-input-box colGrid="3" name="payment_date" class="date" value="{{ $payment_date }}"
-            label="Payment Date" />
-        <x-input-box colGrid="3" name="routing_no" value="{{ $routing_no }}" label="Routing No" />
-        <x-input-box colGrid="6" name="remarks" value="{{ $remarks }}" label="Remarks" />
+            label="Payment Date" readonly/>
+        <x-input-box colGrid="3" name="routing_no" value="{{ $routing_no }}" label="Routing No" readonly/>
+        <x-input-box colGrid="6" name="remarks" value="{{ $remarks }}" label="Remarks" readonly/>
         <x-input-box colGrid="3" type="file" name="attached_file" value="{{ $attached_file }}"
-            label="Attached File" />
+            label="Attached File" readonly/>
         {{-- <div class="offset-md-9 col-md-3">
             <div class="previous-image">
                 @if (!empty($pop->attached_file))
@@ -288,6 +288,7 @@
                             </td>
                             <td>
                                 <input type="number" class="form-control form-control-sm amount"
+                                       readonly
                                        value="{{ isset($amounts[$particular->id]) ? $amounts[$particular->id][0]->amount : 0 }}"
                                        name="amount[]"
                                        data-amount="{{ isset($amounts[$particular->id]) ? $amounts[$particular->id][0]->amount : 0 }}">
@@ -307,13 +308,6 @@
             </table>
         </div>
     </div>
-    <div class="row">
-        <div class="offset-md-4 col-md-4 mt-2">
-            <div class="input-group input-group-sm ">
-                <button class="btn btn-success btn-round btn-block py-2">Submit</button>
-            </div>
-        </div>
-    </div>
     {!! Form::close() !!}
 @endsection
 
@@ -327,13 +321,11 @@
             });
 
             function calculateTotalAmount() {
-                var monthlyRentInput = $(".monthly_rent");
-                var monthlyRent = parseFloat(monthlyRentInput.val()) || 0;
                 var amount = 0;
                 $(".amount").each(function () {
                     amount += parseFloat($(this).val()) || 0;
                 });
-                amount += monthlyRent;
+
                 $('#total_rent').val(amount.toFixed(2));
             }
         });

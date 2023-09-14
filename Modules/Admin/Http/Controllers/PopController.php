@@ -87,7 +87,16 @@ class PopController extends Controller
      */
     public function show(Pop $pop)
     {
-        //
+        $formType = "show";
+        $branches = Branch::latest()->get();
+        $divisions = Division::latest()->get();
+        $districts = District::latest()->get();
+        $thanas = Thana::latest()->get();
+        $particulars = Particular::get();
+        $banks = Bank::latest()->get();
+
+        $pops = Pop::latest()->get();
+        return view('admin::pops.show', compact('pop', 'pops', 'formType', 'branches', 'divisions', 'particulars', 'banks', 'districts', 'thanas'));
     }
 
     /**
@@ -126,7 +135,7 @@ class PopController extends Controller
         } else {
             $requestData['attached_file'] = $pop->attached_file;
         }
-        
+
         try {
             DB::beginTransaction();
             $pop->update($requestData);
@@ -172,7 +181,7 @@ class PopController extends Controller
 
     /**
      * Get pop lines
-     *   
+     *
      */
     private function getPopLines($requestData, $key1)
     {
