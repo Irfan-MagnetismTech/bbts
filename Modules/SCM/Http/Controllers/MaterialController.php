@@ -129,7 +129,6 @@ class MaterialController extends Controller
     {
         $category = ScCategory::findOrfail($request->id);
         $firstThreeCharacters = substr($category->name, 0, 3);
-        do {
             try {
                 $lastRecord = Material::where('category_id', $request->id)->latest()
                     ->first();
@@ -144,11 +143,7 @@ class MaterialController extends Controller
                 }
             } catch (\Exception $e) {
                 // Handle the exception (e.g., log it or return an error response)
-            }
-            $exists = Material::where('code', $result)->exists();
-        } while ($exists);
-
-        // return $lastRecord->code;
+            };
         return $result;
     }
 }
