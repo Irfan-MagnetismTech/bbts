@@ -82,9 +82,10 @@
                                     <th rowspan="2">FR No</th>
                                     <th rowspan="2">Name of the Link</th>
                                     <th colspan="6">Connectivity Address</th>
-                                    <th colspan="5">Local Contact Details</th>
+                                    <th colspan="6">Local Contact Details</th>
                                 </tr>
                                 <tr>
+                                    <th>Branch</th>
                                     <th>Division</th>
                                     <th>District</th>
                                     <th>Thana</th>
@@ -99,8 +100,10 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {{-- @dd($feasibility_requirement); --}}
                                 @if (!empty($feasibility_requirement))
                                     @foreach ($feasibility_requirement->feasibilityRequirementDetails as $item)
+                                    @dd($item);
                                         <tr class="feasibility_details_row">
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
@@ -110,6 +113,11 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <span class="form-control">{!! $item->connectivity_point ?? '&nbsp;' !!}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <span class="form-control">{!! $item?->branch?->name ?? '&nbsp' !!}</span>
                                                 </div>
                                             </td>
                                             <td>

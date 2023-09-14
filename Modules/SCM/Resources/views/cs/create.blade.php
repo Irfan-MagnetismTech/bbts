@@ -43,7 +43,8 @@
                         @php
                             $cs_no = $is_old ? old('cs_no') : $cs->cs_no ?? null;
                             $effective_date = $is_old ? old('effective_date') : $cs->effective_date ?? null;
-                            $expiry_date = $is_old ? old('expiry_date') : $cs->expiry_date ?? null;
+                            /*$expiry_date = $is_old ? old('expiry_date') : $cs->expiry_date ?? null;*/
+                            $indent_no = $is_old ? old('indent_no') : $cs->indent_no ?? null;
                             $remarks = $is_old ? old('remarks') : $cs->remarks ?? null;
                         @endphp
                         @if (!empty($cs_no))
@@ -81,6 +82,13 @@
                                 {{ Form::text('expiry_date', $expiry_date, ['class' => 'form-control', 'id' => 'expiry_date', 'autocomplete' => 'off', 'placeholder' => 'Expiry Date', 'required', 'readonly']) }}
                             </div>
                         </div> --}}
+                        <div class="col-xl-4 col-md-4">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <label class="input-group-addon" for="indent_no">Indent No<span
+                                        class="text-danger">*</span></label>
+                                {{ Form::text('indent_no', $indent_no, ['class' => 'form-control', 'id' => 'indent_no', 'autocomplete' => 'off', 'placeholder' => 'Indent No', 'required']) }}
+                            </div>
+                        </div>
                         <div class="mt-1 col-xl-12 col-md-12">
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="remarks">Remarks</label>
@@ -334,14 +342,14 @@
                     <td>
                         <input type="text" name="unit[]" class="form-control unit text-center" readOnly tabindex="-1">
                     </td>
-                    <td> 
+                    <td>
                         <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
                             <option value="">Select Brand</option>
                             @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}" @selected($brand->id == @$brand_id[$key])>{{ $brand->name }}</option>
                             @endforeach
                         </select>
-                    </td>                  
+                    </td>
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
                     </td>
@@ -371,7 +379,7 @@
                     </td>
                     <td>
                         <input type="text" name="quotation_no[]"  class="form-control text-center quotation_no" placeholder="Quotation No." autocomplete="off" required>
-                    </td> 
+                    </td>
                     <td>
                         <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax text-center" required>
                             @foreach ($Taxes as $data)
@@ -381,7 +389,7 @@
                     </td>
                     <td>
                         <input type="text" name="credit_period[]"  class="form-control credit_period text-center" placeholder="Credit Period" autocomplete="off" required>
-                    </td>                
+                    </td>
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
                     </td>
@@ -548,17 +556,16 @@
             });
         }); // document.ready
 
-
         var select_all_projects = function() {
             if ($("#select_all_projects").is(":checked")) {
                 $('#plus').prop('disabled', true);
             } else {
                 $('#plus').prop('disabled', false);
             }
-
         };
 
         $(select_all_projects);
         $("#select_all_projects").change(select_all_projects);
     </script>
+    <script src="{{ asset('js/get-indent-no.js') }}"></script>
 @endsection

@@ -23,7 +23,16 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->integer('branch_id')->nullable();
             $table->string('lat_long')->nullable();
+            $table->string('room_size')->nullable();
+            $table->string('tower')->nullable();
+            $table->string('tower_height')->nullable();
+            $table->string('electric_meter_no')->nullable();
+            $table->string('deed_duration')->nullable();
+            $table->string('renewal_condition')->nullable();
+            $table->date('renewal_date')->nullable();
             $table->string('owners_name')->nullable();
+            $table->string('owners_nid')->nullable();
+            $table->string('owners_address')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('designation')->nullable();
             $table->string('contact_no')->nullable();
@@ -39,7 +48,8 @@ return new class extends Migration
             $table->double('rent', 8, 2)->nullable();
             $table->double('advance_reduce', 8, 2)->nullable();
             $table->double('monthly_rent', 8, 2)->nullable();
-            $table->string('paymet_method')->nullable();
+            $table->double('total_rent', 8, 2)->nullable();
+            $table->string('payment_method')->nullable();
             $table->integer('bank_id')->nullable();
             $table->string('account_no')->nullable();
             $table->date('payment_date')->nullable();

@@ -10,7 +10,7 @@ class CsRequest extends FormRequest
     /**
      * Manupulate the request data before validation
      * @return void
-     * 
+     *
      */
     public function prepareForValidation()
     {
@@ -34,7 +34,7 @@ class CsRequest extends FormRequest
     {
         return [
             'effective_date'          => ['required', 'date', 'date_format:d-m-Y'],
-            'expiry_date'             => ['required', 'date', 'date_format:d-m-Y', 'after:effective_date'],
+//            'expiry_date'             => ['required', 'date', 'date_format:d-m-Y', 'after:effective_date'],
             'remarks'                 => ['present', 'nullable', 'string'],
 
             'material_id'             => ['required', 'array'],
@@ -61,7 +61,7 @@ class CsRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
     public function messages()
@@ -73,10 +73,10 @@ class CsRequest extends FormRequest
             'effective_date.date'               => 'Effective Date must be a date',
             'effective_date.date_format'        => 'Effective Date must be in the format of d-m-Y',
 
-            'expiry_date.required'              => 'Expiry Date is required',
-            'expiry_date.date'                  => 'Expiry Date must be a date',
-            'expiry_date.date_format'           => 'Expiry Date must be in the format of d-m-Y',
-            'expiry_date.after'                 => 'Expiry Date must be after Effective Date',
+//            'expiry_date.required'              => 'Expiry Date is required',
+//            'expiry_date.date'                  => 'Expiry Date must be a date',
+//            'expiry_date.date_format'           => 'Expiry Date must be in the format of d-m-Y',
+//            'expiry_date.after'                 => 'Expiry Date must be after Effective Date',
 
             'remarks.present'                   => 'Remarks must be present',
             'remarks.nullable'                  => 'Remarks may be null',

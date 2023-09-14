@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('cs_no', 255);
             $table->string('cs_type', 255);
+            $table->string('indent_no',255)->nullable();
             $table->date('effective_date')->nullable();
             $table->date('expiry_date')->nullable();
             $table->text('remarks')->nullable();

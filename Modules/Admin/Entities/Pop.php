@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pop extends Model
 {
     protected $fillable = [
-        'name', 'type', 'division_id', 'district_id', 'thana_id', 'address', 'branch_id', 'lat_long', 'owners_name', 'contact_person', 'designation', 'contact_no', 'email', 'description', 'approval_date', 'btrc_approval_date', 'commissioning_date', 'termination_date', 'website_published_date', 'signboard', 'advance_amount', 'rent', 'advance_reduce', 'monthly_rent', 'paymet_method', 'bank_id', 'account_no', 'payment_date', 'routing_no', 'remarks', 'attached_file',
+        'name', 'type', 'division_id', 'district_id', 'thana_id', 'address', 'branch_id', 'lat_long', 'room_size', 'tower', 'tower_height', 'electric_meter_no', 'deed_duration', 'renewal_condition', 'renewal_date', 'owners_name', 'owners_nid', 'owners_address', 'contact_person', 'designation', 'contact_no', 'email', 'description', 'approval_date', 'btrc_approval_date', 'commissioning_date', 'termination_date', 'website_published_date', 'signboard', 'advance_amount', 'rent', 'advance_reduce', 'monthly_rent', 'total_rent', 'payment_method', 'bank_id', 'account_no', 'payment_date', 'routing_no', 'remarks', 'attached_file',
     ];
 
     public function branch()
@@ -23,7 +23,7 @@ class Pop extends Model
         return $this->hasMany(PopLine::class);
     }
 
-    private $dateAttributes = ['approval_date', 'btrc_approval_date', 'commissioning_date', 'termination_date', 'website_published_date', 'payment_date'];
+    private $dateAttributes = ['renewal_date','approval_date', 'btrc_approval_date', 'commissioning_date', 'termination_date', 'website_published_date', 'payment_date'];
 
     public function setAttribute($key, $value)
     {

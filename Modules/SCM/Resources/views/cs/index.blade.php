@@ -27,7 +27,7 @@
                     <th>SL</th>
                     <th>#Cs Ref</th>
                     <th>Effective Date</th>
-                    <th>Expiry Date</th>
+{{--                    <th>Expiry Date</th>--}}
                     <th>Remarks</th>
                     <th>Selected Supplier</th>
                     {{-- <th>Status</th> --}}
@@ -39,7 +39,7 @@
                     <th>SL</th>
                     <th>#Cs Ref</th>
                     <th>Effective Date</th>
-                    <th>Expiry Date</th>
+{{--                    <th>Expiry Date</th>--}}
                     <th>Remarks</th>
                     <th>Selected Supplier</th>
                     {{-- <th>Status</th> --}}
@@ -53,7 +53,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td><strong>#{{ $cs->cs_no }}</strong></td>
                         <td>{{ $cs->effective_date }}</td>
-                        <td>{{ $cs->expiry_date }}</td>
+{{--                        <td>{{ $cs->expiry_date }}</td>--}}
                         <td>{{ $cs->remarks }}</td>
                         <td>
                             @foreach ($cs->selectedSuppliers as $csSupplier)
@@ -99,9 +99,9 @@
                                         @endif
                                     @endif() --}}
 
-                                    {{-- <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
+                                     <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
 
-                                    <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
+{{--                                    <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
                                     <a href="{{ route('cs.edit', $cs->id) }}" data-toggle="tooltip" title="Edit"
                                         class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     <a href="{{ route('cs.show', $cs->id) }}" data-toggle="tooltip"

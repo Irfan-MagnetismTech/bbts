@@ -129,16 +129,21 @@ class MaterialController extends Controller
     {
         $category = ScCategory::findOrfail($request->id);
         $firstThreeCharacters = substr($category->name, 0, 3);
-        do {
-            // Generate 3 random digits
-            $randomDigits = mt_rand(100, 999);
-            // Concatenate the first 3 characters and the random digits
-            $result = $firstThreeCharacters . '-' . $randomDigits;
-
-            // Check if the result already exists in the CsMaterial model's column
-            $exists = Material::where('code', $result)->exists();
-        } while ($exists);
-
+            try {
+                $lastRecord = Material::where('category_id', $request->id)->latest()
+                    ->first();
+                if (isset($lastRecord)) {
+                    if (preg_match('/\d+/', $lastRecord->code, $matches)) {
+                        $extractedNumber = $matches[0];
+                        $finalNumber = $extractedNumber + 1;
+                        $result = $firstThreeCharacters . '-' . $finalNumber;
+                    }
+                } else {
+                    $result = $firstThreeCharacters . '-' . '101';
+                }
+            } catch (\Exception $e) {
+                // Handle the exception (e.g., log it or return an error response)
+            };
         return $result;
     }
 }

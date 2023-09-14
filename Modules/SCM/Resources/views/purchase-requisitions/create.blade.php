@@ -92,22 +92,22 @@
                         value="{{ old('date') ?? (@$purchaseRequisition->date ?? '') }}" readonly
                         placeholder="Select a Date">
                 </div>
-
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
                         name="client_name" value="{{ old('client_name') ?? ($client_name ?? '') }}" placeholder="Search...">
                 </div>
+                @php $fr_no = json_decode($fr_no); @endphp
 
                 <div class="form-group col-3 fr_no">
                     <label for="select2">FR No</label>
-                    <select class="form-control select2" id="fr_no" name="fr_no">
+                    <select class="form-control select2" id="fr_no" multiple="multiple" name="fr_no[]">
                         <option value="" readonly selected>Select FR No</option>
                         @if ($form_method == 'POST')
                             <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
                         @elseif($form_method == 'PUT')
                             @forelse ($fr_nos as $key => $value)
-                                <option value="{{ $value->fr_no }}" @if ($fr_no == $value->fr_no) selected @endif>
+                                <option value="{{ $value->fr_no }}" @if (in_array($value->fr_no, $fr_no)) selected @endif>
                                     {{ $value->fr_no }}
                                 </option>
                             @empty
@@ -116,7 +116,7 @@
                     </select>
                 </div>
 
-                <div class="form-group col-3 link_no">
+                {{-- <div class="form-group col-3 link_no">
                     <label for="link_no">Link No:</label>
                     <select class="form-control select2" id="link_no" name="link_no">
                         <option value="" readonly selected>Select Link No</option>
@@ -131,7 +131,7 @@
                             @endforelse
                         @endif
                     </select>
-                </div>
+                </div> --}}
 
                 <div class="form-group col-3 client_no">
                     <label for="client_no">Client No:</label>

@@ -10,7 +10,7 @@ use Modules\SCM\Entities\CsMaterialSupplier;
 
 class Cs extends Model
 {
-    protected $fillable = ['cs_no', 'cs_type', 'effective_date', 'expiry_date', 'remarks', 'created_by'];
+    protected $fillable = ['cs_no', 'cs_type', 'indent_no', 'effective_date', 'expiry_date', 'remarks', 'created_by'];
 
     /**
      * @var array
@@ -39,10 +39,10 @@ class Cs extends Model
     /**
      * @param $input
      */
-    public function getExpiryDateAttribute($input)
-    {
-        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
-    }
+//    public function getExpiryDateAttribute($input)
+//    {
+//        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+//    }
 
     /**
      * @param $input

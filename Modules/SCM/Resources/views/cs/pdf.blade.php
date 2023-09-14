@@ -148,46 +148,23 @@
 </head>
 
 <body>
-    @php 
+    @php
         $iteration = 1;
     @endphp
-
-@php $price_index = 0; @endphp
-@foreach ($comparative_statement->csMaterials->chunk(5) as $chunk)
-
     <div>
-        <div id="logo" class="pdflogo" id="fixed_header">
-            <img src="{{ asset('images/ranksfc_log.png') }}" alt="Logo" class="pdfimg">
-            <div class="clearfix"></div>
-            <h5>Atlas Rangs Plaza (Level- 9 & 10), 7, SK Mujib Road, Agrabad C/A, Chattogram.</h5>
+        &nbsp;
+    </div>
+    <div>
+        <div style="width: 100%; text-align: center">
+            <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
+            <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
         </div>
 
         <div id="pageTitle" style="display: block; width: 100%;">
             <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
-                Comparative Statement & Supplier Selection Form</h2>
-        </div>
-        <div class="container" style="margin-top: 10px; clear: both; display: block; width: 96%;">
-            <div style="text-align: center !important; position: relative;">
-                <table id="table" style="text-align: right">
-                    <tr>
-                        <td>
-                            <b>Projects:</b>
-                            @forelse ($comparative_statement->csProjects as $cs_project)
-                                {{ $cs_project->project->name }}
-                                {{ !$loop->last ? ', ' : '' }}
-                            @empty
-
-                            @endforelse
-                        </td>
-                        <td><b>CS Ref# - {{ $comparative_statement->reference_no }}</b></td>
-                        <td><b>Effective Date:</b> {{ $comparative_statement->effective_date }}</td>
-                    </tr>
-                </table>
-            </div>
+                Comparative Statement & Supplier Selection</h2>
         </div>
     </div>
-
-
 
     <div class="container" style="margin-top: 10px; clear: both; display: block; width: 96%;">
         <table id="table">
@@ -196,43 +173,43 @@
                     <th width="20px">SL No</th>
                     <th width="100px">Material's Name</th>
                     <th width="30px">Unit</th>
-                    @forelse ($comparative_statement->csSuppliers as $cs_supplier)
+                    @forelse ($csSuppliers as $csSupplier)
+                        @if($csSupplier->cs_id == $comparativeStatement->id)
                         <th width="120px">
-                            <span>{{ $cs_supplier->supplier->name }}</span> <br>
-                            <span>{{ $cs_supplier->supplier->address }}</span> <br>
-                            <span>{{ $cs_supplier->supplier->contact }}</span> <br>
-                            <span>{{ $cs_supplier->collection_way }}</span> <br>
-                            <span>{{ $cs_supplier->is_checked ? 'Selected' : ''}}</span> <br>
+                            <span>{{ $csSupplier->supplier->name }}</span> <br>
+                            <span>{{ $csSupplier->supplier->address }}</span> <br>
+                            <span>{{ $csSupplier->supplier->contact }}</span> <br>
+                            <span>{{ $csSupplier->collection_way }}</span> <br>
+                            <span>{{ $csSupplier->is_checked ? 'Selected' : ''}}</span> <br>
                         </th>
+                        @endif
                     @empty
                     @endforelse
                     <th width="60px">Remarks</th>
                 </tr>
             </thead>
             <tbody>
-                @php $price_index = 0; @endphp
-                @foreach ($chunk as $cs_material)
+                @foreach ($csMaterials as $csMaterial)
+                    @if($csMaterial->cs_id == $comparativeStatement->id)
                     <tr>
                         <td style="text-align: center">{{ $iteration++ }}</td>
-                        <td style="text-align: center"><b>{{ $cs_material->nestedMaterial->name }}</b></td>
-                        <td style="text-align: center">{{ $cs_material->nestedMaterial->unit->name }}</td>
-                        @forelse ($comparative_statement->csSuppliers as $cs_supplier)
+                        <td style="text-align: center"><b>{{ $csMaterial->material->name }}</b></td>
+                        <td style="text-align: center">{{ $csMaterial->material->unit?? '' }}</td>
+                        @forelse ($csSuppliers as $csSupplier)
+                            @if($csSupplier->cs_id == $comparativeStatement->id)
                             <td style="text-align: center">
-                                {{ $comparative_statement->csMaterialsSuppliers->where('cs_material_id', $cs_material->id)->where('cs_supplier_id', $cs_supplier->id)->first()->price }}</td>
+                                {{ $comparativeStatement->csMaterialsSuppliers->where('cs_material_id', $csMaterial->id)->where('cs_supplier_id', $csSupplier->id)->first()->price ?? ''}}
+                            </td>
+                            @endif
                         @empty
                         @endforelse
-
-                        @if ($loop->last) <td style="text-align: center">{{ $comparative_statement->remarks }}</td> @endif
+                        <td style="text-align: center">  {{ $comparativeStatement->remarks}}</td>
                     </tr>
+                    @endif
                 @endforeach
-                <tr>
-                    <td style="text-align: center">---</td>
-                    <td>Terms & Condition</td>
-                    <td colspan="{{ count($comparative_statement->csSuppliers) + 2 }}"></td>
-                </tr>
+
                 @php
                     $other_details = [
-                        'grade' => 'Grade',
                         'vat_tax' => 'Vat & Tax',
                         'credit_period' => 'Credit Period',
                         'material_availability' => 'Material Availability',
@@ -246,8 +223,10 @@
                         <td style="text-align: center">---</td>
                         <td>{{ $value }}</td>
                         <td></td>
-                        @forelse ($comparative_statement->csSuppliers as $cs_supplier)
-                            <td style="text-align: center">{{ $cs_supplier[$key] }}</td>
+                        @forelse ($csSuppliers as $csSupplier)
+                            @if($csSupplier->cs_id == $comparativeStatement->id)
+                            <td style="text-align: center">{{ $csSupplier[$key] }}</td>
+                            @endif
                         @empty
                         @endforelse
                         <td></td>
@@ -256,7 +235,7 @@
             </tbody>
         </table>
         <br>
-        <span style="font-size: 12px">We May select all suppliers for contingency price</span>
+        <span style="font-size: 12px">We may select all suppliers for contingency price</span>
         <br>
 
         <br><br><br>
@@ -287,11 +266,6 @@
             </table>
         </div>
     </div>
-    @if (!$loop->last)
-            <div class="page_break"></div>
-        @endif
-    @endforeach
-
 </body>
 
 </html>

@@ -121,7 +121,6 @@
                     @endif
                 </select>
             </div>
-
             <div class="form-group col-3 client_no">
                 <label for="client_no">Client No:</label>
                 <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
@@ -140,7 +139,11 @@
                 <input class="form-control" id="date" name="date" aria-describedby="date"
                     value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
             </div>
-
+            <div class="form-group col-3">
+                <label for="client_no">Remarks</label>
+                <input type="text" class="form-control" id="remarks" aria-describedby="remarks" name="remarks"
+                   value="{{ old('remarks') ?? (@$requisition->remarks ?? '') }}">
+            </div>
             <div class="form-group col-3 pop_id" style="display: none">
                 <label for="select2">Pop Name</label>
                 <select class="form-control select2" id="pop_id" name="pop_id">
