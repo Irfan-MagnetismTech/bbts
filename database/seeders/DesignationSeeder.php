@@ -16,12 +16,28 @@ class DesignationSeeder extends Seeder
     public function run()
     {
         $designations = [
+            ['name'=>'Deputy General Manager & Head of Sales & Marketing.'],
+            ['name'=>'Sr. Manager'],
             ['name'=>'Manager'],
-            ['name'=>'Asst. Manager'],
-            ['name'=>'Team Leader'],
-            ['name'=>'Sr. Executive'],
+            ['name'=>'Manager Network & Wireless'],
+            ['name'=>'Manager Network & Maintenance'],
+            ['name'=>'Manager Sales & Marketing'],
+            ['name'=>'Deputy Manager Network & Support'],
+            ['name'=>'Deputy Manager'],
+            ['name'=>'Assistant Manager'],
+            ['name'=>'Assistant Manager & Head '],
+            ['name'=>'Sr. Engineer'],
+            ['name'=>'Sr. Executive Network & Support'],
+            ['name'=>'Senior Executive'],
+            ['name'=>'Engineer'],
             ['name'=>'Executive'],
-            ['name'=>'Jr. Executive'],
+            ['name'=>'Deputy Engineer'],
+            ['name'=>'Deputy Executive'],
+            ['name'=>'Assistant Executive'],
+            ['name'=>'Assistant Engineer'],
+            ['name'=>'Asst. Officer'],
+            ['name'=>'Assistant'],
+            ['name'=>'Assistant Front Desk'], 
         ];
         foreach($designations as $designation){
             Designation::create($designation);
