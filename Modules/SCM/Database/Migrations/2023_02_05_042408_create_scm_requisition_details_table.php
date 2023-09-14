@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('item_code')->nullable();
             $table->double('quantity', 8, 2)->nullable();
             $table->integer('brand_id')->nullable();
+            $table->integer('current_stock')->nullable();
             $table->string('model')->nullable();
             $table->string('purpose')->nullable();
             $table->timestamps();

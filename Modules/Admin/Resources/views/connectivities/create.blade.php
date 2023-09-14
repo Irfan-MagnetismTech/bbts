@@ -26,8 +26,8 @@ legend {
   font-weight: 100!important;
   color: inherit!important;
   white-space: normal!important;
-  margin-bottom:0%!important; 
-  padding-bottom:0%!important; 
+  margin-bottom:0%!important;
+  padding-bottom:0%!important;
 }
 .section-label {
     background: #ffffff;
@@ -111,28 +111,46 @@ legend {
                 <div class="card-body">
                     <div class="row" >
                         <x-input-box colGrid="2" name="reference" label="Reference" value="{{$reference}}"/>
+                        <x-input-box colGrid="3" name="link_name" label="Link Name" value="{{$link_name}}"/>
+                        <x-input-box colGrid="3" name="vendor" label="Vendor" value="{{$vendor_name}}"/>
+                        <x-input-box colGrid="3" name="cost_center" label="Cost Center" value="{{$from_location}}" placeholder="POP"/>
+                        <div class="col-3">
+                            {{-- <legend>Link From</legend> --}}
+                            <div class="form-check-inline">
+                                <label class="form-check-label" for="bbts">
+                                    <input type="radio" class="form-check-input link_from" id="bbts" name="link_from"
+                                           value="bbts" @checked(@$link_from == 'bbts' || ($form_method == 'POST' && !old()))>
+                                    BBTS
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label" for="vendor">
+                                    <input type="radio" class="form-check-input link_from" id="vendor" name="link_from"
+                                           value="vendor" @checked(@$link_from == 'vendor')>
+                                    VENDOR
+                                </label>
+                            </div>
+                        </div>
                         <div class="col-2">
                             <div class="form-check-inline pt-0 mt-0">
                                 <label class="form-check-label" for="new">
                                     <input type="radio" class="form-check-input link_type" id="new" name="link_type"
-                                        value="new" @checked(@$link_type == 'new' || ($form_method == 'POST' && !old()))>
+                                           value="new" @checked(@$link_type == 'new' || ($form_method == 'POST' && !old()))>
                                     NEW
                                 </label>
                             </div>
                             <div class="form-check-inline mt-0 pt-0">
                                 <label class="form-check-label" for="existing">
                                     <input type="radio" class="form-check-input link_type" id="existing" name="link_type"
-                                        value="existing" @checked(@$link_type == 'existing')>
+                                           value="existing" @checked(@$link_type == 'existing')>
                                     EXISTING
                                 </label>
                             </div>
                         </div>
-                        <x-input-box colGrid="3" name="link_name" label="Link Name" value="{{$link_name}}"/>
-                        <x-input-box colGrid="3" name="vendor" label="Vendor" value="{{$vendor_name}}"/>
                         <input type="hidden" id="vendor_id" name="vendor_id" value="{{$vendor_id}}">
                         <x-input-box colGrid="2" name="bbts_link_id" label="BBTS Link Id" value="{{$bbts_link_id}}"/>
                     </div>
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-md-4">
                             <div class="col-md-12">
                                 <div style="border: 2px solid gray; border-radius: 15px; margin-top: 30px;" class="row">
@@ -141,7 +159,7 @@ legend {
                                     </div>
                                     <x-input-box colGrid="12" name="from_location" label="From Location" value="{{$from_location}}" placeholder="POP"/>
                                     <input type="hidden" id="from_pop_id" name="from_pop_id" value="{{$from_pop_id}}">
-                                    <x-input-box colGrid="12" name="from_site" label="From Site" value="{{$from_site}}" placeholder="LDP"/> 
+                                    <x-input-box colGrid="12" name="from_site" label="From Site" value="{{$from_site}}" placeholder="LDP"/>
                                 </div>
                             </div>
                         </div>
@@ -177,34 +195,34 @@ legend {
                                                 <option value="">Select thana</option>
                                             </select>
                                         </div>
-                                    </div> 
+                                    </div>
 
                                     <div class="col-3">
                                         {{-- <legend>Link From</legend> --}}
                                         <div class="form-check-inline">
-                                            <label class="form-check-label" for="bbts">
-                                                <input type="radio" class="form-check-input link_from" id="bbts" name="link_from"
-                                                    value="bbts" @checked(@$link_from == 'bbts' || ($form_method == 'POST' && !old()))>
-                                                BBTS
+                                            <label class="form-check-label" for="link">
+                                                <input type="radio" class="form-check-input link_from" id="link" name="link_from"
+                                                    value="link" @checked(@$link_from == 'link' || ($form_method == 'POST' && !old()))>
+                                                Link
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <label class="form-check-label" for="vendor">
-                                                <input type="radio" class="form-check-input link_from" id="vendor" name="link_from"
-                                                    value="vendor" @checked(@$link_from == 'vendor')>
-                                                    VENDOR
+                                            <label class="form-check-label" for="backbone">
+                                                <input type="radio" class="form-check-input link_from" id="backbone" name="link_from"
+                                                    value="backbone" @checked(@$link_from == 'backbone')>
+                                                    Backbone
                                             </label>
-                                        </div> 
+                                        </div>
                                     </div>
                                     <x-input-box colGrid="3" name="to_location" label="To Location" value="{{$to_location}}"/>
-                                    <input type="hidden" id="to_pop_id" name="to_pop_id"> 
-            
+                                    <input type="hidden" id="to_pop_id" name="to_pop_id">
+
                                     <x-input-box colGrid="3" name="to_site" label="To Site" value="{{$to_site}}" placeholder="LDP/POC"/>
-                                    <x-input-box colGrid="3" name="gps" label="GPS" value="{{$gps}}" placeholder="Lat/Long"/> 
+                                    <x-input-box colGrid="3" name="gps" label="GPS" value="{{$gps}}" placeholder="Lat/Long"/>
                                 </div>
                             </div>
                         </div>
-                    </div>    
+                    </div>
                 </div>
             </div>
             <div class="card">
@@ -263,7 +281,7 @@ legend {
                         <x-input-box colGrid="2" name="vat_percent" label="VAT (%)" value="{{$vat_percent}}"/>
                         <x-input-box colGrid="2" name="vat" label="VAT" value="{{$vat}}"/>
                         <x-input-box colGrid="3" name="total" label="Total" value="{{$total}}" attr="readonly"/>
-                    </div> 
+                    </div>
                 </div>
             </div>
             <button class="py-2 btn btn-success btn-block">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
@@ -281,7 +299,7 @@ legend {
                     todayHighlight: true,
                     showOtherMonths: true
                 });
-      
+
                 $('.link_type').on('change',function(){
                     emptyField();
                     changeInput();
@@ -335,7 +353,7 @@ legend {
                     }else{
                         if($(this).autocomplete()){
                             $(this).autocomplete('destroy');
-                        }  
+                        }
                     }
                 })
 
@@ -375,10 +393,10 @@ legend {
                         return false;
                     }
                 });
-                
+
             })
             $('#link_type').on('change',function(){
-               
+
             })
             $(document).ready(function(){
                     changeInput();
@@ -422,7 +440,7 @@ legend {
                 Calculatetotal();
             })
             function Calculatevat(){
-                
+
             }
             function Calculatetotal(){
                 $('#amount').val(0).attr('value',0);

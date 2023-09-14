@@ -103,7 +103,6 @@
                                 {{-- @dd($feasibility_requirement); --}}
                                 @if (!empty($feasibility_requirement))
                                     @foreach ($feasibility_requirement->feasibilityRequirementDetails as $item)
-                                    @dd($item);
                                         <tr class="feasibility_details_row">
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">

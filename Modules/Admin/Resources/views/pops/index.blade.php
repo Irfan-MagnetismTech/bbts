@@ -45,6 +45,7 @@
                 <td>
                     <div class="icon-btn">
                         <nobr>
+                            <a href="{{ route('pops.show', $data->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                             <a href="{{ url("admin/pops/$data->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                             {!! Form::open(array('url' => "admin/pops/$data->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
                             {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}

@@ -26,6 +26,10 @@
                             <td> <strong>Type</strong> </td>
                             <td> {{ ucfirst($requisition->type) }}</td>
                         </tr>
+                        <tr>
+                            <td> <strong>Branch Name</strong> </td>
+                            <td>{{ ucfirst($requisition->branch->name) }}</td>
+                        </tr>
                         @if ($requisition?->type == 'client')
                             <tr>
                                 <td> <strong>Client Name</strong> </td>
@@ -35,6 +39,23 @@
                                 <td> <strong>Connectivity Point</strong> </td>
                                 <td> {{ ucfirst($requisition->feasibilityRequirementDetail?->connectivity_point ?? '') }} - {{ $requisition->feasibilityRequirementDetail?->fr_no }}</td>
                             </tr>
+                            <tr>
+                                <td> <strong>Link No</strong> </td>
+                                <td>{{ ucfirst($requisition->link_no) }}</td>
+                            </tr>
+                            <tr>
+                                <td> <strong>Link No</strong> </td>
+                                <td>{{ ucfirst($requisition->link_no) }}</td>
+                            </tr>
+                            <tr>
+                                <td> <strong>Client No</strong> </td>
+                                <td>{{ ucfirst($requisition->client_no) }}</td>
+                            </tr>
+                            <tr>
+                                <td> <strong>Client Address</strong> </td>
+                                <td>{{ ucfirst($requisition->client->location ) }}</td>
+                            </tr>
+
                         @endif
                         @if ($requisition?->type == 'pop')
                             <tr>
@@ -49,6 +70,20 @@
                         <tr>
                             <td> <strong>Requisition By</strong> </td>
                             <td> {{ ucfirst($requisition->requisitionBy->name) }}</td>
+                        </tr>
+                        @if ($requisition?->type == 'general')
+                        <tr>
+                            <td> <strong>Pop Name</strong></td>
+                            <td> {{ ucfirst($requisition->branch->name) }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Employee Name</strong></td>
+                            <td> {{ ucfirst($requisition->employee->name) }}</td>
+                        </tr>
+                       @endif
+                        <tr>
+                            <td> <strong>Remarks</strong> </td>
+                            <td>{{ old('remarks') ?? (@$requisition->remarks ?? '') }}</td>
                         </tr>
                     </tbody>
                 </table>

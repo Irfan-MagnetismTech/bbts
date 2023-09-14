@@ -1,5 +1,6 @@
 @section('script')
     <script src="{{ asset('js/search-client.js') }}"></script>
+    <script src="{{ asset('js/search-employee.js') }}"></script>
     <script>
         $('#date').datepicker({
             format: "dd-mm-yyyy",
@@ -140,6 +141,7 @@
                 $('.link_no').show('slow').removeClass("d-none");
                 $('.fr_no').show('slow').removeClass("d-none");
                 $('.client_name').show('slow').removeClass("d-none");
+                $('.employee').show('slow').addClass("d-none");
                 $('.current_stock').hide('slow');
             } else if (radioValue == 'warehouse') {
                 $('.pop_id').hide('slow');
@@ -148,6 +150,7 @@
                 $('.link_no').show('slow').addClass("d-none");
                 $('.fr_no').show('slow').addClass("d-none");
                 $('.client_name').show('slow').addClass("d-none");
+                $('.employee').show('slow').addClass("d-none");
                 $('.current_stock').show('slow');
             } else if (radioValue == 'pop') {
                 $('.pop_id').show('slow');
@@ -156,6 +159,18 @@
                 $('.link_no').show('slow').addClass("d-none");
                 $('.fr_no').show('slow').addClass("d-none");
                 $('.client_name').show('slow').addClass("d-none");
+                $('.employee').show('slow').addClass("d-none");
+                $('.current_stock').show('slow');
+
+            
+            } else if (radioValue == 'general') {
+                $('.pop_id').show('slow');
+                $('.client_address').show('slow').addClass("d-none");
+                $('.client_no').show('slow').addClass("d-none");
+                $('.link_no').show('slow').addClass("d-none");
+                $('.fr_no').show('slow').addClass("d-none");
+                $('.client_name').show('slow').addClass("d-none");
+                $('.employee').show('slow').removeClass("d-none");
                 $('.current_stock').show('slow');
             }
         }
