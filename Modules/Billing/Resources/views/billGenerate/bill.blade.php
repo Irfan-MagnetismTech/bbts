@@ -142,7 +142,7 @@
                                @endif
                                <tr>
                                     <td colspan="4">{{isset($value->billingOtcBill) && $value->billingOtcBill->particular}}</td>
-                                    <td>{{$value->billingOtcBill->installation_charge}}</td>
+                                    <td>{{$value->billingOtcBill->installation_charge ?? ''}}</td>
                                </tr>
                            @endforeach
                         </tbody>

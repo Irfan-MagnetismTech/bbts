@@ -45,4 +45,5 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
     Route::get('get-sale-modication-fr-details', [SaleModificationController::class, 'getSaleModicationFRDetails'])->name('get-sale-modication-fr-details');
     Route::get('sales-modification/{connectivity_requirement_id}/create', [SaleModificationController::class, 'create'])->name('sales-modification.create');
     Route::get('get-fr-wise-pnl-report/{fr_no}', [SaleModificationController::class, 'getFrWisePnlReport'])->name('get-fr-wise-pnl-report');
+    Route::get('get-client-info-for-sale-modification', [SaleModificationController::class, 'getClientInfoForSales'])->name('get-client-info-for-sale-modification');
 });
