@@ -117,7 +117,7 @@ class FeasibilityRequirementController extends Controller
      */
     public function show($id)
     {
-        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.connectivityRequirement', 'feasibilityRequirementDetails.survey')->find($id);
+        $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.connectivityRequirement', 'feasibilityRequirementDetails.branch', 'feasibilityRequirementDetails.survey')->find($id);
         return view('sales::feasibility_requirement.show', compact('feasibility_requirement'));
     }
 
@@ -145,64 +145,61 @@ class FeasibilityRequirementController extends Controller
     public function update(FeasibilityRequirement $feasibility_requirement, FeasibilityRequirementRequest $request)
     {
         //  dd($request->all());
-         if ($request->file) {
+        if ($request->file) {
             $additionalData = $request;
             $feasibilityRequirement = $feasibility_requirement;
             Excel::import(new FeasibilityRequirementImportUpdate($additionalData, $feasibilityRequirement), $request->file('file'));
             return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
-        }
-        else{
-        $data = $request->only('client_no', 'is_existing', 'date');
-        $data['user_id'] = auth()->user()->id;
-        $data['branch_id'] = auth()->user()->branch_id ?? '1';
+        } else {
+            $data = $request->only('client_no', 'is_existing', 'date');
+            $data['user_id'] = auth()->user()->id;
+            $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
-        $feasibility_requirement->update($data);
-        // dd($feasibility_requirement);
+            $feasibility_requirement->update($data);
+            // dd($feasibility_requirement);
 
-        foreach ($request->connectivity_point as $key => $link) {
-            $detailId = $request['detail_id'][$key] ?? null;
-            $frNo = 'fr' . '-' . $data['client_no'] . '-';
-            $detailsData = [
-                'connectivity_point' => $request['connectivity_point'][$key],
-                'client_no' => $data['client_no'],
-                'aggregation_type' => $request['aggregation_type'][$key],
-                'branch_id' => $request['branch_id'][$key],
-                'division_id' => $request['division_id'][$key],
-                'district_id' => $request['district_id'][$key],
-                'thana_id' => $request['thana_id'][$key],
-                'location' => $request['location'][$key],
-                'lat' => $request['lat'][$key],
-                'long' => $request['long'][$key],
-                'contact_name' => $request['contact_name'][$key],
-                'contact_designation' => $request['contact_designation'][$key],
-                'contact_number' => $request['contact_number'][$key],
-                'contact_email' => $request['contact_email'][$key],
-            ];
+            foreach ($request->connectivity_point as $key => $link) {
+                $detailId = $request['detail_id'][$key] ?? null;
+                $frNo = 'fr' . '-' . $data['client_no'] . '-';
+                $detailsData = [
+                    'connectivity_point' => $request['connectivity_point'][$key],
+                    'client_no' => $data['client_no'],
+                    'aggregation_type' => $request['aggregation_type'][$key],
+                    'branch_id' => $request['branch_id'][$key],
+                    'division_id' => $request['division_id'][$key],
+                    'district_id' => $request['district_id'][$key],
+                    'thana_id' => $request['thana_id'][$key],
+                    'location' => $request['location'][$key],
+                    'lat' => $request['lat'][$key],
+                    'long' => $request['long'][$key],
+                    'contact_name' => $request['contact_name'][$key],
+                    'contact_designation' => $request['contact_designation'][$key],
+                    'contact_number' => $request['contact_number'][$key],
+                    'contact_email' => $request['contact_email'][$key],
+                ];
 
-            if ($detailId) {
-                $feasibility = FeasibilityRequirementDetail::find($detailId);
-                if ($feasibility) {
-                    $feasibility->update($detailsData);
-                }
-            } else {
-                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
-
-                if ($maxFrNo) {
-                    $frArray = explode('-', $maxFrNo);
-                    $frSerial = intval($frArray[count($frArray) - 1]) + 1;
-                    $frNo .= $frSerial;
+                if ($detailId) {
+                    $feasibility = FeasibilityRequirementDetail::find($detailId);
+                    if ($feasibility) {
+                        $feasibility->update($detailsData);
+                    }
                 } else {
-                    $frNo .= '1';
+                    $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
+
+                    if ($maxFrNo) {
+                        $frArray = explode('-', $maxFrNo);
+                        $frSerial = intval($frArray[count($frArray) - 1]) + 1;
+                        $frNo .= $frSerial;
+                    } else {
+                        $frNo .= '1';
+                    }
+                    $detailsData['fr_no'] = $frNo;
+                    $feasibility_requirement->feasibilityRequirementDetails()->create($detailsData);
                 }
-                $detailsData['fr_no'] = $frNo;
-                $feasibility_requirement->feasibilityRequirementDetails()->create($detailsData);
             }
-        }
 
-        return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
-
+            return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
         }
-        
     }
 
     /**

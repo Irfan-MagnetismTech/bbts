@@ -15,6 +15,7 @@ use Modules\Sales\Entities\SurveyDetail;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\ConnectivityRequirement;
+use Modules\Admin\Entities\Branch;
 
 
 class FeasibilityRequirementDetail extends Model
@@ -78,7 +79,7 @@ class FeasibilityRequirementDetail extends Model
 
     public function costing()
     {
-        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no')->where('is_modified',0);
+        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no')->where('is_modified', 0);
     }
 
     public function offerDetail()
@@ -89,5 +90,10 @@ class FeasibilityRequirementDetail extends Model
     public function saleProductDetails()
     {
         return $this->hasMany(SaleProductDetail::class, 'fr_no', 'fr_no');
+    }
+
+    public function branch()
+    {
+        return $this->hasOne(Branch::class, 'id', 'branch_id');
     }
 }
