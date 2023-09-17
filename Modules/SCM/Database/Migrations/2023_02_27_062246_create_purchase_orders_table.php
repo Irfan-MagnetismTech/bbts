@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
+            $table->string('cs_id');
             $table->string('po_no');
             $table->date('date')->nullable();
             $table->bigInteger('supplier_id')->nullable();

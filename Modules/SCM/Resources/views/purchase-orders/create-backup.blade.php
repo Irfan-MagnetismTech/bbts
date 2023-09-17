@@ -28,31 +28,6 @@
             font-size: 11px;
             border-radius: 50%;
         }
-
-        .custom-spinner-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 40vh;
-        }
-
-        .custom-spinner {
-            width: 4rem;
-            height: 4rem;
-            border: .5em solid transparent;
-            border-top-color: currentColor;
-            border-radius: 50%;
-            animation: spinner-animation 1s linear infinite;
-        }
-
-        @keyframes spinner-animation {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Custom CSS for animation */
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -130,10 +105,9 @@
 
         <div class="form-gorup col-4 cs_no">
             <label for="cs_no">CS No: <span class="text-danger">*</span></label>
-            <select class="form-control text-center cs_no select2" name="cs_id" id="cs_id" required>
+            <select class="form-control text-center cs_no select2" name="cs_no" id="cs_no" required>
                 <option value="" readonly selected>Select CS No</option>
             </select>
-            <input type="hidden" name="cs_no" id="cs_no" value="">
         </div>
 
         <div class="form-group col-4 remarks">
@@ -142,23 +116,13 @@
                 value="{{ old('remarks') ?? (@$purchaseOrder->remarks ?? '') }}">
         </div>
     </div>
-    {{-- create a loading design --}}
-    <div class="row loading" style="display: none;">
-        <div class="col-md-12">
-            <div class="custom-spinner-container">
-                <div class="custom-spinner text-primary" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-
-                <!-- Optional text -->
-                <div class="mt-2">Loading...</div>
-            </div>
-        </div>
-    </div>
 
     <table class="table table-bordered" id="material_requisition">
         <thead>
             <tr>
+                <th>Requisiiton No.</th>
+                <th>CS No.</th>
+                <th>Quotation No</th>
                 <th> Material Name</th>
                 <th>Brand</th>
                 <th>Description</th>
@@ -208,22 +172,52 @@
             @endphp
             @foreach ($purchase_requisition as $key => $value)
                 <tr>
-                    <td>
-                        <input type='text' name="material_name[]" class="form-control text-center material_name"
-                            autocomplete="off" value="{{ $material_name[$key] }}">
-                        <input type="hidden" name="material_id[]" class="material_id"
-                            value="{{ $material_id[$key] }}">
+                    <td class="form-group">
+                        <select class="form-control text-center purchase_requisition_id" name="purchase_requisition_id[]">
+                            <option value="" readonly selected>Select Requisiiton</option>
+                            @foreach ($indentWiseRequisitions as $data)
+                                @foreach ($data as $id => $prs_no)
+                                    <option value="{{ $id }}"
+                                        {{ $id == $purchase_requisition_id[$key] ? 'selected' : '' }}>
+                                        {{ $prs_no }}</option>
+                                @endforeach
+                            @endforeach
+                        </select>
                     </td>
 
                     <td>
-                        <input type="text" name="brand[]" class="form-control text-center brand" autocomplete="off"
-                            value="{{ $brand[$key] }}">
-                        <input type="hidden" name="brand_id[]" class="brand_id" value="{{ $brand_id[$key] }}">
+                        <input type="text" class="form-control text-center cs_no" aria-describedby="cs_no"
+                            name="cs_no[]" value="{{ $cs_no[$key] }}" placeholder="Search...">
+                        <input type="hidden" name="cs_id[]" class="form-control text-center cs_id"
+                            value="{{ $cs_id[$key] }}">
                     </td>
 
                     <td>
-                        <input type="text" name="model[]" class="form-control text-center model" autocomplete="off"
-                            value="{{ $model[$key] }}">
+                        <input type="text" name="quotation_no[]" class="form-control text-center quotation_no"
+                            autocomplete="off" value="{{ $quotation_no[$key] }}">
+                    </td>
+
+                    <td>
+                        <select class="form-control text-center material_name select2" name="material_id[]">
+                            <option value="" readonly selected>Select Material</option>
+                            @foreach ($materials[$key] as $material)
+                                <option value="{{ $material->material_id }}"
+                                    {{ $material->material_id == $material_id[$key] ? 'selected' : '' }}>
+                                    {{ $material->material->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+
+                    <td>
+                        <select class="form-control text-center brand_name select2" name="brand_id[]">
+                            <option value="" readonly selected>Select Brand</option>
+                            @foreach ($brands[$key] as $id => $brand)
+                                <option value="{{ $brand->csMaterial->brand->id }}" data-price="{{ $brand->price }}"
+                                    data-unit="{{ $brand->csMaterial->material->unit }}"
+                                    {{ $brand->csMaterial->brand->id == $brand_id[$key] ? 'selected' : '' }}>
+                                    {{ $brand->csMaterial->brand->name }}</option>
+                            @endforeach
+                        </select>
                     </td>
 
                     <td>
@@ -328,8 +322,6 @@
 
 @section('script')
     <script>
-        let materials = [];
-        let brands = [];
         var req_options = null;
 
         @if (!empty($purchaseOrder->id))
@@ -357,39 +349,39 @@
         }).datepicker("setDate", new Date());
 
         //submit form with ajax and validation response
-        // document.querySelector('.custom-form').addEventListener('submit', function(e) {
-        //     e.preventDefault(); // prevent default form submit
-        //     var form_data = new FormData(this); // get form data
-        //     fetch(this.action, {
-        //             method: this.method,
-        //             body: form_data
-        //         })
-        //         .then(function(response) {
-        //             if (!response.ok) {
-        //                 // throw new Error('Network response was not ok');
-        //                 console.log("not okay", response.responseJSON);
+        document.querySelector('.custom-form').addEventListener('submit', function(e) {
+            e.preventDefault(); // prevent default form submit
+            var form_data = new FormData(this); // get form data
+            fetch(this.action, {
+                    method: this.method,
+                    body: form_data
+                })
+                .then(function(response) {
+                    if (!response.ok) {
+                        // throw new Error('Network response was not ok');
+                        console.log("not okay", response.responseJSON);
 
-        //             }
-        //             return response.json();
-        //         })
-        //         .then(function(response) {
-        //             // handle success response
-        //             if (response.status == 'success') {
-        //                 window.location.href =
-        //                     "{{ route('purchase-orders.index') }}?message=Purchase Order Created Successfully";
-        //             } else {
-        //                 $('#errorlist').empty();
-        //                 $('#errorlist').removeClass('d-none');
+                    }
+                    return response.json();
+                })
+                .then(function(response) {
+                    // handle success response
+                    if (response.status == 'success') {
+                        window.location.href =
+                            "{{ route('purchase-orders.index') }}?message=Purchase Order Created Successfully";
+                    } else {
+                        $('#errorlist').empty();
+                        $('#errorlist').removeClass('d-none');
 
-        //                 $.each(response, function(key, value) {
-        //                     $('#errorlist').append('<p>' + value + '</p>');
-        //                 });
-        //             }
-        //         })
-        //         .catch(function(error) {
-        //             console.log("not okay", error);
-        //         });
-        // });
+                        $.each(response, function(key, value) {
+                            $('#errorlist').append('<p>' + value + '</p>');
+                        });
+                    }
+                })
+                .catch(function(error) {
+                    console.log("not okay", error);
+                });
+        });
 
         $(document).on('click', '.add-terms-row', function() {
             var terms_and_conditions = $(this).closest('.terms_label').find('.terms_and_conditions').val();
@@ -489,14 +481,14 @@
                     $('#indent_no').val(ui.item.label);
                     $('#indent_id').val(ui.item.value);
                     console.log(ui.item.requisition_nos);
-                    $('#cs_id').html('');
+                    $('#cs_no').html('');
                     $('#client_links').html('');
                     var options = '<option value="">Select CS No</option>';
                     ui.item.cs_no.forEach(function(element) {
                         options +=
                             `<option value="${element.id}">${element.cs_no}</option>`;
                     });
-                    $('#cs_id').html(options);
+                    $('#cs_no').html(options);
 
                     return false;
                 }
@@ -517,10 +509,28 @@
         @endif
         function appendCalculationRow() {
             let row = `<tr>
+                            <td class="form-group">
+                                <select class="form-control purchase_requisition_id" name="purchase_requisition_id[]">
+                                    <option value="" readonly selected>Select Requisiiton</option>
+
+                                </select>
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control cs_no" aria-describedby="cs_no" name="cs_no[]"
+                                    value="{{ old('cs_no') ?? (@$purchaseOrder->client->name ?? '') }}" placeholder="Search...">
+                                <input type="hidden" name="cs_id[]" class="form-control cs_id"
+                                    value="{{ old('cs_id') ?? @$purchaseOrder?->client->id }}">
+                            </td>
+
+                            <td>
+                                <input type="text" name="quotation_no[]" class="form-control quotation_no" autocomplete="off">
+                            </td>
+
                             <td>
                                 <select class="form-control material_name select2" name="material_id[]">
                                     <option value="" readonly selected>Select Material</option>
-                                    ${materials.map(material => `<option value="${material.id}">${material.name}</option>`)}
+
                                 </select>
                             </td>
 
@@ -529,10 +539,6 @@
                                     <option value="" readonly selected>Select Brand</option>
 
                                 </select>
-                            </td>
-
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
                             </td>
 
                             <td>
@@ -594,35 +600,45 @@
             }).datepicker("setDate", new Date());
         }
 
-
-
         //get cs no on keyup get 5 value evey time
-        $(document).on('change', '#cs_id', function() {
-            $('.loading').show();
-            let cs_id = $(this).val();
-            $('#cs_no').val($(this).find('option:selected').text());
-            let cs_materials = '<option>Select Materials</option>';
-            $.ajax({
-                url: "{{ route('search-material-by-cs-requisition') }}",
-                type: 'get',
-                dataType: "json",
-                data: {
-                    cs_id: cs_id,
-                },
-                success: function(data) {
-                    $('.loading').hide();
-                    brands = data.brands;
-                    $.each(data.materials, function(key, value) {
-                        cs_materials +=
-                            `<option value="${value.material.id}">${value.material.name}</option>`;
-                        materials.push(value.material)
+        $(document).on('keyup', '.cs_no', function() {
+            let supplier_id = $('#supplier_id').val();
+
+            $(this).autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ url('search-cs-no') }}/" + supplier_id,
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            search: request.term
+                        },
+                        success: function(data) {
+                            if (data.length > 0) {
+                                response(data);
+                            } else {
+                                response([{
+                                    label: 'No Result Found',
+                                    value: -1,
+                                }]);
+                            }
+                        }
                     });
-                    $('.material_name').html(cs_materials);
+                },
+                select: function(event, ui) {
+                    if (ui.item.value == -1) {
+                        $(this).val('');
+                        return false;
+                    }
+
+                    $(this).closest('tr').find('.cs_no').val(ui.item.label);
+                    $(this).closest('tr').find('.cs_id').val(ui.item.value);
+
+                    getMaterial(this)
+                    return false;
                 }
             });
         });
-
-
 
         $(document).on('change', '.purchase_requisition_id', function() {
             getMaterial(this)
@@ -648,8 +664,7 @@
             let purchase_requisition_id = $(e).closest('tr').find('.purchase_requisition_id').val();
 
             if (purchase_requisition_id != '' && cs_id != '') {
-                const url = '{{ url('/scm/search-material-by-cs-requisition') }}/' + cs_id + '/' +
-                    purchase_requisition_id;
+                const url = '{{ url('/scm/search-material-by-cs-requisition') }}/' + cs_id + '/' + purchase_requisition_id;
                 let dropdown;
 
                 dropdown = $(e).closest('tr').find('.material_name');
@@ -671,7 +686,7 @@
 
         $(document).on('change', '.material_name', function() {
             let material_id = $(this).val();
-            let cs_id = $('#cs_id').val();
+            let cs_id = $(this).closest('tr').find('.cs_id').val();
             let supplier_id = $('#supplier_id').val();
             var selectedIndex = this;
 
@@ -680,8 +695,7 @@
                 return false;
             }
 
-            const url = '{{ url('/scm/search-material-price-by-cs-requisition') }}/' + cs_id + '/' +
-                supplier_id +
+            const url = '{{ url('/scm/search-material-price-by-cs-requisition') }}/' + cs_id + '/' + supplier_id +
                 '/' + material_id;
 
             let dropdown;
@@ -696,7 +710,6 @@
                 $.each(items, function(key, material) {
                     dropdown.append($('<option></option>')
                         .attr('value', material.cs_material.brand.id)
-                        .attr('data-model', material.cs_material.model)
                         .attr('data-price', material.price)
                         .attr('data-unit', material.cs_material.material.unit)
                         .text(material.cs_material.brand.name))
@@ -718,8 +731,7 @@
             let unit = $(this).find(':selected').data('unit');
             let quantity = $(this).closest('tr').find('.quantity').val() || 0;
             let total = price * quantity;
-            let model = $(this).find(':selected').data('model');
-            $(this).closest('tr').find('.model').val(model);
+
             $(this).closest('tr').find('.total_amount').val(total);
             $(this).closest('tr').find('.unit').val(unit);
             $(this).closest('tr').find('.unit_price').val(price);
