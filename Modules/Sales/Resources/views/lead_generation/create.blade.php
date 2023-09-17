@@ -100,8 +100,7 @@
                                 <select name="division_id" id="division" class="form-control ">
                                     <option>Select Division</option>
                                     @foreach ($divisons as $division)
-                                        <option value="{{ $division->id }}"
-                                            {{ $division->id == $single_division ? 'selected' : '' }}>{{ $division->name }}
+                                        <option value="{{ $division->id }}">{{ $division->name }}
                                         </option>
                                     @endforeach
                                 </select>

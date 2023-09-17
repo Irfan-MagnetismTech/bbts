@@ -18,6 +18,8 @@ use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Sales\Entities\Client;
+use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Entities\ScmWor;
 use Modules\SCM\Http\Requests\ScmChallanRequest;
 
@@ -50,6 +52,8 @@ class ScmChallanController extends Controller
      */
     public function create()
     {
+        // $r = ScmRequisition::get();
+        // dd($r);
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
@@ -61,8 +65,9 @@ class ScmChallanController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(ScmChallanRequest $request)
+    public function store(Request $request)
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
             $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_no', 'pop_id', 'fr_composite_key', 'link_no', 'fr_no', 'equipment_type');
@@ -366,5 +371,11 @@ class ScmChallanController extends Controller
             'to_branch_balance' => $this->branchWiseStock(request()->to_branch_id),
         ];
         return response()->json($data);
+    }
+
+    public function getRequisitionDataByMrsNo(Request $request)
+    {
+        $requisation = ScmRequisition::with('branch','client', 'feasibilityRequirementDetail')->where('mrs_no', $request->mrs_no)->firstOrFail();        
+        return response()->json($requisation);
     }
 }
