@@ -343,6 +343,7 @@ class CommonApiController extends Controller
                     'requisition_no' => $item->scmPurchaseRequisition->prs_no ?? '',
                     'purchase_requisition_id' => $item->scmPurchaseRequisition->id ?? '',
                 ]),
+                'cs_no' => Cs::select('id', 'cs_no')->where('indent_no', $item->indent_no)->get() ?? '',
             ];
         }
 

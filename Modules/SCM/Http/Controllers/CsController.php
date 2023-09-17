@@ -104,7 +104,7 @@ class CsController extends Controller
      */
     public function show(Cs $c)
     {
-        $comparativestatement=$c;
+        $comparativestatement = $c;
         $csMaterials = CsMaterial::latest()->get();
         $csSuppliers = CsSupplier::latest()->get();
 
@@ -210,6 +210,7 @@ class CsController extends Controller
             $cs_materials[] = [
                 'material_id' => $request['material_id'][$material_key],
                 'brand_id'    => $request['brand_id'][$material_key],
+                'model'      => $request['model'][$material_key],
             ];
         }
 
