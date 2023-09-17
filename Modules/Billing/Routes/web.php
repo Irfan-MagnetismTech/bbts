@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Billing\Http\Controllers\BillGenerateController;
+use Modules\Billing\Http\Controllers\BillRegisterController;
 use Modules\Billing\Http\Controllers\MonthlyBillController;
 use Modules\Billing\Http\Controllers\BillingOtcBillController;
 use Modules\Billing\Http\Controllers\BrokenDaysBillController;
@@ -25,6 +26,7 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
         'monthly-bills'     => MonthlyBillController::class,
         'otc-bills'         => BillingOtcBillController::class,
         'bill-generate'     => BillGenerateController::class,
+        'bill-register'     => BillRegisterController::class,
         'broken-days-bills' => BrokenDaysBillController::class,
         'collections'       => CollectionController::class,
     ]);
@@ -39,4 +41,5 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::get('get_fr_product', [BrokenDaysBillController::class, 'get_fr_product'])->name('get_fr_product');
     Route::get('get_fr_bill_date', [BrokenDaysBillController::class, 'get_fr_bill_date'])->name('get_fr_bill_date');
     Route::get('get_client', [BrokenDaysBillController::class, 'get_client'])->name('get_client');
+    Route::get('get_supplier', [BillRegisterController::class, 'get_supplier'])->name('get_supplier');
 });
