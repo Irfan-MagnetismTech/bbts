@@ -102,7 +102,7 @@ class PurchaseOrderController extends Controller
             PoMaterial::insert($finalData['poMaterials']);
 
             DB::commit();
-            return response()->json(['status' => 'success', 'messsage' => 'Purchase Order Created Successfully'], 200);
+            return redirect()->route('purchase-orders.index')->with('message', 'Purchase Order Created Successfully');
         } catch (QueryException $e) {
             DB::rollBack();
 
@@ -142,13 +142,14 @@ class PurchaseOrderController extends Controller
                     ];
                 }
             );
+        // foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
+        //     $materials[] = $this->searchMaterialByCsAndRequsiition($value->cs_no);
+        //     $brands[] = $this->searchMaterialPriceByCsAndRequsiition($value->cs_id, $purchaseOrder->supplier_id, $value->material_id);
+        // }
 
-        foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
-            $materials[] = $this->searchMaterialByCsAndRequsiition($value->cs_id, $value->scm_purchase_requisition_id);
-            $brands[] = $this->searchMaterialPriceByCsAndRequsiition($value->cs_id, $purchaseOrder->supplier_id, $value->material_id);
-        }
+        // dd($materials, $brands);
 
-        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions', 'materials', 'brands'));
+        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions'));
     }
 
     /**
@@ -214,18 +215,31 @@ class PurchaseOrderController extends Controller
         }
     }
 
-    public function searchMaterialByCsAndRequsiition($csId, $reqId)
+    public function searchMaterialByCsAndRequsiition($cs_id = null)
     {
-        return CsMaterial::with('material', 'brand')
+        $csId = request()->cs_id ?? $cs_id;
+        $materials = CsMaterial::with('material', 'brand')
             ->orderBy('id')
-            ->where('cs_id', $csId)
-            ->whereIn('material_id', function ($query) use ($reqId) {
-                $query->select('material_id')
-                    ->from('scm_purchase_requisition_details')
-                    ->where('scm_purchase_requisition_id', $reqId);
-            })
+            ->where('cs_id', request()->cs_id)
             ->get()
             ->unique('material_id', 'brand_id');
+        $brands = Brand::latest()->get();
+        $data = [
+            'materials' => $materials,
+            'brands' => $brands
+        ];
+        return response()->json($data);
+
+        // return CsMaterial::with('material', 'brand')
+        //     ->orderBy('id')
+        //     ->where('cs_id', request()->cs_id)
+        //     ->whereIn('material_id', function ($query) use ($reqId) {
+        //         $query->select('material_id')
+        //             ->from('scm_purchase_requisition_details')
+        //             ->where('scm_purchase_requisition_id', $reqId);
+        //     })
+        //     ->get()
+        //     ->unique('material_id', 'brand_id');
     }
 
     public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
@@ -281,12 +295,9 @@ class PurchaseOrderController extends Controller
         $purchaseOrderData = $request->all();
 
         $purchaseOrderLinesData = [];
-        foreach ($purchaseOrderData['purchase_requisition_id'] as $key => $value) {
+        foreach ($purchaseOrderData['material_id'] as $key => $value) {
             $purchaseOrderLinesData[] = [
-                'scm_purchase_requisition_id' => $request->purchase_requisition_id[$key] ?? null,
                 'po_composit_key'         => ($requestMethod === "PUT" ? $purchaseOrder->po_no :  $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key] ?? null,
-                'cs_id'                      => $request->cs_id[$key] ?? null,
-                'quotation_no'               => $request->quotation_no[$key] ?? null,
                 'material_id'             => $request->material_id[$key] ?? null,
                 'brand_id'                => $request->brand_id[$key] ?? null,
                 'description'             => $request->description[$key] ?? null,
