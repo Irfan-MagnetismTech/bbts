@@ -5,6 +5,7 @@ namespace Modules\Admin\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Vendor;
 use App\Models\Dataencoding\Division;
 use Illuminate\Database\QueryException;
@@ -34,7 +35,8 @@ class ConnectivityLinkController extends Controller
     {
         $formType = "create";
         $divisions = Division::latest()->get();
-        return view('admin::connectivities.create', compact('formType', 'divisions'));
+        $branches = Branch::latest()->get();
+        return view('admin::connectivities.create', compact('formType', 'divisions','branches'));
     }
 
     /**

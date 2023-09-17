@@ -151,18 +151,18 @@
                 </select>
             </div>
         </div>
-
         <x-input-box colGrid="3" name="address" value="{{ $address }}" label="Address" />
-
         <div class="form-group col-3">
-            <select name="branch_id" id="branch_id" class="form-control select2">
-                <option value="" selected disabled>Search Branch</option>
-                @foreach ($branches as $branch)
-                    <option value="{{ $branch->id }}" {{ $branch_id == $branch->id ? 'selected' : '' }}>
-                        {{ $branch->name }}
-                    </option>
-                @endforeach
-            </select>
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="branch_id" name="branch_id" required>
+                    <option value="">Select Branch</option>
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ $branch_id == $branch->id ? 'selected' : '' }}>
+                            {{ $branch->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
         </div>
         <div class="col-md-3">
             <div class="

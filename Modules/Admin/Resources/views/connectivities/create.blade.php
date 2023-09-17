@@ -54,6 +54,7 @@ legend {
     $vendor_name = old('vendor', !empty($connectivity) ? $connectivity->vendor->name : null);
     $bbts_link_id = old('bbts_link_id', !empty($connectivity) ? $connectivity->bbts_link_id : null);
     $from_location = old('from_location', !empty($connectivity) ? $connectivity->from_location : null);
+    $cost_center = old('cost_center', !empty($connectivity) ? $connectivity->cost_center : null);
     $from_pop_id = old('from_pop_id', !empty($connectivity) ? $connectivity->from_pop_id : null);
     $to_location = old('to_location', !empty($connectivity) ? $connectivity->to_location : null);
     $to_pop_id = old('to_pop_id', !empty($connectivity) ? $connectivity->to_pop_id : null);
@@ -62,9 +63,11 @@ legend {
     $district_id = old('district_id', !empty($connectivity) ? $connectivity->district_id : null);
     $to_site = old('to_site', !empty($connectivity) ? $connectivity->to_site : null);
     $thana_id = old('thana_id', !empty($connectivity) ? $connectivity->thana_id : null);
+    $branch_id = old('branch_id', !empty($connectivity) ? $connectivity->branch_id : null);
     $gps = old('gps', !empty($connectivity) ? $connectivity->gps : null);
     $teck_type = old('teck_type', !empty($connectivity) ? $connectivity->teck_type : null);
     $link_from = old('link_from', !empty($connectivity) ? $connectivity->link_from : null);
+    $link_to = old('link_to', !empty($connectivity) ? $connectivity->link_to : null);
     $vendor_link_id = old('vendor_link_id', !empty($connectivity) ? $connectivity->vendor_link_id : null);
     $vendor_vlan = old('vendor_vlan', !empty($connectivity) ? $connectivity->vendor_vlan : null);
     $port = old('port', !empty($connectivity) ? $connectivity->port : null);
@@ -113,19 +116,31 @@ legend {
                         <x-input-box colGrid="2" name="reference" label="Reference" value="{{$reference}}"/>
                         <x-input-box colGrid="3" name="link_name" label="Link Name" value="{{$link_name}}"/>
                         <x-input-box colGrid="3" name="vendor" label="Vendor" value="{{$vendor_name}}"/>
-                        <x-input-box colGrid="3" name="cost_center" label="Cost Center" value="{{$from_location}}" placeholder="POP"/>
+                        <x-input-box colGrid="3" name="cost_center" label="Cost Center" value="{{$cost_center}}" placeholder="POP"/>
+                        <div class="form-group col-3">
+                            <div class="input-group input-group-sm input-group-primary">
+                                <select class="form-control" id="branch_id" name="branch_id" required>
+                                    <option value="">Select Branch</option>
+                                    @foreach ($branches as $branch)
+                                        <option value="{{ $branch->id }}" {{ $branch_id == $branch->id ? 'selected' : '' }}>
+                                            {{ $branch->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="col-3">
                             {{-- <legend>Link From</legend> --}}
                             <div class="form-check-inline">
                                 <label class="form-check-label" for="bbts">
-                                    <input type="radio" class="form-check-input link_from" id="bbts" name="link_from"
+                                    <input type="radio" class="form-check-input link_from" id="link_from" name="link_from"
                                            value="bbts" @checked(@$link_from == 'bbts' || ($form_method == 'POST' && !old()))>
                                     BBTS
                                 </label>
                             </div>
                             <div class="form-check-inline">
                                 <label class="form-check-label" for="vendor">
-                                    <input type="radio" class="form-check-input link_from" id="vendor" name="link_from"
+                                    <input type="radio" class="form-check-input link_from" id="link_from" name="link_from"
                                            value="vendor" @checked(@$link_from == 'vendor')>
                                     VENDOR
                                 </label>
@@ -134,14 +149,14 @@ legend {
                         <div class="col-2">
                             <div class="form-check-inline pt-0 mt-0">
                                 <label class="form-check-label" for="new">
-                                    <input type="radio" class="form-check-input link_type" id="new" name="link_type"
+                                    <input type="radio" class="form-check-input link_type" id="link_type" name="link_type"
                                            value="new" @checked(@$link_type == 'new' || ($form_method == 'POST' && !old()))>
                                     NEW
                                 </label>
                             </div>
                             <div class="form-check-inline mt-0 pt-0">
                                 <label class="form-check-label" for="existing">
-                                    <input type="radio" class="form-check-input link_type" id="existing" name="link_type"
+                                    <input type="radio" class="form-check-input link_type" id="link_type" name="link_type"
                                            value="existing" @checked(@$link_type == 'existing')>
                                     EXISTING
                                 </label>
@@ -201,15 +216,15 @@ legend {
                                         {{-- <legend>Link From</legend> --}}
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="link">
-                                                <input type="radio" class="form-check-input link_from" id="link" name="link_from"
-                                                    value="link" @checked(@$link_from == 'link' || ($form_method == 'POST' && !old()))>
+                                                <input type="radio" class="form-check-input link_to" id="link_to" name="link_to"
+                                                    value="link" @checked(@$link_to == 'link' || ($form_method == 'POST' && !old()))>
                                                 Link
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="backbone">
-                                                <input type="radio" class="form-check-input link_from" id="backbone" name="link_from"
-                                                    value="backbone" @checked(@$link_from == 'backbone')>
+                                                <input type="radio" class="form-check-input link_to" id="link_to" name="link_to"
+                                                    value="backbone" @checked(@$link_to == 'backbone')>
                                                     Backbone
                                             </label>
                                         </div>
@@ -315,6 +330,7 @@ legend {
                             $('#vendor').val(item.data.vendor_name).attr('value',item.data.vendor_name);
                             $('#bbts_link_id').val(item.data.bbts_link_id).attr('value',item.data.bbts_link_id);
                             $('#from_location').val(item.data.from_location).attr('value',item.data.from_location);
+                            $('#cost_center').val(item.data.cost_center).attr('value',item.data.cost_center);
                             $('#from_site').val(item.data.from_site).attr('value',item.data.from_site);
                             $('#vendor_link_id').val(item.data.vendor_link_id).attr('value',item.data.vendor_link_id);
                             $('#vendor_vlan').val(item.data.vendor_vlan).attr('value',item.data.vendor_vlan);
@@ -381,6 +397,20 @@ legend {
                             return false;
                         }
                 })
+         $('#cost_center,#to_location').on('keyup', function(event) {
+             let selector = this;
+             let myObject = {}
+             jquaryUiAjax(this, "{{ route('get_pop') }}", uiList, myObject);
+             function uiList(item) {
+                 $(selector).val(item.label).attr('value',item.label);
+                 if(event.target.id == "cost_center"){
+                     $('#from_pop_id').val(item.id);
+                 }else{
+                     $('#to_pop_id').val(item.id);
+                 }
+                 return false;
+             }
+         })
         $(document).ready(function(){
             associativeDropdown("{{ route('get-districts') }}", 'division_id', '#division_id', '#district_id', 'get', null)
             associativeDropdown("{{ route('get-thanas') }}", 'district_id', '#district_id', '#thana_id', 'get', null)
@@ -411,6 +441,7 @@ legend {
             function emptyField(){
                             $('#division_id').val(null);
                             $('#from_location').val(null).attr('value',null);
+                            $('#cost_center').val(null).attr('value',null);
                             $('#bbts_link_id').val(null).attr('value',null);
                             $('#vendor').val(null).attr('value',null);
                             $('#vendor_id').val(null).attr('value',null);

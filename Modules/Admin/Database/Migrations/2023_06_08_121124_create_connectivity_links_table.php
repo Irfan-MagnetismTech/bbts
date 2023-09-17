@@ -17,11 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('status')->nullable();
             $table->string('link_from')->nullable();
+            $table->string('link_to')->nullable();
             $table->string('reference')->nullable();
             $table->string('link_type')->nullable();
             $table->string('link_name')->nullable();
             $table->bigInteger('vendor_id')->nullable();
+            $table->bigInteger('branch_id')->nullable();
             $table->string('bbts_link_id')->nullable();
+            $table->string('cost_center')->nullable();
             $table->string('from_location')->nullable();
             $table->string('division_id')->nullable();
             $table->string('to_location')->nullable();

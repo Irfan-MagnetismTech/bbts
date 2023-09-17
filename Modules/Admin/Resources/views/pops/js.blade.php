@@ -5,7 +5,7 @@
     associativeDropdown("{{ route('get-districts') }}", 'division_id', '#division_id', '#district_id', 'get', null)
     associativeDropdown("{{ route('get-thanas') }}", 'district_id', '#district_id', '#thana_id', 'get', null)
 
-    select2Ajax("{{ route('searchBranch') }}", '#branch_id')
+    {{--select2Ajax("{{ route('searchBranch') }}", '#branch_id')--}}
 
     $('.date').datepicker({
         format: "dd-mm-yyyy",
