@@ -3,6 +3,7 @@
 namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\SCM\Entities\ScmMir;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -177,5 +178,10 @@ class ScmGatePassController extends Controller
             ->values();
 
         return $mir;
+    }
+    public function pdf($id = null)
+    {
+        $gate_pass = ScmGatePass::where('id', $id)->first();
+        return view('scm::gate-passes.pdf', compact('gate_pass'));
     }
 }
