@@ -33,6 +33,14 @@
         .input-group-info .input-group-addon {
             /*background-color: #04748a!important;*/
         }
+        .select2-container--default .select2-selection--multiple .select2-selection__choice span {
+            color: #b10000;
+        }
+
+        .select2_container {
+            max-width: 200px;
+            white-space: inherit;
+        }
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -99,9 +107,9 @@
                 </div>
                 @php $fr_no = json_decode($fr_no); @endphp
 
-                <div class="form-group col-3 fr_no">
+                <div class="form-group col-3 fr_no select2_container">
                     <label for="select2">FR No</label>
-                    <select class="form-control select2" id="fr_no" multiple="multiple" name="fr_no[]">
+                    <select class="form-control select2 serial_code" id="fr_no" multiple name="fr_no[]">
                         <option value="" readonly selected>Select FR No</option>
                         @if ($form_method == 'POST')
                             <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
@@ -115,6 +123,16 @@
                         @endif
                     </select>
                 </div>
+                {{-- <td class="select2_container">
+                    <select class="form-control select2 serial_code" multiple
+                        name="serial_code[{{ $key }}][]">
+                        @foreach ($serial_codes[$key] as $key1 => $value)
+                            <option value="{{ $value->serial_code }}" @selected(in_array($value->serial_code, json_decode($serial_code[$key])))>
+                                {{ $value->serial_code }}
+                            </option>
+                        @endforeach
+                    </select>
+                </td> --}}
 
                 {{-- <div class="form-group col-3 link_no">
                     <label for="link_no">Link No:</label>
