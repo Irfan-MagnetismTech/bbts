@@ -5,7 +5,7 @@
     $form_heading = !empty($challan) ? 'Update' : 'Add';
     $form_url = !empty($challan) ? route('challans.update', $challan->id) : route('challans.store');
     $form_method = !empty($challan) ? 'PUT' : 'POST';
-
+    
     $date = old('date', !empty($challan) ? $challan->date : null);
     $type = old('date', !empty($challan) ? $challan->type : null);
     $scm_requisition_id = old('scm_requisition_id', !empty($challan) ? $challan->scm_requisition_id : null);
@@ -22,7 +22,7 @@
     $pop_id = old('pop_id', !empty($challan) ? $challan->pop_id : null);
     $pop_name = old('pop_name', !empty($challan) ? $challan?->pop?->name : null);
     $pop_address = old('pop_address', !empty($challan) ? $challan?->pop?->address : null);
-
+    
 @endphp
 
 @section('breadcrumb-title')
@@ -68,8 +68,7 @@
     ]) !!}
     <div class="row">
         <div class="col-md-12">
-            <div class="
-                     mt-2 mb-4">
+            <div class="mt-2 mb-4">
                 <div class="form-check-inline">
                     <label class="form-check-label" for="client">
                         <input type="radio" class="form-check-input radioButton" id="client" name="type"
@@ -120,21 +119,33 @@
             </select>
         </div>
         <div class="form-group col-3 branch_name">
-            <label for="select2">From Branch</label>
-            <select class="form-control select2" id="branch_id" name="branch_id">
-                <option value="" selected>Select Branch</option>
-                @if ($form_method == 'PUT')
-                    {{-- <option value="{{ $branch_id }}" selected>
-                        {{ $branch_name }}
-                    </option> --}}
-                @endif
-            </select>
+            <label for="select2">Branch Name</label>
+            <input class="form-control" type="text" id="branch_name" name="branch_name" readonly
+                value="{{ old('branch_name') ?? (@$branch_name ?? '') }}">
+            <input type="hidden" name="branch_id" value="{{ old('branch_id') ?? (@$branch_id ?? '') }}" id="branch_id_1">
+        </div>
+        {{-- <div class="form-group col-3 branch_name">
+            <label for="client_no">Branch Name:</label>
+            <input type="text" class="form-control" id="branch_name" aria-describedby="branch_name" name="branch_name"
+                readonly value="{{ old('branch_name') ?? (@$branch_name ?? '') }}">
+                <input type="hidden" id="branch_id" name="branch_id" value="{{ old('branch_id') ?? (@$branch_id ?? '') }}">
+            </div>
+        </div> --}}
+        <div class="form-group col-3 employee">
+            {{-- @dd($requisition) --}}
+            <input type="hidden" id="employee_id" name="employee_id"
+                value="{{ !empty($requisition->employee) ? $requisition->employee->id : '' }}">
+            <label for="employee">Employee</label>
+            <input type="text" class="form-control" id="employee" aria-describedby="employee" name="employee"
+                value="{{ old('employee') ?? (@$requisition->employee->name ?? '') }}" placeholder="Search...">
+
         </div>
     </div>
-
     <div class="row">
+        {{-- <div class="pop-up-type">
 
-        <div class="form-group col-3 equipment_type">
+        </div> --}}
+        {{-- <div class="form-group col-3 equipment_type type">
             <label for="equipment_type">Type:</label>
             <select class="form-control select2" id="equipment_type" name="equipment_type">
                 <option value="Service Equipment" @if ($equipment_type == 'Service Equipment') selected @endif>Service Equipment
@@ -142,13 +153,22 @@
                 <option value="Link" @if ($equipment_type == 'Link') selected @endif>Link</option>
             </select>
 
+        </div> --}}
+        <div class="form-group col-3 equipment_type type" id="pop-up-type">
+            <label for="client_name">Type:</label>
+            <input type="text" class="form-control" id="equipment_type" aria-describedby="equipment_type"
+                name="equipment_type" readonly value="{{ old('equipment_type') ?? (@$equipment_type ?? '') }}">
         </div>
-        <div class="form-group col-3 client_name">
-            <label for="client_name">Client Name:</label>
+
+
+
+
+        <div class="form-group col-3 client_no">
+            <label for="client_no">Client Name:</label>
             <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
-                value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
+                readonly value="{{ old('client_name') ?? (@$client_name ?? '') }}">
         </div>
-        <div class="form-group col-3 fr_no">
+        {{-- <div class="form-group col-3 fr_no">
             <label for="select2">FR No</label>
             <select class="form-control select2" id="fr_no" name="fr_no">
                 <option value="" readonly selected>Select FR No</option>
@@ -162,9 +182,14 @@
                     @endforeach
                 @endif
             </select>
+        </div> --}}
+        <div class="form-group col-3 client_no">
+            <label for="client_no">Fr No:</label>
+            <input type="text" class="form-control" id="fr_no" aria-describedby="fr_no" name="fr_no" readonly
+                value="{{ old('fr_no') ?? (@$fr_no ?? '') }}">
         </div>
 
-        <div class="form-group col-3 link_no">
+        {{-- <div class="form-group col-3 link_no">
             <label for="link_no">Link No:</label>
             <select class="form-control select2" id="link_no" name="link_no">
                 <option value="" readonly selected>Select Link No</option>
@@ -178,6 +203,11 @@
                     @endforeach
                 @endif
             </select>
+        </div> --}}
+        <div class="form-group col-3 client_no">
+            <label for="client_no">Link No:</label>
+            <input type="text" class="form-control" id="link_no" aria-describedby="link_no" name="link_no"
+                readonly value="{{ old('link_no') ?? (@$link_no ?? '') }}">
         </div>
 
         <div class="form-group col-3 client_no">
@@ -236,11 +266,11 @@
                 $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
                 $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                 $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
-
+                
                 $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
                 $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
                 $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
-
+                
             @endphp
             @foreach ($Challan_Lines as $key => $Challan_Line)
                 <tr>
@@ -468,6 +498,7 @@
                         success: function(data) {
                             if (data.length > 0) {
                                 response(data);
+
                             } else {
                                 response([{
                                     label: 'No Result Found',
@@ -476,6 +507,7 @@
                             }
                         }
                     });
+
                 },
                 select: function(event, ui) {
                     if (ui.item.value == -1) {
@@ -484,7 +516,40 @@
                     }
                     $('#scm_requisition_id').val(ui.item.scm_requisition_id);
                     $('#mrs_no').val(ui.item.label);
+                    // console.log(ui.item.label);
+                    $.ajax({
+                        url: "{{ route('get-requisition-data-by-mrs-no') }}",
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            _token: CSRF_TOKEN,
+                            mrs_no: ui.item.label
+                        },
+                        success: function(data) {
+                            // console.log(data);
+                            $('#fr_no').val(data.fr_no);
+                            $('#link_no').val(data.link_no);
+                            $('#client_no').val(data.client_no);
+                            $('#branch_id_1').val(data.branch.id);
+                            $('#branch_name').val(data.branch.name);
+                            $('#client_name').val(data.client.client_name);
+                            $('#client_address').val(data.feasibility_requirement_detail
+                                .location);
+                            console.log(data.branch.id);
+                            // if (data.length > 0) {
+                            //     response(data);
+
+                            // } else {
+                            //     response([{
+                            //         label: 'No Result Found',
+                            //         value: -1,
+                            //     }]);
+                            // }
+                        }
+                    });
+
                     return false;
+
                 }
             })
             $("#pop_name").autocomplete({
@@ -511,12 +576,12 @@
 
         });
 
-        @if($form_method=='PUT')
+        @if ($form_method == 'PUT')
 
-        $(document).on('DOMNodeInserted', '#branch_id', function() {
-                let selectedValue = "{{$branch_id}}"
+            $(document).on('DOMNodeInserted', '#branch_id', function() {
+                let selectedValue = "{{ $branch_id }}"
                 $('#branch_id').val(selectedValue)
-                });
+            });
         @endif
 
         function onChangeRadioButton() {
@@ -529,10 +594,11 @@
                 $('.client_name').show('slow');
                 $('.client_no').show('slow');
                 $('.client_address').show('slow');
-                $('.type').show('slow');
+                $('.type').show('slow').removeClass("d-none");
                 $('.link_no').show('slow');
                 $('.fr_no').show('slow');
                 $('.fr_id').show('slow');
+                $('.employee').show('slow').addClass("d-none");
             } else if (radioValue == 'pop') {
                 $('.pop_id').show('slow');
                 $('.pop_name').show('slow');
@@ -541,10 +607,11 @@
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
-                $('.type').hide('slow');
+                $('.type').hide('slow').addClass("d-none")
                 $('.link_no').hide('slow');
                 $('.fr_no').hide('slow');
                 $('.fr_id').hide('slow');
+                $('.employee').show('slow').addClass("d-none");
             } else if (radioValue == 'general') {
                 $('.pop_id').hide('slow');
                 $('.pop_name').hide('slow');
@@ -553,10 +620,11 @@
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
                 $('.client_address').hide('slow');
-                $('.type').hide('slow');
+                $('.type').hide('slow').addClass("d-none")
                 $('.link_no').hide('slow');
                 $('.fr_no').hide('slow');
                 $('.fr_id').show('slow');
+                $('.employee').show('slow').removeClass("d-none");
             }
         }
 
@@ -577,6 +645,7 @@
         })
 
         function ClearNext(selector) {
+            F
             let sib = $(selector).parent().nextAll('td');
             // loop siblings
             sib.each(function() {
@@ -781,6 +850,16 @@
                     (elemmtn).find('.quantity').val(avaiable_quantity);
                 });
             }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // // This code will run when the page is fully loaded
+            // // Set the inner HTML of the div with id "myDiv"
+            $('#pop-up-type').html(`
+            <label for="client_name">Type:</label>
+            <input type="text" class="form-control" value = {{'ccc'}} id="equipment_type" aria-describedby="equipment_type" name="equipment_type"
+            readonly value="{{ old('equipment_type') ?? (@$equipment_type ?? '') }}">`);
         });
     </script>
 

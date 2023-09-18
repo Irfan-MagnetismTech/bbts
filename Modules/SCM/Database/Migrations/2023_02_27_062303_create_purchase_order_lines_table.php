@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('purchase_order_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('purchase_order_id')->constrained('purchase_orders', 'id')->cascadeOnDelete();
-            $table->bigInteger('scm_purchase_requisition_id')->nullable();
-            $table->string('po_composit_key')->nullable();
-            $table->bigInteger('cs_id')->nullable();
+            // $table->bigInteger('scm_purchase_requisition_id')->nullable();
+            // $table->string('po_composit_key')->nullable();
+            // $table->bigInteger('cs_id')->nullable();
             $table->string('quotation_no')->nullable();
             $table->bigInteger('material_id')->nullable();
             $table->bigInteger('brand_id')->nullable();

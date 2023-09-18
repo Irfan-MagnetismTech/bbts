@@ -33,3 +33,4 @@ Route::get('search-serial-for-wcr', [ScmWcrController::class, 'searchSerialForWc
 Route::post('warranty-claims/sent-to-supplier/{wcr?}', [ScmWcrController::class, 'sentToSupplier'])->name('sentToSupplier');
 Route::get('search-wcr-for-wcrr', [ScmWcrrController::class, 'searchWcrForWcrr'])->name('searchWcrForWcrr');
 Route::get('search-material-for-wcrr', [ScmWcrrController::class, 'searchMaterialForWcrr'])->name('searchMaterialForWcrr');
+Route::get('get-requisition-data-by-mrs-no', [ScmChallanController::class, 'getRequisitionDataByMrsNo'])->name('get-requisition-data-by-mrs-no');

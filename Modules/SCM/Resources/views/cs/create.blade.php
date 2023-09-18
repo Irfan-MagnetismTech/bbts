@@ -115,6 +115,7 @@
                                 <th>Material Name<span class="text-danger">*</span></th>
                                 <th>Unit</th>
                                 <th>Brand</th>
+                                <th>Model</th>
                                 <th><i class="btn btn-primary btn-sm fa fa-plus addMaterial"></i></th>
                             </tr>
                         </thead>
@@ -128,6 +129,7 @@
                                     $material_name = $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode ?? '---';
                                     $unit = $is_old ? old('unit')[$material_key] : $material_value->material->unit ?? '---';
                                     $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value?->brand_id;
+                                    $model = $is_old ? old('model')[$material_key] : $material_value->model ?? '---';
                                 @endphp
                                 <tr>
                                     <td>
@@ -149,6 +151,11 @@
                                                 </option>
                                             @endforeach
                                         </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="model[]"
+                                            value="{{ $is_old ? old('model')[$material_key] : $model ?? '---' }}"
+                                            class="form-control model text-center" autocomplete="off">
                                     </td>
                                     <td>
                                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
@@ -349,6 +356,9 @@
                                 <option value="{{ $brand->id }}" @selected($brand->id == @$brand_id[$key])>{{ $brand->name }}</option>
                             @endforeach
                         </select>
+                    </td>
+                    <td>
+                        <input type="text" name="model[]" class="form-control model text-center" autocomplete="off">
                     </td>
                     <td>
                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
