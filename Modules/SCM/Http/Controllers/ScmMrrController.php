@@ -284,7 +284,7 @@ class ScmMrrController extends Controller
     public function getMaterialForPo($po_id)
     {
         $items = PurchaseOrderLine::query()
-            ->with('material')
+            ->with('material', 'brand')
             ->whereHas('purchaseOrder', function ($item) use ($po_id) {
                 return $item->where('id', $po_id);
             })->get()->unique('material_id');

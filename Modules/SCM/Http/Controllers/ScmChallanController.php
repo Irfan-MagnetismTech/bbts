@@ -19,6 +19,7 @@ use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\Client;
+use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Entities\ScmWor;
 use Modules\SCM\Http\Requests\ScmChallanRequest;
@@ -55,9 +56,11 @@ class ScmChallanController extends Controller
         // $r = ScmRequisition::get();
         // dd($r);
         $formType = "create";
+        $materials = Material::latest()->get();
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
-        return view('scm::challans.create', compact('formType', 'brands', 'branchs'));
+        // dd($formType);
+        return view('scm::challans.create', compact('formType', 'brands', 'branchs','materials'));
     }
 
     /**
@@ -115,6 +118,7 @@ class ScmChallanController extends Controller
      */
     public function edit(ScmChallan $challan)
     {
+        $formType = "update";
         $branchs = Branch::latest()->get();
         $client_links = SaleLinkDetail::where('fr_no', $challan->fr_no)->pluck('link_no');
         $fr_no_list = SaleDetail::where('client_no', $challan->client_no)->pluck('fr_no');
@@ -179,7 +183,7 @@ class ScmChallanController extends Controller
 
             $branch_stock[] = StockLedger::query()->branchStockForChallan($challan->branch_id, $item);
         });
-        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes', 'branch_stock', 'fr_no_list'));
+        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes', 'branch_stock', 'fr_no_list', 'formType'));
     }
 
     /**
@@ -375,7 +379,7 @@ class ScmChallanController extends Controller
 
     public function getRequisitionDataByMrsNo(Request $request)
     {
-        $requisation = ScmRequisition::with('branch','client', 'feasibilityRequirementDetail')->where('mrs_no', $request->mrs_no)->firstOrFail();        
+        $requisation = ScmRequisition::with('branch','client','pop', 'employee', 'feasibilityRequirementDetail')->where('mrs_no', $request->mrs_no)->firstOrFail();        
         return response()->json($requisation);
     }
 }

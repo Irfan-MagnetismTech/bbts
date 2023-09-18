@@ -122,7 +122,7 @@
             <label for="select2">Branch Name</label>
             <input class="form-control" type="text" id="branch_name" name="branch_name" readonly
                 value="{{ old('branch_name') ?? (@$branch_name ?? '') }}">
-            <input type="hidden" name="branch_id" value="{{ old('branch_id') ?? (@$branch_id ?? '') }}" id="branch_id_1">
+            <input type="hidden" name="branch_id" value="{{ old('branch_id') ?? (@$branch_id ?? '') }}" id="branch_id">
         </div>
         {{-- <div class="form-group col-3 branch_name">
             <label for="client_no">Branch Name:</label>
@@ -131,17 +131,18 @@
                 <input type="hidden" id="branch_id" name="branch_id" value="{{ old('branch_id') ?? (@$branch_id ?? '') }}">
             </div>
         </div> --}}
+
+    </div>
+    <div class="row">
         <div class="form-group col-3 employee">
             {{-- @dd($requisition) --}}
             <input type="hidden" id="employee_id" name="employee_id"
                 value="{{ !empty($requisition->employee) ? $requisition->employee->id : '' }}">
             <label for="employee">Employee</label>
-            <input type="text" class="form-control" id="employee" aria-describedby="employee" name="employee"
-                value="{{ old('employee') ?? (@$requisition->employee->name ?? '') }}" placeholder="Search...">
+            <input type="text" class="form-control" readonly id="employee" aria-describedby="employee" name="employee"
+                value="{{ old('employee') ?? (@$requisition->employee->name ?? '') }}" placeholder="Employee Name">
 
         </div>
-    </div>
-    <div class="row">
         {{-- <div class="pop-up-type">
 
         </div> --}}
@@ -223,17 +224,17 @@
                 value="{{ old('client_address') ?? (@$client_address ?? '') }}">
         </div>
 
-        <div class="form-group col-3 pop_name" style="display: none">
+        <div class="form-group col-3 pop_name">
             <label for="select2">Pop Name</label>
             <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
-                value="{{ old('pop_name') ?? (@$pop_name ?? '') }}" placeholder="Search a POP Name">
+                value="{{ old('pop_name') ?? (@$pop_name ?? '') }}" readonly placeholder="POP Name">
             <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
                 value="{{ old('pop_id') ?? (@$pop_id ?? '') }}">
         </div>
-        <div class="form-group col-3 pop_address" style="display: none">
+        <div class="form-group col-3 pop_address">
             <label for="select2">Pop Address</label>
-            <input class="form-control" id="pop_address" name="pop_address" aria-describedby="pop_address"
-                value="{{ old('pop_address') ?? (@$pop_address ?? '') }}" readonly placeholder="Select a POP Address">
+            <input class="form-control" id="pop_address" name="pop_address" readonly aria-describedby="pop_address"
+                value="{{ old('pop_address') ?? (@$pop_address ?? '') }}" readonly placeholder="POP Address">
         </div>
     </div>
 
@@ -254,6 +255,7 @@
             </tr>
         </thead>
         <tbody>
+            
             @php
                 $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                 $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
@@ -478,8 +480,8 @@
             });
 
             //using form custom function js file
-            fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_name', 'get', null)
+            // fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
+            // associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_name', 'get', null)
 
             $(".radioButton").click(function() {
                 onChangeRadioButton()
@@ -530,12 +532,29 @@
                             $('#fr_no').val(data.fr_no);
                             $('#link_no').val(data.link_no);
                             $('#client_no').val(data.client_no);
-                            $('#branch_id_1').val(data.branch.id);
-                            $('#branch_name').val(data.branch.name);
-                            $('#client_name').val(data.client.client_name);
+                            $('#branch_id').val(data.branch ?.id);
+                            $('#branch_name').val(data.branch ?.name);
+                            $('#client_name').val(data.client ?.client_name);
                             $('#client_address').val(data.feasibility_requirement_detail
-                                .location);
-                            console.log(data.branch.id);
+                                ?.location);
+                                if(data.link_no != null){
+                                    $('#equipment_type').val('Link');
+                                }
+                                else{
+                                    $('#equipment_type').val('Service Equipment');
+                                }
+
+
+                        //pop
+                        console.log(data.pop.name);
+                        $('#pop_name').val(data.pop ?.name);
+                        $('#pop_address').val(data.pop ?.address);
+                        $('#pop_id').val(data.pop ?.id);
+                        $('#employee').val(data.employee ?.name);
+                        $('#employee_id').val(data.employee ?.id);
+                 
+         
+                            // console.log("link no",data.link_no);
                             // if (data.length > 0) {
                             //     response(data);
 
@@ -588,8 +607,8 @@
             var radioValue = $("input[name='type']:checked").val();
             if (radioValue == 'client') {
                 $('.pop_id').hide('slow');
-                $('.pop_name').hide('slow');
-                $('.pop_address').hide('slow');
+                $('.pop_name').hide('slow').addClass("d-none");
+                $('.pop_address').hide('slow').addClass("d-none");
                 $('.address').show('slow');
                 $('.client_name').show('slow');
                 $('.client_no').show('slow');
@@ -601,8 +620,8 @@
                 $('.employee').show('slow').addClass("d-none");
             } else if (radioValue == 'pop') {
                 $('.pop_id').show('slow');
-                $('.pop_name').show('slow');
-                $('.pop_address').show('slow');
+                $('.pop_name').show('slow').removeClass("d-none");
+                $('.pop_address').show('slow').removeClass("d-none");
                 $('.address').hide('slow');
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
@@ -613,9 +632,9 @@
                 $('.fr_id').hide('slow');
                 $('.employee').show('slow').addClass("d-none");
             } else if (radioValue == 'general') {
-                $('.pop_id').hide('slow');
-                $('.pop_name').hide('slow');
-                $('.pop_address').hide('slow');
+                $('.pop_id').show('slow');
+                $('.pop_name').show('slow').removeClass("d-none");
+                $('.pop_address').show('slow').removeClass("d-none");
                 $('.address').hide('slow');
                 $('.client_name').hide('slow');
                 $('.client_no').hide('slow');
@@ -644,8 +663,7 @@
             }
         })
 
-        function ClearNext(selector) {
-            F
+        function ClearNext(selector) { 
             let sib = $(selector).parent().nextAll('td');
             // loop siblings
             sib.each(function() {
@@ -799,20 +817,20 @@
             }
         });
 
-        $(document).on('change', '.received_type', function() {
-            var event_this = $(this).closest('tr');
-            ClearNext($(this));
-            if ($('#branch_id').val() == '') {
-                $(this).val('');
-                swal.fire({
-                    title: "Please Select From Branch",
-                    type: "warning",
-                }).then(function() {
-                    $('#branch_id').focus();
-                });
-                return false;
-            }
-        })
+        // $(document).on('change', '.received_type', function() {
+        //     var event_this = $(this).closest('tr');
+        //     ClearNext($(this));
+        //     if ($('#branch_id').val() == '') {
+        //         $(this).val('');
+        //         swal.fire({
+        //             title: "Please Select From Branch",
+        //             type: "warning",
+        //         }).then(function() {
+        //             $('#branch_id').focus();
+        //         });
+        //         return false;
+        //     }
+        // })
 
         $(document).on('change', '.model, .material_name, .brand', function() {
             var elemmtn = $(this);
@@ -852,16 +870,14 @@
             }
         });
     </script>
-    <script>
+    {{-- <script>
         $(document).ready(function() {
-            // // This code will run when the page is fully loaded
-            // // Set the inner HTML of the div with id "myDiv"
             $('#pop-up-type').html(`
             <label for="client_name">Type:</label>
             <input type="text" class="form-control" value = {{'ccc'}} id="equipment_type" aria-describedby="equipment_type" name="equipment_type"
             readonly value="{{ old('equipment_type') ?? (@$equipment_type ?? '') }}">`);
         });
-    </script>
+    </script> --}}
 
     <script src="{{ asset('js/search-client.js') }}"></script>
 @endsection

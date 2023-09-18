@@ -9,7 +9,7 @@
 @endphp
 
 @section('breadcrumb-title')
-    {{ $form_heading }} PO (Purchaase Order)
+    {{ $form_heading }} PO (Purchase Order)
 @endsection
 
 @section('style')
@@ -127,13 +127,19 @@
             <input type="hidden" name="indent_id" id="indent_id"
                 value="{{ old('indent_id') ?? @$purchaseOrder?->indent_id }}">
         </div>
-
         <div class="form-gorup col-4 cs_no">
             <label for="cs_no">CS No: <span class="text-danger">*</span></label>
-            <select class="form-control text-center cs_no select2" name="cs_id" id="cs_id" required>
-                <option value="" readonly selected>Select CS No</option>
+
+            <select class="form-control select2" name="cs_id" id="cs_id" required>
+                <option value="" disabled selected>Select CS No</option>
+
+                @if (!empty($purchaseOrder->id))
+                    @foreach ($indent_wise_cs as $cs)
+                        <option value="{{ $cs->cs_no }}" @selected($cs->cs_no == @$purchaseOrder->cs_no)>
+                            {{ $cs->cs_no }}</option>
+                    @endforeach
+                @endif
             </select>
-            <input type="hidden" name="cs_no" id="cs_no" value="">
         </div>
 
         <div class="form-group col-4 remarks">
@@ -161,6 +167,7 @@
             <tr>
                 <th> Material Name</th>
                 <th>Brand</th>
+                <th>Model</th>
                 <th>Description</th>
                 <th>Unit</th>
                 <th> Quantity </th>
@@ -178,13 +185,12 @@
                 $purchase_requisition = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
                 $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scm_purchase_requisition_id') : []);
                 
-                $cs_no = old('cs_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('cs.cs_no') : []);
-                $cs_id = old('cs_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('cs.id') : []);
-                
                 $quotation_no = old('quotation_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quotation_no') : []);
                 
                 $material_name = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.name') : []);
                 $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.id') : []);
+                
+                $single_model = old('model', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('model') : []);
                 
                 $brand = old('brand', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand') : []);
                 $brand_id = old('brand_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand_id') : []);
@@ -209,21 +215,37 @@
             @foreach ($purchase_requisition as $key => $value)
                 <tr>
                     <td>
-                        <input type='text' name="material_name[]" class="form-control text-center material_name"
-                            autocomplete="off" value="{{ $material_name[$key] }}">
-                        <input type="hidden" name="material_id[]" class="material_id"
-                            value="{{ $material_id[$key] }}">
+                        <select class="form-control text-center material_name select2" name="material_id[]">
+                            <option value="" readonly selected>Select Material</option>
+                            @foreach ($materials[$key] as $material)
+                                <option value="{{ $material->material_id }}"
+                                    {{ $material->material_id == $material_id[$key] ? 'selected' : '' }}>
+                                    {{ $material->material->name }}</option>
+                            @endforeach
+                        </select>
                     </td>
 
                     <td>
-                        <input type="text" name="brand[]" class="form-control text-center brand" autocomplete="off"
-                            value="{{ $brand[$key] }}">
-                        <input type="hidden" name="brand_id[]" class="brand_id" value="{{ $brand_id[$key] }}">
+                        <select class="form-control text-center brand_name select2" name="brand_id[]">
+                            <option value="" readonly selected>Select Brand</option>
+                            @foreach ($brands[$key] as $id => $brand)
+                                <option value="{{ $brand->csMaterial->brand->id }}" data-price="{{ $brand->price }}"
+                                    data-unit="{{ $brand->csMaterial->material->unit }}"
+                                    {{ $brand->csMaterial->brand->id == $brand_id[$key] ? 'selected' : '' }}>
+                                    {{ $brand->csMaterial->brand->name }}</option>
+                            @endforeach
+                        </select>
                     </td>
 
                     <td>
-                        <input type="text" name="model[]" class="form-control text-center model" autocomplete="off"
-                            value="{{ $model[$key] }}">
+                        <select class="form-control text-center model select2" name="model[]">
+                            <option value="" readonly selected>Select Model</option>
+                            @foreach ($models[$key] as $id => $model)
+                                <option value="{{ $model->model }}"
+                                    {{ $model->model == $single_model[$id] ? 'selected' : '' }}>
+                                    {{ $model->model }}</option>
+                            @endforeach
+                        </select>
                     </td>
 
                     <td>
@@ -424,7 +446,7 @@
         function calculateTotalAmount() {
             var final_total_amount = 0;
             $('.total_amount').each(function() {
-                final_total_amount += parseFloat($(this).val());
+                final_total_amount += parseFloat($(this).val()) || 0;
             });
             $('.final_total_amount').val(final_total_amount.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
@@ -532,7 +554,9 @@
                             </td>
 
                             <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
+                                <select class="form-control model select2" name="model[]">
+                                    <option value="" readonly selected>Select Model</option>
+                                </select>
                             </td>
 
                             <td>
@@ -611,8 +635,7 @@
                 },
                 success: function(data) {
                     $('.loading').hide();
-                    brands = data.brands;
-                    $.each(data.materials, function(key, value) {
+                    $.each(data, function(key, value) {
                         cs_materials +=
                             `<option value="${value.material.id}">${value.material.name}</option>`;
                         materials.push(value.material)
@@ -669,6 +692,7 @@
             }
         }
 
+
         $(document).on('change', '.material_name', function() {
             let material_id = $(this).val();
             let cs_id = $('#cs_id').val();
@@ -680,7 +704,7 @@
                 return false;
             }
 
-            const url = '{{ url('/scm/search-material-price-by-cs-requisition') }}/' + cs_id + '/' +
+            const url = '{{ url('/scm/search-material-brand-by-cs-requisition') }}/' + cs_id + '/' +
                 supplier_id +
                 '/' + material_id;
 
@@ -692,13 +716,10 @@
             dropdown.prop('selectedIndex', 0);
 
             $.getJSON(url, function(items) {
-
+                materials = items;
                 $.each(items, function(key, material) {
                     dropdown.append($('<option></option>')
                         .attr('value', material.cs_material.brand.id)
-                        .attr('data-model', material.cs_material.model)
-                        .attr('data-price', material.price)
-                        .attr('data-unit', material.cs_material.material.unit)
                         .text(material.cs_material.brand.name))
                 })
 
@@ -714,15 +735,29 @@
         })
 
         $(document).on('change', '.brand_name', function() {
-            let price = $(this).find(':selected').data('price');
-            let unit = $(this).find(':selected').data('unit');
-            let quantity = $(this).closest('tr').find('.quantity').val() || 0;
-            let total = price * quantity;
-            let model = $(this).find(':selected').data('model');
-            $(this).closest('tr').find('.model').val(model);
-            $(this).closest('tr').find('.total_amount').val(total);
-            $(this).closest('tr').find('.unit').val(unit);
-            $(this).closest('tr').find('.unit_price').val(price);
+            let brand_id = $(this).val();
+            let find_materials = materials.find(material => material.cs_material.brand.id == brand_id);
+            let model_html = '<option selected disabled>Select Model</option>';
+            if (find_materials.length > 1) {
+                find_materials.forEach(function(value, element) {
+                    model_html +=
+                        `<option value="${value.cs_material.model}">${value.cs_material.model}</option>`;
+                });
+            } else {
+                model_html +=
+                    `<option value="${find_materials.cs_material.model}">${find_materials.cs_material.model}</option>`;
+            }
+            $(this).closest('tr').find('.model').html(model_html);
+        })
+
+        $(document).on('change', '.model', function() {
+            let model = $(this).val();
+            let brand_id = $(this).closest('tr').find('.brand_name').val();
+            let material_id = $(this).closest('tr').find('.material_name').val();
+            let find_materials = materials.find(material => material.cs_material.brand.id == brand_id && material
+                .cs_material.model == model && material.cs_material.material.id == material_id);
+            $(this).closest('tr').find('.unit').val(find_materials.cs_material.material.unit);
+            $(this).closest('tr').find('.unit_price').val(find_materials.price);
             calculateTotalAmount()
         })
     </script>

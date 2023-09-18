@@ -64,4 +64,9 @@ class PurchaseOrder extends Model
 	{
 		return $this->belongsTo(Branch::class, 'branch_id');
 	}
+
+	public function cs()
+	{
+		return $this->hasOne(Cs::class, 'cs_no', 'cs_no');
+	}
 }

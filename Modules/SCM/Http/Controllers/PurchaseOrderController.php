@@ -14,6 +14,7 @@ use Illuminate\Database\QueryException;
 use Modules\SCM\Entities\PurchaseOrder;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\Cs;
 use Modules\SCM\Entities\CsMaterialSupplier;
 use Modules\SCM\Entities\Indent;
 use Modules\SCM\Entities\IndentLine;
@@ -142,14 +143,15 @@ class PurchaseOrderController extends Controller
                     ];
                 }
             );
-        // foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
-        //     $materials[] = $this->searchMaterialByCsAndRequsiition($value->cs_no);
-        //     $brands[] = $this->searchMaterialPriceByCsAndRequsiition($value->cs_id, $purchaseOrder->supplier_id, $value->material_id);
-        // }
+        $indent = Indent::where('id', $purchaseOrder->indent_id)->first();
+        $indent_wise_cs = Cs::select('id', 'cs_no')->where('indent_no', $indent->indent_no)->get();
+        $materials[] = $this->searchMaterialByCsAndRequsiition($purchaseOrder->cs->id);
+        foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
 
-        // dd($materials, $brands);
-
-        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions'));
+            $brands[] = $this->searchMaterialBrandByCsAndRequsiition($purchaseOrder->cs->id, $purchaseOrder->supplier_id, $value->material_id);
+            $models[] = $this->searchMaterialPriceByCsAndRequsiition($purchaseOrder->cs->id, $purchaseOrder->supplier_id, $value->material_id, $value->brand_id);
+        }
+        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions', 'materials', 'brands', 'models', 'indent_wise_cs'));
     }
 
     /**
@@ -218,17 +220,12 @@ class PurchaseOrderController extends Controller
     public function searchMaterialByCsAndRequsiition($cs_id = null)
     {
         $csId = request()->cs_id ?? $cs_id;
-        $materials = CsMaterial::with('material', 'brand')
+        return CsMaterial::with('material', 'brand')
             ->orderBy('id')
-            ->where('cs_id', request()->cs_id)
+            ->where('cs_id', $csId)
             ->get()
             ->unique('material_id', 'brand_id');
-        $brands = Brand::latest()->get();
-        $data = [
-            'materials' => $materials,
-            'brands' => $brands
-        ];
-        return response()->json($data);
+
 
         // return CsMaterial::with('material', 'brand')
         //     ->orderBy('id')
@@ -242,7 +239,7 @@ class PurchaseOrderController extends Controller
         //     ->unique('material_id', 'brand_id');
     }
 
-    public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
+    public function searchMaterialBrandByCsAndRequsiition($csId, $supplierId, $materialId)
     {
         return CsMaterialSupplier::query()
             ->with('csMaterial.brand', function ($query) {
@@ -259,6 +256,27 @@ class PurchaseOrderController extends Controller
                 $query->where('cs_id', $csId)
                     ->where('supplier_id', $supplierId);
             })
+            ->get();
+    }
+
+    public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId, $brandId)
+    {
+        return CsMaterialSupplier::query()
+            ->with('csMaterial.brand', function ($query) {
+                $query->select('id', 'name');
+            })
+            ->with('csMaterial.material', function ($query) {
+                $query->select('id', 'name', 'unit');
+            })
+            ->whereHas('csMaterial', function ($query) use ($csId, $materialId) {
+                $query->where('cs_id', $csId)
+                    ->where('material_id', $materialId);
+            })
+            ->whereHas('csSupplier', function ($query) use ($csId, $supplierId) {
+                $query->where('cs_id', $csId)
+                    ->where('supplier_id', $supplierId);
+            })
+            ->where('brand_id', $brandId)
             ->get();
     }
 
@@ -300,6 +318,7 @@ class PurchaseOrderController extends Controller
                 'po_composit_key'         => ($requestMethod === "PUT" ? $purchaseOrder->po_no :  $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key] ?? null,
                 'material_id'             => $request->material_id[$key] ?? null,
                 'brand_id'                => $request->brand_id[$key] ?? null,
+                'model'                   => $request->model[$key] ?? null,
                 'description'             => $request->description[$key] ?? null,
                 'quantity'                => $request->quantity[$key] ?? null,
                 'warranty_period'         => $request->warranty_period[$key] ?? null,
@@ -334,6 +353,7 @@ class PurchaseOrderController extends Controller
                 'material_id' => $firstMaterialId,
                 'quantity' => array_sum(array_column($purchaseOrderLinesData, 'quantity')),
                 'brand_id' => $request->brand_id[$key] ?? null,
+                'model' => $request->model[$key] ?? null,
                 'unit_price' => $request->unit_price[$key] ?? null,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -345,6 +365,7 @@ class PurchaseOrderController extends Controller
                     'material_id' => $value['material_id'],
                     'quantity' => $value['quantity'],
                     'brand_id' => $request->brand_id[$key] ?? null,
+                    'model' => $request->model[$key] ?? null,
                     'unit_price' => $request->unit_price[$key] ?? null,
                     'created_at' => now(),
                     'updated_at' => now(),
