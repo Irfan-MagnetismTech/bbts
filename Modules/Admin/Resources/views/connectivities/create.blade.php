@@ -38,7 +38,6 @@ legend {
     transition: 0.3s;
 }
 
-
 </style>
 
 @php
@@ -115,6 +114,7 @@ legend {
                     <div class="row" >
                         <x-input-box colGrid="2" name="reference" label="Reference" value="{{$reference}}"/>
                         <x-input-box colGrid="3" name="link_name" label="Link Name" value="{{$link_name}}"/>
+                        <input type="hidden" id="vendor_id" name="vendor_id" value="{{$vendor_id}}">
                         <x-input-box colGrid="3" name="vendor" label="Vendor" value="{{$vendor_name}}"/>
                         <x-input-box colGrid="3" name="cost_center" label="Cost Center" value="{{$cost_center}}" placeholder="POP"/>
                         <div class="form-group col-3">
@@ -162,7 +162,6 @@ legend {
                                 </label>
                             </div>
                         </div>
-                        <input type="hidden" id="vendor_id" name="vendor_id" value="{{$vendor_id}}">
                         <x-input-box colGrid="2" name="bbts_link_id" label="BBTS Link Id" value="{{$bbts_link_id}}"/>
                     </div>
                     <div class="row">
