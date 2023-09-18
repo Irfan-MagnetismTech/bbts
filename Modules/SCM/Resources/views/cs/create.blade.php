@@ -56,7 +56,7 @@
                             </div>
                         @endif
 
-                        <div class="col-xl-4 col-md-4">
+                        {{-- <div class="col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
                                 <label class="input-group-addon" for="cs_type">CS Type <span
                                         class="text-danger">*</span></label>
@@ -66,7 +66,7 @@
                                     <option value="Work Order" @selected('Work Order' == @$cs->cs_type)>Work Order</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">

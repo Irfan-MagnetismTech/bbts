@@ -310,11 +310,13 @@ class ScmMirController extends Controller
             ->values()
             ->all();
 
+        // dd($data);
         return response()->json($data);
     }
 
     public function mrsAndTypeWiseMaterials()
     {
+        // dd(request()->from_branch);
         $data['options'] = StockLedger::query()
             ->with('material')
             ->whereIn('material_id', function ($q) {

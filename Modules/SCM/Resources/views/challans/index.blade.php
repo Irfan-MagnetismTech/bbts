@@ -52,8 +52,10 @@
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $challan->challan_no }}</td>
                         <td class="text-center">{{ ucfirst($challan->type) }}</td>
-                        <td class="text-center">{{ ucfirst($challan->pop->name ?? '') }} {{ ucfirst($challan->client->client_name ?? '') }} 
-                            {{ ucfirst(!empty($challan->feasibilityRequirementDetail) ? '('.$challan->feasibilityRequirementDetail->connectivity_point.')' : '') }} </td>
+                        <td class="text-center">{{ ucfirst($challan->pop->name ?? '') }}
+                            {{ ucfirst($challan->client->client_name ?? '') }}
+                            {{ ucfirst(!empty($challan->feasibilityRequirementDetail) ? '(' . $challan->feasibilityRequirementDetail->connectivity_point . ')' : '') }}
+                        </td>
                         <td class="text-center">{{ ucfirst($challan?->branch?->name ?? '') }}</td>
                         <td class="text-center">{{ $challan->date }}</td>
                         <td>
@@ -66,7 +68,7 @@
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
 
-                                    @if (in_array($challan->type, ['client', 'pop']) && !$challan->mur)
+                                    @if (!$challan->mur)
                                         <form action="{{ url("scm/challans/$challan->id") }}" method="POST"
                                             data-toggle="tooltip" title="Delete" class="d-inline">
                                             @csrf
