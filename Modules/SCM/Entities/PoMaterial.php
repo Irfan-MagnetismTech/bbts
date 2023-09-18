@@ -14,6 +14,7 @@ class PoMaterial extends Model
         'material_id',
         'brand_id',
         'quantity',
+        'model',
         'unit_price',
     ];
 

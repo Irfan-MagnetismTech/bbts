@@ -250,6 +250,7 @@ class CsController extends Controller
                     'brand_id'       => $cs_material->brand_id,
                     'cs_supplier_id' => $cs_supplier->id,
                     'price'          => $request['price'][$price_index++],
+                    'model'          => $cs_material->model,
                 ];
             }
         }
