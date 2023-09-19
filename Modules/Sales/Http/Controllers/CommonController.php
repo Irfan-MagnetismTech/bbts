@@ -20,8 +20,8 @@ class CommonController extends Controller
         $connectivity_links = ConnectivityLink::with('vendor')->where('to_pop_id', $pop_id)->latest()->get();
         $links = $connectivity_links->map(function ($connectivity_link, $key) {
             return [
-                'vendor_name' => $connectivity_link->vendor->name,
-                'from_pop_name' => Pop::where('id', $connectivity_link->from_pop_id)->first()->name,
+                'vendor_name' => $connectivity_link?->vendor?->name,
+                'from_pop_name' => Pop::where('id', $connectivity_link->from_pop_id)->first()?->name,
                 'capacity' => $connectivity_link->new_capacity,
             ];
         })->toArray();

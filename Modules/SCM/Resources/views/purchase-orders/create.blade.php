@@ -141,6 +141,7 @@
                 @endif
             </select>
         </div>
+        <input type="hidden" name="cs_no" id="cs_no" value="{{ old('cs_no') ?? @$purchaseOrder?->cs_no }}">
 
         <div class="form-group col-4 remarks">
             <label for="remarks">Remarks</label>
@@ -350,6 +351,7 @@
 
 @section('script')
     <script>
+        let material_items = [];
         let materials = [];
         let brands = [];
         var req_options = null;
@@ -519,7 +521,6 @@
                             `<option value="${element.id}">${element.cs_no}</option>`;
                     });
                     $('#cs_id').html(options);
-
                     return false;
                 }
             });
@@ -542,7 +543,7 @@
                             <td>
                                 <select class="form-control material_name select2" name="material_id[]">
                                     <option value="" readonly selected>Select Material</option>
-                                    ${materials.map(material => `<option value="${material.id}">${material.name}</option>`)}
+                                    ${material_items.map(material => `<option value="${material.id}">${material.name}</option>`)}
                                 </select>
                             </td>
 
@@ -638,7 +639,7 @@
                     $.each(data, function(key, value) {
                         cs_materials +=
                             `<option value="${value.material.id}">${value.material.name}</option>`;
-                        materials.push(value.material)
+                        material_items.push(value.material)
                     });
                     $('.material_name').html(cs_materials);
                 }
@@ -683,6 +684,7 @@
                 dropdown.prop('selectedIndex', 0);
 
                 $.getJSON(url, function(items) {
+                    materials = items;
                     $.each(items, function(key, material) {
                         dropdown.append($('<option></option>')
                             .attr('value', material.material.id)
