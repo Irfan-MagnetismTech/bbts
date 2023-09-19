@@ -716,7 +716,7 @@
         });
 
         $('.pop').on('change', function() {
-            console.log('pop')
+            // console.log('pop')
             var e = $(this)
             var pop_id = e.val();
             $.ajax({
@@ -726,6 +726,7 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(data) {
+                    console.log(data);
                     var html = '';
                     $.each(data, function(key, value) {
                         $.each(value, function(key, value) {

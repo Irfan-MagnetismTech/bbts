@@ -17,7 +17,7 @@ class CommonController extends Controller
     public function getPopDetails(Request $request)
     {
         $pop_id = $request->pop_id;
-        $connectivity_links = ConnectivityLink::with('vendor')->where('to_pop_id', $pop_id)->latest()->get();
+        $connectivity_links = ConnectivityLink::with('vendor')->where('to_pop_id', 11)->latest()->get();
         $links = $connectivity_links->map(function ($connectivity_link, $key) {
             return [
                 'vendor_name' => $connectivity_link->vendor->name,
