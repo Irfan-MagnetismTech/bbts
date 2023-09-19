@@ -42,7 +42,7 @@
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($indents as $key => $indent)            
+                @foreach ($indents as $key => $indent)
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $indent->indent_no }}</td>
@@ -55,6 +55,7 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
+                                    <a href="{{ route("indent-pdf", $indent->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
                                     <a href="{{ route('indents.show', $indent->id) }}" data-toggle="tooltip"
                                         title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                                     <a href="{{ route('indents.edit', $indent->id) }}" data-toggle="tooltip" title="Edit"

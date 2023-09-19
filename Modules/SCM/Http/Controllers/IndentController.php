@@ -132,4 +132,11 @@ class IndentController extends Controller
     {
         //
     }
+
+    public function pdf($id = null)
+    {
+        $indent = Indent::where('id', $id)->first();
+        return view('scm::indents.pdf', compact('indent'));
+
+    }
 }

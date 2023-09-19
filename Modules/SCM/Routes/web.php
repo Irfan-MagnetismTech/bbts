@@ -44,6 +44,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('get-indent-no', [CsController::class, 'getIndentNo'])->name('get-indent-no');
     Route::get('gate-pass-pdf/{id}', [ScmGatePassController::class, 'pdf'])->name('gate-pass-pdf');
     Route::get('po-pdf/{id}', [PurchaseOrderController::class, 'pdf'])->name('po-pdf');
+    Route::get('indent-pdf/{id}', [IndentController::class, 'pdf'])->name('indent-pdf');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
 });
