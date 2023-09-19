@@ -112,14 +112,31 @@
         <tbody>
         @if($gate_pass->type=='challan')
             @foreach ($gate_pass->lines as $key => $value)
-                <tr>
-                    <td> {{ $value->challan?->challan_no ?? $value->mir?->mir_no }} </td>
-                    <td class="text-center">{{ $value->challan->branch->name ??''}}</td>
-                    <td class="text-center">{{ $value->challan->scmChallanLines[0]->material->name ??''}}</td>
-                    <td class="text-center">{{ $value->challan->purpose ??''}}</td>
-                    <td class="text-center">{{ $value->challan->scmChallanLines[0]->quantity??'' }}</td>
-                    <td class="text-center">{{ $gate_pass->carrier??'' }}</td>
-                </tr>
+                @foreach($value->challan->scmChallanLines as $key1=>$value1)
+                    <tr>
+                        <td> {{ $value->challan?->challan_no ?? $value->mir?->mir_no }} </td>
+                        <td class="text-center">{{''}}</td>
+{{--                        <td class="text-center">{{ $value->challan->branch->name ??''}}</td>--}}
+                        <td class="text-center">{{ $value1->material->name ??''}}</td>
+                        <td class="text-center">{{ $value->challan->purpose ??''}}</td>
+                        <td class="text-center">{{ $value1->quantity??'' }}</td>
+                        <td class="text-center">{{ $gate_pass->carrier??'' }}</td>
+                    </tr>
+                @endforeach
+            @endforeach
+        @endif
+        @if($gate_pass->type=='mir')
+            @foreach ($gate_pass->lines as $key => $value)
+                @foreach($value->mir->lines as $key1=>$value1)
+                    <tr>
+                        <td> {{ $value->challan?->challan_no ?? $value->mir?->mir_no }} </td>
+                        <td class="text-center">{{ $value->mir->toBranch->name ??''}}</td>
+                        <td class="text-center">{{ $value1->material->name ??''}}</td>
+                        <td class="text-center">{{ $value->mir->purpose ??''}}</td>
+                        <td class="text-center">{{ $value1->quantity??'' }}</td>
+                        <td class="text-center">{{ $gate_pass->carrier??'' }}</td>
+                    </tr>
+                @endforeach
             @endforeach
         @endif
         </tbody>

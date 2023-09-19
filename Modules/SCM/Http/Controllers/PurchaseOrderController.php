@@ -29,6 +29,7 @@ use function Termwind\render;
 class PurchaseOrderController extends Controller
 {
     use HasRoles;
+
     private $purchaseOrderNo;
 
     public function __construct(BbtsGlobalService $globalService)
@@ -39,6 +40,7 @@ class PurchaseOrderController extends Controller
         $this->middleware('permission:scm-purchase-order-delete', ['only' => ['destroy']]);
         $this->purchaseOrderNo = $globalService->generateUniqueId(PurchaseOrder::class, 'PO');
     }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -315,18 +317,18 @@ class PurchaseOrderController extends Controller
         $purchaseOrderLinesData = [];
         foreach ($purchaseOrderData['material_id'] as $key => $value) {
             $purchaseOrderLinesData[] = [
-                'po_composit_key'         => ($requestMethod === "PUT" ? $purchaseOrder->po_no :  $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key] ?? null,
-                'material_id'             => $request->material_id[$key] ?? null,
-                'brand_id'                => $request->brand_id[$key] ?? null,
-                'model'                   => $request->model[$key] ?? null,
-                'description'             => $request->description[$key] ?? null,
-                'quantity'                => $request->quantity[$key] ?? null,
-                'warranty_period'         => $request->warranty_period[$key] ?? null,
-                'unit_price'              => $request->unit_price[$key] ?? null,
-                'vat'                     => $request->vat[$key] ?? null,
-                'tax'                     => $request->tax[$key] ?? null,
-                'total_amount'            => $request->quantity[$key] * $request->unit_price[$key] ?? null,
-                'required_date'           => $request->required_date[$key] ?? null,
+                'po_composit_key' => ($requestMethod === "PUT" ? $purchaseOrder->po_no : $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key] ?? null,
+                'material_id' => $request->material_id[$key] ?? null,
+                'brand_id' => $request->brand_id[$key] ?? null,
+                'model' => $request->model[$key] ?? null,
+                'description' => $request->description[$key] ?? null,
+                'quantity' => $request->quantity[$key] ?? null,
+                'warranty_period' => $request->warranty_period[$key] ?? null,
+                'unit_price' => $request->unit_price[$key] ?? null,
+                'vat' => $request->vat[$key] ?? null,
+                'tax' => $request->tax[$key] ?? null,
+                'total_amount' => $request->quantity[$key] * $request->unit_price[$key] ?? null,
+                'required_date' => $request->required_date[$key] ?? null,
             ];
         }
 
@@ -349,7 +351,7 @@ class PurchaseOrderController extends Controller
 
         if ($allMaterialsAreSame) {
             $materials[] = [
-                'po_composit_key' => ($requestMethod === "PUT" ? $purchaseOrder->po_no :  $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key],
+                'po_composit_key' => ($requestMethod === "PUT" ? $purchaseOrder->po_no : $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key],
                 'material_id' => $firstMaterialId,
                 'quantity' => array_sum(array_column($purchaseOrderLinesData, 'quantity')),
                 'brand_id' => $request->brand_id[$key] ?? null,
@@ -361,7 +363,7 @@ class PurchaseOrderController extends Controller
         } else {
             foreach ($purchaseOrderLinesData as $key => $value) {
                 $materials[] = [
-                    'po_composit_key' => ($requestMethod === "PUT" ? $purchaseOrder->po_no :  $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key],
+                    'po_composit_key' => ($requestMethod === "PUT" ? $purchaseOrder->po_no : $this->purchaseOrderNo) . '-' . $request->material_id[$key] . '-' . $request->brand_id[$key],
                     'material_id' => $value['material_id'],
                     'quantity' => $value['quantity'],
                     'brand_id' => $request->brand_id[$key] ?? null,
@@ -380,7 +382,7 @@ class PurchaseOrderController extends Controller
             $key = $item['material_id'] . '-' . $item['brand_id'];
             // If the key already exists in the merged array, add the quantity
             if (isset($poMaterials[$key])) {
-                $poMaterials[$key]['quantity'] += (int) $item['quantity'];
+                $poMaterials[$key]['quantity'] += (int)$item['quantity'];
             } else {
                 // If the key doesn't exist, add a new item to the merged array
                 $poMaterials[$key] = $item;
@@ -395,5 +397,12 @@ class PurchaseOrderController extends Controller
             'poTermsAndConditions' => $poTermsAndConditions,
             'poMaterials' => $poMaterials,
         ];
+    }
+
+    public function pdf($id = null)
+    {
+        $purchase_order = PurchaseOrder::where('id', $id)->first();
+        return view('scm::purchase-orders.pdf', compact('purchase_order'));
+
     }
 }
