@@ -153,9 +153,9 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" name="model[]"
+                                        {{-- <input type="text" name="model[]"
                                             value="{{ $is_old ? old('model')[$material_key] : $model ?? '---' }}"
-                                            class="form-control model text-center" autocomplete="off">
+                                            class="form-control model text-center" autocomplete="off"> --}}
                                     </td>
                                     <td>
                                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
@@ -281,6 +281,7 @@
                             <tr>
                                 <th>Materials</th>
                                 <th>Brand</th>
+                                <th>Model</th>
                                 @forelse ($suppliers as $supplier_key => $supplier_value)
                                     <th>
                                         {{ $is_old ? old('supplier_name')[$supplier_key] : $supplier_value->supplier->name }}
@@ -436,12 +437,27 @@
             changeCsRow(column, material_name, brand);
         });
 
+
+
+        function changeCsRowModel(column, model) {
+            let cs_details_table_body = $('#csDetailsTable tbody');
+            cs_details_table_body.children(`tr:eq(${column.index()})`).find(".cs_model").html(model);
+        }
+        //on change model
+        $(document).on('keyup', '.model', function() {
+            let column = $(this).closest('tr');
+            let model = ($(this).val());
+            changeCsRowModel(column, model);
+        });
+
+
         function addCsRow() {
             let cs_details_table_tbody = $('#csDetailsTable tbody');
             let count_supplier = $('.supplier_name').length ? 0 : $('.supplier_name').length;
             let table_data =
                 `<tr><td colspan="${count_supplier}" class="cs_material">Select a Material</td><td colspan="${count_supplier}" class="cs_brand">Select a Brand</td>
-                <input type="hidden" name="cs_brand_name[]" class="cs_brand_name">`;
+                <input type="hidden" name="cs_brand_name[]" class="cs_brand_name">
+                <td colspan="${count_supplier}" class="cs_model">Model</td>`;
 
             $('.supplier_name').each(function() {
                 table_data +=
