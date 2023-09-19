@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\SCM\Http\Controllers\ScmGatePassController;
 use Modules\SCM\Http\Controllers\UnitController;
 use Modules\SCM\Http\Controllers\CourierController;
 use Modules\SCM\Http\Controllers\CsController;
@@ -41,6 +42,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('get-unique-code', [MaterialController::class, 'getUniqueCode'])->name('get-unique-code');
     Route::get('cs-pdf/{id}', [CsController::class, 'generateCsPdf'])->name('cs-pdf');
     Route::get('get-indent-no', [CsController::class, 'getIndentNo'])->name('get-indent-no');
+    Route::get('gate-pass-pdf/{id}', [ScmGatePassController::class, 'pdf'])->name('gate-pass-pdf');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
 });
