@@ -223,8 +223,7 @@ class PurchaseOrderController extends Controller
         return CsMaterial::with('material', 'brand')
             ->orderBy('id')
             ->where('cs_id', $csId)
-            ->get()
-            ->unique('material_id', 'brand_id');
+            ->get();
 
 
         // return CsMaterial::with('material', 'brand')
