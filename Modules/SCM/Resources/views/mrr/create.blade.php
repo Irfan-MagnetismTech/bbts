@@ -48,6 +48,29 @@
             margin-bottom: 4px !important;
             /* Adjust spacing below tags */
         }
+
+        .custom-spinner-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh;
+        }
+
+        .custom-spinner {
+            width: 4rem;
+            height: 4rem;
+            border: .5em solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spinner-animation 1s linear infinite;
+        }
+
+        @keyframes spinner-animation {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
 @endsection
@@ -135,162 +158,177 @@
                 value="{{ $challan_date }}" placeholder="Select a Date" readonly>
         </div>
     </div>
+    <div class="row loading" style="display: none;">
+        <div class="col-md-12">
+            <div class="custom-spinner-container">
+                <div class="custom-spinner text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
 
-    <table class="table table-bordered table-responsive" id="material_requisition">
-        <thead>
-            <tr>
-                <th>Material Name</th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Description</th>
-                <th>Serial/Drum Code <br /> No</th>
-                <th>Initial Mark</th>
-                <th>Final Mark</th>
-                <th>Warranty Period</th>
-                <th>Unit</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Amount</th>
-                <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
-                $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
-                $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
-                $item_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
-                $material_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
-                $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
-                $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
-                $description = old('description', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('description') : []);
-                $sl_code = old(
-                    'sl_code',
-                    !empty($materialReceive)
-                        ? $materialReceive->scmMrrLines->map(function ($item) {
-                            return implode(',', $item->scmMrrSerialCodeLines->pluck('serial_or_drum_key')->toArray());
-                        })
-                        : '',
-                );
-                
-                $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
-                $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
-                $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
-                $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
-                $po_composit_key = old('po_composit_key', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('po_composit_key') : []);
-                
-                $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
-                $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('unit_price') : []);
-                $amount = old(
-                    'amount',
-                    !empty($materialReceive)
-                        ? collect($quantity)
-                            ->map(function ($value, $key) use ($unit_price) {
-                                return $value * $unit_price[$key];
-                            })
-                            ->toArray()
-                        : [],
-                );
-            @endphp
-            @foreach ($mrr_lines as $key => $requisitionDetail)
-                @php
-                    if ($item_type[$key] == 'Drum') {
-                        $max_tag = 1;
-                    } else {
-                        $max_tag = null;
-                    }
-                @endphp
+                <!-- Optional text -->
+                <div class="mt-2">Loading...</div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive" style="display: none;">
+        <table class="table table-bordered" id="material_requisition">
+            <thead>
                 <tr>
-                    <td class="form-group">
-                        <select class="form-control material_name" name="material_id[]">
-                            <option value="" readonly selected>Select Material</option>
-                            @foreach ($material_list as $key1 => $value)
-                                <option value="{{ $value->material->id }}" data-unit="{{ $value->material->unit }}"
-                                    data-type="{{ $value->material->type }}" data-code="{{ $value->material->code }}"
-                                    readonly @selected($material_id[$key] == $value->material->id)>{{ $value->material->materialNameWithCode }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"
-                            value="{{ $item_code[$key] }}">
-                        <input type="hidden" name="material_type[]" class="form-control material_type"
-                            autocomplete="off" value="{{ $material_type[$key] }}">
-                        <input type="hidden" name="po_composit_key[]" class="form-control po_composit_key"
-                            autocomplete="off" value="{{ $po_composit_key[$key] }}">
-                    </td>
+                    <th>Material Name</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Description</th>
+                    <th>Serial/Drum Code <br /> No</th>
+                    <th id="initial_mark_head">Initial Mark</th>
+                    <th id="final_mark_head">Final Mark</th>
+                    <th>Warranty Period</th>
+                    <th>Unit</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Amount</th>
+                    <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
+                    $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
+                    $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
+                    $item_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
+                    $material_type = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.type') : []);
+                    $brand_id = old('brand_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('brand_id') : []);
+                    $model = old('model', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('model') : []);
+                    $description = old('description', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('description') : []);
+                    $sl_code = old(
+                        'sl_code',
+                        !empty($materialReceive)
+                            ? $materialReceive->scmMrrLines->map(function ($item) {
+                                return implode(',', $item->scmMrrSerialCodeLines->pluck('serial_or_drum_key')->toArray());
+                            })
+                            : '',
+                    );
+                    
+                    $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
+                    $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
+                    $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
+                    $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
+                    $po_composit_key = old('po_composit_key', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('po_composit_key') : []);
+                    
+                    $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
+                    $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('unit_price') : []);
+                    $amount = old(
+                        'amount',
+                        !empty($materialReceive)
+                            ? collect($quantity)
+                                ->map(function ($value, $key) use ($unit_price) {
+                                    return $value * $unit_price[$key];
+                                })
+                                ->toArray()
+                            : [],
+                    );
+                @endphp
+                @foreach ($mrr_lines as $key => $requisitionDetail)
+                    @php
+                        if ($item_type[$key] == 'Drum') {
+                            $max_tag = 1;
+                        } else {
+                            $max_tag = null;
+                        }
+                    @endphp
+                    <tr>
+                        <td class="form-group">
+                            <select class="form-control material_name" name="material_id[]">
+                                <option value="" readonly selected>Select Material</option>
+                                @foreach ($material_list as $key1 => $value)
+                                    <option value="{{ $value->material->id }}" data-unit="{{ $value->material->unit }}"
+                                        data-type="{{ $value->material->type }}"
+                                        data-code="{{ $value->material->code }}" readonly @selected($material_id[$key] == $value->material->id)>
+                                        {{ $value->material->materialNameWithCode }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"
+                                value="{{ $item_code[$key] }}">
+                            <input type="hidden" name="material_type[]" class="form-control material_type"
+                                autocomplete="off" value="{{ $material_type[$key] }}">
+                            <input type="hidden" name="po_composit_key[]" class="form-control po_composit_key"
+                                autocomplete="off" value="{{ $po_composit_key[$key] }}">
+                        </td>
 
-                    <td>
-                        <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                            <option value="">Select Brand</option>
-                            @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                    {{ $brand->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
+                        <td>
+                            <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <option value="">Select Brand</option>
+                                @foreach ($brands as $brand)
+                                    <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
+                                        {{ $brand->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
 
-                    <td>
-                        <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                            value="{{ $model[$key] }}">
-                    </td>
-                    <td>
-                        <input type="text" name="description[]" class="form-control description" autocomplete="off"
-                            value="{{ $description[$key] }}">
-                    </td>
-                    <td>
-                        <div class="tags_add_multiple select2container">
-                            <input class="" type="text" name="sl_code[]" value="{{ $sl_code[$key] }}"
-                                data-role="tagsinput" data-max-tags="{{ $max_tag }}">
-                        </div>
-                    </td>
+                        <td>
+                            <input type="text" name="model[]" class="form-control model" autocomplete="off"
+                                value="{{ $model[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="description[]" class="form-control description"
+                                autocomplete="off" value="{{ $description[$key] }}">
+                        </td>
+                        <td>
+                            <div class="tags_add_multiple select2container">
+                                <input class="" type="text" name="sl_code[]" value="{{ $sl_code[$key] }}"
+                                    data-role="tagsinput" data-max-tags="{{ $max_tag }}">
+                            </div>
+                        </td>
 
+                        <td>
+                            <input type="text" name="initial_mark[]" class="form-control initial_mark"
+                                autocomplete="off" value="{{ $initial_mark[$key] ?? '' }}">
+                        </td>
+                        <td>
+                            <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off"
+                                value="{{ $final_mark[$key] ?? '' }}">
+                        </td>
+                        <td>
+                            <input type="text" name="warranty_period[]" class="form-control warranty_period"
+                                autocomplete="off" value="{{ $warranty_period[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
+                                value="{{ $unit[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input class="form-control quantity" name="quantity[]" aria-describedby="date"
+                                value="{{ $quantity[$key] }}">
+                        </td>
+                        <td>
+                            <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly
+                                value="10" value="{{ $unit_price[$key] }}">
+                        </td>
+                        <td>
+                            <input name="amount[]" class="form-control amount" autocomplete="off" readonly
+                                value="{{ $amount[$key] }}">
+                        </td>
+                        <td>
+                            <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                        </td>
+                    </tr>
+                @endforeach
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="11" class="text-right" id="total_amount_first_row">Total Amount</td>
                     <td>
-                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off"
-                            value="{{ $initial_mark[$key] }}">
-                    </td>
-                    <td>
-                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off"
-                            value="{{ $final_mark[$key] }}">
-                    </td>
-                    <td>
-                        <input type="text" name="warranty_period[]" class="form-control warranty_period"
-                            autocomplete="off" value="{{ $warranty_period[$key] }}">
-                    </td>
-                    <td>
-                        <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                            value="{{ $unit[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input class="form-control quantity" name="quantity[]" aria-describedby="date"
-                            value="{{ $quantity[$key] }}">
-                    </td>
-                    <td>
-                        <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly
-                            value="10" value="{{ $unit_price[$key] }}">
-                    </td>
-                    <td>
-                        <input name="amount[]" class="form-control amount" autocomplete="off" readonly
-                            value="{{ $amount[$key] }}">
-                    </td>
-                    <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                        <input type="text" name="total_amount" class="form-control total_amount" autocomplete="off"
+                            value="{{ old('total_amount', !empty($materialReceive) ? $materialReceive->total_amount : 0) }}"
+                            readonly>
                     </td>
                 </tr>
-            @endforeach
+            </tfoot>
+        </table>
+    </div>
 
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="11" class="text-right">Total Amount</td>
-                <td>
-                    <input type="text" name="total_amount" class="form-control total_amount" autocomplete="off"
-                        value="{{ old('total_amount', !empty($materialReceive) ? $materialReceive->total_amount : 0) }}"
-                        readonly>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
     <div class="row">
         <div class="offset-md-4 col-md-4 mt-2">
             <div class="input-group input-group-sm ">
@@ -439,15 +477,26 @@
                 });
 
             function loadMateaials() {
+                $('.loading').show();
                 let purchase_order_id = $("#purchase_order_id").val();
                 if (purchase_order_id) {
                     const url = '{{ url('scm/get_materials_for_po') }}/' + purchase_order_id;
                     let material_row = '';
-
+                    let grand_total = 0;
                     $.getJSON(url, function(items) {
                         console.log(items);
                         $.each(items, function(key, data) {
                             console.log(data)
+                            if (data.material.type == 'Drum') {
+                                $('.tags_add_multiple').tagsinput('destroy');
+                                $('#initial_mark_head').show();
+                                $('#final_mark_head').show();
+                                $('#total_amount_first_row').attr('colspan', 11);
+                            } else {
+                                $('#initial_mark_head').hide();
+                                $('#final_mark_head').hide();
+                                $('#total_amount_first_row').attr('colspan', 9);
+                            }
                             material_row += `
                             <tr>
                                 <td class="form-group">
@@ -465,7 +514,7 @@
                                     <input type="text" name="model[]" class="form-control model" autocomplete="off" value="${data.model}" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" name="description[]" class="form-control description" autocomplete="off" value="${data.description}" readonly>
+                                    <input type="text" name="description[]" class="form-control description" autocomplete="off" value="${data.description ?? ''}" readonly>
                                 </td>
                                 <td>
                                     <div class="tags_add_multiple select2container">
@@ -473,18 +522,20 @@
                                     </div>
                                 </td>
                                 ${data.material.type == 'Drum' ? `
-                                                    <td>
-                                                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                                                    </td>` : ''}
+                                                                                                    <td>
+                                                                                                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                                                                                                    </td>
+                                                                                                    ` : ''}
                                 ${data.material.type == 'Drum' ? `
-                                                    <td>
-                                                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                                                    </td>` : ''}
+                                                                                                    <td>
+                                                                                                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
+                                                                                                    </td>
+                                                                                                     ` : ''}
                                 <td>
-                                    <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period}" readonly>
+                                    <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
                                 </td>
                                 <td>
-                                    <input name="unit[]" class="form-control unit" autocomplete="off" value="${data.material.unit}" readonly>
+                                    <input name="unit[]" class="form-control unit" autocomplete="off" value="${data.material.unit ?? ''}" readonly>
                                 </td>
                                 <td>
                                     <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="${data.quantity}" readonly>
@@ -493,15 +544,20 @@
                                     <input name="unit_price[]" class="form-control unit_price" autocomplete="off" value="${data.unit_price}" readonly>
                                 </td>
                                 <td>
-                                    <input name="amount[]" class="form-control amount" autocomplete="off" value="${data.amount}" readonly>
+                                    <input name="amount[]" class="form-control amount" autocomplete="off" value="${data.total_amount}" readonly>
                                 </td>
                                 <td>
                                     <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                                 </td>
                             </tr>`;
+                            grand_total += parseFloat(data.total_amount);
                         })
                         console.log(material_row)
                         $('#material_requisition tbody').html(material_row);
+                        $(".tags_add_multiple").tagsinput('items');
+                        $('.total_amount').val(grand_total);
+                        $('.loading').hide();
+                        $('.table-responsive').show();
                     });
 
                 }

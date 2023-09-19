@@ -108,9 +108,9 @@
                                         @endif
                                     @endif --}}
 
-                                    {{-- <a href="{{ route("cs-pdf", $cs->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
+                                    <a href="{{ route("po-pdf", $po->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
 
-                                    <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
+{{--                                    <a href="{{ url("csLog/$cs->id/log") }}" data-toggle="tooltip" title="Logs" class="btn btn-dark"><i class="fas fa-history"></i></a> --}}
                                     <a href="{{ route('purchase-orders.show', $po->id) }}" data-toggle="tooltip"
                                         title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 

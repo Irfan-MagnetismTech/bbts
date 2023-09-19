@@ -32,7 +32,7 @@
     ]) !!}
 
     <div class="row">
-       
+
         <div class="col-md-12">
             <div class="typeSection mt-2 mb-4">
                 <div class="form-check-inline">
@@ -128,12 +128,12 @@
 @section('script')
     <script>
         /* Append row */
-        
+
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
             console.log(type)
             let row = `<tr>
-                            ${ type === 'mir' ? 
+                            ${ type === 'mir' ?
                             `<td class="mir">
                                 <input type="text" name="mir_no[]" class="form-control mir_no" autocomplete="off">
                                 <input type="hidden" name="mir_id[]" class="form-control mir_id" autocomplete="off">
@@ -142,8 +142,8 @@
                                 <input type="text" name="challan_no[]" class="form-control challan_no" autocomplete="off">
                                 <input type="hidden" name="challan_id[]" class="form-control challan_id" autocomplete="off">
                             </td>
-                            ` 
-                            : 
+                            `
+                            :
                             `<td class="challan">
                                 <input type="text" name="challan_no[]" class="form-control challan_no" autocomplete="off">
                                 <input type="hidden" name="challan_id[]" class="form-control challan_id" autocomplete="off">
@@ -153,7 +153,7 @@
                                 <input type="hidden" name="mir_id[]" class="form-control mir_id" autocomplete="off">
                             </td>
                             `
-                             } 
+                             }
                             <td>
                                 <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
                             </td>
@@ -170,7 +170,7 @@
                 appendCalculationRow();
             })
             .on('click', '.remove-gate-pass', function() {
-                
+
                 $(this).closest('tr').remove();
             });
             $(document).on('keyup','.challan_no',function(){
@@ -186,7 +186,7 @@
                     event_this_challan.find('.challan_no').val(item.value);
                     return false;
                 }
-                
+
             })
 
             $(document).on('keyup','.mir_no',function(){
@@ -199,9 +199,10 @@
 
                 function uiList(item) {
                     event_this_mir.find('.mir_id').val(item.id);
+                    event_this_mir.find('.mir_no').val(item.value);
                     return false;
                 }
-                
+
             })
 
         $('#date').datepicker({

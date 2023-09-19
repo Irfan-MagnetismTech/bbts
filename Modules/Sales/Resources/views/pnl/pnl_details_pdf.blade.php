@@ -89,15 +89,15 @@
 <html-separator />
 
 <div style="width: 100%;">
-    <div style="text-align: center">
-        <div class="table-responsive">
+    <div style="text-align: center; width: 100%" >
+        <div class="table-responsive" style="width: 100%">
             @foreach ($feasibility_requirement->feasibilityRequirementDetails  as $index => $details)
                 @if ($details->costing && $details->costing->saleDetail)
                     <div>
                         <div>
                             &nbsp;
                         </div>
-                        <table class="table table-bordered">
+                        <table class="table table-bordered" style="width: 100%">
                             <thead>
                             <tr>
                                 <th colspan="9" class="text-center" style="background-color: #024FA7; color: white">
@@ -154,7 +154,7 @@
                             </tfoot>
                         </table>
                         <div style="margin-top: 25px;">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" style="width: 100%">
                                 <thead>
                                 <tr class="text-center">
                                     <th style="background-color:#057097; color: white">Particulars</th>
