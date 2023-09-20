@@ -285,4 +285,9 @@ class ScmWcrController extends Controller
 
         return response()->json($items);
     }
+    public function gatePassPdf($id = null)
+    {
+        $warranty_claim = ScmWcr::where('id', $id)->first();
+        return view('scm::wcrs.gate_pass_pdf', compact('warranty_claim'));
+    }
 }

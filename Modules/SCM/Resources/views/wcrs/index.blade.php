@@ -54,6 +54,7 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
+                                    <a href="{{ route("wcr-gate-pass", $ScmData->id) }}" data-toggle="tooltip" title="GP" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
                                     <a href="{{ route('warranty-claims.show', $ScmData->id) }}" data-toggle="tooltip"
                                         title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                                     @if (!$ScmData->isDeleteable())

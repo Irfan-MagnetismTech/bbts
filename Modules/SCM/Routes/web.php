@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\SCM\Http\Controllers\ScmGatePassController;
+use Modules\SCM\Http\Controllers\ScmWcrController;
 use Modules\SCM\Http\Controllers\UnitController;
 use Modules\SCM\Http\Controllers\CourierController;
 use Modules\SCM\Http\Controllers\CsController;
@@ -43,10 +44,11 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('get-unique-code', [MaterialController::class, 'getUniqueCode'])->name('get-unique-code');
     Route::get('cs-pdf/{id}', [CsController::class, 'generateCsPdf'])->name('cs-pdf');
     Route::get('get-indent-no', [CsController::class, 'getIndentNo'])->name('get-indent-no');
-    Route::get('gate-pass-pdf/{id}', [ScmGatePassController::class, 'pdf'])->name('gate-pass-pdf');
+    Route::get('gate-pass/{id}', [ScmGatePassController::class, 'pdf'])->name('gate-pass');
     Route::get('po-pdf/{id}', [PurchaseOrderController::class, 'pdf'])->name('po-pdf');
     Route::get('indent-pdf/{id}', [IndentController::class, 'pdf'])->name('indent-pdf');
-    Route::get('gate-pass-pdf/{id}', [ScmChallanController::class, 'gatePassPdf'])->name('gate-pass-pdf');
+    Route::get('challan-gate-pass/{id}', [ScmChallanController::class, 'gatePassPdf'])->name('challan-gate-pass');
+    Route::get('wcr-gate-pass/{id}', [ScmWcrController::class, 'gatePassPdf'])->name('wcr-gate-pass');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
 });
