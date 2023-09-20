@@ -75,7 +75,7 @@ class CsController extends Controller
      */
     public function store(Request $request)
     {
-      dd($request->all());
+    //   dd($request->all());
         try {
             $all_details = $this->getAllDetails($request->toArray());
             DB::beginTransaction();
