@@ -53,8 +53,8 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><strong>#{{ $mrr->mrr_no }}</strong></td>
-                        <td>{{ $mrr->purchaseOrder->po_no }}</td>
-                        <td>{{ $mrr->purchaseOrder->date }}</td>
+                        <td>{{ $mrr->purchaseOrder->po_no ?? '' }}</td>
+                        <td>{{ $mrr->purchaseOrder->date ?? '' }}</td>
                         <td>{{ $mrr->supplier->name }}</td>
                         <td>{{ $mrr->challan_no }}</td>
                         <td>{{ $mrr->createdBy->name }}</td>

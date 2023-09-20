@@ -380,7 +380,7 @@
                                     <th>Latitude</th>
                                     <th>Longitude</th>
                                     <th>Distance</th>
-                                    <th>Current Capacity</th>
+                                    <th>Current Capacity</th>  
                                     <th>Remarks</th>
                                     <th>
                                         <button type="button" class="btn btn-sm btn-success" id="addRow">
