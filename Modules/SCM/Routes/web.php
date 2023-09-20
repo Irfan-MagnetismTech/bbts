@@ -12,6 +12,7 @@ use Modules\SCM\Http\Controllers\ScCategoryController;
 use Modules\SCM\Http\Controllers\ScmPurchaseRequisitionController;
 use Modules\SCM\Http\Controllers\SupplierController;
 use Modules\SCM\Http\Controllers\ScmRequisitionController;
+use Modules\SCM\Http\Controllers\ScmChallanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('gate-pass-pdf/{id}', [ScmGatePassController::class, 'pdf'])->name('gate-pass-pdf');
     Route::get('po-pdf/{id}', [PurchaseOrderController::class, 'pdf'])->name('po-pdf');
     Route::get('indent-pdf/{id}', [IndentController::class, 'pdf'])->name('indent-pdf');
+    Route::get('gate-pass-pdf/{id}', [ScmChallanController::class, 'gatePassPdf'])->name('gate-pass-pdf');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
 });

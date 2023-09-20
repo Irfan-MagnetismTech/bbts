@@ -22,7 +22,6 @@
             margin: 0;
         }
 
-
         .text-center {
             text-align: center;
         }
@@ -129,33 +128,60 @@
         <thead>
         <tr style="background-color: #668ba6;color: black">
             <th>SL#</th>
-            <th>Description of Goods</th>
-            <th>Required Quantity</th>
+            <th>Material Name</th>
+            <th>Total Quantity</th>
             <th>Unit</th>
-            <th>Present Stock</th>
             <th>Last Receiving Date</th>
-            <th>Item Code</th>
             <th>PRS No.</th>
+            <th>Item Code</th>
         </tr>
         </thead>
         <tbody>
-            @foreach ($indent->indentLines as $key => $value)
-                @foreach ($value->scmPurchaseRequisition->scmPurchaseRequisitionDetails as $key1 => $value1)
-                    <tr>
-                        <td class="text-center">{{ $iteration++ }}</td>
-                        <td class="text-center">{{ $value1->material->name ??''}}</td>
-                        <td class="text-center">{{ $value1->quantity??'' }}</td>
-                        <td class="text-center">{{ $value1->material->unit ??''}}
-                        <td class="text-center">{{ '' }}</td>
-                        <td class="text-center">{{ $value->scmPurchaseRequisition->date??'' }}</td>
-                        <td class="text-center">{{ $value->scmPurchaseRequisition->prs_no??'' }}</td>
-                        <td class="text-center">{{ $value1->item_code??'' }}</td>
-                    </tr>
-                @endforeach
+        @php
+            $materialQuantities = [];
+            $iteration = 1;
+        @endphp
+
+        @foreach ($indent->indentLines as $key => $value)
+            @foreach ($value->scmPurchaseRequisition->scmPurchaseRequisitionDetails as $key1 => $value1)
+                @php
+                    $materialName = $value1->material->name ?? '';
+                    $quantity = $value1->quantity ?? 0;
+                    $unit = $value1->material->unit ?? '';
+                    $date = $value->scmPurchaseRequisition->date ?? '';
+                    $prsNo = $value->scmPurchaseRequisition->prs_no ?? '';
+                    $itemCode = $value1->material->code ?? '';
+
+                    if (!isset($materialQuantities[$materialName])) {
+                        $materialQuantities[$materialName] = [
+                            'totalQuantity' => 0,
+                            'unit' => $unit,
+                            'date' => $date,
+                            'prsNo' => $prsNo,
+                            'itemCode' => $itemCode,
+                        ];
+                    }
+
+                    $materialQuantities[$materialName]['totalQuantity'] += $quantity;
+                @endphp
+
             @endforeach
+        @endforeach
+
+        @foreach ($materialQuantities as $materialName => $data)
+            <tr>
+                <td class="text-center">{{ $iteration++ }}</td>
+                <td class="text-center">{{ $materialName }}</td>
+                <td class="text-center">{{ $data['totalQuantity'] }}</td>
+                <td class="text-center">{{ $data['unit'] }}</td>
+                <td class="text-center">{{ $data['date'] }}</td>
+                <td class="text-center">{{ $data['prsNo'] }}</td>
+                <td class="text-center">{{ $data['itemCode'] }}</td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
-
+    
     <div class="signature-container">
         <div class="signature-line" style="border: 1px solid black;"></div>
         <span style="color: black;">Authorised Signature</span>

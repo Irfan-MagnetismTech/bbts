@@ -4,6 +4,7 @@ namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Modules\SCM\Entities\ScmErr;
+use Modules\SCM\Entities\ScmGatePass;
 use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmWcr;
 use Illuminate\Http\JsonResponse;
@@ -366,7 +367,7 @@ class ScmChallanController extends Controller
      * Get branch wise stock for from and to branch
      *
      * @return JsonResponse
-     * 
+     *
      */
     public function getMaterialStock(): JsonResponse
     {
@@ -379,7 +380,13 @@ class ScmChallanController extends Controller
 
     public function getRequisitionDataByMrsNo(Request $request)
     {
-        $requisation = ScmRequisition::with('branch','client','pop', 'employee', 'feasibilityRequirementDetail')->where('mrs_no', $request->mrs_no)->firstOrFail();        
+        $requisation = ScmRequisition::with('branch','client','pop', 'employee', 'feasibilityRequirementDetail')->where('mrs_no', $request->mrs_no)->firstOrFail();
         return response()->json($requisation);
+    }
+
+    public function gatePassPdf($id = null)
+    {
+        $challan = ScmChallan::where('id', $id)->first();
+        return view('scm::challans.gate_pass_pdf', compact('challan'));
     }
 }
