@@ -78,7 +78,7 @@ class CsController extends Controller
     //   dd($request->all());
         try {
             $all_details = $this->getAllDetails($request->toArray());
-            DB::beginTransaction();
+            DB::beginTransaction(); 
 
             $all_details['all_request']['cs_no'] = $this->csNo;
             $all_details['all_request']['created_by'] = auth()->id();
