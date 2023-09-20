@@ -96,49 +96,40 @@
         <h2 style="text-align: center; width: 40%; border: 1px solid #000000; border-radius: 5px; margin: 20px auto">GATE PASS</h2>
     </div>
     <div style="text-align: end">
-        <h4>Date: {{$gate_pass->date}}</h4>
+        <h4>Date: {{$warranty_claim->date}}</h4>
     </div>
     <table class="table table-striped table-bordered" style="width: 100%">
         <thead>
         <tr>
-            <th>Challan / MIR</th>
-            <th>Issued To</th>
-            <th>Materials</th>
-            <th>Purpose</th>
-            <th>Qty.</th>
-            <th>Carrier</th>
+            <th>Material Name</th>
+            <th>Description</th>
+            <th>Unit</th>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Remaining Days</th>
+            <th>Warranty Period</th>
+            <th>Receiving Date</th>
+            <th>Challan No</th>
+            <th>Serial Code</th>
+            <th>Item Code</th>
         </tr>
         </thead>
         <tbody>
-        @if($gate_pass->type=='challan')
-            @foreach ($gate_pass->lines as $key => $value)
-                @foreach($value->challan->scmChallanLines as $key1=>$value1)
-                    <tr>
-                        <td> {{ $value->challan?->challan_no ?? $value->mir?->mir_no }} </td>
-                        <td class="text-center">{{''}}</td>
-{{--                        <td class="text-center">{{ $value->challan->branch->name ??''}}</td>--}}
-                        <td class="text-center">{{ $value1->material->name ??''}}</td>
-                        <td class="text-center">{{ $value->challan->purpose ??''}}</td>
-                        <td class="text-center">{{ $value1->quantity??'' }}</td>
-                        <td class="text-center">{{ $gate_pass->carrier??'' }}</td>
-                    </tr>
-                @endforeach
-            @endforeach
-        @endif
-        @if($gate_pass->type=='mir')
-            @foreach ($gate_pass->lines as $key => $value)
-                @foreach($value->mir->lines as $key1=>$value1)
-                    <tr>
-                        <td> {{ $value->challan?->challan_no ?? $value->mir?->mir_no }} </td>
-                        <td class="text-center">{{ $value->mir->toBranch->name ??''}}</td>
-                        <td class="text-center">{{ $value1->material->name ??''}}</td>
-                        <td class="text-center">{{ $value->mir->purpose ??''}}</td>
-                        <td class="text-center">{{ $value1->quantity??'' }}</td>
-                        <td class="text-center">{{ $gate_pass->carrier??'' }}</td>
-                    </tr>
-                @endforeach
-            @endforeach
-        @endif
+        @foreach ($warranty_claim->lines as $key => $line)
+            <tr>
+                <td> {{ $line->material->name }} </td>
+                <td> {{ $line->description }} </td>
+                <td> {{ $line->material->unit }} </td>
+                <td> {{ $line->brand->name }} </td>
+                <td> {{ $line->model }} </td>
+                <td> {{ $line->remaining_days }} </td>
+                <td> {{ $line->warranty_period }} </td>
+                <td> {{ $line->receiving_date }} </td>
+                <td> {{ $line->challan_no }} </td>
+                <td> {{ $line->serial_code }} </td>
+                <td> {{ $line->item_code }} </td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
 </div>

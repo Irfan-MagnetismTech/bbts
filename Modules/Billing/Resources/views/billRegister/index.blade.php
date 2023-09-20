@@ -31,7 +31,7 @@
                     <th>Supplier Name</th>
                     <th>Bill No</th>
                     <th>Amount</th>
-{{--                    <th>Action</th>--}}
+                    <th>Action</th>
                 </tr>
             </thead>
             <tfoot>
@@ -40,7 +40,7 @@
                     <th>Supplier Name</th>
                     <th>Bill No</th>
                     <th>Amount</th>
-{{--                    <th>Action</th>--}}
+                    <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
@@ -50,14 +50,24 @@
                         <td class="text-center">{{ $value->supplier->name }}</td>
                         <td class="text-center">{{ $value->bill_no }}</td>
                         <td class="text-center">{{ $value->amount }}</td>
-{{--                        <td>--}}
-{{--                            <div class="icon-btn">--}}
-{{--                                <nobr>--}}
-{{--                                    <a href="{{ route('generate_bill', $value->id) }}" data-toggle="tooltip" title="Edit"--}}
-{{--                                        class="btn btn-outline-success">Generate</a>--}}
-{{--                                </nobr>--}}
-{{--                            </div>--}}
-{{--                        </td>--}}
+                        <td>
+                            <div class="icon-btn">
+                                <nobr>
+{{--                                    <a href="{{ route('gate-pass-pdf', $gate_pass->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>--}}
+{{--                                    <a href="{{ route('gate-passes.show', $gate_pass->id) }}" data-toggle="tooltip"--}}
+{{--                                       title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>--}}
+                                    <a href="{{ route('bill-register.edit', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                       class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    <form action="{{ route('bill-register.destroy',$value->id) }}" method="POST" data-toggle="tooltip"
+                                          title="Delete" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                </nobr>
+                            </div>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

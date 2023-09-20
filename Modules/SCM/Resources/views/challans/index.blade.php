@@ -61,7 +61,7 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route("gate-pass-pdf", $challan->id) }}" data-toggle="tooltip" title="GP" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
+                                    <a href="{{ route("challan-gate-pass", $challan->id) }}" data-toggle="tooltip" title="GP" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
                                     <a href="{{ url("scm/challans/$challan->id") }}" data-toggle="tooltip" title="Details"
                                         class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 

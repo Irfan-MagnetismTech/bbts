@@ -48,7 +48,7 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('gate-pass-pdf', $gate_pass->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
+                                    <a href="{{ route('gate-pass', $gate_pass->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
                                     <a href="{{ route('gate-passes.show', $gate_pass->id) }}" data-toggle="tooltip"
                                         title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                                     <a href="{{ route('gate-passes.edit', $gate_pass->id) }}" data-toggle="tooltip" title="Edit"

@@ -2,6 +2,7 @@
 
 namespace Modules\Billing\Http\Controllers;
 
+use Illuminate\Database\QueryException;
 use Modules\Billing\Entities\BillRegister;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\Supplier;
@@ -67,7 +68,7 @@ class BillRegisterController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(BillRegister $billRegister)
     {
         return view('billing::show');
     }
@@ -77,9 +78,9 @@ class BillRegisterController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit(BillRegister $billRegister)
     {
-        return view('billing::edit');
+        return view('billing::billRegister.create', compact('billRegister'));
     }
 
     /**
@@ -88,9 +89,19 @@ class BillRegisterController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, BillRegister $billRegister)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->only('bill_no', 'supplier_id','amount');
+            $billRegister->update($data);
+
+            DB::commit();
+            return redirect()->route('bill-register.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('bill-register.create')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -98,9 +109,14 @@ class BillRegisterController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(BillRegister $billRegister)
     {
-        //
+        try {
+            $billRegister->delete();
+            return redirect()->route('bill-register.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $err) {
+            return redirect()->route('bill-register.index')->withInput()->withErrors($err->getMessage());
+        }
     }
 
     public function get_supplier()
@@ -108,10 +124,10 @@ class BillRegisterController extends Controller
         $items = Supplier::query()
             ->where('name', 'like', '%' . request()->search . '%')
             ->get()
-            ->map(fn ($item) => [
-                'value'                 => $item->name,
-                'label'                 => $item->name,
-                'supplier_id'             => $item->id
+            ->map(fn($item) => [
+                'value' => $item->name,
+                'label' => $item->name,
+                'supplier_id' => $item->id
             ]);
         return response()->json($items);
     }
