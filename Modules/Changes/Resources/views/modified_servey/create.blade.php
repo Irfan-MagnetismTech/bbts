@@ -966,10 +966,9 @@
             </script> --}}
             <script>
                      $('.pop').on('change', function() {
-                    console.log('pop')
                     var e = $(this)
                     let key1 = parseInt($(this).data('key'));
-                    // alert(key1);
+                    // console.log(key1);
                     var pop_id = e.val();
                     $.ajax({
                         url: "{{ route('get-pop-details') }}",
