@@ -12,6 +12,8 @@ use Modules\SCM\Entities\PoMaterial;
 use Illuminate\Database\Eloquent\Model;
 use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\SCM\Entities\ScmMrrLine;
+use Modules\SCM\Http\Requests\MaterialRequest;
 
 class PurchaseOrderLine extends Model
 {
@@ -68,5 +70,10 @@ class PurchaseOrderLine extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+
+    public function materialReceiveLines()
+    {
+        return $this->hasMany(ScmMrrLine::class, 'po_composit_key', 'po_composit_key');
     }
 }

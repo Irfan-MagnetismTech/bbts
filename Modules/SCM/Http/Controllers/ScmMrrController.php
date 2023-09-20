@@ -17,6 +17,7 @@ use Modules\SCM\Entities\PurchaseOrderLine;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\PoMaterial;
+use Modules\SCM\Entities\ScmMrrLine;
 use Modules\SCM\Http\Requests\ScmMrrRequest;
 
 class ScmMrrController extends Controller
@@ -75,6 +76,7 @@ class ScmMrrController extends Controller
                     'brand_id' => $request->brand_id[$key],
                     'model' => $request->model[$key],
                     'quantity' => $request->quantity[$key],
+                    'order_quantity' => $request->order_quantity[$key] ?? 0,
                     'initial_mark' => $request->initial_mark[$key] ?? null,
                     'final_mark' => $request->final_mark[$key] ?? null,
                     'item_code' => $request->item_code[$key],
@@ -97,6 +99,8 @@ class ScmMrrController extends Controller
                         if ($serial == '') {
                             $serial_code = Null;
                             $quantity = $value->quantity;
+                            $order_quantity = $value->order_quantity;
+                            $received_quantity = $value->received_quantity;
                         } else {
                             $serial_code = 'SL-' . $serial;
                             $quantity = 1;
@@ -182,6 +186,7 @@ class ScmMrrController extends Controller
                     'brand_id'          => $request->brand_id[$key],
                     'model'             => $request->model[$key],
                     'quantity'          => $request->quantity[$key],
+                    'order_quantity'    => $request->order_quantity[$key] ?? 0,
                     'initial_mark'      => $request->initial_mark[$key] ?? null,
                     'final_mark'        => $request->final_mark[$key] ?? null,
                     'item_code'         => $request->item_code[$key],
@@ -206,6 +211,8 @@ class ScmMrrController extends Controller
                         if ($serial == '') {
                             $serial_code = Null;
                             $quantity = $value->quantity;
+                            $order_quantity = $value->order_quantity;
+                            $left_quantity = $value->left_quantity;
                         } else {
                             $serial_code = 'SL-' . $serial;
                             $quantity = 1;
@@ -287,7 +294,14 @@ class ScmMrrController extends Controller
             ->with('material', 'brand')
             ->whereHas('purchaseOrder', function ($item) use ($po_id) {
                 return $item->where('id', $po_id);
-            })->get()->unique('material_id');
+            })->get();
+
+        $items->map(function ($item) {
+            $item->left_quantity = $item->quantity - ScmMrrLine::query()
+                ->where('po_composit_key', $item->po_composit_key)
+                ->sum('quantity');
+            return $item;
+        });
 
 
         return response()->json($items);

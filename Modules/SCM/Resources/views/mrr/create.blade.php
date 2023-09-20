@@ -183,6 +183,8 @@
                     <th id="final_mark_head">Final Mark</th>
                     <th>Warranty Period</th>
                     <th>Unit</th>
+                    <th>Order Quantity</th>
+                    <th>left Quantity</th>
                     <th>Quantity</th>
                     <th>Unit Price</th>
                     <th>Amount</th>
@@ -215,6 +217,8 @@
                     $po_composit_key = old('po_composit_key', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('po_composit_key') : []);
                     
                     $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
+                    $order_quantity = old('order_quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('order_quantity') : []);
+                    $left_quantity = old('left_quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('left_quantity') : []);
                     $unit_price = old('unit_price', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('unit_price') : []);
                     $amount = old(
                         'amount',
@@ -296,6 +300,14 @@
                         <td>
                             <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
                                 value="{{ $unit[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input class="form-control order_quantity" name="order_quantity[]" aria-describedby="date"
+                                value="{{ $order_quantity[$key] }}">
+                        </td>
+                        <td>
+                            <input class="form-control left_quantity" name="left_quantity[]" aria-describedby="date"
+                                value="{{ $left_quantity[$key] }}">
                         </td>
                         <td>
                             <input class="form-control quantity" name="quantity[]" aria-describedby="date"
@@ -398,74 +410,7 @@
             @if (empty($materialReceive) && empty(old('material_id')))
                 // appendCalculationRow();
             @endif
-            function appendCalculationRow() {
 
-                let row = `<tr>
-                            <td class="form-group">
-                                <select class="form-control material_name" name="material_id[]">
-                                    <option value="" readonly selected>Select Material</option>
-                                   
-                                </select>
-                                <input type="hidden" name="item_code[]" class="form-control item_code" autocomplete="off"> 
-                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off"> 
-                                <input type="hidden" name="po_composit_key[]" class="form-control po_composit_key" autocomplete="off"> 
-                            </td>
-                            <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                    <option value="">Select Brand</option>
-                                    @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">
-                                            {{ $brand->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
-
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off"> 
-                            </td>
-                            <td>
-                                <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                            </td>
-                            <td>
-                                <div class="tags_add_multiple select2container">
-                                    <input class="" type="text" name="sl_code[]" value="111" data-role="tagsinput">
-                                </div>
-                            </td>
-
-                            <td>
-                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                            </td>
-
-                            <td>
-                                <input type="number" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                            </td>
-                            
-                            <td>
-                                <input type="number" name="warranty_period[]" class="form-control warranty_period" autocomplete="off">
-                            </td>
-                            
-                            <td>
-                                <input name="unit[]" class="form-control unit" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="{{ old('required_date') ?? (@$materialReceive->required_date ?? '') }}" >
-                            </td>
-                            <td>
-                                <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly>
-                            </td>
-                            <td>
-                                <input name="amount[]" class="form-control amount" autocomplete="off" readonly>
-                            </td>
-                            <td>   
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
-                            </td>
-                        </tr>
-                    `;
-                $('#material_requisition tbody').append(row);
-                $('input[data-role="tagsinput"]').tagsinput({});
-
-            }
             /* Adds and removes quantity row on click */
             $("#material_requisition")
                 .on('click', '.add-requisition-row', () => {
@@ -522,15 +467,15 @@
                                     </div>
                                 </td>
                                 ${data.material.type == 'Drum' ? `
-                                                                                                    <td>
-                                                                                                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                                                                                                    </td>
-                                                                                                    ` : ''}
+                                                                                                                                                <td>
+                                                                                                                                                    <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                                                                                                                                                </td>
+                                                                                                                                                ` : ''}
                                 ${data.material.type == 'Drum' ? `
-                                                                                                    <td>
-                                                                                                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                                                                                                    </td>
-                                                                                                     ` : ''}
+                                                                                                                                                <td>
+                                                                                                                                                    <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
+                                                                                                                                                </td>
+                                                                                                                                                 ` : ''}
                                 <td>
                                     <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
                                 </td>
@@ -538,7 +483,13 @@
                                     <input name="unit[]" class="form-control unit" autocomplete="off" value="${data.material.unit ?? ''}" readonly>
                                 </td>
                                 <td>
-                                    <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="${data.quantity}" readonly>
+                                    <input class="form-control quantity" name="order_quantity[]" aria-describedby="date" value="${data.quantity}" readonly>
+                                </td>
+                                <td>
+                                    <input class="form-control left_quantity" name="left_quantity[]" aria-describedby="date" value="${data.left_quantity}" readonly>
+                                </td>
+                                <td>
+                                    <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="" ${data.left_quantity == 0 ? 'readonly' : ''}>
                                 </td>
                                 <td>
                                     <input name="unit_price[]" class="form-control unit_price" autocomplete="off" value="${data.unit_price}" readonly>
@@ -562,55 +513,6 @@
 
                 }
             };
-            $(document).on('change', '.material_name', function() {
-                let material_id = $(this).closest('tr').find('.material_name').val();
-                let code = $(this).find(':selected').data('code');
-                let type = $(this).find(':selected').data('type');
-                let unit = $(this).find(':selected').data('unit');
-                var elemmtn = $(this);
-                (elemmtn).closest('tr').find('.final_mark').attr('readonly', true).val(null);
-                (elemmtn).closest('tr').find('.initial_mark').attr('readonly', true).val(null);
-                (elemmtn).closest('tr').find('.unit').val(unit);
-                (elemmtn).closest('tr').find('.item_code').val(code);
-                (elemmtn).closest('tr').find('.material_type').val(type);
-
-                if (type == 'Drum') {
-                    (elemmtn).closest('tr').find('.final_mark').attr('readonly', false);
-                    (elemmtn).closest('tr').find('.initial_mark').attr('readonly', false);
-                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
-                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({
-                        maxTags: 1
-                    });
-                } else {
-                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput('destroy');
-                    (elemmtn).closest('tr').find('input[data-role="tagsinput"]').tagsinput({});
-                }
-            })
-
-
-            $(document).on('change', '.brand', function() {
-                let material_id = $(this).closest('tr').find('.material_name').val();
-                let brand_id = $(this).closest('tr').find('.brand').val();
-                let purchase_order_id = $("#purchase_order_id").val();
-
-                const url = '{{ url('scm/get_pocomposite_with_price') }}/' + purchase_order_id + '/' +
-                    material_id + '/' + brand_id;
-                var elemmtn = this;
-                $(elemmtn).closest('tr').find('.unit_price').val(null);
-                $(elemmtn).closest('tr').find('.po_composit_key').val(null);
-                $.getJSON(url, function(item) {
-                    if (item.length) {
-                        $(elemmtn).closest('tr').find('.unit_price').val(item[0].unit_price);
-                        $(elemmtn).closest('tr').find('.po_composit_key').val(item[0]
-                            .po_composit_key);
-                        var maxTags = 1; // maximum number of tags allowed
-                        calculateAmount(elemmtn);
-                    } else {
-                        alert('No po is given for this Brand of that material');
-                    }
-                });
-
-            })
 
 
 
@@ -637,6 +539,17 @@
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 }));
+            }
+        })
+
+        $(document).on('keyup', '.quantity', function() {
+            var quantity = $(this).val();
+            console.log(quantity);
+            var left_quantity = $(this).closest('tr').find('.left_quantity').val();
+            console.log(left_quantity);
+            if (quantity > left_quantity) {
+                alert('Quantity can not be greater than left quantity');
+                $(this).val(left_quantity);
             }
         })
 

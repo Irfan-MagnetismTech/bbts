@@ -183,8 +183,8 @@
         </thead>
         <tbody>
             @php
-                $purchase_requisition = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
-                $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scm_purchase_requisition_id') : []);
+                // $purchase_requisition = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
+                // $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scm_purchase_requisition_id') : []);
                 
                 $quotation_no = old('quotation_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quotation_no') : []);
                 
@@ -213,98 +213,98 @@
                 
                 $required_date = old('required_date', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('required_date') : []);
             @endphp
-            @foreach ($purchase_requisition as $key => $value)
-                <tr>
-                    <td>
-                        <select class="form-control text-center material_name select2" name="material_id[]">
-                            <option value="" readonly selected>Select Material</option>
-                            @foreach ($materials[$key] as $material)
-                                <option value="{{ $material->material_id }}"
-                                    {{ $material->material_id == $material_id[$key] ? 'selected' : '' }}>
-                                    {{ $material->material->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
+            @if(!empty($purchaseOrder))
+                @foreach ($purchaseOrder->purchaseOrderLines as $key => $purchaseOrderLine)
+                    <tr>
+                        <td>
+                            <select class="form-control text-center material_name select2" name="material_id[]">
+                                <option value="" readonly selected>Select Material</option>
+                                @foreach ($cs_materials as $cs_material)
+                                    <option value="{{ $cs_material->material_id }}"
+                                        {{ $cs_material->material_id == $material_id[$key] ? 'selected' : '' }}>
+                                        {{ $cs_material->material->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        {{-- @dd($cs_brands, $brand_id) --}}
+                        <td>
+                            <select class="form-control text-center brand_name select2" name="brand_id[]">
+                                <option value="" readonly selected>Select Brand</option>
+                                @foreach ($cs_brands as $cs_brand)
+                                    <option value="{{ $cs_brand->brand_id }}"
+                                        {{ $cs_brand->brand_id == $brand_id[$key] ? 'selected' : '' }}>
+                                        {{ $cs_brand->brand->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-control text-center model select2" name="model[]">
+                                <option value="" readonly selected>Select Model</option>
+                                @foreach ($cs_models as $cs_model)
+                                    <option value="{{ $cs_model->model }}"
+                                        {{ $cs_model->model == $single_model[$key] ? 'selected' : '' }}>
+                                        {{ $cs_model->model }}</option>
+                                @endforeach
+                            </select>
+                        </td>
 
-                    <td>
-                        <select class="form-control text-center brand_name select2" name="brand_id[]">
-                            <option value="" readonly selected>Select Brand</option>
-                            @foreach ($brands[$key] as $id => $brand)
-                                <option value="{{ $brand->csMaterial->brand->id }}" data-price="{{ $brand->price }}"
-                                    data-unit="{{ $brand->csMaterial->material->unit }}"
-                                    {{ $brand->csMaterial->brand->id == $brand_id[$key] ? 'selected' : '' }}>
-                                    {{ $brand->csMaterial->brand->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
+                        <td>
+                            <input type="text" name="description[]" class="form-control text-center description"
+                                autocomplete="off" value="{{ $description[$key] }}">
+                        </td>
 
-                    <td>
-                        <select class="form-control text-center model select2" name="model[]">
-                            <option value="" readonly selected>Select Model</option>
-                            @foreach ($models[$key] as $id => $model)
-                                <option value="{{ $model->model }}"
-                                    {{ $model->model == $single_model[$id] ? 'selected' : '' }}>
-                                    {{ $model->model }}</option>
-                            @endforeach
-                        </select>
-                    </td>
+                        <td>
+                            <input type="text" name="unit[]" class="form-control text-center unit" autocomplete="off"
+                                readonly value="{{ $unit[$key] }}">
+                        </td>
 
-                    <td>
-                        <input type="text" name="description[]" class="form-control text-center description"
-                            autocomplete="off" value="{{ $description[$key] }}">
-                    </td>
+                        <td>
+                            <input type="number" name="quantity[]" class="form-control text-center quantity"
+                                autocomplete="off" value="{{ $quantity[$key] }}">
+                        </td>
 
-                    <td>
-                        <input type="text" name="unit[]" class="form-control text-center unit" autocomplete="off"
-                            readonly value="{{ $unit[$key] }}">
-                    </td>
+                        <td>
+                            <input type="text" name="warranty_period[]" class="form-control text-center warranty_period"
+                                autocomplete="off" value="{{ $warranty_period[$key] }}">
+                        </td>
 
-                    <td>
-                        <input type="number" name="quantity[]" class="form-control text-center quantity"
-                            autocomplete="off" value="{{ $quantity[$key] }}">
-                    </td>
+                        <td>
+                            <input type="number" name="unit_price[]" class="form-control text-center unit_price"
+                                autocomplete="off" readonly value="{{ $unit_price[$key] }}">
+                        </td>
 
-                    <td>
-                        <input type="text" name="warranty_period[]" class="form-control text-center warranty_period"
-                            autocomplete="off" value="{{ $warranty_period[$key] }}">
-                    </td>
+                        <td>
+                            <select class="form-control text-center" name="vat[]">
+                                @foreach ($vatOrTax as $value)
+                                    <option value="{{ $vat[$key] }}" @selected($value == $vat[$key])>{{ $value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </td>
 
-                    <td>
-                        <input type="number" name="unit_price[]" class="form-control text-center unit_price"
-                            autocomplete="off" readonly value="{{ $unit_price[$key] }}">
-                    </td>
+                        <td>
+                            <select class="form-control text-center" name="tax[]">
+                                @foreach ($vatOrTax as $value)
+                                    <option value="{{ $tax[$key] }}" @selected($value == $tax[$key])>
+                                        {{ $value }}</option>
+                                @endforeach
+                            </select>
+                        </td>
 
-                    <td>
-                        <select class="form-control text-center" name="vat[]">
-                            @foreach ($vatOrTax as $value)
-                                <option value="{{ $vat[$key] }}" @selected($value == $vat[$key])>{{ $value }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-
-                    <td>
-                        <select class="form-control text-center" name="tax[]">
-                            @foreach ($vatOrTax as $value)
-                                <option value="{{ $tax[$key] }}" @selected($value == $tax[$key])>
-                                    {{ $value }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-
-                    <td>
-                        <input name="total_amount[]" class="form-control text-center total_amount" autocomplete="off"
-                            readonly value="{{ $total_amount[$key] }}">
-                    </td>
-                    <td>
-                        <input class="form-control text-center date" name="required_date[]" aria-describedby="date"
-                            value="{{ $required_date[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
-                    </td>
-                </tr>
-            @endforeach
+                        <td>
+                            <input name="total_amount[]" class="form-control text-center total_amount" autocomplete="off"
+                                readonly value="{{ $total_amount[$key] }}">
+                        </td>
+                        <td>
+                            <input class="form-control text-center date" name="required_date[]" aria-describedby="date"
+                                value="{{ $required_date[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
         <tfoot>
             <tr>
