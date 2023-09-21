@@ -105,46 +105,45 @@
                                 </tr>
                             </thead>
                             <tbody class="productBody">
-                                @foreach ($planning->servicePlans as $service_plan)
+                                @foreach ($products as $product)
                                     <tr class="product_details_row">
                                         <td>
                                             <span>
                                                 <input type="text" name="product[]" id="product"
                                                     class="form-control form-control-sm input" placeholder="Product"
-                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->name }}"
-                                                    readonly>
+                                                    value="{{ $product['product_name'] }}" readonly>
                                                 <input type="hidden" name="product_id[]" id="product"
                                                     class="form-control form-control-sm input" placeholder="Product"
-                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->id }}">
+                                                    value="{{ $product['product_id'] }}">
                                             </span>
                                         </td>
                                         <td>
                                             <span>
                                                 <input type="number" name="product_quantity[]"
                                                     class="form-control form-control-sm input product_quantity"
-                                                    placeholder="Quantity" value="{{ $service_plan->plan }}">
+                                                    placeholder="Quantity" value="{{ $product['quantity'] }}">
                                             </span>
                                         </td>
                                         <td>
                                             <span>
                                                 <input type="number" name="product_rate[]"
                                                     class="form-control form-control-sm input product_rate"
-                                                    placeholder="Rate" value="">
+                                                    placeholder="Rate" value="{{ $product['rate'] ?? 0 }}">
                                             </span>
                                         </td>
                                         <td>
                                             <span>
                                                 <input type="text" name="product_unit[]"
                                                     class="form-control form-control-sm input product_unit"
-                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->unit }}"
-                                                    readonly>
+                                                    value="{{ $product['unit'] }}" readonly>
                                             </span>
                                         </td>
                                         <td>
                                             <span>
                                                 <input type="number" name="product_price[]"
                                                     class="form-control form-control-sm input product_price"
-                                                    placeholder="Amount" value="" readonly>
+                                                    placeholder="Amount"
+                                                    value="{{ $product['rate'] * $product['quantity'] ?? 0 }}" readonly>
                                             </span>
                                         </td>
                                         <td>
@@ -179,9 +178,7 @@
                                             <span>
                                                 <input type="number" name="product_vat[]"
                                                     class="form-control form-control-sm input product_vat"
-                                                    placeholder="Vat"
-                                                    value="{{ $service_plan->connectivityProductRequirementDetails->product->vat }}"
-                                                    step="0.01">
+                                                    placeholder="Vat" value="{{ $product['vat'] }}" step="0.01">
                                             </span>
                                         </td>
                                         <td>
