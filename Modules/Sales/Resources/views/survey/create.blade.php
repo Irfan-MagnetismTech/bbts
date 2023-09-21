@@ -374,7 +374,7 @@
                                     <th>Option</th>
                                     <th>Status</th>
                                     <th>Method</th>
-                                    <th colspan="2">POP</th>
+                                    <th>POP</th>
                                     <th>LDP</th>
                                     <th>Vendor</th>
                                     <th>Latitude</th>
@@ -512,13 +512,18 @@
                                                         value="{{ $distances[$key] }}">
                                                 </div>
                                             </td>
-                                            <td>
+                                            {{-- <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="current_capacity[]" id="current_capacity"
                                                         class="form-control" placeholder="Current Capacity"
                                                         value="{{ $current_capacities[$key] }}">
                                                 </div>
-                                            </td>
+                                            </td> --}}
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" id='new_current_capacity_{{ $key1 }}'
+                                                        name="current_capacity[]"
+                                                        class="myInputField myInputField_{{ $key1 }} form-control text-right new_current_capacity" disabled>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="remarks[]" id="remarks"
@@ -536,6 +541,7 @@
                                         </tr>
                                     @endforeach
                                 @else
+                                @foreach ($connectivity_requirement->connectivityRequirementDetails as $key1 => $value)
                                     <tr class="feasibility_details_row">
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
@@ -576,12 +582,28 @@
                                                 </select>
                                             </div>
                                         </td>
-                                        <td colspan="2">
+                                        {{-- <td colspan="2">
                                             <div class="input-group input-group-sm input-group-primary ">
                                                 <select name="pop[]" class="form-control pop" title="">
                                                     <option value="">Select POP</option>
                                                     @foreach ($pops as $pop)
                                                         <option value="{{ $pop->id }}">{{ $pop->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="custom-tooltip">
+                                                    <span class="custom-tooltip-text">Tooltip content</span>
+                                                </div>
+                                            </div>
+                                        </td> --}}
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <select name="pop[]" class="form-control pop" title=""
+                                                    data-key="
+                                            {{ $key1 }}">
+                                                    <option value="">Select POP</option>
+                                                    @foreach ($pops as $pop)
+                                                        <option value="{{ $pop->id }}">{{ $pop->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                                 <div class="custom-tooltip">
@@ -626,12 +648,17 @@
                                                     class="form-control" placeholder="Distance">
                                             </div>
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="current_capacity[]" id="current_capacity"
                                                     class="form-control" placeholder="Current Capacity">
                                             </div>
-                                        </td>
+                                        </td> --}}
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" id='new_current_capacity_{{ $key1 }}'
+                                                    name="current_capacity[]"
+                                                    class="myInputField myInputField_{{ $key1 }} form-control text-right new_current_capacity" disabled>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="remarks[]" id="remarks"
@@ -643,6 +670,7 @@
                                                 attr_one=''><i class="fa fa-trash"></i></button>
                                         </td>
                                     </tr>
+                                    @endforeach
                                 @endif
                             </tbody>
                         </table>
@@ -715,33 +743,33 @@
             });
         });
 
-        $('.pop').on('change', function() {
-            // console.log('pop')
-            var e = $(this)
-            var pop_id = e.val();
-            $.ajax({
-                url: "{{ route('get-pop-details') }}",
-                data: {
-                    pop_id: pop_id,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    console.log(data);
-                    var html = '';
-                    $.each(data, function(key, value) {
-                        $.each(value, function(key, value) {
-                            html += 'Vendor: ' + value.vendor_name + ' | Pop Name: ' +
-                                value
-                                .from_pop_name +
-                                ' | Capacity:' +
-                                value.capacity + '\n';
-                        });
-                    });
+        // $('.pop').on('change', function() {
+        //     // console.log('pop')
+        //     var e = $(this)
+        //     var pop_id = e.val();
+        //     $.ajax({
+        //         url: "{{ route('get-pop-details') }}",
+        //         data: {
+        //             pop_id: pop_id,
+        //             _token: "{{ csrf_token() }}"
+        //         },
+        //         success: function(data) {
+        //             console.log(data);
+        //             var html = '';
+        //             $.each(data, function(key, value) {
+        //                 $.each(value, function(key, value) {
+        //                     html += 'Vendor: ' + value.vendor_name + ' | Pop Name: ' +
+        //                         value
+        //                         .from_pop_name +
+        //                         ' | Capacity:' +
+        //                         value.capacity + '\n';
+        //                 });
+        //             });
 
-                    e.attr('title', html);
-                }
-            });
-        })
+        //             e.attr('title', html);
+        //         }
+        //     });
+        // })
 
         $(document).keydown(function(event) {
             if (event.ctrlKey && event.key === 'Insert') {
@@ -765,4 +793,43 @@
             showOtherMonths: true
         }).datepicker("setDate", new Date());
     </script>
+            <script>
+                $('.pop').on('change', function() {
+               var e = $(this)
+               let key1 = parseInt($(this).data('key'));
+               // console.log(key1);
+               var pop_id = e.val();
+               $.ajax({
+                   url: "{{ route('get-pop-details') }}",
+                   data: {
+                       pop_id: pop_id,
+                       _token: "{{ csrf_token() }}"
+                   },
+                   success: function(data) {
+                       let totalCapacity = 0;
+
+                       data.connectivity_links.forEach(function(connectivity_link) {
+                           totalCapacity += parseInt(connectivity_link
+                           .capacity); // Ensure capacity is treated as an integer
+                       });
+
+                       console.log("Total Capacity:", totalCapacity);
+                       $(`#new_current_capacity_${key1}`).val(totalCapacity);
+                       console.log($(`#new_current_capacity_${key1}`).val());
+                       var html = '';
+                       $.each(data, function(key, value) {
+                           $.each(value, function(key, value) {
+                               html += 'Vendor: ' + value.vendor_name + ' | Pop Name: ' +
+                                   value
+                                   .from_pop_name +
+                                   ' | Capacity:' +
+                                   value.capacity + '\n';
+                           });
+                       });
+
+                       e.attr('title', html);
+                   }
+               });
+           })
+       </script>
 @endsection
