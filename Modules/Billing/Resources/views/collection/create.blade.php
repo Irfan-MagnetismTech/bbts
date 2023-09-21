@@ -46,37 +46,45 @@
                             $remarks = $is_old ? old('remarks') : $collection->remarks ?? null;
                             $total_amount = $is_old ? old('total_amount') : $collection->total_amount ?? null;
                             $total_net_amount = $is_old ? old('total_net_amount') : $collection->total_net_amount ?? null;
+                            $total_vat = $is_old ? old('total_vat') : $collection->total_vat ?? null;
+                            $total_tax = $is_old ? old('total_tax') : $collection->total_tax ?? null;
                             $total_receive_amount = $is_old ? old('total_receive_amount') : $collection->total_receive_amount ?? null;
+                            $total_single_total = $is_old ? old('total_single_total') : $collection->total_single_total ?? null;
                             $total_due = $is_old ? old('total_due') : $collection->total_due ?? null;
                         @endphp
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="client_no" id="client_no" autocomplete="off" readonly value="{{$client_no}}">
+                                <input type="text" class="form-control" name="client_no" id="client_no"
+                                    autocomplete="off" readonly value="{{ $client_no }}">
                                 <label for="client_no">Client NO<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="client_name" id="client_name" autocomplete="off" required value="{{$client_name}}">
+                                <input type="text" class="form-control" name="client_name" id="client_name"
+                                    autocomplete="off" required value="{{ $client_name }}">
                                 <label for="client_name">Client Name<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="mr_no" id="mr_no" autocomplete="off" required value="{{$mr_no}}">
+                                <input type="text" class="form-control" name="mr_no" id="mr_no" autocomplete="off"
+                                    required value="{{ $mr_no }}">
                                 <label for="mr_no">MR No<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
                                 <input type="date" name="date" id="date" class="form-control"
-                                    value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off" value="{{$date}}">
+                                    value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off"
+                                    value="{{ $date }}">
                                 <label for="client_type">Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="remarks" id="remarks" autocomplete="off" required value="{{$remarks}}">
+                                <input type="text" class="form-control" name="remarks" id="remarks" autocomplete="off"
+                                    required value="{{ $remarks }}">
                                 <label for="remarks">Remarks<span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -110,37 +118,49 @@
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="payment_method[]" class="form-control"
-                                                        autocomplete="off">
+                                                            autocomplete="off">
                                                             <option value="">Select Payment Method</option>
-                                                            <option value="bank" @if($item->payment_method == "bank") Selected @endif>BANK</option>
-                                                            <option value="cash" @if($item->payment_method == "cash") Selected @endif>CASH</option>
-                                                            <option value="bkash" @if($item->payment_method == "bkash") Selected @endif>BKASH</option>
-                                                            <option value="nogod" @if($item->payment_method == "nogod") Selected @endif>NOGOD</option>
+                                                            <option value="bank"
+                                                                @if ($item->payment_method == 'bank') Selected @endif>BANK
+                                                            </option>
+                                                            <option value="cash"
+                                                                @if ($item->payment_method == 'cash') Selected @endif>CASH
+                                                            </option>
+                                                            <option value="bkash"
+                                                                @if ($item->payment_method == 'bkash') Selected @endif>BKASH
+                                                            </option>
+                                                            <option value="nogod"
+                                                                @if ($item->payment_method == 'nogod') Selected @endif>NOGOD
+                                                            </option>
                                                         </select>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="bank_name[]" class="form-control" autocomplete="off"
-                                                            placeholder="Bank Name" value="{{$item->bank_name}}">
+                                                        <input type="text" name="bank_name[]" class="form-control"
+                                                            autocomplete="off" placeholder="Bank Name"
+                                                            value="{{ $item->bank_name }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="instrument_no[]" class="form-control"  autocomplete="off"
-                                                            placeholder="Instrument No" value="{{$item->instrument_no}}">
+                                                        <input type="text" name="instrument_no[]" class="form-control"
+                                                            autocomplete="off" placeholder="Instrument No"
+                                                            value="{{ $item->instrument_no }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="instrument_date[]" class="form-control" autocomplete="off"
-                                                            placeholder="Instrument Date" value="{{$item->instrument_date}}">
+                                                        <input type="text" name="instrument_date[]" class="form-control"
+                                                            autocomplete="off" placeholder="Instrument Date"
+                                                            value="{{ $item->instrument_date }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="amount[]" class="form-control" autocomplete="off"
-                                                            placeholder="Amount" value="{{$item->amount}}">
+                                                        <input type="text" name="amount[]" class="form-control"
+                                                            autocomplete="off" placeholder="Amount"
+                                                            value="{{ $item->amount }}">
                                                     </div>
                                                 </td>
                                                 <td>
@@ -166,22 +186,29 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="bank_name[]" class="form-control bank_name" autocomplete="off" placeholder="Bank Name">
+                                                    <input type="text" name="bank_name[]"
+                                                        class="form-control bank_name" autocomplete="off"
+                                                        placeholder="Bank Name">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="instrument_no[]" class="form-control instrument_no" autocomplete="off" placeholder="Instrument No">
+                                                    <input type="text" name="instrument_no[]"
+                                                        class="form-control instrument_no" autocomplete="off"
+                                                        placeholder="Instrument No">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="instrument_date[]" class="form-control instrument_date" autocomplete="off" placeholder="Instrument Date">
+                                                    <input type="text" name="instrument_date[]"
+                                                        class="form-control instrument_date" autocomplete="off"
+                                                        placeholder="Instrument Date">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="amount[]" class="form-control amount" autocomplete="off" placeholder="Amount">
+                                                    <input type="text" name="amount[]" class="form-control amount"
+                                                        autocomplete="off" placeholder="Amount">
                                                 </div>
                                             </td>
                                             <td>
@@ -198,7 +225,8 @@
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_amount" class="form-control"
-                                                    id="total_amount" autocomplete="off" placeholder="Total Amount" readonly value="{{$total_amount}}">
+                                                    id="total_amount" autocomplete="off" placeholder="Total Amount"
+                                                    readonly value="{{ $total_amount }}">
                                             </div>
                                         </td>
                                     </tr>
@@ -213,7 +241,7 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th colspan="9" class="bg-secondary">Bills</th>
+                                        <th colspan="12" class="bg-secondary">Bills</th>
                                     </tr>
                                     <tr>
                                         <th>Bill No</th>
@@ -222,7 +250,10 @@
                                         <th>Discount</th>
                                         <th>Penalty</th>
                                         <th>Net Amount</th>
+                                        <th>Vat</th>
+                                        <th>Tax</th>
                                         <th>Receive Amount</th>
+                                        <th>Total</th>
                                         <th>Due</th>
                                         <th>
                                             <button type="button" class="btn btn-sm btn-warning" id="addBillRow"><i
@@ -236,49 +267,61 @@
                                             <tr class="bill_details_row">
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="bill_no[]" class="form-control bill_no" autocomplete="off"
-                                                            placeholder="Bill No" value="{{$item->bill_no}}">
+                                                        <input type="text" name="bill_no[]"
+                                                            class="form-control bill_no" autocomplete="off"
+                                                            placeholder="Bill No" value="{{ $item->bill_no }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="bill_amount[]" class="form-control bill_amount" autocomplete="off"
-                                                        placeholder="Bill Amount" value="{{$item->amount}}">
+                                                        <input type="text" name="bill_amount[]"
+                                                            class="form-control bill_amount" autocomplete="off"
+                                                            placeholder="Bill Amount" value="{{ $item->amount }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="previous_due[]" class="form-control previous_due" autocomplete="off" placeholder="Previous Due" value="{{$item->previous_due}}" readonly>
+                                                        <input type="text" name="previous_due[]"
+                                                            class="form-control previous_due" autocomplete="off"
+                                                            placeholder="Previous Due" value="{{ $item->previous_due }}"
+                                                            readonly>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="discount[]" class="form-control discount" autocomplete="off"
-                                                            placeholder="Discount" value="{{$item->discount}}">
+                                                        <input type="text" name="discount[]"
+                                                            class="form-control discount" autocomplete="off"
+                                                            placeholder="Discount" value="{{ $item->discount }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="penalty[]" class="form-control penalty" autocomplete="off"
-                                                            placeholder="Penalty" value="{{$item->penalty}}">
+                                                        <input type="text" name="penalty[]"
+                                                            class="form-control penalty" autocomplete="off"
+                                                            placeholder="Penalty" value="{{ $item->penalty }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="net_amount[]" class="form-control net_amount" autocomplete="off"
-                                                            placeholder="Net Amount" value="{{$item->net_amount}}" readonly>
+                                                        <input type="text" name="net_amount[]"
+                                                            class="form-control net_amount" autocomplete="off"
+                                                            placeholder="Net Amount" value="{{ $item->net_amount }}"
+                                                            readonly>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="receive_amount[]" class="form-control receive_amount" autocomplete="off"
-                                                            placeholder="Receive Amount" value="{{$item->receive_amount}}">
+                                                        <input type="text" name="receive_amount[]"
+                                                            class="form-control receive_amount" autocomplete="off"
+                                                            placeholder="Receive Amount"
+                                                            value="{{ $item->receive_amount }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="due[]" class="form-control due" autocomplete="off"
-                                                            placeholder="Due" value="{{$item->due}}" readonly>
+                                                        <input type="text" name="due[]" class="form-control due"
+                                                            autocomplete="off" placeholder="Due"
+                                                            value="{{ $item->due }}" readonly>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -292,42 +335,74 @@
                                         <tr class="bill_details_row">
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="bill_no[]" class="form-control bill_no" autocomplete="off" placeholder="Bill No">
+                                                    <input type="text" name="bill_no[]" class="form-control bill_no"
+                                                        autocomplete="off" placeholder="Bill No">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="bill_amount[]" class="form-control bill_amount" autocomplete="off" placeholder="Bill Amount" readonly>
+                                                    <input type="text" name="bill_amount[]"
+                                                        class="form-control bill_amount" autocomplete="off"
+                                                        placeholder="Bill Amount" readonly>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="previous_due[]" class="form-control previous_due" autocomplete="off" placeholder="Previous Due" readonly>
+                                                    <input type="text" name="previous_due[]"
+                                                        class="form-control previous_due" autocomplete="off"
+                                                        placeholder="Previous Due" readonly>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="discount[]" class="form-control discount" autocomplete="off" placeholder="Discount">
+                                                    <input type="text" name="discount[]" class="form-control discount"
+                                                        autocomplete="off" placeholder="Discount">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="penalty[]" class="form-control penalty" autocomplete="off" placeholder="Penalty">
+                                                    <input type="text" name="penalty[]" class="form-control penalty"
+                                                        autocomplete="off" placeholder="Penalty">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="net_amount[]" class="form-control net_amount" autocomplete="off" placeholder="Net Amount" readonly>
+                                                    <input type="text" name="net_amount[]"
+                                                        class="form-control net_amount" autocomplete="off"
+                                                        placeholder="Net Amount" readonly>
+                                                </div>
+                                            </td>
+
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="vat[]" class="form-control vat"
+                                                        autocomplete="off" placeholder="Vat">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="receive_amount[]" class="form-control receive_amount" autocomplete="off" placeholder="Receive Amount">
+                                                    <input type="text" name="tax[]" class="form-control tax"
+                                                        autocomplete="off" placeholder="tax">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="due[]" class="form-control due" autocomplete="off" placeholder="Due" readonly>
+                                                    <input type="text" name="receive_amount[]"
+                                                        class="form-control receive_amount" autocomplete="off"
+                                                        placeholder="Receive Amount">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="single_total[]"
+                                                        class="form-control single_total" id="single_total"
+                                                        autocomplete="off" placeholder="Single Total">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="due[]" class="form-control due"
+                                                        autocomplete="off" placeholder="Due" readonly>
                                                 </div>
                                             </td>
                                             <td>
@@ -344,19 +419,45 @@
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_net_amount" class="form-control"
-                                                    id="total_net_amount" autocomplete="off" placeholder="Total Net" readonly value="{{$total_net_amount}}">
+                                                    id="total_net_amount" autocomplete="off" placeholder="Total Net"
+                                                    readonly value="{{ $total_net_amount }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_vat" class="form-control"
+                                                    id="total_vat" autocomplete="off" placeholder="Total Vat" readonly
+                                                    value="{{ $total_vat }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_tax" class="form-control"
+                                                    id="total_tax" autocomplete="off" placeholder="Total Tax" readonly
+                                                    value="{{ $total_tax }}">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_receive_amount" class="form-control"
-                                                    id="total_receive_amount" autocomplete="off" placeholder="Total Received" readonly value="{{$total_receive_amount}}">
+                                                    id="total_receive_amount" autocomplete="off"
+                                                    placeholder="Total Received" readonly
+                                                    value="{{ $total_receive_amount }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_single_total" class="form-control"
+                                                    id="total_single_total" autocomplete="off"
+                                                    placeholder="Total" readonly
+                                                    value="{{ $total_single_total }}">
                                             </div>
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_due" class="form-control"
-                                                    id="total_due" autocomplete="off" placeholder="Total Due" readonly value="{{$total_due}}">
+                                                    id="total_due" autocomplete="off" placeholder="Total Due" readonly
+                                                    value="{{ $total_due }}">
                                             </div>
                                         </td>
                                     </tr>
@@ -364,8 +465,7 @@
                             </table>
                         </div>
 
-                        <button
-                            class="py-2 btn btn-success ">{{ !empty($collections->id) ? 'Update' : 'Save' }}</button>
+                        <button class="py-2 btn btn-success ">{{ !empty($collections->id) ? 'Update' : 'Save' }}</button>
                     </div>
                 </div>
                 {!! Form::close() !!}
@@ -373,8 +473,6 @@
 
             @section('script')
                 <script>
-
-
                     $('#addRow').on('click', function() {
                         addRow();
                     });
@@ -444,7 +542,7 @@
                     $('#client_name').on('input keyup', function() {
                         var client_name = $(this).val();
                         let myObject = {
-                            "client_name" : client_name,
+                            "client_name": client_name,
                         }
                         jquaryUiAjax(this, "{{ route('get_client') }}", uiList, myObject);
 
@@ -452,13 +550,30 @@
                             $('#client_name').val(item.value).attr('value', item.value);
                             $('#client_no').val(item.client_no).attr('value', item.client_no);
                             $('#client_id').val(item.client_id).attr('value', item.client_id);
+
+                            $.ajax({
+                url: "{{ route('get_unpaid_bill') }}",
+                data: {
+                    client_no: item.client_no,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    // data.forEach(element => {
+                    //     html += '<option value="' + element.id + '">' + element.text +
+                    //         '</option>';
+                    // });
+                    // $('#district').html(html);
+                }
+            });
                         }
+                  
+                        
                     });
 
-                    $(document).on('input keyup','.bill_no', function() {
+                    $(document).on('input keyup', '.bill_no', function() {
                         var client_no = $('#client_no').val();
                         let myObject = {
-                            "client_no" : client_no,
+                            "client_no": client_no,
                         }
 
                         var source = $(this);
@@ -468,63 +583,86 @@
                             $(source).val(item.value).attr('value', item.value);
                             $(source).closest('tr').find('.bill_amount').val(item.amount);
                             $(source).closest('tr').find('.previous_due').val(item.previous_due);
-                            if(item.previous_due){
+                            if (item.previous_due) {
                                 $(source).closest('tr').find('.net_amount').val(item.previous_due);
                                 $(source).closest('tr').find('.due').val(item.previous_due);
-                            }else{
+                            } else {
                                 $(source).closest('tr').find('.net_amount').val(item.amount);
                                 $(source).closest('tr').find('.due').val(item.amount);
                             }
                             calculateBillTotal();
                         }
                     });
-                    $(document).on('keyup','.penalty,.discount,.receive_amount',function(){
+                    $(document).on('keyup', '.penalty,.discount,.receive_amount,.vat,.tax,.single_total', function() {
                         var previous_due = $(this).closest('tr').find('.previous_due').val();
                         var bill_amount = $(this).closest('tr').find('.bill_amount').val();
                         var penalty = $(this).closest('tr').find('.penalty').val() ?? 0;
                         var discount = $(this).closest('tr').find('.discount').val();
-                        var receive_amount = $(this).closest('tr').find('.receive_amount').val();
-                        if(previous_due > 0){
+                        var vat = parseFloat($(this).closest('tr').find('.vat').val()) || 0;
+                        var tax = parseFloat($(this).closest('tr').find('.tax').val()) || 0;
+                        var receive_amount = parseFloat($(this).closest('tr').find('.receive_amount').val()) || 0;
+                        var single_total = vat + tax + receive_amount;
+                        var single_total = $(this).closest('tr').find('.single_total').val();
+                        var single_total = vat + tax + receive_amount;
+                        $(this).closest('tr').find('.single_total').val(single_total)
+
+
+                        if (previous_due > 0) {
                             var net = previous_due - penalty - discount;
                             var due = previous_due - penalty - discount - receive_amount;
-                        }else{
+                        } else {
                             var net = bill_amount - penalty - discount;
                             var due = bill_amount - penalty - discount - receive_amount;
                         }
                         $(this).closest('tr').find('.net_amount').val(net);
-                        (due>0) ? $(this).closest('tr').find('.due').val(due) : $(this).closest('tr').find('.due').val("0");
+                        (due > 0) ? $(this).closest('tr').find('.due').val(due): $(this).closest('tr').find('.due').val("0");
                         calculateBillTotal();
                     })
-                    function calculateBillTotal(){
+
+                    function calculateBillTotal() {
                         var totalNetAmount = 0;
-                        $(".net_amount").each(function () {
+                        $(".net_amount").each(function() {
                             totalNetAmount += parseFloat($(this).val() ? $(this).val() : 0);
                         })
 
+                        var totalVat = 0;
+                        $(".vat").each(function() {
+                            totalVat += parseFloat($(this).val() ? $(this).val() : 0);
+                        })
+                        var totalTax = 0;
+                        $(".tax").each(function() {
+                            totalTax += parseFloat($(this).val() ? $(this).val() : 0);
+                        })
                         var totalReceiveAmount = 0;
-                        $(".receive_amount").each(function () {
+                        $(".receive_amount").each(function() {
                             totalReceiveAmount += parseFloat($(this).val() ? $(this).val() : 0);
+                        })
+                        var totalSingleTotal = 0;
+                        $(".single_total").each(function() {
+                            totalSingleTotal = totalVat + totalTax + totalReceiveAmount;
                         })
 
                         var totalDue = 0;
-                        $(".due").each(function () {
+                        $(".due").each(function() {
                             totalDue += parseFloat($(this).val() ? $(this).val() : 0);
                         })
                         $('#total_net_amount').val(totalNetAmount);
+                        $('#total_vat').val(totalVat);
+                        $('#total_tax').val(totalTax);
                         $('#total_receive_amount').val(totalReceiveAmount);
+                        $('#total_single_total').val(totalSingleTotal);
                         $('#total_due').val(totalDue);
                     }
-                    $(document).on('keyup','.amount',function(){
+                    $(document).on('keyup', '.amount', function() {
                         calculatePaymentTotal();
                     })
 
-                    function calculatePaymentTotal(){
+                    function calculatePaymentTotal() {
                         var totalPayment = 0;
-                        $(".amount").each(function () {
+                        $(".amount").each(function() {
                             totalPayment += parseFloat($(this).val() ? $(this).val() : 0);
                         })
                         $('#total_amount').val(totalPayment);
                     }
-
                 </script>
             @endsection
