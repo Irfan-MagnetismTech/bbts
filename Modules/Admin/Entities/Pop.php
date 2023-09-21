@@ -23,6 +23,11 @@ class Pop extends Model
         return $this->hasMany(PopLine::class);
     }
 
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
+    }
+
     private $dateAttributes = ['renewal_date','approval_date', 'btrc_approval_date', 'commissioning_date', 'termination_date', 'website_published_date', 'payment_date'];
 
     public function setAttribute($key, $value)
