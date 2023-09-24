@@ -41,5 +41,6 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::get('get_fr_product', [BrokenDaysBillController::class, 'get_fr_product'])->name('get_fr_product');
     Route::get('get_fr_bill_date', [BrokenDaysBillController::class, 'get_fr_bill_date'])->name('get_fr_bill_date');
     Route::get('get_client', [BrokenDaysBillController::class, 'get_client'])->name('get_client');
+    Route::get('get_unpaid_bill', [BrokenDaysBillController::class, 'getUnpaidBill'])->name('get_unpaid_bill');
     Route::get('get_supplier', [BillRegisterController::class, 'get_supplier'])->name('get_supplier');
 });

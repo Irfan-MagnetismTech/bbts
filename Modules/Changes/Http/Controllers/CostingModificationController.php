@@ -35,11 +35,62 @@ class CostingModificationController extends Controller
      */
     public function create($connectivity_requirement_id = null)
     {
-        $planning = Planning::with('equipmentPlans.material', 'servicePlans', 'planLinks.PlanLinkEquipments.material')
-            ->where('connectivity_requirement_id', $connectivity_requirement_id)->where('is_modified', 1)->first();
+        // Load the planning data
+        $planning = Planning::with('equipmentPlans.material', 'servicePlans.connectivityProductRequirementDetails.product', 'planLinks.PlanLinkEquipments.material')
+            ->where('connectivity_requirement_id', $connectivity_requirement_id)
+            ->where('is_modified', 1)
+            ->first();
+
+        // Load the old sale data
+        $old_sale = Sale::query()
+            ->whereHas('saleDetails', function ($query) use ($planning) {
+                $query->where('fr_no', $planning->fr_no);
+            })
+            ->with(['saleDetails' => function ($query) use ($planning) {
+                $query->where('fr_no', $planning->fr_no)->with('saleProductDetails');
+            }])
+            ->first();
+
+        // Iterate through service plans and merge data into $planning
+        $sale_products = [];
+        foreach ($old_sale->saleDetails as $key => $saleDetail) {
+            foreach ($saleDetail->saleProductDetails as $key => $saleProductDetail) {
+                $sale_products[] = [
+                    'product_id' => $saleProductDetail->product_id,
+                    'product_name' => $saleProductDetail->product->name,
+                    'unit' => $saleProductDetail->unit,
+                    'vat' => $saleProductDetail->vat_percent,
+                    'quantity' => $saleProductDetail->quantity,
+                    'rate' => $saleProductDetail->rate,
+                ];
+            }
+        }
+
+
+        $service_products = [];
+        $servicePlanProduct = $planning->servicePlans->pluck('connectivityProductRequirementDetails')->toArray();
+        foreach ($servicePlanProduct as $key => $product) {
+            $service_products[] = [
+                'product_id' => $product['product_id'],
+                'product_name' => $product['product']['name'],
+                'unit' => $product['product']['unit'],
+                'vat' => $product['product']['vat'],
+                'quantity' => $product['capacity'],
+                'rate' => 0,
+            ];
+        }
+
+        $products = array_merge($sale_products, $service_products);
+        // dd($products);
+        // foreach ($service_products as $key => $service_product) {
+        //     if ($service_product['product_id'] != $sale_products['product_id'][$key]) {
+        //         array_push($sale_products[$key], $service_product);
+        //     }
+        // }
+
         $feasibilityRequirementDetail = $planning->feasibilityRequirementDetail;
         $pnl_summary_data = $this->getPNLSummary($planning);
-        return view('changes::modify_costing.create', compact('planning', 'feasibilityRequirementDetail', 'pnl_summary_data'));
+        return view('changes::modify_costing.create', compact('planning', 'feasibilityRequirementDetail', 'pnl_summary_data', 'products'));
     }
 
     /**

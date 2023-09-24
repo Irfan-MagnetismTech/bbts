@@ -227,7 +227,7 @@ class BrokenDaysBillController extends Controller
     public function get_client()
     {
         $items = Client::query()
-            ->with('saleDetails.feasibilityRequirementDetails')
+            ->with('saleDetails.feasibilityRequirementDetails','billingAddress')
             ->where('client_name', 'like', '%' . request()->search . '%')
             ->get()
             ->map(fn ($item) => [
@@ -296,5 +296,12 @@ class BrokenDaysBillController extends Controller
             'total_price'       => $request->total_price[$key],
             'total_amount'       => $request->total_amount[$key],
         ];
+    }
+
+    public function getUnpaidBill(Request $request)
+    {
+        $unpaidBills = BillGenerate::with('collection')->where('client_no', $request->client_no)->get();
+        
+        return $unpaidBills;
     }
 }

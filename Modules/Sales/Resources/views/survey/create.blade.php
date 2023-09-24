@@ -75,8 +75,8 @@
                                 $options = $survey->surveyDetails->pluck('option')->toArray();
                                 $statuses = $survey->surveyDetails->pluck('status')->toArray();
                                 $methods = $survey->surveyDetails->pluck('method')->toArray();
-                                $selected_vendors = $survey->surveyDetails->pluck('vendor')->toArray();
-                                $selected_pops = $survey->surveyDetails->pluck('pop')->toArray();
+                                $selected_vendors = $survey->surveyDetails->pluck('vendor_id')->toArray();
+                                $selected_pops = $survey->surveyDetails->pluck('pop_id')->toArray();
                                 $ldps = $survey->surveyDetails->pluck('ldp')->toArray();
                                 $lat = $survey->surveyDetails->pluck('lat')->toArray();
                                 $long = $survey->surveyDetails->pluck('long')->toArray();
@@ -89,7 +89,7 @@
                                 $contact_email = $is_old ? old('contact_email') : $survey->feasibilityRequirementDetails->contact_email ?? '';
                                 $contact_designation = $is_old ? old('contact_designation') : $survey->feasibilityRequirementDetails->contact_designation ?? '';
                                 $connectivity_remarks = $is_old ? old('connectivity_remarks') : $survey->feasibilityRequirementDetails->connectivity_remarks ?? '';
-                            }else{
+                            } else {
                                 $contact_person = $is_old ? old('contact_person') : $fr_detail->contact_name ?? '';
                                 $contact_number = $is_old ? old('contact_number') : $fr_detail->contact_number ?? '';
                                 $contact_email = $is_old ? old('contact_email') : $fr_detail->contact_email ?? '';
@@ -119,7 +119,7 @@
                             $statuses = $is_old ? old('status') : $statuses ?? [];
                             $methods = $is_old ? old('method') : $methods ?? [];
                             $selected_vendors = $is_old ? old('vendor') : $selected_vendors ?? [];
-                            $selected_pops = $is_old ? old('bts_pop_ldp') : $selected_pops ?? [];
+                            $selected_pops = $is_old ? old('pop') : $selected_pops ?? [];
                             $ldps = $is_old ? old('ldp') : $ldps ?? [];
                             $lat = $is_old ? old('gps') : $lat ?? [];
                             $long = $is_old ? old('gps') : $long ?? [];
@@ -128,7 +128,6 @@
                             $remarks = $is_old ? old('remarks') : $remarks ?? [];
                             $details_ids = $details_ids ?? [];
                             $lat_long = $is_old ? old('lat_long') : $survey->feasibilityRequirementDetails->lat_long ?? null;
-                            
                         @endphp
                         {{-- exiting or new radio button --}}
                         <div class="col-xl-4 col-md-4">
@@ -380,7 +379,7 @@
                                     <th>Latitude</th>
                                     <th>Longitude</th>
                                     <th>Distance</th>
-                                    <th>Current Capacity</th>  
+                                    <th>Current Capacity</th>
                                     <th>Remarks</th>
                                     <th>
                                         <button type="button" class="btn btn-sm btn-success" id="addRow">
@@ -442,6 +441,21 @@
                                                     </select>
                                                 </div>
                                             </td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <select name="method[]" id="method" class="form-control">
+                                                        <option value="">Select Method</option>
+                                                        <option value="Fiber"
+                                                            {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber
+                                                        </option>
+                                                        <option value="Radio"
+                                                            {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio
+                                                        </option>
+                                                        <option value="GSM"
+                                                            {{ $methods[$key] == 'GSM' ? 'selected' : '' }}>GSM</option>
+                                                    </select>
+                                                </div>
+                                            </td>
                                             <td colspan="2">
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="pop[]" id="pop" class="form-control pop">
@@ -473,22 +487,6 @@
                                                     </select>
                                                 </div>
                                             </td>
-                                            <td>
-                                                <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="method[]" id="method" class="form-control">
-                                                        <option value="">Select Method</option>
-                                                        <option value="Fiber"
-                                                            {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber
-                                                        </option>
-                                                        <option value="Radio"
-                                                            {{ $methods[$key] == 'Radio' ? 'selected' : '' }}>Radio
-                                                        </option>
-                                                        <option value="GSM"
-                                                            {{ $methods[$key] == 'GSM' ? 'selected' : '' }}>GSM</option>
-                                                    </select>
-                                                </div>
-                                            </td>
-
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="lat[]" id="lat"
