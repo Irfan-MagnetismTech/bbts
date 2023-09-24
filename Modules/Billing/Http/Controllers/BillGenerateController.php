@@ -127,14 +127,12 @@ class BillGenerateController extends Controller
         return view('billing::billGenerate.pdf', compact('billData'));
     }
 
-
     public function generate_bill($id)
     {
         $billData = BillGenerate::findOrFail($id);
         $billData->load('lines.billingOtcBill.lines');
         return view('billing::billGenerate.bill', compact('billData'));
     }
-
 
     public function getRow($req)
     {

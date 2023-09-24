@@ -22,7 +22,7 @@
         table {
             border-collapse: collapse;
             border: 1px solid black;
-            border-top: 2px solid black; 
+            border-top: 2px solid black;
          }
         #service_table1 {
             border-radius: 100px!important;
@@ -50,23 +50,23 @@
                     <table class="table rounded-table" id="service_table1">
                         <thead>
                             <tr>
-                                <td>Client : </td>  
+                                <td>Client : </td>
                                 <td>{{$billData->client->client_name}}</td>
                             </tr>
                             <tr>
-                                <td>Address : </td>  
+                                <td>Address : </td>
                                 <td>{{$billData->billingAddress->address}}</td>
                             </tr>
                             <tr>
-                                <td>Attention : </td>  
+                                <td>Attention : </td>
                                 <td>{{$billData->billingAddress->contact_person}}</td>
                             </tr>
                             <tr>
-                                <td></td>  
+                                <td>Designation :</td>
                                 <td>{{$billData->billingAddress->designation}}</td>
                             </tr>
                             <tr>
-                                <td>BIN NO : </td>  
+                                <td>BIN NO : </td>
                                 <td>{{$billData?->client?->bin_no ?? ''}}</td>
                             </tr>
                         </thead>
@@ -76,27 +76,26 @@
                     <table class="table" id="service_table2">
                         <thead>
                             <tr>
-                                <td>Invoice No : </td>  
+                                <td>Invoice No : </td>
                                 <td>{{$billData->client->client_name}}</td>
                             </tr>
                             <tr>
-                                <td>Invoice Date : </td>  
+                                <td>Invoice Date : </td>
                                 <td>{{$billData->billingAddress->address}}</td>
                             </tr>
                             <tr>
-                                <td>Invoice Period : </td>  
+                                <td>Invoice Period : </td>
                                 <td>{{$billData->billingAddress->contact_person}}</td>
                             </tr>
                             <tr>
-                                <td>BBTSL BIN No</td>  
-                                <td>{{$billData?->client?->bin_no ?? ''}}</td>
+                                <td>BBTSL BIN No :</td>
+                                <td>{{$billData->client->bin_no ?? ''}}</td>
                             </tr>
                         </thead>
                     </table>
                 </div>
             </div>
             <div class="row">
-                <div class="offset-md-2 col-md-7 mt-1">
                     <table class="table table-bordered" id="service_table">
                         <thead>
                             <tr>
@@ -122,7 +121,7 @@
                                 @foreach ($value->billingOtcBill->lines as $key1 => $value1 )
                                     <tr>
                                         @if($loop->first)
-                                        <td rowspan="{{count($value->billingOtcBill->lines) + 1 }}">{{$value->frDetail->connectivity_point}}</td>
+                                        <td rowspan="{{count($value->billingOtcBill->lines) + 1 }}">{{$value->frDetail->connectivity_point??''}}</td>
                                         @endif
                                         <td>{{$value1->material->name}}</td>
                                         <td>{{$value1->quantity}}</td>
@@ -134,16 +133,21 @@
                                         @endif
                                     </tr>
                                 @endforeach
-                               
                                 @else
                                 <tr>
-                                    <td>{{$value->frDetail->connectivity_point}}</td>
+                                    <td>{{$value->frDetail->connectivity_point??''}}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                @endif
-                               <tr>
-                                    <td colspan="4">{{isset($value->billingOtcBill) && $value->billingOtcBill->particular}}</td>
-                                    <td>{{$value->billingOtcBill->installation_charge ?? ''}}</td>
-                               </tr>
+{{--                               <tr>--}}
+{{--                                    <td colspan="4">{{isset($value->billingOtcBill) && $value->billingOtcBill->particular}}</td>--}}
+{{--                                    <td>{{$value->billingOtcBill->installation_charge ?? ''}}</td>--}}
+{{--                               </tr>--}}
                            @endforeach
                         </tbody>
                         <tfoot>
@@ -155,7 +159,6 @@
                             </tr>
                         </tfoot>
                     </table>
-                </div>
             </div>
 
             <div class="row">

@@ -27,8 +27,6 @@
     <span class="text-danger">*</span> Marked are required.
 @endsection
 
-@section('content-grid', 'offset-md-1 col-md-10 offset-lg-2 col-lg-8 my-3')
-
 @section('content')
     <div class="container">
         <form action="{{ !empty($monthlyBill) ? route('bill-generate.update', $branch->id) : route('bill-generate.store') }}"
@@ -53,7 +51,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="offset-md-2 col-md-7 mt-1">
                     <table class="table table-bordered" id="service_table">
                         <thead>
                             <tr>
@@ -75,21 +72,21 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control connectivity_point" name="connectivity_point[]"
-                                                value="{{ $item->frDetail->connectivity_point }}" readonly>
+                                                value="{{ $item->frDetail->connectivity_point ??''}}" readonly>
                                             <input type="hidden" class="form-control connectivity_point" name="fr_no[]"
-                                                value="{{ $item->fr_no }}">
+                                                value="{{ $item->fr_no??'' }}">
                                             <input type="hidden" class="form-control otc_bill_id" name="otc_bill_id[]"
-                                                value="{{ $item->id }}">
+                                                value="{{ $item->id ??''}}">
                                         </td>
                                         <td>
                                             <input type="text" class="form-control contact" name="contact[]"
-                                                value="{{ $item->frDetail->contact_name . '-' . $item->frDetail->contact_number }}" readonly>
+                                                value="{{ $item->frDetail?->contact_name . '-' . $item->frDetail?->contact_number }}" readonly>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control billing_address" name="child_billing_address[]"
-                                                value="{{ $item->saleDetails->billingAddress->address }}" readonly>
+                                                value="{{ $item->saleDetails->billingAddress->address??'' }}" readonly>
                                             <input type="hidden" class="form-control billing_address" name="child_billing_address_id[]"
-                                                value="{{ $item->saleDetails->billingAddress->id }}" readonly>
+                                                value="{{ $item->saleDetails->billingAddress->id??'' }}" readonly>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control particular" name="particular[]"
@@ -97,12 +94,12 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control total_amount" name="total_amount[]"
-                                                value="{{ $item->saleDetails->otc }}" readonly>
+                                                value="{{ $item->saleDetails->otc??'' }}" readonly>
                                             <input type="hidden" class="form-control net_amount" name="net_amount[]"
-                                                value="{{ $item->saleDetails->otc }}">
+                                                value="{{ $item->saleDetails->otc??'' }}">
                                         </td>
                                     </tr>
-                                @php($total+= $item->saleDetails->otc)
+                                @php($total+= $item->saleDetails?->otc)
                                 @endforeach
                             @endif
                         </tbody>
@@ -113,12 +110,9 @@
                                     <input type="number" class="form-control total" name="amount"
                                         value="{{$total}}" readonly>
                                 </td>
-                                <td></td>
-                                <td></td>
                             </tr>
                         </tfoot>
                     </table>
-                </div>
             </div>
 
             <div class="row">
@@ -136,7 +130,7 @@
     <script src="{{ asset('js/custom-function.js') }}"></script>
     <script>
         $('#date').datepicker({
-            format: "dd-mm-yyyy",
+            format: "yyyy-mm-dd",
             autoclose: true,
             todayHighlight: true,
             showOtherMonths: true
