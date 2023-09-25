@@ -158,11 +158,17 @@
                                                             value="{{ $item->instrument_date }}">
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
+                                                {{-- <td>
+                                                    <div class="input-group input-group-sm input-group-primary amount">
                                                         <input type="text" name="amount[]" class="form-control"
                                                             autocomplete="off" placeholder="Amount"
                                                             value="{{ $item->amount }}">
+                                                    </div>
+                                                </td> --}}
+                                                <td>
+                                                    <div class="input-group input-group-sm input-group-primary">
+                                                        <input type="text" name="amount[]" class="form-control amount"
+                                                            autocomplete="off" placeholder="Amount" value="{{ $item->amount }}">
                                                     </div>
                                                 </td>
                                                 <td>
@@ -228,7 +234,7 @@
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_amount" class="form-control"
                                                     id="total_amount" autocomplete="off" placeholder="Total Amount"
-                                                    readonly value="{{ $total_amount }}">
+                                                    readonly value="{{ $grand_total }}">
                                             </div>
                                         </td>
                                     </tr>
@@ -267,6 +273,7 @@
                                 </thead>
                                 <tbody class="billBody">
                                     @if (!empty($collection))
+                                    {{-- @dd($collection->collectionBill); --}}
                                         @foreach ($collection->collectionBills as $item)
                                             <tr class="bill_details_row">
                                                 
@@ -281,7 +288,7 @@
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <input type="text" name="bill_amount[]"
                                                             class="form-control bill_amount" autocomplete="off"
-                                                            placeholder="Bill Amount" value="{{ $item->amount }}">
+                                                            placeholder="Bill Amount" value="{{ $item->amount }}" readonly>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -339,7 +346,7 @@
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <input type="text" name="total[]"
                                                             class="form-control total" id="total"
-                                                            autocomplete="off" placeholder="Total" value="{{ $item->total }}">
+                                                            autocomplete="off" placeholder="Total" value="{{ $item->total }}" readonly>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -410,7 +417,7 @@
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="grand_total" class="form-control"
-                                                    id="grand_total" autocomplete="off" placeholder="Total" readonly
+                                                    id="grand_total" autocomplete="off" placeholder="Grand Total" readonly
                                                     value="{{ $grand_total }}">
                                             </div>
                                         </td>
@@ -426,7 +433,7 @@
                             </table>
                         </div>
 
-                        <button class="py-2 btn btn-success ">{{ !empty($collections->id) ? 'Update' : 'Save' }}</button>
+                        <button class="py-3 px-5 btn btn-success ">{{ !empty($collections->id) ? 'Update' : 'Save' }}</button>
                     </div>
                 </div>
                 {!! Form::close() !!}
@@ -631,7 +638,7 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="total[]"
                                                         class="form-control total" id="total"
-                                                        autocomplete="off" placeholder="Single Total">
+                                                        autocomplete="off" placeholder="Total" readonly>
                                                 </div>
                                             </td>
                                             <td>
@@ -709,10 +716,12 @@
 
                         if (previous_due > 0) {
                             var net = previous_due - penalty - discount;
-                            var due = previous_due - penalty - discount - receive_amount;
+                            // var due = previous_due - penalty - discount - receive_amount;
+                               var due = net - total;
                         } else {
                             var net = bill_amount - penalty - discount;
-                            var due = bill_amount - penalty - discount - receive_amount;
+                            // var due = bill_amount - penalty - discount - receive_amount;
+                            var due = net - total;
                         }
                         $(this).closest('tr').find('.net_amount').val(net);
                         (due > 0) ? $(this).closest('tr').find('.due').val(due): $(this).closest('tr').find('.due').val("0");
@@ -761,6 +770,7 @@
                         var totalPayment = 0;
                         $(".amount").each(function() {
                             totalPayment += parseFloat($(this).val() ? $(this).val() : 0);
+                            console.log(totalPayment);
                         })
                         $('#total_amount').val(totalPayment);
                     }

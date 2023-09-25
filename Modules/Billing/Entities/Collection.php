@@ -22,6 +22,10 @@ class Collection extends Model
     {
         return $this->hasMany(CollectionBill::class, 'collection_id');
     }
+    public function getTotalAmountAttribute()
+    {
+        return $this->collectionBills->sum('amount');
+    }
 
     public function client(): BelongsTo
     {

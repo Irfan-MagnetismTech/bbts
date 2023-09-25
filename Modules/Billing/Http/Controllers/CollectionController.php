@@ -23,7 +23,9 @@ class CollectionController extends Controller
      */
     public function index()
     {
-        $datas = Collection::query()->get();
+        $datas = Collection::query()
+        ->latest()
+        ->get();
         return view('billing::collection.index', compact('datas'));
     }
 
