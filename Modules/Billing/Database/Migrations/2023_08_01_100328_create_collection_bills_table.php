@@ -21,6 +21,9 @@ return new class extends Migration
             $table->bigInteger('discount')->default(0);
             $table->bigInteger('penalty')->default(0);
             $table->bigInteger('net_amount')->default(0);
+            $table->bigInteger('vat')->default(0);
+            $table->bigInteger('tax')->default(0);
+            $table->bigInteger('total')->default(0);
             $table->bigInteger('receive_amount')->default(0);
             $table->bigInteger('previous_due')->default(0);
             $table->bigInteger('due')->default(0);

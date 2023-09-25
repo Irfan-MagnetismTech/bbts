@@ -49,7 +49,7 @@
                             $total_vat = $is_old ? old('total_vat') : $collection->total_vat ?? null;
                             $total_tax = $is_old ? old('total_tax') : $collection->total_tax ?? null;
                             $total_receive_amount = $is_old ? old('total_receive_amount') : $collection->total_receive_amount ?? null;
-                            $total_single_total = $is_old ? old('total_single_total') : $collection->total_single_total ?? null;
+                            $grand_total = $is_old ? old('grand_total') : $collection->grand_total ?? null;
                             $total_due = $is_old ? old('total_due') : $collection->total_due ?? null;
                         @endphp
                         <div class="col-xl-3 col-md-3">
@@ -84,7 +84,7 @@
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
                                 <input type="text" class="form-control" name="remarks" id="remarks" autocomplete="off"
-                                    required value="{{ $remarks }}">
+                                     value="{{ $remarks }}">
                                 <label for="remarks">Remarks<span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -255,10 +255,10 @@
                                         <th>Receive Amount</th>
                                         <th>Total</th>
                                         <th>Due</th>
-                                        <th>
+                                        {{-- <th>
                                             <button type="button" class="btn btn-sm btn-warning" id="addBillRow"><i
                                                     class="fas fa-plus"></i></button>
-                                        </th>
+                                        </th> --}}
                                     </tr>
                                 </thead>
                                 <tbody class="billBody">
@@ -332,23 +332,216 @@
                                             </tr>
                                         @endforeach
                                     @else
-                                        <tr class="bill_details_row">
+                                    @endif
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="1" class="text-right">Total</td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_bill_amount" class="form-control"
+                                                    id="total_bill_amount" autocomplete="off" placeholder="Total Bill Amount"
+                                                    readonly>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_previous_due" class="form-control"
+                                                    id="total_previous_due" autocomplete="off" placeholder="Total Previous Due"
+                                                    readonly value="{{ $total_net_amount }}">
+                                            </div>
+                                        </td>
+                                        <td colspan="2" class="text-right"></td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_net_amount" class="form-control"
+                                                    id="total_net_amount" autocomplete="off" placeholder="Total Net"
+                                                    readonly value="{{ $total_net_amount }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_vat" class="form-control"
+                                                    id="total_vat" autocomplete="off" placeholder="Total Vat" readonly
+                                                    value="{{ $total_vat }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_tax" class="form-control"
+                                                    id="total_tax" autocomplete="off" placeholder="Total Tax" readonly
+                                                    value="{{ $total_tax }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_receive_amount" class="form-control"
+                                                    id="total_receive_amount" autocomplete="off"
+                                                    placeholder="Total Received" readonly
+                                                    value="{{ $total_receive_amount }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="grand_total" class="form-control"
+                                                    id="grand_total" autocomplete="off" placeholder="Total"
+                                                    readonly value="{{ $grand_total }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_due" class="form-control"
+                                                    id="total_due" autocomplete="off" placeholder="Total Due" readonly
+                                                    value="{{ $total_due }}">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <button class="py-2 btn btn-success ">{{ !empty($collections->id) ? 'Update' : 'Save' }}</button>
+                    </div>
+                </div>
+                {!! Form::close() !!}
+            @endsection
+
+            @section('script')
+                <script>
+                    $('#addRow').on('click', function() {
+                        addRow();
+                    });
+
+                    // $('#addBillRow').on('click', function() {
+                    //     addBillRow();
+                    // });
+
+                    function addRow() {
+                        $('.payment_details_row').first().clone().appendTo('.paymentBody');
+                        $('.payment_details_row').last().find('input').val('');
+                        $('.payment_details_row').last().find('select').val('');
+                    };
+
+                    // function addBillRow() {
+                    //     $('.bill_details_row').first().clone().appendTo('.billBody');
+                    //     $('.bill_details_row').last().find('input').val('');
+                    //     $('.bill_details_row').last().find('select').val('');
+                    // };
+
+                    $(document).keydown(function(event) {
+                        if (event.ctrlKey && event.key === 'Insert') {
+                            event.preventDefault();
+                            addRow();
+                        }
+                    });
+
+                    $(document).keydown(function(event) {
+                        if (event.ctrlKey && event.key === 'Delete') {
+                            event.preventDefault();
+                            if ($('.payment_details_row').length > 1) {
+                                $('.payment_details_row').last().remove();
+                            }
+                        }
+                    });
+
+                    $(document).keydown(function(event) {
+                        if (event.altKey && event.key === 'Insert') {
+                            event.preventDefault();
+                            addBillRow();
+                        }
+                    });
+
+                    $(document).keydown(function(event) {
+                        if (event.altKey && event.key === 'Delete') {
+                            event.preventDefault();
+                            if ($('.bill_details_row').length > 1) {
+                                $('.bill_details_row').last().remove();
+                            }
+                        }
+                    });
+
+                    $(document).on('click', '.removeRow', function() {
+                        let count = $('.payment_details_row').length;
+                        if (count > 1) {
+                            $(this).closest('tr').remove();
+                        }
+                    });
+
+                    // $(document).on('click', '.removeBillRow', function() {
+                    //     let count = $('.bill_details_row').length;
+                    //     if (count > 1) {
+                    //         $(this).closest('tr').remove();
+                    //     }
+                    // });
+                    $(document).on('click', '.removeBillRow', function() {
+    let count = $('.bill_details_row').length;
+    if (count > 1) {
+        // Find the input element with class 'bill_amount' in the closest table row
+        const removedRow = $(this).closest('tr');
+        const billAmountValue = removedRow.find('.bill_amount').val();
+        const previousDuetValue = removedRow.find('.previous_due').val();
+
+        const preTotalBillAmount = $('#total_bill_amount').val();
+        const preTotalPreviousDue = $('#total_previous_due').val();
+
+        $('#total_bill_amount').val(preTotalBillAmount - billAmountValue);
+        $('#total_previous_due').val(preTotalPreviousDue - previousDuetValue);
+        removedRow.remove();
+    }
+});
+
+                    
+
+                    $('#client_name').on('input keyup', function() {
+                        var client_name = $(this).val();
+                        let myObject = {
+                            "client_name": client_name,
+                        }
+                        jquaryUiAjax(this, "{{ route('get_client') }}", uiList, myObject);
+
+                        function uiList(item) {
+                            $('#client_name').val(item.value).attr('value', item.value);
+                            $('#client_no').val(item.client_no).attr('value', item.client_no);
+                            $('#client_id').val(item.client_id).attr('value', item.client_id);
+
+                            $.ajax({
+                                url: "{{ route('get_unpaid_bill') }}",
+                                data: {
+                                    client_no: item.client_no,
+                                    _token: "{{ csrf_token() }}"
+                                },
+                                success: function(data) {
+                                    // console.log(data);
+                                    let totalBillAmount = 0;
+                                    let totalPreviousDue = 0;
+                                  
+
+                                    data.forEach(element => {
+                                   
+                                        totalBillAmount += element.amount;
+                                        totalPreviousDue += (element.amount) - (element.collection_sum_receive_amount);
+                                 
+                                        // amount = amount + element.amount;
+                                        // $('.bill_details_row').first().clone().appendTo('.billBody');
+                                        // $('.bill_details_row').last().find('input').val('');
+                                        // $('.bill_details_row').last().find('select').val('');
+                                        var newChild = $(`<tr class="bill_details_row">
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="bill_no[]" class="form-control bill_no"
+                                                    <input value=${element.bill_no} type="text" name="bill_no[]" class="form-control bill_no"
                                                         autocomplete="off" placeholder="Bill No">
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="bill_amount[]"
+                                                    <input type="text" value=${element.amount} name="bill_amount[]"
                                                         class="form-control bill_amount" autocomplete="off"
                                                         placeholder="Bill Amount" readonly>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="previous_due[]"
+                                                    <input type="text" value = ${(element.amount) - (element.collection_sum_receive_amount)} name="previous_due[]"
                                                         class="form-control previous_due" autocomplete="off"
                                                         placeholder="Previous Due" readonly>
                                                 </div>
@@ -394,8 +587,8 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="single_total[]"
-                                                        class="form-control single_total" id="single_total"
+                                                    <input type="text" name="total[]"
+                                                        class="form-control total" id="total"
                                                         autocomplete="off" placeholder="Single Total">
                                                 </div>
                                             </td>
@@ -410,164 +603,29 @@
                                                     class="btn btn-sm btn-danger removeBillRow"><i
                                                         class="fas fa-trash"></i></button>
                                             </td>
-                                        </tr>
-                                    @endif
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="5" class="text-right">Total</td>
-                                        <td>
-                                            <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="total_net_amount" class="form-control"
-                                                    id="total_net_amount" autocomplete="off" placeholder="Total Net"
-                                                    readonly value="{{ $total_net_amount }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="total_vat" class="form-control"
-                                                    id="total_vat" autocomplete="off" placeholder="Total Vat" readonly
-                                                    value="{{ $total_vat }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="total_tax" class="form-control"
-                                                    id="total_tax" autocomplete="off" placeholder="Total Tax" readonly
-                                                    value="{{ $total_tax }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="total_receive_amount" class="form-control"
-                                                    id="total_receive_amount" autocomplete="off"
-                                                    placeholder="Total Received" readonly
-                                                    value="{{ $total_receive_amount }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="total_single_total" class="form-control"
-                                                    id="total_single_total" autocomplete="off"
-                                                    placeholder="Total" readonly
-                                                    value="{{ $total_single_total }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="total_due" class="form-control"
-                                                    id="total_due" autocomplete="off" placeholder="Total Due" readonly
-                                                    value="{{ $total_due }}">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
+                                        </tr>`);
+                                        
+                                        $(".billBody").append(newChild);
+                                      
 
-                        <button class="py-2 btn btn-success ">{{ !empty($collections->id) ? 'Update' : 'Save' }}</button>
-                    </div>
-                </div>
-                {!! Form::close() !!}
-            @endsection
+                                        // $('.bill_no').val(element.bill_no);
 
-            @section('script')
-                <script>
-                    $('#addRow').on('click', function() {
-                        addRow();
-                    });
 
-                    $('#addBillRow').on('click', function() {
-                        addBillRow();
-                    });
-
-                    function addRow() {
-                        $('.payment_details_row').first().clone().appendTo('.paymentBody');
-                        $('.payment_details_row').last().find('input').val('');
-                        $('.payment_details_row').last().find('select').val('');
-                    };
-
-                    function addBillRow() {
-                        $('.bill_details_row').first().clone().appendTo('.billBody');
-                        $('.bill_details_row').last().find('input').val('');
-                        $('.bill_details_row').last().find('select').val('');
-                    };
-
-                    $(document).keydown(function(event) {
-                        if (event.ctrlKey && event.key === 'Insert') {
-                            event.preventDefault();
-                            addRow();
+                                    });
+                                    // console.log(sum);
+                                    $('#total_bill_amount').val(totalBillAmount);
+                                    $('#total_previous_due').val(totalPreviousDue);
+                                    // console.log(data);
+                                    // data.forEach(element => {
+                                    //     html += '<option value="' + element.id + '">' + element.text +
+                                    //         '</option>';
+                                    // });
+                                    // $('#district').html(html);
+                                }
+                            });
                         }
-                    });
 
-                    $(document).keydown(function(event) {
-                        if (event.ctrlKey && event.key === 'Delete') {
-                            event.preventDefault();
-                            if ($('.payment_details_row').length > 1) {
-                                $('.payment_details_row').last().remove();
-                            }
-                        }
-                    });
 
-                    $(document).keydown(function(event) {
-                        if (event.altKey && event.key === 'Insert') {
-                            event.preventDefault();
-                            addBillRow();
-                        }
-                    });
-
-                    $(document).keydown(function(event) {
-                        if (event.altKey && event.key === 'Delete') {
-                            event.preventDefault();
-                            if ($('.bill_details_row').length > 1) {
-                                $('.bill_details_row').last().remove();
-                            }
-                        }
-                    });
-
-                    $(document).on('click', '.removeRow', function() {
-                        let count = $('.payment_details_row').length;
-                        if (count > 1) {
-                            $(this).closest('tr').remove();
-                        }
-                    });
-
-                    $(document).on('click', '.removeBillRow', function() {
-                        let count = $('.bill_details_row').length;
-                        if (count > 1) {
-                            $(this).closest('tr').remove();
-                        }
-                    });
-
-                    $('#client_name').on('input keyup', function() {
-                        var client_name = $(this).val();
-                        let myObject = {
-                            "client_name": client_name,
-                        }
-                        jquaryUiAjax(this, "{{ route('get_client') }}", uiList, myObject);
-
-                        function uiList(item) {
-                            $('#client_name').val(item.value).attr('value', item.value);
-                            $('#client_no').val(item.client_no).attr('value', item.client_no);
-                            $('#client_id').val(item.client_id).attr('value', item.client_id);
-
-                            $.ajax({
-                url: "{{ route('get_unpaid_bill') }}",
-                data: {
-                    client_no: item.client_no,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(data) {
-                    // data.forEach(element => {
-                    //     html += '<option value="' + element.id + '">' + element.text +
-                    //         '</option>';
-                    // });
-                    // $('#district').html(html);
-                }
-            });
-                        }
-                  
-                        
                     });
 
                     $(document).on('input keyup', '.bill_no', function() {
@@ -593,7 +651,7 @@
                             calculateBillTotal();
                         }
                     });
-                    $(document).on('keyup', '.penalty,.discount,.receive_amount,.vat,.tax,.single_total', function() {
+                    $(document).on('keyup', '.penalty,.discount,.receive_amount,.vat,.tax,.total', function() {
                         var previous_due = $(this).closest('tr').find('.previous_due').val();
                         var bill_amount = $(this).closest('tr').find('.bill_amount').val();
                         var penalty = $(this).closest('tr').find('.penalty').val() ?? 0;
@@ -601,10 +659,10 @@
                         var vat = parseFloat($(this).closest('tr').find('.vat').val()) || 0;
                         var tax = parseFloat($(this).closest('tr').find('.tax').val()) || 0;
                         var receive_amount = parseFloat($(this).closest('tr').find('.receive_amount').val()) || 0;
-                        var single_total = vat + tax + receive_amount;
-                        var single_total = $(this).closest('tr').find('.single_total').val();
-                        var single_total = vat + tax + receive_amount;
-                        $(this).closest('tr').find('.single_total').val(single_total)
+                        var total = vat + tax + receive_amount;
+                        var total = $(this).closest('tr').find('.total').val();
+                        var total = vat + tax + receive_amount;
+                        $(this).closest('tr').find('.total').val(total)
 
 
                         if (previous_due > 0) {
@@ -638,7 +696,7 @@
                             totalReceiveAmount += parseFloat($(this).val() ? $(this).val() : 0);
                         })
                         var totalSingleTotal = 0;
-                        $(".single_total").each(function() {
+                        $(".total").each(function() {
                             totalSingleTotal = totalVat + totalTax + totalReceiveAmount;
                         })
 
@@ -650,7 +708,7 @@
                         $('#total_vat').val(totalVat);
                         $('#total_tax').val(totalTax);
                         $('#total_receive_amount').val(totalReceiveAmount);
-                        $('#total_single_total').val(totalSingleTotal);
+                        $('#grand_total').val(totalSingleTotal);
                         $('#total_due').val(totalDue);
                     }
                     $(document).on('keyup', '.amount', function() {
