@@ -80,7 +80,7 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control contact" name="contact[]"
-                                                value="{{ $item->frDetail?->contact_name . '-' . $item->frDetail?->contact_number }}" readonly>
+                                                value="{{ $item->frDetail?->contact_name . ' ' . $item->frDetail?->contact_number }}" readonly>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control billing_address" name="child_billing_address[]"
