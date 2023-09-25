@@ -122,33 +122,30 @@
                         @endif
                         </thead>
                         <tbody>
-                        @foreach ($billData->lines as $value)
+                        @foreach ($billData->lines as $key=>$value )
                             @if(isset($value->billingOtcBill) && count($value->billingOtcBill->lines))
                                 @php
                                     $total = $value->billingOtcBill->lines->sum('amount') + $value->billingOtcBill->installation_charge;
                                     $g_total += $total;
                                 @endphp
-                                <tr>
-                                    <td rowspan="{{ count($value->billingOtcBill->lines) + 1 }}">{{ $value->frDetail->connectivity_point ?? '' }}</td>
-                                    <td>{{$value->billingOtcBill->lines[0]->material->name}}</td>
-                                    <td>{{$value->billingOtcBill->lines[0]->quantity}}</td>
-                                    <td>{{$value->billingOtcBill->lines[0]->material->unit}}</td>
-                                    <td>{{$value->billingOtcBill->lines[0]->rate}}</td>
-                                    <td>{{$value->billingOtcBill->lines[0]->amount}}</td>
-                                    <td rowspan="{{ count($value->billingOtcBill->lines) + 1 }}">{{$total}}</td>
-                                </tr>
-                                @for ($i = 1; $i < count($value->billingOtcBill->lines); $i++)
+                                @foreach ($value->billingOtcBill->lines as $key1 => $value1 )
                                     <tr>
-                                        <td>{{$value->billingOtcBill->lines[$i]->material->name}}</td>
-                                        <td>{{$value->billingOtcBill->lines[$i]->quantity}}</td>
-                                        <td>{{$value->billingOtcBill->lines[$i]->material->unit}}</td>
-                                        <td>{{$value->billingOtcBill->lines[$i]->rate}}</td>
-                                        <td>{{$value->billingOtcBill->lines[$i]->amount}}</td>
+                                        @if($loop->first)
+                                            <td rowspan="{{count($value->billingOtcBill->lines) + 1 }}">{{$value->frDetail->connectivity_point??''}}</td>
+                                        @endif
+                                        <td style="text-align: center;">{{$value1->material->name}}</td>
+                                        <td style="text-align: center;">{{$value1->quantity}}</td>
+                                        <td style="text-align: center;">{{$value1->material->unit}}</td>
+                                        <td style="text-align: center;">{{$value1->rate}}</td>
+                                        <td style="text-align: center;">{{$value1->amount}}</td>
+                                        @if($loop->first)
+                                            <td rowspan="{{count($value->billingOtcBill->lines) + 1 }}" style="text-align: center;">{{$total}}</td>
+                                        @endif
                                     </tr>
-                                @endfor
+                                @endforeach
                                 <tr>
-                                    <td colspan="4">Installation Charge</td>
-                                    <td>{{$value->billingOtcBill->installation_charge ?? ''}}</td>
+                                    <td colspan="4" style="text-align: center">Installation Charge</td>
+                                    <td style="text-align: center;">{{$value->billingOtcBill->installation_charge}}</td>
                                 </tr>
                             @else
                                 @php
@@ -156,8 +153,8 @@
                                     $g_total += $total;
                                 @endphp
                                 <tr>
-                                    <td>{{$value->frDetail->connectivity_point ?? ''}}</td>
-                                    <td>{{$value->total_amount ?? ''}}</td>
+                                    <td style="text-align: center;">{{$value->frDetail->connectivity_point ?? ''}}</td>
+                                    <td style="text-align: center;">{{$value->total_amount ?? ''}}</td>
                                 </tr>
                             @endif
                         @endforeach
