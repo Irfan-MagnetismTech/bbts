@@ -213,4 +213,22 @@ class MonthlyBillController extends Controller
         ])->stream('bill.pdf');
         return view('billing::monthlyBills.mrcBillExceptPenaltySummary', compact('monthlyBill', 'groupedLines'));
     }
+    public function mrc_bill_except_due($id)
+    {
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+        return PDF::loadView('billing::monthlyBills.mrcBillExceptDue', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'OTC Bill',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('bill.pdf');
+        return view('billing::monthlyBills.mrcBillExceptDue', compact('monthlyBill', 'groupedLines'));
+    }
 }
