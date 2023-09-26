@@ -18,10 +18,10 @@
 <script src="{{ asset('js/select2.min.js') }}"></script>
 <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('js/sweetalert2.min.js') }} "></script>
-<script src="{{ asset('js/toastify-js.js') }} "></script>
+<script src="{{ asset('js/sweetalert2.min.js') }}"></script>
+<script src="{{ asset('js/toastify-js.js') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('js/toastr.min.js') }} "></script>
+{{-- <script src="{{ asset('js/toastr.min.js') }}"></script> --}}
 <script src="{{ asset('js/highcharts.min.js') }}"></script>
 <script src="{{ asset('js/jquery.step.js') }}"></script>
 <script src="{{ asset('js/form-wizards.js') }}"></script>
@@ -44,5 +44,47 @@
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
     })
+</script>
+<script>
+
+    let authUserId = '{{ auth()->user()->id }}';
+    Echo.private(`Modules.Admin.Entities.User.${authUserId}`).notification((notification) => {
+
+        console.log(notification.type)
+
+        let totalNotification = $("#notificationCount").text();
+        $("#notificationCount").text(parseInt(totalNotification) + 1);
+
+        $("#notification-list-popup").prepend(`
+            <li>
+                <a href="{{ route('support-tickets.index') }}/${notification.supportTicketId}" style="font-size: 12px; padding: 0" class="text-left p-0 d-block">
+                    ${notification.message} <br>
+                
+                    <small>
+                        Recent
+                    </small>
+                </a>
+            </li>
+
+            `);
+
+        $("#no-notification").hide();
+
+        Toastify({
+            text: notification.message,
+            className: "info",
+            style: {
+                background: "linear-gradient(to right, #5bffe9, #007af5)",
+                fontSize: '16px',
+                boxShadow: "2px 2px 2px #000"
+            },
+            close: true
+        }).showToast();
+
+    }).error((error) => {
+        console.error(error);
+    });
+
+
 </script>
 @yield('script')
