@@ -41,7 +41,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket->clientDetail->link_name }}" disabled>
+                                value="{{ $supportTicket?->clientDetail?->link_name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket->supportComplainType->name }}" disabled>
+                                value="{{ $supportTicket?->supportComplainType?->name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket->ticketSource->name }}" disabled>
+                                value="{{ $supportTicket?->ticketSource?->name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket->clientDetail?->client?->name }}" disabled>
+                                value="{{ $supportTicket?->clientDetail?->client?->name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                            value="{{ $supportTicket->clientDetail?->client?->email }}"disabled>
+                            value="{{ $supportTicket?->clientDetail?->client?->email }}"disabled>
                         </div>
                     </div>
                 </div>
@@ -267,8 +267,8 @@
                                 <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('H:i a \o\n d/m/Y') }}</td>
                                 <td>{{ $activity->remarks }}</td>
                                 <td>{{ $activity->description }}</td>
-                                <td>{{ $activity->user->employee->department->name }}</td>
-                                <td>{{ $activity->user->name }}</td>
+                                <td>{{ $activity?->user?->employee?->department?->name }}</td>
+                                <td>{{ $activity?->user?->name }}</td>
                             </tr>
                             @endforeach
                         </tbody>
