@@ -110,9 +110,9 @@
                 <div class="form-group col-3 fr_no select2_container">
                     <label for="select2">FR No</label>
                     <select class="form-control select2 serial_code" id="fr_no" multiple name="fr_no[]">
-                        <option value="" readonly selected>Select FR No</option>
+                        <option value="" readonly >Select FR No</option>
                         @if ($form_method == 'POST')
-                            <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
+                            <option value="{{ old('fr_no') }}" >{{ old('fr_no') }}</option>
                         @elseif($form_method == 'PUT')
                             @forelse ($fr_nos as $key => $value)
                                 <option value="{{ $value->fr_no }}" @if (in_array($value->fr_no, $fr_no)) selected @endif>

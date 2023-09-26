@@ -46,10 +46,10 @@ class CollectionController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        // if($request->total_amount!=$request->grand_total)
-        // {
-        //     return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
-        // }
+        if($request->total_amount!=$request->grand_total)
+        {
+            return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
+        }
         try {
             DB::beginTransaction();
             $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
@@ -96,6 +96,10 @@ class CollectionController extends Controller
      */
     public function update(Request $request, Collection $collection)
     {
+        if($request->total_amount!=$request->grand_total)
+        {
+            return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
+        }
         try {
             DB::beginTransaction();
             $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
