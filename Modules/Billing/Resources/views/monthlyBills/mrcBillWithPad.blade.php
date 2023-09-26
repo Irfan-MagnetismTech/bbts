@@ -169,12 +169,13 @@
 <body>
     <div>
         <div id="fixed_header">
-            <div id="logo" class="pdflogo">
-                <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
-                <div class="clearfix" style="margin-top: 10px"></div>
-                <h5 style="margin: 0 !important; padding: 0 !important">Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
-                <h5 style="margin: 0 !important; padding: 0 !important">Billing Contact: 01800000000, Hot Line: 01900000000, Support Contact: 01700000000</h5>
-            </div>
+{{--            <div id="logo" class="pdflogo">--}}
+{{--                <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">--}}
+{{--                <div class="clearfix" style="margin-top: 10px"></div>--}}
+{{--                <h5 style="margin: 0 !important; padding: 0 !important">Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>--}}
+{{--                <h5 style="margin: 0 !important; padding: 0 !important">Billing Contact: 01800000000, Hot Line: 01900000000, Support Contact: 01700000000</h5>--}}
+
+{{--            </div>--}}
 
             <div>
                 <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 20px auto">
@@ -249,6 +250,7 @@
                                 <th width="9.09%">Vat</th>
                                 <th width="9.09%">Penalty</th>
                                 <th width="9.09%">Total Amount</th>
+                                <th width="9.09%">Due</th>
                                 <th width="9.09%">Net Amount</th>
                             </tr>
                         </thead>
@@ -256,7 +258,7 @@
                             @php
                                 $g_total_price = 0;
                                 $g_vat = 0;
-                                $g_penalty = 0;
+                                $g_panalty = 0;
                             @endphp
                             @foreach ($groupedLines as $key1=>$values )
                                 @foreach($values as $key2 => $value)
@@ -274,14 +276,15 @@
                                     @if ($loop->first)
                                             <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price')}}</td>
                                             <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('vat')}}</td>
-                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('penalty')}}</td>
-                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $values->sum('penalty')}}</td>
-                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $values->sum('penalty')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('panalty')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $values->sum('panalty')}}</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">0</td>
+                                            <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $values->sum('panalty')}}</td>
                                         </tr>
                                         @php
                                             $g_total_price += $values->sum('total_price');
                                             $g_vat += $values->sum('vat');
-                                            $g_penalty += $values->sum('penalty');
+                                            $g_panalty += $values->sum('panalty');
                                         @endphp
                                     @else
                                         </tr>
@@ -293,10 +296,11 @@
                             <tr>
                                 <td colspan="5" style="text-align: right;">Total Amount</td>
                                 <td style="text-align: center;">{{$g_total_price}}</td>
+                                <td style="text-align: center;">{{$g_panalty}}</td>
                                 <td style="text-align: center;">{{$g_vat}}</td>
-                                <td style="text-align: center;">{{$g_penalty}}</td>
-                                <td style="text-align: center;">{{$g_total_price + $g_vat - $g_penalty}}</td>
-                                <td style="text-align: center;">{{$g_total_price + $g_vat - $g_penalty}}</td>
+                                <td style="text-align: center;">{{$g_total_price + $g_vat - $g_panalty}}</td>
+                                <td style="text-align: center;">0</td>
+                                <td style="text-align: center;">{{$g_total_price + $g_vat - $g_panalty}}</td>
                             </tr>
                         </tfoot>
                     </table>

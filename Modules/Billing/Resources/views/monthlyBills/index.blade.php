@@ -65,18 +65,22 @@
                     <td>
                         <div class="icon-btn">
                             <nobr>
-                                <a href="{{ route('mrc_bill', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                <a href="{{ route('mrc_bill_edit', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                   class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                <a href="{{ route('mrc_bill', $value->id) }}" data-toggle="tooltip" title="PDF"
                                    class="btn btn-outline-success">MRC Bill</a>
-                                <a href="{{ route('mrc_bill_summary', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                <a href="{{ route('mrc_bill_summary', $value->id) }}" data-toggle="tooltip" title="PDF"
                                    class="btn btn-outline-success">MRC Bill Summary</a>
                                 <a href="{{ route('mrc_bill_except_penalty', $value->id) }}" data-toggle="tooltip"
-                                   title="Edit"
+                                   title="PDF"
                                    class="btn btn-outline-success">MRC Bill (without penalty)</a>
                                 <a href="{{ route('mrc_bill_summary_except_penalty', $value->id) }}"
-                                   data-toggle="tooltip" title="Edit"
+                                   data-toggle="tooltip" title="PDF"
                                    class="btn btn-outline-success">MRC Bill Summary (without penalty)</a>
-                                <a href="{{ route('mrc_bill_except_due', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                <a href="{{ route('mrc_bill_except_due', $value->id) }}" data-toggle="tooltip" title="PDF"
                                    class="btn btn-outline-success">MRC Bill (without due)</a>
+                                <a href="{{ route('mrc_bill_with_pad', $value->id) }}" data-toggle="tooltip" title="PDF"
+                                   class="btn btn-outline-success">MRC Bill (with pad)</a>
                             </nobr>
                         </div>
                     </td>

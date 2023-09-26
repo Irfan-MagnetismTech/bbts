@@ -38,6 +38,8 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::get('mrc_bill_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_except_penalty'])->name('mrc_bill_except_penalty');
     Route::get('mrc_bill_summary_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_summary_except_penalty'])->name('mrc_bill_summary_except_penalty');
     Route::get('mrc_bill_except_due/{id}', [MonthlyBillController::class, 'mrc_bill_except_due'])->name('mrc_bill_except_due');
+    Route::get('mrc_bill_with_pad/{id}', [MonthlyBillController::class, 'mrc_bill_with_pad'])->name('mrc_bill_with_pad');
+    Route::get('mrc_bill_edit/{id}', [MonthlyBillController::class, 'mrc_bill_edit'])->name('mrc_bill_edit');
     Route::get('get_bill', [CollectionController::class, 'get_bill'])->name('get_bill');
     Route::get('get_fr_product', [BrokenDaysBillController::class, 'get_fr_product'])->name('get_fr_product');
     Route::get('get_fr_bill_date', [BrokenDaysBillController::class, 'get_fr_bill_date'])->name('get_fr_bill_date');
