@@ -670,6 +670,9 @@
                                     //         '</option>';
                                     // });
                                     // $('#district').html(html);
+                                    // console.log()
+
+                                    )
                                 }
                             });
                         }
