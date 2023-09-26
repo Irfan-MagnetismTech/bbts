@@ -154,28 +154,29 @@
             display: block;
             text-align: center;
         }
-        #fixed_header { 
-            position: fixed; 
-            width: 100%; 
-            top: 0; 
-            left: 0; 
+        #fixed_header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
             right: 0;
         }
     </style>
 </head>
 
 <body>
-    
+
     <div class="fixed_header">
         <div id="logo" class="pdflogo">
             <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
-            <div class="clearfix"></div>
-            <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+            <div class="clearfix" style="margin-top: 10px"></div>
+            <h5 style="margin: 0 !important; padding: 0 !important">Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+            <h5 style="margin: 0 !important; padding: 0 !important">Billing Contact: 01800000000, Hot Line: 01900000000, Support Contact: 01700000000</h5>
         </div>
 
         <div>
-            <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
-                MRC Bill (Summary)</h2>
+            <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 20px auto">
+                Monthly Connectivity Charge Bill (Summary)</h2>
         </div>
     </div>
     <html-separator/>
@@ -211,28 +212,28 @@
             </div>
         </div>
         <div class="row" style="padding:30px 0 30px;">
-            
+
             <div class="col-5" style="border: 1px solid #000000; border-radius: 5px;margin: 0;">
                 <table class="table rounded-table infoTable">
                     <thead>
                         <tr>
-                            <td>Client : </td>  
+                            <td>Client : </td>
                             <td>{{$monthlyBill->client->client_name}}</td>
                         </tr>
                         <tr>
-                            <td>Address : </td>  
+                            <td>Address : </td>
                             <td>{{$monthlyBill->billingAddress->address}}</td>
                         </tr>
                         <tr>
-                            <td>Attention : </td>  
+                            <td>Attention : </td>
                             <td>{{$monthlyBill->billingAddress->contact_person}}</td>
                         </tr>
                         <tr>
-                            <td></td>  
+                            <td></td>
                             <td>{{$monthlyBill->billingAddress->designation}}</td>
                         </tr>
                         <tr>
-                            <td>BIN NO : </td>  
+                            <td>BIN NO : </td>
                             <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
                         </tr>
                     </thead>
@@ -243,19 +244,19 @@
                 <table class="table infoTable">
                     <thead>
                         <tr>
-                            <td>Invoice No : </td>  
+                            <td>Invoice No : </td>
                             <td>{{$monthlyBill->client->client_name}}</td>
                         </tr>
                         <tr>
-                            <td>Invoice Date : </td>  
+                            <td>Invoice Date : </td>
                             <td>{{$monthlyBill->billingAddress->address}}</td>
                         </tr>
                         <tr>
-                            <td>Invoice Period : </td>  
+                            <td>Invoice Period : </td>
                             <td>{{$monthlyBill->billingAddress->contact_person}}</td>
                         </tr>
                         <tr>
-                            <td>BBTSL BIN No</td>  
+                            <td>BBTSL BIN No</td>
                             <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
                         </tr>
                     </thead>

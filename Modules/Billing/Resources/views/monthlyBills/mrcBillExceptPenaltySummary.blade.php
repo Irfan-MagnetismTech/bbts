@@ -178,13 +178,14 @@
     <div class="fixed_header">
         <div id="logo" class="pdflogo">
             <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
-            <div class="clearfix"></div>
-            <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+            <div class="clearfix" style="margin-top: 10px"></div>
+            <h5 style="margin: 0 !important; padding: 0 !important">Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+            <h5 style="margin: 0 !important; padding: 0 !important">Billing Contact: 01800000000, Hot Line: 01900000000, Support Contact: 01700000000</h5>
         </div>
 
         <div>
-            <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
-                MRC Bill (Summary)</h2>
+            <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 20px auto">
+                Monthly Connectivity Charge Bill (Summary)</h2>
         </div>
     </div>
     <html-separator />

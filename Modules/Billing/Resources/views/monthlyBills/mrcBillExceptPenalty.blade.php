@@ -154,11 +154,11 @@
             display: block;
             text-align: center;
         }
-        #fixed_header { 
-            position: fixed; 
-            width: 100%; 
-            top: 0; 
-            left: 0; 
+        #fixed_header {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
             right: 0;
         }
         /* Add clearfix to clear floats */
@@ -171,12 +171,14 @@
         <div id="fixed_header">
             <div id="logo" class="pdflogo">
                 <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
-                <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+                <div class="clearfix" style="margin-top: 10px"></div>
+                <h5 style="margin: 0 !important; padding: 0 !important">Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+                <h5 style="margin: 0 !important; padding: 0 !important">Billing Contact: 01800000000, Hot Line: 01900000000, Support Contact: 01700000000</h5>
             </div>
 
             <div>
-                <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
-                    MRC Bill (Details)</h2>
+                <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 20px auto">
+                    Monthly Connectivity Charge Bill (Details)</h2>
             </div>
         </div>
     </div>
@@ -187,23 +189,23 @@
                     <table class="table rounded-table infoTable">
                         <thead>
                             <tr>
-                                <td>Client : </td>  
+                                <td>Client : </td>
                                 <td>{{$monthlyBill->client->client_name}}</td>
                             </tr>
                             <tr>
-                                <td>Address : </td>  
+                                <td>Address : </td>
                                 <td>{{$monthlyBill->billingAddress->address}}</td>
                             </tr>
                             <tr>
-                                <td>Attention : </td>  
+                                <td>Attention : </td>
                                 <td>{{$monthlyBill->billingAddress->contact_person}}</td>
                             </tr>
                             <tr>
-                                <td></td>  
+                                <td></td>
                                 <td>{{$monthlyBill->billingAddress->designation}}</td>
                             </tr>
                             <tr>
-                                <td>BIN NO : </td>  
+                                <td>BIN NO : </td>
                                 <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
                             </tr>
                         </thead>
@@ -214,19 +216,19 @@
                     <table class="table infoTable">
                         <thead>
                             <tr>
-                                <td>Invoice No : </td>  
+                                <td>Invoice No : </td>
                                 <td>{{$monthlyBill->client->client_name}}</td>
                             </tr>
                             <tr>
-                                <td>Invoice Date : </td>  
+                                <td>Invoice Date : </td>
                                 <td>{{$monthlyBill->billingAddress->address}}</td>
                             </tr>
                             <tr>
-                                <td>Invoice Period : </td>  
+                                <td>Invoice Period : </td>
                                 <td>{{$monthlyBill->billingAddress->contact_person}}</td>
                             </tr>
                             <tr>
-                                <td>BBTSL BIN No</td>  
+                                <td>BBTSL BIN No</td>
                                 <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
                             </tr>
                         </thead>
@@ -267,7 +269,7 @@
                                         <td style="text-align: center;">{{$value->quantity}} {{$value->product->unit}}</td>
                                         <td style="text-align: center;">{{$value->unit_price}}</td>
                                         <td style="text-align: center;">{{$value->total_price}}</td>
-                                        
+
                                     @if ($loop->first)
                                             <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('total_price')}}</td>
                                             <td rowspan="{{count($values)}}" style="text-align: center;">{{$values->sum('vat')}}</td>
