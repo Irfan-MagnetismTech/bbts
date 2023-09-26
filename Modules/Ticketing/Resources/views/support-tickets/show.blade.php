@@ -263,7 +263,7 @@
                                     <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('H:i a \o\n d/m/Y') }}</td>
                                     <td>{{ $activity->remarks }}</td>
                                     <td>{{ $activity->description }}</td>
-                                    <td>{{ $activity->user->employee->department->name }}</td>
+                                    <td>{{ $activity->user?->employee?->department?->name }}</td>
                                     <td>{{ $activity->user->name }}</td>
                                 </tr>
                             @endforeach
