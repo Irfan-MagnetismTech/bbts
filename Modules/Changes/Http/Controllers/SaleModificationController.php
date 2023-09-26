@@ -361,6 +361,7 @@ class SaleModificationController extends Controller
                 return $item;
             });
         }
+        dd($connectivity_requirement);
         // if ($feasibility_requirement) {
         //     $feasibility_requirement->feasibilityRequirementDetails->map(function ($item) {
         //         if ($item->costing) {

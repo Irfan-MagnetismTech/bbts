@@ -20,8 +20,8 @@
         }
 
         /* th{
-                  border: 1px solid black!important;
-             } */
+                          border: 1px solid black!important;
+                     } */
     </style>
 @endsection
 
@@ -34,7 +34,7 @@
                 <thead>
                     <tr>
                         <th colspan="9" class="text-center" style="background-color: #024FA7">
-                            {{ $details->connectivity_point . '-' . $details->fr_no }}
+                            {{ $connectivity_requirement->connectivity_point . '-' . $connectivity_requirement->fr_no }}
                         </th>
                     </tr>
                     <tr class="text-center">
@@ -54,7 +54,7 @@
                         $product_sale_total = 0;
                         $product_grand_total = 0;
                     @endphp
-                    @foreach ($details->costing->costingProducts as $product)
+                    @foreach ($connectivity_requirement->costingByConnectivity->costingProducts as $product)
                         @php
                             $product_sale_total += $product->sale_product?->price ?? 0;
                             $product_grand_total += $product->sale_product?->total_price ?? 0;
@@ -76,9 +76,10 @@
                     <tr class="text-right" style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
                         <td colspan="4">Total</td>
                         <td style="border:1px solid black">
-                            {{ number_format($details->costing->costingProducts->sum('sub_total'), 2) }}</td>
-                        <td>{{ number_format($details->costing->costingProducts->sum('operation_cost'), 2) }}</td>
-                        <td>{{ number_format($details->costing->costingProducts->sum('operation_cost_total'), 2) }}
+                            {{ number_format($details->costingByConnectivity->costingProducts->sum('sub_total'), 2) }}</td>
+                        <td>{{ number_format($details->costingByConnectivity->costingProducts->sum('operation_cost'), 2) }}
+                        </td>
+                        <td>{{ number_format($details->costingByConnectivity->costingProducts->sum('operation_cost_total'), 2) }}
                         </td>
                         <td></td>
                         <td>{{ number_format($product_grand_total, 2) }}</td>
@@ -107,18 +108,18 @@
                         <?php $equipment_roi = 0; ?>
                         @if ($details->costing->costingProductEquipments()->exists())
                             <?php
-                            $equipment_investment = $details->costing->equipment_grand_total - $details->costing->equipment_price_for_client;
+                            $equipment_investment = $connectivity_requirement->costingByConnectivity->equipment_grand_total - $connectivity_requirement->costingByConnectivity->equipment_price_for_client;
                             $equipment_roi = ($equipment_investment - $details->offerDetail->equipment_offer_price) / 12;
                             ?>
                             <tr>
                                 <td>Product Equipment</td>
-                                <td class="text-right">@formatInt($details->costing->equipment_partial_total)</td>
-                                <td class="text-right">@formatInt($details->costing->equipment_deployment_cost)</td>
-                                <td>{{ $details->costing->equipment_interest }}</td>
-                                <td>{{ $details->costing->equipment_vat }}</td>
-                                <td>{{ $details->costing->equipment_tax }}</td>
+                                <td class="text-right">@formatInt($connectivity_requirement->costingByConnectivity->equipment_partial_total)</td>
+                                <td class="text-right">@formatInt($connectivity_requirement->costingByConnectivity->equipment_deployment_cost)</td>
+                                <td>{{ $connectivity_requirement->costingByConnectivity->equipment_interest }}</td>
+                                <td>{{ $connectivity_requirement->costingByConnectivity->equipment_vat }}</td>
+                                <td>{{ $connectivity_requirement->costingByConnectivity->equipment_tax }}</td>
                                 <td class="text-right">@formatFloat($equipment_investment)</td>
-                                <td class="text-right">{{ $details->offerDetail->product_equipment_price }}</td>
+                                <td class="text-right">{{ $connectivity_requirement->offer->offerDetails->first()->product_equipment_price }}</td>
                                 <td class="text-right">{{ $equipment_roi }}</td>
                                 <td></td>
                                 <td></td>
