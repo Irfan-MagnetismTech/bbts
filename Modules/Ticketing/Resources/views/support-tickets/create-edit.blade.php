@@ -213,8 +213,8 @@
                                         <h5 class="text-center">Physical Connectivity Information</h5>
                                         <hr />
                                     </div>
-                                    @if (!empty($supportTicket))
-                                        @forelse ($supportTicket->physicalConnectivity->lines as $item)
+                                    @if (!empty($supportTicket->physicalConnectivity?->lines))
+                                        @forelse ($supportTicket?->physicalConnectivity?->lines as $item)
                                             <div class="col-4">
                                                 <div class="form-item">
                                                     <input type="text" id="link_type" name="link_type"

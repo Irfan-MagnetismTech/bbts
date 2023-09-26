@@ -21,7 +21,12 @@ class Sale extends Model
      */
     public function getEffectiveDateAttribute($input)
     {
-        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+        if ($input != '' && $input != null) {
+            //check if date is in Y-m-d format
+            if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $input)) {
+                return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+            }
+        }
     }
 
     /**

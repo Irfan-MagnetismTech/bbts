@@ -468,9 +468,9 @@
                                             <td colspan="5" class="text-right" style="font-size: 14px;">ROI</td>
                                             <td>
                                                 <span>
-                                                    <input type="number" name="equipment_roi" id="equipment_roi"
+                                                    <input type="text" name="equipment_roi" id="equipment_roi"
                                                         class="form-control form-control-sm input" placeholder="ROI"
-                                                        value="{{ $costing->equipment_roi }}" readonly>
+                                                        value="{{ $costing->equipment_roi }}" step="any" readonly>
                                                 </span>
                                             </td>
                                         </tr>
@@ -718,7 +718,7 @@
                                                         id="plan_equipment_perchantage_interest"
                                                         class="form-control form-control-sm plan_equipment_perchantage_interest input"
                                                         placeholder="Interest"
-                                                        value="{{ $costing_link->perchantage_interest }}">
+                                                        value="{{ $costing_link->interest_perchantage }}">
                                                 </span>
                                             </div>
                                             <div class="col-6">
@@ -774,7 +774,7 @@
                                                         name="plan_equipment_perchantage_vat_{{ $row_no }}"
                                                         id="plan_equipment_perchantage_vat"
                                                         class="form-control form-control-sm plan_equipment_perchantage_vat input"
-                                                        placeholder="VAT" value="{{ $costing_link->perchantage_vat }}">
+                                                        placeholder="VAT" value="{{ $costing_link->vat_perchantage }}">
                                                 </span>
                                             </div>
                                             <div class="col-6">
@@ -809,7 +809,7 @@
                                                         name="plan_equipment_perchantage_tax_{{ $row_no }}"
                                                         id="plan_equipment_perchantage_tax"
                                                         class="form-control form-control-sm plan_equipment_perchantage_tax input"
-                                                        placeholder="Tax" value="{{ $costing_link->perchantage_tax }}">
+                                                        placeholder="Tax" value="{{ $costing_link->tax_perchantage }}">
                                                 </span>
                                             </div>
                                             <div class="col-6">

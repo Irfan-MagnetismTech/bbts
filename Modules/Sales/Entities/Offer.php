@@ -48,6 +48,11 @@ class Offer extends Model
         return $this->belongsTo(Costing::class, 'mq_no', 'mq_no');
     }
 
+    public function modifyCosting(): BelongsTo
+    {
+        return $this->belongsTo(Costing::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
+    }
+
     public function sale()
     {
         return $this->hasOne(Sale::class);

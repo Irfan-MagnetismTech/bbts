@@ -43,7 +43,7 @@
                             $client_name = $is_old ? old('client_name') : $connectivity_requirement->lead_generation->client_name ?? null;
                             $client_no = $is_old ? old('client_name') : $connectivity_requirement->client_no ?? null;
                             $connectivity_requirement_id = $is_old ? old('connectivity_requirement_id') : $connectivity_requirement->id ?? null;
-                            $offer_validity = $is_old ? old('offer_validity') : $connectivity_requirement->costing->offer_validity ?? null;
+                            $offer_validity = $is_old ? old('offer_validity') : $connectivity_requirement->costingByConnectivity->offer_validity ?? null;
                             $row_no = 0;
                             
                         @endphp
@@ -94,7 +94,7 @@
                                             </thead>
 
                                             <tbody class="mainRow">
-                                                @foreach ($connectivity_requirement->costing->costingLinks as $key => $link)
+                                                @foreach ($connectivity_requirement->costingByConnectivity->costingLinks as $key => $link)
                                                     <tr class="offer_details_row">
                                                         <td>
                                                             <div class="checkbox-fade fade-in-primary"
@@ -185,7 +185,7 @@
                                                                 <input type="hidden" class="link_invest"
                                                                     name="link_invest[]" value="{{ $link->investment }}">
                                                                 <input type="hidden" class="month" name="month[]"
-                                                                    value="{{ $connectivity_requirement->costing->month }}">
+                                                                    value="{{ $connectivity_requirement->costingByConnectivity->month }}">
                                                                 <input type="hidden" class="capacity_amount"
                                                                     name="capacity_amount[]"
                                                                     value="{{ $link->capacity_amount }}">
@@ -220,7 +220,7 @@
                                                             <input type="text" name="client_equipment_total"
                                                                 class="form-control form-control-sm client_equipment_total text-right"
                                                                 id="client_equipment_total"
-                                                                value="{{ $connectivity_requirement->costing->costingLinks->sum('plan_client_equipment_total') }}"
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->costingLinks->sum('plan_client_equipment_total') }}"
                                                                 readonly>
                                                         </div>
                                                     </td>
@@ -229,14 +229,14 @@
                                                             <input type="text" name="total_otc"
                                                                 class="form-control form-control-sm total_otc text-right"
                                                                 id="total_otc[]"
-                                                                value="{{ $connectivity_requirement->costing->costingLinks->sum('otc') }}"
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->costingLinks->sum('otc') }}"
                                                                 readonly>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
                                                             <input type="text" name="total_roi"
-                                                                value="{{ $connectivity_requirement->costing->costingLinks->sum('roi') + $connectivity_requirement->costing->costingLinks->sum('capacity_amount') }}"
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->costingLinks->sum('roi') + $connectivity_requirement->costingByConnectivity->costingLinks->sum('capacity_amount') }}"
                                                                 class="form-control form-control-sm total_roi text-right"
                                                                 id="total_roi" readonly>
                                                         </div>
@@ -272,7 +272,7 @@
                                                             <input type="text" name="product_equipment_price"
                                                                 class="form-control form-control-sm product_equipment_price text-right"
                                                                 id="product_equipment_price"
-                                                                value="{{ $connectivity_requirement->costing->client_equipment_total }}"
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->client_equipment_total }}"
                                                                 readonly>
                                                         </div>
                                                     </td>
@@ -280,14 +280,14 @@
                                                         <div class="input-group input-group-sm input-group-primary">
                                                             <input type="text" name="equipment_otc"
                                                                 class="form-control form-control-sm text-right"
-                                                                value="{{ $connectivity_requirement->costing->equipment_otc }}"
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->equipment_otc }}"
                                                                 id="equipment_otc" readonly>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
                                                             <input type="text" name="equipment_roi"
-                                                                value="{{ $connectivity_requirement->costing->equipment_roi }}"
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->equipment_roi }}"
                                                                 class="form-control form-control-sm text-right"
                                                                 id="equipment_roi" readonly>
                                                         </div>
@@ -298,9 +298,9 @@
                                                                 class="form-control form-control-sm equipment_offer_price text-right"
                                                                 id="equipment_offer_price">
                                                             <input type="hidden" class="month"
-                                                                value="{{ $connectivity_requirement->costing->month }}">
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->month }}">
                                                             <input type="hidden" class="equipment_invest"
-                                                                value="{{ $connectivity_requirement->costing->equipment_grand_total }}">
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->equipment_grand_total }}">
                                                         </div>
                                                     </td>
                                                     <td>
@@ -328,7 +328,7 @@
                                                         <div class="input-group input-group-sm input-group-primary">
                                                             <input type="text" name="product_amount"
                                                                 class="form-control form-control-sm product_price text-right"
-                                                                value="{{ $connectivity_requirement->costing->total_cost_amount }}"
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->total_cost_amount }}"
                                                                 id="product_price" readonly>
                                                         </div>
                                                     </td>
@@ -351,7 +351,7 @@
                                                         <div class="input-group input-group-sm input-group-primary">
                                                             <input type="text" name="management_cost"
                                                                 class="form-control form-control-sm management_cost text-right"
-                                                                value="{{ $connectivity_requirement->costing->management_cost_amount }}"
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->management_cost_amount }}"
                                                                 id="management_cost" readonly>
                                                         </div>
                                                     </td>
@@ -359,7 +359,7 @@
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
                                                             <input type="text" name="offer_management_cost"
-                                                                value="{{ $connectivity_requirement->costing->management_cost_amount ?? 0 }} "
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->management_cost_amount ?? 0 }} "
                                                                 class="form-control form-control-sm offer_management_cost text-right"
                                                                 id="offer_management_cost" readonly>
                                                         </div>

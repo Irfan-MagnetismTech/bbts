@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->integer('connectivity_requirement_id')->nullable();
             $table->string('client_no')->nullable();
             $table->integer('is_modified')->default(0);
             $table->string('account_holder')->nullable();
