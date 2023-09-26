@@ -447,10 +447,10 @@
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="existing_vendor_name[]"
                                                     class="form-control text-center existing_vendor_name" readonly
-                                                    value="{{ $value->connectivityLink->vendor->name }}">
+                                                    value="{{ $value?->connectivityLink?->vendor?->name }}">
                                                 <input type="hidden" name="existing_vendor_id[]"
                                                     class="form-control text-center existing_vendor_id"
-                                                    value="{{ $value->connectivityLink->vendorid }}">
+                                                    value="{{ $value?->connectivityLink?->vendorid }}">
                                             </div>
                                         </td>
                                         <td>

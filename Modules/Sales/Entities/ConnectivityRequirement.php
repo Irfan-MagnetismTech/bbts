@@ -105,4 +105,9 @@ class ConnectivityRequirement extends Model
     {
         return $this->hasOne(OfferDetail::class, 'fr_no', 'fr_no');
     }
+
+    public function offerByConnectivity()
+    {
+        return $this->hasOne(Offer::class, 'connectivity_requirement_id', 'id');
+    }
 }

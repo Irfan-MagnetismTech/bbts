@@ -30,6 +30,7 @@ use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\CostingLinkEquipment;
 use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\CostingProductEquipment;
 
 class SaleController extends Controller
@@ -345,7 +346,7 @@ class SaleController extends Controller
         return view('sales::pnl.pnl_summary', compact('feasibility_requirement', 'mq_no', 'sale'));
     }
 
-    public function pnlDetails($mq_no = null)
+    public function pnlDetails($mq_no = null, $connectivity_requirement_id = null)
     {
         $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing.costingProducts')
             ->where('mq_no', $mq_no)->first();
@@ -360,6 +361,7 @@ class SaleController extends Controller
                 }
             });
         }
+
         return view('sales::pnl.pnl_details', compact('feasibility_requirement', 'mq_no'));
     }
 
@@ -379,37 +381,37 @@ class SaleController extends Controller
             DB::beginTransaction();
 
             $saleDetails = SaleDetail::with('saleLinkDetails.planLinkDetail')
-            ->whereHas('sale',function($q) use($mq_no){
-                $q->where('mq_no', $mq_no);
-            })->get();
+                ->whereHas('sale', function ($q) use ($mq_no) {
+                    $q->where('mq_no', $mq_no);
+                })->get();
 
             $lastMRSId = ScmRequisition::latest()->first();
             $currentYear = now()->format('Y');
             $mrsNoCounter = $lastMRSId ? $lastMRSId->id + 1 : 1;
- 
-            foreach($saleDetails as $saleDetail){ 
-                foreach($saleDetail->saleLinkDetails as $saleLinkDetail){
+
+            foreach ($saleDetails as $saleDetail) {
+                foreach ($saleDetail->saleLinkDetails as $saleLinkDetail) {
                     // dump($saleLinkDetail->finalSurveyDetails->toArray());
-                    $nttn_req = [ 
-                    'client_no' => $saleLinkDetail->client_no, 
-                    'fr_no' => $saleLinkDetail->fr_no, 
-                    'type' => 'Client', 
-                    'date' => now()->format('d-m-Y'), 
-                    'from_pop_id' => $saleLinkDetail->finalSurveyDetails->pop_id ?? null, 
-                    'vendor_id' => $saleLinkDetail->finalSurveyDetails->vendor_id ?? null, 
-                    'capacity' => $saleLinkDetail->planLinkDetail->new_transmission_capacity, 
-                    ]; 
- 
+                    $nttn_req = [
+                        'client_no' => $saleLinkDetail->client_no,
+                        'fr_no' => $saleLinkDetail->fr_no,
+                        'type' => 'Client',
+                        'date' => now()->format('d-m-Y'),
+                        'from_pop_id' => $saleLinkDetail->finalSurveyDetails->pop_id ?? null,
+                        'vendor_id' => $saleLinkDetail->finalSurveyDetails->vendor_id ?? null,
+                        'capacity' => $saleLinkDetail->planLinkDetail->new_transmission_capacity,
+                    ];
+
                     NetServiceRequisition::create($nttn_req);
 
-                    if($saleDetail->saleLinkDetails()->exists()){
+                    if ($saleDetail->saleLinkDetails()->exists()) {
                         $mrsNoCounter++;
                         $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
 
-                        $link_equipment_requisition =[
+                        $link_equipment_requisition = [
                             "client_no"         => $saleDetail->client_no,
                             "mrs_no"            => $mrsNo,
-                            "fr_no"             => $saleDetail->fr_no, 
+                            "fr_no"             => $saleDetail->fr_no,
                             "type"              => 'client',
                             "requisition_by"    => auth()->id(),
                             "branch_id"         => 1,
@@ -418,7 +420,7 @@ class SaleController extends Controller
                         $link_equipment_requisitionData = ScmRequisition::create($link_equipment_requisition);
 
                         $link_eqp_details = [];
-                        foreach($saleLinkDetail->planLinkDetail->PlanLinkEquipments as $planLinkEquipment){
+                        foreach ($saleLinkDetail->planLinkDetail->PlanLinkEquipments as $planLinkEquipment) {
                             $link_eqp_details[] = [
                                 "material_id"   => $planLinkEquipment->material_id,
                                 "item_code"     => $planLinkEquipment->material->code,
@@ -426,28 +428,28 @@ class SaleController extends Controller
                                 "brand_id"      => $planLinkEquipment->brand_id,
                                 "quantity"      => $planLinkEquipment->quantity,
                                 "model"         => $planLinkEquipment->model,
-                                ];
-                            }
-                            $link_equipment_requisitionData->scmRequisitiondetails()->createMany($link_eqp_details);
-                    } 
-                }   
-                if($saleDetail->costing->planning->equipmentPlans()->exists()){
+                            ];
+                        }
+                        $link_equipment_requisitionData->scmRequisitiondetails()->createMany($link_eqp_details);
+                    }
+                }
+                if ($saleDetail->costing->planning->equipmentPlans()->exists()) {
                     $mrsNoCounter++;
                     $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
-                    
+
                     $product_equipment_requisitions = [
-                    "client_no"         => $saleDetail->client_no,
-                    "mrs_no"            => $mrsNo,
-                    "fr_no"             => $saleDetail->fr_no, 
-                    "type"              => 'client',
-                    "requisition_by"    => auth()->id(),
-                    "branch_id"         => 1,
-                    "date"              => now()->format('d-m-Y'),
-                    ]; 
+                        "client_no"         => $saleDetail->client_no,
+                        "mrs_no"            => $mrsNo,
+                        "fr_no"             => $saleDetail->fr_no,
+                        "type"              => 'client',
+                        "requisition_by"    => auth()->id(),
+                        "branch_id"         => 1,
+                        "date"              => now()->format('d-m-Y'),
+                    ];
 
                     $product_equipment_requisitionsData = ScmRequisition::create($product_equipment_requisitions);
                     $product_eqp_details = [];
-                    foreach($saleDetail->costing->planning->equipmentPlans as $equipmentPlan){
+                    foreach ($saleDetail->costing->planning->equipmentPlans as $equipmentPlan) {
                         $product_eqp_details[] = [
                             "material_id"   => $equipmentPlan->material_id,
                             "item_code"     => $equipmentPlan->material->code,
@@ -457,21 +459,21 @@ class SaleController extends Controller
                             "model"         => $equipmentPlan->model,
                         ];
                     }
-                    $product_equipment_requisitionsData->scmRequisitiondetails()->createMany($product_eqp_details); 
-                } 
-            }  
+                    $product_equipment_requisitionsData->scmRequisitiondetails()->createMany($product_eqp_details);
+                }
+            }
             // dd();
 
             $datas = Planning::with('equipmentPlans.material', 'planLinks.PlanLinkEquipments.material')
                 ->where('mq_no', $mq_no)
-                ->get(); 
-            $material_array = []; 
-            
+                ->get();
+            $material_array = [];
+
             foreach ($datas as $key => $values) {
-                
+
                 $cle_data = CostingLinkEquipment::whereHas('costing', function ($qr) use ($values) {
                     $qr->where("fr_no", $values->fr_no)->where('ownership', 'Client');
-                })->get(); 
+                })->get();
 
                 $cpe_data = CostingProductEquipment::whereHas('costing', function ($qr) use ($values) {
                     $qr->where("fr_no", $values->fr_no)->where('ownership', 'Client');
@@ -560,7 +562,7 @@ class SaleController extends Controller
                 //         ];
                 //     } 
                 //  }
-            } 
+            }
             // $lastMRSId = ScmRequisition::latest()->first();
             // $currentYear = now()->format('Y');
             // $mrsNoCounter = $lastMRSId ? $lastMRSId->id + 1 : 1;

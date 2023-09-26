@@ -4,7 +4,7 @@
 @php
     $is_old = old('client_no') ? true : false;
     $form_heading = !empty($sale->id) ? 'Update' : 'Add';
-    $form_url = !empty($sale->id) ? route('sales.update', $sale->id) : route('sales.store');
+    $form_url = !empty($sale->id) ? route('sales-modification.update', $sale->id) : route('sales-modification.store');
     $form_method = !empty($sale->id) ? 'PUT' : 'POST';
 @endphp
 
@@ -25,8 +25,8 @@
 @section('content')
     <style>
         /* #calculation_table.table-bordered td, .table-bordered th{
-                                                    border: 1px solid gainsboro!important;
-                                                } */
+                                                                                border: 1px solid gainsboro!important;
+                                                                            } */
         #dv {
             background-color: #f6f9f9 !important;
             color: #191818 !important;
@@ -103,6 +103,7 @@
                             $sla = $is_old ? old('sla') : $sale->sla ?? null;
                             $wo_no = $is_old ? old('wo_no') : $sale->wo_no ?? null;
                             $grand_total = $is_old ? old('grand_total') : $sale->grand_total ?? 0;
+                            $connectivity_requirement_id = $is_old ? old('connectivity_requirement_id') : $sale->connectivity_requirement_id ?? $connectivity_requirement_id;
                             
                         @endphp
                         <x-input-box colGrid="4" name="client_name" value="{{ $client_name }}" label="Client Name" />
@@ -120,6 +121,8 @@
                         <x-input-box colGrid="4" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
                         <x-input-box colGrid="4" type="file" name="sla" label="SLA" value="" />
                         <x-input-box colGrid="4" type="file" name="work_order" label="Work Order" value="" />
+                        <input type="hidden" name="connectivity_requirement_id"
+                            value="{{ $connectivity_requirement_id }}">
 
 
                     </div>
@@ -138,36 +141,30 @@
                                     <div class="col-3">
                                         <div class="checkbox-fade fade-in-primary">
                                             <label>
-                                                <input type="checkbox" class="checkbox" value="Primary"
-                                                    name="checked[{{ $key }}]"
+                                                <input type="checkbox" class="" value="Primary"
                                                     @if ($value->checked == 1) checked=True @endif>
                                                 <span class="cr">
                                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                 </span>
                                                 <span>{{ $value->frDetails->connectivity_point }} ( {{ $value->fr_no }}
                                                     )</span>
-                                                <input type="hidden" class="fr_no" name="fr_no[{{ $key }}]"
-                                                    value="{{ $value->fr_no }}">
-                                                <input type="hidden" class="costing_id"
-                                                    name="costing_id[{{ $key }}]"
-                                                    value="{{ $value->costing_id }}">
+                                                <input type="hidden" class="fr_no" value="{{ $value->fr_no }}">
+                                                <input type="hidden" class="costing_id" value="{{ $value->costing_id }}">
                                             </label>
                                         </div>
                                     </div>
                                     <div class="col-9">
                                         @foreach ($value->saleLinkDetails as $link_key => $link_value)
-                                            <span>{{ $link_value->link_type }}</span>
-                                            <input type="hidden"
-                                                name="link_no[{{ $key }}][]"value="{{ $link_value->link_no }}">
-                                            <input type="hidden"
-                                                name="link_type[{{ $key }}][]"value="{{ $link_value->link_type }}">
+                                            <span class="badge badge-primary">{{ $link_value->link_type }}</span>
+                                            <input type="hidden" value="{{ $link_value->link_no }}">
+                                            <input type="hidden" value="{{ $link_value->link_type }}">
                                         @endforeach
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <x-input-box colGrid="3" name="delivery_date[{{ $key }}]"
-                                        value="{{ $value->delivery_date ?? '' }}" label="Delivery Date" class="date" />
-                                    <x-input-box colGrid="3" name="bill_payment_date[{{ $key }}]"
+                                    <x-input-box colGrid="3" name="" value="{{ $value->delivery_date ?? '' }}"
+                                        label="Delivery Date" class="date" />
+                                    <x-input-box colGrid="3" name=""
                                         value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date"
                                         class="container" attr='readonly' />
 
@@ -175,24 +172,22 @@
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="prepaid">
                                                 <input type="radio" class="form-check-input payment_status"
-                                                    id="prepaid" name="payment_status[{{ $key }}]"
-                                                    value="prepaid" @checked(@$value->payment_status == 'prepaid' || ($form_method == 'POST' && !old()))>
+                                                    id="prepaid" value="prepaid" @checked(@$value->payment_status == 'prepaid' || ($form_method == 'POST' && !old()))>
                                                 Prepaid
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="postpaid">
                                                 <input type="radio" class="form-check-input payment_status"
-                                                    id="postpaid" name="payment_status[{{ $key }}]"
-                                                    value="postpaid" @checked(@$value->payment_status == 'postpaid')>
+                                                    id="postpaid" value="postpaid" @checked(@$value->payment_status == 'postpaid')>
                                                 Postpaid
                                             </label>
                                         </div>
                                     </div>
-                                    <x-input-box colGrid="3" name="mrc[{{ $key }}]"
-                                        value="{{ $value->mrc }}" label="MRC" attr="readonly" />
-                                    <x-input-box colGrid="3" name="otc[{{ $key }}]"
-                                        value="{{ $value->otc }}" label="OTC" attr="readonly" />
+                                    <x-input-box colGrid="3" name="" value="{{ $value->mrc }}"
+                                        label="MRC" attr="readonly" />
+                                    <x-input-box colGrid="3" name="" value="{{ $value->otc }}"
+                                        label="OTC" attr="readonly" />
                                 </div>
                                 <div>
 
@@ -213,56 +208,46 @@
                                                 <tr>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text"
-                                                                name="product_name[{{ $key }}][]"
-                                                                class="form-control text-center" id="service_name"
-                                                                readonly value="{{ $val->product_name }}">
-                                                            <input type="hidden"
-                                                                name="product_id[{{ $key }}][]"
-                                                                class="form-control text-center" id="service" readonly
-                                                                value="{{ $val->product_id }}">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="service_name" readonly
+                                                                value="{{ $val->product_name }}">
+                                                            <input type="hidden" class="form-control text-center"
+                                                                id="service" readonly value="{{ $val->product_id }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text" name="quantity[{{ $key }}][]"
-                                                                class="form-control text-right" id="quantity" readonly
-                                                                value="{{ $val->quantity }}">
+                                                            <input type="text" class="form-control text-right"
+                                                                id="quantity" readonly value="{{ $val->quantity }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text" name="unit[{{ $key }}][]"
-                                                                class="form-control text-center" id="unit" readonly
-                                                                value="{{ $val->unit }}">
+                                                            <input type="text" class="form-control text-center"
+                                                                id="unit" readonly value="{{ $val->unit }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text" name="rate[{{ $key }}][]"
-                                                                class="form-control text-right" readonly
+                                                            <input type="text" class="form-control text-right" readonly
                                                                 value="{{ $val->rate }}">
                                                         </div>
                                                     </td>
                                                     <td class="d-none">
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text" name="price[{{ $key }}][]"
-                                                                class="form-control text-right" readonly
+                                                            <input type="text" class="form-control text-right" readonly
                                                                 value="{{ $percent * $val->rate + $val->rate }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text"
-                                                                name="total_price[{{ $key }}][]"
-                                                                class="form-control text-right" readonly
+                                                            <input type="text" class="form-control text-right" readonly
                                                                 value="{{ ($percent * $val->rate + $val->rate) * $val->quantity }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
                                                             <input type="text"
-                                                                name="vat_percent[{{ $key }}][]"
                                                                 class="form-control text-right vat_percent"
                                                                 value="0">
                                                         </div>
@@ -270,7 +255,6 @@
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
                                                             <input type="text"
-                                                                name="vat_amount[{{ $key }}][]"
                                                                 class="form-control text-right vat_amount" readonly
                                                                 value="0">
                                                         </div>
@@ -284,9 +268,8 @@
                                                 <td style="text-align: center;">Total MRC</td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="total_mrc[{{ $key }}]"
-                                                            class="form-control text-right total_mrc" readonly
-                                                            value="{{ $value->total_mrc }}">
+                                                        <input type="text" class="form-control text-right total_mrc"
+                                                            readonly value="{{ $value->total_mrc }}">
                                                     </div>
                                                 </td>
                                             </tr>
@@ -311,39 +294,36 @@
                                     <div class="col-3">
                                         <div class="checkbox-fade fade-in-primary">
                                             <label>
-                                                <input type="checkbox" class="checkbox" value="Primary"
-                                                    name="checked[{{ $key }}]"
+                                                <input type="checkbox" class="checkbox" value="Primary" name="checked"
                                                     @if ($value->checked == 1) checked=True @endif>
                                                 <span class="cr">
                                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                 </span>
                                                 <span>{{ $value->frDetails->connectivity_point }} ( {{ $value->fr_no }}
                                                     )</span>
-                                                <input type="hidden" class="fr_no" name="fr_no[{{ $key }}]"
+                                                <input type="hidden" class="fr_no" name="fr_no"
                                                     value="{{ $value->fr_no }}">
-                                                <input type="hidden" class="costing_id"
-                                                    name="costing_id[{{ $key }}]"
+                                                <input type="hidden" class="costing_id" name="costing_id"
                                                     value="{{ $value->costing_id }}">
                                             </label>
                                         </div>
                                     </div>
                                     <div class="col-9">
                                         @foreach ($value->saleLinkDetails as $link_key => $link_value)
-                                            <span>{{ $link_value->link_type }}</span>
+                                            <span class="badge badge-primary">{{ $link_value->link_type }}</span>
+                                            <input type="hidden" name="link_no[]"value="{{ $link_value->link_no }}">
                                             <input type="hidden"
-                                                name="link_no[{{ $key }}][]"value="{{ $link_value->link_no }}">
-                                            <input type="hidden"
-                                                name="link_type[{{ $key }}][]"value="{{ $link_value->link_type }}">
+                                                name="link_type[]"value="{{ $link_value->link_type }}">
                                         @endforeach
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <x-input-box colGrid="3" name="delivery_date[{{ $key }}]"
+                                    <x-input-box colGrid="3" name="delivery_date"
                                         value="{{ $value->delivery_date ?? '' }}" label="Delivery Date"
                                         class="date" />
                                     <div class="col-xl-2 col-md-2">
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <select name="billing_address_id[{{ $key }}]" class="form-control">
+                                            <select name="billing_address_id" class="form-control">
                                                 @foreach ($billing_address as $bil_key => $bil_val)
                                                     <option value="{{ $bil_val->id }}"
                                                         @if ($bil_val->id == $value->billing_address_id) selected @endif>
@@ -358,8 +338,7 @@
                                     </div>
                                     <div class="col-xl-2 col-md-2">
                                         <div class="input-group input-group-sm input-group-primary">
-                                            <select name="collection_address_id[{{ $key }}]"
-                                                class="form-control">
+                                            <select name="collection_address_id" class="form-control">
                                                 @foreach ($collection_address as $col_key => $col_val)
                                                     <option value="{{ $col_val->id }}"
                                                         @if ($col_val->id == $value->collection_address_id) selected @endif>
@@ -372,7 +351,7 @@
                                                     onClick="ShowModal('collection','{{ $value->fr_no }}',this)"></i></label>
                                         </div>
                                     </div>
-                                    <x-input-box colGrid="3" name="bill_payment_date[{{ $key }}]"
+                                    <x-input-box colGrid="3" name="bill_payment_date"
                                         value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date"
                                         class="container" attr='readonly' />
 
@@ -380,24 +359,24 @@
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="prepaid">
                                                 <input type="radio" class="form-check-input payment_status"
-                                                    id="prepaid" name="payment_status[{{ $key }}]"
-                                                    value="prepaid" @checked(@$value->payment_status == 'prepaid' || ($form_method == 'POST' && !old()))>
+                                                    id="prepaid" name="payment_status" value="prepaid"
+                                                    @checked(@$value->payment_status == 'prepaid' || ($form_method == 'POST' && !old()))>
                                                 Prepaid
                                             </label>
                                         </div>
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="postpaid">
                                                 <input type="radio" class="form-check-input payment_status"
-                                                    id="postpaid" name="payment_status[{{ $key }}]"
-                                                    value="postpaid" @checked(@$value->payment_status == 'postpaid')>
+                                                    id="postpaid" name="payment_status" value="postpaid"
+                                                    @checked(@$value->payment_status == 'postpaid')>
                                                 Postpaid
                                             </label>
                                         </div>
                                     </div>
-                                    <x-input-box colGrid="3" name="mrc[{{ $key }}]"
-                                        value="{{ $value->mrc }}" label="MRC" attr="readonly" />
-                                    <x-input-box colGrid="3" name="otc[{{ $key }}]"
-                                        value="{{ $value->otc }}" label="OTC" attr="readonly" />
+                                    <x-input-box colGrid="3" name="mrc" value="{{ $value->mrc }}"
+                                        label="MRC" attr="readonly" />
+                                    <x-input-box colGrid="3" name="otc" value="{{ $value->otc }}"
+                                        label="OTC" attr="readonly" />
                                 </div>
                                 <div>
 
@@ -412,89 +391,92 @@
                                             <th>Total Price</th>
                                             <th>Vat Percent</th>
                                             <th>Vat Amount</th>
+                                            <th>Total Amount</th>
                                         </thead>
                                         <tbody>
                                             @foreach ($value->saleProductDetails as $key1 => $val)
                                                 <tr>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text"
-                                                                name="product_name[{{ $key }}][]"
+                                                            <input type="text" name="product_name[]"
                                                                 class="form-control text-center" id="service_name"
                                                                 readonly value="{{ $val->product_name }}">
-                                                            <input type="hidden"
-                                                                name="product_id[{{ $key }}][]"
+                                                            <input type="hidden" name="product_id[]"
                                                                 class="form-control text-center" id="service" readonly
                                                                 value="{{ $val->product_id }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text" name="quantity[{{ $key }}][]"
+                                                            <input type="text" name="quantity[]"
                                                                 class="form-control text-right" id="quantity" readonly
                                                                 value="{{ $val->quantity }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text" name="unit[{{ $key }}][]"
+                                                            <input type="text" name="unit[]"
                                                                 class="form-control text-center" id="unit" readonly
                                                                 value="{{ $val->unit }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text" name="rate[{{ $key }}][]"
+                                                            <input type="text" name="rate[]"
                                                                 class="form-control text-right" readonly
                                                                 value="{{ $val->rate }}">
                                                         </div>
                                                     </td>
                                                     <td class="d-none">
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text" name="price[{{ $key }}][]"
+                                                            <input type="text" name="price[]"
                                                                 class="form-control text-right" readonly
                                                                 value="{{ $percent * $val->rate + $val->rate }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text"
-                                                                name="total_price[{{ $key }}][]"
+                                                            <input type="text" name="total_price[]"
                                                                 class="form-control text-right" readonly
                                                                 value="{{ ($percent * $val->rate + $val->rate) * $val->quantity }}">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text"
-                                                                name="vat_percent[{{ $key }}][]"
+                                                            <input type="text" name="vat_percent[]"
                                                                 class="form-control text-right vat_percent"
+                                                                value="{{ $percent }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <input type="text" name="vat_amount[]"
+                                                                class="form-control text-right vat_amount" readonly
                                                                 value="0">
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text"
-                                                                name="vat_amount[{{ $key }}][]"
-                                                                class="form-control text-right vat_amount" readonly
-                                                                value="0">
+                                                            <input type="text" name="total_amount[]"
+                                                                class="form-control text-right total_amount" readonly
+                                                                value="{{ ($percent * $val->rate + $val->rate) * $val->quantity }}">
                                                         </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="3" style="text-align: left;"></td>
-                                                <td style="text-align: center;">Total MRC</td>
-                                                <td>
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <input type="text" name="total_mrc[{{ $key }}]"
-                                                            class="form-control text-right total_mrc" readonly
-                                                            value="{{ $value->total_mrc }}">
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                        <tfoot></tfoot>
+                                        <tr>
+                                            <td colspan="3" style="text-align: left;"></td>
+                                            <td style="text-align: center;">Total MRC</td>
+                                            <td>
+                                                <div class="input-group input-group-sm input-group-primary">
+                                                    <input type="text" name="total_mrc"
+                                                        class="form-control text-right total_mrc" readonly
+                                                        value="{{ $value->total_mrc }}">
+                                                </div>
+                                            </td>
+                                        </tr>
                                         </tfoot>
                                     </table>
                                 </div>

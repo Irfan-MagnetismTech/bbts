@@ -71,11 +71,13 @@ class SaleModificationController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         try {
             DB::beginTransaction();
-            $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
+            $data = $request->only('wo_no',  'connectivity_requirement_id', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
             $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale');
             $data['work_order'] = $this->uploadFile->handleFile($request->work_order, 'sales/sale');
+            $data['is_modified'] = 1;
             $sale = Sale::create($data);
             $detailsData = $this->makeRow($request->all(), $sale->id);
             $saleDetail = SaleDetail::create($detailsData);
@@ -84,7 +86,7 @@ class SaleModificationController extends Controller
             SaleLinkDetail::insert($saleLink);
             SaleProductDetail::insert($saleService);
             DB::commit();
-            return redirect()->route('sales.index')->with('success', 'Sales Created Successfully');
+            return redirect()->route('sales-modification.index')->with('success', 'Sales Created Successfully');
         } catch (Exception $err) {
             DB::rollBack();
             return redirect()->back()->with('error', $err->getMessage())->withInput();
@@ -108,7 +110,18 @@ class SaleModificationController extends Controller
      */
     public function edit($id)
     {
-        return view('changes::edit');
+        $sale = Sale::where('id', $id)->first();
+        $frNo = $sale->saleDetails->first()->fr_no;
+        $oldSale = Sale::whereHas('saleDetails', function ($query) use ($frNo) {
+            $query->where('fr_no', $frNo);
+        })->with(['saleDetails' => function ($query) use ($frNo) {
+            $query->where('fr_no', $frNo);
+        }])
+            ->first();
+        $divisions = Division::latest()->get();
+        $billing_address = BillingAddress::where('client_no', $sale->client_no)->get();
+        $collection_address = CollectionAddress::where('client_no', $sale->client_no)->get();
+        return view('changes::modify_sales.create', compact('sale', 'divisions', 'billing_address', 'collection_address', 'oldSale'));
     }
 
     /**
@@ -119,7 +132,38 @@ class SaleModificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $sale = Sale::where('id', $id)->first();
+        $data = $request->only('wo_no', 'connectivity_requirement_id', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
+        if ($request->hasFile('sla')) {
+            $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale', $sale->sla);
+        } else {
+            $data['sla'] = $sale->sla;
+        }
+        if ($request->hasFile('work_order')) {
+            $data['work_order'] = $this->uploadFile->handleFile($request->work_order, 'sales/sale', $sale->work_order);
+        } else {
+            $data['work_order'] = $sale->work_order;
+        }
+
+        try {
+            DB::beginTransaction();
+            $sale->update($data);
+            $detailsData = $this->makeRow($request->all(), $sale->id);
+            $sale->saleDetails()->delete();
+            $saleDetail = SaleDetail::create($detailsData);
+
+            $saleService = $this->makeServiceRow($request->all(), $saleDetail);
+            $sale->saleLinkDetails()->delete();
+            $sale->saleProductDetails()->delete();
+            $saleLink = $this->makeLinkRow($request->all(), $saleDetail, true);
+            SaleLinkDetail::insert($saleLink);
+            SaleProductDetail::insert($saleService);
+            DB::commit();
+            return redirect()->route('sales-modification.index')->with('success', 'Sales Updated Successfully');
+        } catch (Exception $err) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $err->getMessage())->withInput();
+        }
     }
 
     /**
@@ -129,7 +173,18 @@ class SaleModificationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $sale = Sale::where('id', $id)->first();
+        try {
+            DB::beginTransaction();
+            $this->uploadFile->deleteFile($sale->sla);
+            $this->uploadFile->deleteFile($sale->work_order);
+            $sale->delete();
+            DB::commit();
+            return redirect()->back()->with('success', 'Sales Deleted Successfully');
+        } catch (Exception $err) {
+            DB::rollBack();
+            return redirect()->back()->with('error', $err->getMessage())->withInput();
+        }
     }
 
     private function makeRow($raw, $sale_id)
@@ -167,7 +222,6 @@ class SaleModificationController extends Controller
                 'total_price'       => $raw['total_price'][$key],
                 'vat_amount'        => $raw['vat_amount'][$key],
                 'vat_percent'       => $raw['vat_percent'][$key],
-                'total_amount'      => $raw['total_amount'][$key],
                 'sale_id'           => $saleDetail['sale_id'],
                 'sale_detail_id'    => $saleDetail['id'],
                 'updated_at'        => now()
@@ -287,5 +341,39 @@ class SaleModificationController extends Controller
         $offer->toArray();
 
         return response()->json($offer);
+    }
+
+    public function pnlSummary($connectivity_requirement_id = null)
+    {
+        $connectivity_requirement = ConnectivityRequirement::where('id', $connectivity_requirement_id)->first();
+        $sale = Sale::where('connectivity_requirement_id', $connectivity_requirement_id)->first();
+        return view('changes::modify_pnl.pnl_summary', compact('connectivity_requirement', 'sale', 'connectivity_requirement_id'));
+    }
+
+    public function pnlDetails($connectivity_requirement_id = null)
+    {
+        // $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing.costingProducts')
+        //     ->where('mq_no', $mq_no)->first();
+        $connectivity_requirement = ConnectivityRequirement::where('id', $connectivity_requirement_id)->first();
+        if ($connectivity_requirement) {
+            $connectivity_requirement->costingByConnectivity->costingProducts->map(function ($item) {
+                $item->sale_product = SaleProductDetail::where('product_id', $item->product_id)->where('fr_no', $item->fr_no)->first();
+                return $item;
+            });
+        }
+        // if ($feasibility_requirement) {
+        //     $feasibility_requirement->feasibilityRequirementDetails->map(function ($item) {
+        //         if ($item->costing) {
+        //             $item->costing->costingProducts->map(function ($item) {
+        //                 $item->sale_product = SaleProductDetail::where('product_id', $item->product_id)->where('fr_no', $item->fr_no)->first();
+        //                 return $item;
+        //             });
+        //             return $item;
+        //         }
+        //     });
+        // }
+
+
+        return view('changes::modify_pnl.pnl_details', compact('connectivity_requirement', 'connectivity_requirement_id'));
     }
 }

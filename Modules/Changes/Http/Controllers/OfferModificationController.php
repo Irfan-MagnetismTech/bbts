@@ -141,6 +141,7 @@ class OfferModificationController extends Controller
 
     function updateOffer($requestData, $id)
     {
+        // dd($requestData);
         $offer = null;
         $requestData['is_modified'] = 1;
         try {

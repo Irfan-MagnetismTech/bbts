@@ -233,7 +233,7 @@ class PlanningController extends Controller
                 $planLink->save();
 
                 $finalSurveyData = [
-                    'link_no' => $surveyDetails->link_no ?? '',
+                    'link_no' => $surveyDetails ? $surveyDetails->link_no : $finalSurvey->link_no ?? $request->fr_no . '-' . substr($linkType, 0, 1) . $i,
                     'vendor_id' => request("link_vender_id_{$i}") ?? '',
                     'link_type' => $linkType,
                     'method' => request("last_mile_connectivity_method_{$i}"),

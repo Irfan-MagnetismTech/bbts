@@ -80,7 +80,21 @@ class CostingModificationController extends Controller
             ];
         }
 
-        $products = array_merge($sale_products, $service_products);
+        $sale_products_assoc = [];
+        foreach ($sale_products as $sale_product) {
+            $product_id = $sale_product['product_id'];
+            $sale_products_assoc[$product_id] = $sale_product;
+        }
+
+        // Convert $service_products to an associative array indexed by product_id
+        $service_products_assoc = [];
+        foreach ($service_products as $service_product) {
+            $product_id = $service_product['product_id'];
+            $service_products_assoc[$product_id] = $service_product;
+        }
+
+        $products = $service_products_assoc + $sale_products_assoc;
+
         // dd($products);
         // foreach ($service_products as $key => $service_product) {
         //     if ($service_product['product_id'] != $sale_products['product_id'][$key]) {
@@ -155,7 +169,29 @@ class CostingModificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        try {
+            DB::beginTransaction();
+
+            $costingData = $request->all();
+
+            $costing = Costing::find($id);
+
+            $costing->update($costingData);
+
+            $this->createOrUpdateCostingProducts($request, $costing);
+
+            $this->createOrUpdateCostingMaterials($request, $costing);
+
+            $this->createOrUpdateCostingLinks($request, $costing);
+
+            DB::commit();
+            // return response()->json(['message' => 'Data saved successfully.']);
+            return redirect()->route('costing.index')->with('success', 'Data saved successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Failed to save data. Error: ' . $e->getMessage());
+        }
     }
 
     /**
