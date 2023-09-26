@@ -23,7 +23,9 @@ class CollectionController extends Controller
      */
     public function index()
     {
-        $datas = Collection::query()->get();
+        $datas = Collection::query()
+        ->latest()
+        ->get();
         return view('billing::collection.index', compact('datas'));
     }
 
@@ -44,13 +46,14 @@ class CollectionController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        if($request->total_amount!=$request->total_single_total)
-        {
-            return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
-        }
+        // if($request->total_amount!=$request->grand_total)
+        // {
+        //     return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
+        // }
         try {
             DB::beginTransaction();
-            $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount', 'total_receive_amount', 'total_due');
+            $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
+
             $BillCollection = Collection::create($CollectionData);
             $lineRow = $this->createLineRow($request);
             $collectionBillRow = $this->createCollectionBillRow($request);
@@ -81,6 +84,7 @@ class CollectionController extends Controller
      */
     public function edit(Collection $collection)
     {
+        
         return view('billing::collection.create', compact('collection'));
     }
 
@@ -94,7 +98,7 @@ class CollectionController extends Controller
     {
         try {
             DB::beginTransaction();
-            $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount', 'total_receive_amount', 'total_due');
+            $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
             $collection->update($CollectionData);
             $lineRow = $this->createLineRow($request);
             $collectionBillRow = $this->createCollectionBillRow($request);
@@ -154,6 +158,10 @@ class CollectionController extends Controller
                 'previous_due'      => $req->previous_due[$key],
                 'discount'          => $req->discount[$key],
                 'penalty'           => $req->penalty[$key],
+                'net_amount'        => $req->net_amount[$key],
+                'vat'        => $req->vat[$key],
+                'tax'        => $req->tax[$key],
+                'total'        => $req->total[$key],
                 'net_amount'        => $req->net_amount[$key],
                 'receive_amount'    => $req->receive_amount[$key],
                 'due'               => $req->due[$key]

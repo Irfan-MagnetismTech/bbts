@@ -21,6 +21,11 @@ return new class extends Migration
             $table->string('remarks')->nullable();
             $table->integer('total_amount')->default(0);
             $table->integer('total_net_amount')->default(0);
+            $table->integer('total_vat')->default(0);
+            $table->integer('total_tax')->default(0);
+            $table->integer('grand_total')->default(0);
+            $table->integer('total_bill_amount')->default(0);
+            $table->integer('total_previous_due')->default(0);
             $table->integer('total_receive_amount')->default(0);
             $table->integer('total_due')->default(0);
             $table->timestamps();

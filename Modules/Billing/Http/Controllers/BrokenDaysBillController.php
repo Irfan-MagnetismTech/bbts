@@ -300,7 +300,9 @@ class BrokenDaysBillController extends Controller
 
     public function getUnpaidBill(Request $request)
     {
-        $unpaidBills = BillGenerate::with('collection')->where('client_no', $request->client_no)->get();
+        $unpaidBills = BillGenerate::with('collection')
+        ->withSum('collection', 'receive_amount')
+        ->where('client_no', $request->client_no)->get();
         
         return $unpaidBills;
     }

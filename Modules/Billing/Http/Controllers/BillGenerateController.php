@@ -63,8 +63,10 @@ class BillGenerateController extends Controller
             $data = $request->only('client_no', 'date', 'billing_address_id', 'bill_type', 'amount');
             $data['user_id'] = Auth()->id();
             $data['bill_no'] = $this->billNo;
-            $bill_generate = BillGenerate::create($data);
+            $amount=$this->getAmount($request);
             $getRow = $this->getRow($request);
+            $data['amount'] = $amount;
+            $bill_generate = BillGenerate::create($data);
             $bill_generate->lines()->createMany($getRow);
             DB::commit();
             return redirect()->route('bill-generate.index')->with('message', 'Data has been created successfully');
@@ -127,14 +129,12 @@ class BillGenerateController extends Controller
         return view('billing::billGenerate.pdf', compact('billData'));
     }
 
-
     public function generate_bill($id)
     {
         $billData = BillGenerate::findOrFail($id);
         $billData->load('lines.billingOtcBill.lines');
         return view('billing::billGenerate.bill', compact('billData'));
     }
-
 
     public function getRow($req)
     {
@@ -153,5 +153,15 @@ class BillGenerateController extends Controller
             }
         }
         return $row;
+    }
+    public function getAmount($req)
+    {
+        $amount=0;
+        foreach ($req->connectivity_point as $key => $value) {
+            if ((isset($req['checked']) && isset($req['checked'][$key]))) {
+                $amount += $req->total_amount[$key];
+            }
+        }
+        return $amount;
     }
 }

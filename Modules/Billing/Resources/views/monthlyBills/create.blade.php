@@ -50,7 +50,7 @@
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="date">Date <span class="text-danger">*</span></label>
                         <input class="form-control" id="date" name="date" aria-describedby="date"
-                            placeholder="Enter  date" value="{{ old('date') ?? ($branch->date ?? '') }}" required>
+                            placeholder="Enter date" value="{{ old('date') ?? ($branch->date ?? '') }}" required>
                     </div>
                 </div>
             </div>
