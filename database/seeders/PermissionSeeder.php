@@ -237,6 +237,14 @@ class PermissionSeeder extends Seeder
                 'guard_name' => 'web',
             ],
             [
+                'name' => 'support-ticket-reports',
+                'guard_name' => 'web',
+            ],
+            [
+                'name' => 'support-ticket-downtime-report',
+                'guard_name' => 'web',
+            ],
+            [
                 'name' => 'bulk-email-send',
                 'guard_name' => 'web',
             ],

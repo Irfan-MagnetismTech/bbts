@@ -24,7 +24,7 @@ use Modules\Changes\Http\Controllers\SaleModificationController;
 */
 
 Route::prefix('changes')->middleware(['auth'])->group(function () {
-    Route::get('/', 'ChangesController@index');
+    // Route::get('/', 'ChangesController@index');
     Route::resources([
         'client-requirement-modification' => ClientRequirementController::class,
         'client-plan-modification' => ClientPlanningModificationController::class,

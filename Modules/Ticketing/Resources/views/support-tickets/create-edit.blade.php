@@ -178,14 +178,14 @@
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="contact_person">
                                             Contact Person</label>
-                                        <input type="text" class="form-control col-8" id="contact_person"
+                                        <input type="text" disabled class="form-control col-8" id="contact_person"
                                             value="{{ old('contact_person') ?? (!empty($supportTicket) ? $supportTicket?->client?->contact_person : '') }}"
                                             name="contact_person" placeholder="Contact Person">
                                     </div>
                                     <div class="d-flex align-items-center justify-content-space-between mb-2">
                                         <label class="d-flex align-items-center m-0 pr-1 col-4" for="email_address">
                                             E-mail Address</label>
-                                        <input type="text" class="form-control col-8" id="email_address"
+                                        <input type="text" disabled class="form-control col-8" id="email_address"
                                             value="{{ old('email_address') ?? (!empty($supportTicket) ? $supportTicket?->client?->email : '') }}"
                                             name="email_address" placeholder="E-mail Address">
                                     </div>
@@ -492,7 +492,6 @@
             $('#contact_no').val(e.params.data.fullObject?.contact_no)
             $('#email_address').val(e.params.data.fullObject?.email)
             $("#client_link_id").val(e.params.data.fullObject?.text)
-            getClientsPreviousTickets(clientId, 5)
         });
 
         $('#fr_no').on('select2:select', function(e) {
@@ -502,6 +501,8 @@
                         </div>`;
             let fr_no = e.params.data.id;
             let clientId = $("#client_no").val();
+            getClientsPreviousTickets(fr_no, 5)
+
             $.ajax({
                 url: "{{ url('get-links-by-fr') }}" + "/" + clientId + "/" + fr_no,
                 type: 'get',
@@ -563,10 +564,9 @@
         });
 
 
-        function getClientsPreviousTickets(clientId, limit = 5) {
-            console.log(clientId, limit)
+        function getClientsPreviousTickets(fr_no, limit = 5) {
             $.ajax({
-                url: "{{ url('get-clients-previous-tickets') }}" + "/" + clientId + "/" + limit,
+                url: "{{ url('get-clients-previous-tickets') }}" + "/" + fr_no + "/" + limit,
                 type: 'get',
                 dataType: "json"
             }).done(function(data) {

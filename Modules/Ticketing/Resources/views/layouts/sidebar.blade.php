@@ -47,12 +47,14 @@
         </a>
     </li>
     @endif
+    @if(auth()->user()->hasPermissionTo('support-ticket-handover'))
     <li class="{{ request()->routeIs('handovered-tickets') ? 'active' : null }}">
         <a href="{{ route('handovered-tickets') }}">
             <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-hands-helping"></i></span>
             <span class="pcoded-mtext">Handovered Ticket List</span>
         </a>
     </li>
+    @endif
     @if(auth()->user()->hasPermissionTo('bulk-email-send'))
     <li class="{{ request()->routeIs('bulk-email') ? 'active' : null }}">
         <a href="{{ route('bulk-email') }}">
@@ -93,16 +95,20 @@
         </a>
     </li>
     @endif
+    @if(auth()->user()->hasPermissionTo('support-ticket-reports'))
     <li class="{{ request()->routeIs('report-index') ? 'active' : null }}">
         <a href="{{ route('report-index') }}">
             <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-briefcase"></i></span>
             <span class="pcoded-mtext">Reports</span>
         </a>
     </li>
+    @endif
+    @if(auth()->user()->hasPermissionTo('support-ticket-downtime-report'))
     <li class="{{ request()->routeIs('downtime-report-index') ? 'active' : null }}">
         <a href="{{ route('downtime-report-index') }}">
             <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-network-wired"></i></span>
             <span class="pcoded-mtext">Downtime Report</span>
         </a>
     </li>
+    @endif
 </ul>

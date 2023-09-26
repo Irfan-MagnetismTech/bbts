@@ -96,13 +96,11 @@ class CommonApiController extends Controller
         return response()->json($results);
     }
 
-    public function getClientsPreviousTickets($clientId, $limit)
+    public function getClientsPreviousTickets($frNo, $limit)
     {
-        $clientId = abs($clientId);
         $limit = (abs($limit) > 5) ? 5 : abs($limit);
 
-        $client = Client::find($clientId);
-        $previousTickets = $client->supportTickets()
+        $previousTickets = SupportTicket::where('fr_no', $frNo)
             ->with(['supportComplainType', 'ticketSource'])
             ->limit($limit)
             ->orderBy('id', 'desc')

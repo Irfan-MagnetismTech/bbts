@@ -224,7 +224,7 @@
             dropdown.empty();
             dropdown.append('<option selected="true" disabled>Select District </option>');
             dropdown.prop('selectedIndex', 0);
-            const url = '{{url("getDistricts")}}/' + $("#division_id").val();
+            const url = '{{url("admin/get_districts")}}?division_id=' + $("#division_id").val();
             // Populate dropdown with list of provinces
             $.getJSON(url, function (district) {
                 $.each(district, function (key, entry) {
@@ -237,7 +237,7 @@
             dropdown.empty();
             dropdown.append('<option selected="true" disabled>Select District </option>');
             dropdown.prop('selectedIndex', 0);
-            const url = '{{url("getDistricts")}}/' + $("#per_division_id").val();
+            const url = '{{url("admin/get_districts")}}?division_id=' + $("#per_division_id").val();
             // Populate dropdown with list of provinces
             $.getJSON(url, function (perdistrict) {
                 $.each(perdistrict, function (key, entry) {
@@ -250,7 +250,7 @@
             dropdown.empty();
             dropdown.append('<option selected="true" disabled>Select Thana </option>');
             dropdown.prop('selectedIndex', 0);
-            const url = '{{url("getThanas")}}/' + $("#district_id").val();
+            const url = '{{url("admin/get_thanas")}}/' + $("#district_id").val();
             // Populate dropdown with list of provinces
             $.getJSON(url, function (thana) {
                 $.each(thana, function (key, entry) {
@@ -263,7 +263,7 @@
             dropdown.empty();
             dropdown.append('<option selected="true" disabled>Select Thana </option>');
             dropdown.prop('selectedIndex', 0);
-            const url = '{{url("getThanas")}}/' + $("#per_district_id").val();
+            const url = '{{url("admin/get_thanas")}}/' + $("#per_district_id").val();
             // Populate dropdown with list of provinces
             $.getJSON(url, function (thana) {
                 $.each(thana, function (key, entry) {
