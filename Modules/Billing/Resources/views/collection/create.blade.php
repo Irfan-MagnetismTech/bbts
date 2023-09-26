@@ -497,6 +497,14 @@
                         let count = $('.payment_details_row').length;
                         if (count > 1) {
                             $(this).closest('tr').remove();
+                            const removePaymentRow =  $(this).closest('tr')
+                            const amount = removePaymentRow.find('.amount').val();
+                            const previousAmount =  $('#total_amount').val();
+                            $('#total_amount').val(previousAmount - amount);
+                            removePaymentRow.remove();
+
+
+
                         }
                     });
 
@@ -687,9 +695,17 @@
                         jquaryUiAjax(this, "{{ route('get_bill') }}", uiList, myObject);
 
                         function uiList(item) {
+                            let previousDue
+                            if(item.previous_due > 0)
+                            {
+                                previousDue = item.previous_due
+                            }
+                            else{
+                                previousDue = item.amount;
+                            }
                             $(source).val(item.value).attr('value', item.value);
                             $(source).closest('tr').find('.bill_amount').val(item.amount);
-                            $(source).closest('tr').find('.previous_due').val(item.previous_due);
+                            $(source).closest('tr').find('.previous_due').val(previousDue);
                             if (item.previous_due) {
                                 $(source).closest('tr').find('.net_amount').val(item.previous_due);
                                 $(source).closest('tr').find('.due').val(item.previous_due);
@@ -733,6 +749,14 @@
                         $(".net_amount").each(function() {
                             totalNetAmount += parseFloat($(this).val() ? $(this).val() : 0);
                         })
+                        var totalBillAmount = 0;
+                        $(".bill_amount").each(function() {
+                            totalBillAmount += parseFloat($(this).val() ? $(this).val() : 0);
+                        })
+                        var totalPreviousDue = 0;
+                        $(".previous_due").each(function() {
+                            totalPreviousDue += parseFloat($(this).val() ? $(this).val() : 0);
+                        })
 
                         var totalVat = 0;
                         $(".vat").each(function() {
@@ -756,12 +780,17 @@
                             totalDue += parseFloat($(this).val() ? $(this).val() : 0);
                         })
                         $('#total_net_amount').val(totalNetAmount);
+                        $('#total_bill_amount').val(totalBillAmount);
+                        $('#total_previous_due').val(totalPreviousDue);
                         $('#total_vat').val(totalVat);
                         $('#total_tax').val(totalTax);
                         $('#total_receive_amount').val(totalReceiveAmount);
                         $('#grand_total').val(totalSingleTotal);
                         $('#total_due').val(totalDue);
                     }
+                    $(document).on('keyup', '.amount', function() {
+                        calculatePaymentTotal();
+                    })
                     $(document).on('keyup', '.amount', function() {
                         calculatePaymentTotal();
                     })
