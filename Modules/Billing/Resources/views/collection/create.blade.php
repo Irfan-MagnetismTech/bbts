@@ -567,13 +567,12 @@
                                     _token: "{{ csrf_token() }}"
                                 },
                                 success: function(data) {
-                                    // console.log(data);
+                                //   console.log(data);
                                     let totalBillAmount = 0;
                                     let totalPreviousDue = 0;
 
 
                                     data.forEach(element => {
-
                                         totalBillAmount += element.amount;
                                         totalPreviousDue += (element.amount) - (element
                                             .collection_sum_receive_amount);
@@ -598,7 +597,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" value = ${(element.amount) - (element.collection_sum_receive_amount)} name="previous_due[]"
+                                                    <input type="text" value = ${element.last_previous_due !== undefined ? element.last_previous_due : element.amount} name="previous_due[]"
                                                         class="form-control previous_due" autocomplete="off"
                                                         placeholder="Previous Due" readonly>
                                                 </div>

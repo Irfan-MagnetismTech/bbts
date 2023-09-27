@@ -298,12 +298,36 @@ class BrokenDaysBillController extends Controller
         ];
     }
 
-    public function getUnpaidBill(Request $request)
-    {
-        $unpaidBills = BillGenerate::with('collection')
-        ->withSum('collection', 'receive_amount')
-        ->where('client_no', $request->client_no)->get();
+    // public function getUnpaidBill(Request $request)
+    // {
+    //     $unpaidBills = BillGenerate::with('collection')
+    //     ->withSum('collection', 'receive_amount')
+    //     ->where('client_no', $request->client_no)->get();
         
-        return $unpaidBills;
-    }
+    //     return $unpaidBills;
+    // }
+    public function getUnpaidBill(Request $request)
+{
+    $unpaidBills = BillGenerate::with('collection')
+        ->withSum('collection', 'receive_amount')
+        ->where('client_no', $request->client_no)
+        ->get();
+
+    $unpaidBills->each(function ($bill) {
+        // Access the collection relationship
+        $collections = $bill->collection;
+
+        // Check if there are collections
+        if ($collections->isNotEmpty()) {
+            // Access the last object's previous_due
+            $lastCollection = $collections->last();
+            $previousDue = $lastCollection->previous_due;
+
+            // You can now use $previousDue as needed
+            $bill->last_previous_due = $previousDue;
+        }
+    });
+
+    return $unpaidBills;
+}
 }
