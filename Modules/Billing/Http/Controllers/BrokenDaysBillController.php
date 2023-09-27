@@ -306,45 +306,29 @@ class BrokenDaysBillController extends Controller
         
     //     return $unpaidBills;
     // }
-//     public function getUnpaidBill(Request $request)
-// {
-//     $unpaidBills = BillGenerate::with('collection')
-//         ->withSum('collection', 'receive_amount')
-//         ->where('client_no', $request->client_no)
-//         ->get();
-
-//     $unpaidBills->each(function ($bill) {
-//         // Access the collection relationship
-//         $collections = $bill->collection;
-
-//         // Check if there are collections
-//         if ($collections->isNotEmpty()) {
-//             // Access the last object's previous_due
-//             $lastCollection = $collections->last();
-//             $previousDue = $lastCollection->previous_due;
-
-//             // You can now use $previousDue as needed
-//             $bill->last_previous_due = $previousDue;
-//         }
-//     });
-
-//     return $unpaidBills;
-// }
-public function getUnpaidBill(Request $request)
+    public function getUnpaidBill(Request $request)
 {
     $unpaidBills = BillGenerate::with('collection')
         ->withSum('collection', 'receive_amount')
         ->where('client_no', $request->client_no)
         ->get();
 
-    // Filter the $unpaidBills based on the last_previous_due property
-    $filteredBills = $unpaidBills->filter(function ($bill) {
-        // Check if the last_previous_due is not equal to 0
-        return $bill->last_previous_due != 0;
+    $unpaidBills->each(function ($bill) {
+        // Access the collection relationship
+        $collections = $bill->collection;
+
+        // Check if there are collections
+        if ($collections->isNotEmpty()) {
+            // Access the last object's previous_due
+            $lastCollection = $collections->last();
+            $previousDue = $lastCollection->previous_due;
+
+            // You can now use $previousDue as needed
+            $bill->last_previous_due = $previousDue;
+        }
     });
 
-    return $filteredBills;
+    return $unpaidBills;
 }
-
 
 }
