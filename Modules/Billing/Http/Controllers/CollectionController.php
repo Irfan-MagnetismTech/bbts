@@ -46,10 +46,10 @@ class CollectionController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        // if($request->total_amount!=$request->grand_total)
-        // {
-        //     return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
-        // }
+        if($request->total_amount!=$request->grand_total)
+        {
+            return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
+        }
         try {
             DB::beginTransaction();
             $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
@@ -96,6 +96,10 @@ class CollectionController extends Controller
      */
     public function update(Request $request, Collection $collection)
     {
+        if($request->total_amount!=$request->grand_total)
+        {
+            return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
+        }
         try {
             DB::beginTransaction();
             $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
@@ -151,22 +155,40 @@ class CollectionController extends Controller
     public function createCollectionBillRow($req)
     {
         $row = [];
+        // foreach ($req->bill_no as $key => $value) {
+        //     $row[] = [
+        //         'bill_no'           => $req->bill_no[$key],
+        //         'amount'            => $req->bill_amount[$key],
+        //         'previous_due'      => $req->previous_due[$key],
+        //         'discount'          => $req->discount[$key],
+        //         'penalty'           => $req->penalty[$key],
+        //         'net_amount'        => $req->net_amount[$key],
+        //         'vat'        => $req->vat[$key],
+        //         'tax'        => $req->tax[$key],
+        //         'total'        => $req->total[$key],
+        //         'net_amount'        => $req->net_amount[$key],
+        //         'receive_amount'    => $req->receive_amount[$key],
+        //         'due'               => $req->due[$key]
+        //     ];
+        // }
         foreach ($req->bill_no as $key => $value) {
-            $row[] = [
-                'bill_no'           => $req->bill_no[$key],
-                'amount'            => $req->bill_amount[$key],
-                'previous_due'      => $req->previous_due[$key],
-                'discount'          => $req->discount[$key],
-                'penalty'           => $req->penalty[$key],
-                'net_amount'        => $req->net_amount[$key],
-                'vat'        => $req->vat[$key],
-                'tax'        => $req->tax[$key],
-                'total'        => $req->total[$key],
-                'net_amount'        => $req->net_amount[$key],
-                'receive_amount'    => $req->receive_amount[$key],
-                'due'               => $req->due[$key]
-            ];
+            if ($req->receive_amount[$key] > 0) {
+                $row[] = [
+                    'bill_no'           => $req->bill_no[$key],
+                    'amount'            => $req->bill_amount[$key],
+                    'previous_due'      => $req->previous_due[$key],
+                    'discount'          => $req->discount[$key],
+                    'penalty'           => $req->penalty[$key],
+                    'net_amount'        => $req->net_amount[$key],
+                    'vat'               => $req->vat[$key],
+                    'tax'               => $req->tax[$key],
+                    'total'             => $req->total[$key],
+                    'receive_amount'    => $req->receive_amount[$key],
+                    'due'               => $req->due[$key]
+                ];
+            }
         }
+        
         return $row;
     }
 
