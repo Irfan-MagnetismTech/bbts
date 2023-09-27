@@ -2,6 +2,7 @@
 
 namespace Modules\Billing\Http\Controllers;
 
+use Illuminate\Database\QueryException;
 use PDF;
 use Exception;
 use Illuminate\Http\Request;
@@ -108,9 +109,11 @@ class MonthlyBillController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function edit(MonthlyBill $monthlyBill)
+    public function edit(int $id)
     {
-        return view('billing::edit');
+        $monthlyBill = BillGenerate::findOrFail($id);
+        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+        return view('billing::monthlyBills.edit', compact('monthlyBill', 'groupedLines'));
     }
 
     /**
@@ -119,10 +122,19 @@ class MonthlyBillController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         try {
-        } catch (Exception $err) {
+            DB::beginTransaction();
+            $monthlyBill = BillGenerate::findOrFail($id);
+            $data = $request->only('penalty');
+            $monthlyBill->update($data);
+
+            DB::commit();
+            return redirect()->route('monthly-bills.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('monthly-bills.create')->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -134,12 +146,6 @@ class MonthlyBillController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function mrc_bill_edit($id){
-        $monthlyBill = BillGenerate::findOrFail($id);
-        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
-        return view('billing::monthlyBills.edit', compact('monthlyBill', 'groupedLines'));
     }
 
     public function mrc_bill($id)

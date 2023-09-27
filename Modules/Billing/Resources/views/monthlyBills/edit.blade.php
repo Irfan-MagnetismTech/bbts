@@ -12,8 +12,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('monthly-bills.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-database"></i></a>
+    <a href="{{ route('monthly-bills.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('style')
@@ -189,7 +188,7 @@
         'encType' => 'multipart/form-data',
         'class' => 'custom-form',
     ]) !!}
-    <div style="clear: both"></div>
+
     <div class="container">
         <div class="row" style="padding:30px 0 30px;">
             <div class="col-5" style="border: 1px solid #000000; border-radius: 5px;margin: 0;">
@@ -197,19 +196,19 @@
                     <thead>
                     <tr>
                         <td>Client :</td>
-                        <td>{{$monthlyBill->client->client_name}}</td>
+                        <td>{{$monthlyBill->client->client_name ?? ''}}</td>
                     </tr>
                     <tr>
                         <td>Address :</td>
-                        <td>{{$monthlyBill->billingAddress->address}}</td>
+                        <td>{{$monthlyBill->billingAddress->address  ?? ''}}</td>
                     </tr>
                     <tr>
                         <td>Attention :</td>
-                        <td>{{$monthlyBill->billingAddress->contact_person}}</td>
+                        <td>{{$monthlyBill->billingAddress->contact_person  ?? ''}}</td>
                     </tr>
                     <tr>
                         <td>Designation :</td>
-                        <td>{{$monthlyBill->billingAddress->designation}}</td>
+                        <td>{{$monthlyBill->billingAddress->designation  ?? ''}}</td>
                     </tr>
                     <tr>
                         <td>BIN NO :</td>
@@ -224,18 +223,18 @@
                     <thead>
                     <tr>
                         <td>Invoice No :</td>
-                        <td>{{$monthlyBill->client->client_name}}</td>
+                        <td>{{$monthlyBill->client->client_name ?? ''}}</td>
                     </tr>
                     <tr>
                         <td>Invoice Date :</td>
-                        <td>{{$monthlyBill->billingAddress->address}}</td>
+                        <td>{{$monthlyBill->billingAddress->address ?? ''}}</td>
                     </tr>
                     <tr>
                         <td>Invoice Period :</td>
-                        <td>{{$monthlyBill->billingAddress->contact_person}}</td>
+                        <td>{{$monthlyBill->billingAddress->contact_person ?? ''}}</td>
                     </tr>
                     <tr>
-                        <td>BBTSL BIN No</td>
+                        <td>BBTSL BIN No :</td>
                         <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
                     </tr>
                     </thead>
@@ -262,13 +261,13 @@
                 @php
                     $g_total_price = 0;
                     $g_vat = 0;
+                    $penalty = $monthlyBill->penalty ?? 0;
                 @endphp
                 @foreach ($groupedLines as $key1=>$values )
                     @foreach($values as $key2 => $value)
                         @if ($loop->first)
                             <tr>
-                                <td rowspan="{{count($values)}}"
-                                    style="text-align: center;">{{$value->frDetail->connectivity_point}}</td>
+                                <td rowspan="{{count($values)}}" style="text-align: center;">{{$value->frDetail->connectivity_point}}</td>
                         @else
                             <tr>
                                 @endif
@@ -312,7 +311,7 @@
                     <td>
                         <div class="input-group input-group-sm input-group-primary">
                             <input type="number" name="penalty" class="form-control"
-                                   id="penalty" autocomplete="off" placeholder="0" value="">
+                                   id="penalty" autocomplete="off" value={{$penalty}}>
                         </div>
                     </td>
                 </tr>

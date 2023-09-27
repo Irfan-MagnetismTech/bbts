@@ -175,8 +175,8 @@
         </div>
 
         <div>
-            <h2 style="text-align: center; width: 65%; border: 1px solid #000000; border-radius: 5px; margin: 20px auto">
-                Monthly Connectivity Charge Bill (Summary)</h2>
+            <h2 style="background-color: #e3e3e3; text-align: center; width: 30%; border: 1px solid #000000; border-radius: 5px; margin: 20px auto">
+                Monthly Connectivity Charge</h2>
         </div>
     </div>
     <html-separator/>
@@ -271,7 +271,6 @@
                                 <th width="14.28%">Point Name</th>
                                 <th width="14.28%">Total</th>
                                 <th width="14.28%">Vat</th>
-                                <th width="14.28%">Penalty</th>
                                 <th width="14.28%">Total Amount</th>
                                 <th width="14.28%">Due</th>
                                 <th width="14.28%">Net Amount</th>
@@ -281,22 +280,19 @@
                             @php
                                 $g_total_price = 0;
                                 $g_vat = 0;
-                                $g_panalty = 0;
                             @endphp
                             @foreach ($groupedLines as $key1=>$values )
                                 <tr>
                                     <td style="text-align: center;">{{$values->first()->frDetail->connectivity_point}}</td>
                                     <td style="text-align: center;">{{$values->sum('total_price')}}</td>
                                     <td style="text-align: center;">{{$values->sum('vat')}}</td>
-                                    <td style="text-align: center;">{{$values->sum('panalty')}}</td>
-                                    <td style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $values->sum('panalty')}}</td>
+                                    <td style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $monthlyBill?->penalty}}</td>
                                     <td style="text-align: center;">0</td>
-                                    <td style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $values->sum('panalty')}}</td>
+                                    <td style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $monthlyBill?->penalty}}</td>
                                 </tr>
                                 @php
                                     $g_total_price += $values->sum('total_price');
                                     $g_vat += $values->sum('vat');
-                                    $g_panalty += $values->sum('panalty');
                                 @endphp
                            @endforeach
                         </tbody>
@@ -304,12 +300,17 @@
                             <tr>
                                 <td class="text-right" style="text-align: right;">Total Amount</td>
                                 <td style="text-align: center;">{{$g_total_price}}</td>
-                                <td style="text-align: center;">{{$g_panalty}}</td>
                                 <td style="text-align: center;">{{$g_vat}}</td>
-                                <td style="text-align: center;">{{$g_total_price + $g_vat - $g_panalty}}</td>
+                                <td style="text-align: center;">{{$g_total_price + $g_vat - $monthlyBill?->penalty}}</td>
                                 <td style="text-align: center;">0</td>
-                                <td style="text-align: center;">{{$g_total_price + $g_vat - $g_panalty}}</td>
+                                <td style="text-align: center;">{{$g_total_price + $g_vat - $monthlyBill?->penalty}}</td>
                             </tr>
+                            @if($monthlyBill->penalty != null || $monthlyBill->penalty != 0)
+                            <tr>
+                                <td colspan="5" style="text-align: right;">Penalty Amount</td>
+                                <td style="text-align: center;">{{$monthlyBill?->penalty}}</td>
+                            </tr>
+                            @endif
                         </tfoot>
                     </table>
                 </div>
