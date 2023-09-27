@@ -173,10 +173,13 @@ class CollectionController extends Controller
         // }
         foreach ($req->bill_no as $key => $value) {
             if ($req->receive_amount[$key] > 0) {
+                // dd($req->previous_due[$key] - ($req->discount[$key] + $req->penalty[$key] 
+                // + $req->total[$key]));
                 $row[] = [
                     'bill_no'           => $req->bill_no[$key],
                     'amount'            => $req->bill_amount[$key],
-                    'previous_due'      => $req->previous_due[$key],
+                    'previous_due'      => $req->previous_due[$key] - ($req->discount[$key] + $req->penalty[$key] 
+                    + $req->total[$key]),
                     'discount'          => $req->discount[$key],
                     'penalty'           => $req->penalty[$key],
                     'net_amount'        => $req->net_amount[$key],
