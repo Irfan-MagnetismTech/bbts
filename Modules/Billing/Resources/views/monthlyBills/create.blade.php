@@ -21,7 +21,7 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-<a href="{{ route('monthly-bills.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+<a href="{{ route('monthly-bills.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('sub-title')
@@ -54,7 +54,6 @@
                     </div>
                 </div>
             </div>
-    </div>
 
     <div class="row">
         <div class="offset-md-4 col-md-4 mt-2">
@@ -71,7 +70,7 @@
     <script src="{{ asset('js/custom-function.js') }}"></script>
     <script>
         $('#date').datepicker({
-            format: "dd-mm-yyyy",
+            format: "yyyy-mm-dd",
             autoclose: true,
             todayHighlight: true,
             showOtherMonths: true

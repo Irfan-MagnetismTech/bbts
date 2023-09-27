@@ -28,14 +28,16 @@ class BillGenerateController extends Controller
     {
         $this->billNo = $globalService->generateUniqueId(BillGenerate::class, 'OTC');
     }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
+//        $datas = BillGenerate::get();
 //        $datas = BillGenerate::where('bill_type', 'OTC')->get();
-        $datas = BillGenerate::get();
+        $datas = BillGenerate::wherenot('bill_type', 'Monthly Bill')->get();
         return view('billing::billGenerate.index', compact('datas'));
     }
 
@@ -63,7 +65,7 @@ class BillGenerateController extends Controller
             $data = $request->only('client_no', 'date', 'billing_address_id', 'bill_type', 'amount');
             $data['user_id'] = Auth()->id();
             $data['bill_no'] = $this->billNo;
-            $amount=$this->getAmount($request);
+            $amount = $this->getAmount($request);
             $getRow = $this->getRow($request);
             $data['amount'] = $amount;
             $bill_generate = BillGenerate::create($data);
@@ -122,9 +124,9 @@ class BillGenerateController extends Controller
         $billData = BillGenerate::findOrFail($id);
         $billData->load('lines.billingOtcBill.lines');
         return PDF::loadView('billing::billGenerate.pdf', ['billData' => $billData], [], [
-            'format'                     => 'A4',
-            'orientation'                => 'L',
-            'title'                      => 'OTC Bill',
+            'format' => 'A4',
+            'orientation' => 'L',
+            'title' => 'OTC Bill',
         ])->stream('bill.pdf');
         return view('billing::billGenerate.pdf', compact('billData'));
     }
@@ -154,9 +156,10 @@ class BillGenerateController extends Controller
         }
         return $row;
     }
+
     public function getAmount($req)
     {
-        $amount=0;
+        $amount = 0;
         foreach ($req->connectivity_point as $key => $value) {
             if ((isset($req['checked']) && isset($req['checked'][$key]))) {
                 $amount += $req->total_amount[$key];
