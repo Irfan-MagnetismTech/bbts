@@ -32,10 +32,12 @@
                     <th>Date</th>
                     <th>MR No</th>
                     <th>Remarks</th>
-                    <th>Total Amount</th>
-                    <th>Total Net Amount</th>
-                    <th>Total Receive Amount</th>
-                    <th>Total Due</th>
+                    <th>Discount</th>
+                    <th>Pnalty</th>
+                    <th>Vat</th>
+                    <th>Tax</th>
+                    <th>Receive Amount</th>
+                    <th> Total Receive Amount</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -46,10 +48,12 @@
                     <th>Date</th>
                     <th>MR No</th>
                     <th>Remarks</th>
-                    <th>Total Amount</th>
-                    <th>Total Net Amount</th>
+                    <th>Discount</th>
+                    <th>Pnalty</th>
+                    <th>Vat</th>
+                    <th>Tax</th>
+                    <th>Receive Amount</th>
                     <th>Total Receive Amount</th>
-                    <th>Total Due</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -60,11 +64,14 @@
                         <td>{{ $data->client->client_name }}</td>
                         <td>{{ $data->date }}</td>
                         <td>{{ $data->mr_no }}</td>
-                        <td>{{ $data->remarks }}</td>
-                        <td>{{ $data->total_amount }}</td>
-                        <td>{{ $data->total_net_amount }}</td>
+                        <td>{{ $data->remarks}}</td>
+                        <td>{{ $data->total_discount}}</td>
+                        <td>{{ $data->total_penalty }}</td>
+                        <td>{{ $data->total_vat }}</td>
+                        <td>{{ $data->total_tax }}</td>
                         <td>{{ $data->total_receive_amount }}</td>
-                        <td>{{ $data->total_due }}</td>
+                        <td>{{ $data->grand_total }}</td>
+
                         <td>
                             <div class="icon-btn">
                                 <nobr>

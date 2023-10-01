@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('mr_no')->nullable();
             $table->string('remarks')->nullable();
             $table->integer('total_amount')->default(0);
+            $table->integer('total_discount')->default(0);
+            $table->integer('total_penalty')->default(0);
             $table->integer('total_net_amount')->default(0);
             $table->integer('total_vat')->default(0);
             $table->integer('total_tax')->default(0);
