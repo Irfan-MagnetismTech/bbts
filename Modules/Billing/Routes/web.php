@@ -33,12 +33,12 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::get('generate_otc_bill/{client_no}', [BillGenerateController::class, 'create'])->name('generate_otc_bill');
     Route::get('generate_otc_bill_pdf/{id}', [BillGenerateController::class, 'pdf'])->name('generate_otc_bill_pdf');
     Route::get('generate_bill/{id}', [BillGenerateController::class, 'generate_bill'])->name('generate_bill');
-    Route::get('mrc_bill/{id}', [MonthlyBillController::class, 'mrc_bill'])->name('mrc_bill');
-    Route::get('mrc_bill_summary/{id}', [MonthlyBillController::class, 'mrc_bill_summary'])->name('mrc_bill_summary');
-    Route::get('mrc_bill_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_except_penalty'])->name('mrc_bill_except_penalty');
-    Route::get('mrc_bill_summary_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_summary_except_penalty'])->name('mrc_bill_summary_except_penalty');
-    Route::get('mrc_bill_except_due/{id}', [MonthlyBillController::class, 'mrc_bill_except_due'])->name('mrc_bill_except_due');
-    Route::get('mrc_bill_with_pad/{id}', [MonthlyBillController::class, 'mrc_bill_with_pad'])->name('mrc_bill_with_pad');
+    Route::get('mrc_bill', [MonthlyBillController::class, 'mrc_bill'])->name('mrc_bill');
+    Route::get('mrc_bill_summary', [MonthlyBillController::class, 'mrc_bill_summary'])->name('mrc_bill_summary');
+//    Route::get('mrc_bill_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_except_penalty'])->name('mrc_bill_except_penalty');
+//    Route::get('mrc_bill_summary_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_summary_except_penalty'])->name('mrc_bill_summary_except_penalty');
+//    Route::get('mrc_bill_except_due/{id}', [MonthlyBillController::class, 'mrc_bill_except_due'])->name('mrc_bill_except_due');
+//    Route::get('mrc_bill_with_pad/{id}', [MonthlyBillController::class, 'mrc_bill_with_pad'])->name('mrc_bill_with_pad');
     Route::get('mrc_bill_edit/{id}', [MonthlyBillController::class, 'mrc_bill_edit'])->name('mrc_bill_edit');
     Route::get('get_bill', [CollectionController::class, 'get_bill'])->name('get_bill');
     Route::get('get_fr_product', [BrokenDaysBillController::class, 'get_fr_product'])->name('get_fr_product');
@@ -46,4 +46,7 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::get('get_client', [BrokenDaysBillController::class, 'get_client'])->name('get_client');
     Route::get('get_unpaid_bill', [BrokenDaysBillController::class, 'getUnpaidBill'])->name('get_unpaid_bill');
     Route::get('get_supplier', [BillRegisterController::class, 'get_supplier'])->name('get_supplier');
+    Route::get('generate_mrc_detail_pdf/{id}', [MonthlyBillController::class, 'generate_mrc_detail_pdf'])->name('generate_mrc_detail_pdf');
+    Route::get('generate_mrc_summary_pdf/{id}', [MonthlyBillController::class, 'generate_mrc_summary_pdf'])->name('generate_mrc_summary_pdf');
+
 });
