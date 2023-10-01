@@ -41,8 +41,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket->feasibilityRequirementDetails->connectivity_point . ' (' . $supportTicket->feasibilityRequirementDetails->fr_no . ')' }}"
-                                disabled>
+                                value="{{ $supportTicket?->clientDetail?->link_name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -53,7 +52,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket->supportComplainType->name }}" disabled>
+                                value="{{ $supportTicket?->supportComplainType?->name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -73,8 +72,8 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control" value="{{ $supportTicket->ticketSource->name }}"
-                                disabled>
+                            <input type="text" class="form-control"
+                                value="{{ $supportTicket?->ticketSource?->name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -136,8 +135,8 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control" value="{{ $supportTicket?->client?->client_name }}"
-                                disabled>
+                            <input type="text" class="form-control"
+                                value="{{ $supportTicket?->clientDetail?->client?->name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -159,7 +158,29 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket?->client?->email }}"disabled>
+                            value="{{ $supportTicket?->clientDetail?->client?->email }}"disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        Swtich Port
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control"
+                                value="" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        VLAN
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control"
+                                value="" disabled>
                         </div>
                     </div>
                 </div>
@@ -257,15 +278,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($supportTicket->supportTicketLifeCycles as $activity)
-                                <tr>
-                                    <td>{{ $loop->index + 1 }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('H:i a \o\n d/m/Y') }}</td>
-                                    <td>{{ $activity->remarks }}</td>
-                                    <td>{{ $activity->description }}</td>
-                                    <td>{{ $activity->user?->employee?->department?->name }}</td>
-                                    <td>{{ $activity->user->name }}</td>
-                                </tr>
+                            @foreach($supportTicket->supportTicketLifeCycles as $activity)
+                            <tr>
+                                <td>{{ $loop->index + 1 }}</td>
+                                <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('H:i a \o\n d/m/Y') }}</td>
+                                <td>{{ $activity->remarks }}</td>
+                                <td>{{ $activity->description }}</td>
+                                <td>{{ $activity?->user?->employee?->department?->name }}</td>
+                                <td>{{ $activity?->user?->name }}</td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
