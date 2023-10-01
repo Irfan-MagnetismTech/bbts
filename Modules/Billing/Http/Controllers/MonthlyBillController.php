@@ -148,11 +148,22 @@ class MonthlyBillController extends Controller
         //
     }
 
-    public function mrc_bill($id)
+    public function mrc_bill(Request $request)
     {
+        $selectedOptions = $request->input('selectedOptions');
+        $id = $request->input('id');
+        // Convert the comma-separated string to an array
+        $selectedOptionsArray = explode(',', $selectedOptions);
+
+        // Check if 'with_due' is in the selectedOptions array
+        $withDue = in_array('with_due', $selectedOptionsArray) ? 1 : 0;
+
+        // Check if 'with_pad' is in the selectedOptions array
+        $withPad = in_array('with_pad', $selectedOptionsArray) ? 1 : 0;
+
         $monthlyBill = BillGenerate::findOrFail($id);
         $groupedLines = $monthlyBill->lines->groupBy('fr_no');
-        return PDF::loadView('billing::monthlyBills.mrcBill', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+        return PDF::loadView('billing::monthlyBills.mrcBill', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines, 'selectedOptions' => $selectedOptions, 'withDue' => $withDue, 'withPad' => $withPad], [], [
             'format'                     => 'A4',
             'orientation'                => 'L',
             'title'                      => 'OTC Bill',
@@ -164,14 +175,25 @@ class MonthlyBillController extends Controller
             'watermark_image_size'       => 'D',
             'watermark_image_position'   => 'P',
         ])->stream('bill.pdf');
-        return view('billing::monthlyBills.mrcBill', compact('monthlyBill', 'groupedLines'));
+        return view('billing::monthlyBills.mrcBill', compact('monthlyBill', 'groupedLines','selectedOptions','withDue','withPad'));
     }
 
-    public function mrc_bill_summary($id)
+    public function mrc_bill_summary(Request $request)
     {
+        $selectedOptions = $request->input('selectedOptions');
+        $id = $request->input('id');
+        // Convert the comma-separated string to an array
+        $selectedOptionsArray = explode(',', $selectedOptions);
+
+        // Check if 'with_due' is in the selectedOptions array
+        $withDue = in_array('with_due', $selectedOptionsArray) ? 1 : 0;
+
+        // Check if 'with_pad' is in the selectedOptions array
+        $withPad = in_array('with_pad', $selectedOptionsArray) ? 1 : 0;
+
         $monthlyBill = BillGenerate::findOrFail($id);
         $groupedLines = $monthlyBill->lines->groupBy('fr_no');
-        return PDF::loadView('billing::monthlyBills.mrcBillSummary', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+        return PDF::loadView('billing::monthlyBills.mrcBillSummary', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines, 'selectedOptions' => $selectedOptions, 'withDue' => $withDue, 'withPad' => $withPad], [], [
             'format'                     => 'A4',
             'orientation'                => 'L',
             'title'                      => 'OTC Bill',
@@ -184,82 +206,95 @@ class MonthlyBillController extends Controller
             'watermark_image_size'       => 'D',
             'watermark_image_position'   => 'P',
         ])->stream('bill.pdf');
-        return view('billing::monthlyBills.mrcBill', compact('monthlyBill', 'groupedLines'));
+        return view('billing::monthlyBills.mrcBillSummary', compact('monthlyBill', 'groupedLines','selectedOptions','withDue','withPad'));
     }
 
-    public function mrc_bill_except_penalty($id)
+//    public function mrc_bill_except_penalty($id)
+//    {
+//        $monthlyBill = BillGenerate::findOrFail($id);
+//        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+//        return PDF::loadView('billing::monthlyBills.mrcBillExceptPenalty', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+//            'format'                     => 'A4',
+//            'orientation'                => 'L',
+//            'title'                      => 'OTC Bill',
+//            'watermark'                  => 'BBTS',
+//            'show_watermark'             => true,
+//            'watermark_text_alpha'       => 0.1,
+//            'watermark_image_path'       => '',
+//            'watermark_image_alpha'      => 0.2,
+//            'watermark_image_size'       => 'D',
+//            'watermark_image_position'   => 'P',
+//        ])->stream('bill.pdf');
+//        return view('billing::monthlyBills.mrcBillExceptPenalty', compact('monthlyBill', 'groupedLines'));
+//    }
+//
+//    public function mrc_bill_summary_except_penalty($id)
+//    {
+//        $monthlyBill = BillGenerate::findOrFail($id);
+//        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+//        return PDF::loadView('billing::monthlyBills.mrcBillExceptPenaltySummary', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+//            'format'                     => 'A4',
+//            'orientation'                => 'L',
+//            'title'                      => 'OTC Bill',
+//            'watermark'                  => 'BBTS',
+//            'show_watermark'             => true,
+//            'watermark_font'             => 'sans-serif',
+//            'watermark_text_alpha'       => 0.1,
+//            'watermark_image_path'       => '',
+//            'watermark_image_alpha'      => 0.1,
+//            'watermark_image_size'       => 'D',
+//            'watermark_image_position'   => 'P',
+//        ])->stream('bill.pdf');
+//        return view('billing::monthlyBills.mrcBillExceptPenaltySummary', compact('monthlyBill', 'groupedLines'));
+//    }
+//
+//    public function mrc_bill_except_due($id)
+//    {
+//        $monthlyBill = BillGenerate::findOrFail($id);
+//        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+//        return PDF::loadView('billing::monthlyBills.mrcBillExceptDue', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+//            'format'                     => 'A4',
+//            'orientation'                => 'L',
+//            'title'                      => 'OTC Bill',
+//            'watermark'                  => 'BBTS',
+//            'show_watermark'             => true,
+//            'watermark_text_alpha'       => 0.1,
+//            'watermark_image_path'       => '',
+//            'watermark_image_alpha'      => 0.2,
+//            'watermark_image_size'       => 'D',
+//            'watermark_image_position'   => 'P',
+//        ])->stream('bill.pdf');
+//        return view('billing::monthlyBills.mrcBillExceptDue', compact('monthlyBill', 'groupedLines'));
+//    }
+//
+//    public function mrc_bill_with_pad($id)
+//    {
+//        $monthlyBill = BillGenerate::findOrFail($id);
+//        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
+//        return PDF::loadView('billing::monthlyBills.mrcBillWithPad', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
+//            'format'                     => 'A4',
+//            'orientation'                => 'L',
+//            'title'                      => 'OTC Bill',
+//            'watermark'                  => 'BBTS',
+//            'show_watermark'             => true,
+//            'watermark_text_alpha'       => 0.1,
+//            'watermark_image_path'       => '',
+//            'watermark_image_alpha'      => 0.2,
+//            'watermark_image_size'       => 'D',
+//            'watermark_image_position'   => 'P',
+//        ])->stream('bill.pdf');
+//        return view('billing::monthlyBills.mrcBillWithPad', compact('monthlyBill', 'groupedLines'));
+//    }
+
+    public function generate_mrc_detail_pdf($id)
     {
-        $monthlyBill = BillGenerate::findOrFail($id);
-        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
-        return PDF::loadView('billing::monthlyBills.mrcBillExceptPenalty', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
-            'format'                     => 'A4',
-            'orientation'                => 'L',
-            'title'                      => 'OTC Bill',
-            'watermark'                  => 'BBTS',
-            'show_watermark'             => true,
-            'watermark_text_alpha'       => 0.1,
-            'watermark_image_path'       => '',
-            'watermark_image_alpha'      => 0.2,
-            'watermark_image_size'       => 'D',
-            'watermark_image_position'   => 'P',
-        ])->stream('bill.pdf');
-        return view('billing::monthlyBills.mrcBillExceptPenalty', compact('monthlyBill', 'groupedLines'));
+        $format='detail';
+        return view('billing::monthlyBills.checkboxDialog',compact('id','format'));
     }
 
-    public function mrc_bill_summary_except_penalty($id)
+    public function generate_mrc_summary_pdf($id)
     {
-        $monthlyBill = BillGenerate::findOrFail($id);
-        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
-        return PDF::loadView('billing::monthlyBills.mrcBillExceptPenaltySummary', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
-            'format'                     => 'A4',
-            'orientation'                => 'L',
-            'title'                      => 'OTC Bill',
-            'watermark'                  => 'BBTS',
-            'show_watermark'             => true,
-            'watermark_font'             => 'sans-serif',
-            'watermark_text_alpha'       => 0.1,
-            'watermark_image_path'       => '',
-            'watermark_image_alpha'      => 0.1,
-            'watermark_image_size'       => 'D',
-            'watermark_image_position'   => 'P',
-        ])->stream('bill.pdf');
-        return view('billing::monthlyBills.mrcBillExceptPenaltySummary', compact('monthlyBill', 'groupedLines'));
-    }
-    public function mrc_bill_except_due($id)
-    {
-        $monthlyBill = BillGenerate::findOrFail($id);
-        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
-        return PDF::loadView('billing::monthlyBills.mrcBillExceptDue', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
-            'format'                     => 'A4',
-            'orientation'                => 'L',
-            'title'                      => 'OTC Bill',
-            'watermark'                  => 'BBTS',
-            'show_watermark'             => true,
-            'watermark_text_alpha'       => 0.1,
-            'watermark_image_path'       => '',
-            'watermark_image_alpha'      => 0.2,
-            'watermark_image_size'       => 'D',
-            'watermark_image_position'   => 'P',
-        ])->stream('bill.pdf');
-        return view('billing::monthlyBills.mrcBillExceptDue', compact('monthlyBill', 'groupedLines'));
-    }
-
-    public function mrc_bill_with_pad($id)
-    {
-        $monthlyBill = BillGenerate::findOrFail($id);
-        $groupedLines = $monthlyBill->lines->groupBy('fr_no');
-        return PDF::loadView('billing::monthlyBills.mrcBillWithPad', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
-            'format'                     => 'A4',
-            'orientation'                => 'L',
-            'title'                      => 'OTC Bill',
-            'watermark'                  => 'BBTS',
-            'show_watermark'             => true,
-            'watermark_text_alpha'       => 0.1,
-            'watermark_image_path'       => '',
-            'watermark_image_alpha'      => 0.2,
-            'watermark_image_size'       => 'D',
-            'watermark_image_position'   => 'P',
-        ])->stream('bill.pdf');
-        return view('billing::monthlyBills.mrcBillWithPad', compact('monthlyBill', 'groupedLines'));
+        $format='summary';
+        return view('billing::monthlyBills.checkboxDialog',compact('id','format'));
     }
 }
