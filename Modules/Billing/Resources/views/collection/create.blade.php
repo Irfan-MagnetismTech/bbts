@@ -567,21 +567,21 @@
                                     _token: "{{ csrf_token() }}"
                                 },
                                 success: function(data) {
-                                    // console.log(data);
+                                //   console.log(data);
                                     let totalBillAmount = 0;
-                                    let totalPreviousDue = 0;
-
-
+                                    let totalPreviousDue = 0; 
+                                    $(".billBody").empty();
                                     data.forEach(element => {
-
+                                        let previousAmount = element.amount - element.total_receive
+                                        console.log(element);
                                         totalBillAmount += element.amount;
-                                        totalPreviousDue += (element.amount) - (element
-                                            .collection_sum_receive_amount);
+                                        totalPreviousDue += previousAmount;
 
                                         // amount = amount + element.amount;
                                         // $('.bill_details_row').first().clone().appendTo('.billBody');
                                         // $('.bill_details_row').last().find('input').val('');
                                         // $('.bill_details_row').last().find('select').val('');
+                                        
                                         var newChild = $(`<tr class="bill_details_row">
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
@@ -598,7 +598,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" value = ${(element.amount) - (element.collection_sum_receive_amount)} name="previous_due[]"
+                                                    <input type="text" value = ${previousAmount} name="previous_due[]"
                                                         class="form-control previous_due" autocomplete="off"
                                                         placeholder="Previous Due" readonly>
                                                 </div>
