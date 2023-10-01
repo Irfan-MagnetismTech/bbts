@@ -48,7 +48,7 @@
 
         @keyframes spinner-animation {
             to {
-                transform: rotate(360deg);
+                transform: rotate(-360deg);
             }
         }
 
@@ -166,7 +166,7 @@
     <table class="table table-bordered" id="material_requisition">
         <thead>
             <tr>
-                <th> Material Name</th>
+                <th>Material Name</th>
                 <th>Brand</th>
                 <th>Model</th>
                 <th>Description</th>
@@ -213,7 +213,7 @@
                 
                 $required_date = old('required_date', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('required_date') : []);
             @endphp
-            @if(!empty($purchaseOrder))
+            @if (!empty($purchaseOrder))
                 @foreach ($purchaseOrder->purchaseOrderLines as $key => $purchaseOrderLine)
                     <tr>
                         <td>
@@ -254,8 +254,8 @@
                         </td>
 
                         <td>
-                            <input type="text" name="unit[]" class="form-control text-center unit" autocomplete="off"
-                                readonly value="{{ $unit[$key] }}">
+                            <input type="text" name="unit[]" class="form-control text-center unit"
+                                autocomplete="off" readonly value="{{ $unit[$key] }}">
                         </td>
 
                         <td>
@@ -264,8 +264,9 @@
                         </td>
 
                         <td>
-                            <input type="text" name="warranty_period[]" class="form-control text-center warranty_period"
-                                autocomplete="off" value="{{ $warranty_period[$key] }}">
+                            <input type="text" name="warranty_period[]"
+                                class="form-control text-center warranty_period" autocomplete="off"
+                                value="{{ $warranty_period[$key] }}">
                         </td>
 
                         <td>

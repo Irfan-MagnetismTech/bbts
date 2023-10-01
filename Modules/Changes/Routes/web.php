@@ -48,7 +48,7 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
     Route::get('get-client-info-for-sale-modification', [SaleModificationController::class, 'getClientInfoForSales'])->name('get-client-info-for-sale-modification');
     Route::get('modify-pnl-summary/{id?}', [SaleModificationController::class, 'pnlSummary'])->name('modify-pnl-summary');
     Route::get('modify-pnl-details/{id?}', [SaleModificationController::class, 'pnlDetails'])->name('modify-pnl-details');
-    Route::get('modify-pnl-approve-by-finance/{connectivity_requirement_id}', [SaleController::class, 'pnlApproveByFinance'])->name('modify-pnl-approve-by-finance');
-    Route::get('modify-pnl-approve-by-cmo/{connectivity_requirement_id}', [SaleController::class, 'pnlApproveByCmo'])->name('modify-pnl-approve-by-cmo');
-    Route::get('modify-pnl-approve-by-management/{connectivity_requirement_id}', [SaleController::class, 'pnlApproveByManagement'])->name('modify-pnl-approve-by-management');
+    Route::get('modify-pnl-approve-by-finance/{connectivity_requirement_id}', [SaleModificationController::class, 'pnlApproveByFinance'])->name('modify-pnl-approve-by-finance');
+    Route::get('modify-pnl-approve-by-cmo/{connectivity_requirement_id}', [SaleModificationController::class, 'pnlApproveByCmo'])->name('modify-pnl-approve-by-cmo');
+    Route::get('modify-pnl-approve-by-management/{connectivity_requirement_id}', [SaleModificationController::class, 'pnlApproveByManagement'])->name('modify-pnl-approve-by-management');
 });
