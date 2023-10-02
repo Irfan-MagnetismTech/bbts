@@ -1,4 +1,4 @@
-$(document).on("keyup focus", "#days", function () {
+$(document).on("input", "#days", function () {
     var days = $(this).val();
     var netTotalAmount = parseFloat($("#net_total_amount").val());
 
