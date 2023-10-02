@@ -80,7 +80,8 @@
                         $total_yearly_pnl += $monthly_pnl * $month;
                     @endphp
                     <tr>
-                        <td class="text-left">{{ $connectivity_requirement->connectivity_point }}
+                        <td class="text-left">
+                            {{ $connectivity_requirement->feasibilityRequirementDetail->connectivity_point }}
                             ({{ $connectivity_requirement->fr_no }}) </td>
                         <td class="text-right">@formatFloat($investment + ($connectivity_requirement->costingByConnectivity->equipment_grand_total - $connectivity_requirement->costingByConnectivity->equipment_price_for_client))</td>
                         <td class="text-right">{{ $total_otc }}</td>
@@ -124,17 +125,17 @@
         <a class="btn btn-outline-success" style="transition: 0.5s"
             href="{{ route('modify-pnl-details', $connectivity_requirement_id) }}">Details</a>
         <a class="btn btn-outline-success"
-            @if ($sale->finance_approval == 'Not Approved') href="{{ route('modify-pnl-approve-by-finance', $connectivity_requirement_id) }}" @else href="#" title="Approved By {{ $sale?->financeApprovedBy?->name }}" @endif
-            style="transition: 0.5s">Finance {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
+            @if ($sale->finance_approval == '') href="{{ route('modify-pnl-approve-by-finance', $connectivity_requirement_id) }}" @else href="#" title="Approved By {{ $sale?->financeApprovedBy?->name }}" @endif
+            style="transition: 0.5s">Finance {{ $sale->finance_approval == '' ? 'Approval' : 'Approved' }}</a>
         <a class="btn btn-outline-success"
-            @if ($sale->cmo_approval == 'Not Approved') href="{{ route('modify-pnl-approve-by-cmo', $connectivity_requirement_id) }}" @else href="#" title="Approved By {{ $sale?->cmoApprovedBy?->name }}" @endif
+            @if ($sale->cmo_approval == '') href="{{ route('modify-pnl-approve-by-cmo', $connectivity_requirement_id) }}" @else href="#" title="Approved By {{ $sale?->cmoApprovedBy?->name }}" @endif
             style="transition: 0.5s" href="{{ route('modify-pnl-approve-by-cmo', $connectivity_requirement_id) }}">CMO
-            {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
+            {{ $sale->finance_approval == '' ? 'Approval' : 'Approved' }}</a>
         <a class="btn btn-outline-success"
-            @if ($sale->management_approval == 'Not Approved') href="{{ route('modify-pnl-approve-by-management', $connectivity_requirement_id) }}" @else href="{{ route('pnl-approve-by-management', $connectivity_requirement_id) }}" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @endif
+            @if ($sale->management_approval == '') href="{{ route('modity-pnl-approve-by-management', $connectivity_requirement_id) }}" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @else href="#" @endif
             style="transition: 0.5s"
             href="{{ route('modify-pnl-approve-by-management', $connectivity_requirement_id) }}">Management
-            {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
+            {{ $sale->finance_approval == '' ? 'Approval' : 'Approved' }}</a>
     </div>
 @endsection
 

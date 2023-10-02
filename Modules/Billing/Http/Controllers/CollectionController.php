@@ -52,7 +52,7 @@ class CollectionController extends Controller
         }
         try {
             DB::beginTransaction();
-            $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
+            $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks','total_discount', 'total_penalty', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
 
             $BillCollection = Collection::create($CollectionData);
             $lineRow = $this->createLineRow($request);
@@ -102,7 +102,7 @@ class CollectionController extends Controller
         }
         try {
             DB::beginTransaction();
-            $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
+            $CollectionData = $request->only('client_no', 'mr_no', 'date', 'remarks', 'total_discount', 'total_penalty', 'total_amount', 'total_net_amount','total_vat', 'total_tax','grand_total', 'total_bill_amount', 'total_previous_due', 'total_receive_amount', 'total_due');
             $collection->update($CollectionData);
             $lineRow = $this->createLineRow($request);
             $collectionBillRow = $this->createCollectionBillRow($request);
