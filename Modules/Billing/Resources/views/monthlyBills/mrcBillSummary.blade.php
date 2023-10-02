@@ -245,12 +245,12 @@
                     <td>{{$monthlyBill->billingAddress->contact_person}}</td>
                 </tr>
                 <tr>
-                    <td></td>
+                    <td>Designation :</td>
                     <td>{{$monthlyBill->billingAddress->designation}}</td>
                 </tr>
                 <tr>
-                    <td>BIN NO :</td>
-                    <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
+                    <td>BIN No :</td>
+                    <td>{{$monthlyBill?->billingAddress->phone ?? ''}}</td>
                 </tr>
                 </thead>
             </table>
@@ -272,7 +272,7 @@
                     <td>{{$monthlyBill->billingAddress->contact_person}}</td>
                 </tr>
                 <tr>
-                    <td>BBTSL BIN No</td>
+                    <td>BBTSL BIN No :</td>
                     <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
                 </tr>
                 </thead>
@@ -304,11 +304,11 @@
                         <td style="text-align: center;">{{$values->first()->frDetail->connectivity_point}}</td>
                         <td style="text-align: center;">{{$values->sum('total_price')}}</td>
                         <td style="text-align: center;">{{$values->sum('vat')}}</td>
-                        <td style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $monthlyBill?->penalty}}</td>
+                        <td style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat')}}</td>
                         @if($withDue==1)
                             <td style="text-align: center;">0</td>
                         @endif
-                        <td style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat') - $monthlyBill?->penalty}}</td>
+                        <td style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat')}}</td>
                     </tr>
                     @php
                         $g_total_price += $values->sum('total_price');
@@ -321,11 +321,11 @@
                     <td class="text-right" style="text-align: right;">Total Amount</td>
                     <td style="text-align: center;">{{$g_total_price}}</td>
                     <td style="text-align: center;">{{$g_vat}}</td>
-                    <td style="text-align: center;">{{$g_total_price + $g_vat - $monthlyBill?->penalty}}</td>
+                    <td style="text-align: center;">{{$g_total_price + $g_vat}}</td>
                     @if($withDue==1)
                         <td style="text-align: center;">0</td>
                     @endif
-                    <td style="text-align: center;">{{$g_total_price + $g_vat - $monthlyBill?->penalty}}</td>
+                    <td style="text-align: center;">{{$g_total_price + $g_vat}}</td>
                 </tr>
                 @if($monthlyBill->penalty != null || $monthlyBill->penalty != 0)
                     @if($withDue==1)
@@ -333,10 +333,18 @@
                             <td colspan="5" style="text-align: right;">Penalty Amount</td>
                             <td style="text-align: center;">{{$monthlyBill?->penalty}}</td>
                         </tr>
+                        <tr>
+                            <td colspan="5" style="text-align: right;">Gross Total</td>
+                            <td style="text-align: center;">{{$g_total_price + $g_vat - $monthlyBill?->penalty}}</td>
+                        </tr>
                     @else
                         <tr>
                             <td colspan="4" style="text-align: right;">Penalty Amount</td>
                             <td style="text-align: center;">{{$monthlyBill?->penalty}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: right;">Gross Total</td>
+                            <td style="text-align: center;">{{$g_total_price + $g_vat - $monthlyBill?->penalty}}</td>
                         </tr>
                     @endif
                 @endif
