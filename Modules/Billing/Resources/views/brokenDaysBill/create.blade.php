@@ -36,61 +36,66 @@
                 <div class="card-body">
                     <div class="row">
                         @php
-                                $is_old = (bool)old('client_no');
-                                $client_name = $is_old ? old('client_name') : $brokenDaysBill->client->client_name ?? null;
-                                $client_no = $is_old ? old('client_no') : $brokenDaysBill->client_no ?? null;
-                                $date = $is_old ? old('date') : $brokenDaysBill->date ?? null;
-                                $fr_no = $is_old ? old('fr_no') : $brokenDaysBill->fr_no ?? null;
-                                $bill_no = $is_old ? old('bill_no') : $brokenDaysBill->bill_no ?? null;
-                                $billing_date = $is_old ? old('billing_date') : $brokenDaysBill->billing_date ?? null;
-                                $days = $is_old ? old('days') : $brokenDaysBill->days ?? null;
-                                $total_amount = $is_old ? old('total_amount') : $brokenDaysBill->total_amount ?? null;
+                            $is_old = (bool)old('client_no');
+                            $client_name = $is_old ? old('client_name') : $brokenDaysBill->client->client_name ?? null;
+                            $client_no = $is_old ? old('client_no') : $brokenDaysBill->client_no ?? null;
+                            $date = $is_old ? old('date') : $brokenDaysBill->date ?? null;
+                            $fr_no = $is_old ? old('fr_no') : $brokenDaysBill->fr_no ?? null;
+                            $bill_no = $is_old ? old('bill_no') : $brokenDaysBill->bill_no ?? null;
+                            $billing_date = $is_old ? old('billing_date') : $brokenDaysBill->billing_date ?? null;
+                            $days = $is_old ? old('days') : $brokenDaysBill->days ?? null;
+                            $total_amount = $is_old ? old('total_amount') : $brokenDaysBill->total_amount ?? null;
                         @endphp
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="client_no" id="client_no" autocomplete="off" readonly value="{{$client_no}}">
+                                <input type="text" class="form-control" name="client_no" id="client_no"
+                                       autocomplete="off" readonly value="{{$client_no}}">
                                 <label for="client_no">Client No<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="client_name" id="client_name" autocomplete="off" required value="{{$client_name}}">
+                                <input type="text" class="form-control" name="client_name" id="client_name"
+                                       autocomplete="off" required value="{{$client_name}}">
                                 <label for="client_name">Client Name<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <label for="select2">FR No<span class="text-danger">*</span></label>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                            <select class="form-control select2" id="fr_no" name="fr_no" >
-                                <option value="" selected>Select FR No</option>
-                                @if ($form_method == 'POST')
-                                    <option value="{{ $fr_no }}" selected>{{ $fr_no }}</option>
-                                @endif
-                                @if ($form_method == 'PUT')
-                                    @foreach ($fr_no as $key => $value)
-                                        <option value="{{ $value }}" selected>{{ $value }}>
-                                            {{ $value }}</option>
-                                    @endforeach
-                                @endif
-                            </select>
+                                <select class="form-control select2" id="fr_no" name="fr_no">
+                                    <option value="" selected>Select FR No</option>
+                                    @if ($form_method == 'POST')
+                                        <option value="{{ $fr_no }}" selected>{{ $fr_no }}</option>
+                                    @endif
+                                    @if ($form_method == 'PUT')
+                                        @foreach ($fr_no as $key => $value)
+                                            <option value="{{ $value }}" selected>{{ $value }}>
+                                                {{ $value }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="billing_date" id="billing_date" autocomplete="off" readonly required value="{{$billing_date}}">
+                                <input type="text" class="form-control" name="billing_date" id="billing_date"
+                                       autocomplete="off" readonly required value="{{$billing_date}}">
                                 <label for="billing_date">Billing Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
-                                <input type="number" class="form-control" name="days" id="days" autocomplete="off" required value="{{$days}}">
+                                <input type="number" class="form-control" name="days" id="days" autocomplete="off"
+                                       readonly required value="{{$days}}">
                                 <label for="days">Days<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
                                 <input type="date" name="date" id="date" class="form-control"
-                                       value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off" value="{{$date}}">
+                                       value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off"
+                                       value="{{$date}}">
                                 <label for="date">Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
@@ -130,25 +135,31 @@
                                 @foreach ($product_names as $key => $product_name)
                                     <tr>
                                         <td>
-                                            <input name="product_name[]" class="form-control product_name" readonly autocomplete="off"
+                                            <input name="product_name[]" class="form-control product_name" readonly
+                                                   autocomplete="off"
                                                    type="text" value="{{ $product_name }}" readonly>
-                                            <input name="product_id[]" class="form-control product_id" readonly autocomplete="off"
+                                            <input name="product_id[]" class="form-control product_id" readonly
+                                                   autocomplete="off"
                                                    type="hidden" value="{{ $product_ids[$key] }}">
                                         </td>
                                         <td>
-                                            <input name="quantity[]" class="form-control quantity" autocomplete="off" type="text"
+                                            <input name="quantity[]" class="form-control quantity" autocomplete="off"
+                                                   type="text"
                                                    value="{{ $quantities[$key] }}">
                                         </td>
                                         <td>
-                                            <input name="unit[]" class="form-control unit" autocomplete="off" type="text"
+                                            <input name="unit[]" class="form-control unit" autocomplete="off"
+                                                   type="text"
                                                    value="{{ $units[$key] }}" readonly>
                                         </td>
                                         <td>
-                                            <input name="unit_price[]" class="form-control unit_price" autocomplete="off" type="text"
+                                            <input name="unit_price[]" class="form-control unit_price"
+                                                   autocomplete="off" type="text"
                                                    value="{{ $unit_prices[$key] }}" readonly>
                                         </td>
                                         <td>
-                                            <input name="total_price[]" class="form-control total_price" autocomplete="off" type="text"
+                                            <input name="total_price[]" class="form-control total_price"
+                                                   autocomplete="off" type="text"
                                                    value="{{ $total_prices[$key] }}" readonly>
                                         </td>
                                         <td>
@@ -156,7 +167,8 @@
                                                    value="{{ $vats[$key] }}" readonly>
                                         </td>
                                         <td>
-                                            <input name="total_amount[]" class="form-control total_amount" autocomplete="off" type="text"
+                                            <input name="total_amount[]" class="form-control total_amount"
+                                                   autocomplete="off" type="text"
                                                    value="{{ $total_amounts[$key] }}" readonly>
                                         </td>
                                     </tr>
@@ -168,7 +180,9 @@
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="net_total_amount" class="form-control"
-                                                   id="net_total_amount" autocomplete="off" placeholder="Net Total Amount" readonly value="{{$net_total_amount}}">
+                                                   id="net_total_amount" autocomplete="off"
+                                                   placeholder="Net Total Amount" readonly
+                                                   value="{{$net_total_amount}}">
                                         </div>
                                     </td>
                                 </tr>
@@ -177,7 +191,8 @@
                                     <td>
                                         <div class="input-group input-group-sm input-group-primary">
                                             <input type="text" name="payable_amount" class="form-control"
-                                                   id="payable_amount" autocomplete="off" placeholder="Payable Amount" readonly value="{{$payable_amount}}">
+                                                   id="payable_amount" autocomplete="off" placeholder="Payable Amount"
+                                                   readonly value="{{$payable_amount}}">
                                         </div>
                                     </td>
                                 </tr>
@@ -197,10 +212,7 @@
                 @endsection
 
                 @section('script')
-
-
                     <script src="{{ asset('js/get-fr-product.js') }}"></script>
                     <script src="{{ asset('js/get-fr-bill-date.js') }}"></script>
                     <script src="{{ asset('js/get-client.js') }}"></script>
-                    <script src="{{ asset('js/get-bdb-payable-amount.js') }}"></script>
 @endsection
