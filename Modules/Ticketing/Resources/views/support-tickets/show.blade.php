@@ -23,7 +23,7 @@
 @section('content')
     <div class="col-md-12 mx-auto">
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
                 <div class="row align-items-center">
                     <div class="col-4 text-right">
                         Ticket ID
@@ -57,6 +57,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row align-items-center mt-2">
                     <div class="col-4 text-right">
                         Description
@@ -64,27 +65,6 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <textarea type="text" class="form-control" disabled>{{ $supportTicket->description }}</textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Source
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control" value="{{ $supportTicket->ticketSource->name }}"
-                                disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Remarks
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <textarea type="text" class="form-control" disabled>{{ $supportTicket->remarks }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -129,62 +109,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6">
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Client Name
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control" value="{{ $supportTicket?->client?->client_name }}"
-                                disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Contact Person
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control" value="{{ $supportTicket->client?->contact_person }}"
-                                disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        E-mail Address
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="{{ $supportTicket?->client?->email }}"disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Address
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control" value="{{ $supportTicket?->client?->location }}"
-                                disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Contact Number
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="{{ $supportTicket?->client?->contact_no }}" disabled>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-5">
                 <div class="col-12">
                     <h4 class="text-center mt-5">Physibility Information</h4>
                 </div>
@@ -240,9 +165,111 @@
                     </div>
                 </div>
             </div>
+            <div class="col-3">
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        Source
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control" value="{{ $supportTicket->ticketSource->name }}"
+                                disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        Remarks
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <textarea type="text" class="form-control" disabled>{{ $supportTicket->remarks }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        Client Name
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control"
+                                value="{{ $supportTicket?->client?->client_name }}" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        Contact Person
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control"
+                                value="{{ $supportTicket->client?->contact_person }}" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        E-mail Address
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control"
+                                value="{{ $supportTicket?->client?->email }}"disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        Address
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control" value="{{ $supportTicket?->client?->location }}"
+                                disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        Contact Number
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control"
+                                value="{{ $supportTicket?->client?->contact_no }}" disabled>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+            </div>
+
+
+
+
         </div>
+
+
+
+
+
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 text-center">
                 <h4 class="text-center mt-5">Ticket Activity</h4>
                 <div class="dt-responsive table-responsive">
                     <table id="dataTable" class="table table-striped table-bordered">

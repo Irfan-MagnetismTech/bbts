@@ -78,11 +78,11 @@ class SupportTicketController extends Controller
     {
         $clientInfo = Client::where('client_no', $request->client_no)->first();
 
-        if ($clientInfo->supportTickets->where('status', '!=', 'Closed')->count() > 0) {
-            return back()->withInput()->withErrors([
-                'message' => 'This client already has previous tickets.'
-            ]);
-        }
+        // if ($clientInfo->supportTickets->where('status', '!=', 'Closed')->count() > 0) {
+        //     return back()->withInput()->withErrors([
+        //         'message' => 'This client already has previous tickets.'
+        //     ]);
+        // }
 
         $lastTicketOfThisMonth = SupportTicket::where('created_at', '>=', Carbon::now()->startOfMonth())
             ->orderBy('created_at', 'desc')
