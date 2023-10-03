@@ -61,7 +61,8 @@ class PhysicalConnectivityController extends Controller
 
             $challanInfo = ScmChallan::query()
                 ->where('fr_no', $saleDetails->fr_no)
-                ->get();
+                ->get() ?? null;
+
             // dd($saleDetails->client_no);
 
             $connectivity_points = FeasibilityRequirementDetail::query()
