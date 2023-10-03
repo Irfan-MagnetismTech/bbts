@@ -42,7 +42,7 @@ class SurveyController extends Controller
         $all_fr_list = FeasibilityRequirementDetail::get();
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $fr_detail->fr_no)->first();
         $pops = Pop::get();
-        $vendors = Vendor::get(); 
+        $vendors = Vendor::get();
         return view('sales::survey.create', compact('fr_detail', 'all_fr_list', 'connectivity_requirement', 'pops', 'vendors'));
     }
 
@@ -80,7 +80,7 @@ class SurveyController extends Controller
                 $connectivity_requirement_details['lat'] = $request->lat[$key];
                 $connectivity_requirement_details['long'] = $request->long[$key];
                 $connectivity_requirement_details['distance'] = $request->distance[$key];
-                $connectivity_requirement_details['current_capacity'] = $request->current_capacity[$key];
+                $connectivity_requirement_details['current_capacity'] = $request->current_capacity[$key] ?? '';
                 $connectivity_requirement_details['remarks'] = $request->remarks[$key];
                 SurveyDetail::create($connectivity_requirement_details);
             }
@@ -157,7 +157,7 @@ class SurveyController extends Controller
                 $survey_details['lat'] = $request->lat[$key];
                 $survey_details['long'] = $request->long[$key];
                 $survey_details['distance'] = $request->distance[$key];
-                $survey_details['current_capacity'] = $request->current_capacity[$key];
+                $survey_details['current_capacity'] = $request->current_capacity[$key] ?? '';
                 $survey_details['remarks'] = $request->remarks[$key];
                 SurveyDetail::create($survey_details);
             }
