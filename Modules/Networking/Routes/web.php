@@ -29,6 +29,7 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
     // Route::get('add-survey/{fr_id?}', [SurveyController::class, 'create'])->name('add-survey');
 
     Route::resource('connectivities', ConnectivityController::class);
+    Route::resource('modify-connectivities', ConnectivityModificationController::class);
     require __DIR__ . '/irfan.php';
     require __DIR__ . '/jaber.php';
 });

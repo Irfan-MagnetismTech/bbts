@@ -41,6 +41,8 @@ class CCScheduleController extends Controller
                 $saleDetail['billing_date'] = $saleDetail->connectivities->billing_date ?? null;
                 return $saleDetail;
             });
+
+            // dd($salesDetails->toArray());
         return view('networking::cc-schedules.index', compact('salesDetails'));
     }
 
@@ -141,5 +143,4 @@ class CCScheduleController extends Controller
     {
         //
     }
-
 }
