@@ -23,7 +23,7 @@
 @section('content')
     <div class="col-md-12 mx-auto">
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
                 <div class="row align-items-center">
                     <div class="col-4 text-right">
                         Ticket ID
@@ -56,6 +56,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="row align-items-center mt-2">
                     <div class="col-4 text-right">
                         Description
@@ -63,27 +64,6 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <textarea type="text" class="form-control" disabled>{{ $supportTicket->description }}</textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Source
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="{{ $supportTicket?->ticketSource?->name }}" disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="row align-items-center mt-2">
-                    <div class="col-4 text-right">
-                        Remarks
-                    </div>
-                    <div class="col-8">
-                        <div class="form-group mb-0">
-                            <textarea type="text" class="form-control" disabled>{{ $supportTicket->remarks }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -128,7 +108,90 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-5">
+                <div class="col-12">
+                    <h4 class="text-center mt-5">Physibility Information</h4>
+                </div>
+                @foreach ($supportTicket->physicalConnectivity->lines as $line)
+                    <hr />
+                    <div class="row align-items-center mt-2">
+                        <div class="col-2 text-right">
+                            Swtich Port
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group mb-0">
+                                <input type="text" class="form-control" value="{{ $line->port }}" disabled>
+                            </div>
+                        </div>
+                        <div class="col-2 text-right">
+                            VLAN
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group mb-0">
+                                <input type="text" class="form-control" value="{{ $line->vlan }}" disabled>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center mt-2">
+                        <div class="col-2 text-right">
+                            Switch IP
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group mb-0">
+                                <input type="text" class="form-control" value="{{ $line->device_ip }}" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-2 text-right">
+                            LDP
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group mb-0">
+                                <input type="text" class="form-control" value="{{ $line?->ldb }}" disabled>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+                <div class="row align-items-center mt-2">
+                    <div class="col-2 text-right">
+                        Ticket Closed By
+                    </div>
+                    <div class="col-10">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control" value="" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        Source
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <input type="text" class="form-control" value="{{ $supportTicket->ticketSource->name }}"
+                                disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row align-items-center mt-2">
+                    <div class="col-4 text-right">
+                        Remarks
+                    </div>
+                    <div class="col-8">
+                        <div class="form-group mb-0">
+                            <textarea type="text" class="form-control" disabled>{{ $supportTicket->remarks }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
                 <div class="row align-items-center mt-2">
                     <div class="col-4 text-right">
                         Client Name
@@ -136,7 +199,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                                value="{{ $supportTicket?->clientDetail?->client?->name }}" disabled>
+                                value="{{ $supportTicket?->client?->client_name }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -146,8 +209,8 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control" value="{{ $supportTicket->client?->contact_person }}"
-                                disabled>
+                            <input type="text" class="form-control"
+                                value="{{ $supportTicket->client?->contact_person }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -206,64 +269,28 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12">
-                    <h4 class="text-center mt-5">Physibility Information</h4>
-                </div>
-                @foreach ($supportTicket->physicalConnectivity->lines as $line)
-                    <hr />
-                    <div class="row align-items-center mt-2">
-                        <div class="col-2 text-right">
-                            Swtich Port
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group mb-0">
-                                <input type="text" class="form-control" value="{{ $line->port }}" disabled>
-                            </div>
-                        </div>
-                        <div class="col-2 text-right">
-                            VLAN
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group mb-0">
-                                <input type="text" class="form-control" value="{{ $line->vlan }}" disabled>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="row align-items-center mt-2">
-                        <div class="col-2 text-right">
-                            Switch IP
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group mb-0">
-                                <input type="text" class="form-control" value="{{ $line->device_ip }}" disabled>
-                            </div>
-                        </div>
 
-                        <div class="col-2 text-right">
-                            LDP
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group mb-0">
-                                <input type="text" class="form-control" value="{{ $line?->ldb }}" disabled>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-                <div class="row align-items-center mt-2">
-                    <div class="col-2 text-right">
-                        Ticket Closed By
-                    </div>
-                    <div class="col-10">
-                        <div class="form-group mb-0">
-                            <input type="text" class="form-control" value="" disabled>
-                        </div>
-                    </div>
-                </div>
+
+
+
+
+
+
+
             </div>
+
+
+
+
         </div>
+
+
+
+
+
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 text-center">
                 <h4 class="text-center mt-5">Ticket Activity</h4>
                 <div class="dt-responsive table-responsive">
                     <table id="dataTable" class="table table-striped table-bordered">
