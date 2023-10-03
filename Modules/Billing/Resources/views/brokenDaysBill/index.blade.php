@@ -71,7 +71,7 @@
                     <td>
                         <div class="icon-btn">
                             <nobr>
-                                <a href="{{ route('generate_bill', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                <a href="{{ route('bdb_bill', $value->id) }}" data-toggle="tooltip" title="Edit"
                                    class="btn btn-outline-success">Generate</a>
                             </nobr>
                         </div>

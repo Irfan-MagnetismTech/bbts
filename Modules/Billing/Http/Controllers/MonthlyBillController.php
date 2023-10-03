@@ -166,7 +166,7 @@ class MonthlyBillController extends Controller
         return PDF::loadView('billing::monthlyBills.mrcBill', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines, 'selectedOptions' => $selectedOptions, 'withDue' => $withDue, 'withPad' => $withPad], [], [
             'format'                     => 'A4',
             'orientation'                => 'L',
-            'title'                      => 'OTC Bill',
+            'title'                      => 'MRC Bill',
             'watermark'                  => 'BBTS',
             'show_watermark'             => true,
             'watermark_text_alpha'       => 0.1,
@@ -196,7 +196,7 @@ class MonthlyBillController extends Controller
         return PDF::loadView('billing::monthlyBills.mrcBillSummary', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines, 'selectedOptions' => $selectedOptions, 'withDue' => $withDue, 'withPad' => $withPad], [], [
             'format'                     => 'A4',
             'orientation'                => 'L',
-            'title'                      => 'OTC Bill',
+            'title'                      => 'MRC Bill (Summary)',
             'watermark'                  => 'BBTS',
             'show_watermark'             => true,
             'watermark_font'             => 'sans-serif',
@@ -216,7 +216,7 @@ class MonthlyBillController extends Controller
 //        return PDF::loadView('billing::monthlyBills.mrcBillExceptPenalty', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
 //            'format'                     => 'A4',
 //            'orientation'                => 'L',
-//            'title'                      => 'OTC Bill',
+//            'title'                      => 'MRC Bill',
 //            'watermark'                  => 'BBTS',
 //            'show_watermark'             => true,
 //            'watermark_text_alpha'       => 0.1,
@@ -235,7 +235,7 @@ class MonthlyBillController extends Controller
 //        return PDF::loadView('billing::monthlyBills.mrcBillExceptPenaltySummary', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
 //            'format'                     => 'A4',
 //            'orientation'                => 'L',
-//            'title'                      => 'OTC Bill',
+//            'title'                      => 'MRC Bill',
 //            'watermark'                  => 'BBTS',
 //            'show_watermark'             => true,
 //            'watermark_font'             => 'sans-serif',
@@ -255,7 +255,7 @@ class MonthlyBillController extends Controller
 //        return PDF::loadView('billing::monthlyBills.mrcBillExceptDue', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
 //            'format'                     => 'A4',
 //            'orientation'                => 'L',
-//            'title'                      => 'OTC Bill',
+//            'title'                      => 'MRC Bill',
 //            'watermark'                  => 'BBTS',
 //            'show_watermark'             => true,
 //            'watermark_text_alpha'       => 0.1,
@@ -274,7 +274,7 @@ class MonthlyBillController extends Controller
 //        return PDF::loadView('billing::monthlyBills.mrcBillWithPad', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines], [], [
 //            'format'                     => 'A4',
 //            'orientation'                => 'L',
-//            'title'                      => 'OTC Bill',
+//            'title'                      => 'MRC Bill',
 //            'watermark'                  => 'BBTS',
 //            'show_watermark'             => true,
 //            'watermark_text_alpha'       => 0.1,
