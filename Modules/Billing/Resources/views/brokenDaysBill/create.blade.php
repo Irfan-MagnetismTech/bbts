@@ -212,7 +212,6 @@
                 @endsection
 
                 @section('script')
-                    <script src="{{ asset('js/get-fr-product.js') }}"></script>
-                    <script src="{{ asset('js/get-fr-bill-date.js') }}"></script>
                     <script src="{{ asset('js/get-client.js') }}"></script>
+                    <script src="{{ asset('js/get-fr-product.js') }}"></script>
 @endsection
