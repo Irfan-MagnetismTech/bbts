@@ -148,26 +148,24 @@
 
 
                             var tableData = '';
-                   $.each(clientTickets, function(key, value) {
-                    // console.log(value[0]?.client?.client_name);
-           
-             
-                    tableData += '<tr>';
-                    tableData += '<td>' + value[0]?.client?.client_name + '</td>';
-                    // tableData += '<td>' + value.status + '</td>';
-                    // tableData += '<td>' + value.opening_date + '</td>';
-                    // tableData += '<td>' + value.support_complain_type.name + '</td>';
-                    // tableData += '<td>' + value.remarks + '</td>';
-     
-                })
-
-                $("#client-ticket").find("tbody").html("");
-                $("#client-ticket").find("tbody").html(tableData);
+                            $.each(clientTickets, function(key, value) {
+                                console.log(value);
 
 
+                                tableData += '<tr>';
+                                tableData += '<td>' + value[0]?.client?.client_name +
+                                    '</td>';
+                                tableData += '<td>' + value.map(function(val) {
+                                    return val.client_no;
+                                }); + '</td>';
+                                // tableData += '<td>' + value.opening_date + '</td>';
+                                // tableData += '<td>' + value.support_complain_type.name + '</td>';
+                                // tableData += '<td>' + value.remarks + '</td>';
 
+                            })
 
-
+                            $("#client-ticket").find("tbody").html("");
+                            $("#client-ticket").find("tbody").html(tableData);
 
 
 
@@ -184,7 +182,12 @@
 
 
 
-                   
+
+
+
+
+
+
                         }
                     });
                     // console.log(selectedValue);
