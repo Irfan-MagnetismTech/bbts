@@ -16,6 +16,7 @@ use Modules\Networking\Entities\Connectivity;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Sale;
 use Modules\Sales\Entities\SaleProductDetail;
+use PDF;
 
 class BrokenDaysBillController extends Controller
 {
@@ -33,7 +34,7 @@ class BrokenDaysBillController extends Controller
 
     public function index()
     {
-        $datas = BrokenDaysBill::get();
+        $datas = BillGenerate::where('bill_type', 'Broken Days Bill')->get();
         return view('billing::brokenDaysBill.index', compact('datas'));
     }
 
@@ -296,5 +297,24 @@ class BrokenDaysBillController extends Controller
             'total_price'       => $request->total_price[$key],
             'total_amount'       => $request->total_amount[$key],
         ];
+    }
+
+    public function bdb_bill($id)
+    {
+        $bdbBill = BillGenerate::find($id);
+        $groupedLines = $bdbBill->lines->groupBy('fr_no');
+        return PDF::loadView('billing::brokenDaysBill.bdbBill', ['bdbBill' => $bdbBill, 'groupedLines' => $groupedLines], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'BDB Bill',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('bill.pdf');
+        return view('billing::brokenDaysBill.bdbBill', compact('bdbBill', 'groupedLines'));
     }
 }
