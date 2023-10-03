@@ -76,6 +76,8 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         Route::get('/downtime-report', [ReportController::class, 'downtimeReport'])->name('downtime-report-index');
         Route::post('/filter-downtime-report', [ReportController::class, 'downtimeReport'])->name('filter-downtime-report');
         Route::post('/download-datatable-filtered-downtime-report', [ReportController::class, 'downtimeDataTableExcelDownload'])->name('filtered-downtime-report-download'); // Datatable Filtered Data
+        Route::get('/repeated-ticket-client-list', [ReportController::class, 'repeatedTicketClientList'])->name('repeated-ticket-client-list');
+        Route::get('/get-repeated-ticket-client-list', [ReportController::class, 'getRepeatedTicketClientList'])->name('get-repeated-ticket-client-list');
 
     });
 });
