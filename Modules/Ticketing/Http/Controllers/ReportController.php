@@ -13,6 +13,7 @@ use App\Exports\Ticketing\CRMDailyReport;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Ticketing\Entities\SupportTicket;
 use App\Exports\Ticketing\DowntimeReportExport;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -160,4 +161,24 @@ class ReportController extends Controller
             return redirect()->route('downtime-report-index')->withErrors('Invalid Report Request. Type Error.');
         }
     }
+
+public function repeatedTicketClientList()
+{
+
+    return view('ticketing::reports.repeated-ticket-client-list');
+}
+public function getRepeatedTicketClientList(Request $request)
+{
+    $clients = SupportTicket::with('client')->whereIn('client_no', function ($query) {
+        $query->select('client_no')
+            ->from('support_tickets');
+           
+            // ->havingRaw('COUNT(client_no) > 1');
+    })
+    ->where('created_at', '>=', now()->subDays($request->selected_day))
+    ->get()
+    ->groupBy('client_no');
+    return $clients;
+}
+    
 }
