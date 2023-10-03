@@ -76,24 +76,30 @@ class CommonApiController extends Controller
 
     public function getClientsByLinkId()
     {
-        $results = Client::query()
-            ->with('feasibility_requirement_details')
-            ->where('client_no', 'LIKE', '%' . request('search') . '%')
-            ->limit(15)
-            ->get()
-            ->map(fn ($item) => [
-                'id' => $item->client_no,
-                'text' => $item->client_no . ' - ' . $item->client_name,
-                'client_name' => $item->client_name,
-                'contact_person' => $item->contact_person,
-                'contact_no' => $item->contact_no,
-                'email' => $item->email,
-                'client_type' => $item->client_type,
-                'address' => $item->location,
-                'fr_list' => $item->feasibility_requirement_details->pluck('fr_no', 'connectivity_point'),
-            ]);
+    $results = Client::query()
+    ->with('feasibility_requirement_details')
+    ->where(function ($query) {
+        $search = request('search');
+        $query->where('client_no', 'LIKE', '%' . $search . '%')
+            ->orWhere('client_name', 'LIKE', '%' . $search . '%');
+    })
+    ->limit(15)
+    ->get()
+    ->map(function ($item) {
+        return [
+            'id' => $item->client_no,
+            'text' => $item->client_no . ' - ' . $item->client_name,
+            'client_name' => $item->client_name,
+            'contact_person' => $item->contact_person,
+            'contact_no' => $item->contact_no,
+            'email' => $item->email,
+            'client_type' => $item->client_type,
+            'address' => $item->location,
+            'fr_list' => $item->feasibility_requirement_details->pluck('fr_no', 'connectivity_point'),
+        ];
+    });
 
-        return response()->json($results);
+return response()->json($results);
     }
 
     public function getClientsPreviousTickets($frNo, $limit)
