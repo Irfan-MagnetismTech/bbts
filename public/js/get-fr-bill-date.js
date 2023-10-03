@@ -14,7 +14,6 @@ $(document).on("change", "#fr_no", function () {
             if (data.length > 0) {
                 $("#billing_date").val(data[0].billing_date);
 
-
                 const billingDateValue = $("#billing_date").val();
 
                 // Check if the billingDateValue is not empty before creating a Date object
