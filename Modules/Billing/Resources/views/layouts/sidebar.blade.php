@@ -48,6 +48,13 @@
                         class="pcoded-mcaret"></span></a>
             </li>
         </ul>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('broken-days-bills.index') ? 'active' : null }}">
+                <a href="{{ route('broken-days-bills.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
     </li>
     <li class="pcoded-hasmenu {{ request()->routeIs(['bill-generate.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">

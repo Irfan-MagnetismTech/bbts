@@ -68,6 +68,16 @@ function calculateTotalAmount(){
         totalAmount += parseFloat($(this).val() ? $(this).val() : 0);
     })
     $('#net_total_amount').val(totalAmount.toFixed(2));
+
+    var days = $("#days").val();
+    var netTotalAmount = totalAmount.toFixed(2);
+
+    if (days > 0 && netTotalAmount > 0) {
+        let amount = (parseFloat(days) * netTotalAmount) / 30;
+        $("#payable_amount").val(amount.toFixed(2));
+    } else {
+        $("#payable_amount").val('0.00');
+    }
 }
 
 
@@ -99,29 +109,16 @@ $(document).on("change", "#fr_no", function () {
                     $("#days").val(remainingDays);
                 }
 
-                calculatePayableAmount();
+                calculateTotalAmount();
             } else {
                 // Handle the case where no data is returned or an error occurs
                 $("#billing_date").val('');
                 $("#days").val('0');
 
-                calculatePayableAmount();
+                calculateTotalAmount();
             }
         },
 
     });
 });
-
-function calculatePayableAmount() {
-    var days = $("#days").val();
-    var netTotalAmount = parseFloat($("#net_total_amount").val());
-
-    // Check if 'days' is a valid number
-    if (days > 0 && netTotalAmount > 0) {
-        let amount = (parseFloat(days) * netTotalAmount) / 30;
-        $("#payable_amount").val(amount.toFixed(2));
-    } else {
-        $("#payable_amount").val('0.00');
-    }
-}
 

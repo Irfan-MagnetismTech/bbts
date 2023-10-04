@@ -16,6 +16,7 @@ use Modules\Networking\Entities\Connectivity;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Sale;
 use Modules\Sales\Entities\SaleProductDetail;
+use PDF;
 
 class BrokenDaysBillController extends Controller
 {
@@ -25,7 +26,6 @@ class BrokenDaysBillController extends Controller
      */
     private $brokenDaysBillNo;
 
-
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->brokenDaysBillNo = $globalService->generateUniqueId(BillGenerate::class, 'BDB');
@@ -33,6 +33,7 @@ class BrokenDaysBillController extends Controller
 
     public function index()
     {
+//        $datas = BillGenerate::where('bill_type', 'Broken Days Bill')->get();
         $datas = BrokenDaysBill::get();
         return view('billing::brokenDaysBill.index', compact('datas'));
     }
@@ -64,6 +65,7 @@ class BrokenDaysBillController extends Controller
 
             $billGenerateData = [
                 'client_no' => $bill->client_no,
+                'billing_address_id' => $bill->billingAddress->id,
                 'date' => $bill->date,
                 'bill_no' => $bill->bill_no,
                 'bill_type' => $bill->type,
@@ -303,7 +305,7 @@ class BrokenDaysBillController extends Controller
     //     $unpaidBills = BillGenerate::with('collection')
     //     ->withSum('collection', 'receive_amount')
     //     ->where('client_no', $request->client_no)->get();
-        
+
     //     return $unpaidBills;
     // }
     public function getUnpaidBill(Request $request)
@@ -317,7 +319,7 @@ class BrokenDaysBillController extends Controller
         ->get()
         ->map(function($bill){
             $toal_receive = $bill->collection_sum_total + $bill->collection_sum_discount + $bill->collection_sum_penalty;
-            if($bill->amount > $toal_receive){ 
+            if($bill->amount > $toal_receive){
                 $bill->total_receive = $toal_receive;
                 return $bill;
             }
@@ -325,10 +327,10 @@ class BrokenDaysBillController extends Controller
         ->filter()
         ->values()
         ;
-        
+
         // $data[] = $unpaidBills;
         // dd($unpaidBills);
-    
+
         // $unpaidBills->each(function ($bill) use($unpaidBills){
         //     // Access the collection relationship
         //     $total_receive = $bill->collection->sum('total');
@@ -353,11 +355,30 @@ class BrokenDaysBillController extends Controller
         //     //     // You can now use $previousDue as needed
         //     //     $bill->last_previous_due = $previousDue;
         //     // }
-        // }); 
-        
+        // });
+
         return $unpaidBills;
 
         // return collect($unpaidBills->filter())->values();
-    } 
+    }
+
+    public function bdb_bill($id)
+    {
+        $bdbBill = BrokenDaysBill::find($id);
+        $groupedLines = $bdbBill->BrokenDaysBillDetails->groupBy('fr_no');
+        return PDF::loadView('billing::brokenDaysBill.bdbBill', ['bdbBill' => $bdbBill, 'groupedLines' => $groupedLines], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'BDB Bill',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('bill.pdf');
+        return view('billing::brokenDaysBill.bdbBill', compact('bdbBill', 'groupedLines'));
+    }
 
 }

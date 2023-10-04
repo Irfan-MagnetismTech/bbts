@@ -49,4 +49,5 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
     Route::get('generate_mrc_detail_pdf/{id}', [MonthlyBillController::class, 'generate_mrc_detail_pdf'])->name('generate_mrc_detail_pdf');
     Route::get('generate_mrc_summary_pdf/{id}', [MonthlyBillController::class, 'generate_mrc_summary_pdf'])->name('generate_mrc_summary_pdf');
 
+    Route::get('bdb_bill/{id}', [BrokenDaysBillController::class, 'bdb_bill'])->name('bdb_bill');
 });

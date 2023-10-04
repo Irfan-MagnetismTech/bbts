@@ -59,19 +59,19 @@
             @foreach ($datas as $key => $value)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td class="text-center">{{ $value->client->client_name }}</td>
-                    <td class="text-center">{{ $value->client->location }}</td>
-                    <td class="text-center">{{ $value->client->contact_no }}</td>
-                    <td class="text-center">{{ $value->fr_no }}</td>
-                    <td class="text-center">{{ $value->type }}</td>
-                    <td class="text-center">{{ $value->bill_no }}</td>
-                    <td class="text-center">{{ $value->date }}</td>
-                    <td class="text-center">{{ $value->days }}</td>
-                    <td class="text-center">{{ $value->total_amount }}</td>
+                    <td class="text-center">{{ $value->client->client_name  ?? ''}}</td>
+                    <td class="text-center">{{ $value->client->location  ?? ''}}</td>
+                    <td class="text-center">{{ $value->client->contact_no  ?? ''}}</td>
+                    <td class="text-center">{{ $value->fr_no ?? ''}}</td>
+                    <td class="text-center">{{ $value->type  ?? ''}}</td>
+                    <td class="text-center">{{ $value->bill_no  ?? ''}}</td>
+                    <td class="text-center">{{ $value->date  ?? ''}}</td>
+                    <td class="text-center">{{ $value->days ?? ''}}</td>
+                    <td class="text-center">{{ $value->total_amount ?? ''}}</td>
                     <td>
                         <div class="icon-btn">
                             <nobr>
-                                <a href="{{ route('generate_bill', $value->id) }}" data-toggle="tooltip" title="Edit"
+                                <a href="{{ route('bdb_bill', $value->id) }}" data-toggle="tooltip" title="Edit"
                                    class="btn btn-outline-success">Generate</a>
                             </nobr>
                         </div>
