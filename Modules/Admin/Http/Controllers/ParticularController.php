@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Admin\Http\Requests\ParticularRequest;
+use Modules\Admin\Http\Requests\ParticularUpdateRequest;
 
 class ParticularController extends Controller
 {
@@ -85,7 +86,7 @@ class ParticularController extends Controller
      * @param  \App\Particular  $particular
      * @return \Illuminate\Http\Response
      */
-    public function update(ParticularRequest $request, Particular $particular)
+    public function update(ParticularUpdateRequest $request, Particular $particular)
     {
         try {
             $data = $request->all();

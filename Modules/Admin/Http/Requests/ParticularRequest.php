@@ -14,7 +14,7 @@ class ParticularRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:brands,name'
+            'name' => 'required|unique:particulars,name'
         ];
     }
 

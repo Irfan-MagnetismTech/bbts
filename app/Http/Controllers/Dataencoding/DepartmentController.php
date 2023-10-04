@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Dataencoding\Department;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
 
 class DepartmentController extends Controller
 {
@@ -44,6 +45,10 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         try {
+            Validator::make($request->all(), [
+                'name' => 'required|unique:departments,name',
+            ])->validate();
+
             $data = $request->all();
             Department::create($data);
             return redirect()->route('dataencoding.departments.index')->with('message', 'Data has been updated successfully');
@@ -86,6 +91,10 @@ class DepartmentController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            Validator::make($request->all(), [
+                'name' => 'required|unique:departments,name,' . $id,
+            ])->validate();
+            
             $department = Department::findOrFail($id);
             $data = $request->all();
             $department->update($data);
