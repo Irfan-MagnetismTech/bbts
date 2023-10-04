@@ -26,7 +26,6 @@ class BrokenDaysBillController extends Controller
      */
     private $brokenDaysBillNo;
 
-
     public function __construct(BbtsGlobalService $globalService)
     {
         $this->brokenDaysBillNo = $globalService->generateUniqueId(BillGenerate::class, 'BDB');
@@ -34,7 +33,8 @@ class BrokenDaysBillController extends Controller
 
     public function index()
     {
-        $datas = BillGenerate::where('bill_type', 'Broken Days Bill')->get();
+//        $datas = BillGenerate::where('bill_type', 'Broken Days Bill')->get();
+        $datas = BrokenDaysBill::get();
         return view('billing::brokenDaysBill.index', compact('datas'));
     }
 
@@ -364,8 +364,8 @@ class BrokenDaysBillController extends Controller
 
     public function bdb_bill($id)
     {
-        $bdbBill = BillGenerate::find($id);
-        $groupedLines = $bdbBill->lines->groupBy('fr_no');
+        $bdbBill = BrokenDaysBill::find($id);
+        $groupedLines = $bdbBill->BrokenDaysBillDetails->groupBy('fr_no');
         return PDF::loadView('billing::brokenDaysBill.bdbBill', ['bdbBill' => $bdbBill, 'groupedLines' => $groupedLines], [], [
             'format'                     => 'A4',
             'orientation'                => 'L',

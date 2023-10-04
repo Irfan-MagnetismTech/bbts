@@ -230,15 +230,15 @@
                 <thead>
                 <tr>
                     <td>Invoice No :</td>
-                    <td>{{$bdbBill->client->client_name  ?? ''}}</td>
+                    <td>{{$bdbBill->bill_no ?? ''}}</td>
                 </tr>
                 <tr>
                     <td>Invoice Date :</td>
-                    <td>{{$bdbBill->billingAddress->address  ?? ''}}</td>
+                    <td>{{$bdbBill->date ?? ''}}</td>
                 </tr>
                 <tr>
                     <td>Invoice Period :</td>
-                    <td>{{$bdbBill->billingAddress->contact_person  ?? ''}}</td>
+                    <td>{{$bdbBill->days ?? ''}} days</td>
                 </tr>
                 <tr>
                     <td>BBTSL BIN No :</td>
@@ -261,7 +261,7 @@
                     <th width="9.09%">Total</th>
                     <th width="9.09%">Vat</th>
                     <th width="9.09%">Total Amount</th>
-                    <th width="9.09%">Due</th>
+                    <th width="9.09%">Day</th>
                     <th width="9.09%">Net Amount</th>
                 </tr>
                 </thead>
@@ -277,14 +277,14 @@
                             @if ($loop->first)
                                 <tr>
                                     <td rowspan="{{count($values)}}"
-                                        style="text-align: center;">{{$value->frDetail->connectivity_point}}</td>
+                                        style="text-align: center;">{{$bdbBill->frDetail->connectivity_point ?? ''}}</td>
                             @else
                                 <tr>
                                     @endif
-                                    <td style="text-align: center;">{{$value->product->name}}</td>
-                                    <td style="text-align: center;">{{$value->quantity}} {{$value->product->unit}}</td>
-                                    <td style="text-align: center;">{{$value->unit_price}}</td>
-                                    <td style="text-align: center;">{{$value->total_price}}</td>
+                                    <td style="text-align: center;">{{$value->product->name ?? ''}}</td>
+                                    <td style="text-align: center;">{{$value->quantity ?? ''}} {{$value->product->unit ?? ''}}</td>
+                                    <td style="text-align: center;">{{$value->unit_price ?? ''}}</td>
+                                    <td style="text-align: center;">{{$value->total_price ?? ''}}</td>
 
                                     @if ($loop->first)
                                         <td rowspan="{{count($values)}}"
@@ -293,7 +293,7 @@
                                             style="text-align: center;">{{$values->sum('vat')}}</td>
                                         <td rowspan="{{count($values)}}"
                                             style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat')}}</td>
-                                        <td rowspan="{{count($values)}}" style="text-align: center;">0</td>
+                                        <td rowspan="{{count($values)}}" style="text-align: center;">{{$bdbBill->days ?? ''}}</td>
                                         <td rowspan="{{count($values)}}"
                                             style="text-align: center;">{{$values->sum('total_price') + $values->sum('vat')}}</td>
                                 </tr>
@@ -314,13 +314,13 @@
                     <td style="text-align: center;">{{$g_total_price}}</td>
                     <td style="text-align: center;">{{$g_vat}}</td>
                     <td style="text-align: center;">{{$g_total_price + $g_vat}}</td>
-                    <td style="text-align: center;">0</td>
+                    <td style="text-align: center;">{{$bdbBill->days ?? ''}}</td>
                     <td style="text-align: center;">{{$g_total_price + $g_vat}}</td>
                 </tr>
-{{--                <tr>--}}
-{{--                    <td colspan="9" style="text-align: right;">Gross Total</td>--}}
-{{--                    <td style="text-align: center;">{{$g_total_price + $g_vat - $bdbBill?->penalty}}</td>--}}
-{{--                </tr>--}}
+                <tr>
+                    <td colspan="9" style="text-align: right;">Payable Amount</td>
+                    <td style="text-align: center;">{{$bdbBill->total_amount ?? '0'}}</td>
+                </tr>
                 </tfoot>
             </table>
         </div>
