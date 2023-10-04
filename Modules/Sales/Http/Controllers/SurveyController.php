@@ -113,10 +113,11 @@ class SurveyController extends Controller
     public function edit($id)
     {
         $survey = Survey::with('surveyDetails', 'lead_generation', 'feasibilityRequirementDetails')->find($id);
+        $fr_detail = $survey->feasibilityRequirementDetails;
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $survey->fr_no)->first();
         $pops = Pop::get();
         $vendors = Vendor::get();
-        return view('sales::survey.create', compact('survey', 'connectivity_requirement', 'pops', 'vendors'));
+        return view('sales::survey.create', compact('survey', 'connectivity_requirement', 'pops', 'vendors', 'fr_detail'));
     }
 
     /**

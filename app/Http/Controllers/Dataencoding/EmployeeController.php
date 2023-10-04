@@ -82,8 +82,9 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         try{
-            $employee_data = $request->except('district_id','division_id');
+            // $employee_data = $request->except('district_id','division_id');
             if($request->hasFile('picture')) {
                 $pictureName =$request->fname.'_'.time(). '_' . $request->picture->getClientOriginalName();
                 $request->picture->move('images/Employees', $pictureName);
@@ -97,10 +98,13 @@ class EmployeeController extends Controller
             if($request->address_status==1)
             {
                 $employee_data['per_street_address'] = $employee_data['pre_street_address'];
+                $employee_data['per_division_id'] = $employee_data['pre_division_id'];
+                $employee_data['per_district_id'] = $employee_data['pre_district_id'];
                 $employee_data['per_thana_id'] = $employee_data['pre_thana_id'];
             }
+            dd($employee_data);
             Employee::create($employee_data);
-            return redirect()->route('employees.index')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('dataencoding/employees')->with('message', 'Data has been inserted successfully');
             }
         catch(QueryException $e){
             return redirect()->back()->withInput()->withErrors($e->getMessage());

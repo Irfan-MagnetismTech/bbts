@@ -10,6 +10,7 @@ use Modules\Admin\Entities\Branch;
 use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Admin\Http\Requests\BranchRequest;
+use Modules\Admin\Http\Requests\BranchUpdateRequest;
 
 class BranchController extends Controller
 {
@@ -91,7 +92,7 @@ class BranchController extends Controller
      * @param  \App\Branch  $Branch
      * @return \Illuminate\Http\Response
      */
-    public function update(BranchRequest $request, Branch $branch)
+    public function update(BranchUpdateRequest $request, Branch $branch)
     {
         try {
             $data = $request->all();

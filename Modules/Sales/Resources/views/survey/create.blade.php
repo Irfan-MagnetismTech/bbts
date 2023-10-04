@@ -96,20 +96,20 @@
                                 $contact_designation = $is_old ? old('contact_designation') : $fr_detail->contact_designation ?? '';
                             }
                             
-                            $client_name = $is_old ? old('client_name') : $survey->lead_generation->client_name ?? $fr_detail->feasibilityRequirement->lead_generation->client_name;
-                            $client_no = $is_old ? old('client_no') : $survey->lead_generation->client_no ?? $fr_detail->feasibilityRequirement->lead_generation->client_no;
+                            $client_name = $is_old ? old('client_name') : $fr_detail->feasibilityRequirement->lead_generation->client_name ?? '';
+                            $client_no = $is_old ? old('client_no') : $fr_detail->feasibilityRequirement->lead_generation->client_no ?? '';
                             $date = $is_old ? old('date') : $survey->date ?? null;
                             $mq_no = $is_old ? old('mq_no') : $survey->mq_no ?? $fr_detail->feasibilityRequirement->mq_no;
                             $fr_no = $is_old ? old('fr_no') : $survey->fr_no ?? $fr_detail->fr_no;
-                            $connectivity_point = $is_old ? old('connectivity_point') : $survey->feasibilityRequirementDetails->connectivity_point ?? $fr_detail->connectivity_point;
+                            $connectivity_point = $is_old ? old('connectivity_point') : $fr_detail->connectivity_point ?? '';
                             $link_types = $is_old ? old('link_type') : $link_types ?? [];
                             $options = $is_old ? old('option') : $options ?? [];
-                            $client_lat = $is_old ? old('lat') : $survey->feasibilityRequirementDetails->lat ?? $fr_detail->lat;
-                            $client_long = $is_old ? old('long') : $survey->feasibilityRequirementDetails->long ?? $fr_detail->long;
-                            $division = $is_old ? old('division') : $survey->feasibilityRequirementDetails->division ?? $fr_detail->division;
-                            $district = $is_old ? old('district') : $survey->feasibilityRequirementDetails->district ?? $fr_detail->district;
-                            $thana = $is_old ? old('upazila') : $survey->feasibilityRequirementDetails->thana ?? $fr_detail->thana;
-                            $location = $is_old ? old('location') : $survey->feasibilityRequirementDetails->location ?? $fr_detail->location;
+                            $client_lat = $is_old ? old('lat') : $fr_detail->lat ?? '';
+                            $client_long = $is_old ? old('long') : $fr_detail->long ?? '';
+                            $division = $is_old ? old('division') : $fr_detail->division ?? '';
+                            $district = $is_old ? old('district') : $fr_detail->district ?? '';
+                            $thana = $is_old ? old('upazila') : $fr_detail->thana ?? '';
+                            $location = $is_old ? old('location') : $fr_detail->location ?? '';
                             $connectivity_remarks = $is_old ? old('connectivity_remarks') : $connectivity_remarks ?? '';
                             $contact_person = $is_old ? old('contact_person') : $contact_person ?? '';
                             $contact_number = $is_old ? old('contact_number') : $contact_number ?? '';
@@ -456,7 +456,7 @@
                                                     </select>
                                                 </div>
                                             </td>
-                                            <td colspan="2">
+                                            <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="pop[]" id="pop" class="form-control pop">
                                                         <option value="">Select POP</option>
@@ -519,10 +519,10 @@
                                             </td> --}}
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" id='new_current_capacity_{{ $key1 }}'
+                                                    <input type="text" id='new_current_capacity_{{ $key }}'
                                                         name="current_capacity[]"
-                                                        class="myInputField myInputField_{{ $key1 }} form-control text-right new_current_capacity"
-                                                        disabled>
+                                                        class="myInputField myInputField_{{ $key }} form-control text-right new_current_capacity"
+                                                        readonly>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="remarks[]" id="remarks"

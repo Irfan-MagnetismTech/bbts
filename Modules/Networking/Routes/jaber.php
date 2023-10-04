@@ -9,9 +9,11 @@ use Modules\Networking\Http\Controllers\PhysicalConnectivityController;
 use Modules\Networking\Http\Controllers\LogicalConnectivityVasController;
 use Modules\Networking\Http\Controllers\LogicalConnectivityDataController;
 use Modules\Networking\Http\Controllers\LogicalConnectivityInternetController;
+use Modules\Networking\Http\Controllers\PhysicalConnectivityModificationController;
 
 Route::resources([
     'physical-connectivities' => PhysicalConnectivityController::class,
+    'modify-physical-connectivities' => PhysicalConnectivityModificationController::class,
     'logical-data-connectivities' => LogicalConnectivityDataController::class,
     'logical-vas-connectivities' => LogicalConnectivityVasController::class,
     'logical-internet-connectivities' => LogicalConnectivityInternetController::class,

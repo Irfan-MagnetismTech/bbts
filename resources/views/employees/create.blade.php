@@ -22,9 +22,9 @@
 @section('content')
 
     @if($formType == 'edit')
-        {!! Form::open(array('url' => "employees/$employee->id",'encType' =>"multipart/form-data", 'method' => 'PUT', 'class'=>'custom-form')) !!}
+        {!! Form::open(array('url' => "dataencoding/employees/$employee->id",'encType' =>"multipart/form-data", 'method' => 'PUT', 'class'=>'custom-form')) !!}
     @else
-        {!! Form::open(array('url' => "employees",'method' => 'POST','encType' =>"multipart/form-data", 'class'=>'custom-form')) !!}
+        {!! Form::open(array('url' => "dataencoding/employees",'method' => 'POST','encType' =>"multipart/form-data", 'class'=>'custom-form')) !!}
     @endif
     <div class="row">
         <div class="row col-md-12">
@@ -142,11 +142,11 @@
                 </div>
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="permanent_address">Division</label>
-                    {{Form::select('division_id',$divisions, old('division_id') ? old('division_id') : (!empty($employee->preThana->district->division_id) ? $employee->preThana->district->division_id : null),['class' => 'form-control','id' => 'division_id', 'placeholder'=>"Select Division", 'autocomplete'=>"off",'onChange'=>"loadDistrict(this)"])}}
+                    {{Form::select('pre_division_id',$divisions, old('division_id') ? old('division_id') : (!empty($employee->preThana->district->division_id) ? $employee->preThana->district->division_id : null),['class' => 'form-control','id' => 'division_id', 'placeholder'=>"Select Division", 'autocomplete'=>"off",'onChange'=>"loadDistrict(this)"])}}
                 </div>
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="designation_id">District<span class="text-danger">*</span></label>
-                    {{Form::select('district_id', $predistrict, old('district_id') ? old('district_id') : (!empty($employee->preThana->district_id) ? $employee->preThana->district_id : null),['class' => 'form-control','id' => 'district_id', 'placeholder'=>"Select District", 'autocomplete'=>"off",'onChange'=>"loadThana(this)"])}}
+                    {{Form::select('pre_district_id', $predistrict, old('district_id') ? old('district_id') : (!empty($employee->preThana->district_id) ? $employee->preThana->district_id : null),['class' => 'form-control','id' => 'district_id', 'placeholder'=>"Select District", 'autocomplete'=>"off",'onChange'=>"loadThana(this)"])}}
                 </div>
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="permanent_address">Thana</label>
@@ -175,11 +175,11 @@
                 </div>
                 <div class="input-group input-group-sm input-group-primary" id="">
                     <label class="input-group-addon" for="permanent_address">Division</label>
-                    {{Form::select('division_id',$divisions, old('division_id') ? old('division_id') : (!empty($employee->perThana->district->division_id) ? $employee->perThana->district->division_id : null),['class' => 'form-control','id' => 'per_division_id', 'placeholder'=>"Select Division", 'autocomplete'=>"off",'onChange'=>"loadPerDistrict(this)"])}}
+                    {{Form::select('per_division_id',$divisions, old('division_id') ? old('division_id') : (!empty($employee->perThana->district->division_id) ? $employee->perThana->district->division_id : null),['class' => 'form-control','id' => 'per_division_id', 'placeholder'=>"Select Division", 'autocomplete'=>"off",'onChange'=>"loadPerDistrict(this)"])}}
                 </div>
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="designation_id">District<span class="text-danger">*</span></label>
-                    {{Form::select('district_id', $perdistrict, old('district_id') ? old('district_id') : (!empty($employee->perThana->district_id) ? $employee->perThana->district_id : null),['class' => 'form-control','id' => 'per_district_id', 'placeholder'=>"Select District", 'autocomplete'=>"off",'onChange'=>"loadPerThana(this)"])}}
+                    {{Form::select('per_district_id', $perdistrict, old('district_id') ? old('district_id') : (!empty($employee->perThana->district_id) ? $employee->perThana->district_id : null),['class' => 'form-control','id' => 'per_district_id', 'placeholder'=>"Select District", 'autocomplete'=>"off",'onChange'=>"loadPerThana(this)"])}}
                 </div>
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="permanent_address">Thana </label>
@@ -228,6 +228,7 @@
             // Populate dropdown with list of provinces
             $.getJSON(url, function (district) {
                 $.each(district, function (key, entry) {
+                    // console.log(entry);
                     dropdown.append($('<option></option>').attr('value', entry.id).text(entry.name));
                 })
             });
@@ -245,25 +246,33 @@
                 })
             });
         }
+ 
+
+
         function loadThana() {
             let dropdown = $('#thana_id');
             dropdown.empty();
             dropdown.append('<option selected="true" disabled>Select Thana </option>');
             dropdown.prop('selectedIndex', 0);
-            const url = '{{url("admin/get_thanas")}}/' + $("#district_id").val();
+            // const url = '{{url("admin/get_thanas")}}/' + $("#district_id").val();
+            const url = '{{url("admin/get_thanas")}}?district_id=' + $("#district_id").val();
             // Populate dropdown with list of provinces
             $.getJSON(url, function (thana) {
                 $.each(thana, function (key, entry) {
+                    console.log(entry);
                     dropdown.append($('<option></option>').attr('value', entry.id).text(entry.name));
                 })
             });
         }
+
+
         function loadPerThana() {
             let dropdown = $('#per_thana_id');
             dropdown.empty();
             dropdown.append('<option selected="true" disabled>Select Thana </option>');
             dropdown.prop('selectedIndex', 0);
-            const url = '{{url("admin/get_thanas")}}/' + $("#per_district_id").val();
+            // const url = '{{url("admin/get_thanas")}}/' + $("#per_district_id").val();
+            const url = '{{url("admin/get_thanas")}}?district_id=' + $("#per_district_id").val();
             // Populate dropdown with list of provinces
             $.getJSON(url, function (thana) {
                 $.each(thana, function (key, entry) {
@@ -297,4 +306,3 @@
         })
     </script>
 @endsection
-
