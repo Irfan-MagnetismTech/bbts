@@ -6,7 +6,7 @@
         Edit
     @else
     @endif
-    Bill Generate (OTC)
+    Bill Generate ({{$bill_type}})
 @endsection
 
 @section('style')
@@ -45,7 +45,7 @@
 
 @section('content')
     <div class="container">
-        <form action="{{ route('generate_otc_bill_pdf', $billData->id) }}"
+        <form action="{{ route('generate_bill_pdf', $billData->id) }}"
               method="get" class="custom-form">
             <div class="row" style="padding:30px 0 30px">
                 <div class="col-7">
@@ -69,7 +69,7 @@
                         </tr>
                         <tr>
                             <td>BIN NO :</td>
-                            <td>{{$billData?->client?->bin_no ?? ''}}</td>
+                            <td>{{$billData->billingAddress->phone ?? ''}}</td>
                         </tr>
                         </thead>
                     </table>
@@ -79,15 +79,15 @@
                         <thead>
                         <tr>
                             <td>Invoice No :</td>
-                            <td>{{$billData->client->client_name ?? ''}}</td>
+                            <td>{{$billData->bill_no ?? ''}}</td>
                         </tr>
                         <tr>
                             <td>Invoice Date :</td>
-                            <td>{{$billData->billingAddress->address ?? ''}}</td>
+                            <td>{{$billData->date ?? ''}}</td>
                         </tr>
                         <tr>
                             <td>Invoice Period :</td>
-                            <td>{{$billData->billingAddress->contact_person ?? ''}}</td>
+                            <td>{{$billData->month ?? ''}}</td>
                         </tr>
                         <tr>
                             <td>BBTSL BIN No :</td>
