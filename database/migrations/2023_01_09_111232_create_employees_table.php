@@ -23,6 +23,12 @@ return new class extends Migration
             $table->foreignIdFor(Branch::class)->nullable();
             $table->integer('pre_thana_id')->nullable();
             $table->integer('per_thana_id')->nullable();
+            $table->integer('pre_division_id')->nullable();
+            $table->integer('per_division_id')->nullable();
+            $table->integer('pre_district_id')->nullable();
+            $table->integer('per_district_id')->nullable();
+            $table->integer('pre_thana_id')->nullable();
+            $table->integer('per_thana_id')->nullable();
             $table->string('name')->nullable();
             $table->string('nid')->nullable();
             $table->string('blood_group')->nullable();

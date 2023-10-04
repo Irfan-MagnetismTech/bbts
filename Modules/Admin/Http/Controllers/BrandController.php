@@ -9,6 +9,8 @@ use App\Models\Dataencoding\District;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Admin\Http\Requests\BrandRequest;
+use Modules\Admin\Http\Requests\BrandUpdateRequest;
+
 
 class BrandController extends Controller
 {
@@ -87,7 +89,7 @@ class BrandController extends Controller
      * @param  \App\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function update(BrandRequest $request, Brand $brand)
+    public function update(BrandUpdateRequest $request, Brand $brand)
     {
         try {
             $data = $request->all();
