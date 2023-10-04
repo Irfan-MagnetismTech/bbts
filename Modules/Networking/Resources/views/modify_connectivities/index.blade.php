@@ -53,7 +53,7 @@
                         <td>{{ $details->connectivities ? $details->connectivities->commissioning_date : '' }}</td>
                         <td>
                             <span class="badge badge-primary">
-                                <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                <a href="{{ route('modify-physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                     class="text-white" target="_blank">Physical Connectivity</a>
                             </span>
                             <span class="badge badge-info">
