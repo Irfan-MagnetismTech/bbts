@@ -65,6 +65,7 @@ class BrokenDaysBillController extends Controller
 
             $billGenerateData = [
                 'client_no' => $bill->client_no,
+                'billing_address_id' => $bill->billingAddress->id,
                 'date' => $bill->date,
                 'bill_no' => $bill->bill_no,
                 'bill_type' => $bill->type,

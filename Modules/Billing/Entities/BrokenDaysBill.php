@@ -4,6 +4,7 @@ namespace Modules\Billing\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\SaleProductDetail;
 
@@ -19,5 +20,10 @@ class BrokenDaysBill extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
+
+    public function billingAddress(): BelongsTo
+    {
+        return $this->belongsTo(BillingAddress::class, 'client_no', 'client_no');
     }
 }

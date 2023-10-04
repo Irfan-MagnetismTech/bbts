@@ -3,6 +3,7 @@
 namespace Modules\Billing\Entities;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Sales\Entities\Client;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Billing\Entities\Collection;
@@ -69,5 +70,10 @@ class BillGenerate extends Model
     public function collection(): HasMany
     {
         return $this->hasMany(CollectionBill::class, 'bill_no', 'bill_no');
+    }
+
+    public function brokenDaysBill(): BelongsTo
+    {
+        return $this->belongsTo(BrokenDaysBill::class, 'bill_no','bill_no');
     }
 }
