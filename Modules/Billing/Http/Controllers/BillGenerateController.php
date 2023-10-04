@@ -121,21 +121,21 @@ class BillGenerateController extends Controller
 
     public function pdf($id)
     {
-        $billData = BillGenerate::findOrFail($id);
+        $billData = BillGenerate::find($id);
         $billData->load('lines.billingOtcBill.lines');
         return PDF::loadView('billing::billGenerate.pdf', ['billData' => $billData], [], [
             'format' => 'A4',
             'orientation' => 'L',
-            'title' => 'OTC Bill',
+            'title' => $billData->bill_type,
         ])->stream('bill.pdf');
         return view('billing::billGenerate.pdf', compact('billData'));
     }
 
-    public function generate_bill($id)
+    public function generate_bill($id,$bill_type)
     {
-        $billData = BillGenerate::findOrFail($id);
+        $billData = BillGenerate::find($id);
         $billData->load('lines.billingOtcBill.lines');
-        return view('billing::billGenerate.bill', compact('billData'));
+        return view('billing::billGenerate.bill', compact('billData','bill_type'));
     }
 
     public function getRow($req)

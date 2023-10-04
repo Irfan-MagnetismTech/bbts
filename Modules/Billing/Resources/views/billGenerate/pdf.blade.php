@@ -181,12 +181,12 @@
                                 <td>{{$billData->billingAddress->contact_person ?? ''}}</td>
                             </tr>
                             <tr>
-                                <td></td>
+                                <td>Designation :</td>
                                 <td>{{$billData->billingAddress->designation ?? ''}}</td>
                             </tr>
                             <tr>
-                                <td>BIN NO : </td>
-                                <td>{{$billData?->client?->bin_no ?? ''}}</td>
+                                <td>BIN NO :</td>
+                                <td>{{$billData->billingAddress->phone ?? ''}}</td>
                             </tr>
                         </thead>
                     </table>
@@ -196,22 +196,22 @@
 
                     <table class="table infoTable">
                         <thead>
-                            <tr>
-                                <td>Invoice No : </td>
-                                <td>{{$billData->client->client_name ?? ''}}</td>
-                            </tr>
-                            <tr>
-                                <td>Invoice Date : </td>
-                                <td>{{$billData->billingAddress->address ?? ''}}</td>
-                            </tr>
-                            <tr>
-                                <td>Invoice Period : </td>
-                                <td>{{$billData->billingAddress->contact_person ?? ''}}</td>
-                            </tr>
-                            <tr>
-                                <td>BBTSL BIN No</td>
-                                <td>{{$billData?->client?->bin_no ?? ''}}</td>
-                            </tr>
+                        <tr>
+                            <td>Invoice No :</td>
+                            <td>{{$billData->bill_no ?? ''}}</td>
+                        </tr>
+                        <tr>
+                            <td>Invoice Date :</td>
+                            <td>{{$billData->date ?? ''}}</td>
+                        </tr>
+                        <tr>
+                            <td>Invoice Period :</td>
+                            <td>{{$billData->month ?? ''}}</td>
+                        </tr>
+                        <tr>
+                            <td>BBTSL BIN No :</td>
+                            <td>{{$billData->client->bin_no ?? ''}}</td>
+                        </tr>
                         </thead>
                     </table>
                 </div>
