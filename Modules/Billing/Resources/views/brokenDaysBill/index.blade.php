@@ -62,12 +62,12 @@
                     <td class="text-center">{{ $value->client->client_name }}</td>
                     <td class="text-center">{{ $value->client->location }}</td>
                     <td class="text-center">{{ $value->client->contact_no }}</td>
-                    <td class="text-center">{{ $value->fr_no }}</td>
-                    <td class="text-center">{{ $value->type }}</td>
+                    <td class="text-center">{{ $value->brokenDaysBill->fr_no ?? ''}}</td>
+                    <td class="text-center">{{ $value->bill_type }}</td>
                     <td class="text-center">{{ $value->bill_no }}</td>
                     <td class="text-center">{{ $value->date }}</td>
-                    <td class="text-center">{{ $value->days }}</td>
-                    <td class="text-center">{{ $value->total_amount }}</td>
+                    <td class="text-center">{{ $value->brokenDaysBill->days ?? ''}}</td>
+                    <td class="text-center">{{ $value->amount }}</td>
                     <td>
                         <div class="icon-btn">
                             <nobr>

@@ -317,10 +317,10 @@
                     <td style="text-align: center;">0</td>
                     <td style="text-align: center;">{{$g_total_price + $g_vat}}</td>
                 </tr>
-                <tr>
-                    <td colspan="9" style="text-align: right;">Gross Total</td>
-                    <td style="text-align: center;">{{$g_total_price + $g_vat - $bdbBill?->penalty}}</td>
-                </tr>
+{{--                <tr>--}}
+{{--                    <td colspan="9" style="text-align: right;">Gross Total</td>--}}
+{{--                    <td style="text-align: center;">{{$g_total_price + $g_vat - $bdbBill?->penalty}}</td>--}}
+{{--                </tr>--}}
                 </tfoot>
             </table>
         </div>
