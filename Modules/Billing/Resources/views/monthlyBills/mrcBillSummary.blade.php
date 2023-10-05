@@ -261,15 +261,15 @@
                 <thead>
                 <tr>
                     <td>Invoice No :</td>
-                    <td>{{$monthlyBill->client->client_name}}</td>
+                    <td>{{$monthlyBill->bill_no ?? ''}}</td>
                 </tr>
                 <tr>
                     <td>Invoice Date :</td>
-                    <td>{{$monthlyBill->billingAddress->address}}</td>
+                    <td>{{$monthlyBill->date ?? ''}}</td>
                 </tr>
                 <tr>
                     <td>Invoice Period :</td>
-                    <td>{{$monthlyBill->billingAddress->contact_person}}</td>
+                    <td>{{$monthlyBill->month ?? ''}}</td>
                 </tr>
                 <tr>
                     <td>BBTSL BIN No :</td>
