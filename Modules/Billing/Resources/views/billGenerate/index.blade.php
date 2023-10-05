@@ -63,8 +63,12 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('generate_bill', $value->id) }}" data-toggle="tooltip" title="Edit"
-                                        class="btn btn-outline-success">Generate</a>
+{{--                                    <a href="{{ route('generate_bill', $value->id, $value->bill_type) }}" data-toggle="tooltip" title="Edit"--}}
+{{--                                        class="btn btn-outline-success">Generate</a>--}}
+                                    <a href="{{ route('generate_bill', ['id' => $value->id, 'bill_type' => $value->bill_type]) }}"
+                                       data-toggle="tooltip" title="Edit"
+                                       class="btn btn-outline-success">Generate</a>
+
                                 </nobr>
                             </div>
                         </td>

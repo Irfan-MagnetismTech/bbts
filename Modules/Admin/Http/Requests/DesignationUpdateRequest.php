@@ -4,7 +4,7 @@ namespace Modules\Admin\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BranchRequest extends FormRequest
+class DesignationUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,12 +13,10 @@ class BranchRequest extends FormRequest
      */
     public function rules()
     {
+        $designation = $this->route('designation');
+        // dd($designation);
         return [
-            'name' => 'required|unique:branches,name',
-            'division_id' => 'required|exists:divisions,id',
-            'district_id' => 'required|exists:districts,id',
-            'thana_id' => 'required|exists:thanas,id',
-            'location' => 'required'
+            'name' => "required|unique:designations,name, $designation->id"
         ];
     }
 
@@ -31,11 +29,7 @@ class BranchRequest extends FormRequest
     {
         return [
             'name.required' => 'Name is required',
-            'name.unique' => 'Name already exists',
-            'division_id.required' => 'Division is required',
-            'district_id.required' => 'District is required',
-            'thana_id.required' => 'Thana is required',
-            'location.required' => 'Location is required',
+            'name.unique' => 'Name already exists'
         ];
     }
 

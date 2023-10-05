@@ -31,8 +31,8 @@ Route::prefix('billing')->middleware(['auth'])->group(function () {
         'collections'       => CollectionController::class,
     ]);
     Route::get('generate_otc_bill/{client_no}', [BillGenerateController::class, 'create'])->name('generate_otc_bill');
-    Route::get('generate_otc_bill_pdf/{id}', [BillGenerateController::class, 'pdf'])->name('generate_otc_bill_pdf');
-    Route::get('generate_bill/{id}', [BillGenerateController::class, 'generate_bill'])->name('generate_bill');
+    Route::get('generate_bill_pdf/{id}', [BillGenerateController::class, 'pdf'])->name('generate_bill_pdf');
+    Route::get('generate_bill/{id}/{bill_type}', [BillGenerateController::class, 'generate_bill'])->name('generate_bill');
     Route::get('mrc_bill', [MonthlyBillController::class, 'mrc_bill'])->name('mrc_bill');
     Route::get('mrc_bill_summary', [MonthlyBillController::class, 'mrc_bill_summary'])->name('mrc_bill_summary');
 //    Route::get('mrc_bill_except_penalty/{id}', [MonthlyBillController::class, 'mrc_bill_except_penalty'])->name('mrc_bill_except_penalty');

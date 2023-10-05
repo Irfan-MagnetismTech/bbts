@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use App\Models\Dataencoding\Designation;
+use Modules\Admin\Http\Requests\DesignationStoreRequest;
+use Modules\Admin\Http\Requests\DesignationUpdateRequest;
 
 class DesignationController extends Controller
 {
@@ -43,9 +45,12 @@ class DesignationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DesignationStoreRequest $request)
     {
         try{
+            // Validator::make($request->all(), [
+            //     'name' => 'required|unique:designations,name',
+            // ])->validate();
             $data = $request->all();
             Designation::create($data);
             return redirect()->route('dataencoding.designations.create')->with('message', 'Data has been inserted successfully');
@@ -85,9 +90,12 @@ class DesignationController extends Controller
      * @param  \App\Designation  $designation
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Designation $designation)
+    public function update(DesignationUpdateRequest $request, Designation $designation)
     {
         try{
+            // Validator::make($request->all(), [
+            //     'name' => "required|unique:designations,name, $designation->id",
+            // ])->validate();
             $data = $request->all();
             $designation->update($data);
             return redirect()->route('dataencoding.designations.create')->with('message', 'Data has been updated successfully');

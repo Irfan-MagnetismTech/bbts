@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('sc_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('short_code')->nullable();
             $table->timestamps();
         });
     }

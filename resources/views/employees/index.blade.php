@@ -52,9 +52,9 @@
                     <td>
                         <div class="icon-btn">
                             <nobr>
-                                <a href="{{ url("employees/$employee->id") }}" data-toggle="tooltip" title="View" class="btn btn-outline-info"><i class="fas fa-eye"></i></a>
-                                <a href="{{ url("employees/$employee->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                {!! Form::open(array('url' => "employees/$employee->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
+                              <a href="{{ url("dataencoding/employees/$employee->id") }}" data-toggle="tooltip" title="View" class="btn btn-outline-info"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url("dataencoding/employees/$employee->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                {!! Form::open(array('url' => "dataencoding/employees/$employee->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
                                 {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
                                 {!! Form::close() !!}
                             </nobr>

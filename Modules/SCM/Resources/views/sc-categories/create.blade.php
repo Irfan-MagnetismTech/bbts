@@ -36,13 +36,20 @@
             @csrf
             <div class="row">
 
-                <div class="col-12">
+                <div class="col-12"  style="margin-top: 10px">
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="name">Category Name <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="name" name="name"
                             placeholder="Enter category name" value="{{ old('name') ?? ($category->name ?? '') }}" required>
                     </div>
-                </div>>
+                </div>
+                <div class="col-12" style="margin-top: 10px">
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="short_code">Short Code <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="short_code" name="short_code"
+                               placeholder="Enter short code" value="{{ old('short_code') ?? ($category->short_code ?? '') }}" required>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
