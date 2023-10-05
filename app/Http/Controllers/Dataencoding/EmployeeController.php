@@ -14,6 +14,7 @@ use App\Models\Dataencoding\Department;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 use App\Models\Dataencoding\Designation;
+use Modules\Admin\Http\Requests\EmployeeRequest;
 
 class EmployeeController extends Controller
 {
@@ -23,15 +24,15 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    CONST BLOODGROUPS = [
-        'A+'=>'A+',
-        'A-'=>'A-',
-        'B+'=>'B+',
-        'B-'=>'B-',
-        'O+'=>'O+',
-        'O-'=>'O-',
-        'AB+'=>'AB+',
-        'AB-'=>'AB-'
+    const BLOODGROUPS = [
+        'A+' => 'A+',
+        'A-' => 'A-',
+        'B+' => 'B+',
+        'B-' => 'B-',
+        'O+' => 'O+',
+        'O-' => 'O-',
+        'AB+' => 'AB+',
+        'AB-' => 'AB-'
     ];
     // function __construct()
     // {
@@ -43,10 +44,10 @@ class EmployeeController extends Controller
     public function index()
 
     {
-//        $test=Employee::with('preThana','preThana.district')->get();
-//        dd($test);
-        $employees=Employee::with('designation','department')->latest()->get();
-    //    dd($employees);
+        //        $test=Employee::with('preThana','preThana.district')->get();
+        //        dd($test);
+        $employees = Employee::with('designation', 'department')->latest()->get();
+        //    dd($employees);
         return view('employees.index', compact('employees'));
     }
 
@@ -59,19 +60,19 @@ class EmployeeController extends Controller
     {
         $user = Auth::user();
         $formType = "create";
-      
-            $departments = Department::orderBy('name')->pluck('name', 'id');
-        
+
+        $departments = Department::orderBy('name')->pluck('name', 'id');
+
         $designations = Designation::orderBy('name')->pluck('name', 'id');
-        $divisions=Division::orderBy('name')->pluck('name', 'id');
-        $predistrict= [];
-        $perdistrict= [];
-        $prethanas=[];
-        $perthanas=[];
+        $divisions = Division::orderBy('name')->pluck('name', 'id');
+        $predistrict = [];
+        $perdistrict = [];
+        $prethanas = [];
+        $perthanas = [];
 
         $bloodgroups = self::BLOODGROUPS;
 
-        return view('employees.create', compact('prethanas','perthanas','formType','designations','departments','predistrict','perdistrict','divisions','bloodgroups'));
+        return view('employees.create', compact('prethanas', 'perthanas', 'formType', 'designations', 'departments', 'predistrict', 'perdistrict', 'divisions', 'bloodgroups'));
     }
 
     /**
@@ -80,33 +81,31 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EmployeeRequest $request)
     {
         // dd($request->all());
-        try{
+        try {
             // $employee_data = $request->except('district_id','division_id');
-            if($request->hasFile('picture')) {
-                $pictureName =$request->fname.'_'.time(). '_' . $request->picture->getClientOriginalName();
+            if ($request->hasFile('picture')) {
+                $pictureName = $request->fname . '_' . time() . '_' . $request->picture->getClientOriginalName();
                 $request->picture->move('images/Employees', $pictureName);
+                $employee_data = $request->all();
                 $employee_data['picture'] = $pictureName;
-            }
-            else{
-                $employee_data=$request->all();
-                $employee_data['picture']="";
+            } else {
+                $employee_data = $request->all();
+                $employee_data['picture'] = "";
             }
             // dd($employee_data);
-            if($request->address_status==1)
-            {
+            if ($request->address_status == 1) {
                 $employee_data['per_street_address'] = $employee_data['pre_street_address'];
                 $employee_data['per_division_id'] = $employee_data['pre_division_id'];
                 $employee_data['per_district_id'] = $employee_data['pre_district_id'];
                 $employee_data['per_thana_id'] = $employee_data['pre_thana_id'];
             }
-            dd($employee_data);
+            // dd($employee_data);
             Employee::create($employee_data);
-            return redirect()->route('dataencoding/employees')->with('message', 'Data has been inserted successfully');
-            }
-        catch(QueryException $e){
+            return redirect()->route('dataencoding.employees.index')->with('message', 'Data has been inserted successfully');
+        } catch (QueryException $e) {
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
@@ -121,7 +120,10 @@ class EmployeeController extends Controller
     public function show(Employee $employee)
     {
         // dd($employee->department);
-        return view('employees.show',compact('employee'));
+        $employee = Employee::with('preDivision', 'perDivision', 'preDistrict',
+         'perDistrict', 'preThana', 'perThana')->findOrfail($employee->id);
+        // dd($employee);
+        return view('employees.show', compact('employee'));
     }
 
     /**
@@ -132,28 +134,20 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
-//        dd($employee);
         $formType = "edit";
-        $user = Auth::user();
-        $sectionId = Session::get('section_id');
-        if($user->hasRole(['super-admin','admin'])) {
-            $departments = Department::where('section_id',$sectionId)->orderBy('name')->pluck('name', 'id');
-        }else{
-            $departments = Department::where('section_id',$user->section_id)->orderBy('name')->pluck('name', 'id');
-        }
+        $departments = Department::orderBy('name')->pluck('name', 'id');
         $designations = Designation::orderBy('name')->pluck('name', 'id');
 
-
-        $divisions=Division::orderBy('name')->pluck('name', 'id');
-        $predistrict= District::where('division_id',$employee->preThana->district->division_id ??'')->orderBy('name')->pluck('name', 'id');
-        $perdistrict= District::where('division_id',$employee->perThana->district->division_id ?? '')->orderBy('name')->pluck('name', 'id');
-        $prethanas=Thana::where('district_id',$employee->preThana->district_id ?? '')->orderBy('name')->pluck('name', 'id');
-        $perthanas=Thana::where('district_id',$employee->perThana->district_id ?? '')->orderBy('name')->pluck('name', 'id');
-        $section= Apsection::orderBy('name')->pluck('name', 'id');
-
+        $divisions = Division::orderBy('name')->pluck('name', 'id');
+        $districts = District::orderBy('name')->pluck('name', 'id');
+        $thanas = Thana::orderBy('name')->pluck('name', 'id');
+        $predistrict = District::where('division_id', $employee->preThana->district->division_id ?? '')->orderBy('name')->pluck('name', 'id');
+        $perdistrict = District::where('division_id', $employee->perThana->district->division_id ?? '')->orderBy('name')->pluck('name', 'id');
+        $prethanas = Thana::where('district_id', $employee->preThana->district_id ?? '')->orderBy('name')->pluck('name', 'id');
+        $perthanas = Thana::where('district_id', $employee->perThana->district_id ?? '')->orderBy('name')->pluck('name', 'id');
         $bloodgroups = self::BLOODGROUPS;
 
-        return view('employees.create', compact('predistrict','perdistrict','perthanas','prethanas','employee','section','formType', 'designations','departments','divisions','bloodgroups'));
+        return view('employees.create', compact('employee','formType', 'designations', 'departments', 'divisions', 'districts', 'thanas', 'bloodgroups'));
     }
 
     /**
@@ -163,31 +157,30 @@ class EmployeeController extends Controller
      * @param  \App\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(EmployeeRequest $request, Employee $employee)
     {
 
-        try{
-            $data = $request->except('district_id','division_id');
-            if($request->hasFile('picture')){
-                $pictureName =$request->fname.'_'.time(). '_' . $request->picture->getClientOriginalName();
-                if(!empty($employee->picture) && file_exists(public_path("images/Employees/$employee->image"))){
+        try {
+            $data = $request->except('district_id', 'division_id');
+            if ($request->hasFile('picture')) {
+                $pictureName = $request->fname . '_' . time() . '_' . $request->picture->getClientOriginalName();
+                if (!empty($employee->picture) && file_exists(public_path("images/Employees/$employee->image"))) {
                     unlink(public_path("images/Employees/$employee->picture"));
-                    $request->picture->move('images/Employees',$pictureName);
-                }else{
-                    $request->picture->move('images/Employees',$pictureName);
+                    $request->picture->move('images/Employees', $pictureName);
+                } else {
+                    $request->picture->move('images/Employees', $pictureName);
                 }
                 $data['picture'] = $pictureName;
             }
 
-            if($request->address_status==1)
-            {
+            if ($request->address_status == 1) {
                 $data['per_street_address'] = $data['pre_street_address'];
                 $data['per_thana_id'] = $data['pre_thana_id'];
             }
 
             $employee->update($data);
-            return redirect()->route('employees.index')->with('message', 'Data has been updated successfully');
-        }catch(QueryException $e){
+            return redirect()->route('dataencoding.employees.index')->with('message', 'Data has been updated successfully');
+        } catch (QueryException $e) {
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
@@ -200,10 +193,11 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        try{
+        //    dd($employee);
+        try {
             $employee->delete();
-            return redirect()->route('employees.index')->with('message', 'Data has been deleted successfully');
-        }catch(QueryException $e){
+            return redirect()->route('dataencoding.employees.index')->with('message', 'Data has been deleted successfully');
+        } catch (QueryException $e) {
             return redirect()->back()->withInput()->withErrors($e->getMessage());
         }
     }
