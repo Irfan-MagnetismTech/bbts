@@ -111,7 +111,7 @@ class MonthlyBillController extends Controller
      */
     public function edit(int $id)
     {
-        $monthlyBill = BillGenerate::findOrFail($id);
+        $monthlyBill = BillGenerate::find($id);
         $groupedLines = $monthlyBill->lines->groupBy('fr_no');
         return view('billing::monthlyBills.edit', compact('monthlyBill', 'groupedLines'));
     }
@@ -126,7 +126,7 @@ class MonthlyBillController extends Controller
     {
         try {
             DB::beginTransaction();
-            $monthlyBill = BillGenerate::findOrFail($id);
+            $monthlyBill = BillGenerate::find($id);
             $data = $request->only('penalty');
             $monthlyBill->update($data);
 
@@ -161,7 +161,7 @@ class MonthlyBillController extends Controller
         // Check if 'with_pad' is in the selectedOptions array
         $withPad = in_array('with_pad', $selectedOptionsArray) ? 1 : 0;
 
-        $monthlyBill = BillGenerate::findOrFail($id);
+        $monthlyBill = BillGenerate::find($id);
         $groupedLines = $monthlyBill->lines->groupBy('fr_no');
         return PDF::loadView('billing::monthlyBills.mrcBill', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines, 'selectedOptions' => $selectedOptions, 'withDue' => $withDue, 'withPad' => $withPad], [], [
             'format'                     => 'A4',
@@ -191,7 +191,7 @@ class MonthlyBillController extends Controller
         // Check if 'with_pad' is in the selectedOptions array
         $withPad = in_array('with_pad', $selectedOptionsArray) ? 1 : 0;
 
-        $monthlyBill = BillGenerate::findOrFail($id);
+        $monthlyBill = BillGenerate::find($id);
         $groupedLines = $monthlyBill->lines->groupBy('fr_no');
         return PDF::loadView('billing::monthlyBills.mrcBillSummary', ['monthlyBill' => $monthlyBill, 'groupedLines' => $groupedLines, 'selectedOptions' => $selectedOptions, 'withDue' => $withDue, 'withPad' => $withPad], [], [
             'format'                     => 'A4',
