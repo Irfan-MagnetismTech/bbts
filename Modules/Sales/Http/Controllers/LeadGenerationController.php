@@ -80,7 +80,7 @@ class LeadGenerationController extends Controller
     {
         $lead_generation = LeadGeneration::with('createdBy')->find($id);
         $divisons = Division::all();
-        $districts = District::where('division_id', $lead_generation->division_id)->get();
+        $districts = District::get();
         $thanas = Thana::where('district_id', $lead_generation->district_id)->get();
         $organizations = [
             '1' => 'School',

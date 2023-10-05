@@ -522,7 +522,7 @@
                                                     <input type="text" id='new_current_capacity_{{ $key }}'
                                                         name="current_capacity[]"
                                                         class="myInputField myInputField_{{ $key }} form-control text-right new_current_capacity"
-                                                        readonly>
+                                                        readonly value="{{ $current_capacities[$key] }}">
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="remarks[]" id="remarks"

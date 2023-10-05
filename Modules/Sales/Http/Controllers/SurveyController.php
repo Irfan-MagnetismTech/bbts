@@ -144,7 +144,6 @@ class SurveyController extends Controller
         try {
             $survey->update($survey_data);
             $survey->surveyDetails()->delete();
-            $survey->finalSurveyDetails()->delete();
             foreach ($request->link_type as $key => $value) {
                 $survey_details['survey_id'] = $survey->id;
                 $survey_details['link_type'] = $value;

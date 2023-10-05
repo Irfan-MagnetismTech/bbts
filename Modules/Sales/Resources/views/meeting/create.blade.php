@@ -50,7 +50,7 @@
                             $sales_representative = $is_old ? old('sales_representative') : (!empty($meeting->sales_representative) ? $meeting->sales_representative : null);
                             $meeting_start_time = $is_old ? old('meeting_start_time') : (!empty($meeting->meeting_start_time) ? $meeting->meeting_start_time : null);
                             $meeting_end_time = $is_old ? old('meeting_end_time') : (!empty($meeting->meeting_end_time) ? $meeting->meeting_end_time : null);
-                            $client_id = $is_old ? old('client_id') : (!empty($meeting->client_id) ? $meeting->client_id : null);
+                            $client_no = $is_old ? old('client_id') : (!empty($meeting->client_no) ? $meeting->client_no : null);
                             $contact_person = $is_old ? old('contact_person') : (!empty($meeting->client->contact_person) ? $meeting->client->contact_person : null);
                             $contact_number = $is_old ? old('contact_number') : (!empty($meeting->client->contact_no) ? $meeting->client->contact_no : null);
                             $designation = $is_old ? old('designation') : (!empty($meeting->client->designation) ? $meeting->client->designation : null);
@@ -93,8 +93,9 @@
                                     <option value="">Select Client</option>
                                     @if ($clients)
                                         @foreach ($clients as $client)
-                                            <option value="{{ $client->id }}"
-                                                {{ $client->id == $client_id ? 'selected' : '' }}>{{ $client->client_name }}
+                                            <option value="{{ $client->client_no }}"
+                                                {{ $client->client_no == $client_no ? 'selected' : '' }}>
+                                                {{ $client->client_name }}
                                             </option>
                                         @endforeach
                                     @endif
@@ -177,15 +178,14 @@
     @section('script')
         <script>
             $('#client_id').on('change', function() {
-                var client_id = $(this).val();
+                var client_no = $(this).val();
                 var clients = JSON.parse('{!! json_encode($clients) !!}');
-                var client = clients.find(client => client.id == client_id);
+                var client = clients.find(client => client.client_no == client_no);
                 $('#contact_person').val(client.contact_person).attr('value', client.contact_person)
                 $('#designation').val(client.designation).attr('value', client.designation)
                 $('#contact_number').val(client.contact_no).attr('value', client.contact_no)
                 $('#email').val(client.email).attr('value', client.email)
             })
-
             $('.select2').select2();
         </script>
 

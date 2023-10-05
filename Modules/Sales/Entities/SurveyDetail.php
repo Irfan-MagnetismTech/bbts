@@ -14,6 +14,11 @@ class SurveyDetail extends Model
         return $this->belongsTo(Survey::class);
     }
 
+    public function finalSurveyDetail()
+    {
+        return $this->hasOne(FinalSurveyDetail::class);
+    }
+
     public function vendor()
     {
         return $this->hasOne(Vendor::class, 'id', 'vendor_id');

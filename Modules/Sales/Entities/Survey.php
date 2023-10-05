@@ -13,11 +13,6 @@ class Survey extends Model
         return $this->hasMany(SurveyDetail::class);
     }
 
-    public function finalSurveyDetails()
-    {
-        return $this->hasMany(FinalSurveyDetail::class);
-    }
-
     public function lead_generation()
     {
         return $this->hasOne(LeadGeneration::class, 'client_no', 'client_no');
