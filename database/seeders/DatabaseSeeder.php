@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             //    $this->call(DistrictSeeder::class);
             //    $this->call(ThanaSeeder::class);
                 // $this->call(DepartmentSeeder::class);
-                $this->call(DesignationSeeder::class);
+                // $this->call(DesignationSeeder::class);
                 // $this->call(RoleSeeder::class);
                 // $this->call(PermissionSeeder::class);
                 // $this->call(BranchSeederTableSeeder::class);
