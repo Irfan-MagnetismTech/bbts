@@ -14,6 +14,7 @@ use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\Planning;
 use App\Models\Dataencoding\Division;
 use App\Models\Dataencoding\Employee;
+use Carbon\Carbon;
 use Exception;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\QueryException;
@@ -21,6 +22,7 @@ use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Billing\Entities\BillingOtcBill;
+use Modules\Networking\Entities\NetServiceRequisition;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\ConnectivityRequirement;
@@ -352,8 +354,6 @@ class SaleModificationController extends Controller
 
     public function pnlDetails($connectivity_requirement_id = null)
     {
-        // $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing.costingProducts')
-        //     ->where('mq_no', $mq_no)->first();
         $connectivity_requirement = ConnectivityRequirement::where('id', $connectivity_requirement_id)->first();
         if ($connectivity_requirement) {
             $connectivity_requirement->costingByConnectivity->costingProducts->map(function ($item) {
@@ -361,20 +361,260 @@ class SaleModificationController extends Controller
                 return $item;
             });
         }
-        dd($connectivity_requirement);
-        // if ($feasibility_requirement) {
-        //     $feasibility_requirement->feasibilityRequirementDetails->map(function ($item) {
-        //         if ($item->costing) {
-        //             $item->costing->costingProducts->map(function ($item) {
-        //                 $item->sale_product = SaleProductDetail::where('product_id', $item->product_id)->where('fr_no', $item->fr_no)->first();
-        //                 return $item;
-        //             });
-        //             return $item;
-        //         }
-        //     });
-        // }
-
-
         return view('changes::modify_pnl.pnl_details', compact('connectivity_requirement', 'connectivity_requirement_id'));
+    }
+
+    public function pnlApproveByFinance($connectivity_requirement_id = null)
+    {
+        $sales = Sale::where('connectivity_requirement_id', $connectivity_requirement_id)->first();
+        $sales->update([
+            'finance_approval' => 'Approved',
+            'finance_approved_by' => auth()->user()->id
+        ]);
+        return redirect()->back()->with('success', 'Approved Successfully');
+    }
+
+    public function pnlApproveByCmo($connectivity_requirement_id = null)
+    {
+        $sales = Sale::where('connectivity_requirement_id', $connectivity_requirement_id)->first();
+        $sales->update([
+            'cmo_approval' => 'Approved',
+            'cmo_approved_by' => auth()->user()->id
+        ]);
+        return redirect()->back()->with('success', 'Approved Successfully');
+    }
+
+    public function pnlApproveByManagement($connectivity_requirement_id = null)
+    {
+        try {
+            DB::beginTransaction();
+
+            $saleDetails = SaleDetail::with('saleLinkDetails.planLinkDetail')
+                ->whereHas('sale', function ($q) use ($connectivity_requirement_id) {
+                    $q->where('connectivity_requirement_id', $connectivity_requirement_id);
+                })->get();
+
+
+            $lastMRSId = ScmRequisition::latest()->first();
+            $currentYear = now()->format('Y');
+            $mrsNoCounter = $lastMRSId ? $lastMRSId->id + 1 : 1;
+
+            foreach ($saleDetails as $saleDetail) {
+                foreach ($saleDetail->saleLinkDetails as $saleLinkDetail) {
+                    // dump($saleLinkDetail->finalSurveyDetails->toArray());
+                    $nttn_req = [
+                        'client_no' => $saleLinkDetail->client_no,
+                        'fr_no' => $saleLinkDetail->fr_no,
+                        'type' => 'Client',
+                        'date' => now()->format('d-m-Y'),
+                        'from_pop_id' => $saleLinkDetail->finalSurveyDetails->pop_id ?? null,
+                        'vendor_id' => $saleLinkDetail->finalSurveyDetails->vendor_id ?? null,
+                        'capacity' => $saleLinkDetail->planLinkDetail->new_transmission_capacity,
+                    ];
+
+                    NetServiceRequisition::create($nttn_req);
+
+                    if ($saleDetail->saleLinkDetails()->exists()) {
+                        $mrsNoCounter++;
+                        $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
+
+                        $link_equipment_requisition = [
+                            "client_no"         => $saleDetail->client_no,
+                            "mrs_no"            => $mrsNo,
+                            "fr_no"             => $saleDetail->fr_no,
+                            "type"              => 'client',
+                            "requisition_by"    => auth()->id(),
+                            "branch_id"         => 1,
+                            "date"              => now()->format('d-m-Y'),
+                        ];
+                        $link_equipment_requisitionData = ScmRequisition::create($link_equipment_requisition);
+
+                        $link_eqp_details = [];
+                        foreach ($saleLinkDetail->planLinkDetail->PlanLinkEquipments as $planLinkEquipment) {
+                            $link_eqp_details[] = [
+                                "material_id"   => $planLinkEquipment->material_id,
+                                "item_code"     => $planLinkEquipment->material->code,
+                                "req_key"     => $link_equipment_requisitionData->id . '-' . $planLinkEquipment->material->code,
+                                "brand_id"      => $planLinkEquipment->brand_id,
+                                "quantity"      => $planLinkEquipment->quantity,
+                                "model"         => $planLinkEquipment->model,
+                            ];
+                        }
+                        $link_equipment_requisitionData->scmRequisitiondetails()->createMany($link_eqp_details);
+                    }
+                }
+                $sale = Sale::where('connectivity_requirement_id', $connectivity_requirement_id)->first();
+                // dd($sale->costingByConnectivity->planningByConnectivity->equipmentPlans());
+                if ($sale->costingByConnectivity->planningByConnectivity->equipmentPlans()->exists()) {
+                    $mrsNoCounter++;
+                    $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
+
+                    $product_equipment_requisitions = [
+                        "client_no"         => $saleDetail->client_no,
+                        "mrs_no"            => $mrsNo,
+                        "fr_no"             => $saleDetail->fr_no,
+                        "type"              => 'client',
+                        "requisition_by"    => auth()->id(),
+                        "branch_id"         => 1,
+                        "date"              => now()->format('d-m-Y'),
+                    ];
+
+                    $product_equipment_requisitionsData = ScmRequisition::create($product_equipment_requisitions);
+                    $product_eqp_details = [];
+                    foreach ($sale->costingByConnectivity->planningByConnectivity->equipmentPlans as $equipmentPlan) {
+                        $product_eqp_details[] = [
+                            "material_id"   => $equipmentPlan->material_id,
+                            "item_code"     => $equipmentPlan->material->code,
+                            "req_key"       => $product_equipment_requisitionsData->id . '-' . $equipmentPlan->material->code,
+                            "brand_id"      => $equipmentPlan->brand_id,
+                            "quantity"      => $equipmentPlan->quantity,
+                            "model"         => $equipmentPlan->model,
+                        ];
+                    }
+                    $product_equipment_requisitionsData->scmRequisitiondetails()->createMany($product_eqp_details);
+                }
+            }
+            // dd();
+
+            $datas = Planning::with('equipmentPlans.material', 'planLinks.PlanLinkEquipments.material')
+                ->where('connectivity_requirement_id', $connectivity_requirement_id)
+                ->get();
+            $material_array = [];
+
+            foreach ($datas as $key => $values) {
+
+                $cle_data = CostingLinkEquipment::whereHas('costing', function ($qr) use ($values) {
+                    $qr->where("connectivity_requirement_id", $values->connectivity_requirement_id)->where('ownership', 'Client');
+                })->get();
+
+                $cpe_data = CostingProductEquipment::whereHas('costing', function ($qr) use ($values) {
+                    $qr->where("connectivity_requirement_id", $values->connectivity_requirement_id)->where('ownership', 'Client');
+                })->get();
+                $sale = Sale::where('connectivity_requirement_id', $values->connectivity_requirement_id)->first();
+                $saleData = SaleDetail::where('sale_id', $sale->id)->get()->first();
+                if (!$saleData) {
+                    continue;
+                }
+                $otc_lines_data = [];
+                $equipment_amount = 0;
+
+
+                foreach ($cle_data as $cle_data_key => $cle_data_values) {
+                    $otc_lines_data[] = [
+                        'material_id' => $cle_data_values->material_id,
+                        'quantity' => $cle_data_values->quantity,
+                        'rate' => $cle_data_values->rate,
+                        'amount' => $cle_data_values->rate * $cle_data_values->quantity,
+                    ];
+                    $equipment_amount += $cle_data_values->rate * $cle_data_values->quantity;
+                }
+
+                foreach ($cpe_data as $cpe_data_key => $cpe_data_values) {
+                    $otc_lines_data[] = [
+                        'material_id' => $cpe_data_values->material_id,
+                        'quantity' => $cpe_data_values->quantity,
+                        'rate' => $cpe_data_values->rate,
+                        'amount' => $cpe_data_values->rate * $cpe_data_values->quantity,
+                    ];
+                    $equipment_amount += $cpe_data_values->rate * $cpe_data_values->quantity;
+                }
+                $TotalAmount = $saleData->otc;
+                $installation_charge = -1 * ($TotalAmount - $equipment_amount);
+                $otc = [
+                    'client_no' =>  $values->client_no,
+                    'fr_no' =>  $values->fr_no,
+                    'sale_id' => $saleData->sale_id,
+                    'sale_detail_id' => $saleData->id,
+                    'date' =>  Carbon::now()->format('Y-m-d'),
+                    'user_id' => auth()->id(),
+                    'equipment_amount' => $equipment_amount,
+                    'installation_charge' => $installation_charge,
+                    'total_amount' => $TotalAmount,
+                ];
+
+                $otc_data = BillingOtcBill::create($otc);
+                $otc_data->lines()->createMany($otc_lines_data);
+
+                // if (count($values->equipmentPlans)) {
+                //     $material_array[$key]['parent']['main'] = [
+                //         "client_no"         => $values->client_no,
+                //         "fr_no"             => $values->fr_no,
+                //         "type"              => 'client',
+                //         "requisition_by"    => auth()->id(),
+                //         "branch_id"         => 1,
+                //         "date"              => now()->format('d-m-Y'),
+                //     ];
+                //     foreach ($values->equipmentPlans as $key2 => $values2) {
+                //         $material_array[$key]['parent']['child'][] = [
+                //             "material_id"   => $values2->material_id,
+                //             "item_code"     => $values2->material->code,
+                //             "brand_id"      => $values2->brand_id,
+                //             "quantity"      => $values2->quantity,
+                //             "model"         => $values2->model,
+                //         ];
+                //     }
+                // }
+
+                // foreach ($values->planLinks as $key2 => $values2) {
+                //     $material_array[$key]['link'][$key2]['main'] = [
+                //         "client_no"         => $values->client_no,
+                //         "fr_no"             => $values->fr_no,
+                //         "link_no"           => $values2->link_no,
+                //         "type"              => 'client',
+                //         "requisition_by"    => auth()->id(),
+                //         "branch_id"         => 1,
+                //         "date"              => now()->format('d-m-Y'),
+                //     ];
+                //     foreach ($values2->PlanLinkEquipments as $key3 => $values3) {
+                //         $material_array[$key]['link'][$key2]['child'][] = [
+                //             "material_id"   => $values3->material_id,
+                //             "item_code"     => $values3->material->code,
+                //             "brand_id"      => $values3->brand_id,
+                //             "quantity"      => $values3->quantity,
+                //             "model"         => $values3->model,
+                //         ];
+                //     } 
+                //  }
+            }
+            // $lastMRSId = ScmRequisition::latest()->first();
+            // $currentYear = now()->format('Y');
+            // $mrsNoCounter = $lastMRSId ? $lastMRSId->id + 1 : 1;
+            /* foreach ($material_array as $key => $value) {
+                if (isset($value['parent'])) {
+                    $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
+                    $mrsNoCounter++;
+                    $value['parent']['main']['mrs_no'] = $mrsNo;
+                    // $reqq = ScmRequisition::create($value['parent']['main']);
+                    // $reqChildItems = collect($value['parent']['child'])->map(function ($child) use ($reqq) {
+                    //     $child['req_key'] = $reqq->id . '-' . $child['item_code'];
+                    //     return $child;
+                    // });
+                    // $reqq->scmRequisitiondetails()->createMany($reqChildItems);
+                }
+                foreach ($value['link'] as $key1 => $value1) {
+                    $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
+                    $mrsNoCounter++;
+                    $value1['main']['mrs_no'] = $mrsNo;
+                    // $reqq = ScmRequisition::create($value1['main']);
+                    // $reqChildItems = collect($value1['child'])->map(function ($child) use ($reqq) {
+                    //     $child['req_key'] = $reqq->id . '-' . $child['item_code'];
+                    //     return $child;
+                    // });
+                    // $reqq->scmRequisitiondetails()->createMany($reqChildItems);
+                }
+            } */
+            $sales = Sale::where('connectivity_requirement_id', $connectivity_requirement_id)->first();
+            $sales->update([
+                'management_approval' => 'Approved',
+                'management_approved_by' => auth()->user()->id,
+                'approval_date'  => now()
+            ]);
+
+            DB::commit();
+            return redirect()->route('modify-pnl-summary', $connectivity_requirement_id)->with('success', 'Approved Successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('modify-pnl-summary', $connectivity_requirement_id)->with('error', $e->getMessage());
+        }
     }
 }

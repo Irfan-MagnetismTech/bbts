@@ -26,7 +26,9 @@ $(document).on("change", "#fr_no", function () {
 });
 
 function addRow(value) {
-    const totalAmount = (parseFloat(value.vat_amount) + parseFloat(value.total_price)).toFixed(2);
+    const vatAmount = value.vat_amount ?? 0;
+    const totalPrice = value.total_price ?? 0;
+    const totalAmount = (parseFloat(vatAmount) + parseFloat(totalPrice)).toFixed(2);
 
     let row = `<tr>
                             <td>
@@ -43,10 +45,10 @@ function addRow(value) {
                                 <input name="unit_price[]" class="form-control unit_price" autocomplete="off" type="text" value="${value.price}" readonly>
                             </td>
                             <td>
-                                <input name="total_price[]" class="form-control total_price" autocomplete="off" type="text" value="${value.total_price}" readonly>
+                                <input name="total_price[]" class="form-control total_price" autocomplete="off" type="text" value="${totalPrice}" readonly>
                             </td>
                             <td>
-                                <input name="vat[]" class="form-control vat" autocomplete="off" type="text" value="${value.vat_amount}" readonly>
+                                <input name="vat[]" class="form-control vat" autocomplete="off" type="text" value="${vatAmount}" readonly>
                             </td>
                             <td>
                                 <input name="total_amount[]" class="form-control total_amount" autocomplete="off" type="text" value="${totalAmount}" readonly>
@@ -66,4 +68,57 @@ function calculateTotalAmount(){
         totalAmount += parseFloat($(this).val() ? $(this).val() : 0);
     })
     $('#net_total_amount').val(totalAmount.toFixed(2));
+
+    var days = $("#days").val();
+    var netTotalAmount = totalAmount.toFixed(2);
+
+    if (days > 0 && netTotalAmount > 0) {
+        let amount = (parseFloat(days) * netTotalAmount) / 30;
+        $("#payable_amount").val(amount.toFixed(2));
+    } else {
+        $("#payable_amount").val('0.00');
+    }
 }
+
+
+$(document).on("change", "#fr_no", function () {
+    var selectedFrNo = $(this).val(); // Get the selected "fr_no" value
+
+    // Send the selected value to the server using AJAX
+    $.ajax({
+        url: window.location.origin + "/billing/get_fr_bill_date",
+        type: "get",
+        dataType: "json",
+        data: {
+            fr_no: selectedFrNo, // Pass the selected "fr_no" value
+        },
+        success: function (data) {
+            // Handle the server's response here
+            if (data.length > 0) {
+                $("#billing_date").val(data[0].billing_date);
+
+                const billingDateValue = $("#billing_date").val();
+
+                // Check if the billingDateValue is not empty before creating a Date object
+                if (billingDateValue) {
+                    const inputDate = new Date(billingDateValue);
+                    const lastDayOfMonth = new Date(inputDate.getFullYear(), inputDate.getMonth() + 1, 0);
+                    const remainingDays = lastDayOfMonth.getDate() - inputDate.getDate();
+
+                    // Set the remaining days in the input field with the id "days"
+                    $("#days").val(remainingDays);
+                }
+
+                calculateTotalAmount();
+            } else {
+                // Handle the case where no data is returned or an error occurs
+                $("#billing_date").val('');
+                $("#days").val('0');
+
+                calculateTotalAmount();
+            }
+        },
+
+    });
+});
+

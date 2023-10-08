@@ -95,4 +95,9 @@ class Sale extends Model
     {
         return $this->belongsTo(User::class, 'cmo_approved_by', 'id');
     }
+
+    public function costingByConnectivity()
+    {
+        return $this->hasOne(Costing::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
+    }
 }

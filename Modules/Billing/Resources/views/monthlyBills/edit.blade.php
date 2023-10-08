@@ -211,8 +211,8 @@
                         <td>{{$monthlyBill->billingAddress->designation  ?? ''}}</td>
                     </tr>
                     <tr>
-                        <td>BIN NO :</td>
-                        <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
+                        <td>BIN No :</td>
+                        <td>{{$monthlyBill?->billingAddress->phone ?? ''}}</td>
                     </tr>
                     </thead>
                 </table>

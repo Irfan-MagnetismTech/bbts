@@ -53,6 +53,8 @@
                             $total_receive_amount = $is_old ? old('total_receive_amount') : $collection->total_receive_amount ?? null;
                             $grand_total = $is_old ? old('grand_total') : $collection->grand_total ?? null;
                             $total_due = $is_old ? old('total_due') : $collection->total_due ?? null;
+                            $total_discount = $is_old ? old('total_discount') : $collection->total_discount ?? null;
+                            $total_penalty = $is_old ? old('total_penalty') : $collection->total_penalty ?? null;
                         @endphp
                         <div class="col-xl-3 col-md-3">
                             <div class="form-item">
@@ -384,7 +386,23 @@
                                                     value="{{ $total_previous_due }}">
                                             </div>
                                         </td>
-                                        <td colspan="2" class="text-right"></td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_discount" class="form-control"
+                                                    id="total_discount" autocomplete="off"
+                                                    placeholder="total_discount" readonly value="{{ $total_discount }}"
+                                                   >
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="total_penalty" class="form-control"
+                                                    id="total_penalty" autocomplete="off"
+                                                    placeholder="total_penalty" readonly value="{{$total_penalty}}"
+                                                    >
+                                            </div>
+                                        </td>
+                                        {{-- <td colspan="2" class="text-right"></td> --}}
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="total_net_amount" class="form-control"
@@ -522,6 +540,8 @@
 
                             const billAmountValue = removedRow.find('.bill_amount').val();
                             const previousDuetValue = removedRow.find('.previous_due').val();
+                            const discount = removedRow.find('.discount').val();
+                            const penalty = removedRow.find('.penalty').val();
                             const vat = removedRow.find('.vat').val();
                             const tax = removedRow.find('.tax').val();
                             const total = removedRow.find('.total').val();
@@ -530,6 +550,8 @@
 
                             const preTotalBillAmount = $('#total_bill_amount').val();
                             const preTotalPreviousDue = $('#total_previous_due').val();
+                            const previousTotalDiscount = $('#total_discount').val();
+                            const previousTotalPenalty = $('#total_penalty').val();
                             const previousTotalVat = $('#total_vat').val();
                             const previousTotalTax = $('#total_tax').val();
                             const previousGrandTotal = $('#grand_total').val();
@@ -538,6 +560,8 @@
 
                             $('#total_bill_amount').val(preTotalBillAmount - billAmountValue);
                             $('#total_previous_due').val(preTotalPreviousDue - previousDuetValue);
+                            $('#total_discount').val(previousTotalDiscount - discount);
+                            $('#total_penalty').val(previousTotalPenalty - penalty);
                             $('#total_vat').val(previousTotalVat - vat);
                             $('#total_tax').val(previousTotalTax - tax);
                             $('#grand_total').val(previousGrandTotal - total);
@@ -758,6 +782,15 @@
                             totalPreviousDue += parseFloat($(this).val() ? $(this).val() : 0);
                         })
 
+                        var totalDiscount = 0;
+                        $(".discount").each(function() {
+                            totalDiscount += parseFloat($(this).val() ? $(this).val() : 0);
+                        })
+                        var totalPenalty = 0;
+                        $(".penalty").each(function() {
+                            totalPenalty += parseFloat($(this).val() ? $(this).val() : 0);
+                        })
+
                         var totalVat = 0;
                         $(".vat").each(function() {
                             totalVat += parseFloat($(this).val() ? $(this).val() : 0);
@@ -782,6 +815,8 @@
                         $('#total_net_amount').val(totalNetAmount);
                         $('#total_bill_amount').val(totalBillAmount);
                         $('#total_previous_due').val(totalPreviousDue);
+                        $('#total_discount').val(totalDiscount);
+                        $('#total_penalty').val(totalPenalty);
                         $('#total_vat').val(totalVat);
                         $('#total_tax').val(totalTax);
                         $('#total_receive_amount').val(totalReceiveAmount);

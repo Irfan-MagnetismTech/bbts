@@ -103,4 +103,9 @@ class SaleDetail extends Model
     {
         return $this->hasOne(Survey::class, 'fr_no', 'fr_no');
     }
+
+    public function costingByConnectivity()
+    {
+        return $this->hasOne(Costing::class, 'connectivity_requirement_id', 'id');
+    }
 }

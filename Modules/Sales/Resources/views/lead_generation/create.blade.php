@@ -77,6 +77,7 @@
                             $potentiality = $is_old ? old('potentiality') : $lead_generation->potentiality ?? null;
                             $website = $is_old ? old('website') : $lead_generation->website ?? null;
                             $docuemnt = $is_old ? old('docuemnt') : $lead_generation->docuemnt ?? null;
+                            $divisons = $divisons ?? null;
                             $thanas = $thanas ?? null;
                             $districts = $districts ?? null;
                             $remarks = $is_old ? old('remarks') : $lead_generation->remarks ?? null;
@@ -100,7 +101,9 @@
                                 <select name="division_id" id="division" class="form-control ">
                                     <option>Select Division</option>
                                     @foreach ($divisons as $division)
-                                        <option value="{{ $division->id }}">{{ $division->name }}
+                                        <option value="{{ $division->id }}"
+                                            {{ $division->id == $single_division ? 'selected' : '' }}>
+                                            {{ $division->name }}
                                         </option>
                                     @endforeach
                                 </select>

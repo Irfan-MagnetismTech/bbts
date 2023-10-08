@@ -28,6 +28,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Name</th>
+                    <th>Short Code</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -35,6 +36,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Name</th>
+                    <th>Short Code</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -43,6 +45,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $category->name }}</td>
+                        <td class="text-center">{{ $category->short_code }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

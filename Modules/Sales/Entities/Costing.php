@@ -53,4 +53,9 @@ class Costing extends Model
     {
         return $this->hasOne(Client::class, 'client_no', 'client_no');
     }
+
+    public function planningByConnectivity()
+    {
+        return $this->hasOne(Planning::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
+    }
 }

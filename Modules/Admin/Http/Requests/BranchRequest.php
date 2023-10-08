@@ -14,7 +14,11 @@ class BranchRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|unique:branches,name',
+            'division_id' => 'required|exists:divisions,id',
+            'district_id' => 'required|exists:districts,id',
+            'thana_id' => 'required|exists:thanas,id',
+            'location' => 'required'
         ];
     }
 
@@ -26,7 +30,12 @@ class BranchRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'name.required' => 'Name is required',
+            'name.unique' => 'Name already exists',
+            'division_id.required' => 'Division is required',
+            'district_id.required' => 'District is required',
+            'thana_id.required' => 'Thana is required',
+            'location.required' => 'Location is required',
         ];
     }
 

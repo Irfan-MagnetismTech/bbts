@@ -406,11 +406,11 @@
                                                 <th>Link Vendor</th>
                                                 <td class="link_vendor" style="width:30%">
                                                     <input type="text" name="link_vendor_1" id="link_vendor"
-                                                        class="form-control form-control-sm link_vendor_1" value=""
-                                                        style="height: 25px !important">
+                                                        class="form-control form-control-sm link_vendor_1"
+                                                        style="height: 25px !important" value="{{ $plan_link->finalSurveyDetails->vendor->name ?? '' }}">
                                                     <input type="hidden" name="link_vender_id_1" id="link_vendor_id"
                                                         class="form-control form-control-sm link_vender_id_1"
-                                                        value="">
+                                                        value="{{ $plan_link->finalSurveyDetails->vendor_id ?? '' }}">
                                                 </td>
                                                 <th>Connecting POP Running Vendor</th>
                                                 <td class="running_vendor_pop" style="width:30%"></td>

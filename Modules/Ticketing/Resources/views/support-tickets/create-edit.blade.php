@@ -43,7 +43,8 @@
                             <div class="row">
 
                                 <div class="col-6">
-                                    <label for="client_no" class="font-weight-bold">Client ID:</label>
+                                    <label for="client_no" class="font-weight-bold">Client ID: <span
+                                            class="text-danger font-bold">*</span></label>
                                     <select name="client_no" id="client_no" class="form-control">
                                         <option
                                             value="{{ old('client_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->client_no : '') }}">
@@ -53,7 +54,8 @@
                                     <input type="hidden" name="client_link_id" id="client_link_id">
                                 </div>
                                 <div class="col-6">
-                                    <label for="fr_no" class="font-weight-bold">FR List</label>
+                                    <label for="fr_no" class="font-weight-bold">FR List <span
+                                            class="text-danger font-bold">*</span></label>
                                     <select name="fr_no" id="fr_no" class="form-control">
                                         @if (!empty($supportTicket))
                                             @foreach ($fr_list as $key => $fr_no)
@@ -69,7 +71,8 @@
                             </div>
                             <div class="row mt-2">
                                 <div class="col-6">
-                                    <label for="opening_time">Opening Time:</label>
+                                    <label for="opening_time">Opening Time: <span
+                                            class="text-danger font-bold">*</span></label>
                                     <input type="text" class="form-control" id="opening_time" name="opening_time"
                                         value="{{ old('opening_time') ?? (!empty($supportTicket) ? $supportTicket?->opening_date : \Carbon\Carbon::now()->format('d/m/Y H:i A')) }}"
                                         disabled>
@@ -81,7 +84,10 @@
                                         value="{{ old('complain_time') ?? (!empty($supportTicket) ? $supportTicket?->complain_time : \Carbon\Carbon::now()->format('Y-m-d\TH:i:s')) }}">
                                 </div>
                             </div>
-                            <div class="form-group mt-2">
+                            <div class="row">
+
+
+                            <div class="form-group col-6">
                                 <label for="support_complain_type_id">Complain Type:</label>
                                 <select class="form-control select2" id="support_complain_type_id"
                                     name="support_complain_type_id">
@@ -94,15 +100,15 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group mt-2">
+                            <div class="form-group col-6">
                                 <label for="description">Description:</label>
                                 <input type="text" class="form-control" id="description" name="description"
                                     aria-describedby="description"
                                     value="{{ old('description') ?? (!empty($supportTicket) ? $supportTicket?->description : '') }}"
                                     placeholder="Description">
                             </div>
-                            <div class="form-group">
-                                <label for="ticket_source_id">Source:</label>
+                            <div class="form-group col-6">
+                                <label for="ticket_source_id">Source: <span class="text-danger font-bold">*</span></label>
                                 <select class="form-control select2" id="ticket_source_id" name="ticket_source_id">
                                     <option value="20" selected>Select Source</option>
                                     @foreach ($ticketSources as $complainSource)
@@ -113,7 +119,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-6">
                                 <label for="priority">Priority:</label>
                                 <select class="form-control select2" id="priority" name="priority">
                                     <option value="20" selected>Select Priority</option>
@@ -125,13 +131,19 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-6">
                                 <label for="remarks">Remarks:</label>
                                 <input type="text" class="form-control" id="remarks" name="remarks"
                                     aria-describedby="remarks"
                                     value="{{ old('remarks') ?? (!empty($supportTicket) ? $supportTicket?->remarks : '') }}"
                                     placeholder="Remarks">
                             </div>
+
+
+                        </div>
+
+
+
                             <p class="py-1 font-weight-bold">Mail</p>
                             <div class="form-group">
                                 <label for="receiver_address">To:</label>
@@ -371,7 +383,7 @@
 
                     <div class="clear-both"></div>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-2">
                             <div class="form-group">
                                 <label for="" class="d-block">Ticket Close:</label>
 
@@ -396,7 +408,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-2">
                             <div class="form-group">
                                 <label for="" class="d-block">Mail Notification:</label>
 
@@ -412,7 +424,7 @@
 
                                 <div class="form-check-inline">
                                     <label class="form-check-label" for="noMailNotification">
-                                        <input type="radio" class="form-check-input radioButton"
+                                        <input type="radio" checked class="form-check-input radioButton"
                                             id="noMailNotification" name="mailNotification" @checked(@$supportTicket->mailNotification == '0' || old('mailNotification') == '0')
                                             value="0">
                                         <span style="position: relative; top: 3px">
@@ -422,7 +434,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-2">
                             <div class="form-group">
                                 <label for="" class="d-block">SMS Notification:</label>
 
@@ -438,8 +450,9 @@
 
                                 <div class="form-check-inline">
                                     <label class="form-check-label" for="noSmsNotification">
-                                        <input type="radio" class="form-check-input radioButton" id="noSmsNotification"
-                                            name="smsNotification" @checked(@$supportTicket->smsNotification == '0' || old('smsNotification') == '0') value="0">
+                                        <input type="radio" checked class="form-check-input radioButton"
+                                            id="noSmsNotification" name="smsNotification" @checked(@$supportTicket->smsNotification == '0' || old('smsNotification') == '0')
+                                            value="0">
                                         <span style="position: relative; top: 3px">
                                             No
                                         </span>
@@ -577,18 +590,28 @@
                     return ticket.status == "Pending";
                 });
 
-                if (pendingTickets.length > 0) {
-                    alert('This client already have pending tickets. Please see the ticket list.');
-                    $("#formSubmit").find("button").css("display", "none");
-                } else {
-                    $("#formSubmit").find("button").removeAttr("style");
-                }
+                // if (pendingTickets.length > 0) {
+                //     alert('This client already have pending tickets. Please see the ticket list.');
+                //     $("#formSubmit").find("button").css("display", "none");
+                // } else {
+                //     $("#formSubmit").find("button").removeAttr("style");
+                // }
 
                 // run foreach data 
                 var tableData = '';
                 $.each(tickets, function(key, value) {
+                    // console.console.log();
+                    var inputDate = value.ticket_no
+                    // Extract the date parts
+                    var year = inputDate.substring(0, 2);
+                    var month = inputDate.substring(2, 4);
+                    var day = inputDate.substring(4, 6);
+                    var restOfString = inputDate.substring(6);
+
+                    // Create the new date string in the desired format
+                    var newDateString = day + month + year + restOfString;
                     tableData += '<tr>';
-                    tableData += '<td>' + value.ticket_no + '</td>';
+                    tableData += '<td>' + newDateString + '</td>';
                     tableData += '<td>' + value.status + '</td>';
                     tableData += '<td>' + value.opening_date + '</td>';
                     tableData += '<td>' + value.support_complain_type.name + '</td>';

@@ -365,7 +365,7 @@ class TicketMovementController extends Controller
             $authorizedMember = User::where('id', $movement->supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id)->first();
 
             if ($authorizedMember->hasPermissionTo('receive-in-app-notification-when-ticket-forwarded-ticket-accepted')) {
-                $notificationMessage = 'Ticket: '.$movement->supportTicket->ticket_no.' accepted by '.$authorizedMember->name.'.';
+                $notificationMessage = 'Ticket: '.$movement->supportTicket->ticket_no.' accepted by '.auth()->user()->name.'.';
                 Notification::send($authorizedMember, new TicketMovementNotification($movement->supportTicket, 'backward', $notificationMessage));
             }
         
