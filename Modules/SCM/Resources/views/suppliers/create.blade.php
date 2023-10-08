@@ -43,7 +43,19 @@
                             placeholder="Enter supplier name" value="{{ old('name') ?? ($supplier->name ?? '') }}" required>
                     </div>
                 </div>
-
+{{--                <div class="col-12">--}}
+{{--                    <div class="input-group input-group-sm input-group-primary">--}}
+{{--                        <label class="input-group-addon" for="name">Supplier Category <span class="text-danger">*</span></label>--}}
+{{--                        <select class="form-control" id="category_id" name="category_id" required>--}}
+{{--                            <option value="">Select Category</option>--}}
+{{--                            @foreach ($categories as $category)--}}
+{{--                                <option value="{{ $category->id }}" {{ old('category_id') ?? ($supplier->category_id ?? '') }}>--}}
+{{--                                    {{ $category->name }}--}}
+{{--                                </option>--}}
+{{--                            @endforeach--}}
+{{--                        </select>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="contact_person">Contact Person <span class="text-danger">*</span></label>

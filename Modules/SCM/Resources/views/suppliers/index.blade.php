@@ -20,7 +20,6 @@
     Total: {{ count($suppliers) }}
 @endsection
 
-
 @section('content')
     <div class="dt-responsive table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
@@ -28,6 +27,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Name</th>
+{{--                    <th>Category</th>--}}
                     <th>Contact Person</th>
                     <th>Email</th>
                     <th>Address-1</th>
@@ -42,6 +42,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Name</th>
+{{--                    <th>Category</th>--}}
                     <th>Contact Person</th>
                     <th>Email</th>
                     <th>Address-1</th>
@@ -57,6 +58,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $supplier->name }}</td>
+{{--                        <td class="text-center">{{ $supplier->category->name ?? ''}}</td>--}}
                         <td class="text-center">{{ $supplier->contact_person ?? '' }}</td>
                         <td class="text-center">{{ $supplier->email }}</td>
                         <td class="text-center">{{ $supplier->address_1 }}</td>
@@ -73,8 +75,7 @@
                                         data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
+                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i class="fas fa-trash"></i></button>
                                     </form>
                                 </nobr>
                             </div>
