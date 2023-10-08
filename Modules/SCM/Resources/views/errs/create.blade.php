@@ -5,7 +5,7 @@
     $form_heading = !empty($err) ? 'Update' : 'Add';
     $form_url = !empty($err) ? route('errs.update', $err->id) : route('errs.store');
     $form_method = !empty($err) ? 'PUT' : 'POST';
-    
+
     $date = old('date', !empty($err) ? $err->date : null);
     $type = old('date', !empty($err) ? $err->type : null);
     $purpose = old('purpose', !empty($err) ? $err->purpose : null);
@@ -354,7 +354,7 @@
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
-            }).datepicker("setDate", new Date());;
+            }).datepicker("setDate", new Date());
         @else
             $('.date').datepicker({
                 format: "dd-mm-yyyy",
@@ -496,7 +496,7 @@
                             </td>
                             <td>
                                 <input name="brand_name[]" class="form-control brand_name" autocomplete="off" type="text" value="${value.brand_name}" readonly>
-                                <input name="brand_id[]" class="form-control brand_id" autocomplete="off" type="hidden" value="${value.brand_id}">  
+                                <input name="brand_id[]" class="form-control brand_id" autocomplete="off" type="hidden" value="${value.brand_id}">
                             </td>
                             <td>
                                 <input name="model[]" class="form-control model" autocomplete="off" type="text" value="${value.model}" readonly>
@@ -520,7 +520,7 @@
                                 <input name="bbts_useable[]" class="form-control bbts_useable" autocomplete="off" type="number" value="0">
                             </td>
                             <td>
-                                <input name="client_useable[]" class="form-control client_useable" autocomplete="off" type="number" value="0">   
+                                <input name="client_useable[]" class="form-control client_useable" autocomplete="off" type="number" value="0">
                             </td>
                             <td>
                                 <input name="quantity[]" class="form-control quantity" autocomplete="off" type="number" value="0" readonly>

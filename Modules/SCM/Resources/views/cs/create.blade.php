@@ -576,12 +576,18 @@
                 $(this).closest('tr').remove();
             });
 
-            $('#expiry_date,#effective_date').datepicker({
-                format: "dd-mm-yyyy",
+            // $('#expiry_date,#effective_date').datepicker({
+            //     format: "dd-mm-yyyy",
+            //     autoclose: true,
+            //     todayHighlight: true,
+            //     showOtherMonths: true
+            // });
+            $('#effective_date').datepicker({
+                format: "yyyy-mm-dd",
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
-            });
+            }).datepicker("setDate", new Date());
         }); // document.ready
 
         var select_all_projects = function() {
