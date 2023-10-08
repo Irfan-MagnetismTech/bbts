@@ -73,17 +73,17 @@
                                 @endphp
                                 @foreach ($data->costing->costingProducts as $product)
                                     @php
-                                        $productPrice = number_format($product->product_price, 2);
-                                        $totalProductPrice = $product->quantity * $productPrice;
+                                        $totalProductPrice = $product->quantity * $product->product_price;
                                         $vat = $product->product_vat_amount;
                                         $total += $totalProductPrice + $vat;
                                         $total_mrc += $totalProductPrice + $vat;
                                     @endphp
+
                                     <tr class="text-center">
                                         <td>{{ $product->product->name }}</td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>{{ $product->unit }}</td>
-                                        <td>{{ $productPrice }}</td>
+                                        <td>{{ $product->product_price }}</td>
                                         <td>{{ $totalProductPrice }}</td>
                                         <td>{{ $vat }}</td>
                                         <td class="text-right"><b>@formatFloat($totalProductPrice + $vat)</b></td>
@@ -93,11 +93,11 @@
                             <tfoot>
                                 <tr>
                                     <td class="text-right" colspan="6"><b>Total Product Price</b></td>
-                                    <td class="text-right"><b>@formatFloat($total )</b></td>
+                                    <td class="text-right"><b>@formatFloat($total)</b></td>
                                 </tr>
                                 <tr>
                                     <td class="text-right" colspan="6"><b>OTC</b></td>
-                                    <td class="text-right"><b>@formatFloat($data->total_offer_otc )</b></td>
+                                    <td class="text-right"><b>@formatFloat($data->total_offer_otc)</b></td>
                                 </tr>
                                 <tr>
                                     <td colspan="6" class="text-right"><b>Total</b></td>
@@ -109,34 +109,34 @@
                     </div>
                     {{-- @dd($uniqueEquipments); --}}
                     @if (!isset($uniqueEquipments))
-                    <div class="col-12 mt-3">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr class="text-center">
-                                    <th>Equipment</th>
-                                    <th>Quantity</th>
-                                    <th>Unit</th>
-                                    <th>Ownership</th>
-                                    <th>Rate</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($uniqueEquipments as $equipment)
-                                    <tr>
-                                        <td>{{ $equipment->material->name }}</td>
-                                        <td>{{ $equipment->sum_quantity }}</td>
-                                        <td>{{ $equipment->unit }}</td>
-                                        <td>{{ $equipment->ownership }}</td>
-                                        <td>{{ $equipment->rate }}</td>
-                                        <td>{{ $equipment->total_price }}</td>
+                        <div class="col-12 mt-3">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Equipment</th>
+                                        <th>Quantity</th>
+                                        <th>Unit</th>
+                                        <th>Ownership</th>
+                                        <th>Rate</th>
+                                        <th>Total</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    @foreach ($uniqueEquipments as $equipment)
+                                        <tr>
+                                            <td>{{ $equipment->material->name }}</td>
+                                            <td>{{ $equipment->sum_quantity }}</td>
+                                            <td>{{ $equipment->unit }}</td>
+                                            <td>{{ $equipment->ownership }}</td>
+                                            <td>{{ $equipment->rate }}</td>
+                                            <td>{{ $equipment->total_price }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     @endif
-                    
+
                 </div>
             @endforeach
             <div class="float-right" style="margin-top: 20px;">
