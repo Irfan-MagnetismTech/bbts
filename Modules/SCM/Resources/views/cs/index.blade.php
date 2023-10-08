@@ -52,8 +52,8 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><strong>#{{ $cs->cs_no }}</strong></td>
-                        <td>{{ $cs->effective_date }}</td>
-{{--                        <td>{{ $cs->expiry_date }}</td>--}}
+                        <td>{{ \Carbon\Carbon::parse($cs->effective_date)->format('d-m-Y') }}</td>
+                        {{--                        <td>{{ $cs->expiry_date }}</td>--}}
                         <td>{{ $cs->remarks }}</td>
                         <td>
                             @foreach ($cs->selectedSuppliers as $csSupplier)

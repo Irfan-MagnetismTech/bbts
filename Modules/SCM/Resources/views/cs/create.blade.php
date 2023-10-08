@@ -153,9 +153,8 @@
                                         </select>
                                     </td>
                                     <td>
-                                        {{-- <input type="text" name="model[]"
-                                            value="{{ $is_old ? old('model')[$material_key] : $model ?? '---' }}"
-                                            class="form-control model text-center" autocomplete="off"> --}}
+                                        <input type="text" name="model[]" value="{{ $model }}"
+                                               class="form-control model text-center" autocomplete="off">
                                     </td>
                                     <td>
                                         <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
@@ -304,6 +303,9 @@
                                             </td>
                                             <input type="hidden" name="cs_brand_name[]" class="cs_brand_name"
                                                 value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? 'Null' }}">
+                                            <td class="cs_model text-center">
+                                                {{ $is_old ? old('model')[$material_key] : $material_value->model ?? 'Null' }}
+                                            </td>
                                     @endif
                                     <td>
                                         <input type="text" name="price[]"
@@ -475,7 +477,7 @@
         // Cs Details Column
         function changeCsColumn(column, supplier_name) {
             let cs_details_table_head = $('#csDetailsTable thead tr');
-            let th = cs_details_table_head.children(`th:eq(${column.index() + 2})`).html(supplier_name);
+            let th = cs_details_table_head.children(`th:eq(${column.index() + 3})`).html(supplier_name);
         }
 
         function addCsColumn() {
@@ -492,11 +494,11 @@
 
         function removeCsColumn(index) {
             let cs_details_table_head = $('#csDetailsTable thead tr');
-            cs_details_table_head.children(`th:eq(${index + 1})`).remove();
+            cs_details_table_head.children(`th:eq(${index + 2})`).remove();
 
             let cs_details_table_body = $('#csDetailsTable tbody');
             $("#csDetailsTable tbody tr").each(function() {
-                $(this).children(`td:eq(${index + 1})`).remove();
+                $(this).children(`td:eq(${index + 2})`).remove();
             });
         }
 
@@ -574,12 +576,18 @@
                 $(this).closest('tr').remove();
             });
 
-            $('#expiry_date,#effective_date').datepicker({
-                format: "dd-mm-yyyy",
+            // $('#expiry_date,#effective_date').datepicker({
+            //     format: "dd-mm-yyyy",
+            //     autoclose: true,
+            //     todayHighlight: true,
+            //     showOtherMonths: true
+            // });
+            $('#effective_date').datepicker({
+                format: "yyyy-mm-dd",
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
-            });
+            }).datepicker("setDate", new Date());
         }); // document.ready
 
         var select_all_projects = function() {

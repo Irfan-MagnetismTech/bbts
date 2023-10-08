@@ -4,6 +4,8 @@ namespace Modules\SCM\Http\Controllers;
 
 use Modules\Admin\Entities\Unit;
 use Illuminate\Routing\Controller;
+use Modules\Sales\Entities\Category;
+use Modules\SCM\Entities\ScCategory;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\SCM\Entities\Supplier;
@@ -34,9 +36,10 @@ class SupplierController extends Controller
     public function create()
     {
         $formType = "create";
+        $categories = ScCategory::latest()->get();
         $suppliers = Supplier::latest()->get();
 
-        return view('scm::suppliers.create', compact('suppliers', 'formType'));
+        return view('scm::suppliers.create', compact('suppliers', 'formType', 'categories'));
     }
 
     /**
@@ -77,6 +80,7 @@ class SupplierController extends Controller
     public function edit(Supplier $supplier)
     {
         $formType = "edit";
+        $categories = ScCategory::latest()->get();
         $suppliers = Supplier::latest()->get();
 
         return view('scm::suppliers.create', compact('supplier', 'suppliers', 'formType'));
