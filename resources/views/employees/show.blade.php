@@ -130,7 +130,7 @@ Employee Details
                     Reference:
                 </th>
                 <td>
-                    {{ $employee->reference }}
+                    {{ $employee?->reference }}
                 </td>
             </tr>
             <tr>
@@ -159,6 +159,7 @@ Employee Details
                             Division:
                         </th>
                         <td>
+                           {{-- @dd($employee->division); --}}
                             {{ $employee->preThana->district->division->name }}
                         </td>
                     </tr>
@@ -191,7 +192,7 @@ Employee Details
                             Address:
                         </th>
                         <td>
-                            {{ $employee->per_street_address }}
+                            {{ $employee?->per_street_address }}
                         </td>
                     </tr>
                     <tr>
@@ -199,7 +200,7 @@ Employee Details
                             Division:
                         </th>
                         <td>
-                            {{ $employee->perThana->district->division->name }}
+                            {{ $employee?->perThana?->district?->division?->name }}
                         </td>
                     </tr>
                     <tr>
@@ -207,7 +208,7 @@ Employee Details
                             District:
                         </th>
                         <td>
-                        {{ $employee->perThana->district->name }}
+                        {{ $employee?->perThana?->district?->name }}
 
                         </td>
                     </tr>
@@ -216,7 +217,7 @@ Employee Details
                             Thana:
                         </th>
                         <td>
-                        {{ $employee->perThana->name }}
+                        {{ $employee?->perThana?->name }}
 
                         </td>
                     </tr>

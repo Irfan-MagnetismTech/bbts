@@ -38,7 +38,7 @@ class MeetingController extends Controller
      */
     public function store(MeetingRequest $request)
     {
-        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose']);
+        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose', 'client_type']);
         Meeting::create($data);
         return redirect()->route('meeting.index')->with('success', 'Meeting created successfully');
     }
@@ -73,7 +73,7 @@ class MeetingController extends Controller
      */
     public function update(MeetingRequest $request, Meeting $meeting)
     {
-        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose']);
+        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose', 'client_type']);
         $meeting->update($data);
         return redirect()->route('meeting.index')->with('success', 'Meeting updated successfully');
     }

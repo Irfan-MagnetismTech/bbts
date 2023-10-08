@@ -113,8 +113,8 @@
                             <div class="form-item">
                                 <select name="aggregation_type" id="aggregation_type" class="form-control">
                                     <option value="">Select Aggregation Type</option>
+                                    <option value="DC" {{ $aggregation_type == 'DC' ? 'selected' : '' }}>DC</option>
                                     <option value="DR" {{ $aggregation_type == 'DR' ? 'selected' : '' }}>DR</option>
-                                    <option value="DC" {{ $aggregation_type == 'DC' ? 'selected' : '' }}>IR</option>
                                     <option value="Branch" {{ $aggregation_type == 'Branch' ? 'selected' : '' }}>Branch
                                     </option>
                                 </select>
