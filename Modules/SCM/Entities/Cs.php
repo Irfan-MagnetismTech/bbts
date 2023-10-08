@@ -25,7 +25,7 @@ class Cs extends Model
      */
     public function getEffectiveDateAttribute($input)
     {
-        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+//        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
     }
 
     /**
