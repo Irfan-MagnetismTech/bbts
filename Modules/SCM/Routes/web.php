@@ -14,6 +14,7 @@ use Modules\SCM\Http\Controllers\ScmPurchaseRequisitionController;
 use Modules\SCM\Http\Controllers\SupplierController;
 use Modules\SCM\Http\Controllers\ScmRequisitionController;
 use Modules\SCM\Http\Controllers\ScmChallanController;
+use Modules\SCM\Http\Controllers\OpeningStockController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
         'couriers'                  => CourierController::class,
         'requisitions'              => ScmRequisitionController::class,
         'purchase-requisitions'     => ScmPurchaseRequisitionController::class,
+        'opening-stocks'            => OpeningStockController::class,
         'cs'                        => CsController::class,
         'indents'                   => IndentController::class,
         'purchase-orders'           => PurchaseOrderController::class,

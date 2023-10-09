@@ -24,7 +24,7 @@ class MaterialController extends Controller
     }
     public function index()
     {
-        $materials = Material::with('unit')->latest()->get();
+        $materials = Material::with('unit')->get();
         return view('scm::materials.index', compact('materials'));
     }
 

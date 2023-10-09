@@ -40,6 +40,27 @@
             </li>
         </ul>
     </li>
+    @can('opening-stocks-view')
+        <li class="pcoded-hasmenu {{ request()->routeIs(['opening-stocks.*']) ? 'active pcoded-trigger' : null }}">
+            <a href="javascript:void(0)">
+                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-mtext">Opening Stock</span>
+                <span class="pcoded-mcaret"></span>
+            </a>
+            <ul class="pcoded-submenu">
+                <li class="{{ request()->routeIs('purchase-requisitions.create') ? 'active' : null }}">
+                    <a href="{{ route('opening-stocks.create') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+                <li class="{{ request()->routeIs('purchase-requisitions.index') ? 'active' : null }}">
+                    <a href="{{ route('opening-stocks.index') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+            </ul>
+        </li>
+    @endcan
     @can('scm-requisition-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['requisitions.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
