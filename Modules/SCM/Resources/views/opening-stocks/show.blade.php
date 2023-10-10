@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('opening-stocks.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -18,27 +18,9 @@
             <div class="table-responsive">
                 <table id="dataTable" class="table table-striped table-bordered">
                     <tbody class="text-left">
-                        <tr style="background-color: #0C4A77;color: white">
-                            <td> <strong>MRS No.</strong> </td>
-                            <td> <strong>{{ $purchaseRequisition->prs_no }}</strong></td>
-                        </tr>
-                        <tr>
-                            <td> <strong>Type</strong> </td>
-                            <td> {{ ucfirst($purchaseRequisition->type) }}</td>
-                        </tr>
-                        @if ($purchaseRequisition?->typre == 'client')
-                            <tr>
-                                <td> <strong>Client Name</strong> </td>
-                                <td> {{ ucfirst($purchaseRequisition->client->name) }}</td>
-                            </tr>
-                        @endif
                         <tr>
                             <td> <strong>Date</strong> </td>
-                            <td> {{ $purchaseRequisition->date }}</td>
-                        </tr>
-                        <tr>
-                            <td> <strong>Requisition By</strong> </td>
-                            <td> {{ ucfirst($purchaseRequisition->requisitionBy->name) }}</td>
+                            <td> {{ $openingStock->date }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -55,18 +37,18 @@
                     <th>Quantity</th>
                     <th>Brand</th>
                     <th>Model</th>
-                    <th>Purpose</th>
+                    <th>Amount</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($purchaseRequisition->scmPurchaseRequisitionDetails as $key => $requisitionDetail)
+                @foreach ($openingStock->lines as $key => $detail)
                     <tr>
-                        <td> {{ $requisitionDetail->material->name }} </td>
-                        <td> {{ $requisitionDetail->material->unit }} </td>
-                        <td> {{ $requisitionDetail->quantity }} </td>
-                        <td> {{ $requisitionDetail->brand->name }} </td>
-                        <td> {{ $requisitionDetail->model }} </td>
-                        <td> {{ $requisitionDetail->purpose }} </td>
+                        <td> {{ $detail->material->name }} </td>
+                        <td> {{ $detail->material->unit }} </td>
+                        <td> {{ $detail->quantity }} </td>
+                        <td> {{ $detail->brand->name }} </td>
+                        <td> {{ $detail->model }} </td>
+                        <td> {{ $detail->total_amount }} </td>
                     </tr>
                 @endforeach
             </tbody>

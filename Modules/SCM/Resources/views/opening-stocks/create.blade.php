@@ -84,14 +84,14 @@
                 <tbody></tbody>
                 <tfoot>
                     @php
-                        $material_name_with_code = old('material_name', !empty($openingStock) ? $openingStock->scmPurchaseRequisitionDetails->pluck('material.materialNameWithCode') : []);
-                        $material_id = old('material_id', !empty($openingStock) ? $openingStock->scmPurchaseRequisitionDetails->pluck('material_id') : []);
-                        $unit = old('unit', !empty($openingStock) ? $openingStock->scmPurchaseRequisitionDetails->pluck('material.unit') : []);
-                        $brand_id = old('brand_id', !empty($openingStock) ? $openingStock->scmPurchaseRequisitionDetails->pluck('brand_id') : []);
-                        $quantity = old('quantity', !empty($openingStock) ? $openingStock->scmPurchaseRequisitionDetails->pluck('quantity') : []);
-                        $unit_price = old('unit_price', !empty($openingStock) ? $openingStock->scmPurchaseRequisitionDetails->pluck('unit_price') : []);
-                        $total_amount = old('total_amount', !empty($openingStock) ? $openingStock->scmPurchaseRequisitionDetails->pluck('total_amount') : []);
-                        $model = old('model', !empty($openingStock) ? $openingStock->scmPurchaseRequisitionDetails->pluck('model') : []);
+                        $material_name_with_code = old('material_name', !empty($openingStock) ? $openingStock->lines->pluck('material.materialNameWithCode') : []);
+                        $material_id = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material_id') : []);
+                        $unit = old('unit', !empty($openingStock) ? $openingStock->lines->pluck('material.unit') : []);
+                        $brand_id = old('brand_id', !empty($openingStock) ? $openingStock->lines->pluck('brand_id') : []);
+                        $quantity = old('quantity', !empty($openingStock) ? $openingStock->lines->pluck('quantity') : []);
+                        $unit_price = old('unit_price', !empty($openingStock) ? $openingStock->lines->pluck('unit_price') : []);
+                        $total_amount = old('total_amount', !empty($openingStock) ? $openingStock->lines->pluck('total_amount') : []);
+                        $model = old('model', !empty($openingStock) ? $openingStock->lines->pluck('model') : []);
                     @endphp
                     @foreach ($material_name_with_code as $key => $requisitionDetail)
                         <tr>
