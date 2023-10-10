@@ -139,7 +139,7 @@
 
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
-                <select class="form-control" id="thana_id" name="thana_id" required>
+                <select class="form-control" id="thana_id" name="thana_id" >
                     <option value="">Select thana</option>
                     @if ($formType == 'edit')
                         @foreach (@$thanas as $thana)
@@ -243,7 +243,7 @@
                      label="Monthly Rent" class="monthly_rent" />
         <x-input-box colGrid="3" name="payment_method" value="{{ $payment_method }}" label="Payment Method" />
         <div class="col-md-3">
-            <select class="form-control bankList" id="bank_id" name="bank_id" required>
+            <select class="form-control bankList" id="bank_id" name="bank_id" >
                 <option value="">Select Bank</option>
                 @foreach (@$banks as $bank)
                     <option value="{{ $bank->id }}" {{ $bank_id == $bank->id ? 'selected' : '' }}>
