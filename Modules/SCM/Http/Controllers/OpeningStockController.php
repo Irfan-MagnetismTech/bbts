@@ -2,18 +2,15 @@
 
 namespace Modules\SCM\Http\Controllers;
 
-use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
-use Modules\Sales\Entities\Client;
 use App\Services\BbtsGlobalService;
 use Modules\SCM\Entities\OpeningStock;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
-use Modules\SCM\Http\Requests\SupplierRequest;
 use Modules\SCM\Http\Requests\OpeningStockRequest;
 use Illuminate\Http\Request;
 
@@ -54,10 +51,9 @@ class OpeningStockController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
-            $openingStock = OpeningStock::create($request);
+            $openingStock = OpeningStock::create($request->all());
 
             $stockDetails = [];
             foreach ($request->material_id as $key => $data) {
