@@ -37,6 +37,7 @@
                     <th>Quantity</th>
                     <th>Brand</th>
                     <th>Model</th>
+                    <th>Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,6 +48,7 @@
                         <td> {{ $detail->quantity }} </td>
                         <td> {{ $detail->brand->name }} </td>
                         <td> {{ $detail->model }} </td>
+                        <td> {{ $detail->total_amount }} </td>
                     </tr>
                 @endforeach
             </tbody>
