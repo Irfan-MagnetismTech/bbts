@@ -57,26 +57,26 @@
                 <div class="card-body">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <h5 class="text-center">Client Information</h5> 
+                            <h5 class="text-center">Client Information</h5>
                             <table class="table custom_table table-bordered" style="font-size: 12px;">
                                 <tr>
                                     <th class="table_label">Client Name</th>
-                                    <td>{{ $lead_generation->client_name }}</td> 
+                                    <td>{{ $lead_generation->client_name }}</td>
                                     <th class="table_label">Landmark</th>
                                     <td>{{ $lead_generation->landmark }}</td>
                                     <th class="table_label">Division</th>
                                     <td>{{ $lead_generation->division->name ?? '' }}</td>
-                                </tr> 
+                                </tr>
                                 <tr>
                                     <th class="table_label">Contact Person</th>
                                     <td>{{ $lead_generation->contact_person }}</td>
                                     <th class="table_label">Lat-Long</th>
-                                    <td>{{ $lead_generation->lat }} - {{ $lead_generation->long }}</td> 
+                                    <td>{{ $lead_generation->lat }} - {{ $lead_generation->long }}</td>
                                     <th class="table_label">District</th>
-                                    <td>{{ $lead_generation->district->name ?? '' }}</td> 
-                                    
-                                    
-                                    
+                                    <td>{{ $lead_generation->district->name ?? '' }}</td>
+
+
+
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact No</th>
@@ -84,8 +84,8 @@
                                     <th class="table_label">Website</th>
                                     <td>{{ $lead_generation->website }}</td>
                                     <th class="table_label">Thana</th>
-                                    <td>{{ $lead_generation->thana->name ?? '' }}</td> 
-                                    
+                                    <td>{{ $lead_generation->thana->name ?? '' }}</td>
+
                                 </tr>
                                 <tr>
                                     <th class="table_label">Email</th>
@@ -97,10 +97,10 @@
                                                 target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
                                                     class="fas fa-eye"></i></a>
                                         @endif
-                                    </td> 
+                                    </td>
                                     <th class="table_label">Address</th>
                                     <td>{{ $lead_generation->address }}</td>
-                                </tr> 
+                                </tr>
                             </table>
                         </div>
                     </div>
@@ -445,7 +445,7 @@
                                             <tr>
                                                 <td>
                                                     <select name="material_id_1[]" id="material_id"
-                                                        class="form-control form-control-sm link_material_id">
+                                                        class="form-control form-control-sm link_material_id select2">
                                                         <option value="">Select Equipment</option>
                                                         @foreach ($materials as $material)
                                                             <option value="{{ $material->id }}">
