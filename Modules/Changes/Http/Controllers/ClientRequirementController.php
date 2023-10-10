@@ -74,10 +74,10 @@ class ClientRequirementController extends Controller
         $categories = Category::all();
         $vendors = Vendor::all();
         $frList = FeasibilityRequirementDetail::where('client_no', $clientRequirementModification->client_no)->pluck('fr_no', 'id');
-               
+
         $physicalConnectivity = PhysicalConnectivity::query()
             ->with('lines.connectivityLink.vendor')
-            ->whereClientNoAndFrNo($clientRequirementModification->client_no,$clientRequirementModification->fr_no)
+            ->whereClientNoAndFrNo($clientRequirementModification->client_no, $clientRequirementModification->fr_no)
             ->orderBy('sale_id', 'desc')
             ->first();
 
@@ -208,17 +208,20 @@ class ClientRequirementController extends Controller
     protected function extractRequirementDetailsData($request): array
     {
         $data = [];
-        foreach ($request['link_type'] as $key => $link_type) {
-            if (!empty($link_type)) {
-                $data[] = [
-                    'link_type' => $link_type,
-                    'method' => $request['method'][$key],
-                    'connectivity_capacity' => $request['connectivity_capacity'][$key],
-                    'sla' => $request['uptime_req'][$key],
-                    'vendor_id' => $request['vendor_id'][$key],
-                ];
+        if (!empty($request['link_type'])) {
+            foreach ($request['link_type'] as $key => $link_type) {
+                if (!empty($link_type)) {
+                    $data[] = [
+                        'link_type' => $link_type,
+                        'method' => $request['method'][$key],
+                        'connectivity_capacity' => $request['connectivity_capacity'][$key],
+                        'sla' => $request['uptime_req'][$key],
+                        'vendor_id' => $request['vendor_id'][$key],
+                    ];
+                }
             }
         }
+
         return $data;
     }
 

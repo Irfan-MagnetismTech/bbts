@@ -390,14 +390,13 @@ class SaleController extends Controller
 
             foreach ($saleDetails as $saleDetail) {
                 foreach ($saleDetail->saleLinkDetails as $saleLinkDetail) {
-                    // dump($saleLinkDetail->finalSurveyDetails->toArray());
                     $nttn_req = [
                         'client_no' => $saleLinkDetail->client_no,
                         'fr_no' => $saleLinkDetail->fr_no,
                         'type' => 'Client',
                         'date' => now()->format('d-m-Y'),
                         'from_pop_id' => $saleLinkDetail->finalSurveyDetails->pop_id ?? null,
-                        'vendor_id' => $saleLinkDetail->finalSurveyDetails->vendor_id ?? null,
+                        'vendor_id' => $saleLinkDetail->finalSurveyDetails->vendor_id == '' ? null : $saleLinkDetail->finalSurveyDetails->vendor_id,
                         'capacity' => $saleLinkDetail->planLinkDetail->new_transmission_capacity,
                     ];
 
