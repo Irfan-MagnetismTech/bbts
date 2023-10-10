@@ -78,25 +78,27 @@ class ModifiedSurveyController extends Controller
         DB::beginTransaction();
         try {
             $connectivity_requirement = Survey::create($connectivity_requirement_data);
-            foreach ($request->new_link_type as $key => $value) {
-                $connectivity_requirement_details['survey_id'] = $connectivity_requirement->id;
-                $connectivity_requirement_details['link_type'] = $value;
-                $connectivity_requirement_details['link_no'] = $connectivity_requirement_data['fr_no'] . '-' . substr($value, 0, 1) . $key + 1;
-                $connectivity_requirement_details['option'] = $request->new_option[$key];
-                $connectivity_requirement_details['status'] = $request->status[$key];
-                // dd($request->method[$key]);
-                $connectivity_requirement_details['method'] = $request->method[$key];
-                $connectivity_requirement_details['vendor_id'] = $request->vendor[$key];
-                $connectivity_requirement_details['pop_id'] = $request->pop[$key];
-                $connectivity_requirement_details['ldp'] = $request->ldp[$key];
-                $connectivity_requirement_details['lat'] = $request->new_lat[$key];
-                $connectivity_requirement_details['long'] = $request->new_long[$key];
-                $connectivity_requirement_details['distance'] = $request->new_distance[$key];
-                $connectivity_requirement_details['current_capacity'] = $request->new_current_capacity[$key];
-                $connectivity_requirement_details['remarks'] = $request->new_remarks[$key];
-                SurveyDetail::create($connectivity_requirement_details);
+            if ($request->has('new_link_type')) {
+                foreach ($request->new_link_type as $key => $value) {
+                    $connectivity_requirement_details['survey_id'] = $connectivity_requirement->id;
+                    $connectivity_requirement_details['link_type'] = $value;
+                    $connectivity_requirement_details['link_no'] = $connectivity_requirement_data['fr_no'] . '-' . substr($value, 0, 1) . $key + 1;
+                    $connectivity_requirement_details['option'] = $request->new_option[$key];
+                    $connectivity_requirement_details['status'] = $request->status[$key];
+                    // dd($request->method[$key]);
+                    $connectivity_requirement_details['method'] = $request->method[$key];
+                    $connectivity_requirement_details['vendor_id'] = $request->vendor[$key];
+                    $connectivity_requirement_details['pop_id'] = $request->pop[$key];
+                    $connectivity_requirement_details['ldp'] = $request->ldp[$key];
+                    $connectivity_requirement_details['lat'] = $request->new_lat[$key];
+                    $connectivity_requirement_details['long'] = $request->new_long[$key];
+                    $connectivity_requirement_details['distance'] = $request->new_distance[$key];
+                    $connectivity_requirement_details['current_capacity'] = $request->new_current_capacity[$key];
+                    $connectivity_requirement_details['remarks'] = $request->new_remarks[$key];
+                    SurveyDetail::create($connectivity_requirement_details);
+                }
+                DB::commit();
             }
-            DB::commit();
             return redirect()->route('survey-modification.index')->with('success', 'Survey Modification Created Successfully');
         } catch (QueryException $e) {
             DB::rollback();

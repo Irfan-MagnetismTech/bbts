@@ -73,9 +73,9 @@
                     <label for="select2">Connectivity Point And FR</label>
                     <input type="text" class="form-control" id="connectivity_point1" name="connectivity_point1"
                         aria-describedby="connectivity_point1"
-                        value="{{ @$physicalConnectivityData->frDetails->connectivity_point . '_' . @$physicalConnectivityData->frDetails->fr_no }}"
+                        value="{{ $saleDetalis->frDetails->connectivity_point . ' (' . @$saleDetalis->frDetails->fr_no . ')' }}"
                         readonly>
-                    <input type="hidden" name="fr_no" id="fr_no" value="{{ @$physicalConnectivityData->frDetails->fr_no }}">
+                    <input type="hidden" name="fr_no" id="fr_no" value="{{ @$saleDetalis->frDetails->fr_no }}">
                 </div>
 
                 <div class="form-group col-3 contact_person">
