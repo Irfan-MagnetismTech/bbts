@@ -41,13 +41,13 @@
     <span class="text-danger">*</span> Marked are required.
 @endsection
 
-@section('content-grid', 'offset-md-1 col-md-10 offset-lg-2 col-lg-8 my-3')
+@section('content-grid')
 
 @section('content')
     <div class="container">
         <form action="{{ route('generate_bill_pdf', $billData->id) }}"
               method="get" class="custom-form">
-            <div class="row" style="padding:30px 0 30px">
+            <div class="row">
                 <div class="col-7">
                     <table class="table rounded-table" id="service_table1">
                         <thead>
