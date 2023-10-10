@@ -24,7 +24,7 @@ class MaterialController extends Controller
     }
     public function index()
     {
-        $materials = Material::with('unit')->latest()->get();
+        $materials = Material::with('unit')->get();
         return view('scm::materials.index', compact('materials'));
     }
 
@@ -125,25 +125,26 @@ class MaterialController extends Controller
             return redirect()->route('materials.index')->withErrors($e->getMessage());
         }
     }
+
     public function getUniqueCode(Request $request)
     {
-        $category = ScCategory::findOrfail($request->id);
-        $firstThreeCharacters = substr($category->name, 0, 3);
-            try {
-                $lastRecord = Material::where('category_id', $request->id)->latest()
-                    ->first();
-                if (isset($lastRecord)) {
-                    if (preg_match('/\d+/', $lastRecord->code, $matches)) {
-                        $extractedNumber = $matches[0];
-                        $finalNumber = $extractedNumber + 1;
-                        $result = $firstThreeCharacters . '-' . $finalNumber;
-                    }
-                } else {
-                    $result = $firstThreeCharacters . '-' . '101';
+        $category = ScCategory::find($request->id);
+        $short_code = $category->short_code;
+        try {
+            $lastRecord = Material::where('category_id', $request->id)->latest()->first();
+            if (isset($lastRecord)) {
+                if (preg_match('/\d+/', $lastRecord->code, $matches)) {
+                    $extractedNumber = $matches[0];
+                    $finalNumber = $extractedNumber + 1;
+                    $result = $short_code . '-' . str_pad($finalNumber, 4, '0', STR_PAD_LEFT);
                 }
-            } catch (\Exception $e) {
-                // Handle the exception (e.g., log it or return an error response)
-            };
+            } else {
+                $result = $short_code . '-' . '0001';
+            }
+        } catch (\Exception $e) {
+            // Handle the exception (e.g., log it or return an error response)
+        }
         return $result;
     }
+
 }

@@ -93,16 +93,14 @@
                         </select>
                     </div>
                 </div>
-
-                {{-- <div class="col-12">
+                 <div class="col-12">
                     <div class="input-group input-group-sm input-group-primary">
-                        <label class="input-group-addon" for="code">Code <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="code" name="code"
+{{--                        <label class="input-group-addon" for="code">Code <span class="text-danger">*</span></label>--}}
+                        <input type="hidden" class="form-control" id="code" name="code"
                             placeholder="Enter material code" value="{{ old('code') ?? ($material->code ?? '') }}" required>
                     </div>
-                </div> --}}
+                </div>
             </div>
-
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
                     <div class="input-group input-group-sm ">
@@ -145,7 +143,7 @@
             $('#category-name').on('change', function() {
                 // Get the selected option's value
                 var selectedOption = $(this).val();
-                console.log(selectedOption);
+                // console.log(selectedOption);
                 $.ajax({
                     url: "{{ route('get-unique-code') }}",
                     data: {
@@ -153,7 +151,7 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(data) {
-                        // console.log(data);
+                        console.log(data);
                         $('#code').val(data);
                     }
                 });

@@ -66,7 +66,7 @@ class ScmPurchaseRequisitionController extends Controller
             // dd($fr_no);
             if (request()->type == 'client') {
                 $requestData = $request->only('type', 'prs_type', 'client_no', 'date','link_no', 'assessment_no');
-                $requestData['fr_no'] = $fr_no; 
+                $requestData['fr_no'] = $fr_no;
             } else {
                 $requestData = $request->only('type', 'prs_type', 'date');
             }
@@ -193,6 +193,7 @@ class ScmPurchaseRequisitionController extends Controller
     {
         try {
             $purchaseRequisition->delete();
+            $purchaseRequisition->scmPurchaseRequisitionDetails()->delete();
             return redirect()->route('purchase-requisitions.index')->with('message', 'Data has been deleted successfully');
         } catch (QueryException $e) {
             return redirect()->route('purchase-requisitions.index')->withErrors($e->getMessage());
