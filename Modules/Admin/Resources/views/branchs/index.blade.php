@@ -51,9 +51,9 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td class="text-center">{{ $branch->name }}</td>
-                        <td class="text-center">{{ $branch->division->name }}</td>
-                        <td class="text-center">{{ $branch->district->name }}</td>
-                        <td class="text-center">{{ $branch->thana->name }}</td> 
+                        <td class="text-center">{{ $branch->division->name?? '' }}</td>
+                        <td class="text-center">{{ $branch->district->name ?? '' }}</td>
+                        <td class="text-center">{{ $branch->thana->name ?? '' }}</td> 
                         <td class="text-center">{{ $branch->location }}</td> 
                         <td>
                             <div class="icon-btn">
