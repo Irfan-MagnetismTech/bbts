@@ -47,6 +47,7 @@ class UserController extends Controller
         $roles = Role::orderBy('name')->pluck('name', 'id');
         $departments = Department::orderBy('name')->pluck('name', 'id');
         $employees = Employee::orderBy('name')->pluck('name', 'id');
+        
         return view('admin::users.create', compact('formType', 'roles', 'employees', 'departments'));
     }
 
@@ -101,7 +102,7 @@ class UserController extends Controller
         $roles = Role::orderBy('name')->pluck('name', 'id');
         $departments = Department::orderBy('name')->pluck('name', 'id');
 
-        $employees = Employee::orderBy('name')->get();
+        $employees = Employee::orderBy('name')->pluck('name', 'id');
         return view('admin::users.create', compact('formType', 'roles', 'employees', 'user', 'departments'));
     }
 
