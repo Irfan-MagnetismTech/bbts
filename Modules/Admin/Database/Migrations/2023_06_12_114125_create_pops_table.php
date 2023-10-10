@@ -56,6 +56,7 @@ return new class extends Migration
             $table->string('routing_no')->nullable();
             $table->string('remarks')->nullable();
             $table->string('attached_file')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

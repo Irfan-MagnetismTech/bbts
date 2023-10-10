@@ -42,6 +42,7 @@
                     <th>#SL</th>
                     <th>Client Name</th>
                     <th>Client id</th>
+                    <th>MQ No</th>
                     <th>FR No</th>
                     <th>Per month Investment</th>
                     <th>Per month Revenue</th>
@@ -54,6 +55,7 @@
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $costing->lead_generation->client_name }}</td>
                         <td>{{ $costing->client_no }}</td>
+                        <td>{{ $costing->mq_no }}</td>
                         <td>{{ $costing->planning->feasibilityRequirementDetail->connectivity_point ?? '' }}
                             ({{ $costing->fr_no }})
                         </td>
