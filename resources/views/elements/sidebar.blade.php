@@ -2,31 +2,33 @@
     <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
     <div class="pcoded-inner-navbar main-menu">
         <ul class="pcoded-item pcoded-left-item">
-            <li
-                class="pcoded-hasmenu {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*', 'brands.*', 'branchs.*', 'pops.*']) ? 'active pcoded-trigger' : null }}">
-                <a href="javascript:void(0)">
-                    <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
-                    <span class="pcoded-mtext">Control Users</span>
-                    <span class="pcoded-mcaret"></span>
-                </a>
-                <ul class="pcoded-submenu">
-                    <li class="{{ request()->routeIs('users.*') ? 'active' : null }}">
-                        <a href="{{ route('users.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">User</span><span
-                                class="pcoded-mcaret"></span></a>
-                    </li>
-                    <li class="{{ request()->routeIs('roles.*') ? 'active' : null }}">
-                        <a href="{{ route('roles.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Role</span><span
-                                class="pcoded-mcaret"></span></a>
-                    </li>
-                    <li class="{{ request()->routeIs('permissions.*') ? 'active' : null }}">
-                        <a href="{{ route('permissions.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Permission</span><span
-                                class="pcoded-mcaret"></span></a>
-                    </li>
-                </ul>
-            </li>
+            @can('control-users')
+                <li
+                    class="pcoded-hasmenu {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*', 'brands.*', 'branchs.*', 'pops.*']) ? 'active pcoded-trigger' : null }}">
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                        <span class="pcoded-mtext">Control Users</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                        <li class="{{ request()->routeIs('users.*') ? 'active' : null }}">
+                            <a href="{{ route('users.index') }}"> <span class="pcoded-micon"><i
+                                        class="ti-angle-right"></i></span><span class="pcoded-mtext">User</span><span
+                                    class="pcoded-mcaret"></span></a>
+                        </li>
+                        <li class="{{ request()->routeIs('roles.*') ? 'active' : null }}">
+                            <a href="{{ route('roles.index') }}"> <span class="pcoded-micon"><i
+                                        class="ti-angle-right"></i></span><span class="pcoded-mtext">Role</span><span
+                                    class="pcoded-mcaret"></span></a>
+                        </li>
+                        <li class="{{ request()->routeIs('permissions.*') ? 'active' : null }}">
+                            <a href="{{ route('permissions.index') }}"> <span class="pcoded-micon"><i
+                                        class="ti-angle-right"></i></span><span class="pcoded-mtext">Permission</span><span
+                                    class="pcoded-mcaret"></span></a>
+                        </li>
+                    </ul>
+                </li>
+            @endcan
             <li
                 class="pcoded-hasmenu {{ request()->routeIs(['branches.*', 'apsections.*', 'teams.*', 'departments.*', 'designations.*', 'employees.*', 'sellCollectionHeads.*', 'services.*']) ? 'active pcoded-trigger' : null }}">
                 <a href="javascript:void(0)">
@@ -94,19 +96,19 @@
                 </ul>
             </li>
         </ul>
-        @can('sales')
+        @can('sales-module')
             @include('sales::layouts.sidebar')
         @endcan
-        @can('support-and-ticketing')
+        @can('support-and-ticketing-module')
             @include('ticketing::layouts.sidebar')
         @endcan
-        @can('networking')
+        @can('networking-module')
             @include('networking::layouts.sidebar')
         @endcan
-        @can('supply-chain')
+        @can('supply-chain-module')
             @include('scm::layouts.sidebar')
         @endcan
-        @can('billing')
+        @can('billing-module')
             @include('billing::layouts.sidebar')
         @endcan
         <div class="p-5"></div>
