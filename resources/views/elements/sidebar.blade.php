@@ -94,19 +94,19 @@
                 </ul>
             </li>
         </ul>
-        @can('sales')
+        @can('sales-module')
             @include('sales::layouts.sidebar')
         @endcan
-        @can('support-and-ticketing')
+        @can('support-and-ticketing-module')
             @include('ticketing::layouts.sidebar')
         @endcan
-        @can('networking')
+        @can('networking-module')
             @include('networking::layouts.sidebar')
         @endcan
-        @can('supply-chain')
+        @can('supply-chain-module')
             @include('scm::layouts.sidebar')
         @endcan
-        @can('billing')
+        @can('billing-module')
             @include('billing::layouts.sidebar')
         @endcan
         <div class="p-5"></div>
