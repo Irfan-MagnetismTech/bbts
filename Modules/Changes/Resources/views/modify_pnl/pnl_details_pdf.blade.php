@@ -253,7 +253,7 @@
                                     <td class="text-right">@formatFloat($product_grand_total - $monthly_cost)</td>
                                 </tr>
                                 <tr style="font-weight: bold!important; background-color: #e3ecf6d8!important; ">
-                                    <td colspan="2" class="text-right">Total PNL</td>
+                                    <td colspan="2" class="text-right">Total PNL sdfsdfs</td>
                                     <td class="text-right">@formatFloat(($product_grand_total - $monthly_cost) * $details->costing->month)</td>
                                 </tr>
                                 </tfoot>
@@ -272,34 +272,28 @@
 <htmlpagefooter name="page-footer">
     <div class=" text-xs justify-between">
         <div>
-            <div style="width:24%; float:left; margin-left: 5px;">
+            <div style="width:33%; float:left; margin-left: 5px;">
                 <div>
                     <div class="text-center"> </div>
                     <hr class="w-32 border-gray-700" />
-                    <div class="text-center">Prepared By</div>
+                    <div class="text-center">Finance Approved</div>
                 </div>
             </div>
-            <div style="width:24%; float:left; margin-left: 5px;">
+            <div style="width:33%; float:left; margin-left: 5px;">
                 <div>
 
                     <hr class="w-32 border-gray-700" />
-                    <div class="text-center">Client Sign</div>
+                    <div class="text-center">CMO Approved</div>
                 </div>
             </div>
-            <div style="width:24%; float:left; margin-left: 5px;">
+            <div style="width:33%; float:left; margin-left: 5px;">
                 <div>
 
                     <hr class="w-32 border-gray-700" />
-                    <div class="text-center">Driver Sign</div>
+                    <div class="text-center">Management Approved </div>
                 </div>
             </div>
-            <div style="width:24%; float:left; margin-left: 5px;">
-                <div>
-                    <div class="text-center"></div>
-                    <hr class="w-32 border-gray-700" />
-                    <div class="text-center">MD</div>
-                </div>
-            </div>
+             
 
         </div>
         <div>

@@ -61,6 +61,7 @@
                 $grand_total_otc = 0;
                 $total_product_cost = 0;
                 $sum_of_monthly_cost = 0;
+                $yearly_revenue = 0;
                 ?>
                 @foreach ($feasibility_requirement->feasibilityRequirementDetails as $details)
                     @if ($details->costing)
@@ -79,6 +80,7 @@
                             $total_budget += $total_monthly_cost;
                             $grand_total_monthly_cost += $total_monthly_cost * $month;
                             $total_revenue += $monthly_revenue;
+                            $yearly_revenue += $monthly_revenue * $month;
                             $monthly_pnl = $monthly_revenue - $total_monthly_cost;
                             $total_monthly_pnl += $monthly_pnl;
                             $total_yearly_pnl += $monthly_pnl * $month;
@@ -96,7 +98,7 @@
                             <td class="text-right">@formatFloat($total_monthly_cost)</td>
                             <td class="text-right">@formatFloat($total_monthly_cost * $month)</td>
                             <td class="text-right">@formatFloat($monthly_revenue)</td>
-                            <td class="text-right">@formatFloat($monthly_revenue * $month)</td>
+                            <td class="text-right">@formatFloat($monthly_revenue * $month) </td>
                             <td class="text-right">@formatFloat($monthly_pnl)</td>
                             <td class="text-right">@formatFloat($monthly_pnl * $month)</td>
                             </td>
@@ -116,7 +118,7 @@
                     <td class="text-right"><b>@formatFloat($total_budget)</b></td>
                     <td class="text-right"><b>@formatFloat($grand_total_monthly_cost)</b></td>
                     <td class="text-right"><b>@formatFloat($total_revenue)</b></td>
-                    <td class="text-right"><b>@formatFloat($total_monthly_pnl)</b></td>
+                    <td class="text-right"><b>@formatFloat($yearly_revenue)</b></td>
                     <td class="text-right"><b>@formatFloat($total_monthly_pnl)</b></td>
                     <td class="text-right"><b>@formatFloat($total_yearly_pnl)</b></td>
                 </tr>

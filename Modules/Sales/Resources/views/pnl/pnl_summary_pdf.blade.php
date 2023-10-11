@@ -126,6 +126,7 @@
                 $grand_total_otc = 0;
                 $total_product_cost = 0;
                 $sum_of_monthly_cost = 0;
+                $yearly_revenue = 0;
                 ?>
                 @foreach ($feasibility_requirement->feasibilityRequirementDetails as $details)
                     @if ($details->costing)
@@ -144,6 +145,7 @@
                             $total_budget += $total_monthly_cost;
                             $grand_total_monthly_cost += $total_monthly_cost * $month;
                             $total_revenue += $monthly_revenue;
+                            $yearly_revenue += $monthly_revenue * $month;
                             $monthly_pnl = $monthly_revenue - $total_monthly_cost;
                             $total_monthly_pnl += $monthly_pnl;
                             $total_yearly_pnl += $monthly_pnl * $month;
@@ -181,7 +183,7 @@
                     <td class="text-right"><b>@formatFloat($total_budget)</b></td>
                     <td class="text-right"><b>@formatFloat($grand_total_monthly_cost)</b></td>
                     <td class="text-right"><b>@formatFloat($total_revenue)</b></td>
-                    <td class="text-right"><b>@formatFloat($total_monthly_pnl)</b></td>
+                    <td class="text-right"><b>@formatFloat($yearly_revenue)</b></td>
                     <td class="text-right"><b>@formatFloat($total_monthly_pnl)</b></td>
                     <td class="text-right"><b>@formatFloat($total_yearly_pnl)</b></td>
                 </tr>
@@ -192,34 +194,28 @@
 <htmlpagefooter name="page-footer">
     <div class=" text-xs justify-between">
         <div>
-            <div style="width:24%; float:left; margin-left: 5px;">
+            <div style="width:33%; float:left; margin-left: 5px;">
                 <div>
                     <div class="text-center"> </div>
                     <hr class="w-32 border-gray-700" />
-                    <div class="text-center">Prepared By</div>
+                    <div class="text-center">Finance Approved</div>
                 </div>
             </div>
-            <div style="width:24%; float:left; margin-left: 5px;">
+            <div style="width:33%; float:left; margin-left: 5px;">
                 <div>
 
                     <hr class="w-32 border-gray-700" />
-                    <div class="text-center">Client Sign</div>
+                    <div class="text-center">CMO Approved</div>
                 </div>
             </div>
-            <div style="width:24%; float:left; margin-left: 5px;">
+            <div style="width:33%; float:left; margin-left: 5px;">
                 <div>
 
                     <hr class="w-32 border-gray-700" />
-                    <div class="text-center">Driver Sign</div>
+                    <div class="text-center">Management Approved </div>
                 </div>
             </div>
-            <div style="width:24%; float:left; margin-left: 5px;">
-                <div>
-                    <div class="text-center"></div>
-                    <hr class="w-32 border-gray-700" />
-                    <div class="text-center">MD</div>
-                </div>
-            </div>
+             
 
         </div>
         <div>
