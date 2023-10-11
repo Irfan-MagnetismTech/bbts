@@ -90,10 +90,9 @@ class ClientProfileController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show($id)
+    public function show(Client $client)
     {
-        dd('show');
-        return view('sales::show');
+        return view('sales::client_profile.show',compact('client'));
     }
 
     /**
