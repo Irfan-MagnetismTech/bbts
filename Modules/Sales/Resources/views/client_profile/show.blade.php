@@ -14,24 +14,17 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('lead-generation.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('client-profile.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-plus"></i></a>
-    <a href="{{ route('lead-generation.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('client-profile.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 @section('sub-title')
-    Client: {{ $lead_generation->client_name }}
+    Client: {{ $client->client_name }}
 @endsection
 
 
 @section('content')
-    {!! Form::open([
-        'url' => route('lead-generation.status.update', $lead_generation->id),
-        'method' => 'GET',
-        'encType' => 'multipart/form-data',
-        'class' => 'custom-form',
-        'novalidate' => 'novalidate',
-    ]) !!}
     <div class="container">
         <div class="card">
             <div class="card-body">
@@ -42,41 +35,41 @@
                             <table class="table custom_table table-bordered" style="font-size: 12px;">
                                 <tr>
                                     <th>Client Name</th>
-                                    <td>{{ $lead_generation->client_name }}</td>
+                                    <td>{{ $client->client_name }}</td>
                                     <th>Address</th>
-                                    <td>{{ $lead_generation->address }}</td>
+                                    <td>{{ $client->address }}</td>
                                 </tr>
                                 <tr>
                                     <th>Division</th>
-                                    <td>{{ $lead_generation->division->name ?? '' }}</td>
+                                    <td>{{ $client->division->name ?? '' }}</td>
                                     <th>District</th>
-                                    <td>{{ $lead_generation->district->name ?? '' }}</td>
+                                    <td>{{ $client->district->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Thana</th>
-                                    <td>{{ $lead_generation->thana->name ?? '' }}</td>
+                                    <td>{{ $client->thana->name ?? '' }}</td>
                                     <th>Landmark</th>
-                                    <td>{{ $lead_generation->landmark }}</td>
+                                    <td>{{ $client->landmark }}</td>
                                 </tr>
                                 <tr>
                                     <th>Lat-Long</th>
-                                    <td>{{ $lead_generation->lat_long }}</td>
+                                    <td>{{ $client->lat_long }}</td>
                                     <th>Contact Person</th>
-                                    <td>{{ $lead_generation->contact_person }}</td>
+                                    <td>{{ $client->contact_person }}</td>
                                 </tr>
                                 <tr>
                                     <th>Contact No</th>
-                                    <td>{{ $lead_generation->contact_no }}</td>
+                                    <td>{{ $client->contact_no }}</td>
                                     <th>Email</th>
-                                    <td>{{ $lead_generation->email }}</td>
+                                    <td>{{ $client->email }}</td>
                                 </tr>
                                 <tr>
                                     <th>Website</th>
-                                    <td>{{ $lead_generation->website }}</td>
+                                    <td>{{ $client->website }}</td>
                                     <th>Document</th>
                                     <td>
-                                        @if ($lead_generation->document)
-                                            <a href="{{ asset('uploads/lead_generation/' . $lead_generation->document) }}"
+                                        @if ($client->document)
+                                            <a href="{{ asset('uploads/lead_generation/' . $client->document) }}"
                                                 target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
                                                     class="fas fa-eye"></i></a>
                                         @endif
@@ -117,8 +110,6 @@
             </div>
         </div>
     </div>
-
-    {!! Form::close() !!}
 @endsection
 
 @section('script')
