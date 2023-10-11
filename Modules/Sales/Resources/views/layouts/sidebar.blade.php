@@ -190,15 +190,15 @@
                 <span class="pcoded-mtext">Planning</span>
                 <span class="pcoded-mcaret"></span>
             </a>
-            @can('plan-list')
-                <ul class="pcoded-submenu">
+            <ul class="pcoded-submenu">
+                @can('plan-list')
                     <li class="{{ request()->routeIs('planning.index') ? 'active' : null }}">
                         <a href="{{ route('planning.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
-                </ul>
-            @endcan
+                @endcan
+            </ul>
         </li>
     @endcan
     @can('cost')
@@ -208,15 +208,15 @@
                 <span class="pcoded-mtext">Costing</span>
                 <span class="pcoded-mcaret"></span>
             </a>
-            @can('cost-list')
-                <ul class="pcoded-submenu">
+            <ul class="pcoded-submenu">
+                @can('cost-list')
                     <li class="{{ request()->routeIs('costing.index') ? 'active' : null }}">
                         <a href="{{ route('costing.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
-                </ul>
-            @endcan
+                @endcan
+            </ul>
         </li>
     @endcan
     @can('offer')
@@ -226,15 +226,15 @@
                 <span class="pcoded-mtext">Offers</span>
                 <span class="pcoded-mcaret"></span>
             </a>
-            @can('offer-list')
-                <ul class="pcoded-submenu">
+            <ul class="pcoded-submenu">
+                @can('offer-list')
                     <li class="{{ request()->routeIs('offer.index') ? 'active' : null }}">
                         <a href="{{ route('offer.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
-                </ul>
-            @endcan
+                @endcan
+            </ul>
         </li>
     @endcan
     @can('client')
