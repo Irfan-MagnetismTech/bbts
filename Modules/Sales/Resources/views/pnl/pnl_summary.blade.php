@@ -127,17 +127,18 @@
     </div>
     <div class="d-flex" style="margin-top: 20px; justify-content: space-around">
         <a class="btn btn-outline-success" style="transition: 0.5s" href="{{ route('pnl-details', $mq_no) }}">Details</a>
-        <a class="btn btn-outline-success"
-            @if ($sale->finance_approval == 'Not Approved') href="{{ route('pnl-approve-by-finance', $mq_no) }}" @else href="#" title="Approved By {{ $sale?->financeApprovedBy?->name }}" @endif
-            style="transition: 0.5s">Finance {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
-        <a class="btn btn-outline-success"
-            @if ($sale->cmo_approval == 'Not Approved') href="{{ route('pnl-approve-by-cmo', $mq_no) }}" @else href="#" title="Approved By {{ $sale?->cmoApprovedBy?->name }}" @endif
+
+        <a class="btn  {{ $sale->finance_approval == 'Approved' ? 'btn-secondary' : 'btn-outline-info' }}"
+            @if ($sale->finance_approval == 'Approved') href="#" @else href="{{ route('pnl-approve-by-finance', $mq_no) }}" title="Approved By {{ $sale?->financeApprovedBy?->name }}" @endif
+            style="transition: 0.5s">Finance {{ $sale->finance_approval == 'Approved' ? 'Approved' : 'Approval' }}</a>
+        <a class="btn {{ $sale->cmo_approval == 'Approved' ? 'btn-secondary' : 'btn-outline-info' }}"
+            @if ($sale->cmo_approval == 'Approved') href="#" @else href="{{ route('pnl-approve-by-cmo', $mq_no) }}" title="Approved By {{ $sale?->cmoApprovedBy?->name }}" @endif
             style="transition: 0.5s" href="{{ route('pnl-approve-by-cmo', $mq_no) }}">CMO
-            {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
-        <a class="btn btn-outline-success"
-            @if ($sale->management_approval == 'Not Approved') href="{{ route('pnl-approve-by-management', $mq_no) }}" @else href="{{ route('pnl-approve-by-management', $mq_no) }}" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @endif
+            {{ $sale->cmo_approval == 'Approved' ? 'Approved' : 'Approval' }}</a>
+        <a class="btn {{ $sale->management_approval == 'Approved' ? 'btn-secondary' : 'btn-outline-info' }}"
+            @if ($sale->management_approval == 'Approved') href="#" @else href="{{ route('pnl-approve-by-management', $mq_no) }}" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @endif
             style="transition: 0.5s" href="{{ route('pnl-approve-by-management', $mq_no) }}">Management
-            {{ $sale->finance_approval == 'Not Approved' ? 'Approval' : 'Approved' }}</a>
+            {{ $sale->management_approval == 'Approved' ? 'Approved' : 'Approval' }}</a>
     </div>
 @endsection
 
