@@ -20,7 +20,7 @@
 
 @section('content')
     <div class="dt-responsive table-responsive">
-        <table id="dataTable" class="table table-striped table-bordered">  
+        <table id="dataTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th>#SL</th>
@@ -74,14 +74,19 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('lead-generation.show', $lead_generation->id) }}"
-                                        data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i
-                                            class="fas fa-eye"></i></a>
-
+                                    @can('lead-generation-view')
+                                        <a href="{{ route('lead-generation.show', $lead_generation->id) }}"
+                                            data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i
+                                                class="fas fa-eye"></i>
+                                        </a>
+                                    @endcan
+                                    @can('lead-generation-edit')
                                     <a href="{{ route('lead-generation.edit', $lead_generation->id) }}"
                                         data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
-                                            class="fas fa-pen"></i></a>
-
+                                            class="fas fa-pen"></i>
+                                        </a>
+                                    @endcan
+                                    @can('lead-generation-delete')
                                     <form action="{{ route('lead-generation.destroy', $lead_generation->id) }}"
                                         method="POST" data-toggle="tooltip" title="Delete" class="d-inline">
                                         @csrf
@@ -89,6 +94,7 @@
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
                                                 class="fas fa-trash"></i></button>
                                     </form>
+                                    @endcan
                                 </nobr>
                             </div>
                         </td>

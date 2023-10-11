@@ -61,22 +61,28 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('meeting.show', $meeting->id) }}" data-toggle="tooltip"
-                                        title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-
-                                    <a href="{{ route('meeting.edit', $meeting->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-
-                                    <form action="{{ route('meeting.destroy', $meeting->id) }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
-                                    <!-- add followup button -->
-                                    <a href="{{ route('followup.create', $meeting->id) }}" data-toggle="tooltip"
-                                        title="Add Followup" class="btn btn-outline-success"><i class="fas fa-plus"></i></a>
+                                    @can('client-meeting-view')
+                                        <a href="{{ route('meeting.show', $meeting->id) }}" data-toggle="tooltip"
+                                            title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    @endcan
+                                    @can('client-meeting-edit')
+                                        <a href="{{ route('meeting.edit', $meeting->id) }}" data-toggle="tooltip"
+                                            title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    @endcan
+                                    @can('client-meeting-delete')
+                                        <form action="{{ route('meeting.destroy', $meeting->id) }}" method="POST"
+                                            data-toggle="tooltip" title="Delete" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                    @endcan
+                                    @can('followup-create')
+                                        <!-- add followup button -->
+                                        <a href="{{ route('followup.create', $meeting->id) }}" data-toggle="tooltip"
+                                            title="Add Followup" class="btn btn-outline-success"><i class="fas fa-plus"></i></a>
+                                    @endcan
                                 </nobr>
                             </div>
                         </td>

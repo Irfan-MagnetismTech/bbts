@@ -65,19 +65,23 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('client-profile.show', $client_profile->id) }}" data-toggle="tooltip"
-                                        title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-
-                                    <a href="{{ route('client-profile.edit', $client_profile->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-
-                                    <form action="{{ route('client-profile.destroy', $client_profile->id) }}"
-                                        method="POST" class="d-inline" id="deleteClientProfile">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
+                                    @can('client-edit')
+                                        <a href="{{ route('client-profile.show', $client_profile->id) }}" data-toggle="tooltip"
+                                            title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    @endcan
+                                    @can('client-edit')
+                                        <a href="{{ route('client-profile.edit', $client_profile->id) }}" data-toggle="tooltip"
+                                            title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    @endcan
+                                    @can('client-delete')
+                                        <form action="{{ route('client-profile.destroy', $client_profile->id) }}"
+                                            method="POST" class="d-inline" id="deleteClientProfile">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                    @endcan
                                 </nobr>
                             </div>
                         </td>

@@ -45,16 +45,20 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('sales.edit', $sale->id) }}" data-toggle="tooltip" title="Edit"
-                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-
-                                    <form action="{{ route('sales.destroy', $sale->id) }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
+                                    @can('sales-edit')
+                                        <a href="{{ route('sales.edit', $sale->id) }}" data-toggle="tooltip" title="Edit"
+                                            class="btn btn-outline-warning"><i class="fas fa-pen"></i>
+                                        </a>
+                                    @endcan
+                                    @can('sales-delete')
+                                        <form action="{{ route('sales.destroy', $sale->id) }}" method="POST"
+                                            data-toggle="tooltip" title="Delete" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                    @endcan
                                     <a href="{{ route('pnl-summary', $sale->mq_no) }}" data-toggle="tooltip" title="PNL"
                                         class="btn btn-outline-success">PNL</a>
                                 </nobr>

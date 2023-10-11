@@ -76,18 +76,23 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('planning.show', $plan->id) }}" data-toggle="tooltip" title="Details"
-                                        class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    <a href="{{ route('planning.edit', $plan->id) }}" data-toggle="tooltip" title="Edit"
-                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-
-                                    <form action="{{ route('planning.destroy', $plan->id) }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
+                                    @can('plan-view')
+                                        <a href="{{ route('planning.show', $plan->id) }}" data-toggle="tooltip" title="Details"
+                                            class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    @endcan
+                                    @can('plan-edit')
+                                        <a href="{{ route('planning.edit', $plan->id) }}" data-toggle="tooltip" title="Edit"
+                                            class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    @endcan
+                                    @can('plan-delete')
+                                        <form action="{{ route('planning.destroy', $plan->id) }}" method="POST"
+                                            data-toggle="tooltip" title="Delete" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                    @endcan
                                 </nobr>
                             </div>
                         </td>

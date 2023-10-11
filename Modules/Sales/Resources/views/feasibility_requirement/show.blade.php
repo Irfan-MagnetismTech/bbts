@@ -171,25 +171,33 @@
                                             </td>
                                             <td>
                                                 @if (!empty($item->planning) && !empty($item->survey) && !empty($item->connectivityRequirement))
-                                                    <div class="input-group input-group-sm input-group-success">
-                                                        <a href="{{ route('add-costing', $item->id) }}"
-                                                            class="btn btn-sm btn-success">Add Costing</a>
-                                                    </div>
+                                                    @can('cost-create')
+                                                        <div class="input-group input-group-sm input-group-success">
+                                                            <a href="{{ route('add-costing', $item->id) }}"
+                                                                class="btn btn-sm btn-success">Add Costing</a>
+                                                        </div>
+                                                    @endcan
                                                 @elseif (!empty($item->survey && $item->connectivityRequirement))
-                                                    <div class="input-group input-group-sm input-group-success">
-                                                        <a href="{{ route('add-planning', $item->id) }}"
-                                                            class="btn btn-sm btn-success">Add Planning</a>
-                                                    </div>
+                                                    @can('plan-create')
+                                                        <div class="input-group input-group-sm input-group-success">
+                                                            <a href="{{ route('add-planning', $item->id) }}"
+                                                                class="btn btn-sm btn-success">Add Planning</a>
+                                                        </div>
+                                                    @endcan
                                                 @elseif ($item->connectivityRequirement)
-                                                    <div class="input-group input-group-sm input-group-success">
-                                                        <a href="{{ route('add-survey', $item->id) }}"
-                                                            class="btn btn-sm btn-success">Add Survey</a>
-                                                    </div>
+                                                    @can('survey-create')
+                                                        <div class="input-group input-group-sm input-group-success">
+                                                            <a href="{{ route('add-survey', $item->id) }}"
+                                                                class="btn btn-sm btn-success">Add Survey</a>
+                                                        </div>
+                                                    @endcan
                                                 @else
-                                                    <div class="input-group input-group-sm input-group-primary">
-                                                        <a href="{{ route('connectivity-requirement-add', $item->id) }}"
-                                                            class="btn btn-sm btn-success">Add Req</a>
-                                                    </div>
+                                                    @can('connectivity-requirement-list')
+                                                        <div class="input-group input-group-sm input-group-primary">
+                                                            <a href="{{ route('connectivity-requirement-add', $item->id) }}"
+                                                                class="btn btn-sm btn-success">Add Req</a>
+                                                        </div>
+                                                    @endcan
                                                 @endif
                                             </td>
                                         </tr>
