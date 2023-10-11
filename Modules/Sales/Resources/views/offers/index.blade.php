@@ -46,18 +46,23 @@
                                     {{-- <a href="{{ route('offer.show', $offer->id) }}" data-toggle="tooltip" title="Details"
                                         class="btn btn-outline-primary"><i class="fas fa-eye"></i></a> --}}
 
-                                    <a href="{{ route('offer.edit', $offer->id) }}" data-toggle="tooltip" title="Edit"
-                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-
-                                    <form action="{{ route('offer.destroy', $offer->id) }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
-                                    <a href="{{ route('client-offer', $offer->mq_no) }}" data-toggle="tooltip"
-                                        title="Client OFfer" class="btn btn-outline-success">Client Offer</a>
+                                    @can('offer-edit')
+                                        <a href="{{ route('offer.edit', $offer->id) }}" data-toggle="tooltip" title="Edit"
+                                            class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    @endcan
+                                    @can('offer-delete')
+                                        <form action="{{ route('offer.destroy', $offer->id) }}" method="POST"
+                                            data-toggle="tooltip" title="Delete" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                    @endcan
+                                    @can('client-offer')
+                                        <a href="{{ route('client-offer', $offer->mq_no) }}" data-toggle="tooltip"
+                                            title="Client OFfer" class="btn btn-outline-success">Client Offer</a>
+                                    @endcan
                                 </nobr>
                             </div>
                         </td>
