@@ -25,13 +25,13 @@ class FeasibilityRequirementController extends Controller
      * @return Renderable
      */
 
-     function __construct()
-     {
-         $this->middleware('permission:feasibility-requirement-view|feasibility-requirement-create|feasibility-requirement-edit|feasibility-requirement-delete', ['only' => ['index', 'show']]);
-         $this->middleware('permission:feasibility-requirement-create', ['only' => ['create', 'store']]);
-         $this->middleware('permission:feasibility-requirement-edit', ['only' => ['edit', 'update']]);
-         $this->middleware('permission:feasibility-requirement-delete', ['only' => ['destroy']]);
-     }
+    function __construct()
+    {
+        $this->middleware('permission:feasibility-view|feasibility-create|feasibility-edit|feasibility-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:feasibility-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:feasibility-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:feasibility-delete', ['only' => ['destroy']]);
+    }
 
     public function index()
     {
