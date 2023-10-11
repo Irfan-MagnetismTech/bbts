@@ -30,6 +30,15 @@ class PlanningController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    function __construct()
+    {
+        $this->middleware('permission:plan-view|plan-create|plan-edit|plan-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:plan-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:plan-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:plan-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')->latest()->get();
