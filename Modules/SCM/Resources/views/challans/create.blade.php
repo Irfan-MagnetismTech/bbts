@@ -5,7 +5,7 @@
     $form_heading = !empty($challan) ? 'Update' : 'Add';
     $form_url = !empty($challan) ? route('challans.update', $challan->id) : route('challans.store');
     $form_method = !empty($challan) ? 'PUT' : 'POST';
-    
+
     $date = old('date', !empty($challan) ? $challan->date : null);
     $type = old('date', !empty($challan) ? $challan->type : null);
     $scm_requisition_id = old('scm_requisition_id', !empty($challan) ? $challan->scm_requisition_id : null);
@@ -22,7 +22,7 @@
     $pop_id = old('pop_id', !empty($challan) ? $challan->pop_id : null);
     $pop_name = old('pop_name', !empty($challan) ? $challan?->pop?->name : null);
     $pop_address = old('pop_address', !empty($challan) ? $challan?->pop?->address : null);
-    
+
 @endphp
 
 @section('breadcrumb-title')
@@ -255,7 +255,7 @@
             </tr>
         </thead>
         <tbody>
-            
+
             @php
                 $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                 $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
@@ -268,11 +268,11 @@
                 $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
                 $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                 $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
-                
+
                 $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
                 $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
                 $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
-                
+
             @endphp
             @foreach ($Challan_Lines as $key => $Challan_Line)
                 <tr>
@@ -552,8 +552,8 @@
                         $('#pop_id').val(data.pop ?.id);
                         $('#employee').val(data.employee ?.name);
                         $('#employee_id').val(data.employee ?.id);
-                 
-         
+
+
                             // console.log("link no",data.link_no);
                             // if (data.length > 0) {
                             //     response(data);
@@ -663,7 +663,7 @@
             }
         })
 
-        function ClearNext(selector) { 
+        function ClearNext(selector) {
             let sib = $(selector).parent().nextAll('td');
             // loop siblings
             sib.each(function() {
