@@ -21,6 +21,7 @@
         <tr>
             <th>SL</th>
             <th>Pop Name</th>
+            <th>Type</th>
             <th>Branch Name</th>
             <th>Address</th>
             <th>Action</th>
