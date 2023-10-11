@@ -31,7 +31,6 @@
                         </ul>
                     </li>
                 @endhasanyrole
-                @endcan
                 @can('admin-configuration')
                     <li
                         class="pcoded-hasmenu {{ request()->routeIs(['branches.*', 'apsections.*', 'teams.*', 'departments.*', 'designations.*', 'employees.*', 'sellCollectionHeads.*', 'services.*']) ? 'active pcoded-trigger' : null }}">
