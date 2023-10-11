@@ -18,6 +18,15 @@ class LeadGenerationController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    function __construct()
+    {
+        $this->middleware('permission:lead-generation-view|lead-generation-create|lead-generation-edit|lead-generation-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:lead-generation-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:lead-generation-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:lead-generation-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $lead_generations = LeadGeneration::with('division', 'district', 'thana')->latest()->get();
