@@ -24,10 +24,10 @@ class ClientProfileController extends Controller
 
     function __construct()
     {
-        $this->middleware('permission:client-profile-view|client-profile-create|client-profile-edit|client-profile-delete', ['only' => ['index', 'show']]);
-        $this->middleware('permission:client-profile-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:client-profile-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:client-profile-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:client-view|client-create|client-edit|client-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:client-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:client-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:client-delete', ['only' => ['destroy']]);
     }
 
     public function index()

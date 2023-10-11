@@ -24,10 +24,10 @@ class CostingController extends Controller
      */
     function __construct()
     {
-        $this->middleware('permission:costing-view|costing-create|costing-edit|costing-delete', ['only' => ['index', 'show']]);
-        $this->middleware('permission:costing-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:costing-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:costing-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:cost-view|cost-create|cost-edit|cost-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:cost-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:cost-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:cost-delete', ['only' => ['destroy']]);
     }
     public function index()
     {
