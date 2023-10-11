@@ -94,11 +94,21 @@
                 </ul>
             </li>
         </ul>
-        @include('sales::layouts.sidebar') 
-        @include('ticketing::layouts.sidebar')
-        @include('networking::layouts.sidebar')
-        @include('scm::layouts.sidebar')
-        @include('billing::layouts.sidebar')
+        @can('sales')
+            @include('sales::layouts.sidebar')
+        @endcan
+        @can('support-and-ticketing')
+            @include('ticketing::layouts.sidebar')
+        @endcan
+        @can('networking')
+            @include('networking::layouts.sidebar')
+        @endcan
+        @can('supply-chain')
+            @include('scm::layouts.sidebar')
+        @endcan
+        @can('billing')
+            @include('billing::layouts.sidebar')
+        @endcan
         <div class="p-5"></div>
     </div>
 </nav>
