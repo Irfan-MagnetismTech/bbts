@@ -26,6 +26,14 @@ class SurveyController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    function __construct()
+    {
+        $this->middleware('permission:survey-view|survey-create|survey-edit|survey-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:survey-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:survey-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:survey-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $surveys = Survey::with('surveyDetails', 'lead_generation')->where('is_modified', '=', 0)->latest()->get();

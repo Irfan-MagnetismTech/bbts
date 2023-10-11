@@ -19,6 +19,15 @@ class OfferController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    function __construct()
+    {
+        $this->middleware('permission:offer-view|offer-create|offer-edit|offer-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:offer-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:offer-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:offer-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $offers = Offer::with('offerDetails.offerLinks')->where('is_modified', 0)->latest()->get();

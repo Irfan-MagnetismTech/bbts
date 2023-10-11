@@ -21,6 +21,15 @@ class ClientProfileController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    function __construct()
+    {
+        $this->middleware('permission:client-profile-view|client-profile-create|client-profile-edit|client-profile-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:client-profile-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:client-profile-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:client-profile-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $client_profiles = Client::with('division', 'district', 'thana')->get();
@@ -92,7 +101,7 @@ class ClientProfileController extends Controller
      */
     public function show(Client $client)
     {
-        return view('sales::client_profile.show',compact('client'));
+        return view('sales::client_profile.show', compact('client'));
     }
 
     /**

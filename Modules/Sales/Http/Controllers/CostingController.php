@@ -22,6 +22,13 @@ class CostingController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+    function __construct()
+    {
+        $this->middleware('permission:costing-view|costing-create|costing-edit|costing-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:costing-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:costing-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:costing-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         // return view('sales::index');

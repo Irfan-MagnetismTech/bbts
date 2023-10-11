@@ -15,6 +15,14 @@ class MeetingController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    function __construct()
+    {
+        $this->middleware('permission:meeting-view|meeting-create|meeting-edit|meeting-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:meeting-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:meeting-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:meeting-delete', ['only' => ['destroy']]);
+    }
     public function index()
     {
         $meetings = Meeting::with('client')->latest()->get();

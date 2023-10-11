@@ -18,6 +18,15 @@ class FollowupController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+    function __construct()
+    {
+        $this->middleware('permission:followup-view|followup-create|followup-edit|followup-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:followup-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:followup-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:followup-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $followups = Followup::with('meeting', 'client')->latest()->get();

@@ -13,6 +13,14 @@ class VendorController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+    function __construct()
+    {
+        $this->middleware('permission:vendor-view|vendor-create|vendor-edit|vendor-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:vendor-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:vendor-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:vendor-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $vendors = Vendor::all();
@@ -92,6 +100,6 @@ class VendorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Vendor Deleted Successfully'
-        ]); 
+        ]);
     }
 }

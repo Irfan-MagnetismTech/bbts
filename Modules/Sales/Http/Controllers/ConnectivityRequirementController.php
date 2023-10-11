@@ -23,6 +23,14 @@ class ConnectivityRequirementController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+    function __construct()
+    {
+        $this->middleware('permission:connectivity-requirement-view|connectivity-requirement-create|connectivity-requirement-edit|connectivity-requirement-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:connectivity-requirement-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:connectivity-requirement-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:connectivity-requirement-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         $connectivity_requirements = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails', 'lead_generation')->unmodified()->latest()->get();

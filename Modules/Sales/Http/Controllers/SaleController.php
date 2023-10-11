@@ -37,6 +37,10 @@ class SaleController extends Controller
 {
     function __construct(private UploadService $uploadFile)
     {
+        $this->middleware('permission:sales-view|sales-create|sales-edit|sales-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:sales-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:sales-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:sales-delete', ['only' => ['destroy']]);
     }
     /**
      * Display a listing of the resource.-

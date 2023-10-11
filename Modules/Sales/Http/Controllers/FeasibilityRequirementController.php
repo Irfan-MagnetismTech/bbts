@@ -24,6 +24,15 @@ class FeasibilityRequirementController extends Controller
      * Display a listing of the resource.
      * @return Renderable
      */
+
+     function __construct()
+     {
+         $this->middleware('permission:feasibility-requirement-view|feasibility-requirement-create|feasibility-requirement-edit|feasibility-requirement-delete', ['only' => ['index', 'show']]);
+         $this->middleware('permission:feasibility-requirement-create', ['only' => ['create', 'store']]);
+         $this->middleware('permission:feasibility-requirement-edit', ['only' => ['edit', 'update']]);
+         $this->middleware('permission:feasibility-requirement-delete', ['only' => ['destroy']]);
+     }
+
     public function index()
     {
         $feasibility_requirements = FeasibilityRequirement::with('lead_generation', 'feasibilityRequirementDetails.surveySum')->latest()->get();
