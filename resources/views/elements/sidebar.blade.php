@@ -2,7 +2,7 @@
     <div class="sidebar_toggle"><a href="#"><i class="icon-close icons"></i></a></div>
     <div class="pcoded-inner-navbar main-menu">
         <ul class="pcoded-item pcoded-left-item">
-            @hasanyrole('Super-Admin')
+            @hasanyrole('Super-Admin|Admin')
                 <li
                     class="pcoded-hasmenu {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*', 'brands.*', 'branchs.*', 'pops.*']) ? 'active pcoded-trigger' : null }}">
                     <a href="javascript:void(0)">
@@ -30,7 +30,7 @@
                         @endrole
                         </ul>
                     </li>
-                @endhasanyrole
+            @endhasanyrole
                 @can('admin-configuration')
                     <li
                         class="pcoded-hasmenu {{ request()->routeIs(['branches.*', 'apsections.*', 'teams.*', 'departments.*', 'designations.*', 'employees.*', 'sellCollectionHeads.*', 'services.*']) ? 'active pcoded-trigger' : null }}">
