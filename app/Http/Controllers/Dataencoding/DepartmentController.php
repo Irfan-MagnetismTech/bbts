@@ -20,7 +20,7 @@ class DepartmentController extends Controller
         $departments = Department::query()
             ->withCount('employees')
             ->latest()
-            ->paginate();
+            ->get();
 
         return view('departments.create', compact('departments'));
     }
