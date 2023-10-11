@@ -54,7 +54,7 @@
                 <tbody>
                 @foreach($departments as $key => $data)
                     <tr>
-                        <td>{{$key  + $departments->firstItem()}}</td>
+                        <td>{{$loop->iteration}}</td>
                         <td class="text-left">{{$data->name}}</td>
                         <td>
                             {{$data->employees_count}}
