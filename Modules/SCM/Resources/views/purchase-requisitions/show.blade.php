@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('purchase-requisitions.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
