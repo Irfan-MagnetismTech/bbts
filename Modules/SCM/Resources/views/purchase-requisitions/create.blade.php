@@ -6,7 +6,7 @@
     $form_heading = !empty($purchaseRequisition) ? 'Update' : 'Add';
     $form_url = !empty($purchaseRequisition) ? route('errs.update', $purchaseRequisition->id) : route('errs.store');
     $form_method = !empty($purchaseRequisition) ? 'PUT' : 'POST';
-    
+
     $client_id = old('client_id', !empty($purchaseRequisition) ? $purchaseRequisition->client_id : null);
     $fr_no = old('fr_no', !empty($purchaseRequisition) ? $purchaseRequisition->fr_no : null);
     $client_name = old('client_name', !empty($purchaseRequisition) ? $purchaseRequisition?->client?->client_name : null);
@@ -176,6 +176,7 @@
                 <thead>
                     <tr>
                         <th> Material Name</th>
+                        <th> Item Code</th>
                         <th> Unit</th>
                         <th> Brand</th>
                         <th> Model </th>
@@ -207,8 +208,10 @@
                                     autocomplete="off" value="{{ $material_name_with_code[$key] }}">
                                 <input type="hidden" name="material_id[]" class="form-control material_id"
                                     value="{{ $material_id[$key] }}">
-                                <input type="hidden" name="item_code[]" class="form-control item_code"
-                                    value="{{ $item_code[$key] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="item_code[]" class="form-control item_code" autocomplete="off"
+                                       readonly value="{{ $item_code[$key] }}" id="item_code">
                             </td>
                             <td>
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
@@ -289,18 +292,20 @@
                             <td>
                                 <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
                                 <input type="hidden" name="material_id[]" class="form-control material_id">
-                                <input type="hidden" name="item_code[]" class="form-control item_code">
-                            </td>                            
+                            </td>
+                            <td>
+                                <input type="text" name="item_code[]" class="form-control item_code" autocomplete="off" readonly>
+                            </td>
                             <td>
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
-                            <td> 
+                            <td>
                                 <select name="brand_id[]" class="form-control brand" autocomplete="off">
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
-                                </select>    
+                                </select>
                             </td>
                             <td>
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off">

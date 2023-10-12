@@ -178,6 +178,7 @@
             <thead>
                 <tr>
                     <th> Material Name</th>
+                    <th> Item Code</th>
                     <th> Unit</th>
                     <th> Description</th>
                     <th class="current_stock" style="display: none"> Current Stock</th>
@@ -209,8 +210,10 @@
                                 autocomplete="off" value="{{ $material_name_with_code[$key] }}">
                             <input type="hidden" name="material_id[]" class="form-control material_id"
                                 value="{{ $material_id[$key] }}">
-                            <input type="hidden" name="item_code[]" class="form-control item_code"
-                                value="{{ $item_code[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" name="item_code[]" class="form-control item_code" autocomplete="off" readonly
+                                   value="{{ $item_code[$key] }}">
                         </td>
                         <td>
                             <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
