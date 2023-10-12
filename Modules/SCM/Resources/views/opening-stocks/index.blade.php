@@ -28,6 +28,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Date</th>
+                    <th>Branch</th>
                     <th> Material Name</th>
                     <th> Unit</th>
                     <th> Brand</th>
@@ -42,6 +43,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Date</th>
+                    <th>Branch</th>
                     <th> Material Name</th>
                     <th> Unit</th>
                     <th> Brand</th>
@@ -60,6 +62,7 @@
                             <td rowspan="{{ count($openingStock->lines) }}">{{ $loop->parent->iteration }}</td>
                         @endif
                         <td class="text-center">{{ $openingStock->date }}</td>
+                        <td class="text-center">{{ $openingStock->branch->name ?? ''}}</td>
                         <td class="text-center">{{ $data->material->name }}</td>
                         <td class="text-center">{{ $data->material->unit }}</td>
                         <td class="text-center">{{ $data->brand->name }}</td>

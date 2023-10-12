@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('opening_stocks', function (Blueprint $table) {
             $table->id();
             $table->date('date')->nullable();
+            $table->integer('branch_id')->nullable();
             $table->timestamps();
         });
     }

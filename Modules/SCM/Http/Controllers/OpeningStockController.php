@@ -39,8 +39,8 @@ class OpeningStockController extends Controller
     public function create()
     {
         $brands = Brand::latest()->get();
-
-        return view('scm::opening-stocks.create', compact('brands'));
+        $branches = Branch::latest()->get();
+        return view('scm::opening-stocks.create', compact('brands','branches'));
     }
 
     /**
@@ -98,9 +98,9 @@ class OpeningStockController extends Controller
     {
         $formType = "edit";
         $brands = Brand::latest()->get();
-        $branchs = Branch::latest()->get();
+        $branches = Branch::latest()->get();
 
-        return view('scm::opening-stocks.create', compact('openingStock', 'formType', 'brands', 'branchs'));
+        return view('scm::opening-stocks.create', compact('openingStock', 'formType', 'brands', 'branches'));
     }
 
     /**

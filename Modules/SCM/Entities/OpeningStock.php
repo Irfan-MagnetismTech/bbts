@@ -4,12 +4,13 @@ namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Admin\Entities\Branch;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 
 class OpeningStock extends Model
 {
-    protected $fillable = [
-        'date',
-    ];
+    protected $fillable = ['date','branch_id'];
 
     /**
      * @param $input
@@ -30,5 +31,9 @@ class OpeningStock extends Model
     public function lines()
     {
         return $this->hasMany(OpeningStockLine::class);
+    }
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class,'branch_id','id');
     }
 }
