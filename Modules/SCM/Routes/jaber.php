@@ -9,6 +9,7 @@ use Modules\SCM\Http\Controllers\PurchaseOrderController;
 use Modules\SCM\Http\Controllers\ScmWorController;
 
 Route::get('search-material-brand-by-cs-requisition/{csId}/{supplierId}/{materialId}', [PurchaseOrderController::class, 'searchMaterialBrandByCsAndRequsiition'])->name('search-material-brand-by-cs-requisition');
+Route::get('get-material-by-cs/{csId}/{supplier_id}', [PurchaseOrderController::class, 'getMaterialByCS'])->name('get-material-by-cs');
 Route::get('search_mrs_no', [ScmMirController::class, 'searchMrs'])->name('search_mrs_no');
 Route::get('search-type-no', [ScmMirController::class, 'searchTypeNo'])->name('searchTypeNo');
 Route::get('search-mrs--type-wise-aterials', [ScmMirController::class, 'mrsAndTypeWiseMaterials'])->name('mrsAndTypeWiseMaterials');
