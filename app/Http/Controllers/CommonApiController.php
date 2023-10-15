@@ -149,12 +149,16 @@ return response()->json($results);
             ->with('thana', 'district')
             ->limit(15)
             ->get()
-            ->map(fn ($item) => [
-                'id' => $item->id,
-                'text' => $item->name . " (" . $item->location . ") - " . $item->thana->name . " - " . $item->district->name,
-                'value' => $item->name . " (" . $item->location . ") - " . $item->thana->name . " - " . $item->district->name,
-                'label' => $item->name . " (" . $item->location . ") - " . $item->thana->name . " - " . $item->district->name,
-            ]);
+            ->map(function ($item){ 
+                $tana = $item->district->name ?? '';
+                $data = [
+                    'id' => $item->id,
+                    'text' => $item->name . " (" . $item->location . ") - " .$tana. " - " . $item->district->name,
+                    'value' => $item->name . " (" . $item->location . ") - " . $tana . " - " . $item->district->name,
+                    'label' => $item->name . " (" . $item->location . ") - " . $tana. " - " . $item->district->name,
+                ];
+                return $data;
+            }); 
 
         return response()->json($results);
     }

@@ -95,12 +95,13 @@
     ]) !!}
     <div class="row">
         <div class="form-group col-3 warehouse_name">
+            {{-- @dd($branches) --}}
             <label for="select2">Warehouse Name</label>
             <select class="form-control select2" id="branch_id" name="branch_id">
                 <option value="0" selected>Select Branch</option>
-                @foreach ($branches as $option)
+                @foreach ($branches as $option) 
                     <option value="{{ $option->id }}" {{ $branch_id == $option->id ? 'selected' : '' }}>
-                        {{ $option->name }}
+                        {{ $option->name ?? '' }}
                     </option>
                 @endforeach
             </select>
