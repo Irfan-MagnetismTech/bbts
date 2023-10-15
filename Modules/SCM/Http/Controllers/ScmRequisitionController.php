@@ -58,7 +58,7 @@ class ScmRequisitionController extends Controller
      */
     public function store(ScmRequisitionRequest $request)
     {
-    // dd($request->all());
+        // dd($request->all());
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
@@ -72,7 +72,7 @@ class ScmRequisitionController extends Controller
             } else {
                 $requestData = $request->only('type', 'date', 'branch_id', 'pop_id', 'remarks');
                 // dd($request->empolyee_id);
-             
+
             }
 
             $lastMRSId = ScmRequisition::latest()->first();
@@ -100,7 +100,7 @@ class ScmRequisitionController extends Controller
                     'brand_id' => $request->brand_id[$key],
                     'model' => $request->model[$key],
                     'purpose' => $request->purpose[$key],
-                    'current_stock' => $request->current_stock[$key],
+                    'current_stock' => $request->current_stock[$key] ?? 0,
                 ];
             }
 
@@ -171,7 +171,7 @@ class ScmRequisitionController extends Controller
             } else {
                 $requestData = $request->only('type', 'date', 'branch_id', 'pop_id', 'remarks');
                 // dd($request->empolyee_id);
-             
+
             }
             $requestData['requisition_by'] = auth()->id();
 
@@ -188,7 +188,7 @@ class ScmRequisitionController extends Controller
                     'brand_id' => $request->brand_id[$key],
                     'model' => $request->model[$key],
                     'purpose' => $request->purpose[$key],
-                    'current_stock' => $request->current_stock[$key],
+                    'current_stock' => $request->current_stock[$key] ?? 0,
                 ];
             }
 

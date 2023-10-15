@@ -61,7 +61,7 @@ class ScmChallanController extends Controller
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
         // dd($formType);
-        return view('scm::challans.create', compact('formType', 'brands', 'branchs','materials'));
+        return view('scm::challans.create', compact('formType', 'brands', 'branchs', 'materials'));
     }
 
     /**
@@ -71,7 +71,6 @@ class ScmChallanController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
             $challan_data = $request->only('type', 'date', 'scm_requisition_id', 'purpose', 'branch_id', 'client_no', 'pop_id', 'fr_composite_key', 'link_no', 'fr_no', 'equipment_type');
@@ -272,6 +271,7 @@ class ScmChallanController extends Controller
             'serial_code' => isset($req->serial_code[$key1]) ? json_encode($req->serial_code[$key1]) : '[]',
             'unit' => $req->unit[$key1],
             'quantity' => $req->quantity[$key1],
+            'mrs_quantity' => $req->mrs_quantity[$key1],
             'remarks' => $req->remarks[$key1],
         ];
     }
@@ -380,7 +380,7 @@ class ScmChallanController extends Controller
 
     public function getRequisitionDataByMrsNo(Request $request)
     {
-        $requisation = ScmRequisition::with('branch','client','pop', 'employee', 'feasibilityRequirementDetail')->where('mrs_no', $request->mrs_no)->firstOrFail();
+        $requisation = ScmRequisition::with('branch', 'client', 'pop', 'employee', 'feasibilityRequirementDetail', 'scmRequisitiondetailsWithMaterial')->where('mrs_no', $request->mrs_no)->firstOrFail();
         return response()->json($requisation);
     }
 
