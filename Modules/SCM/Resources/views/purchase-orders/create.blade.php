@@ -162,193 +162,196 @@
             </div>
         </div>
     </div>
-    <div class="table-responsive">
-        <table class="table table-bordered" id="material_requisition">
-            <thead>
-                <tr>
-                    <th>Material Name</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Description</th>
-                    <th>Unit</th>
-                    <th> Quantity </th>
-                    <th>Warranty Period</th>
-                    <th>Price </th>
-                    <th style="width: 80px !important">Vat</th>
-                    <th style="width: 80px !important">Tax</th>
-                    <th> Sub Total Amount </th>
-                    <th> Required Date </th>
-                    <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    // $purchase_requisition = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
-                    // $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scm_purchase_requisition_id') : []);
+    <div class="content" style="display: none">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="material_requisition">
+                <thead>
+                    <tr>
+                        <th>Material Name</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Description</th>
+                        <th>Unit</th>
+                        <th> Quantity </th>
+                        <th>Warranty Period</th>
+                        <th>Price </th>
+                        <th style="width: 80px !important">Vat</th>
+                        <th style="width: 80px !important">Tax</th>
+                        <th> Sub Total Amount </th>
+                        <th> Required Date </th>
+                        <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        // $purchase_requisition = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scmPurchaseRequisition.prs_no') : []);
+                        // $purchase_requisition_id = old('purchase_requisition_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('scm_purchase_requisition_id') : []);
 
-                    $quotation_no = old('quotation_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quotation_no') : []);
+                        $quotation_no = old('quotation_no', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quotation_no') : []);
 
-                    $material_name = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.name') : []);
-                    $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.id') : []);
+                        $material_name = old('material_name', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.name') : []);
+                        $material_id = old('material_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.id') : []);
 
-                    $single_model = old('model', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('model') : []);
+                        $single_model = old('model', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('model') : []);
 
-                    $brand = old('brand', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand') : []);
-                    $brand_id = old('brand_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand_id') : []);
+                        $brand = old('brand', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand') : []);
+                        $brand_id = old('brand_id', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('brand_id') : []);
 
-                    $description = old('description', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('description') : []);
+                        $description = old('description', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('description') : []);
 
-                    $unit = old('unit', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.unit') : []);
+                        $unit = old('unit', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.unit') : []);
 
-                    $quantity = old('quantity', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quantity') : []);
+                        $quantity = old('quantity', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quantity') : []);
 
-                    $warranty_period = old('warranty_period', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('warranty_period') : []);
+                        $warranty_period = old('warranty_period', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('warranty_period') : []);
 
-                    $unit_price = old('unit_price', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('unit_price') : []);
-                    $vat = old('vat', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('vat') : []);
+                        $unit_price = old('unit_price', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('unit_price') : []);
+                        $vat = old('vat', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('vat') : []);
 
-                    $tax = old('tax', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('tax') : []);
+                        $tax = old('tax', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('tax') : []);
 
-                    $total_amount = old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('total_amount') : []);
+                        $total_amount = old('total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('total_amount') : []);
 
-                    $required_date = old('required_date', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('required_date') : []);
-                @endphp
-                @if (!empty($purchaseOrder))
-                    @foreach ($purchaseOrder->purchaseOrderLines as $key => $purchaseOrderLine)
-                        <tr>
-                            <td>
-                                <select class="form-control text-center material_name select2" name="material_id[]">
-                                    <option value="" readonly selected>Select Material</option>
-                                    @foreach ($cs_materials as $cs_material)
-                                        <option value="{{ $cs_material->material_id }}"
-                                            {{ $cs_material->material_id == $material_id[$key] ? 'selected' : '' }}>
-                                            {{ $cs_material->material->name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            {{-- @dd($cs_brands, $brand_id) --}}
-                            <td>
-                                <select class="form-control text-center brand_name select2" name="brand_id[]">
-                                    <option value="" readonly selected>Select Brand</option>
-                                    @foreach ($cs_brands as $cs_brand)
-                                        <option value="{{ $cs_brand->brand_id }}"
-                                            {{ $cs_brand->brand_id == $brand_id[$key] ? 'selected' : '' }}>
-                                            {{ $cs_brand->brand->name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control text-center model select2" name="model[]">
-                                    <option value="" readonly selected>Select Model</option>
-                                    @foreach ($cs_models as $cs_model)
-                                        <option value="{{ $cs_model->model }}"
-                                            {{ $cs_model->model == $single_model[$key] ? 'selected' : '' }}>
-                                            {{ $cs_model->model }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
+                        $required_date = old('required_date', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('required_date') : []);
+                    @endphp
+                    @if (!empty($purchaseOrder))
+                        @foreach ($purchaseOrder->purchaseOrderLines as $key => $purchaseOrderLine)
+                            <tr>
+                                <td>
+                                    <select class="form-control text-center material_name select2" name="material_id[]">
+                                        <option value="" readonly selected>Select Material</option>
+                                        @foreach ($cs_materials as $cs_material)
+                                            <option value="{{ $cs_material->material_id }}"
+                                                {{ $cs_material->material_id == $material_id[$key] ? 'selected' : '' }}>
+                                                {{ $cs_material->material->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                {{-- @dd($cs_brands, $brand_id) --}}
+                                <td>
+                                    <select class="form-control text-center brand_name select2" name="brand_id[]">
+                                        <option value="" readonly selected>Select Brand</option>
+                                        @foreach ($cs_brands as $cs_brand)
+                                            <option value="{{ $cs_brand->brand_id }}"
+                                                {{ $cs_brand->brand_id == $brand_id[$key] ? 'selected' : '' }}>
+                                                {{ $cs_brand->brand->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control text-center model select2" name="model[]">
+                                        <option value="" readonly selected>Select Model</option>
+                                        @foreach ($cs_models as $cs_model)
+                                            <option value="{{ $cs_model->model }}"
+                                                {{ $cs_model->model == $single_model[$key] ? 'selected' : '' }}>
+                                                {{ $cs_model->model }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
 
-                            <td>
-                                <input type="text" name="description[]" class="form-control text-center description"
-                                    autocomplete="off" value="{{ $description[$key] }}">
-                            </td>
+                                <td>
+                                    <input type="text" name="description[]"
+                                        class="form-control text-center description" autocomplete="off"
+                                        value="{{ $description[$key] }}">
+                                </td>
 
-                            <td>
-                                <input type="text" name="unit[]" class="form-control text-center unit"
-                                    autocomplete="off" readonly value="{{ $unit[$key] }}">
-                            </td>
+                                <td>
+                                    <input type="text" name="unit[]" class="form-control text-center unit"
+                                        autocomplete="off" readonly value="{{ $unit[$key] }}">
+                                </td>
 
-                            <td>
-                                <input type="number" name="quantity[]" class="form-control text-center quantity"
-                                    autocomplete="off" value="{{ $quantity[$key] }}">
-                            </td>
+                                <td>
+                                    <input type="number" name="quantity[]" class="form-control text-center quantity"
+                                        autocomplete="off" value="{{ $quantity[$key] }}">
+                                </td>
 
-                            <td>
-                                <input type="text" name="warranty_period[]"
-                                    class="form-control text-center warranty_period" autocomplete="off"
-                                    value="{{ $warranty_period[$key] }}">
-                            </td>
+                                <td>
+                                    <input type="text" name="warranty_period[]"
+                                        class="form-control text-center warranty_period" autocomplete="off"
+                                        value="{{ $warranty_period[$key] }}">
+                                </td>
 
-                            <td>
-                                <input type="number" name="unit_price[]" class="form-control text-center unit_price"
-                                    autocomplete="off" readonly value="{{ $unit_price[$key] }}">
-                            </td>
+                                <td>
+                                    <input type="number" name="unit_price[]" class="form-control text-center unit_price"
+                                        autocomplete="off" readonly value="{{ $unit_price[$key] }}">
+                                </td>
 
-                            <td>
-                                <select class="form-control text-center" name="vat[]">
-                                    @foreach ($vatOrTax as $value)
-                                        <option value="{{ $vat[$key] }}" @selected($value == $vat[$key])>
-                                            {{ $value }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
+                                <td>
+                                    <select class="form-control text-center" name="vat[]">
+                                        @foreach ($vatOrTax as $value)
+                                            <option value="{{ $vat[$key] }}" @selected($value == $vat[$key])>
+                                                {{ $value }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
 
-                            <td>
-                                <select class="form-control text-center" name="tax[]">
-                                    @foreach ($vatOrTax as $value)
-                                        <option value="{{ $tax[$key] }}" @selected($value == $tax[$key])>
-                                            {{ $value }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
+                                <td>
+                                    <select class="form-control text-center" name="tax[]">
+                                        @foreach ($vatOrTax as $value)
+                                            <option value="{{ $tax[$key] }}" @selected($value == $tax[$key])>
+                                                {{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
 
-                            <td>
-                                <input name="total_amount[]" class="form-control text-center total_amount"
-                                    autocomplete="off" readonly value="{{ $total_amount[$key] }}">
-                            </td>
-                            <td>
-                                <input class="form-control text-center date" name="required_date[]"
-                                    aria-describedby="date" value="{{ $required_date[$key] }}" readonly>
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="11" class="text-right">Total Amount</td>
-                    <td colspan="3">
-                        <input type="text" name="final_total_amount"
-                            class="form-control text-center final_total_amount" autocomplete="off"
-                            value="{{ old('final_total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->sum('total_amount') : 0) }}"
-                            readonly>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-
-    <div class="form-group col-4">
-        <label for="terms_and_conditions" class="terms_label">Terms and Conditions
-            <i class="btn-primary btn-custom fa fa-plus add-terms-row"></i>
-        </label>
-        @if (isset($purchaseOrder) && $purchaseOrder?->poTermsAndConditions->count() > 0)
-            @foreach ($purchaseOrder->poTermsAndConditions as $key => $value)
+                                <td>
+                                    <input name="total_amount[]" class="form-control text-center total_amount"
+                                        autocomplete="off" readonly value="{{ $total_amount[$key] }}">
+                                </td>
+                                <td>
+                                    <input class="form-control text-center date" name="required_date[]"
+                                        aria-describedby="date" value="{{ $required_date[$key] }}" readonly>
+                                </td>
+                                <td>
+                                    <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="11" class="text-right">Total Amount</td>
+                        <td colspan="3">
+                            <input type="text" name="final_total_amount"
+                                class="form-control text-center final_total_amount" autocomplete="off"
+                                value="{{ old('final_total_amount', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->sum('total_amount') : 0) }}"
+                                readonly>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="form-group col-4">
+            <label for="terms_and_conditions" class="terms_label">Terms and Conditions
+                <i class="btn-primary btn-custom fa fa-plus add-terms-row"></i>
+            </label>
+            @if (isset($purchaseOrder) && $purchaseOrder?->poTermsAndConditions->count() > 0)
+                @foreach ($purchaseOrder->poTermsAndConditions as $key => $value)
+                    <div class="input-group">
+                        <input type="text" name="terms_and_conditions[]" class="form-control terms_and_conditions"
+                            autocomplete="off" value="{{ $value->particular }}">
+                        <i class="btn btn-danger btn-sm fa fa-minus remove-terms-row"></i>
+                    </div>
+                @endforeach
+            @else
                 <div class="input-group">
                     <input type="text" name="terms_and_conditions[]" class="form-control terms_and_conditions"
-                        autocomplete="off" value="{{ $value->particular }}">
-                    <i class="btn btn-danger btn-sm fa fa-minus remove-terms-row"></i>
+                        autocomplete="off">
                 </div>
-            @endforeach
-        @else
-            <div class="input-group">
-                <input type="text" name="terms_and_conditions[]" class="form-control terms_and_conditions"
-                    autocomplete="off">
-            </div>
-        @endif
-    </div>
+            @endif
+        </div>
 
-    <div class="row">
-        <div class="offset-md-4 col-md-4 mt-2">
-            <div class="input-group input-group-sm ">
-                <button class="btn btn-success btn-round btn-block py-2" type="submit">Submit</button>
+        <div class="row">
+            <div class="offset-md-4 col-md-4 mt-2">
+                <div class="input-group input-group-sm ">
+                    <button class="btn btn-success btn-round btn-block py-2" type="submit">Submit</button>
+                </div>
             </div>
         </div>
     </div>
+
     {!! Form::close() !!}
 @endsection
 
@@ -551,7 +554,7 @@
                     cs_id: cs_id,
                 },
                 success: function(data) {
-                    $('.loading').hide();
+
                     $.each(data, function(key, value) {
                         cs_materials +=
                             `<option value="${value.material.id}">${value.material.name}</option>`;
@@ -559,6 +562,7 @@
                     });
                     $('.material_name').html(cs_materials);
                     appendCalculationRow();
+
                 }
             });
         });
@@ -641,6 +645,7 @@
 
                     $('#material_requisition tbody').append(row);
                 })
+
             });
 
 
@@ -652,6 +657,8 @@
                 autoclose: true,
                 todayHighlight: true,
             }).datepicker("setDate", new Date());
+            $('.loading').hide();
+            $('.content').show();
         }
 
 

@@ -267,43 +267,14 @@
                     <span class="sr-only">Loading...</span>
                 </div>
 
-    <table class="table table-bordered" id="challan">
-        <thead>
-            <tr>
-                <th>Received Type</th>
-                <th>Type No</th>
-                <th>Material Name</th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Serial/Drum Code <br /> No</th>
-                <th>Unit</th>
-                <th>Available</th>
-                <th>Issued Qty</th>
-                <th>Remarks</th>
-                <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
-            </tr>
-        </thead>
-        <tbody>
-
-            @php
-                $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
-                $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
-                $received_no = old('type_no', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
-                $receiveable_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('receiveable_id') : []);
-                $type_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('type_id') : []);
-                $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
-                $material_type = old('material_type', !empty($challan) ? $challan->scmChallanLines->pluck('material.type') : []);
-                $brand_id = old('brand_id', !empty($challan) ? $challan->scmChallanLines->pluck('brand_id') : []);
-                $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
-                $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
-                $serial_code = old('serial_code', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
-
-                $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
-                $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
-                $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
-
-            @endphp
-            @foreach ($Challan_Lines as $key => $Challan_Line)
+                <!-- Optional text -->
+                <div class="mt-2">Loading...</div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="dataContainer" style="display: none;">
+        <table class="table table-bordered" id="challan">
+            <thead>
                 <tr>
                     <th>Material Name</th>
                     <th>Brand</th>
@@ -637,25 +608,9 @@
                                     '</option>';
                             })
 
-                        //pop
-                        console.log(data.pop.name);
-                        $('#pop_name').val(data.pop ?.name);
-                        $('#pop_address').val(data.pop ?.address);
-                        $('#pop_id').val(data.pop ?.id);
-                        $('#employee').val(data.employee ?.name);
-                        $('#employee_id').val(data.employee ?.id);
-
-
-                            // console.log("link no",data.link_no);
-                            // if (data.length > 0) {
-                            //     response(data);
-
-                            // } else {
-                            //     response([{
-                            //         label: 'No Result Found',
-                            //         value: -1,
-                            //     }]);
-                            // }
+                            $('.material_name').html(material_options);
+                            $('#dataContainer').show();
+                            $('.loading').hide();
                         }
                     });
 
