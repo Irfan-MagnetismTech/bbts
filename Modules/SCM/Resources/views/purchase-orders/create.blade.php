@@ -322,7 +322,6 @@
         </table>
     </div>
 
-
     <div class="form-group col-4">
         <label for="terms_and_conditions" class="terms_label">Terms and Conditions
             <i class="btn-primary btn-custom fa fa-plus add-terms-row"></i>
@@ -538,30 +537,56 @@
             });
         });
 
+        //get cs no on keyup get 5 value evey time
+        $(document).on('change', '#cs_id', function() {
+            $('.loading').show();
+            let cs_id = $(this).val();
+            $('#cs_no').val($(this).find('option:selected').text());
+            let cs_materials = '<option>Select Materials</option>';
+            $.ajax({
+                url: "{{ route('search-material-by-cs-requisition') }}",
+                type: 'get',
+                dataType: "json",
+                data: {
+                    cs_id: cs_id,
+                },
+                success: function(data) {
+                    $('.loading').hide();
+                    $.each(data, function(key, value) {
+                        cs_materials +=
+                            `<option value="${value.material.id}">${value.material.name}</option>`;
+                        material_items.push(value.material)
+                    });
+                    $('.material_name').html(cs_materials);
+                    appendCalculationRow();
+                }
+            });
+        });
+
         /* Append row */
         @if (empty($purchaseOrder) && empty(old('material_name')))
-            appendCalculationRow();
+            // appendCalculationRow();
         @endif
         function appendCalculationRow() {
-            let row = `<tr>
+            let cs_id = $('#cs_id').val();
+            let supplier_id = $('#supplier_id').val();
+            const materialUrl = '{{ url('/scm/get-material-by-cs') }}/' + cs_id + '/' + supplier_id;
+            $.getJSON(materialUrl, function(materials) {
+                $.each(materials, function(key, data) {
+                    let model = data.model != null ? data.model : '';
+                    let row = `<tr>
                             <td>
-                                <select class="form-control material_name select2" name="material_id[]">
-                                    <option value="" readonly selected>Select Material</option>
-                                    ${material_items.map(material => `<option value="${material.id}">${material.name}</option>`)}
-                                </select>
+                                <input type="text" name="material_name[]" class="form-control material_name" value="${data.cs_material.material.name}" autocomplete="off">
+                                <input type="hidden" name="material_id[]" class="form-control material_id" value="${data.cs_material.material.id}" autocomplete="off">
                             </td>
 
                             <td>
-                                <select class="form-control brand_name select2" name="brand_id[]">
-                                    <option value="" readonly selected>Select Brand</option>
-
-                                </select>
+                                <input type="text" name="brand_name[]" class="form-control brand_name" value="${data.brand.name}" autocomplete="off">
+                                <input type="hidden" name="brand_id[]" class="form-control brand_id" value="${data.brand.id}" autocomplete="off">
                             </td>
 
                             <td>
-                                <select class="form-control model select2" name="model[]">
-                                    <option value="" readonly selected>Select Model</option>
-                                </select>
+                                <input type="text" name="model[]" class="form-control model" value="${model}" autocomplete="off">
                             </td>
 
                             <td>
@@ -581,7 +606,7 @@
                             </td>
 
                             <td>
-                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly>
+                                <input type="number" name="unit_price[]" class="form-control unit_price" value=${data.price} autocomplete="off" readonly>
                             </td>
 
                             <td>
@@ -613,8 +638,14 @@
                             </td>
                         </tr>
                     `;
-            $('#material_requisition tbody').append(row);
-            getMaterial(this)
+
+                    $('#material_requisition tbody').append(row);
+                })
+            });
+
+
+
+            // getMaterial(this)
             $('.select2').select2();
             $('.date').datepicker({
                 format: 'dd-mm-yyyy',
@@ -622,33 +653,6 @@
                 todayHighlight: true,
             }).datepicker("setDate", new Date());
         }
-
-
-
-        //get cs no on keyup get 5 value evey time
-        $(document).on('change', '#cs_id', function() {
-            $('.loading').show();
-            let cs_id = $(this).val();
-            $('#cs_no').val($(this).find('option:selected').text());
-            let cs_materials = '<option>Select Materials</option>';
-            $.ajax({
-                url: "{{ route('search-material-by-cs-requisition') }}",
-                type: 'get',
-                dataType: "json",
-                data: {
-                    cs_id: cs_id,
-                },
-                success: function(data) {
-                    $('.loading').hide();
-                    $.each(data, function(key, value) {
-                        cs_materials +=
-                            `<option value="${value.material.id}">${value.material.name}</option>`;
-                        material_items.push(value.material)
-                    });
-                    $('.material_name').html(cs_materials);
-                }
-            });
-        });
 
 
 
@@ -722,14 +726,16 @@
             dropdown.prop('selectedIndex', 0);
 
             $.getJSON(url, function(items) {
+                // console.log(items);
                 materials = items;
                 $.each(items, function(key, material) {
+                    // console.log(material.brand);
                     dropdown.append($('<option></option>')
-                        .attr('value', material.cs_material.brand.id)
-                        .text(material.cs_material.brand.name))
+                        .attr('value', material.brand.id)
+                        .text(material.brand.name))
                 })
 
-                console.log(items);
+                // console.log(items);
                 //check if item is empty or not
                 if (items === null) {
                     alert('No price found for this material');
