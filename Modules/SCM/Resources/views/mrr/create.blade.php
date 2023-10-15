@@ -6,7 +6,7 @@
     $form_heading = !empty($materialReceive) ? 'Update' : 'Add';
     $form_url = !empty($materialReceive) ? route('material-receives.update', $materialReceive->id) : route('material-receives.store');
     $form_method = !empty($materialReceive) ? 'PUT' : 'POST';
-    
+
     $branch_id = old('branch_id', !empty($materialReceive) ? $materialReceive->branch_id : null);
     $material_list = old('branch_id') ? old('select_array') : (!empty($materialReceive) ? $material_list : []);
     $applied_date = old('applied_date', !empty($materialReceive) ? $materialReceive->date : null);
@@ -17,7 +17,7 @@
     $supplier_id = old('supplier_id', !empty($materialReceive) ? $materialReceive->supplier_id : null);
     $challan_no = old('challan_no', !empty($materialReceive) ? $materialReceive->challan_no : null);
     $challan_date = old('challan_date', !empty($materialReceive) ? $materialReceive->challan_date : null);
-    
+
 @endphp
 
 @section('breadcrumb-title')
@@ -99,7 +99,7 @@
             <label for="select2">Warehouse Name</label>
             <select class="form-control select2" id="branch_id" name="branch_id">
                 <option value="0" selected>Select Branch</option>
-                @foreach ($branches as $option) 
+                @foreach ($branches as $option)
                     <option value="{{ $option->id }}" {{ $branch_id == $option->id ? 'selected' : '' }}>
                         {{ $option->name ?? '' }}
                     </option>
@@ -189,7 +189,7 @@
                     <th>Quantity</th>
                     <th>Unit Price</th>
                     <th>Amount</th>
-                    <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -210,13 +210,13 @@
                             })
                             : '',
                     );
-                    
+
                     $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
                     $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
                     $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
                     $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
                     $po_composit_key = old('po_composit_key', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('po_composit_key') : []);
-                    
+
                     $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
                     $order_quantity = old('order_quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('order_quantity') : []);
                     $left_quantity = old('left_quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('left_quantity') : []);
@@ -430,18 +430,16 @@
                     let material_row = '';
                     let grand_total = 0;
                     $.getJSON(url, function(items) {
-                        console.log(items);
                         $.each(items, function(key, data) {
-                            console.log(data)
                             if (data.material.type == 'Drum') {
                                 $('.tags_add_multiple').tagsinput('destroy');
                                 $('#initial_mark_head').show();
                                 $('#final_mark_head').show();
-                                $('#total_amount_first_row').attr('colspan', 11);
+                                $('#total_amount_first_row').attr('colspan', 13);
                             } else {
                                 $('#initial_mark_head').hide();
                                 $('#final_mark_head').hide();
-                                $('#total_amount_first_row').attr('colspan', 9);
+                                $('#total_amount_first_row').attr('colspan', 11);
                             }
                             material_row += `
                             <tr>
@@ -468,15 +466,15 @@
                                     </div>
                                 </td>
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                                <td>
-                                                                                                                                                    <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                                                                                                                                                </td>
-                                                                                                                                                ` : ''}
+                                                                                                                                                                        <td>
+                                                                                                                                                                            <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                                                                                                                                                                        </td>
+                                                                                                                                                                        ` : ''}
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                                <td>
-                                                                                                                                                    <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                                                                                                                                                </td>
-                                                                                                                                                 ` : ''}
+                                                                                                                                                                        <td>
+                                                                                                                                                                            <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
+                                                                                                                                                                        </td>
+                                                                                                                                                                         ` : ''}
                                 <td>
                                     <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
                                 </td>
@@ -504,7 +502,6 @@
                             </tr>`;
                             grand_total += parseFloat(data.total_amount);
                         })
-                        console.log(material_row)
                         $('#material_requisition tbody').html(material_row);
                         $(".tags_add_multiple").tagsinput('items');
                         $('.total_amount').val(grand_total);
@@ -545,10 +542,8 @@
 
         $(document).on('keyup', '.quantity', function() {
             var quantity = $(this).val();
-            console.log(quantity);
             var left_quantity = $(this).closest('tr').find('.left_quantity').val();
-            console.log(left_quantity);
-            if (quantity > left_quantity) {
+            if (parseFloat(quantity) > parseFloat(left_quantity)) {
                 alert('Quantity can not be greater than left quantity');
                 $(this).val(left_quantity);
             }
