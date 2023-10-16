@@ -79,8 +79,15 @@
             <span class="pcoded-mcaret"></span>
         </a>
         <ul class="pcoded-submenu">
-            <li class="{{ request()->routeIs('units.*') ? 'active' : null }}">
-                <a href="{{ route('units.index') }}"> <span class="pcoded-micon"><i
+            <li class="{{ request()->routeIs('ips.*') ? 'active' : null }}">
+                <a href="{{ route('ips.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">IP List</span></span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('vas-services.*') ? 'active' : null }}">
+                <a href="{{ route('vas-services.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">VAS Services</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
@@ -141,11 +148,11 @@
             <span class="pcoded-mcaret"></span>
         </a>
         <ul class="pcoded-submenu">
-            <li class="{{ request()->routeIs('physical-connectivities.create') ? 'active' : null }}">
+            {{-- <li class="{{ request()->routeIs('physical-connectivities.create') ? 'active' : null }}">
                 <a href="{{ route('physical-connectivities.create') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                         class="pcoded-mcaret"></span></a>
-            </li>
+            </li> --}}
             <li class="{{ request()->routeIs('physical-connectivities.index') ? 'active' : null }}">
                 <a href="{{ route('physical-connectivities.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
@@ -167,11 +174,11 @@
                     <span class="pcoded-micon">
                         <i class="ti-angle-right"></i>
                     </span>
-                    <span class="pcoded-mtext">Data Services</span>
+                    <span class="pcoded-mtext">Logical Connectivity List</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
             </li>
-            <li class="{{ request()->routeIs('logical-internet-connectivities.create') ? 'active' : null }}">
+            {{-- <li class="{{ request()->routeIs('logical-internet-connectivities.create') ? 'active' : null }}">
                 <a href="{{ route('logical-internet-connectivities.index') }}">
                     <span class="pcoded-micon">
                         <i class="ti-angle-right"></i>
@@ -188,7 +195,7 @@
                     <span class="pcoded-mtext">Vas Services</span>
                     <span class="pcoded-mcaret"></span>
                 </a>
-            </li>
+            </li> --}}
         </ul>
     </li>
 

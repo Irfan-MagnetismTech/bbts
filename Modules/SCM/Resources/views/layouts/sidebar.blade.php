@@ -103,27 +103,6 @@
         </ul>
     </li>
     @endcan
-    @can('scm-comparative-statement-view')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['cs.*']) ? 'active pcoded-trigger' : null }}">
-            <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i></span>
-                <span class="pcoded-mtext">CS</span>
-                <span class="pcoded-mcaret"></span>
-            </a>
-            <ul class="pcoded-submenu">
-                <li class="{{ request()->routeIs('cs.create') ? 'active' : null }}">
-                    <a href="{{ route('cs.create') }}"> <span class="pcoded-micon"><i
-                                class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
-                            class="pcoded-mcaret"></span></a>
-                </li>
-                <li class="{{ request()->routeIs('cs.index') ? 'active' : null }}">
-                    <a href="{{ route('cs.index') }}"> <span class="pcoded-micon"><i
-                                class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
-                            class="pcoded-mcaret"></span></a>
-                </li>
-            </ul>
-        </li>
-    @endcan
     @can('scm-indent-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['indents.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
@@ -145,6 +124,28 @@
             </ul>
         </li>
     @endcan
+    @can('scm-comparative-statement-view')
+        <li class="pcoded-hasmenu {{ request()->routeIs(['cs.*']) ? 'active pcoded-trigger' : null }}">
+            <a href="javascript:void(0)">
+                <span class="pcoded-micon"><i class="ti-panel"></i></span>
+                <span class="pcoded-mtext">CS</span>
+                <span class="pcoded-mcaret"></span>
+            </a>
+            <ul class="pcoded-submenu">
+                <li class="{{ request()->routeIs('cs.create') ? 'active' : null }}">
+                    <a href="{{ route('cs.create') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+                <li class="{{ request()->routeIs('cs.index') ? 'active' : null }}">
+                    <a href="{{ route('cs.index') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+            </ul>
+        </li>
+    @endcan
+    
     @can('scm-purchase-order-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['purchase-orders.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
