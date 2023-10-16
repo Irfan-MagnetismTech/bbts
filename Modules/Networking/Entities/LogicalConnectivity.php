@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Networking\Entities\ClientFacility;
 use Modules\Networking\Entities\BandwidthDestribution;
 use Modules\Networking\Entities\LogicalConnectivityLine;
+use Modules\Sales\Entities\Client;
 
 class LogicalConnectivity extends Model
 {
@@ -37,5 +38,9 @@ class LogicalConnectivity extends Model
     public function scopeForProductCategories($query, array $categories)
     {
         return $query->whereIn('product_category', $categories);
+    }
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 }

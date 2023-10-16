@@ -49,7 +49,7 @@
                         <td class="text-center">{{ $indent->date }}</td>
                         <td class="text-center">
                             @foreach ($indent->indentLines as $line)
-                                <p>{{ $line->scmPurchaseRequisition->prs_no }}</p>
+                                <p>{{ $line->scmPurchaseRequisition->prs_no ?? ''}}</p>
                             @endforeach
                         </td>
                         <td>

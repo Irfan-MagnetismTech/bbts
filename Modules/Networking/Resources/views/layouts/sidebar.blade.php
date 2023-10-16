@@ -19,7 +19,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">Pops List</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-            </ul> 
+            </ul>
         </li>
         <li class="pcoded-hasmenu {{ request()->routeIs(['connectivity.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
@@ -40,7 +40,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">Connectivity List</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-            </ul> 
+            </ul>
         </li>
         <li class="pcoded-hasmenu {{ request()->routeIs(['vas-services.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
@@ -63,7 +63,7 @@
         </li>
         <li class="pcoded-submenu {{ request()->routeIs(['cc-schedules.*']) ? 'active pcoded-trigger' : null }}">
             <a href="{{ route('cc-schedules.index') }}">
-                <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>            
+                <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
                 <span>Activition Proccess</span>
             </a>
         </li>
@@ -135,7 +135,7 @@
 
     <li class="pcoded-submenu {{ request()->routeIs(['connectivities.*']) ? 'active pcoded-trigger' : null }}">
         <a href="{{ route('connectivities.index') }}">
-            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>            
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
             <span>Connectivities</span>
         </a>
     </li>
@@ -169,8 +169,8 @@
             <span class="pcoded-mcaret"></span>
         </a>
         <ul class="pcoded-submenu">
-            <li class="{{ request()->routeIs('logical-data-connectivities.create') ? 'active' : null }}">
-                <a href="{{ route('logical-data-connectivities.index') }}">
+            <li class="{{ request()->routeIs('logical-connectivities.create') ? 'active' : null }}">
+                <a href="{{ route('logical-connectivities.index') }}">
                     <span class="pcoded-micon">
                         <i class="ti-angle-right"></i>
                     </span>
@@ -201,7 +201,7 @@
 
     <li class="pcoded-submenu {{ request()->routeIs(['cc-schedules.*']) ? 'active pcoded-trigger' : null }}">
         <a href="{{ route('cc-schedules.index') }}">
-            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>            
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
             <span>Client Schedules</span>
         </a>
     </li>

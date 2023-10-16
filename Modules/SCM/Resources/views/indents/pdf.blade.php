@@ -89,7 +89,6 @@
         }
 
 
-
     </style>
 </head>
 
@@ -104,7 +103,7 @@
     </div>
 </htmlpageheader>
 
-<html-separator />
+<html-separator/>
 
 <div style="width: 100%; flex: max-content">
     <h3 style="text-align: center"><u>REQUISITION FORM</u></h3>
@@ -114,6 +113,15 @@
     <div style="text-align: start">
         <div>
             <span>Indent No: {{$indent->indent_no}}</span><br>
+            <div>
+                PRS No:
+                @foreach ($indent->indentLines as $line)
+                    {{ $line->scmPurchaseRequisition->prs_no ?? ''}}
+                    @if (!$loop->last)
+                        ,
+                    @endif
+                @endforeach
+            </div>
             <span>Date: {{$indent->date}}</span><br>
         </div>
         <br>
@@ -123,7 +131,6 @@
         </div>
         <br>
     </div>
-
     <table class="table table-striped table-bordered" style="width: 100%">
         <thead>
         <tr style="background-color: #668ba6;color: black">
@@ -132,7 +139,6 @@
             <th>Total Quantity</th>
             <th>Unit</th>
             <th>Last Receiving Date</th>
-            <th>PRS No.</th>
             <th>Item Code</th>
         </tr>
         </thead>
@@ -149,7 +155,6 @@
                     $quantity = $value1->quantity ?? 0;
                     $unit = $value1->material->unit ?? '';
                     $date = $value->scmPurchaseRequisition->date ?? '';
-                    $prsNo = $value->scmPurchaseRequisition->prs_no ?? '';
                     $itemCode = $value1->material->code ?? '';
 
                     if (!isset($materialQuantities[$materialName])) {
@@ -157,7 +162,6 @@
                             'totalQuantity' => 0,
                             'unit' => $unit,
                             'date' => $date,
-                            'prsNo' => $prsNo,
                             'itemCode' => $itemCode,
                         ];
                     }
@@ -175,7 +179,6 @@
                 <td class="text-center">{{ $data['totalQuantity'] }}</td>
                 <td class="text-center">{{ $data['unit'] }}</td>
                 <td class="text-center">{{ $data['date'] }}</td>
-                <td class="text-center">{{ $data['prsNo'] }}</td>
                 <td class="text-center">{{ $data['itemCode'] }}</td>
             </tr>
         @endforeach

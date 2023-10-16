@@ -5,6 +5,7 @@ namespace Modules\Networking\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Networking\Entities\LogicalConnectivity;
 
 class LogicalConnectivityController extends Controller
 {
@@ -14,7 +15,8 @@ class LogicalConnectivityController extends Controller
      */
     public function index()
     {
-        return view('networking::index');
+        $logicalConnectivities = LogicalConnectivity::latest()->get();
+        return view('networking::logical-connectivities.index', compact('logicalConnectivities'));
     }
 
     /**

@@ -13,7 +13,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('gate-passes.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('indents.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
     class="fas fa-database"></i></a>
 @endsection
 
@@ -41,7 +41,7 @@
                             value="{{ old('indent_no') ?? ($indent->indent_no ?? '') }}" readonly
                             placeholder="Indent No">
                     </div>
-                </div>                
+                </div>
             @endif
             <div class="col-12">
                 <div class="input-group input-group-sm input-group-primary">
@@ -111,7 +111,7 @@
                                 class="text-danger">*</span></label>
                     <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No" required>
                     <input type="hidden" name="prs_id[]" class="prs_id">
-                        <i class="btn btn-danger btn-sm fa fa-minus deleteItem" onclick="deleteRow(this)"></i>    
+                        <i class="btn btn-danger btn-sm fa fa-minus deleteItem" onclick="deleteRow(this)"></i>
                 </div>`
             );
         }
