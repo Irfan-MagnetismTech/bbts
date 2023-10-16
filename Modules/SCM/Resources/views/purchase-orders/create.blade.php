@@ -162,7 +162,7 @@
             </div>
         </div>
     </div>
-    <div class="content" style="display: none">
+    <div class="content" @if(!empty($purchaseOrder->id)) style="display: block;" @endif>
         <div class="table-responsive">
             <table class="table table-bordered" id="material_requisition">
                 <thead>

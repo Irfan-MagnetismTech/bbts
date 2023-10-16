@@ -11,6 +11,7 @@ use Modules\SCM\Entities\ScmChallan;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Admin\Entities\ConnectivityLink;
+use Modules\Networking\Entities\NetFiberManagement;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\SaleDetail;
@@ -75,9 +76,11 @@ class PhysicalConnectivityController extends Controller
             //     ->first();
 
             $connectivity_links = ConnectivityLink::latest()->get();
+
+            $fiber_cores = NetFiberManagement::latest()->get();
         }
 
-        return view('networking::physical-connectivities.create', compact('challanInfo', 'connectivity_points', 'saleDetails', 'connectivity_links'));
+        return view('networking::physical-connectivities.create', compact('challanInfo', 'connectivity_points', 'saleDetails', 'connectivity_links', 'fiber_cores'));
         // return view('networking::physical-connectivities.create', compact('connectivity_links','saleDetails', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
 
@@ -107,6 +110,7 @@ class PhysicalConnectivityController extends Controller
                     'vlan' => $request->vlan[$key],
                     'connectivity_details' => $request->connectivity_details[$key],
                     'comment' => $request->comment[$key],
+                    'fiber_core_composite_key' => $request->fiber_core_composite_key[$key] ?? '',
                 ];
             }
 
@@ -163,7 +167,9 @@ class PhysicalConnectivityController extends Controller
 
         $connectivity_links = ConnectivityLink::latest()->get();
 
-        return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo', 'connectivity_links'));
+        $fiber_cores = NetFiberManagement::latest()->get();
+
+        return view('networking::physical-connectivities.create', compact('physicalConnectivity', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo', 'connectivity_links', 'fiber_cores'));
     }
 
     /**
@@ -190,6 +196,7 @@ class PhysicalConnectivityController extends Controller
                     'vlan' => $request->vlan[$key],
                     'connectivity_details' => $request->connectivity_details[$key],
                     'comment' => $request->comment[$key],
+                    'fiber_core_composite_key' => $request->fiber_core_composite_key[$key] ?? '',
                 ];
             }
 

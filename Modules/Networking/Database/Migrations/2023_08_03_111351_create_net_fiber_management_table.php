@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             NestedSet::columns($table);
             $table->integer('pop_id');
+            $table->string('composite_key')->nullable();
             $table->string('connectivity_point_name')->nullable();
             $table->string('cable_code')->nullable();
             $table->string('fiber_type')->nullable();

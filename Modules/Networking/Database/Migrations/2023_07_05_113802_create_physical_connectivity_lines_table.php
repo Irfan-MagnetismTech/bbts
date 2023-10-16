@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('pop')->nullable();
             $table->string('ldp')->nullable();
             $table->string('bbts_link_id')->nullable();
+            $table->string('fiber_core_composite_key')->nullable();
             $table->string('device_ip')->nullable();
             $table->string('port')->nullable();
             $table->string('vlan')->nullable();
