@@ -157,6 +157,7 @@ class OpeningStockController extends Controller
             $openingStock->update($request->all());
 
             $stockDetails = [];
+            $serialCode = [];
             foreach ($request->material_id as $key => $data) {
                 $stockDetails[] = [
                     'material_id' => $request->material_id[$key],
@@ -166,10 +167,53 @@ class OpeningStockController extends Controller
                     'unit_price' => $request->unit_price[$key],
                     'total_amount' => $request->unit_price[$key] * $request->quantity[$key],
                 ];
+                $serialCode[] = explode(',', $request->serial_code[$key]);
             }
 
+            foreach ($openingStock->lines as $openingStockLine) {
+                $openingStockLine->serialCodeLines()->delete();
+            }
             $openingStock->lines()->delete();
-            $openingStock->lines()->createMany($stockDetails);
+            $openingStock->stockable()->delete();
+            $detail= $openingStock->lines()->createMany($stockDetails);
+
+            $stock = [];
+            foreach ($detail as $key => $value) {
+                $value->serialCodeLines()->createMany(array_map(function ($serial) use ($request, $key, $value, $openingStock, &$stock) {
+                    if ($request->material_type[$key] == 'Drum') {
+                        $serial_code = 'F-' . $serial;
+                        $quantity = 1;
+                    } else {
+                        if ($serial == '') {
+                            $serial_code = Null;
+                            $quantity = $value->quantity;
+                        } else {
+                            $serial_code = 'SL-' . $serial;
+                            $quantity = 1;
+                        }
+                    }
+                    $stock[] = [
+                        'received_type'     => 'OS',
+                        'material_id'       => $value->material_id,
+                        'receiveable_type'  => OpeningStock::class,
+                        'receiveable_id'    => $openingStock->id,
+                        'brand_id'          => $value->brand_id,
+                        'branch_id'         => $request->branch_id,
+                        'model'             => $value->model,
+                        'quantity'          => $quantity,
+                        'unit_price'        => $value->unit_price,
+                        'serial_code'       => $serial_code,
+                        'unit'              => $request->unit[$key],
+                    ];
+                    return [
+                        'serial_or_drum_key'    =>  $serial,
+                        'serial_or_drum_code'   =>  $serial_code,
+                    ];
+                }, $serialCode[$key]));
+            }
+
+            $openingStock->stockable()->createMany($stock);
+
             DB::commit();
 
             return redirect()->route('opening-stocks.index')->with('message', 'Data has been updated successfully');
@@ -188,8 +232,15 @@ class OpeningStockController extends Controller
     public function destroy(OpeningStock $openingStock)
     {
         try {
-            $openingStock->delete();
+            DB::beginTransaction();
+            foreach ($openingStock->lines as $openingStockLine) {
+                $openingStockLine->serialCodeLines()->delete();
+            }
             $openingStock->lines()->delete();
+            $openingStock->stockable()->delete();
+            $openingStock->delete();
+            DB::commit();
+
             return redirect()->route('opening-stocks.index')->with('message', 'Data has been deleted successfully');
         } catch (QueryException $e) {
             return redirect()->route('opening-stocks.index')->withErrors($e->getMessage());

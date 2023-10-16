@@ -20,7 +20,11 @@
                     <tbody class="text-left">
                         <tr>
                             <td> <strong>Date</strong> </td>
-                            <td> {{ $openingStock->date }}</td>
+                            <td> {{ $openingStock->date ?? ''}}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Branch</strong> </td>
+                            <td> {{ $openingStock->branch->name ?? ''}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -37,18 +41,20 @@
                     <th>Quantity</th>
                     <th>Brand</th>
                     <th>Model</th>
+                    <th>Serial Code</th>
                     <th>Amount</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($openingStock->lines as $key => $detail)
                     <tr>
-                        <td> {{ $detail->material->name }} </td>
-                        <td> {{ $detail->material->unit }} </td>
-                        <td> {{ $detail->quantity }} </td>
-                        <td> {{ $detail->brand->name }} </td>
-                        <td> {{ $detail->model }} </td>
-                        <td> {{ $detail->total_amount }} </td>
+                        <td> {{ $detail->material->name ?? ''}} </td>
+                        <td> {{ $detail->material->unit ?? ''}} </td>
+                        <td> {{ $detail->quantity ?? ''}} </td>
+                        <td> {{ $detail->brand->name ?? ''}} </td>
+                        <td> {{ $detail->model ?? ''}} </td>
+                        <td> {{ $detail->serialCodeLines->first()->serial_or_drum_code ?? '' }}</td>
+                        <td> {{ $detail->total_amount ?? ''}} </td>
                     </tr>
                 @endforeach
             </tbody>

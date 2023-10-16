@@ -100,7 +100,7 @@
                 <div class="form-group col-3">
                 <label for="branch">Warehouse:</label>
                 <select name="branch_id" class="form-control branch" autocomplete="off">
-                    <option value="">Select Branch</option>
+                    <option value="">{{ old('branch_id') ?? (@$openingStock->branch->name ?? 'Select Branch') }}</option>
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}">
                             {{ $branch->name }}
@@ -146,7 +146,7 @@
                             : '',
                     );
                 @endphp
-                @foreach ($material_name_with_code as $key => $requisitionDetail)
+                @foreach ($material_name_with_code as $key => $detail)
                     @php
                         if ($material_type[$key] == 'Drum') {
                             $max_tag = 1;

@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Entities;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\Material;
 use Illuminate\Database\Eloquent\Model;
@@ -24,8 +25,8 @@ class OpeningStockLine extends Model
         return $this->belongsTo(Brand::class);
     }
 
-    public function serialCodeLines()
+    public function serialCodeLines():HasMany
     {
-        return $this->hasMany(ScmMrrSerialCodeLine::class);
+        return $this->hasMany(ScmMrrSerialCodeLine::class,'opening_stock_line_id','id');
     }
 }

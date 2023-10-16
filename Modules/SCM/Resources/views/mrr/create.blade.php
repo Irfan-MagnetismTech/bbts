@@ -572,6 +572,7 @@
         //     }
         // })
         //get value by name sl_code
+
         $(document).on('input', 'input[name="sl_code[]"]', function() {
             console.log($(this).val());
             var left_quantity = $(this).closest('tr').find('.left_quantity').val();

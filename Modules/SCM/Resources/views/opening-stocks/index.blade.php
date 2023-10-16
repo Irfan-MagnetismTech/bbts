@@ -14,7 +14,8 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('opening-stocks.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('opening-stocks.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-plus"></i></a>
 @endsection
 @section('sub-title')
     Total: {{ count($openingStocks) }}
@@ -25,38 +26,40 @@
     <div class="dt-responsive table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
-                <tr>
-                    <th>#SL</th>
-                    <th>Date</th>
-                    <th>Branch</th>
-                    <th> Material Name</th>
-                    <th> Unit</th>
-                    <th> Brand</th>
-                    <th> Model </th>
-                    <th> Unit Price </th>
-                    <th> Quantity </th>
-                    <th> Amount </th>
-                    <th>Action</th>
-                </tr>
+            <tr>
+                <th>#SL</th>
+                <th>Date</th>
+                <th>Branch</th>
+                <th> Material Name</th>
+                <th> Unit</th>
+                <th> Brand</th>
+                <th> Model</th>
+                <th>Serial Code</th>
+                <th> Unit Price</th>
+                <th> Quantity</th>
+                <th> Amount</th>
+                <th>Action</th>
+            </tr>
             </thead>
             <tfoot>
-                <tr>
-                    <th>#SL</th>
-                    <th>Date</th>
-                    <th>Branch</th>
-                    <th> Material Name</th>
-                    <th> Unit</th>
-                    <th> Brand</th>
-                    <th> Model </th>
-                    <th> Unit Price </th>
-                    <th> Quantity </th>
-                    <th> Amount </th>
-                    <th>Action</th>
-                </tr>
+            <tr>
+                <th>#SL</th>
+                <th>Date</th>
+                <th>Branch</th>
+                <th> Material Name</th>
+                <th> Unit</th>
+                <th> Brand</th>
+                <th> Model</th>
+                <th>Serial Code</th>
+                <th> Unit Price</th>
+                <th> Quantity</th>
+                <th> Amount</th>
+                <th>Action</th>
+            </tr>
             </tfoot>
             <tbody>
-                @foreach ($openingStocks as $key => $openingStock)
-                    @foreach ($openingStock->lines as $key => $data)
+            @foreach ($openingStocks as $key => $openingStock)
+                @foreach ($openingStock->lines as $key => $data)
                     <tr>
                         @if ($loop->first)
                             <td rowspan="{{ count($openingStock->lines) }}">{{ $loop->parent->iteration }}</td>
@@ -67,33 +70,37 @@
                         <td class="text-center">{{ $data->material->unit }}</td>
                         <td class="text-center">{{ $data->brand->name }}</td>
                         <td class="text-center">{{ $data->model }}</td>
+                        <td>{{ $data->serialCodeLines->first()->serial_or_drum_code ?? '' }}</td>
                         <td class="text-center">{{ $data->unit_price }}</td>
                         <td class="text-center">{{ $data->quantity }}</td>
                         <td class="text-center">{{ $data->total_amount }}</td>
-                            @if ($loop->first)
-                        <td rowspan="{{ count($openingStock->lines) }}">
-                            <div class="icon-btn">
-                                <nobr>
-                                    <a href="{{ url("scm/opening-stocks/$openingStock->id") }}" data-toggle="tooltip"
-                                        title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                        @if ($loop->first)
+                            <td rowspan="{{ count($openingStock->lines) }}">
+                                <div class="icon-btn">
+                                    <nobr>
+                                        <a href="{{ url("scm/opening-stocks/$openingStock->id") }}"
+                                           data-toggle="tooltip"
+                                           title="Details" class="btn btn-outline-primary"><i
+                                                class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('opening-stocks.edit', $openingStock->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                        <a href="{{ route('opening-stocks.edit', $openingStock->id) }}"
+                                           data-toggle="tooltip"
+                                           title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                    <form action="{{ url("scm/opening-stocks/$openingStock->id") }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
-                                </nobr>
-                            </div>
-                        </td>
-                            @endif
+                                        <form action="{{ url("scm/opening-stocks/$openingStock->id") }}" method="POST"
+                                              data-toggle="tooltip" title="Delete" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                    </nobr>
+                                </div>
+                            </td>
+                        @endif
                     </tr>
-                    @endforeach
                 @endforeach
+            @endforeach
             </tbody>
         </table>
     </div>
