@@ -259,10 +259,7 @@ class PurchaseOrderController extends Controller
 
     public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
     {
-        return CsMaterialSupplier::query()
-            ->with('csMaterial.brand', function ($query) {
-                $query->select('id', 'name');
-            })
+        $data = CsMaterialSupplier::query() 
             ->with('csMaterial.material', function ($query) {
                 $query->select('id', 'name', 'unit');
             })
@@ -273,6 +270,19 @@ class PurchaseOrderController extends Controller
             ->whereHas('csSupplier', function ($query) use ($csId, $supplierId) {
                 $query->where('cs_id', $csId)
                     ->where('supplier_id', $supplierId);
+            })
+            ->get();
+
+            return $data ; 
+
+    }
+
+    public function getMaterialByCS ($cs_no, $supplier_id){
+        
+        return CsMaterialSupplier::with('csMaterial.material','brand')
+            ->where('cs_id', $cs_no)
+            ->whereHas('csSupplier', function ($query) use ($cs_no, $supplier_id) {
+                $query->where('cs_id', $cs_no)->where('supplier_id', $supplier_id);
             })
             ->get();
     }

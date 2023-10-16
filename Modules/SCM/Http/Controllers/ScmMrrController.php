@@ -51,6 +51,7 @@ class ScmMrrController extends Controller
     {
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
+        // dd($branches);
         return view('scm::mrr.create', compact('brands', 'branches'));
     }
 

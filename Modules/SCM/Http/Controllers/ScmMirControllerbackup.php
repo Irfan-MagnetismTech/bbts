@@ -17,7 +17,6 @@ use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmErr;
-use Modules\SCM\Entities\ScmMur;
 use Modules\SCM\Http\Requests\ScmMirRequest;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
@@ -306,7 +305,7 @@ class ScmMirController extends Controller
             ->map(fn ($item) => [
                 'value' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no,
                 'label' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no,
-                'id'    => $item->receiveable->id,
+                'id'    => $item->receiveable->id
             ])
             ->values()
             ->all();
@@ -341,49 +340,14 @@ class ScmMirController extends Controller
         return response()->json($data);
     }
 
-    public function mrsAndTypeWiseMaterialsForChallan()
-    {
-        // dd(request()->from_branch);
-        $data['current_stock'] = StockLedger::where('branch_id', request()->branch)
-            ->when(request()->receiveable_id, function ($query) {
-                return $query->where('receiveable_id', request()->receiveable_id);
-            })
-            ->when(request()->received_type, function ($query) {
-                return $query->where('received_type', request()->received_type);
-            })
-            ->when(request()->material_id, function ($query) {
-                return $query->where('material_id', request()->material_id);
-            })
-            ->when(request()->brand_id, function ($query) {
-                return $query->where('brand_id', request()->brand_id);
-            })
-            ->when(request()->model, function ($query) {
-                return $query->where('model', request()->model);
-            })
-            ->sum('quantity');
-
-        $scmDetail = ScmRequisitionDetail::where('scm_requisition_id', request()->scm_requisition_id)
-            ->when(request()->material_id, function ($query) {
-                return $query->where('material_id', request()->material_id);
-            })
-            ->when(request()->brand_id, function ($query) {
-                return $query->where('brand_id', request()->brand_id);
-            })
-            ->when(request()->model, function ($query) {
-                return $query->where('model', request()->model);
-            })
-            ->first();
-        $data['mrs_quantity'] = $scmDetail->quantity ?? 0;
-
-        return response()->json($data);
-    }
-
     public function materialWiseBrands()
     {
         $data['options'] = StockLedger::query()
             ->with('brand')
             ->where([
                 'material_id' => request()->material_id,
+                'receiveable_id' => request()->receiveable_id,
+                'received_type' => request()->received_type,
                 'branch_id' => request()->from_branch_id
             ])
             ->get()
@@ -409,6 +373,8 @@ class ScmMirController extends Controller
             ->where([
                 'material_id' => request()->material_id,
                 'brand_id' => request()->brand_id,
+                'receiveable_id' => request()->receiveable_id,
+                'received_type' => request()->received_type,
                 'branch_id' => request()->from_branch_id
             ])
             ->get()
@@ -483,26 +449,6 @@ class ScmMirController extends Controller
         return $branch_balance;
     }
 
-    public function getStock(): int
-    {
-        $branch_balance = StockLedger::query()
-            ->where([
-                'branch_id' => request()->branch_id,
-            ])
-            ->when(request()->material_id, function ($query) {
-                $query->where('material_id', request()->material_id);
-            })
-            ->when(request()->brand_id, function ($query) {
-                $query->where('brand_id', request()->brand_id);
-            })
-            ->when(request()->model, function ($query) {
-                $query->where('model', request()->model);
-            })
-            ->sum('quantity');
-
-        return $branch_balance;
-    }
-
     /**
      * Get branch wise stock for from and to branch
      *
@@ -514,38 +460,6 @@ class ScmMirController extends Controller
         $data = [
             'from_branch_balance' => $this->branchWiseStock(request()->from_branch_id),
             'to_branch_balance' => $this->branchWiseStock(request()->to_branch_id),
-        ];
-        return response()->json($data);
-    }
-
-    public function getChallanMaterialStock(): JsonResponse
-    {
-        $scmDetail = ScmRequisitionDetail::where('scm_requisition_id', request()->scm_requisition_id)
-            ->when(request()->material_id, function ($query) {
-                return $query->where('material_id', request()->material_id);
-            })
-            ->first();
-        // $received_quantity = StockLedger::query()
-        //     ->where([
-        //         'branch_id' => request()->branch_id,
-        //         'received_type' => request()->received_type,
-        //         'receiveable_id' => request()->receiveable_id,
-        //     ])
-        //     ->when(request()->material_id, function ($query) {
-        //         $query->where('material_id', request()->material_id);
-        //     })
-        //     ->when(request()->brand_id, function ($query) {
-        //         $query->where('brand_id', request()->brand_id);
-        //     })
-        //     ->when(request()->model, function ($query) {
-        //         $query->where('model', request()->model);
-        //     })
-        //     ->sum('quantity');
-        $data = [
-            'current_stock' => $this->getStock(),
-            'mrs_quantity' => $scmDetail->quantity ?? 0,
-            
-            // 'received_quantity' => $received_quantity ?? 0
         ];
         return response()->json($data);
     }
