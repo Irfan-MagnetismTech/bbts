@@ -591,6 +591,6 @@
                 }
             }
         });
-        
+
     </script>
 @endsection
