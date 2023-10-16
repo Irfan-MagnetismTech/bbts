@@ -53,19 +53,17 @@ class LogicalConnectivityInternetController extends Controller
             ->get()
             ->unique('product_id');
 
-        $dedicated_ipv4Ips = LogicalConnectivityLine::select('ip_ipv4')
-            ->where('ip_ipv4', '!=', null)
+        $dedicated_ipv4Ips = LogicalConnectivityLine::distinct('ip_ipv4')
+            ->whereNotNull('ip_ipv4')
             ->where('ip_ipv4', '!=', '')
-            ->get()
-            ->unique('ip_ipv4');
-        $dedicated_ipv4Ips = $dedicated_ipv4Ips->pluck('ip_ipv4')->toArray();
+            ->pluck('ip_ipv4')
+            ->toArray();
 
-        $dedicated_ipv6Ips = LogicalConnectivityLine::select('ip_ipv6')
-            ->where('ip_ipv6', '!=', null)
+        $dedicated_ipv6Ips = LogicalConnectivityLine::distinct('ip_ipv6')
+            ->whereNotNull('ip_ipv6')
             ->where('ip_ipv6', '!=', '')
-            ->get()
-            ->unique('ip_ipv6');
-        $dedicated_ipv6Ips = $dedicated_ipv6Ips->pluck('ip_ipv6')->toArray();
+            ->pluck('ip_ipv6')
+            ->toArray();
         $ips = Ip::latest()->get();
         $ipv4Ips = Ip::where('ip_type', 'IPv4')->whereNotIn('address', $dedicated_ipv4Ips)->latest()->get();
         $ipv6Ips = Ip::where('ip_type', 'IPv6')->whereNotIn('address', $dedicated_ipv6Ips)->latest()->get();
