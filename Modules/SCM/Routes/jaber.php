@@ -16,7 +16,7 @@ Route::get('search-mrs-type-wise-aterials', [ScmMirController::class, 'mrsAndTyp
 Route::get('search-mrs-type-wise-material-for-challan', [ScmMirController::class, 'mrsAndTypeWiseMaterialsForChallan'])->name('search-mrs-type-wise-material-for-challan');
 Route::get('search-materialwise-brand', [ScmMirController::class, 'materialWiseBrands'])->name('materialWiseBrands');
 Route::get('search-brandwise-model', [ScmMirController::class, 'brandWiseModels'])->name('brandWiseModels');
-Route::get('search-modelwise-serial-code', [ScmMirController::class, 'modelWiseSerialCodes'])->name('modelWiseSerialCodes');
+Route::get('search-model-wise-serial-code', [ScmMirController::class, 'modelWiseSerialCodes'])->name('modelWiseSerialCodes');
 Route::get('getMaterialStock', [ScmMirController::class, 'getMaterialStock'])->name('getMaterialStock');
 Route::get('get-stock', [ScmMirController::class, 'getChallanMaterialStock'])->name('get-stock');
 Route::get('clientMurWiseMaterials', [ScmErrController::class, 'clientMurWiseMaterials'])->name('clientMurWiseMaterials');

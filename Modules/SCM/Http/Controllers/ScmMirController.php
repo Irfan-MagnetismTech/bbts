@@ -544,8 +544,9 @@ class ScmMirController extends Controller
         $data = [
             'current_stock' => $this->getStock(),
             'mrs_quantity' => $scmDetail->quantity ?? 0,
+            
             // 'received_quantity' => $received_quantity ?? 0
-        ];  
+        ];
         return response()->json($data);
     }
 }

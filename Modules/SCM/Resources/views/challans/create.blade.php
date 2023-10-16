@@ -290,7 +290,7 @@
                     <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="challanDataBody">
 
                 @php
                     $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
@@ -457,7 +457,6 @@
                             <td>
                                 <select class="form-control model select2" name="model[${indx}]">
                                     <option value="" readonly selected>Select Model</option>
-
                                 </select>
                             </td>
                             <td>
@@ -498,6 +497,8 @@
                             </td>
                         </tr>
                     `;
+            let material_values = $('#challanDataBody').first().find('.material_name').html();
+            row = row.replace('Select Material', material_values);
             indx++;
             $('#challan tbody').append(row);
             $('.select2').select2({});
@@ -514,6 +515,7 @@
             .on('click', '.remove-challan-row', function() {
                 $(this).closest('tr').remove();
             });
+
 
         $(function() {
             onChangeRadioButton();
@@ -600,11 +602,15 @@
                             $('#employee_id').val(data.employee?.id);
                             var material_options =
                                 '<option value="" readonly selected>Select Material</option>';
-                            $.each(data.scm_requisitiondetails_with_material, function(key,
+                            $.each(data.scm_requisitiondetails_with_material, function(
+                                key,
                                 value) {
                                 material_options += '<option value="' + value
                                     .material_id + '"data-unit="' + value.material
-                                    .unit + '">' + value.material.name +
+                                    .unit +
+                                    '"data-code="' + value.material.code +
+                                    '"data-type="' + value.material.type +
+                                    '">' + value.material.name +
                                     '</option>';
                             })
 
@@ -705,6 +711,24 @@
                 event_this.find('.type_no').val(item.label);
                 event_this.find('.type_id').val(item.id);
                 getMaterials(event_this)
+                //get serial code
+                let model = event_this.find('.model').val();
+                let material_id = event_this.find('.material_name').val();
+                let scm_requisition_id = $('#scm_requisition_id').val();
+                let brand_id = event_this.find('.brand').val();
+                let serial_code = event_this.find('.serial_code');
+                let material_type = event_this.find('.material_type').val();
+                let received_type = event_this.find('.received_type').val().toUpperCase();
+                let receiveable_id = event_this.find('.type_id').val();
+
+                populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
+                    model: model,
+                    material_id: material_id,
+                    brand_id: brand_id,
+                    from_branch_id: $('#branch_id').val(),
+                    received_type: received_type,
+                    receiveable_id: receiveable_id,
+                }, serial_code, 'value', 'label', null, false);
                 return false;
             }
         })
@@ -802,24 +826,24 @@
             }, model, 'value', 'label');
         });
 
-        $(document).on('change', '.model', function() {
-            checkUniqueMaterial(this);
-            var event_this = $(this).closest('tr');
-            let model = $(this).val();
-            let material_id = event_this.find('.material_name').val();
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let brand_id = event_this.find('.brand').val();
-            let serial_code = $(this).closest('tr').find('.serial_code');
-            let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
-                'type');
+        // $(document).on('change', '.model', function() {
+        //     checkUniqueMaterial(this);
+        //     var event_this = $(this).closest('tr');
+        //     let model = $(this).val();
+        //     let material_id = event_this.find('.material_name').val();
+        //     let scm_requisition_id = $('#scm_requisition_id').val();
+        //     let brand_id = event_this.find('.brand').val();
+        //     let serial_code = $(this).closest('tr').find('.serial_code');
+        //     let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+        //         'type');
 
-            populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
-                model: model,
-                material_id: material_id,
-                brand_id: brand_id,
-                from_branch_id: $('#branch_id').val(),
-            }, serial_code, 'value', 'label', null, false);
-        });
+        //     populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
+        //         model: model,
+        //         material_id: material_id,
+        //         brand_id: brand_id,
+        //         from_branch_id: $('#branch_id').val(),
+        //     }, serial_code, 'value', 'label', null, false);
+        // });
 
         $(document).on('change', '.serial_code', function() {
             let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
@@ -859,33 +883,6 @@
             });
         }
 
-        $(document).on('change', '.serial_code', function() {
-            let elemmtn = $(this).closest('tr');
-            let material_type = (elemmtn).find('.material_name').find(':selected').data(
-                'type');
-            if (material_type == 'Item') {
-                (elemmtn).find('.quantity').attr('readonly', true);
-                (elemmtn).find('.quantity').val($(this).val().length);
-            } else {
-                (elemmtn).find('.quantity').attr('readonly', false);
-            }
-        });
-
-        // $(document).on('change', '.received_type', function() {
-        //     var event_this = $(this).closest('tr');
-        //     ClearNext($(this));
-        //     if ($('#branch_id').val() == '') {
-        //         $(this).val('');
-        //         swal.fire({
-        //             title: "Please Select From Branch",
-        //             type: "warning",
-        //         }).then(function() {
-        //             $('#branch_id').focus();
-        //         });
-        //         return false;
-        //     }
-        // })
-
         $(document).on('change', '.model, .material_name, .brand', function() {
             var elemmtn = $(this);
             $.ajax({
@@ -922,14 +919,5 @@
             }
         });
     </script>
-    {{-- <script>
-        $(document).ready(function() {
-            $('#pop-up-type').html(`
-            <label for="client_name">Type:</label>
-            <input type="text" class="form-control" value = {{'ccc'}} id="equipment_type" aria-describedby="equipment_type" name="equipment_type"
-            readonly value="{{ old('equipment_type') ?? (@$equipment_type ?? '') }}">`);
-        });
-    </script> --}}
-
     <script src="{{ asset('js/search-client.js') }}"></script>
 @endsection

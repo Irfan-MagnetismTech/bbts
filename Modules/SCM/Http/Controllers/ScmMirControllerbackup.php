@@ -305,7 +305,7 @@ class ScmMirController extends Controller
             ->map(fn ($item) => [
                 'value' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no,
                 'label' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no,
-                'id'    => $item->receiveable->id,
+                'id'    => $item->receiveable->id
             ])
             ->values()
             ->all();
