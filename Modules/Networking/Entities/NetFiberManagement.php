@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class NetFiberManagement extends Model
 {
-    use NodeTrait;
+    // use NodeTrait;
     protected $guarded = [];
 
     public function getCoreRefIdAttribute()

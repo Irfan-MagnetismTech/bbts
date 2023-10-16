@@ -42,6 +42,7 @@ class NetFiberManagementController extends Controller
         try {
             $material_data = $request->only('core_no_color', 'parent_id', 'fiber_type', 'cable_code', 'connectivity_point_name', 'pop_id');
             DB::transaction(function () use ($material_data) {
+                $material_data['composite_key'] = $material_data['connectivity_point_name'] . '-' . $material_data['cable_code'] . '-' . $material_data['core_no_color'];
                 NetFiberManagement::create($material_data);
             });
             return redirect()->route('fiber-managements.index')->with('success', 'Material has been inserted successfully');
