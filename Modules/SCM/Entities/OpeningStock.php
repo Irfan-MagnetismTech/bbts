@@ -6,10 +6,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Admin\Entities\Branch;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\SCM\Http\Traits\StockLedgerTrait;
 
 
 class OpeningStock extends Model
 {
+    use StockLedgerTrait;
+    protected $guarded = [];
+
     protected $fillable = ['date','branch_id'];
 
     /**

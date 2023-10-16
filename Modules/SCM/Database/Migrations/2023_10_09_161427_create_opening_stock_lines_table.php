@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('material_id')->nullable();
             $table->integer('brand_id')->nullable();
             $table->string('model')->nullable();
+            $table->string('serial_code')->nullable();
             $table->double('quantity', 8, 2)->nullable();
             $table->double('unit_price', 22, 2)->nullable();
             $table->double('total_amount', 22, 2)->nullable();

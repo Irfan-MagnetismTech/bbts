@@ -23,4 +23,9 @@ class OpeningStockLine extends Model
     public function brand(){
         return $this->belongsTo(Brand::class);
     }
+
+    public function serialCodeLines()
+    {
+        return $this->hasMany(ScmMrrSerialCodeLine::class);
+    }
 }

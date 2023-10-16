@@ -6,7 +6,7 @@
     $form_heading = !empty($materialReceive) ? 'Update' : 'Add';
     $form_url = !empty($materialReceive) ? route('material-receives.update', $materialReceive->id) : route('material-receives.store');
     $form_method = !empty($materialReceive) ? 'PUT' : 'POST';
-    
+
     $branch_id = old('branch_id', !empty($materialReceive) ? $materialReceive->branch_id : null);
     $material_list = old('branch_id') ? old('select_array') : (!empty($materialReceive) ? $material_list : []);
     $applied_date = old('applied_date', !empty($materialReceive) ? $materialReceive->date : null);
@@ -17,7 +17,7 @@
     $supplier_id = old('supplier_id', !empty($materialReceive) ? $materialReceive->supplier_id : null);
     $challan_no = old('challan_no', !empty($materialReceive) ? $materialReceive->challan_no : null);
     $challan_date = old('challan_date', !empty($materialReceive) ? $materialReceive->challan_date : null);
-    
+
 @endphp
 
 @section('breadcrumb-title')
@@ -209,13 +209,13 @@
                             })
                             : '',
                     );
-                    
+
                     $initial_mark = old('initial_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('initial_mark') : []);
                     $final_mark = old('final_mark', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('final_mark') : []);
                     $warranty_period = old('warranty_period', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('warranty_period') : []);
                     $unit = old('unit', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.unit') : []);
                     $po_composit_key = old('po_composit_key', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('po_composit_key') : []);
-                    
+
                     $quantity = old('quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('quantity') : []);
                     $order_quantity = old('order_quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('order_quantity') : []);
                     $left_quantity = old('left_quantity', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('left_quantity') : []);
@@ -467,15 +467,15 @@
                                     </div>
                                 </td>
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                                <td>
-                                                                                                                                                    <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                                                                                                                                                </td>
-                                                                                                                                                ` : ''}
+                                <td>
+                                    <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                                </td>
+                                ` : ''}
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                                <td>
-                                                                                                                                                    <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                                                                                                                                                </td>
-                                                                                                                                                 ` : ''}
+                                <td>
+                                    <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
+                                </td>
+                                 ` : ''}
                                 <td>
                                     <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
                                 </td>

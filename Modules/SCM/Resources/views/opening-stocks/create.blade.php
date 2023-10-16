@@ -26,18 +26,48 @@
         }
 
         .input-group-info .input-group-addon {
-            /*background-color: #04748a!important;*/
+            background-color: #04748a !important;
         }
 
-        .select2-container--default .select2-selection--multiple .select2-selection__choice span {
-            color: #b10000;
+        .bootstrap-tagsinput {
+            /* ... other properties ... */
+            max-width: 200px !important;
+            /* Ensure it doesn't exceed its container */
+            display: flex !important;
+            /* Use flex display */
+            flex-wrap: wrap !important;
+            /* Allow tags to wrap to the next line */
         }
 
-        .select2_container {
-            max-width: 200px;
-            white-space: inherit;
+        .bootstrap-tagsinput .tag {
+            margin-bottom: 4px !important;
+            /* Adjust spacing below tags */
+        }
+
+        .custom-spinner-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh;
+        }
+
+        .custom-spinner {
+            width: 4rem;
+            height: 4rem;
+            border: .5em solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spinner-animation 1s linear infinite;
+        }
+
+        @keyframes spinner-animation {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-tagsinput.css') }}">
 @endsection
 @section('breadcrumb-button')
     <a href="{{ route('opening-stocks.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
@@ -87,6 +117,7 @@
                     <th> Unit</th>
                     <th> Brand</th>
                     <th> Model</th>
+                    <th>Serial/Drum Code <br /> No</th>
                     <th> Unit Price</th>
                     <th> Quantity</th>
                     <th> Total Amount</th>
@@ -96,23 +127,41 @@
                 <tbody></tbody>
                 <tfoot>
                 @php
-                    $material_name_with_code = old('material_name', !empty($openingStock) ? $openingStock->lines->pluck('material.materialNameWithCode') : []);
-                    $material_id = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material_id') : []);
-                    $unit = old('unit', !empty($openingStock) ? $openingStock->lines->pluck('material.unit') : []);
-                    $brand_id = old('brand_id', !empty($openingStock) ? $openingStock->lines->pluck('brand_id') : []);
-                    $quantity = old('quantity', !empty($openingStock) ? $openingStock->lines->pluck('quantity') : []);
-                    $unit_price = old('unit_price', !empty($openingStock) ? $openingStock->lines->pluck('unit_price') : []);
-                    $total_amount = old('total_amount', !empty($openingStock) ? $openingStock->lines->pluck('total_amount') : []);
-                    $model = old('model', !empty($openingStock) ? $openingStock->lines->pluck('model') : []);
-                    $serial_code = old('serial_code', !empty($openingStock) ? json_decode($openingStock->lines->pluck('serial_code')) : []);
+                        $lines = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material_id') : []);
+                        $material_name_with_code = old('material_name', !empty($openingStock) ? $openingStock->lines->pluck('material.materialNameWithCode') : []);
+                        $material_id = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material_id') : []);
+                        $unit = old('unit', !empty($openingStock) ? $openingStock->lines->pluck('material.unit') : []);
+                        $brand_id = old('brand_id', !empty($openingStock) ? $openingStock->lines->pluck('brand_id') : []);
+                        $quantity = old('quantity', !empty($openingStock) ? $openingStock->lines->pluck('quantity') : []);
+                        $unit_price = old('unit_price', !empty($openingStock) ? $openingStock->lines->pluck('unit_price') : []);
+                        $material_type = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material.type') : []);
+                        $total_amount = old('total_amount', !empty($openingStock) ? $openingStock->lines->pluck('total_amount') : []);
+                        $model = old('model', !empty($openingStock) ? $openingStock->lines->pluck('model') : []);
+                        $serial_code = old(
+                        'serial_code',
+                        !empty($openingStock)
+                            ? $openingStock->lines->map(function ($item) {
+                                return implode(',', $item->serialCodeLines->pluck('serial_or_drum_key')->toArray());
+                            })
+                            : '',
+                    );
                 @endphp
                 @foreach ($material_name_with_code as $key => $requisitionDetail)
+                    @php
+                        if ($material_type[$key] == 'Drum') {
+                            $max_tag = 1;
+                        } else {
+                            $max_tag = null;
+                        }
+                    @endphp
                     <tr>
                         <td>
                             <input type="text" name="material_name[]" class="form-control material_name" required
                                    autocomplete="off" value="{{ $material_name_with_code[$key] }}">
                             <input type="hidden" name="material_id[]" class="form-control material_id"
                                    value="{{ $material_id[$key] }}">
+                            <input type="hidden" name="material_type[]" class="form-control material_type"
+                                   autocomplete="off" value="{{ $material_type[$key] }}">
                         </td>
                         <td>
                             <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
@@ -132,15 +181,11 @@
                             <input type="text" name="model[]" class="form-control model" autocomplete="off"
                                    value="{{ $model[$key] }}">
                         </td>
-                        <td class="select2_container">
-                            <select class="form-control select2 serial_code" multiple
-                                    name="serial_code[{{ $key }}][]">
-                                @foreach ($serial_codes[$key] as $key1 => $value)
-                                    <option value="{{ $value->serial_code }}" @selected(in_array($value->serial_code, json_decode($serial_code[$key])))>
-                                        {{ $value->serial_code }}
-                                    </option>
-                                @endforeach
-                            </select>
+                        <td>
+                            <div class="tags_add_multiple select2container">
+                                <input class="" type="text" name="serial_code[]" value="{{ $serial_code[$key] }}"
+                                       data-role="tagsinput" data-max-tags="{{ $max_tag }}">
+                            </div>
                         </td>
                         <td>
                             <input type="number" name="unit_price[]" class="form-control unit_price"
@@ -175,6 +220,8 @@
 
 @section('script')
     <script src="{{ asset('js/search-client.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-tagsinput.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script>
     <script>
         $(document).on('keyup', '.unit_price, .quantity', function () {
             var unit_price = $(this).closest('tr').find('.unit_price').val();
@@ -189,16 +236,20 @@
             todayHighlight: true,
             showOtherMonths: true
         }).datepicker("setDate", new Date());
+
         /* Append row */
         @if (empty($openingStock) && empty(old('material_name')))
         appendCalculationRow();
         @endif
+
         function appendCalculationRow() {
             var type = $("input[name=type]:checked").val()
+
             let row = `<tr>
                             <td>
                                 <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
                                 <input type="hidden" name="material_id[]" class="form-control material_id">
+                                <input type="hidden" name="material_type[]" class="form-control material_type" autocomplete="off">
                             </td>
                             <td>
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
@@ -214,10 +265,10 @@
                             <td>
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off">
                             </td>
-                            <td class="select2_container">
-                                <select class="form-control serial_code select2" name='serial_code[${indx}][]' multiple="multiple">
-
-                                </select>
+                            <td>
+                                <div class="tags_add_multiple select2container">
+                                    <input class="" type="text" name="serial_code[]" value="" data-role="tagsinput" readonly>
+                                </div>
                             </td>
                             <td>
                                 <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off">
@@ -235,14 +286,17 @@
             $('#opening_stock tbody').append(row);
         }
 
-        /* Adds and removes quantity row on click */
-        $("#opening_stock")
-            .on('click', '.add-stock-row', () => {
-                appendCalculationRow();
-            })
-            .on('click', '.remove-calculation-row', function () {
-                $(this).closest('tr').remove();
-            });
+        $(document).ready(function() {
+            $("#opening_stock")
+                .on('click', '.add-stock-row', () => {
+                    appendCalculationRow();
+                    // Initialize "tagsinput" for the newly added row
+                    $('input[data-role="tagsinput"]').tagsinput();
+                })
+                .on('click', '.remove-calculation-row', function () {
+                    $(this).closest('tr').remove();
+                });
+        });
 
         //Search Material
         $(document).on('keyup focus', '.material_name', function () {

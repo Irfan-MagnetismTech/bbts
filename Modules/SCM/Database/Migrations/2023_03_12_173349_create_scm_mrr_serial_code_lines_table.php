@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('scm_mrr_serial_code_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignId('scm_mrr_line_id')->constrained('scm_mrr_lines', 'id')->cascadeOnDelete();
-            $table->string('serial_or_drum_key');
-            $table->string('serial_or_drum_code');
+            $table->bigInteger('opening_stock_line_id')->nullable();
+            $table->string('serial_or_drum_key')->nullable();
+            $table->string('serial_or_drum_code')->nullable();
             $table->timestamps();
         });
     }
