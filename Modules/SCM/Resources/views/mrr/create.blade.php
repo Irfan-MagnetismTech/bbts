@@ -432,7 +432,7 @@
                     $.getJSON(url, function(items) {
                         $.each(items, function(key, data) {
                             if (data.material.type == 'Drum') {
-                                $('.tags_add_multiple').tagsinput('destroy');
+                                // $('.tags_add_multiple').tagsinput('destroy');
                                 $('#initial_mark_head').show();
                                 $('#final_mark_head').show();
                                 $('#total_amount_first_row').attr('colspan', 13);
@@ -462,19 +462,19 @@
                                 </td>
                                 <td>
                                     <div class="tags_add_multiple select2container">
-                                        <input class="" type="text" name="sl_code[]" value="" data-role="tagsinput" readonly>
+                                        <input class="sl_code" type="text" name="sl_code[]" value="" data-role="tagsinput" readonly>
                                     </div>
                                 </td>
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                                                                                            <td>
-                                                                                                                                                                                                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                                                                                                                                                                                                            </td>
-                                                                                                                                                                                                            ` : ''}
+                                    <td>
+                                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                                    </td>
+                                    ` : ''}
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                                                                                            <td>
-                                                                                                                                                                                                                <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                                                                                                                                                                                                            </td>
-                                                                                                                                                                                                             ` : ''}
+                                    <td>
+                                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
+                                    </td>
+                                        ` : ''}
                                 <td>
                                     <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
                                 </td>
@@ -503,12 +503,12 @@
                             grand_total += parseFloat(data.total_amount);
                         })
                         $('#material_requisition tbody').html(material_row);
-                        $(".tags_add_multiple").tagsinput('items');
                         $('.total_amount').val(grand_total);
                         $('.loading').hide();
                         $('.table-responsive').show();
+                    }).then(function() {
+                        $('.sl_code').tagsinput();
                     });
-
                 }
             };
 
