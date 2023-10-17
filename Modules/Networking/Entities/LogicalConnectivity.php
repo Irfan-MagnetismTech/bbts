@@ -7,6 +7,7 @@ use Modules\Networking\Entities\ClientFacility;
 use Modules\Networking\Entities\BandwidthDestribution;
 use Modules\Networking\Entities\LogicalConnectivityLine;
 use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class LogicalConnectivity extends Model
 {
@@ -42,5 +43,9 @@ class LogicalConnectivity extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
+    public function feasibilityRequirementDetails()
+    {
+        return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
     }
 }
