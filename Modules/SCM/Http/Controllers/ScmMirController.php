@@ -354,7 +354,7 @@ class ScmMirController extends Controller
         // dd(request()->from_branch);
         $data['current_stock'] = StockLedger::where('branch_id', request()->branch)
             ->when(request()->receiveable_id, function ($query) {
-                return $query->where('receiveable_id', request()->receiveable_id);
+                return $query->where('stockable_id', request()->stockable_id);
             })
             ->when(request()->received_type, function ($query) {
                 return $query->where('received_type', request()->received_type);
@@ -460,9 +460,9 @@ class ScmMirController extends Controller
                 }
             })
             ->values();
-            // ;
+        // ;
 
-            // dd($data);
+        // dd($data);
         return response()->json($data);
     }
 
