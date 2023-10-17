@@ -414,6 +414,7 @@ class SaleController extends Controller
                             "client_no"         => $saleDetail->client_no,
                             "mrs_no"            => $mrsNo,
                             "fr_no"             => $saleDetail->fr_no,
+                            "link_no"           => $saleLinkDetail->planLinkDetail->link_no,
                             "type"              => 'client',
                             "requisition_by"    => auth()->id(),
                             "branch_id"         => 1,
@@ -426,8 +427,8 @@ class SaleController extends Controller
                             $link_eqp_details[] = [
                                 "material_id"   => $planLinkEquipment->material_id,
                                 "item_code"     => $planLinkEquipment->material->code,
-                                "req_key"     => $link_equipment_requisitionData->id . '-' . $planLinkEquipment->material->code,
-                                "brand_id"      => $planLinkEquipment->brand_id,
+                                "req_key"       => $link_equipment_requisitionData->id . '-' . $planLinkEquipment->material->code,
+                                "brand_id"      => $planLinkEquipment->brand_id, 
                                 "quantity"      => $planLinkEquipment->quantity,
                                 "model"         => $planLinkEquipment->model,
                             ];

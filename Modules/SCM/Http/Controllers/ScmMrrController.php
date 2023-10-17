@@ -110,8 +110,8 @@ class ScmMrrController extends Controller
                     $stock[] = [
                         'received_type'     => 'MRR',
                         'material_id'       => $value->material_id,
-                        'receiveable_type'  => ScmMrr::class,
-                        'receiveable_id'    => $materialReceive->id,
+                        // 'receiveable_type'  => ScmMrr::class,
+                        // 'receiveable_id'    => $materialReceive->id,
                         'brand_id'          => $value->brand_id,
                         'branch_id'         => $request->branch_id,
                         'model'             => $value->model,
@@ -161,6 +161,17 @@ class ScmMrrController extends Controller
             ->where('purchase_order_id', $materialReceive->purchase_order_id)
             ->get()
             ->unique('material_id');
+
+        $materialReceive->with('scmMrrLines');
+        $materialReceive->scmMrrLines->map(function ($item) {
+            $item->left_quantity = PurchaseOrderLine::query()
+                ->where('po_composit_key', $item->po_composit_key)
+                ->sum('quantity') - ScmMrrLine::query()
+                ->where('po_composit_key', $item->po_composit_key)
+                ->where('scm_mrr_id', '!=', $item->scm_mrr_id)
+                ->sum('quantity');
+            return $item;
+        });
 
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
@@ -222,8 +233,8 @@ class ScmMrrController extends Controller
                     $stock[] = [
                         'received_type'     => 'MRR',
                         'material_id'       => $value->material_id,
-                        'receiveable_type'  => ScmMrr::class,
-                        'receiveable_id'    => $materialReceive->id,
+                        // 'receiveable_type'  => ScmMrr::class,
+                        // 'receiveable_id'    => $materialReceive->id,
                         'brand_id'          => $value->brand_id,
                         'branch_id'         => $request->branch_id,
                         'model'             => $value->model,

@@ -36,7 +36,8 @@ return [
         'MRR' => 'MRR',
         'ERR' => 'ERR',
         'WCR' => 'WCR',
-        'WOR' => 'WOR'
+        'WOR' => 'WOR',
+        'OS' => 'OS'
     ],
 
     //Tax or VAT

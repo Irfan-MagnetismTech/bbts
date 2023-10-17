@@ -38,11 +38,7 @@
                             <tr>
                                 <td> <strong>Connectivity Point</strong> </td>
                                 <td> {{ ucfirst($requisition->feasibilityRequirementDetail?->connectivity_point ?? '') }} - {{ $requisition->feasibilityRequirementDetail?->fr_no }}</td>
-                            </tr>
-                            <tr>
-                                <td> <strong>Link No</strong> </td>
-                                <td>{{ ucfirst($requisition->link_no) }}</td>
-                            </tr>
+                            </tr> 
                             <tr>
                                 <td> <strong>Link No</strong> </td>
                                 <td>{{ ucfirst($requisition->link_no) }}</td>

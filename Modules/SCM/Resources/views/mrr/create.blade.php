@@ -171,7 +171,7 @@
             </div>
         </div>
     </div>
-    <div class="table-responsive" style="display: none;">
+    <div class="table-responsive" @if (empty($materialReceive)) style="display: none;" @endif>
         <table class="table table-bordered" id="material_requisition">
             <thead>
                 <tr>
@@ -194,6 +194,7 @@
             </thead>
             <tbody>
                 @php
+                    $grand_total = 0;
                     $mrr_lines = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
                     $material_id = old('material_id', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material_id') : []);
                     $item_code = old('item_code', !empty($materialReceive) ? $materialReceive->scmMrrLines->pluck('material.code') : []);
@@ -288,27 +289,28 @@
 
                         <td>
                             <input type="text" name="initial_mark[]" class="form-control initial_mark"
-                                autocomplete="off" value="{{ $initial_mark[$key] ?? '' }}">
+                                autocomplete="off" value="{{ $initial_mark[$key] ?? '' }}"
+                                @if ($item_type[$key] == 'Drum') required @endif>
                         </td>
                         <td>
                             <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off"
-                                value="{{ $final_mark[$key] ?? '' }}">
+                                value="{{ $final_mark[$key] ?? '' }}" @if ($item_type[$key] == 'Drum') required @endif>
                         </td>
                         <td>
                             <input type="text" name="warranty_period[]" class="form-control warranty_period"
-                                autocomplete="off" value="{{ $warranty_period[$key] }}">
+                                autocomplete="off" value="{{ $warranty_period[$key] }}" readonly>
                         </td>
                         <td>
                             <input type="text" name="unit[]" class="form-control unit" autocomplete="off"
-                                value="{{ $unit[$key] }}" readonly>
+                                value="{{ $unit[$key] }}" readonly />
                         </td>
                         <td>
                             <input class="form-control order_quantity" name="order_quantity[]" aria-describedby="date"
-                                value="{{ $order_quantity[$key] }}">
+                                value="{{ $order_quantity[$key] }}" readonly>
                         </td>
                         <td>
                             <input class="form-control left_quantity" name="left_quantity[]" aria-describedby="date"
-                                value="{{ $left_quantity[$key] }}">
+                                value="{{ $left_quantity[$key] }}" readonly>
                         </td>
                         <td>
                             <input class="form-control quantity" name="quantity[]" aria-describedby="date"
@@ -316,26 +318,29 @@
                         </td>
                         <td>
                             <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly
-                                value="10" value="{{ $unit_price[$key] }}">
+                                value="10" value="{{ $unit_price[$key] }}" readonly>
                         </td>
                         <td>
                             <input name="amount[]" class="form-control amount" autocomplete="off" readonly
-                                value="{{ $amount[$key] }}">
+                                value="{{ $amount[$key] }}" readonly>
                         </td>
                         <td>
                             <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                         </td>
                     </tr>
+                    @php
+                        $grand_total += $amount[$key];
+                    @endphp
                 @endforeach
 
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="11" class="text-right" id="total_amount_first_row">Total Amount</td>
+                    <td class="text-right" id="total_amount_first_row"
+                        @if (!empty($materialReceive) && $item_type[0] == 'Drum') colspan="11" @else colspan="13" @endif>Total Amount</td>
                     <td>
                         <input type="text" name="total_amount" class="form-control total_amount" autocomplete="off"
-                            value="{{ old('total_amount', !empty($materialReceive) ? $materialReceive->total_amount : 0) }}"
-                            readonly>
+                            value="{{ old('total_amount', !empty($materialReceive) ? $grand_total : 0) }}" readonly>
                     </td>
                 </tr>
             </tfoot>
@@ -466,16 +471,15 @@
                                     </div>
                                 </td>
                                 ${data.material.type == 'Drum' ? `
-
-                                                                                                                                                                                                                                                                                    <td>
-                                                                                                                                                                                                                                                                                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                                                                                                                                                                                                                                                                                    </td>
-                                                                                                                                                                                                                                                                                    ` : ''}
+                                                                                                                                            <td>
+                                                                                                                                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                                                                                                                                            </td>
+                                                                                                                                            ` : ''}
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                                                                                                                                                                    <td>
-                                                                                                                                                                                                                                                                                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                                                                                                                                                                                                                                                                                    </td>
-                                                                                                                                                                                                                                                                                     ` : ''}
+                                                                                                                                        <td>
+                                                                                                                                            <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
+                                                                                                                                        </td>
+                                                                                                                                            ` : ''}
 
                                 <td>
                                     <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
@@ -496,17 +500,16 @@
                                     <input name="unit_price[]" class="form-control unit_price" autocomplete="off" value="${data.unit_price}" readonly>
                                 </td>
                                 <td>
-                                    <input name="amount[]" class="form-control amount" autocomplete="off" value="${data.total_amount}" readonly>
+                                    <input name="amount[]" class="form-control amount" autocomplete="off" value="" readonly>
                                 </td>
                                 <td>
                                     <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
                                 </td>
                             </tr>`;
-                            grand_total += parseFloat(data.total_amount);
                         })
                         $('#material_requisition tbody').html(material_row);
                         $(".sl_code").tagsinput();
-                        $('.total_amount').val(grand_total);
+                        // $('.total_amount').val(grand_total);
                         $('.loading').hide();
                         $('.table-responsive').show();
                     });
@@ -514,84 +517,30 @@
                 }
             };
 
-
-
-            $(document).on('keyup change', '.unit_price, .quantity', function() {
-                calculateAmount(this);
-            });
-
-            function calculateAmount(ref) {
-                var unit_price = $(ref).closest('tr').find('.unit_price').val() != '' ? $(ref).closest('tr').find(
-                    '.unit_price').val() : 0;
-                var quantity = $(ref).closest('tr').find('.quantity').val() != '' ? $(ref).closest('tr').find(
-                    '.quantity').val() : 0;
-                var amount = unit_price * quantity;
-                $(ref).closest('tr').find('.amount').val(amount);
-                calculateTotalAmount()
-            }
-            //function for calculate total amount from all sub total amount
             function calculateTotalAmount() {
                 var final_total_amount = 0;
                 $('.amount').each(function() {
-                    final_total_amount += parseFloat($(this).val());
+                    final_total_amount += parseFloat($(this).val()) || 0;
                 });
                 $('.total_amount').val(final_total_amount.toLocaleString('en-US', {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2
                 }));
             }
+
+            $(document).on('keyup', '.quantity', function() {
+                var quantity = $(this).val();
+                var left_quantity = $(this).closest('tr').find('.left_quantity').val();
+                if (parseFloat(quantity) > parseFloat(left_quantity)) {
+                    alert('Quantity can not be greater than left quantity');
+                    $(this).val(left_quantity);
+                }
+                var unit_price = $(this).closest('tr').find('.unit_price').val();
+                var amount = parseFloat(unit_price) * parseFloat(quantity);
+                amount = amount != 'NaN' ? amount : 0;
+                $(this).closest('tr').find('.amount').val(amount)
+                calculateTotalAmount();
+            })
         })
-
-        $(document).on('keyup', '.quantity', function() {
-            var quantity = $(this).val();
-            var left_quantity = $(this).closest('tr').find('.left_quantity').val();
-            if (parseFloat(quantity) > parseFloat(left_quantity)) {
-                alert('Quantity can not be greater than left quantity');
-                $(this).val(left_quantity);
-            }
-        })
-
-        //sl_code on input get value
-        // $(document).on('change, input', '.sl_code', function() {
-        //     console.log($(this).val());
-        //     var left_quantity = $(this).closest('tr').find('.left_quantity').val();
-        //     let serial_code_count = $(this).closest('tr').find('.sl_code').val().split(',').length;
-        //     let check_drum = $(this).closest('tr').find('.material_type').val();
-        //     if (check_drum != 'Drum') {
-        //         if (serial_code_count > 0) {
-        //             if (serial_code_count < left_quantity) {
-        //                 $(this).closest('tr').find('.quantity').val(serial_code_count);
-        //             }
-        //         }
-        //     } else {
-        //         var quantity = $(this).val();
-        //         if (parseFloat(quantity) > parseFloat(left_quantity)) {
-        //             alert('Quantity can not be greater than left quantity');
-        //             $(this).val(left_quantity);
-        //         }
-        //     }
-        // })
-        //get value by name sl_code
-
-        // $(document).on('change', '.bootstrap-tagsinput', function() {
-        //     var left_quantity = $(this).closest('tr').find('.left_quantity').val();
-        //     let serial_code_count = $('.label-info').length + 1;
-        //     let check_drum = $(this).closest('tr').find('.material_type').val();
-        //     if (check_drum !== 'Drum') {
-        //         if (serial_code_count > 0) {
-        //             if (serial_code_count < left_quantity) {
-        //                 $(this).closest('tr').find('.quantity').val(serial_code_count);
-        //             }
-        //         }
-        //     } else {
-        //         var quantity = $(this).val();
-        //         if (parseFloat(quantity) > parseFloat(left_quantity)) {
-        //             alert('Quantity cannot be greater than left quantity');
-        //             $(this).val(left_quantity);
-        //         }
-        //     }
-        // });
-
-        // $(document).on()
     </script>
 @endsection
