@@ -704,6 +704,7 @@
             var event_this = $(this).closest('tr');
             let myObject = {
                 type: event_this.find('.received_type').val().toUpperCase(),
+                branch_id: $('#branch_id').val(),
             }
             jquaryUiAjax(this, "{{ route('searchTypeNo') }}", uiList, myObject);
 

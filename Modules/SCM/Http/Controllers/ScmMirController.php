@@ -16,6 +16,8 @@ use Modules\SCM\Entities\StockLedger;
 use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\OpeningStock;
+use Modules\SCM\Entities\OpeningStockLine;
 use Modules\SCM\Entities\ScmErr;
 use Modules\SCM\Entities\ScmMur;
 use Modules\SCM\Http\Requests\ScmMirRequest;
@@ -298,15 +300,20 @@ class ScmMirController extends Controller
                     $query->where('wor_no', 'like', '%' . request()->search . '%');
                 });
             })
+            ->when(request()->customQueryFields['type'] == 'OS', function ($query) {
+                $query->whereHasMorph('receiveable', OpeningStock::class, function ($query) {
+                    $query->where('id', 'like', '%' . request()->search . '%');
+                });
+            })
             ->get()
             ->unique(function ($item) {
-                return $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no;
+                return $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no ?? $item->receiveable->id;
             })
             ->take(10)
             ->map(fn ($item) => [
-                'value' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no,
-                'label' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no,
-                'id'    => $item->receiveable->id,
+                'value' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no ?? $item->receiveable->id,
+                'label' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no ?? $item->receiveable->id,
+                'id'    => $item->receiveable->id ?? null,
             ])
             ->values()
             ->all();
@@ -544,7 +551,7 @@ class ScmMirController extends Controller
         $data = [
             'current_stock' => $this->getStock(),
             'mrs_quantity' => $scmDetail->quantity ?? 0,
-            
+
             // 'received_quantity' => $received_quantity ?? 0
         ];
         return response()->json($data);
