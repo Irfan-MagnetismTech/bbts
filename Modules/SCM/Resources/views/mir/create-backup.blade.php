@@ -663,7 +663,6 @@
                                 <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
                                 <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
                             </td>
-                           
                             <td>
                                 <input name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly>
                             </td>                                            
