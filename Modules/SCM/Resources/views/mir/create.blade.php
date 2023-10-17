@@ -138,12 +138,12 @@
     <table class="table table-bordered" id="material_requisition">
         <thead>
             <tr>
-                <th>Received Type</th>
-                <th>Type No</th>
                 <th>Material Name</th>
                 <th>Brand</th>
                 <th>Model</th>
                 <th>Serial Code</th>
+                <th>Received Type</th>
+                <th>Type No</th>
                 <th>Unit</th>
                 <th>Current Stock(Form)</th>
                 <th>Current Stock(To)</th>
@@ -398,14 +398,37 @@
             });
         }
 
+        $(".branch").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: "{{ route('searchBranch') }}",
+                    type: 'get',
+                    dataType: "json",
+                    data: {
+                        _token: CSRF_TOKEN,
+                        search: request.term
+                    },
+                    success: function(data) {
+                        response(data);
+                    }
+                });
+            },
+            select: function(event, ui) {
+                $(this).val(ui.item.label);
+                $(this).closest('div').find('.branch_id').val(ui.item.id);
+                return false;
+            }
+        })
+
 
         $(document).on('change', '.material_name', function() {
+
             checkUniqueMaterial(this);
             var event_this = $(this).closest('tr');
             let material_id = $(this).val();
             let scm_requisition_id = $('#scm_requisition_id').val();
             let brand = $(this).closest('tr').find('.brand');
-
+            console.log(scm_requisition_id);
             event_this.find('.unit').val($(this).closest('tr').find('.material_name').find(':selected')
                 .data(
                     'unit'));
@@ -418,8 +441,44 @@
 
             populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
                 material_id: material_id,
-                from_branch_id: $('#branch_id').val(),
+                from_branch_id: $('#from_branch_id').val(),
             }, brand, 'value', 'label');
+        })
+
+        $(document).on('change', '.brand', function() {
+            checkUniqueMaterial(this);
+            var event_this = $(this).closest('tr');
+            let brand_id = $(this).val();
+            let material_id = event_this.find('.material_name').val();
+            let scm_requisition_id = $('#scm_requisition_id').val();
+            let model = $(this).closest('tr').find('.model');
+
+            populateDropdownByAjax("{{ route('brandWiseModels') }}", {
+                brand_id: brand_id,
+                material_id: material_id,
+                from_branch_id: $('#from_branch_id').val(),
+            }, model, 'value', 'label');
+        });
+
+        $(document).on('change', '.model, .material_name, .brand', function() {
+            var elemmtn = $(this);
+            $.ajax({
+                url: "{{ route('get-stock') }}",
+                type: 'get',
+                dataType: "json",
+                data: {
+                    material_id: (elemmtn).closest('tr').find('.material_name').val(),
+                    brand_id: (elemmtn).closest('tr').find('.brand').val(),
+                    model: (elemmtn).closest('tr').find('.model').val(),
+                    branch_id: $('#from_branch_id').val(),
+                    scm_requisition_id: $('#scm_requisition_id').val(),
+                },
+                success: function(data) {
+                    (elemmtn).closest('tr').find('.available_quantity').val(data
+                        .current_stock);
+                    (elemmtn).closest('tr').find('.mrs_quantity').val(data.mrs_quantity);
+                }
+            })
         })
 
 
