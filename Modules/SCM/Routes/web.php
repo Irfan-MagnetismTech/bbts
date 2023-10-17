@@ -42,6 +42,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
         'sc-categories'             => ScCategoryController::class,
     ]);
     // Route::get('search-material-by-cs-requisition/{csId}', [PurchaseOrderController::class, 'searchMaterialByCsAndRequsiition'])->name('search-material-by-cs-requisition');
+    Route::get('search-material-by-indent', [CsController::class, 'searchMaterialByIndent'])->name('search-material-by-indent');
     Route::get('search-material-by-cs-requisition', [PurchaseOrderController::class, 'searchMaterialByCsAndRequsiition'])->name('search-material-by-cs-requisition');
     Route::get('get-unique-code', [MaterialController::class, 'getUniqueCode'])->name('get-unique-code');
     Route::get('cs-pdf/{id}', [CsController::class, 'generateCsPdf'])->name('cs-pdf');

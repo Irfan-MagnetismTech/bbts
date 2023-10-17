@@ -536,12 +536,14 @@
             $(document).on('keyup focus', '.material_name', function() {
                 $(this).autocomplete({
                     source: function(request, response) {
+                        var indentNo = $("#indent_no").val();
                         $.ajax({
-                            url: "{{ url('search-material') }}",
+                            url: "{{ url('scm/search-material-by-indent') }}",
                             type: 'get',
                             dataType: "json",
                             data: {
-                                search: request.term
+                                search: request.term,
+                                indent_no: indentNo
                             },
                             success: function(data) {
                                 response(data);
