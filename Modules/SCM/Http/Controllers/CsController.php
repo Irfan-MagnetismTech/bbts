@@ -13,8 +13,10 @@ use Illuminate\Support\Facades\DB;
 use Modules\SCM\Entities\CsMaterial;
 use Modules\SCM\Entities\CsSupplier;
 use Modules\SCM\Entities\Indent;
+use Modules\SCM\Entities\IndentLine;
 use Modules\SCM\Entities\Material;
 use Illuminate\Database\QueryException;
+use Modules\SCM\Entities\ScmPurchaseRequisitionDetails;
 use Modules\SCM\Http\Requests\CsRequest;
 use Illuminate\Contracts\Support\Renderable;
 use Termwind\Components\Dd;
@@ -299,5 +301,37 @@ class CsController extends Controller
                 'label'                 => $item->indent_no
             ]);
         return response()->json($items);
+    }
+    public function searchMaterialByIndent(Request $request)
+    {
+        $indent_id = Indent::where('indent_no', $request->indent_no)->value('id');
+
+        $scm_purchase_requisition_ids = IndentLine::where('indent_id', $indent_id)->pluck('scm_purchase_requisition_id');
+
+        $material_ids = ScmPurchaseRequisitionDetails::whereIn('scm_purchase_requisition_id', $scm_purchase_requisition_ids)->pluck('material_id');
+
+
+        $results= Material::whereIn('id', $material_ids)
+            ->where('name', 'LIKE', '%' . $request->search . '%')
+            ->limit(15)
+            ->get()
+            ->map(function ($item) {
+                if (request('branch_id')) {
+                    $stockData = StockLedger::where('material_id', $item->id)
+                        ->where('branch_id', request('branch_id'))
+                        ->sum('quantity');
+                }
+
+                return [
+                    'value' => $item->id,
+                    'material_id' => $item->id,
+                    'label' => $item->name . ' - ' . $item->code,
+                    'unit' => $item->unit,
+                    'item_code' => $item->code,
+                    'stock_data' => $stockData ?? 0
+                ];
+            });
+
+        return response()->json($results);
     }
 }
