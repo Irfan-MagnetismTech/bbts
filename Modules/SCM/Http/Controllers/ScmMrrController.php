@@ -110,8 +110,8 @@ class ScmMrrController extends Controller
                     $stock[] = [
                         'received_type'     => 'MRR',
                         'material_id'       => $value->material_id,
-                        'receiveable_type'  => ScmMrr::class,
-                        'receiveable_id'    => $materialReceive->id,
+                        // 'receiveable_type'  => ScmMrr::class,
+                        // 'receiveable_id'    => $materialReceive->id,
                         'brand_id'          => $value->brand_id,
                         'branch_id'         => $request->branch_id,
                         'model'             => $value->model,
@@ -222,8 +222,8 @@ class ScmMrrController extends Controller
                     $stock[] = [
                         'received_type'     => 'MRR',
                         'material_id'       => $value->material_id,
-                        'receiveable_type'  => ScmMrr::class,
-                        'receiveable_id'    => $materialReceive->id,
+                        // 'receiveable_type'  => ScmMrr::class,
+                        // 'receiveable_id'    => $materialReceive->id,
                         'brand_id'          => $value->brand_id,
                         'branch_id'         => $request->branch_id,
                         'model'             => $value->model,
