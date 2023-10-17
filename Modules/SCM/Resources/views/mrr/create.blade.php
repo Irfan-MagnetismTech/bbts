@@ -462,20 +462,20 @@
                                 </td>
                                 <td>
                                     <div class="tags_add_multiple select2container">
-                                        <input class="" type="text" name="sl_code[]" value="" data-role="tagsinput" readonly>
+                                        <input class="sl_code" type="text" name="sl_code[]" value="" data-role="tagsinput" readonly>
                                     </div>
                                 </td>
                                 ${data.material.type == 'Drum' ? `
 
-                                                                                                                                                                                                            <td>
-                                                                                                                                                                                                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                                                                                                                                                                                                            </td>
-                                                                                                                                                                                                            ` : ''}
+                                                                                                                                                                                                                                                                                    <td>
+                                                                                                                                                                                                                                                                                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                                                                                                                                                                                                                                                                                    </td>
+                                                                                                                                                                                                                                                                                    ` : ''}
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                                                                                            <td>
-                                                                                                                                                                                                                <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                                                                                                                                                                                                            </td>
-                                                                                                                                                                                                             ` : ''}
+                                                                                                                                                                                                                                                                                    <td>
+                                                                                                                                                                                                                                                                                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
+                                                                                                                                                                                                                                                                                    </td>
+                                                                                                                                                                                                                                                                                     ` : ''}
 
                                 <td>
                                     <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
@@ -505,7 +505,7 @@
                             grand_total += parseFloat(data.total_amount);
                         })
                         $('#material_requisition tbody').html(material_row);
-                        $(".tags_add_multiple").tagsinput('items');
+                        $(".sl_code").tagsinput();
                         $('.total_amount').val(grand_total);
                         $('.loading').hide();
                         $('.table-responsive').show();
@@ -573,25 +573,25 @@
         // })
         //get value by name sl_code
 
-        $(document).on('input', 'input[name="sl_code[]"]', function() {
-            console.log($(this).val());
-            var left_quantity = $(this).closest('tr').find('.left_quantity').val();
-            let serial_code_count = $(this).val().split(',').length; // Use $(this).val() to get the value
-            let check_drum = $(this).closest('tr').find('.material_type').val();
-            if (check_drum !== 'Drum') {
-                if (serial_code_count > 0) {
-                    if (serial_code_count < left_quantity) {
-                        $(this).closest('tr').find('.quantity').val(serial_code_count);
-                    }
-                }
-            } else {
-                var quantity = $(this).val();
-                if (parseFloat(quantity) > parseFloat(left_quantity)) {
-                    alert('Quantity cannot be greater than left quantity');
-                    $(this).val(left_quantity);
-                }
-            }
-        });
+        // $(document).on('change', '.bootstrap-tagsinput', function() {
+        //     var left_quantity = $(this).closest('tr').find('.left_quantity').val();
+        //     let serial_code_count = $('.label-info').length + 1;
+        //     let check_drum = $(this).closest('tr').find('.material_type').val();
+        //     if (check_drum !== 'Drum') {
+        //         if (serial_code_count > 0) {
+        //             if (serial_code_count < left_quantity) {
+        //                 $(this).closest('tr').find('.quantity').val(serial_code_count);
+        //             }
+        //         }
+        //     } else {
+        //         var quantity = $(this).val();
+        //         if (parseFloat(quantity) > parseFloat(left_quantity)) {
+        //             alert('Quantity cannot be greater than left quantity');
+        //             $(this).val(left_quantity);
+        //         }
+        //     }
+        // });
 
+        // $(document).on()
     </script>
 @endsection
