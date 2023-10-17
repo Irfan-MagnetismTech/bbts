@@ -361,75 +361,75 @@
         const CSRF_TOKEN = "{{ csrf_token() }}";
 
         $(document).ready(function() {
-            $("#po_no").autocomplete({
-                source: function(request, response) {
-                    $.ajax({
-                        url: "{{ route('search_po_with_date') }}",
-                        type: 'get',
-                        dataType: "json",
-                        data: {
-                            _token: CSRF_TOKEN,
-                            search: request.term,
-                            po_type: "Purchase Order"
+                    $("#po_no").autocomplete({
+                        source: function(request, response) {
+                            $.ajax({
+                                url: "{{ route('search_po_with_date') }}",
+                                type: 'get',
+                                dataType: "json",
+                                data: {
+                                    _token: CSRF_TOKEN,
+                                    search: request.term,
+                                    po_type: "Purchase Order"
+                                },
+                                success: function(data) {
+                                    response(data);
+                                }
+                            });
                         },
-                        success: function(data) {
-                            response(data);
+                        select: function(event, ui) {
+                            $('#purchase_order_id').val(ui.item.value);
+                            $('#po_no').val(ui.item.label);
+                            $('#po_date').val(ui.item.date);
+                            $('#supplier_id').val(ui.item.supplier_id);
+                            $('#supplier_name').val(ui.item.supplier_name);
+                            loadMateaials();
+                            return false;
                         }
+                    })
+
+                    $('.select2').select2({
+                        maximumSelectionLength: 1
                     });
-                },
-                select: function(event, ui) {
-                    $('#purchase_order_id').val(ui.item.value);
-                    $('#po_no').val(ui.item.label);
-                    $('#po_date').val(ui.item.date);
-                    $('#supplier_id').val(ui.item.supplier_id);
-                    $('#supplier_name').val(ui.item.supplier_name);
-                    loadMateaials();
-                    return false;
-                }
-            })
 
-            $('.select2').select2({
-                maximumSelectionLength: 1
-            });
+                    //using form custom function js file
+                    fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
+                    //using form custom function js file
+                    $('#challan_date').datepicker({
+                        format: "dd-mm-yyyy",
+                        autoclose: true,
+                        todayHighlight: true,
+                        showOtherMonths: true
+                    }).datepicker("setDate", new Date());
+                    $('#applied_date').datepicker({
+                        format: "dd-mm-yyyy",
+                        autoclose: true,
+                        todayHighlight: true,
+                        showOtherMonths: true
+                    }).datepicker("setDate", new Date());
 
-            //using form custom function js file
-            fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
-            //using form custom function js file
-            $('#challan_date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            }).datepicker("setDate", new Date());
-            $('#applied_date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            }).datepicker("setDate", new Date());
+                    @if (empty($materialReceive) && empty(old('material_id')))
+                        // appendCalculationRow();
+                    @endif
 
-            @if (empty($materialReceive) && empty(old('material_id')))
-                // appendCalculationRow();
-            @endif
+                    /* Adds and removes quantity row on click */
+                    $("#material_requisition")
+                        .on('click', '.add-requisition-row', () => {
+                            appendCalculationRow();
+                            loadMateaials();
+                        })
+                        .on('click', '.remove-requisition-row', function() {
+                            $(this).closest('tr').remove();
+                        });
 
-            /* Adds and removes quantity row on click */
-            $("#material_requisition")
-                .on('click', '.add-requisition-row', () => {
-                    appendCalculationRow();
-                    loadMateaials();
-                })
-                .on('click', '.remove-requisition-row', function() {
-                    $(this).closest('tr').remove();
-                });
-
-            function loadMateaials() {
-                $('.loading').show();
-                let purchase_order_id = $("#purchase_order_id").val();
-                if (purchase_order_id) {
-                    const url = '{{ url('scm/get_materials_for_po') }}/' + purchase_order_id;
-                    let material_row = '';
-                    let grand_total = 0;
-                    $.getJSON(url, function(items) {
+                    function loadMateaials() {
+                        $('.loading').show();
+                        let purchase_order_id = $("#purchase_order_id").val();
+                        if (purchase_order_id) {
+                            const url = '{{ url('scm/get_materials_for_po') }}/' + purchase_order_id;
+                            let material_row = '';
+                            let grand_total = 0;
+                            $.getJSON(url, function(items) {
                         $.each(items, function(key, data) {
                             if (data.material.type == 'Drum') {
                                 $('.tags_add_multiple').tagsinput('destroy');
@@ -466,132 +466,126 @@
                                     </div>
                                 </td>
                                 ${data.material.type == 'Drum' ? `
-
-                                                                                                                                                                                                                                                                                    <td>
-                                                                                                                                                                                                                                                                                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                                                                                                                                                                                                                                                                                    </td>
-                                                                                                                                                                                                                                                                                    ` : ''}
+                                    <td>
+                                        <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                                    </td>
+                                    ` : ''}
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                                                                                                                                                                    <td>
-                                                                                                                                                                                                                                                                                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                                                                                                                                                                                                                                                                                    </td>
-                                                                                                                                                                                                                                                                                     ` : ''}
+                                    <td>
+                                        <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
+                                    </td>
+                                    <td>
+                                        <input name="unit[]" class="form-control unit" autocomplete="off" value="${data.material.unit ?? ''}" readonly>
+                                    </td>
+                                    <td>
+                                        <input class="form-control quantity" name="order_quantity[]" aria-describedby="date" value="${data.quantity}" readonly>
+                                    </td>
+                                    <td>
+                                        <input class="form-control left_quantity" name="left_quantity[]" aria-describedby="date" value="${data.left_quantity}" readonly>
+                                    </td>
+                                    <td>
+                                        <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="" ${data.left_quantity == 0 ? 'readonly' : ''}>
+                                    </td>
+                                    <td>
+                                        <input name="unit_price[]" class="form-control unit_price" autocomplete="off" value="${data.unit_price}" readonly>
+                                    </td>
+                                    <td>
+                                        <input name="amount[]" class="form-control amount" autocomplete="off" value="${data.total_amount}" readonly>
+                                    </td>
+                                    <td>
+                                        <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
+                                    </td>
+                                </tr>`;
+                                grand_total += parseFloat(data.total_amount);
+                            })
+                            $('#material_requisition tbody').html(material_row);
+                            $(".sl_code").tagsinput();
+                            $('.total_amount').val(grand_total);
+                            $('.loading').hide();
+                            $('.table-responsive').show();
+                        });
 
-                                <td>
-                                    <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
-                                </td>
-                                <td>
-                                    <input name="unit[]" class="form-control unit" autocomplete="off" value="${data.material.unit ?? ''}" readonly>
-                                </td>
-                                <td>
-                                    <input class="form-control quantity" name="order_quantity[]" aria-describedby="date" value="${data.quantity}" readonly>
-                                </td>
-                                <td>
-                                    <input class="form-control left_quantity" name="left_quantity[]" aria-describedby="date" value="${data.left_quantity}" readonly>
-                                </td>
-                                <td>
-                                    <input class="form-control quantity" name="quantity[]" aria-describedby="date" value="" ${data.left_quantity == 0 ? 'readonly' : ''}>
-                                </td>
-                                <td>
-                                    <input name="unit_price[]" class="form-control unit_price" autocomplete="off" value="${data.unit_price}" readonly>
-                                </td>
-                                <td>
-                                    <input name="amount[]" class="form-control amount" autocomplete="off" value="${data.total_amount}" readonly>
-                                </td>
-                                <td>
-                                    <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
-                                </td>
-                            </tr>`;
-                            grand_total += parseFloat(data.total_amount);
-                        })
-                        $('#material_requisition tbody').html(material_row);
-                        $(".sl_code").tagsinput();
-                        $('.total_amount').val(grand_total);
-                        $('.loading').hide();
-                        $('.table-responsive').show();
-                    });
-
-                }
-            };
+                    }
+                };
 
 
 
-            $(document).on('keyup change', '.unit_price, .quantity', function() {
-                calculateAmount(this);
-            });
-
-            function calculateAmount(ref) {
-                var unit_price = $(ref).closest('tr').find('.unit_price').val() != '' ? $(ref).closest('tr').find(
-                    '.unit_price').val() : 0;
-                var quantity = $(ref).closest('tr').find('.quantity').val() != '' ? $(ref).closest('tr').find(
-                    '.quantity').val() : 0;
-                var amount = unit_price * quantity;
-                $(ref).closest('tr').find('.amount').val(amount);
-                calculateTotalAmount()
-            }
-            //function for calculate total amount from all sub total amount
-            function calculateTotalAmount() {
-                var final_total_amount = 0;
-                $('.amount').each(function() {
-                    final_total_amount += parseFloat($(this).val());
+                $(document).on('keyup change', '.unit_price, .quantity', function() {
+                    calculateAmount(this);
                 });
-                $('.total_amount').val(final_total_amount.toLocaleString('en-US', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }));
-            }
-        })
 
-        $(document).on('keyup', '.quantity', function() {
-            var quantity = $(this).val();
-            var left_quantity = $(this).closest('tr').find('.left_quantity').val();
-            if (parseFloat(quantity) > parseFloat(left_quantity)) {
-                alert('Quantity can not be greater than left quantity');
-                $(this).val(left_quantity);
-            }
-        })
+                function calculateAmount(ref) {
+                    var unit_price = $(ref).closest('tr').find('.unit_price').val() != '' ? $(ref).closest('tr').find(
+                        '.unit_price').val() : 0;
+                    var quantity = $(ref).closest('tr').find('.quantity').val() != '' ? $(ref).closest('tr').find(
+                        '.quantity').val() : 0;
+                    var amount = unit_price * quantity;
+                    $(ref).closest('tr').find('.amount').val(amount);
+                    calculateTotalAmount()
+                }
+                //function for calculate total amount from all sub total amount
+                function calculateTotalAmount() {
+                    var final_total_amount = 0;
+                    $('.amount').each(function() {
+                        final_total_amount += parseFloat($(this).val());
+                    });
+                    $('.total_amount').val(final_total_amount.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }));
+                }
+            })
 
-        //sl_code on input get value
-        // $(document).on('change, input', '.sl_code', function() {
-        //     console.log($(this).val());
-        //     var left_quantity = $(this).closest('tr').find('.left_quantity').val();
-        //     let serial_code_count = $(this).closest('tr').find('.sl_code').val().split(',').length;
-        //     let check_drum = $(this).closest('tr').find('.material_type').val();
-        //     if (check_drum != 'Drum') {
-        //         if (serial_code_count > 0) {
-        //             if (serial_code_count < left_quantity) {
-        //                 $(this).closest('tr').find('.quantity').val(serial_code_count);
-        //             }
-        //         }
-        //     } else {
-        //         var quantity = $(this).val();
-        //         if (parseFloat(quantity) > parseFloat(left_quantity)) {
-        //             alert('Quantity can not be greater than left quantity');
-        //             $(this).val(left_quantity);
-        //         }
-        //     }
-        // })
-        //get value by name sl_code
+            $(document).on('keyup', '.quantity', function() {
+                var quantity = $(this).val();
+                var left_quantity = $(this).closest('tr').find('.left_quantity').val();
+                if (parseFloat(quantity) > parseFloat(left_quantity)) {
+                    alert('Quantity can not be greater than left quantity');
+                    $(this).val(left_quantity);
+                }
+            })
 
-        // $(document).on('change', '.bootstrap-tagsinput', function() {
-        //     var left_quantity = $(this).closest('tr').find('.left_quantity').val();
-        //     let serial_code_count = $('.label-info').length + 1;
-        //     let check_drum = $(this).closest('tr').find('.material_type').val();
-        //     if (check_drum !== 'Drum') {
-        //         if (serial_code_count > 0) {
-        //             if (serial_code_count < left_quantity) {
-        //                 $(this).closest('tr').find('.quantity').val(serial_code_count);
-        //             }
-        //         }
-        //     } else {
-        //         var quantity = $(this).val();
-        //         if (parseFloat(quantity) > parseFloat(left_quantity)) {
-        //             alert('Quantity cannot be greater than left quantity');
-        //             $(this).val(left_quantity);
-        //         }
-        //     }
-        // });
+            //sl_code on input get value
+            // $(document).on('change, input', '.sl_code', function() {
+            //     console.log($(this).val());
+            //     var left_quantity = $(this).closest('tr').find('.left_quantity').val();
+            //     let serial_code_count = $(this).closest('tr').find('.sl_code').val().split(',').length;
+            //     let check_drum = $(this).closest('tr').find('.material_type').val();
+            //     if (check_drum != 'Drum') {
+            //         if (serial_code_count > 0) {
+            //             if (serial_code_count < left_quantity) {
+            //                 $(this).closest('tr').find('.quantity').val(serial_code_count);
+            //             }
+            //         }
+            //     } else {
+            //         var quantity = $(this).val();
+            //         if (parseFloat(quantity) > parseFloat(left_quantity)) {
+            //             alert('Quantity can not be greater than left quantity');
+            //             $(this).val(left_quantity);
+            //         }
+            //     }
+            // })
+            //get value by name sl_code
 
-        // $(document).on()
+            // $(document).on('change', '.bootstrap-tagsinput', function() {
+            //     var left_quantity = $(this).closest('tr').find('.left_quantity').val();
+            //     let serial_code_count = $('.label-info').length + 1;
+            //     let check_drum = $(this).closest('tr').find('.material_type').val();
+            //     if (check_drum !== 'Drum') {
+            //         if (serial_code_count > 0) {
+            //             if (serial_code_count < left_quantity) {
+            //                 $(this).closest('tr').find('.quantity').val(serial_code_count);
+            //             }
+            //         }
+            //     } else {
+            //         var quantity = $(this).val();
+            //         if (parseFloat(quantity) > parseFloat(left_quantity)) {
+            //             alert('Quantity cannot be greater than left quantity');
+            //             $(this).val(left_quantity);
+            //         }
+            //     }
+            // });
+
+            // $(document).on()
     </script>
 @endsection
