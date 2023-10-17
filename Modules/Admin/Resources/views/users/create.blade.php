@@ -41,7 +41,7 @@
         <div class="col-12">
             <div class="input-group input-group-sm input-group-primary">
                 <label class="input-group-addon" for="name">Department</label>
-                {{ Form::select('department_id', $departments, old('department_id') ? old('department_id') : (!empty($user) ? $user->employee->department_id : null), ['class' => 'form-control', 'id' => 'department_id', 'placeholder' => 'Select Department']) }}
+                {{ Form::select('department_id', $departments, old('department_id') ? old('department_id') : (!empty($user->employee) ? $user->employee->department_id : null), ['class' => 'form-control', 'id' => 'department_id', 'placeholder' => 'Select Department']) }}
                 @error('department_id')
                     <p class="text-danger">{{ $errors->first('department_id') }}</p>
                 @enderror
