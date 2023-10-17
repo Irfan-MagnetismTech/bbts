@@ -162,6 +162,17 @@ class ScmMrrController extends Controller
             ->get()
             ->unique('material_id');
 
+        $materialReceive->with('scmMrrLines');
+        $materialReceive->scmMrrLines->map(function ($item) {
+            $item->left_quantity = PurchaseOrderLine::query()
+                ->where('po_composit_key', $item->po_composit_key)
+                ->sum('quantity') - ScmMrrLine::query()
+                ->where('po_composit_key', $item->po_composit_key)
+                ->where('scm_mrr_id', '!=', $item->scm_mrr_id)
+                ->sum('quantity');
+            return $item;
+        });
+
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
         return view('scm::mrr.create', compact('branches', 'brands', 'material_list', 'materialReceive'));
