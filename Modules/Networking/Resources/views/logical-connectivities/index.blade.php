@@ -26,10 +26,9 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>FR No</th>
+                    <th>Connectivity Point</th>
                     <th>Client Name</th>
                     <th>Product Category</th>
-                    <th>Shared Type</th>
                     <th>Facility Type</th>
                     <th>Comment</th>
                     <th>Action</th>
@@ -39,7 +38,7 @@
                 @foreach ($logicalConnectivities as $key => $logicalConnectivity)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $logicalConnectivity->fr_no ?? ''}}</td>
+                        <td>{{ $logicalConnectivity->feasibilityRequirementDetails->connectivity_point ?? ''}}</td>
                         <td>{{ $logicalConnectivity->client->client_name ?? ''}}</td>
                         <td>
                             {{ $logicalConnectivity->product_category ?? ''}}
@@ -49,9 +48,6 @@
 {{--                            {{ $line->link_type }} <br>--}}
 {{--                            @endforeach--}}
 {{--                        </td>--}}
-                        <td>
-                            {{ $logicalConnectivity->shared_type ?? ''}}
-                        </td>
                         <td>
                             {{ $logicalConnectivity->facility_type ?? ''}}
                         </td>
