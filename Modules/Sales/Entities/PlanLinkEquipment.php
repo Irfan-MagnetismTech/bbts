@@ -15,4 +15,9 @@ class PlanLinkEquipment extends Model
     {
         return $this->hasOne(Material::class, 'id', 'material_id');
     }
+
+    public function planLink()
+    {
+        return $this->belongsTo(PlanLink::class);
+    }
 }
