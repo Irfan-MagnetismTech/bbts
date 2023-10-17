@@ -162,14 +162,14 @@
     </li>
 
     <li
-        class="pcoded-hasmenu {{ request()->routeIs(['logical-data-connectivities.*', 'logical-vas-connectivities.*']) ? 'active pcoded-trigger' : null }}">
+        class="pcoded-hasmenu {{ request()->routeIs(['logical-connectivities.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
             <span class="pcoded-mtext">Logical Connectivity</span>
             <span class="pcoded-mcaret"></span>
         </a>
         <ul class="pcoded-submenu">
-            <li class="{{ request()->routeIs('logical-connectivities.create') ? 'active' : null }}">
+            <li class="{{ request()->routeIs('logical-connectivities.index') ? 'active' : null }}">
                 <a href="{{ route('logical-connectivities.index') }}">
                     <span class="pcoded-micon">
                         <i class="ti-angle-right"></i>

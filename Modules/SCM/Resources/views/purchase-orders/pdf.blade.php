@@ -87,9 +87,9 @@
     <div style="text-align: start">
         <div>
             <h3>PURCHASE ORDER</h3>
-            <span>Purchase Order No: {{$purchase_order->po_no}}</span><br>
-            <span>Date Issued: {{$purchase_order->date}}</span><br>
-            <span>Ref Indent No: {{$purchase_order->indent->indent_no}}</span>
+            <span>Purchase Order No: {{$purchase_order->po_no ?? ''}}</span><br>
+            <span>Date Issued: {{$purchase_order->date ?? ''}}</span><br>
+            <span>Ref Indent No: {{$purchase_order->indent->indent_no ?? ''}}</span>
         </div>
         <br>
         <div style="display: flex;">
@@ -101,10 +101,10 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td style="text-align: start">{{ $purchase_order->supplier->name ??''}}<br>
-                        {{ $purchase_order->supplier->address_1 ??''}}<br>
-                        {{ $purchase_order->supplier->mobile_no??'' }}<br>
-                        {{ $purchase_order->supplier->email ??''}}<br>
+                    <td style="text-align: start">{{ $purchase_order->supplier->name ?? ''}}<br>
+                        {{ $purchase_order->supplier->address_1 ?? ''}}<br>
+                        {{ $purchase_order->supplier->mobile_no ?? '' }}<br>
+                        {{ $purchase_order->supplier->email ?? ''}}<br>
                     </td>
                 </tr>
                 </tbody>
@@ -138,6 +138,8 @@
         <thead>
         <tr style="background-color: #668ba6;color: black">
             <th>Item</th>
+            <th>Brand</th>
+            <th>Model</th>
             <th>Description</th>
             <th>Quantity</th>
             <th>Unit</th>
@@ -148,28 +150,37 @@
         <tbody>
             @foreach ($purchase_order->purchaseOrderLines as $key => $value)
                     <tr>
-                        <td class="text-center">{{ $value->material->name ??''}}</td>
-                        <td class="text-center">{{ $value->description ??''}}</td>
-                        <td class="text-center">{{ $value->quantity??'' }}</td>
-                        <td class="text-center">{{ $value->material->unit ??''}}
-                        <td class="text-center">{{ $value->unit_price??'' }}</td>
-                        <td class="text-center">{{ $value->total_amount??'' }}</td>
+                        <td class="text-center">{{ $value->material->name ?? ''}}</td>
+                        <td class="text-center">{{ $value->brand->name ?? ''}}</td>
+                        <td class="text-center">{{ $value->model ?? ''}}</td>
+                        <td class="text-center">{{ $value->description ?? ''}}</td>
+                        <td class="text-center">{{ $value->quantity ?? '' }}</td>
+                        <td class="text-center">{{ $value->material->unit ?? ''}}
+                        <td class="text-center">{{ $value->unit_price ?? '' }}</td>
+                        <td class="text-center">{{ $value->total_amount ?? '' }}</td>
                     </tr>
                 @endforeach
         </tbody>
         <tfoot>
         <tr>
-            <td colspan="5" class="text-right"><b>Total Amount</b></td>
-            <td class="text-center"><b>{{ $purchase_order->purchaseOrderLines->sum('total_amount') }}</b></td>
+            <td colspan="7" class="text-right"><b>Total Amount</b></td>
+            <td class="text-center"><b>{{ $purchase_order->purchaseOrderLines->sum('total_amount') ?? ''}}</b></td>
         </tr>
         </tfoot>
     </table>
     <div>
         <br>
         <div>
-            <b>Time of Delivery: </b> Prompt after receiving purchase order.<br>
-            <b>Places of Supply: </b> Delivery to Head Office, Agrabad, Chattogram.<br>
-            <b>Terms of Payment: </b> Payment will be made within short time after receiving of product and submission of bill by A/C Payee Cheque.<br>
+            <b>Time of Delivery: </b> Prompt after receiving purchase order.<br><br>
+            <b>Places of Supply: </b> {{$purchase_order->delivery_location ?? ''}}<br><br>
+            <b>Terms of Payment: </b>
+            <div class="input-group">
+                <ol>
+                    @foreach ($purchase_order->poTermsAndConditions as $term)
+                        <li>{{ $term->particular ?? ''}}</li>
+                    @endforeach
+                </ol>
+            </div>
         </div>
         <br>
         <br>
@@ -180,17 +191,6 @@
                 General Manager --Supply Chain
             </div>
             <br>
-        </div>
-        <br>
-        <div class="form-group col-4">
-            <label for="terms_and_conditions"><u><b>Terms and Conditions :</b></u></label>
-            <div class="input-group">
-                <ol>
-                    @foreach ($purchase_order->poTermsAndConditions as $term)
-                        <li>{{ $term->particular }}</li>
-                    @endforeach
-                </ol>
-            </div>
         </div>
     </div>
 </div>

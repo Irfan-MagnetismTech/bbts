@@ -20,41 +20,41 @@
                     <tbody class="text-left">
                         <tr style="background-color: #0C4A77;color: white">
                             <td> <strong>PO No.</strong> </td>
-                            <td> <strong>{{ $purchaseOrder->po_no }}</strong></td>
+                            <td> <strong>{{ $purchaseOrder->po_no ?? '' }}</strong></td>
                         </tr>
 
                         <tr>
                             <td> <strong>PO Type</strong> </td>
-                            <td> {{ $purchaseOrder->po_type }}</td>
+                            <td> {{ $purchaseOrder->po_type ?? ''}}</td>
                         </tr>
 
                         <tr>
                             <td> <strong>Purchase Date</strong> </td>
-                            <td> {{ $purchaseOrder->date }}</td>
+                            <td> {{ $purchaseOrder->date ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Supplier Name</strong> </td>
 
-                            <td>{{ $purchaseOrder->supplier->name }}</td>
+                            <td>{{ $purchaseOrder->supplier->name ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Indent No</strong> </td>
-                            <td> {{ $purchaseOrder->indent->indent_no }}</td>
+                            <td> {{ $purchaseOrder->indent->indent_no ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Delivery Location</strong> </td>
-                            <td> {{ $purchaseOrder->delivery_location }}</td>
+                            <td> {{ $purchaseOrder->delivery_location ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Submitted By</strong> </td>
-                            <td> {{ $purchaseOrder->createdBy->name }}</td>
+                            <td> {{ $purchaseOrder->createdBy->name ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Branch</strong> </td>
-                            <td> {{ $purchaseOrder?->branch?->name }}</td>
+                            <td> {{ $purchaseOrder?->branch?->name ?? ''}}</td>
                         <tr>
                             <td> <strong>Remarks</strong> </td>
-                            <td> {{ $purchaseOrder->remarks }}</td>
+                            <td> {{ $purchaseOrder->remarks ?? ''}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -68,11 +68,10 @@
             <thead>
                 <tr>
                     <th>SL.No</th>
-                    <th>Prs No</th>
-                    <th>CS No.</th>
-                    <th>Quotation No</th>
                     <th>Material Name</th>
                     <th>Material Unit</th>
+                    <th>Brand</th>
+                    <th>Model</th>
                     <th>Description</th>
                     <th>Warranty period</th>
                     {{-- <th>Installation Cost</th> --}}
@@ -89,28 +88,27 @@
                 @foreach ($purchaseOrder->purchaseOrderLines as $purchaseOrderLine)
                     <tr>
                         <td> {{ $loop->iteration }}</td>
-                        <td>{{ $purchaseOrderLine->scmPurchaseRequisition->prs_no ?? '---' }}</td>
-                        <td>{{ $purchaseOrderLine->cs->cs_no ?? '---' }}</td>
-                        <td>{{ $purchaseOrderLine->quotation_no ?? '---' }}</td>
                         <td>{{ $purchaseOrderLine->material->name ?? '---' }}</td>
-                        <td>{{ $purchaseOrderLine->material->unit ?? null }}</td>
-                        <td> {{ $purchaseOrderLine->description }}</td>
-                        <td> {{ $purchaseOrderLine->warranty_period }}</td>
+                        <td>{{ $purchaseOrderLine->material->unit ?? '---' }}</td>
+                        <td>{{ $purchaseOrderLine->brand->name ?? '---' }}</td>
+                        <td>{{ $purchaseOrderLine->model ?? '---' }}</td>
+                        <td> {{ $purchaseOrderLine->description ?? '---' }}</td>
+                        <td> {{ $purchaseOrderLine->warranty_period ?? '---' }}</td>
                         {{-- <td> {{ $purchaseOrderLine->installation_cost }}</td> --}}
                         {{-- <td> {{ $purchaseOrderLine->transport_cost }}</td> --}}
-                        <td> {{ $purchaseOrderLine->vat }}</td>
-                        <td> {{ $purchaseOrderLine->tax }}</td>
-                        <td> {{ $purchaseOrderLine->required_date }}</td>
-                        <td> {{ $purchaseOrderLine->quantity }}</td>
-                        <td> {{ $purchaseOrderLine->unit_price }}</td>
-                        <td class="text-right"> {{ $purchaseOrderLine->total_amount }}</td>
+                        <td> {{ $purchaseOrderLine->vat ?? '---' }}</td>
+                        <td> {{ $purchaseOrderLine->tax ?? '---' }}</td>
+                        <td> {{ $purchaseOrderLine->required_date ?? '---' }}</td>
+                        <td> {{ $purchaseOrderLine->quantity ?? '---' }}</td>
+                        <td> {{ $purchaseOrderLine->unit_price ?? '---' }}</td>
+                        <td class="text-right"> {{ $purchaseOrderLine->total_amount ?? '---' }}</td>
                     </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="13" class="text-right"> Total Amount </td>
-                    <td class="text-right">{{ $purchaseOrder->purchaseOrderLines->sum('total_amount') }}</td>
+                    <td colspan="12" class="text-right"> Total Amount </td>
+                    <td class="text-right">{{ $purchaseOrder->purchaseOrderLines->sum('total_amount') ?? ''}}</td>
                 </tr>
             </tfoot>
         </table>
@@ -120,7 +118,7 @@
             <div class="input-group">
                 <ol>
                     @foreach ($purchaseOrder->poTermsAndConditions as $term)
-                        <li>{{ $term->particular }}</li>
+                        <li>{{ $term->particular ?? ''}}</li>
                     @endforeach
                 </ol>
             </div>

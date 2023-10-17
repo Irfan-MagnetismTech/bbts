@@ -51,11 +51,11 @@
                 @foreach ($all_pos as $key => $po)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><strong>#{{ $po->po_no }}</strong></td>
-                        <td>{{ $po->po_type }}</td>
-                        <td>{{ $po->supplier->name }}</td>
-                        <td>{{ $po->date }}</td>
-                        <td>{{ $po->createdBy->name }}</td>
+                        <td><strong>#{{ $po->po_no ?? ''}}</strong></td>
+                        <td>{{ $po->po_type ?? ''}}</td>
+                        <td>{{ $po->supplier->name ?? ''}}</td>
+                        <td>{{ $po->date ?? ''}}</td>
+                        <td>{{ $po->createdBy->name ?? ''}}</td>
                         {{-- <td>
                             @if ($cs->approval()->exists())
                                 @foreach ($cs->approval as $approval)
