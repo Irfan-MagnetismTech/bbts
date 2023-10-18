@@ -42,7 +42,7 @@ class CCScheduleController extends Controller
                 return $saleDetail;
             });
 
-            // dd($salesDetails->toArray());
+        // dd($salesDetails->toArray());
         return view('networking::cc-schedules.index', compact('salesDetails'));
     }
 
