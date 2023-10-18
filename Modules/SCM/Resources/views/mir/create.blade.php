@@ -141,9 +141,9 @@
                 <th>Material Name</th>
                 <th>Brand</th>
                 <th>Model</th>
-                <th>Serial Code</th>
                 <th>Received Type</th>
                 <th>Type No</th>
+                <th>Serial Code</th>
                 <th>Unit</th>
                 <th>Current Stock(Form)</th>
                 <th>Current Stock(To)</th>
@@ -168,23 +168,6 @@
             @endphp
             @foreach ($receiveable_type as $key => $value)
                 <tr>
-                    <td>
-                        <select class="form-control received_type" name="received_type[]">
-                            <option value="">Select</option>
-                            @foreach (config('businessinfo.receivedTypes') as $typeKey => $typeValue)
-                                <option value="{{ $typeValue }}"
-                                    {{ $receiveable_type[$key] == $typeValue ? 'selected' : '' }}>
-                                    {{ $typeValue }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off"
-                            value="{{ $mrr_no[$key] }}">
-                        <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off"
-                            value="{{ $mrr_id[$key] }}">
-                    </td>
                     <td>
                         <select class="form-control material_name select2" name="material_name[]">
                             @foreach ($materials[$key] as $key1 => $value)
@@ -222,6 +205,23 @@
                             @endforeach
                         </select>
                     </td>
+                    <td>
+                        <select class="form-control received_type" name="received_type[]">
+                            <option value="">Select</option>
+                            @foreach (config('businessinfo.receivedTypes') as $typeKey => $typeValue)
+                                <option value="{{ $typeValue }}"
+                                    {{ $receiveable_type[$key] == $typeValue ? 'selected' : '' }}>
+                                    {{ $typeValue }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="type_no[]" class="form-control type_no" autocomplete="off"
+                            value="{{ $mrr_no[$key] }}">
+                        <input type="hidden" name="type_id[]" class="form-control type_id" autocomplete="off"
+                            value="{{ $mrr_id[$key] }}">
+                    </td>
                     <td class="select2container">
                         <select class="form-control serial_code select2" name="serial_code[{{ $key }}][]"
                             multiple="multiple">
@@ -231,7 +231,6 @@
                                 </option>
                             @endforeach
                         </select>
-
                     </td>
                     <td>
                         <input type="text" class="form-control unit" name="unit[]" value="{{ $unit_name[$key] }}"
@@ -470,24 +469,24 @@
             }, model, 'value', 'label');
         });
 
-        $(document).on('change', '.model', function() {
-            checkUniqueMaterial(this);
-            var event_this = $(this).closest('tr');
-            let model = $(this).val();
-            let material_id = event_this.find('.material_name').val();
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let brand_id = event_this.find('.brand').val();
-            let serial_code = $(this).closest('tr').find('.serial_code');
-            let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
-                'type');
+        // $(document).on('change', '.model', function() {
+        //     checkUniqueMaterial(this);
+        //     var event_this = $(this).closest('tr');
+        //     let model = $(this).val();
+        //     let material_id = event_this.find('.material_name').val();
+        //     let scm_requisition_id = $('#scm_requisition_id').val();
+        //     let brand_id = event_this.find('.brand').val();
+        //     let serial_code = $(this).closest('tr').find('.serial_code');
+        //     let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+        //         'type');
 
-            populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
-                model: model,
-                material_id: material_id,
-                brand_id: brand_id,
-                from_branch_id: $('#from_branch_id').val(),
-            }, serial_code, 'value', 'label', null, false);
-        });
+        //     populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
+        //         model: model,
+        //         material_id: material_id,
+        //         brand_id: brand_id,
+        //         from_branch_id: $('#from_branch_id').val(),
+        //     }, serial_code, 'value', 'label', null, false);
+        // });
 
         $(document).on('change', '.model, .material_name, .brand', function() {
             var elemmtn = $(this);
@@ -509,6 +508,81 @@
                     (elemmtn).closest('tr').find('.opening_balance').val(data.to_branch_balance);
                 }
             })
+        })
+
+        function getMaterials(event_this) {
+            let scm_requisition_id = $('#scm_requisition_id').val();
+            let material_name = event_this.find('.material_name');
+            let brand = event_this.find('.brand');
+            let model = event_this.find('.model');
+            let receiveable_id = event_this.find('.type_id').val();
+            let received_type = event_this.find('.received_type').val().toUpperCase();
+            let from_branch_id = $('#from_branch_id').val();
+            // populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
+            //     scm_requisition_id: scm_requisition_id,
+            //     branch: $('#branch_id').val(),
+            //     material_id: material_name.val(),
+            //     brand_id: brand.val(),
+            //     model: model.val(),
+            //     receiveable_id: receiveable_id,
+            //     received_type: received_type,
+            // }, material_name, 'value', 'label', {
+            //     'data-type': 'type',
+            //     'data-unit': 'unit',
+            //     'data-code': 'code',
+            // })
+
+            $.ajax({
+                url: "{{ route('search-mrs-type-wise-material-for-challan') }}",
+                type: 'get',
+                data: {
+                    scm_requisition_id: scm_requisition_id,
+                    branch: $('#branch_id').val(),
+                    material_id: material_name.val(),
+                    brand_id: brand.val(),
+                    model: model.val(),
+                    stockable_id: receiveable_id,
+                    received_type: received_type,
+                    from_branch_id: from_branch_id,
+                },
+                success: function(data) {
+                    (event_this).closest('tr').find('.available_quantity').val(data.current_stock);
+                }
+            });
+        }
+
+        $(document).on('keyup', '.type_no', function() {
+            var event_this = $(this).closest('tr');
+            let myObject = {
+                type: event_this.find('.received_type').val().toUpperCase(),
+                branch_id: $('#branch_id').val(),
+            }
+            jquaryUiAjax(this, "{{ route('searchTypeNo') }}", uiList, myObject);
+
+            function uiList(item) {
+                event_this.find('.type_no').val(item.label);
+                event_this.find('.type_id').val(item.id);
+                getMaterials(event_this)
+                //get serial code
+                let model = event_this.find('.model').val();
+                let material_id = event_this.find('.material_name').val();
+                let scm_requisition_id = $('#scm_requisition_id').val();
+                let brand_id = event_this.find('.brand').val();
+                let serial_code = event_this.find('.serial_code');
+                let material_type = event_this.find('.material_type').val();
+                let received_type = event_this.find('.received_type').val().toUpperCase();
+                let receiveable_id = event_this.find('.type_id').val();
+
+                populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
+                    model: model,
+                    material_id: material_id,
+                    brand_id: brand_id,
+                    from_branch_id: $('#from_branch_id').val(),
+                    received_type: received_type,
+                    receiveable_id: receiveable_id,
+                }, serial_code, 'value', 'label', null, false);
+                return false;
+            }
         })
 
 
@@ -543,11 +617,6 @@
                                 <select class="form-control model select2" name="model[${indx}]">
                                 </select>
                             </td>
-                            <td class="select2container float">
-                                <select class="form-control serial_code select2" name="serial_code[${indx}][]" multiple="multiple">
-
-                                </select>
-                            </td>
                             <td>
                                 <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
@@ -559,6 +628,11 @@
                             <td>
                                 <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
                                 <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
+                            </td>
+                            <td class="select2container float">
+                                <select class="form-control serial_code select2" name="serial_code[${indx}][]" multiple="multiple">
+
+                                </select>
                             </td>
                             <td>
                                 <input name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly>

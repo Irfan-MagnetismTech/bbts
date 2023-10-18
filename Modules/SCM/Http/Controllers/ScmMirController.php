@@ -442,7 +442,8 @@ class ScmMirController extends Controller
             ->where([
                 'material_id' => request()->material_id,
                 'brand_id' => request()->brand_id,
-                'model' => request()->model,
+                'receiveable_id' => request()->receiveable_id,
+                'received_type' => request()->received_type,
                 'branch_id' => request()->from_branch_id
             ])
             ->get()
