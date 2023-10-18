@@ -412,6 +412,14 @@
                                             <th>Connectivity Route</th>
                                             <td class="connectivity_route" style="width:30%"></td>
                                         </tr>
+                                        <tr>
+                                            <th>Connectivity Point Last Mile Distance</th>
+                                            <td class="connectivity_lat_long" style="width:30%">
+                                                <input type="text" name="distance_1" id="connectivity_lat_long"
+                                                    class="form-control form-control-sm distance_1"
+                                                    style="height: 25px !important" value="">
+                                            </td>
+                                        </tr>
                                     </table>
                                 </div>
                             </div>
