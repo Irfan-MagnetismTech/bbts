@@ -827,24 +827,24 @@
             }, model, 'value', 'label');
         });
 
-        // $(document).on('change', '.model', function() {
-        //     checkUniqueMaterial(this);
-        //     var event_this = $(this).closest('tr');
-        //     let model = $(this).val();
-        //     let material_id = event_this.find('.material_name').val();
-        //     let scm_requisition_id = $('#scm_requisition_id').val();
-        //     let brand_id = event_this.find('.brand').val();
-        //     let serial_code = $(this).closest('tr').find('.serial_code');
-        //     let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
-        //         'type');
+        $(document).on('change', '.model', function() {
+            checkUniqueMaterial(this);
+            var event_this = $(this).closest('tr');
+            let model = $(this).val();
+            let material_id = event_this.find('.material_name').val();
+            let scm_requisition_id = $('#scm_requisition_id').val();
+            let brand_id = event_this.find('.brand').val();
+            let serial_code = $(this).closest('tr').find('.serial_code');
+            let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+                'type');
 
-        //     populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
-        //         model: model,
-        //         material_id: material_id,
-        //         brand_id: brand_id,
-        //         from_branch_id: $('#branch_id').val(),
-        //     }, serial_code, 'value', 'label', null, false);
-        // });
+            populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
+                model: model,
+                material_id: material_id,
+                brand_id: brand_id,
+                from_branch_id: $('#branch_id').val(),
+            }, serial_code, 'value', 'label', null, false);
+        });
 
         $(document).on('change', '.serial_code', function() {
             let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(

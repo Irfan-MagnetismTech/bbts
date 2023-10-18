@@ -353,7 +353,7 @@ class ScmMirController extends Controller
     {
         // dd(request()->from_branch);
         $data['current_stock'] = StockLedger::where('branch_id', request()->branch)
-            ->when(request()->receiveable_id, function ($query) {
+            ->when(request()->stockable_id, function ($query) {
                 return $query->where('stockable_id', request()->stockable_id);
             })
             ->when(request()->received_type, function ($query) {
@@ -443,8 +443,6 @@ class ScmMirController extends Controller
                 'material_id' => request()->material_id,
                 'brand_id' => request()->brand_id,
                 'model' => request()->model,
-                'stockable_id' => request()->receiveable_id,
-                'received_type' => request()->received_type,
                 'branch_id' => request()->from_branch_id
             ])
             ->get()
@@ -494,6 +492,26 @@ class ScmMirController extends Controller
         return $branch_balance;
     }
 
+    public function branchWiseMaterialStock($branch): int
+    {
+        $branch_balance = StockLedger::query()
+            ->where([
+                'branch_id' => $branch,
+            ])
+            ->when(request()->material_id, function ($query) {
+                $query->where('material_id', request()->material_id);
+            })
+            ->when(request()->brand_id, function ($query) {
+                $query->where('brand_id', request()->brand_id);
+            })
+            ->when(request()->model, function ($query) {
+                $query->where('model', request()->model);
+            })
+            ->sum('quantity');
+
+        return $branch_balance;
+    }
+
     public function getStock(): int
     {
         $branch_balance = StockLedger::query()
@@ -525,6 +543,15 @@ class ScmMirController extends Controller
         $data = [
             'from_branch_balance' => $this->branchWiseStock(request()->from_branch_id),
             'to_branch_balance' => $this->branchWiseStock(request()->to_branch_id),
+        ];
+        return response()->json($data);
+    }
+
+    public function getFromAndToBranchStock()
+    {
+        $data = [
+            'from_branch_balance' => $this->branchWiseMaterialStock(request()->from_branch_id),
+            'to_branch_balance' => $this->branchWiseMaterialStock(request()->to_branch_id),
         ];
         return response()->json($data);
     }

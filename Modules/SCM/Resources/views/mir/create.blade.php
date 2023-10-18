@@ -422,7 +422,17 @@
 
 
         $(document).on('change', '.material_name', function() {
-
+            let from_branch_id = $('#from_branch_id').val();
+            if (from_branch_id == '' || from_branch_id == null && to_branch_id == '' || to_branch_id == null) {
+                swal.fire({
+                    title: "Please Select From Branch and To Branch First",
+                    type: "warning",
+                }).then(function() {
+                    $(this).val($(this).find('option:first').val())
+                        .trigger('change.select2');
+                });
+                return false;
+            }
             checkUniqueMaterial(this);
             var event_this = $(this).closest('tr');
             let material_id = $(this).val();
@@ -441,7 +451,7 @@
 
             populateDropdownByAjax("{{ route('materialWiseBrands') }}", {
                 material_id: material_id,
-                from_branch_id: $('#from_branch_id').val(),
+                from_branch_id: from_branch_id,
             }, brand, 'value', 'label');
         })
 
@@ -460,23 +470,43 @@
             }, model, 'value', 'label');
         });
 
+        $(document).on('change', '.model', function() {
+            checkUniqueMaterial(this);
+            var event_this = $(this).closest('tr');
+            let model = $(this).val();
+            let material_id = event_this.find('.material_name').val();
+            let scm_requisition_id = $('#scm_requisition_id').val();
+            let brand_id = event_this.find('.brand').val();
+            let serial_code = $(this).closest('tr').find('.serial_code');
+            let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+                'type');
+
+            populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
+                model: model,
+                material_id: material_id,
+                brand_id: brand_id,
+                from_branch_id: $('#from_branch_id').val(),
+            }, serial_code, 'value', 'label', null, false);
+        });
+
         $(document).on('change', '.model, .material_name, .brand', function() {
             var elemmtn = $(this);
             $.ajax({
-                url: "{{ route('get-stock') }}",
+                url: "{{ route('get-from-and-to-branch-stock') }}",
                 type: 'get',
                 dataType: "json",
                 data: {
                     material_id: (elemmtn).closest('tr').find('.material_name').val(),
                     brand_id: (elemmtn).closest('tr').find('.brand').val(),
                     model: (elemmtn).closest('tr').find('.model').val(),
-                    branch_id: $('#from_branch_id').val(),
+                    from_branch_id: $('#from_branch_id').val(),
+                    to_branch_id: $('#to_branch_id').val(),
                     scm_requisition_id: $('#scm_requisition_id').val(),
                 },
                 success: function(data) {
-                    (elemmtn).closest('tr').find('.available_quantity').val(data
-                        .current_stock);
-                    (elemmtn).closest('tr').find('.mrs_quantity').val(data.mrs_quantity);
+                    (elemmtn).closest('tr').find('.avaiable_quantity').val(data
+                        .from_branch_balance);
+                    (elemmtn).closest('tr').find('.opening_balance').val(data.to_branch_balance);
                 }
             })
         })
