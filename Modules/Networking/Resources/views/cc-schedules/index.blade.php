@@ -206,7 +206,7 @@
                 },
                 success: function(data) {
                     $('#exampleModal').modal('hide');
-                    // location.reload();
+                    location.reload();
                 }
             });
         });

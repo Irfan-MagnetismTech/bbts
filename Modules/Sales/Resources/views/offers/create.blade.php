@@ -44,7 +44,7 @@
                             $client_no = $is_old ? old('client_name') : $feasibility_requirement->client_no ?? null;
                             $mq_no = $is_old ? old('mq_no') : $feasibility_requirement->mq_no ?? null;
                             $row_no = 0;
-                            
+
                         @endphp
                         <div class="col-md-3 col-3">
                             <input type="text" name="client_no" id="client_no" class="form-control"
@@ -56,7 +56,8 @@
                         </div>
                         <x-input-box colGrid="3" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <div class="col-md-3 col-3">
-                            <input type="text" name="offer_validity" id="offer_validity" class="form-control form-control-sm date"
+                            <input type="text" name="offer_validity" id="offer_validity"
+                                class="form-control form-control-sm date"
                                 value="{{ $is_old ? old('offer_validity') : $costing->offer_validity ?? null }}"
                                 placeholder="Offer Validity" required>
 
@@ -152,7 +153,7 @@
                                                                     <input type="text"
                                                                         name="vendor_{{ $row_no }}[]"
                                                                         class="form-control"
-                                                                        value="{{ $link->finalSurveyDetails->vendor }}"
+                                                                        value="{{ $link->finalSurveyDetails->vendor?->name }}"
                                                                         id="vendor" readonly>
                                                                 </div>
                                                             </td>
@@ -181,8 +182,8 @@
                                                                     <input type="text"
                                                                         name="otc_{{ $row_no }}[]"
                                                                         value="{{ $link->otc }}"
-                                                                        class="form-control form-control-sm text-right" id="otc"
-                                                                        readonly>
+                                                                        class="form-control form-control-sm text-right"
+                                                                        id="otc" readonly>
                                                                 </div>
                                                             </td>
                                                             <td>
@@ -191,20 +192,25 @@
                                                                     <input type="text"
                                                                         name="mo_cost_{{ $row_no }}[]"
                                                                         value="{{ $link->roi + $link->capacity_amount }}"
-                                                                        class="form-control form-control-sm text-right" id="mo_cost"
-                                                                        readonly>
+                                                                        class="form-control form-control-sm text-right"
+                                                                        id="mo_cost" readonly>
                                                                 </div>
                                                             </td>
                                                             <td>
                                                                 <div
                                                                     class="input-group input-group-sm input-group-primary ">
-                                                                    <input type="text"  name="offer_otc_{{ $row_no }}[]"
-                                                                        class="form-control form-control-sm offer_otc text-right" > 
-                                                                    <input type="hidden" class="link_invest" value="{{ $link->investment }}">
-                                                                    <input type="hidden" class="month" value="{{ $details->costing->month }}">
-                                                                    <input type="hidden" class="capacity_amount" value="{{ $link->capacity_amount }}">
-                                                                    <input type="hidden" class="operation_cost" value="{{ $link->operation_cost }}">
-                                                                </div> 
+                                                                    <input type="text"
+                                                                        name="offer_otc_{{ $row_no }}[]"
+                                                                        class="form-control form-control-sm offer_otc text-right">
+                                                                    <input type="hidden" class="link_invest"
+                                                                        value="{{ $link->investment }}">
+                                                                    <input type="hidden" class="month"
+                                                                        value="{{ $details->costing->month }}">
+                                                                    <input type="hidden" class="capacity_amount"
+                                                                        value="{{ $link->capacity_amount }}">
+                                                                    <input type="hidden" class="operation_cost"
+                                                                        value="{{ $link->operation_cost }}">
+                                                                </div>
                                                             </td>
                                                             <td>
                                                                 <div
@@ -229,7 +235,8 @@
 
                                                     <tr>
                                                         <td colspan="5" rowspan="5"></td>
-                                                        <td colspan="2" style="text-align: right;">Link wise Total </td>
+                                                        <td colspan="2" style="text-align: right;">Link wise Total
+                                                        </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
@@ -285,8 +292,9 @@
                                                         </td>
                                                     </tr>
 
-                                                    <tr> 
-                                                        <td colspan="2" style="text-align: right;">Product Equipment</td>
+                                                    <tr>
+                                                        <td colspan="2" style="text-align: right;">Product Equipment
+                                                        </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
@@ -311,8 +319,8 @@
                                                                 <input type="text"
                                                                     name="equipment_roi_{{ $row_no }}"
                                                                     value="{{ $details->costing->equipment_roi }}"
-                                                                    class="form-control form-control-sm text-right" id="equipment_roi"
-                                                                    readonly>
+                                                                    class="form-control form-control-sm text-right"
+                                                                    id="equipment_roi" readonly>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -321,8 +329,10 @@
                                                                     name="equipment_offer_price_{{ $row_no }}"
                                                                     class="form-control form-control-sm equipment_offer_price text-right"
                                                                     id="equipment_offer_price">
-                                                                <input type="hidden" class="month" value="{{ $details->costing->month }}">
-                                                                <input type="hidden" class="equipment_invest" value="{{ $details->costing->equipment_grand_total }}">
+                                                                <input type="hidden" class="month"
+                                                                    value="{{ $details->costing->month }}">
+                                                                <input type="hidden" class="equipment_invest"
+                                                                    value="{{ $details->costing->equipment_grand_total }}">
                                                             </div>
                                                         </td>
                                                         <td>

@@ -33,8 +33,8 @@ class BrokenDaysBillController extends Controller
 
     public function index()
     {
-//        $datas = BillGenerate::where('bill_type', 'Broken Days Bill')->get();
-        $datas = BrokenDaysBill::get();
+        //        $datas = BillGenerate::where('bill_type', 'Broken Days Bill')->get();
+        $datas = BrokenDaysBill::orderBy('id', 'desc')->get();
         return view('billing::brokenDaysBill.index', compact('datas'));
     }
 
@@ -56,7 +56,7 @@ class BrokenDaysBillController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('client_no', 'fr_no', 'date', 'bill_no', 'type', 'days', 'total_amount','user_id');
+            $data = $request->only('client_no', 'fr_no', 'date', 'bill_no', 'type', 'days', 'total_amount', 'user_id');
             $data['user_id'] = Auth()->id();
             $data['bill_no'] = $this->brokenDaysBillNo;
             $data['type'] = 'Broken Days Bill';
@@ -139,9 +139,9 @@ class BrokenDaysBillController extends Controller
         try {
             DB::beginTransaction();
             $connectivity = Connectivity::find($request->connectivity_id);
-            $connectivity->billing_date = Carbon::parse($request->billing_date)->format('Y-m-d');
+            $connectivity->billing_date = date('Y-m-d', strtotime($request->billing_date));
             $connectivity->save();
-
+            // return 'fine';
             $sale = Sale::with('saleDetails')->where('id', $request->sale_id)->first();
             $billingDate = Carbon::parse($request->billing_date);
 
@@ -186,7 +186,7 @@ class BrokenDaysBillController extends Controller
     {
         return [
             'client_no' => $sale->client_no,
-            'date' => Carbon::parse($billing_date)->format('d-m-Y'),
+            'date' => date('Y-m-d', strtotime($billing_date)),
             'billing_address_id' => $sale->saleDetails[0]->billing_address_id,
             'bill_type' => 'Broken Days Bill',
             'amount' => $bill,
@@ -229,7 +229,7 @@ class BrokenDaysBillController extends Controller
     public function get_client()
     {
         $items = Client::query()
-            ->with('saleDetails.feasibilityRequirementDetails','billingAddress')
+            ->with('saleDetails.feasibilityRequirementDetails', 'billingAddress')
             ->where('client_name', 'like', '%' . request()->search . '%')
             ->get()
             ->map(fn ($item) => [
@@ -311,22 +311,21 @@ class BrokenDaysBillController extends Controller
     public function getUnpaidBill(Request $request)
     {
         $unpaidBills = BillGenerate::with('collection')
-        ->withSum('collection', 'total')
-        ->withSum('collection', 'discount')
-        ->withSum('collection', 'penalty')
-        ->where('client_no', $request->client_no)
-        // ->where('amount', '>', 'collection_sum_total')
-        ->get()
-        ->map(function($bill){
-            $toal_receive = $bill->collection_sum_total + $bill->collection_sum_discount + $bill->collection_sum_penalty;
-            if($bill->amount > $toal_receive){
-                $bill->total_receive = $toal_receive;
-                return $bill;
-            }
-        })
-        ->filter()
-        ->values()
-        ;
+            ->withSum('collection', 'total')
+            ->withSum('collection', 'discount')
+            ->withSum('collection', 'penalty')
+            ->where('client_no', $request->client_no)
+            // ->where('amount', '>', 'collection_sum_total')
+            ->get()
+            ->map(function ($bill) {
+                $toal_receive = $bill->collection_sum_total + $bill->collection_sum_discount + $bill->collection_sum_penalty;
+                if ($bill->amount > $toal_receive) {
+                    $bill->total_receive = $toal_receive;
+                    return $bill;
+                }
+            })
+            ->filter()
+            ->values();
 
         // $data[] = $unpaidBills;
         // dd($unpaidBills);
@@ -380,5 +379,4 @@ class BrokenDaysBillController extends Controller
         ])->stream('bill.pdf');
         return view('billing::brokenDaysBill.bdbBill', compact('bdbBill', 'groupedLines'));
     }
-
 }

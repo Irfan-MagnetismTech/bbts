@@ -189,7 +189,7 @@
                                                     value="{{ $equipment_plan->id ?? '' }}">
                                                 <td>
                                                     <select name="equipment_id[]" id="equipment_id"
-                                                        class="form-control form-control-sm equipment_id">
+                                                        class="form-control form-control-sm equipment_id select2">
                                                         <option value="">Select Equipment</option>
                                                         @foreach ($materials as $material)
                                                             <option value="{{ $material->id }}"
@@ -210,7 +210,7 @@
                                                 </td>
                                                 <td>
                                                     <select name="brand_id[]" id="brand_id"
-                                                        class="form-control form-control-sm brand_id">
+                                                        class="form-control select2 brand_id">
                                                         <option value="">Select Brand</option>
                                                         @foreach ($brands as $brand)
                                                             <option value="{{ $brand->id }}"
@@ -644,6 +644,9 @@
 
     @section('script')
         <script>
+            $(document).ready(function() {
+                $('.select2').select2();
+            })
             $('#addEquipmentRow').on('click', function() {
                 addEquipmentRow();
             });

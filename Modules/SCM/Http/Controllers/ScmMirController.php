@@ -67,7 +67,7 @@ class ScmMirController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(ScmMirRequest $request)
+    public function store(Request $request)
     {
         try {
             $mir_data = $request->all();
@@ -362,12 +362,12 @@ class ScmMirController extends Controller
             ->when(request()->material_id, function ($query) {
                 return $query->where('material_id', request()->material_id);
             })
-            ->when(request()->brand_id, function ($query) {
-                return $query->where('brand_id', request()->brand_id);
-            })
-            ->when(request()->model, function ($query) {
-                return $query->where('model', request()->model);
-            })
+            // ->when(request()->brand_id, function ($query) {
+            //     return $query->where('brand_id', request()->brand_id);
+            // })
+            // ->when(request()->model, function ($query) {
+            //     return $query->where('model', request()->model);
+            // })
             ->sum('quantity');
 
         $scmDetail = ScmRequisitionDetail::where('scm_requisition_id', request()->scm_requisition_id)
@@ -442,7 +442,7 @@ class ScmMirController extends Controller
             ->where([
                 'material_id' => request()->material_id,
                 'brand_id' => request()->brand_id,
-                'receiveable_id' => request()->receiveable_id,
+                'stockable_id' => request()->receiveable_id,
                 'received_type' => request()->received_type,
                 'branch_id' => request()->from_branch_id
             ])
