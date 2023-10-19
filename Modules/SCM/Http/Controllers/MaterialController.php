@@ -2,6 +2,8 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Modules\Admin\Entities\Brand;
+use Modules\SCM\Entities\MaterialBrand;
 use Modules\SCM\Entities\Unit;
 use Illuminate\Routing\Controller;
 use Modules\SCM\Entities\Material;
@@ -38,11 +40,12 @@ class MaterialController extends Controller
         $formType = "create";
         $materials = Material::latest()->get();
         $units = Unit::latest()->get();
+        $brands = Brand::latest()->get();
 
         $types = ['Drum', 'Item'];
         $categories = ScCategory::latest()->get();
 
-        return view('scm::materials.create', compact('materials', 'formType', 'types', 'units', 'categories'));
+        return view('scm::materials.create', compact('materials', 'formType', 'types', 'units', 'categories','brands'));
     }
 
     /**
@@ -55,8 +58,20 @@ class MaterialController extends Controller
     {
         // dd($request->all());
         try {
-            $data = $request->all();
-            Material::create($data);
+            $data = $request->only('name','unit','type','code','category_id');
+
+            $material = Material::create($data);
+
+            // Get the selected brand IDs as an array
+            $selectedBrandIds = $request->input('brand');
+
+            $selectedBrandIdsString = implode(', ', $selectedBrandIds);
+
+            $material_brand = $request->only('material_id', 'brand');
+            $material_brand['material_id'] =  $material->id;
+            $material_brand['brand'] =  $selectedBrandIdsString;
+            MaterialBrand::create($material_brand);
+
             return redirect()->route('materials.index')->with('message', 'Data has been inserted successfully');
         } catch (QueryException $e) {
             return redirect()->route('materials.create')->withInput()->withErrors($e->getMessage());
@@ -84,12 +99,11 @@ class MaterialController extends Controller
     {
         $formType = "edit";
         $materials = Material::latest()->get();
-        // dd($material);
         $units = Unit::latest()->get();
-
+        $brands = Brand::latest()->get();
         $types = ['Drum', 'Item'];
         $categories = ScCategory::latest()->get();
-        return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units', 'categories'));
+        return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units', 'categories','brands'));
     }
 
     /**
@@ -99,14 +113,35 @@ class MaterialController extends Controller
      * @param  \App\Material  $material
      * @return \Illuminate\Http\Response
      */
-    public function update(MaterialRequest $request, Material $material)
+
+    public function update(MaterialRequest $request, Material $material, MaterialBrand $materialBrand)
     {
         try {
-            $data = $request->all();
+            // Update the Material model
+            $data = $request->only('name', 'unit', 'type', 'code', 'category_id');
             $material->update($data);
+
+            // Get the selected brand IDs as an array
+            $selectedBrandIds = $request->input('brand');
+
+            // Update the MaterialBrand model
+            $materialBrand->where('material_id', $material->id)->delete(); // Delete existing records
+
+            if (!empty($selectedBrandIds)) {
+                $brandData = [];
+                foreach ($selectedBrandIds as $brandId) {
+                    $brandData[] = [
+                        'material_id' => $material->id,
+                        'brand' => $brandId,
+                    ];
+                }
+            // Insert new records
+                $materialBrand->insert($brandData);
+            }
+
             return redirect()->route('materials.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
-            return redirect()->route('materials.create')->withInput()->withErrors($e->getMessage());
+            return redirect()->route('materials.edit', $material->id)->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -120,6 +155,7 @@ class MaterialController extends Controller
     {
         try {
             $material->delete();
+            $material->material_brand->delete();
             return redirect()->route('materials.index')->with('message', 'Data has been deleted successfully');
         } catch (QueryException $e) {
             return redirect()->route('materials.index')->withErrors($e->getMessage());

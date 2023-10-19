@@ -471,7 +471,7 @@
                                 <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
                                 <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
                             </td>
-                           
+
                             <td class="select2_container">
                                 <select class="form-control serial_code select2" name='serial_code[${indx}][]' multiple="multiple">
 
