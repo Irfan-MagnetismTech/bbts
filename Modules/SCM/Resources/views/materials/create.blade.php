@@ -19,6 +19,15 @@
         .input-group-info .input-group-addon {
             /*background-color: #04748a!important;*/
         }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice span {
+            color: #b10000;
+        }
+
+        .select2_container {
+            max-width: 200px;
+            white-space: inherit;
+        }
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -100,6 +109,22 @@
                             placeholder="Enter material code" value="{{ old('code') ?? ($material->code ?? '') }}" required>
                     </div>
                 </div>
+                <div class="col-12">
+
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="brand">Brand <span class="text-danger">*</span></label>
+                        <select class="form-control" id="brand" name="brand[]" required multiple>
+                            <option value="">Select Brand</option>
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}"
+                                    {{ in_array($brand->id, old('brand', [])) ? 'selected' : '' }}>
+                                    {{ $brand->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                </div>
             </div>
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
@@ -158,4 +183,10 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $('#brand').select2();
+        });
+    </script>
+
 @endsection

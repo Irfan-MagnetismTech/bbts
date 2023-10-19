@@ -18,4 +18,9 @@ class Material extends Model
     {
         return $this->name . '-' . $this->code;
     }
+
+    public function material_brand()
+    {
+        return $this->belongsTo(MaterialBrand::class,'id','material_id');
+    }
 }

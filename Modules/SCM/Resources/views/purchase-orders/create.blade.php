@@ -450,7 +450,7 @@
 
         });
 
-        //function for calculate total amount from all sub total amount            
+        //function for calculate total amount from all sub total amount
         function calculateTotalAmount() {
             var final_total_amount = 0;
             $('.total_amount').each(function() {

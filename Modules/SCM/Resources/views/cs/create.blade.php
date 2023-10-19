@@ -111,57 +111,57 @@
                 <div class="table-responsive">
                     <table id="materialTable" class="table text-center table-striped table-sm table-bordered">
                         <thead>
-                            <tr>
-                                <th>Material Name<span class="text-danger">*</span></th>
-                                <th>Unit</th>
-                                <th>Brand</th>
-                                <th>Model</th>
-                                <th><i class="btn btn-primary btn-sm fa fa-plus addMaterial"></i></th>
-                            </tr>
+                        <tr>
+                            <th>Material Name<span class="text-danger">*</span></th>
+                            <th>Unit</th>
+                            <th>Brand</th>
+                            <th>Model</th>
+                            <th><i class="btn btn-primary btn-sm fa fa-plus addMaterial"></i></th>
+                        </tr>
                         </thead>
                         <tbody>
+                        @php
+                            $materials = $is_old ? old('material_id') ?? [] : $cs->csMaterials ?? [];
+                        @endphp
+                        @forelse ($materials as $material_key => $material_value)
                             @php
-                                $materials = $is_old ? old('material_id') ?? [] : $cs->csMaterials ?? [];
+                                $material_id = $is_old ? old('material_id')[$material_key] : $material_value->material->id;
+                                $material_name = $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode ?? '---';
+                                $unit = $is_old ? old('unit')[$material_key] : $material_value->material->unit ?? '---';
+                                $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value?->brand_id;
+                                $model = $is_old ? old('model')[$material_key] : $material_value->model ?? '---';
                             @endphp
-                            @forelse ($materials as $material_key => $material_value)
-                                @php
-                                    $material_id = $is_old ? old('material_id')[$material_key] : $material_value->material->id;
-                                    $material_name = $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode ?? '---';
-                                    $unit = $is_old ? old('unit')[$material_key] : $material_value->material->unit ?? '---';
-                                    $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value?->brand_id;
-                                    $model = $is_old ? old('model')[$material_key] : $material_value->model ?? '---';
-                                @endphp
-                                <tr>
-                                    <td>
-                                        <input type="hidden" name="material_id[]" value="{{ $material_id }}"
-                                            class="material_id">
-                                        <input type="text" name="material_name[]" value="{{ $material_name }}"
-                                            class="form-control material_name text-center" autocomplete="off" required>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="unit[]" value="{{ $unit }}"
-                                            class="form-control unit text-center" readOnly tabindex="-1">
-                                    </td>
-                                    <td>
-                                        <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
-                                            <option value="">Select Brand</option>
-                                            @foreach ($brands as $brand)
-                                                <option value="{{ $brand->id }}" @selected($brand->id == $brand_id)>
-                                                    {{ $brand->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="model[]" value="{{ $model }}"
-                                               class="form-control model text-center" autocomplete="off">
-                                    </td>
-                                    <td>
-                                        <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
-                                    </td>
-                                </tr>
-                            @empty
-                            @endforelse
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="material_id[]" value="{{ $material_id }}"
+                                           class="material_id">
+                                    <input type="text" name="material_name[]" value="{{ $material_name }}"
+                                           class="form-control material_name text-center" autocomplete="off" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="unit[]" value="{{ $unit }}"
+                                           class="form-control unit text-center" readOnly tabindex="-1">
+                                </td>
+                                <td>
+                                    <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
+                                        <option value="">Select Brand</option>
+                                        @foreach ($brands as $brand)
+                                            <option value="{{ $brand->id }}" @selected($brand->id == $brand_id)>
+                                                {{ $brand->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" name="model[]" value="{{ $model }}"
+                                           class="form-control model text-center" autocomplete="off">
+                                </td>
+                                <td>
+                                    <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
+                                </td>
+                            </tr>
+                        @empty
+                        @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -177,87 +177,87 @@
                 <div class="table-responsive">
                     <table id="supplierTable" class="table text-center table-striped table-sm table-bordered">
                         <thead>
-                            <tr>
-                                <th width="300px"> Supplier Name<span class="text-danger">*</span><br>
-                                    <a href="{{ route('suppliers.create') }}" target="_blank" style="color: white">
-                                        <u>Click Here to Add New Supplier</u>
-                                    </a>
-                                    <span style="font-size: 12px">
+                        <tr>
+                            <th width="300px"> Supplier Name<span class="text-danger">*</span><br>
+                                <a href="{{ route('suppliers.create') }}" target="_blank" style="color: white">
+                                    <u>Click Here to Add New Supplier</u>
+                                </a>
+                                <span style="font-size: 12px">
                                         <i class="fas fa-external-link-square-alt"></i>
                                     </span>
-                                </th>
-                                <th> Supplier Info </th>
-                                <th> Quotation No. <span class="text-danger">*</span></th>
-                                <th> Vat/Tax <span class="text-danger">*</span></th>
-                                <th> Credit Period <span class="text-danger">*</span></th>
-                                <th><i class="btn btn-primary btn-sm fa fa-plus addSupplier"></i></th>
-                            </tr>
+                            </th>
+                            <th> Supplier Info </th>
+                            <th> Quotation No. <span class="text-danger">*</span></th>
+                            <th> Vat/Tax <span class="text-danger">*</span></th>
+                            <th> Credit Period <span class="text-danger">*</span></th>
+                            <th><i class="btn btn-primary btn-sm fa fa-plus addSupplier"></i></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $suppliers = $is_old ? old('supplier_id') ?? [] : $cs->csSuppliers ?? [];
-                            @endphp
-                            @forelse (@$suppliers as $supplier_key => $supplier_value)
+                        @php
+                            $suppliers = $is_old ? old('supplier_id') ?? [] : $cs->csSuppliers ?? [];
+                        @endphp
+                        @forelse (@$suppliers as $supplier_key => $supplier_value)
 
-                                @php
-                                    $supplier_id = $is_old ? old('supplier_id')[$supplier_key] : $supplier_value->supplier->id;
-                                    $supplier_name = $is_old ? old('supplier_name')[$supplier_key] : $supplier_value->supplier->name;
-                                    $checked_supplier = $is_old ? isset(old('checked_supplier')[$supplier_key]) ?? false : $supplier_value->is_checked ?? false;
-                                    $address = $is_old ? old('address')[$supplier_key] : $supplier_value->supplier->address ?? '---';
-                                    $quotation_no = $is_old ? old('quotation_no')[$supplier_key] : $supplier_value->quotation_no;
-                                    $vat_tax = $is_old ? old('vat_tax')[$supplier_key] : $supplier_value->vat_tax;
-                                    $credit_period = $is_old ? old('credit_period')[$supplier_key] : $supplier_value->credit_period;
-                                @endphp
-                                <tr>
-                                    <td>
-                                        <input type="hidden" name="supplier_id[]" value="{{ $supplier_id }}"
-                                            class="supplier_id">
-                                        <div class="form-check">
-                                            <input name="checked_supplier[]"
-                                                @if ($checked_supplier) checked @endif
-                                                value="{{ $supplier_id }}" class="form-check-input checked_supplier_id"
-                                                type="checkbox" id="flexCheckDefault">
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Mark as selected
-                                            </label>
-                                        </div>
-                                        <input type="text" value="{{ $supplier_name }}" name="supplier_name[]"
-                                            class="form-control supplier_name" autocomplete="off" required>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="address[]" value="{{ $address }}"
-                                            class="form-control address" hidden tabindex="-1">
-                                        <div>
-                                            <span><b>Address : </b></span>
-                                            <span class="address_div"> {{ $address }} </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="quotation_no[]" value="{{ $quotation_no }}"
-                                            class="form-control quotation_no text-center" placeholder="Quotation No"
-                                            autocomplete="off" required>
-                                    </td>
-                                    <td>
-                                        <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax text-center"
+                            @php
+                                $supplier_id = $is_old ? old('supplier_id')[$supplier_key] : $supplier_value->supplier->id;
+                                $supplier_name = $is_old ? old('supplier_name')[$supplier_key] : $supplier_value->supplier->name;
+                                $checked_supplier = $is_old ? isset(old('checked_supplier')[$supplier_key]) ?? false : $supplier_value->is_checked ?? false;
+                                $address = $is_old ? old('address')[$supplier_key] : $supplier_value->supplier->address ?? '---';
+                                $quotation_no = $is_old ? old('quotation_no')[$supplier_key] : $supplier_value->quotation_no;
+                                $vat_tax = $is_old ? old('vat_tax')[$supplier_key] : $supplier_value->vat_tax;
+                                $credit_period = $is_old ? old('credit_period')[$supplier_key] : $supplier_value->credit_period;
+                            @endphp
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="supplier_id[]" value="{{ $supplier_id }}"
+                                           class="supplier_id">
+                                    <div class="form-check">
+                                        <input name="checked_supplier[]"
+                                               @if ($checked_supplier) checked @endif
+                                               value="{{ $supplier_id }}" class="form-check-input checked_supplier_id"
+                                               type="checkbox" id="flexCheckDefault">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Mark as selected
+                                        </label>
+                                    </div>
+                                    <input type="text" value="{{ $supplier_name }}" name="supplier_name[]"
+                                           class="form-control supplier_name" autocomplete="off" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="address[]" value="{{ $address }}"
+                                           class="form-control address" hidden tabindex="-1">
+                                    <div>
+                                        <span><b>Address : </b></span>
+                                        <span class="address_div"> {{ $address }} </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" name="quotation_no[]" value="{{ $quotation_no }}"
+                                           class="form-control quotation_no text-center" placeholder="Quotation No"
+                                           autocomplete="off" required>
+                                </td>
+                                <td>
+                                    <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax text-center"
                                             required>
-                                            @foreach ($Taxes as $data)
-                                                <option value="{{ $data }}"
+                                        @foreach ($Taxes as $data)
+                                            <option value="{{ $data }}"
                                                     @if ($vat_tax == $data) Selected @endif>{{ $data }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" name="credit_period[]" value="{{ $credit_period }}"
-                                            class="form-control credit_period text-center" placeholder="Credit Period"
-                                            autocomplete="off" required>
-                                    </td>
-                                    <td>
-                                        <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
-                                    </td>
-                                </tr>
-                            @empty
-                            @endforelse
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" name="credit_period[]" value="{{ $credit_period }}"
+                                           class="form-control credit_period text-center" placeholder="Credit Period"
+                                           autocomplete="off" required>
+                                </td>
+                                <td>
+                                    <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
+                                </td>
+                            </tr>
+                        @empty
+                        @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -277,50 +277,50 @@
                 <div class="table-responsive">
                     <table id="csDetailsTable" class="table text-center table-striped table-sm table-bordered">
                         <thead>
-                            <tr>
-                                <th>Materials</th>
-                                <th>Brand</th>
-                                <th>Model</th>
-                                @forelse ($suppliers as $supplier_key => $supplier_value)
-                                    <th>
-                                        {{ $is_old ? old('supplier_name')[$supplier_key] : $supplier_value->supplier->name }}
-                                    </th>
-                                @empty
-                                @endforelse
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php $price_index = 0; @endphp
-                            @forelse ($materials as $material_key => $material_value)
-                                @forelse ($suppliers as $supplier_key => $supplier_value)
-                                    @if ($loop->first)
-                                        <tr>
-                                            <td class="cs_material text-center">
-                                                {{ $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode }}
-                                            </td>
-                                            <td class="cs_brand text-center">
-                                                {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? 'Null' }}
-                                            </td>
-                                            <input type="hidden" name="cs_brand_name[]" class="cs_brand_name"
-                                                value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? 'Null' }}">
-                                            <td class="cs_model text-center">
-                                                {{ $is_old ? old('model')[$material_key] : $material_value->model ?? 'Null' }}
-                                            </td>
-                                    @endif
-                                    <td>
-                                        <input type="text" name="price[]"
-                                            value="{{ $is_old
-                                                ? old('price')[$price_index++]
-                                                : $cs->csMaterialsSuppliers->where('cs_material_id', $material_value->id)->where('cs_supplier_id', $supplier_value->id)->first()->price }}"
-                                            class="form-control text-center" placeholder="Pricez" required />
-                                    </td>
-                                    @if ($loop->last)
-                                        </tr>
-                                    @endif
-                                @empty
-                                @endforelse
+                        <tr>
+                            <th>Materials</th>
+                            <th>Brand</th>
+                            <th>Model</th>
+                            @forelse ($suppliers as $supplier_key => $supplier_value)
+                                <th>
+                                    {{ $is_old ? old('supplier_name')[$supplier_key] : $supplier_value->supplier->name }}
+                                </th>
                             @empty
                             @endforelse
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @php $price_index = 0; @endphp
+                        @forelse ($materials as $material_key => $material_value)
+                            @forelse ($suppliers as $supplier_key => $supplier_value)
+                                @if ($loop->first)
+                                    <tr>
+                                        <td class="cs_material text-center">
+                                            {{ $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode }}
+                                        </td>
+                                        <td class="cs_brand text-center">
+                                            {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? 'Null' }}
+                                        </td>
+                                        <input type="hidden" name="cs_brand_name[]" class="cs_brand_name"
+                                               value="{{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? 'Null' }}">
+                                        <td class="cs_model text-center">
+                                            {{ $is_old ? old('model')[$material_key] : $material_value->model ?? 'Null' }}
+                                        </td>
+                                        @endif
+                                        <td>
+                                            <input type="text" name="price[]"
+                                                   value="{{ $is_old
+                                                ? old('price')[$price_index++]
+                                                : $cs->csMaterialsSuppliers->where('cs_material_id', $material_value->id)->where('cs_supplier_id', $supplier_value->id)->first()->price }}"
+                                                   class="form-control text-center" placeholder="Pricez" required />
+                                        </td>
+                                        @if ($loop->last)
+                                    </tr>
+                                @endif
+                            @empty
+                            @endforelse
+                        @empty
+                        @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -356,17 +356,17 @@
                         <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
                             <option value="">Select Brand</option>
                             @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}" @selected($brand->id == @$brand_id[$key])>{{ $brand->name }}</option>
+                <option value="{{ $brand->id }}" @selected($brand->id == @$brand_id[$key])>{{ $brand->name }}</option>
                             @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" name="model[]" class="form-control model text-center" autocomplete="off">
-                    </td>
-                    <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
-                    </td>
-                </tr>`
+                </select>
+            </td>
+            <td>
+                <input type="text" name="model[]" class="form-control model text-center" autocomplete="off">
+            </td>
+            <td>
+                <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
+            </td>
+        </tr>`
             );
         }
 
@@ -396,17 +396,17 @@
                     <td>
                         <select name="vat_tax[]" id="vat_tax" class="form-control vat_tax text-center" required>
                             @foreach ($Taxes as $data)
-                                <option value="{{ $data }}">{{ $data }}</option>
+                <option value="{{ $data }}">{{ $data }}</option>
                             @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" name="credit_period[]"  class="form-control credit_period text-center" placeholder="Credit Period" autocomplete="off" required>
-                    </td>
-                    <td>
-                        <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
-                    </td>
-                </tr>`
+                </select>
+            </td>
+            <td>
+                <input type="text" name="credit_period[]"  class="form-control credit_period text-center" placeholder="Credit Period" autocomplete="off" required>
+            </td>
+            <td>
+                <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
+            </td>
+        </tr>`
             );
         }
 
