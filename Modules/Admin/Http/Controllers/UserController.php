@@ -61,6 +61,7 @@ class UserController extends Controller
     {
         // dd($request->input('role'));
         try {
+            
             Validator::make($request->all(), [
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|same:confirm-password',
@@ -115,12 +116,14 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         try {
+            // dd($request->all());
             $userData = $request->all();
             if (!empty($userData['password'])) {
                 $userData['password'] = Hash::make($request['password']);
             } else {
                 $userData['password'] = $user->password;
             }
+            // dd($userData);
             $user->update($userData);
             DB::table('model_has_roles')->where('model_id', $user->id)->delete();
             $user->assignRole($userData['role']);

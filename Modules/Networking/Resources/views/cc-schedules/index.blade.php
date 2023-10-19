@@ -59,9 +59,15 @@
                         <td>{{ $details->fr_no }}</td>
                         <td class="noWrapStyle">{{ $details->frDetails->connectivity_point }}</td>
                         <td></td>
-                        <td>{{ date('d-m-Y', strtotime($details->delivery_date)) }}</td>
-                        <td class="billing_date">{{ date('d-m-Y', strtotime($details->billing_date)) }}</td>
-                        <td>{{ date('d-m-Y', strtotime($details->commissioning_date)) }}</td>
+                        <td>
+                            {{ !empty($details->delivery_date) ? date('d-m-Y', strtotime($details->delivery_date)) : '' }}
+                        </td>
+                        <td class="billing_date">
+                            {{ !empty($details->billing_date) ? date('d-m-Y', strtotime($details->billing_date)) : '' }}
+                        </td>
+                        <td>
+                            {{ !empty($details->commissioning_date) ? date('d-m-Y', strtotime($details->commissioning_date)) : '' }}
+                        </td>
                         <td class="noWrapStyle">
                             {{ date('d-m-Y', strtotime($details->sale->approval_date)) }}
                             {{-- <span class="checkbox-fade">

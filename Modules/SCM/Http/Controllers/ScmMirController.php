@@ -277,43 +277,44 @@ class ScmMirController extends Controller
 
     public function searchTypeNo()
     {
+        // dd(request()->customQueryFields['type']);
         $data = StockLedger::query()
             ->where('received_type', request()->customQueryFields['type'])
-            ->orderBy('receiveable_id')
+            ->orderBy('stockable_id')
             ->when(request()->customQueryFields['type'] == 'MRR', function ($query) {
-                $query->whereHasMorph('receiveable', ScmMrr::class, function ($query2) {
+                $query->whereHasMorph('stockable', ScmMrr::class, function ($query2) {
                     $query2->where('mrr_no', 'like', '%' . request()->search . '%');
                 });
             })
             ->when(request()->customQueryFields['type'] == 'ERR', function ($query) {
-                $query->whereHasMorph('receiveable', ScmErr::class, function ($query) {
+                $query->whereHasMorph('stockable', ScmErr::class, function ($query) {
                     $query->where('err_no', 'like', '%' . request()->search . '%');
                 });
             })
             ->when(request()->customQueryFields['type'] == 'WCR', function ($query) {
-                $query->whereHasMorph('receiveable', ScmWcrr::class, function ($query) {
+                $query->whereHasMorph('stockable', ScmWcrr::class, function ($query) {
                     $query->where('wcr_no', 'like', '%' . request()->search . '%');
                 });
             })
             ->when(request()->customQueryFields['type'] == 'WOR', function ($query) {
-                $query->whereHasMorph('receiveable', ScmWor::class, function ($query) {
+                $query->whereHasMorph('stockable', ScmWor::class, function ($query) {
                     $query->where('wor_no', 'like', '%' . request()->search . '%');
                 });
             })
             ->when(request()->customQueryFields['type'] == 'OS', function ($query) {
-                $query->whereHasMorph('receiveable', OpeningStock::class, function ($query) {
+                $query->whereHasMorph('stockable', OpeningStock::class, function ($query) {
                     $query->where('id', 'like', '%' . request()->search . '%');
                 });
             })
             ->get()
             ->unique(function ($item) {
-                return $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no ?? $item->receiveable->id;
+                return $item->stockable->mrr_no ?? $item->stockable->err_no ?? $item->stockable->wcr_no ?? $item->stockable->wor_no ?? $item->stockable->id;
             })
             ->take(10)
             ->map(fn ($item) => [
-                'value' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no ?? $item->receiveable->id,
-                'label' => $item->receiveable->mrr_no ?? $item->receiveable->err_no ?? $item->receiveable->wcr_no ?? $item->receiveable->wor_no ?? $item->receiveable->id,
-                'id'    => $item->receiveable->id ?? null,
+                'value' => $item->stockable->mrr_no ?? $item->stockable->err_no ?? $item->stockable->wcr_no ?? $item->stockable->wor_no ?? $item->stockable->id,
+                'label' => $item->stockable->mrr_no ?? $item->stockable->err_no ?? $item->stockable->wcr_no ?? $item->stockable->wor_no ?? $item->stockable->id,
+                'id'    => $item->stockable->id ?? null,
             ])
             ->values()
             ->all();
@@ -352,8 +353,8 @@ class ScmMirController extends Controller
     {
         // dd(request()->from_branch);
         $data['current_stock'] = StockLedger::where('branch_id', request()->branch)
-            ->when(request()->receiveable_id, function ($query) {
-                return $query->where('receiveable_id', request()->receiveable_id);
+            ->when(request()->stockable_id, function ($query) {
+                return $query->where('stockable_id', request()->stockable_id);
             })
             ->when(request()->received_type, function ($query) {
                 return $query->where('received_type', request()->received_type);
@@ -441,7 +442,6 @@ class ScmMirController extends Controller
             ->where([
                 'material_id' => request()->material_id,
                 'brand_id' => request()->brand_id,
-                'model' => request()->model,
                 'receiveable_id' => request()->receiveable_id,
                 'received_type' => request()->received_type,
                 'branch_id' => request()->from_branch_id
@@ -459,6 +459,9 @@ class ScmMirController extends Controller
                 }
             })
             ->values();
+        // ;
+
+        // dd($data);
         return response()->json($data);
     }
 
@@ -475,6 +478,26 @@ class ScmMirController extends Controller
                 'branch_id' => $branch,
                 'received_type' => request()->received_type,
                 'receiveable_id' => request()->receiveable_id,
+            ])
+            ->when(request()->material_id, function ($query) {
+                $query->where('material_id', request()->material_id);
+            })
+            ->when(request()->brand_id, function ($query) {
+                $query->where('brand_id', request()->brand_id);
+            })
+            ->when(request()->model, function ($query) {
+                $query->where('model', request()->model);
+            })
+            ->sum('quantity');
+
+        return $branch_balance;
+    }
+
+    public function branchWiseMaterialStock($branch): int
+    {
+        $branch_balance = StockLedger::query()
+            ->where([
+                'branch_id' => $branch,
             ])
             ->when(request()->material_id, function ($query) {
                 $query->where('material_id', request()->material_id);
@@ -521,6 +544,15 @@ class ScmMirController extends Controller
         $data = [
             'from_branch_balance' => $this->branchWiseStock(request()->from_branch_id),
             'to_branch_balance' => $this->branchWiseStock(request()->to_branch_id),
+        ];
+        return response()->json($data);
+    }
+
+    public function getFromAndToBranchStock()
+    {
+        $data = [
+            'from_branch_balance' => $this->branchWiseMaterialStock(request()->from_branch_id),
+            'to_branch_balance' => $this->branchWiseMaterialStock(request()->to_branch_id),
         ];
         return response()->json($data);
     }

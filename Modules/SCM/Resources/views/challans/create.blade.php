@@ -780,7 +780,7 @@
                     material_id: material_name.val(),
                     brand_id: brand.val(),
                     model: model.val(),
-                    receiveable_id: receiveable_id,
+                    stockable_id: receiveable_id,
                     received_type: received_type,
                 },
                 success: function(data) {

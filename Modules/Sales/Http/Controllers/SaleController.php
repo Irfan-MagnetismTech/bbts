@@ -404,7 +404,7 @@ class SaleController extends Controller
                         'capacity' => $saleLinkDetail->planLinkDetail->new_transmission_capacity,
                     ];
 
-                    NetServiceRequisition::create($nttn_req);
+                    // NetServiceRequisition::create($nttn_req);
 
                     if ($saleDetail->saleLinkDetails()->exists()) {
                         $mrsNoCounter++;
@@ -417,7 +417,7 @@ class SaleController extends Controller
                             "link_no"           => $saleLinkDetail->planLinkDetail->link_no,
                             "type"              => 'client',
                             "requisition_by"    => auth()->id(),
-                            "branch_id"         => 1,
+                            "branch_id"         => $saleDetail->frDetails->branch_id,
                             "date"              => now()->format('d-m-Y'),
                         ];
                         $link_equipment_requisitionData = ScmRequisition::create($link_equipment_requisition);
@@ -446,7 +446,7 @@ class SaleController extends Controller
                         "fr_no"             => $saleDetail->fr_no,
                         "type"              => 'client',
                         "requisition_by"    => auth()->id(),
-                        "branch_id"         => 1,
+                        "branch_id"         => $saleDetail->frDetails->branch_id,
                         "date"              => now()->format('d-m-Y'),
                     ];
 
@@ -522,8 +522,8 @@ class SaleController extends Controller
                     'total_amount' => $TotalAmount,
                 ];
 
-                $otc_data = BillingOtcBill::create($otc);
-                $otc_data->lines()->createMany($otc_lines_data);
+                // $otc_data = BillingOtcBill::create($otc);
+                // $otc_data->lines()->createMany($otc_lines_data);
 
                 // if (count($values->equipmentPlans)) {
                 //     $material_array[$key]['parent']['main'] = [

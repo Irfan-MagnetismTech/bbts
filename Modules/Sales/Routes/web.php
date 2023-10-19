@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Sales\Http\Controllers\LeadGenerationController;
 use Modules\Sales\Http\Controllers\MeetingController;
-use Modules\Sales\Http\Controllers\FollowUpController;
+use Modules\Sales\Http\Controllers\FollowupController;
 use Modules\Sales\Http\Controllers\CategoryController;
 use Modules\Sales\Http\Controllers\ConnectivityRequirementController;
 use Modules\Sales\Http\Controllers\ProductController;
@@ -36,7 +36,7 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::resources([
         'lead-generation' => LeadGenerationController::class,
         'meeting' => MeetingController::class,
-        'followup' => FollowUpController::class,
+        'followup' => FollowupController::class,
         'category' => CategoryController::class,
         'product' => ProductController::class,
         'feasibility-requirement' => FeasibilityRequirementController::class,
