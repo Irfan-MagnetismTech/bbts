@@ -68,7 +68,12 @@ class ConnectivityRequirement extends Model
 
     public function planning(): BelongsTo
     {
-        return $this->belongsTo(Planning::class, 'fr_no', 'fr_no');
+        return $this->belongsTo(Planning::class, 'fr_no', 'fr_no')->where('is_modified',0)->withDefault();
+    }
+
+    public function modificationPlan()
+    {
+        return $this->hasOne(Planning::class, 'connectivity_requirement_id', 'id');
     }
 
     public function fromLocation(): BelongsTo
@@ -88,12 +93,17 @@ class ConnectivityRequirement extends Model
 
     public function survey()
     {
-        return $this->hasOne(Survey::class, 'fr_no', 'fr_no');
+        return $this->belongsTo(Survey::class, 'fr_no', 'fr_no')->where('is_modified',0);
+    }
+
+    public function modificationSurvey()
+    {
+        return $this->hasOne(Survey::class, 'connectivity_requirement_id', 'id');
     }
 
     public function costing()
     {
-        return $this->hasOne(Costing::class, 'fr_no', 'fr_no');
+        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no')->where('is_modified',0)->withDafault();
     }
 
     public function costingByConnectivity()

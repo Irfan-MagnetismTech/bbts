@@ -6,9 +6,9 @@
     $form_heading = !empty($survey->id) ? 'Update' : 'Add';
     $form_url = !empty($survey->id) ? route('survey-modification.update', $survey->id) : route('survey-modification.store');
     $form_method = !empty($survey->id) ? 'PUT' : 'POST';
-    
+
     $methods = $is_old ? old('method') : $methods ?? [];
-    
+
 @endphp
 
 @section('breadcrumb-title')
@@ -78,7 +78,7 @@
                 <div class="card-body">
                     <div class="row">
                         @php
-                            
+
                             if (!empty($survey)) {
                                 $link_types = $survey->surveyDetails->pluck('link_type')->toArray();
                                 $options = $survey->surveyDetails->pluck('option')->toArray();
@@ -100,7 +100,7 @@
                                 $contact_designation = $is_old ? old('contact_designation') : $survey->feasibilityRequirementDetails->contact_designation ?? '';
                                 $connectivity_remarks = $is_old ? old('connectivity_remarks') : $survey->feasibilityRequirementDetails->connectivity_remarks ?? '';
                             }
-                            
+
                         @endphp
                     </div>
                     <div class="row">
@@ -324,37 +324,37 @@
                                         <th>Remarks</th>
                                     </thead>
                                     <tbody>
-                                        @foreach ($grouped_qty as $key => $value)
+                                        @foreach ($connectivity_requirement->connectivityProductRequirementDetails as $key => $reqDetail)
                                             <tr>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <input type="text" name="product_name[]"
                                                             class="form-control text-center product_name" readonly
-                                                            value="{{ isset($grouped_current_qty[$key]) ? $grouped_current_qty[$key]->first()->product->name : $grouped_previous_qty[$key]->first()?->product?->name ?? '' }}">
+                                                            value="{{ $reqDetail->product?->name ?? '' }}">
                                                         <input type="hidden" name="product_id[]"
                                                             class="form-control text-center product_id" readonly
-                                                            value="{{ isset($grouped_current_qty[$key]) ? $grouped_current_qty[$key]->first()->product_id : $grouped_previous_qty[$key]->first()?->product_id ?? '' }}">
+                                                            value="{{ $reqDetail->product_id ?? '' }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <input type="text" name="prev_qty[]"
                                                             class="form-control text-right prev_qty" readonly
-                                                            value="{{ isset($grouped_previous_qty[$key]) ? $grouped_previous_qty[$key]->first()->capacity : 0 }}">
+                                                            value="{{ $reqDetail->prev_quantity ?? 0 }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <input type="text" name="req_qty[]"
                                                             class="form-control text-right req_qty" readonly
-                                                            value="{{ isset($grouped_current_qty[$key]) ? $grouped_current_qty[$key]->first()->capacity : 0 }}">
+                                                            value="{{ $reqDetail->capacity ?? 0 }}">
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <input type="text" name="unit[]"
                                                             class="form-control text-center unit" readonly
-                                                            value="{{ $value->first()?->product?->unit ?? '' }}">
+                                                            value="{{ $reqDetail->product?->unit ?? '' }}">
                                                     </div>
                                                 </td>
                                                 <td>
@@ -403,7 +403,9 @@
                                                     name="checked[{{ $key }}]">
                                             </td>
                                         @else
-                                            <td></td>
+                                            <td>
+                                                N/A
+                                            </td>
                                         @endif
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
@@ -423,16 +425,6 @@
                                         </td>
                                         <td>
                                             <div class="input-group input-group-sm input-group-primary">
-                                                <input type="text" name="existing_vendor_name[]"
-                                                    class="form-control text-center existing_vendor_name" readonly
-                                                    value="{{ $value->connectivityLink->vendor->name ?? '' }}">
-                                                <input type="hidden" name="existing_vendor_id[]"
-                                                    class="form-control text-center existing_vendor_id"
-                                                    value="{{ $value->connectivityLink->vendorid ?? '' }}">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="input-group input-group-sm input-group-primary">
                                                 <input type="text" name="existing_method[]"
                                                     class="form-control text-right existing_method" readonly
                                                     value="{{ $value->method }}">
@@ -442,6 +434,16 @@
                                                 <input type="hidden" name="existing_fr_no[]"
                                                     class="form-control existing_fr_no" readonly
                                                     value="{{ $value->physicalConnectivity->fr_no }}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm input-group-primary">
+                                                <input type="text" name="existing_vendor_name[]"
+                                                    class="form-control text-center existing_vendor_name" readonly
+                                                    value="{{ $value->connectivityLink->vendor->name ?? '' }}">
+                                                <input type="hidden" name="existing_vendor_id[]"
+                                                    class="form-control text-center existing_vendor_id"
+                                                    value="{{ $value->connectivityLink->vendorid ?? '' }}">
                                             </div>
                                         </td>
                                         <td>
@@ -587,7 +589,8 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="pop[]" id="pop" class="form-control pop"  data-key="
+                                                    <select name="pop[]" id="pop" class="form-control pop"
+                                                        data-key="
                                                     {{ $key1 }}">
                                                         <option value="">Select POP</option>
                                                         @foreach ($pops as $pop)
@@ -634,17 +637,17 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="capacity[]" id='new_current_capacity_{{ $key1 }}'
-                                                    class="myInputField myInputField_{{ $key1 }} form-control text-right new_current_capacity"  placeholder="Capacity"
-                                                        value="{{ $current_capacities[$key1] }}">
+                                                    <input type="text" name="capacity[]"
+                                                        id='new_current_capacity_{{ $key1 }}'
+                                                        class="myInputField myInputField_{{ $key1 }} form-control text-right new_current_capacity"
+                                                        placeholder="Capacity" value="{{ $current_capacities[$key1] }}">
                                                 </div>
                                             </td>
-        
+
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="new_remarks[]"
-                                                        class="form-control" placeholder="Remarks"
-                                                        value="{{ $remarks[$key1] }}">
+                                                    <input type="text" name="new_remarks[]" class="form-control"
+                                                        placeholder="Remarks" value="{{ $remarks[$key1] }}">
                                                 </div>
                                             </td>
                                             <td>
@@ -775,8 +778,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <button
-                        class="py-2 btn btn-success float-right">{{ !empty($survey) ? 'Update' : 'Save' }}</button>
+                    <button class="py-2 btn btn-success float-right">{{ !empty($survey) ? 'Update' : 'Save' }}</button>
                 </div>
             </div>
             {!! Form::close() !!}
@@ -965,7 +967,7 @@
                 })
             </script> --}}
             <script>
-                     $('.pop').on('change', function() {
+                $('.pop').on('change', function() {
                     var e = $(this)
                     let key1 = parseInt($(this).data('key'));
                     // console.log(key1);
@@ -981,7 +983,7 @@
 
                             data.connectivity_links.forEach(function(connectivity_link) {
                                 totalCapacity += parseInt(connectivity_link
-                                .capacity); // Ensure capacity is treated as an integer
+                                    .capacity); // Ensure capacity is treated as an integer
                             });
 
                             console.log("Total Capacity:", totalCapacity);
