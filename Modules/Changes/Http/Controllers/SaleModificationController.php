@@ -279,7 +279,7 @@ class SaleModificationController extends Controller
                     $total_otc = $connectivityRequirement->offerDetail->total_offer_otc;
                     $investment = $connectivityRequirement->costing->costingLinks->sum('investment');
                     $product_cost = $connectivityRequirement->costing->product_total_cost + $connectivityRequirement->costing->total_operation_cost;
-                    $monthly_cost = ($investment - $total_otc) / $month + $connectivityRequirement->costing->costingLinks->sum('capacity_amount') + $details->offerDetail->equipment_total_mrc;
+                    $monthly_cost = ($investment - $total_otc) / $month + $connectivityRequirement->costing->costingLinks->sum('capacity_amount') ;
                     $total_monthly_cost = $monthly_cost + $product_cost;
                     $monthly_revenue = $connectivityRequirement->offerDetail->grand_total;
                     $total_investment += $investment;

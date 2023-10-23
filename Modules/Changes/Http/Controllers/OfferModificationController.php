@@ -46,6 +46,7 @@ class OfferModificationController extends Controller
     {
         $data = $request->all();
         try {
+            // dd($data, $this);
             $offer = $this->createOffer($data);
             return redirect()->route('offer-modification.index')->with('success', 'Offer created successfully.');
         } catch (\Exception $e) {
@@ -126,8 +127,9 @@ class OfferModificationController extends Controller
             DB::beginTransaction();
             $requestData['is_modified'] = 1;
             $offer = Offer::create($requestData);
-
+            // dd($offer);
             $offerDetail = $this->createOfferDetails($offer, $requestData);
+            // dd($offerDetail);
             $details = $offer->offerDetails()->create($offerDetail);
             $details->offerLinks()->createMany($offerDetail['offerLinks']);
             DB::commit();

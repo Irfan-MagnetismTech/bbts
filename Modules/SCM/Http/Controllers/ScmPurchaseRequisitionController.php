@@ -92,6 +92,7 @@ class ScmPurchaseRequisitionController extends Controller
                     'unit_price' => $request->unit_price[$key],
                     'total_amount' => $request->unit_price[$key] * $request->quantity[$key],
                     'purpose' => $request->purpose[$key],
+                    'remarks' => $request->remarks[$key],
                 ];
             }
 
@@ -169,6 +170,7 @@ class ScmPurchaseRequisitionController extends Controller
                     'unit_price' => $request->unit_price[$key],
                     'total_amount' => $request->unit_price[$key] * $request->quantity[$key],
                     'purpose' => $request->purpose[$key],
+                    'remarks' => $request->remarks[$key],
                 ];
             }
 

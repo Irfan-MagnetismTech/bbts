@@ -53,16 +53,23 @@
                         <td>{{ $client_requirement->date }}</td>
                         <td>
                             <div class="icon-btn">
+                                {{-- @dd(!empty($client_requirement->modificationSurvey)); --}}
                                 <nobr>
-                                    @if (!empty($client_requirement->planning) && !empty($client_requirement->survey))
-                                            <a href="{{ route('add-modified-costing', $client_requirement->id) }}"
-                                                class="btn btn-sm btn-success">Add Costing</a>
-                                    @elseif (!empty($client_requirement->survey))
-                                            <a href="{{ route('add-modified-planning', $client_requirement->id) }}"
-                                                class="btn btn-sm btn-success">Add Planning</a>
+                                    @if (empty($client_requirement->costingByConnectivity) &&
+                                            !empty($client_requirement->modificationPlan) &&
+                                            !empty($client_requirement->modificationSurvey))
+                                        <a href="{{ url("changes/costing-modification/$client_requirement->id/create") }}"
+                                            class="btn btn-sm btn-success">Add Costing</a>
+                                    @elseif (!empty($client_requirement->modificationSurvey && empty($client_requirement->modificationPlan)))
+                                        <a href="{{ url("changes/client-plan-modification/$client_requirement->id/create") }}"
+                                            class="btn btn-sm btn-success">Add Planning</a>
+                                    @elseif(!empty($client_requirement->offerByConnectivity) && empty($client_requirement->modificationSurvey))
+                                        <a href="{{ route('add-modified-survey', $client_requirement->id) }}"
+                                            class="btn btn-sm btn-success">Add Survey</a>
+                                    @elseif(empty($client_requirement->offerByConnectivity))
+                                        <a href="{{ url("changes/add-modified-offer/$client_requirement->id/create") }}"
+                                            class="btn btn-sm btn-success">Add Offer</a>
                                     @else
-                                            <a href="{{ route('add-modified-survey', $client_requirement->id) }}"
-                                                class="btn btn-sm btn-success">Add Survey</a>
                                     @endif
                                     <a href="{{ route('connectivity-requirement.show', $client_requirement->id) }}"
                                         data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i

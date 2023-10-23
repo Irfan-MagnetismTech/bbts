@@ -25,8 +25,8 @@
 @section('content')
     <style>
         /* #calculation_table.table-bordered td, .table-bordered th{
-                                                                                border: 1px solid gainsboro!important;
-                                                                            } */
+                                                                                    border: 1px solid gainsboro!important;
+                                                                                } */
         #dv {
             background-color: #f6f9f9 !important;
             color: #191818 !important;
@@ -104,7 +104,7 @@
                             $wo_no = $is_old ? old('wo_no') : $sale->wo_no ?? null;
                             $grand_total = $is_old ? old('grand_total') : $sale->grand_total ?? 0;
                             $connectivity_requirement_id = $is_old ? old('connectivity_requirement_id') : $sale->connectivity_requirement_id ?? $connectivity_requirement_id;
-                            
+
                         @endphp
                         <x-input-box colGrid="4" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <x-input-box colGrid="4" name="client_no" value="{{ $client_no }}" label="Client Id" />
@@ -164,9 +164,9 @@
                                 <div class="row">
                                     <x-input-box colGrid="3" name="" value="{{ $value->delivery_date ?? '' }}"
                                         label="Delivery Date" class="date" />
-                                    <x-input-box colGrid="3" name=""
+                                    {{-- <x-input-box colGrid="3" name=""
                                         value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date"
-                                        class="container" attr='readonly' />
+                                        class="container" attr='readonly' /> --}}
 
                                     <div class="col-3">
                                         <div class="form-check-inline">
@@ -312,8 +312,7 @@
                                         @foreach ($value->saleLinkDetails as $link_key => $link_value)
                                             <span class="badge badge-primary">{{ $link_value->link_type }}</span>
                                             <input type="hidden" name="link_no[]"value="{{ $link_value->link_no }}">
-                                            <input type="hidden"
-                                                name="link_type[]"value="{{ $link_value->link_type }}">
+                                            <input type="hidden" name="link_type[]"value="{{ $link_value->link_type }}">
                                         @endforeach
                                     </div>
                                 </div>

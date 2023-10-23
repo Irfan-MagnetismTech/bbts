@@ -253,6 +253,7 @@ class SaleController extends Controller
             ->whereHas('client', function ($qr) {
                 return $qr->where('client_name', 'like', '%' . request()->search . '%');
             })
+            ->where('is_modified', 0)
             ->get()
             ->map(fn ($item) => [
                 'value'                 => $item->client->client_name,

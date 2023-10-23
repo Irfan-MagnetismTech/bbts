@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Modules\SCM\Entities\Supplier;
 use Termwind\Components\Dd;
 use Illuminate\Http\Request;
 use Modules\Admin\Entities\Brand;
@@ -259,7 +260,7 @@ class PurchaseOrderController extends Controller
 
     public function searchMaterialPriceByCsAndRequsiition($csId, $supplierId, $materialId)
     {
-        $data = CsMaterialSupplier::query() 
+        $data = CsMaterialSupplier::query()
             ->with('csMaterial.material', function ($query) {
                 $query->select('id', 'name', 'unit');
             })
@@ -273,12 +274,12 @@ class PurchaseOrderController extends Controller
             })
             ->get();
 
-            return $data ; 
+            return $data ;
 
     }
 
     public function getMaterialByCS ($cs_no, $supplier_id){
-        
+
         return CsMaterialSupplier::with('csMaterial.material','brand')
             ->where('cs_id', $cs_no)
             ->whereHas('csSupplier', function ($query) use ($cs_no, $supplier_id) {
@@ -409,5 +410,57 @@ class PurchaseOrderController extends Controller
         $purchase_order = PurchaseOrder::where('id', $id)->first();
         return view('scm::purchase-orders.pdf', compact('purchase_order'));
 
+    }
+
+    public function findSupplier()
+    {
+        $searchTerm = request('search');
+
+        $suppliers = Supplier::where('name', 'like', '%' . $searchTerm . '%')
+            ->with(['csSuppliers.cs'])
+            ->limit(10)
+            ->get();
+
+        $response = [];
+
+        foreach ($suppliers as $supplier) {
+            $csNos = $supplier->csSuppliers->map(function ($csSupplier) {
+                return [
+                    'id' => $csSupplier->cs->id,
+                    'cs_no' => $csSupplier->cs->cs_no,
+                ];
+            });
+
+            $response[] = [
+                'label' => $supplier->name,
+                'value' => $supplier->id,
+                'address' => $supplier->address,
+                'contact' => $supplier->contact,
+                'account_id' => $supplier->account->id ?? 0,
+                'cs_no' => $csNos,
+            ];
+        }
+
+        return response()->json($response);
+    }
+
+    public function findIndentNo(Request $request)
+    {
+        $indentNo = Cs::where('id', $request->cs_id)->value('indent_no');
+        $response = [];
+        if ($indentNo !== null) {
+            $indentId = Indent::where('indent_no', $indentNo)->value('id');
+
+            $response[] = [
+                'label' => $indentNo,
+                'value' => $indentId,
+            ];
+        } else {
+            $response[] = [
+                'label' => '',
+                'value' => '',
+            ];
+        }
+        return response()->json($response);
     }
 }
