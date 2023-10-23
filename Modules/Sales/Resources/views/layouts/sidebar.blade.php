@@ -151,10 +151,20 @@
                     </li>
                 </ul>
             @endcan
+
+            @can('connectivity-requirement-create')
+                <ul class="pcoded-submenu">
+                    <li class="{{ request()->routeIs('client-requirement-modification.create') ? 'active' : null }}">
+                        <a href="{{ url('changes/client-requirement-modification/create') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification
+                                Requirment</span><span class="pcoded-mcaret"></span></a>
+                    </li>
+                </ul>
+            @endcan
             <ul class="pcoded-submenu">
                 <li class="{{ request()->routeIs('client-requirement-modification.index') ? 'active' : null }}">
                     <a href="{{ route('client-requirement-modification.index') }}"> <span class="pcoded-micon"><i
-                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Changes List</span><span
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification List</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
             </ul>

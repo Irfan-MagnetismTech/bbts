@@ -171,12 +171,18 @@
                                             </td>
                                             <td>
                                                 @if (!empty($item->planning) && !empty($item->survey) && !empty($item->connectivityRequirement))
-                                                    @can('cost-create')
+                                                    @if (empty($item->costing))
+                                                        @can('cost-create')
+                                                            <div class="input-group input-group-sm input-group-success">
+                                                                <a href="{{ route('add-costing', $item->id) }}"
+                                                                    class="btn btn-sm btn-success">Add Costing</a>
+                                                            </div>
+                                                        @endcan
+                                                    @else
                                                         <div class="input-group input-group-sm input-group-success">
-                                                            <a href="{{ route('add-costing', $item->id) }}"
-                                                                class="btn btn-sm btn-success">Add Costing</a>
+                                                            <span class="btn btn-sm btn-info"> Costing Complete</span>
                                                         </div>
-                                                    @endcan
+                                                    @endif
                                                 @elseif (!empty($item->survey && $item->connectivityRequirement))
                                                     @can('plan-create')
                                                         <div class="input-group input-group-sm input-group-success">

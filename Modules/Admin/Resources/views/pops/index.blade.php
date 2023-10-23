@@ -2,7 +2,7 @@
 @section('title', 'POPs')
 
 @section('breadcrumb-title')
-   List of  POPs
+    List of POPs
 @endsection
 
 @section('style')
@@ -10,53 +10,69 @@
     </style>
 @endsection
 @section('breadcrumb-button')
-    <a href="{{ route('pops.create')}}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
+    <a href="{{ route('pops.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
 @endsection
 
 @section('content')
 
-<div class="table-responsive">
-    <table id="dataTable" class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>SL</th>
-            <th>Pop Name</th>
-            <th>Type</th>
-            <th>Branch Name</th>
-            <th>Address</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tfoot>
-        <tr>
-            <th>SL</th>
-            <th>Pop Name</th>
-            <th>Branch Name</th>
-            <th>Address</th>
-            <th>Action</th>
-        </tr>
-        </tfoot>
-        <tbody>
-        @foreach(@$pops as $key => $data)
-            <tr>
-                <td>{{$loop->iteration}}</td>
-                <td class="text-center">{{$data->name}}</td>
-                <td class="text-center">{{$data->branch->name ?? ''}}</td>
-                <td class="text-center">{{$data->address}}</td>
-                <td>
-                    <div class="icon-btn">
-                        <nobr>
-                            <a href="{{ route('pops.show', $data->id) }}" data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                            <a href="{{ url("admin/pops/$data->id/edit") }}" data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                            {!! Form::open(array('url' => "admin/pops/$data->id",'method' => 'delete', 'class'=>'d-inline','data-toggle'=>'tooltip','title'=>'Delete')) !!}
-                            {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete'])}}
-                            {!! Form::close() !!}
-                        </nobr>
-                    </div>
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-</div>
+    <div class="table-responsive">
+        <table id="dataTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>SL</th>
+                    <th>Pop Name</th>
+                    <th>Type</th>
+                    <th>Thana</th>
+                    <th>Branch Name</th>
+                    <th>Lat/Long</th>
+                    <th>Contact Person</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>SL</th>
+                    <th>Pop Name</th>
+                    <th>Type</th>
+                    <th>Thana</th>
+                    <th>Branch Name</th>
+                    <th>Lat/Long</th>
+                    <th>Contact Person</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (@$pops as $key => $data)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $data->name }}</td>
+                        <td class="text-center">{{ $data->type ?? '' }}</td>
+                        <td class="text-center">{{ $data->thana?->name ?? '' }}</td>
+                        <td class="text-center">{{ $data->branch->name ?? '' }}</td>
+                        <td class="text-center">{{ $data->lat_long }}</td>
+                        <td class="text-center">{{ $data->contact_person }}</td>
+                        <td>
+                            <div class="icon-btn">
+                                <nobr>
+                                    <a href="{{ route('pops.show', $data->id) }}" data-toggle="tooltip" title="Show"
+                                        class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ url("admin/pops/$data->id/edit") }}" data-toggle="tooltip" title="Edit"
+                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    {!! Form::open([
+                                        'url' => "admin/pops/$data->id",
+                                        'method' => 'delete',
+                                        'class' => 'd-inline',
+                                        'data-toggle' => 'tooltip',
+                                        'title' => 'Delete',
+                                    ]) !!}
+                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-outline-danger btn-sm delete']) }}
+                                    {!! Form::close() !!}
+                                </nobr>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @endsection

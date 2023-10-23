@@ -168,7 +168,7 @@
                             <span class="cr">
                                 <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                             </span>
-                            <span class="font-weight-bold">Client Readyness</span>
+                            <span class="font-weight-bold">Field Operation</span>
                         </label>
                     </div>
                 </div>

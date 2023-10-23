@@ -13,6 +13,8 @@ use Modules\Sales\Services\CommonService;
 use Modules\Sales\Entities\LeadGeneration;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\QueryException;
+use Modules\Networking\Entities\LogicalConnectivity;
+use Modules\Networking\Entities\LogicalConnectivityLine;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
@@ -41,18 +43,35 @@ class ModifiedSurveyController extends Controller
         // dd($survey);
         $pops = Pop::get();
         $vendors = Vendor::get();
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('id', $id)->first();
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 
+        'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')
+        ->where('id', $id)->first();
         // dd($connectivity_requirement);
-        $current_qty = $connectivity_requirement->connectivityProductRequirementDetails;
-        $previous_qty = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('fr_no', $connectivity_requirement->fr_no)->latest()->first()->connectivityProductRequirementDetails;
-        $grouped_qty = $previous_qty->merge($current_qty)->groupBy('product_id');
-        $grouped_current_qty = $current_qty->groupBy('product_id');
-        $grouped_previous_qty = $previous_qty->groupBy('product_id');
+        // $current_qty = $connectivity_requirement->connectivityProductRequirementDetails;
+        // $previous_qty = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('fr_no', $connectivity_requirement->fr_no)->latest()->first()->connectivityProductRequirementDetails;
+        // $grouped_qty = $previous_qty->merge($current_qty)->groupBy('product_id');
+        // $grouped_current_qty = $current_qty->groupBy('product_id');
+        // $grouped_previous_qty = $previous_qty->groupBy('product_id');
+        // $logicalConnectivity = LogicalConnectivity::with('lines')
+        //     ->where('client_no', $connectivity_requirement->client_no)->where('fr_no', $connectivity_requirement->fr_no)
+        //     ->latest()->first(); 
+
+        // $existingService = $logicalConnectivity->lines()->get()->map(function($item) use($connectivity_requirement){
+        //     $reqProducts = $connectivity_requirement->connectivityProductRequirementDetails;
+        //     // if($item->product_id == )
+
+        //     return $reqProducts;
+        // });
+
+        // dd($connectivity_requirement);
+
         $existingConnections = PhysicalConnectivityLines::query()
             ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
                 return $qr->where('fr_no', $connectivity_requirement->fr_no);
             })->get();
-        return view('changes::modified_servey.create', compact('pops', 'vendors', 'connectivity_requirement', 'grouped_qty', 'grouped_previous_qty', 'grouped_current_qty', 'existingConnections'));
+        return view('changes::modified_servey.create', compact('pops', 'vendors', 
+                'connectivity_requirement',  
+              'existingConnections'));
     }
 
     /**
