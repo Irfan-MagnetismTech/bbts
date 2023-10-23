@@ -45,7 +45,7 @@
                 appendedData += `<div class="card">
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-3">
+                                                <div class="col-5">
                                                     <div class="checkbox-fade fade-in-primary">
                                                     <label>
                                                         <input type="checkbox" class="checkbox" value="Primary" name="checked[${indx}]">
@@ -58,9 +58,9 @@
                                                     </label>
                                                     </div>
                                                 </div>
-                                                <div class="col-9">`
+                                                <div class="col-7">`
                 element.offer_links.forEach(elmnt => {
-                    appendedData += `<span>${elmnt.link_type}</span>
+                    appendedData += `<span class="badge badge-info" style="font-size:12px">${elmnt.link_type}</span>
                                         <input type="hidden" name="link_no[${indx}][]"value="${elmnt.link_no}">
                                         <input type="hidden" name="link_type[${indx}][]"value="${elmnt.link_type}">`
                 })
@@ -92,26 +92,10 @@
                                                         <label class="input-group-addon input-group-addon-manual"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','${element.fr_no}',this)"></i></label>
                                                     </div>
                                                 </div>
-                                                <x-input-box colGrid="3" name="bill_payment_date[${indx}]" label="Bill Payment Date" class="container" attr='readonly' value=""/>
-                                                <div class="col-3">
-                                                    <div class="form-check-inline">
-                                                        <label class="form-check-label" for="prepaid_${+indx}">
-                                                            <input type="radio" class="form-check-input payment_status" id="prepaid_${+indx}" name="payment_status[${indx}]"
-                                                                value="prepaid" checked>
-                                                            Prepaid
-                                                        </label>
-                                                    </div>
-                                                    
-                                                    <div class="form-check-inline">
-                                                        <label class="form-check-label" for="prepaid_${+indx}">
-                                                            <input type="radio" class="form-check-input payment_status" id="prepaid_${+indx}" name="payment_status[${indx}]"
-                                                                value="postpaid">
-                                                                Postpaid
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <x-input-box colGrid="3" name="mrc[${indx}]" value="${element.grand_total}" label="MRC" attr="readonly" />
-                                                <x-input-box colGrid="3" name="otc[${indx}]" value="${element.total_offer_otc}" label="OTC" attr="readonly"/>
+                                                
+                                                
+                                                <x-input-box colGrid="2" name="mrc[${indx}]" value="${element.grand_total}" label="MRC" attr="readonly" />
+                                                <x-input-box colGrid="2" name="otc[${indx}]" value="${element.total_offer_otc}" label="OTC" attr="readonly"/>
                                             </div>
                                         <div>
                                         </div>
@@ -410,7 +394,7 @@
             var $table = $('.box');
             var $inpt = $('.container');
             if (!$table.is(event.target) && !$table.has(event.target).length && !$inpt.is(event
-                .target) && !$inpt.has(event.target).length) {
+                    .target) && !$inpt.has(event.target).length) {
                 $('.box').css('left', '-1000px');
             }
         });

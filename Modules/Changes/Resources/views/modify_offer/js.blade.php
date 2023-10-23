@@ -19,19 +19,19 @@
     //     calculateTotalOtc($(this));
     // });
     $('.offer_otc').on('input', function() {
-    // calculateOtc($(this));
-    var offer_otc = parseFloat($(this).val());
-    offer_otc = isNaN(offer_otc) ? 0 : offer_otc;
+        // calculateOtc($(this));
+        var offer_otc = parseFloat($(this).val());
+        offer_otc = isNaN(offer_otc) ? 0 : offer_otc;
 
-    var client_equipment_amount = parseFloat($(this).closest('tr').find('.client_equipment_amount').val());
-    client_equipment_amount = isNaN(client_equipment_amount) ? 0 : client_equipment_amount;
+        var client_equipment_amount = parseFloat($(this).closest('tr').find('.client_equipment_amount').val());
+        client_equipment_amount = isNaN(client_equipment_amount) ? 0 : client_equipment_amount;
 
-    var total_amount = offer_otc + client_equipment_amount;
-    $(this).closest('tr').find('.total_cost_otc').val(total_amount);
-    
-    $(this).val(offer_otc); // Optional: Set the value to the parsed offer_otc value
-    calculateTotalOtc($(this));
-});
+        var total_amount = offer_otc + client_equipment_amount;
+        $(this).closest('tr').find('.total_cost_otc').val(total_amount);
+
+        $(this).val(offer_otc); // Optional: Set the value to the parsed offer_otc value
+        calculateTotalOtc($(this));
+    });
 
 
 
@@ -47,6 +47,7 @@
             let cost_otc = $(this).val() ? $(this).val() : 0;
             total_cost_otc += parseFloat(cost_otc);
         });
+        console.log(total_otc)
         event.closest('.mainRow').find('.total_offer_otc').val(total_otc);
         event.closest('.mainRow').find('.grand_total_otc').val(total_cost_otc);
     }
@@ -72,11 +73,10 @@
     });
 
     function calculateEquipmentPrice(event) {
-        var equipment_offer_price = event.val();
-        console.log('equipment_offer_price', equipment_offer_price)
+        var equipment_offer_price = event.val() ?? 0;
         var client_equipment_amount = event.closest('.mainRow').find('.product_equipment_price').val() ?? 0;
-        console.log('client_equipment_amount', client_equipment_amount)
         var total_amount = parseFloat(equipment_offer_price) + parseFloat(client_equipment_amount);
+ 
         event.closest('tr').find('.equipment_total_otc').val(total_amount);
     }
 
@@ -98,9 +98,7 @@
         let operation_cost = value.closest('tr').find('.operation_cost').val() || 0;
 
         let roi = (link_invest - offer_otc) / month;
-        console.log('month', month)
         let mrc = Number(roi) + Number(capacity_amount) + Number(operation_cost);
-        console.log(offer_otc, link_invest, month, capacity_amount, operation_cost, roi, mrc)
         value.closest('tr').find('.offer_mrc').val(mrc.toFixed(2));
     }
 
