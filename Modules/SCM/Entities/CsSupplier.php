@@ -16,4 +16,10 @@ class CsSupplier extends Model
     {
         return $this->belongsTo(Supplier::class, 'supplier_id')->withDefault();
     }
+
+    public function cs()
+    {
+        return $this->belongsTo(Cs::class, 'cs_id')->select('id', 'cs_no');
+    }
+
 }

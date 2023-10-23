@@ -184,6 +184,7 @@
                         <th> Quantity </th>
                         <th> Total Amount </th>
                         <th> Purpose </th>
+                        <th> Remarks </th>
                         <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
                     </tr>
                 </thead>
@@ -200,6 +201,7 @@
                         $total_amount = old('total_amount', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('total_amount') : []);
                         $model = old('model', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('model') : []);
                         $purpose = old('purpose', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('purpose') : []);
+                        $remarks = old('remarks', !empty($purchaseRequisition) ? $purchaseRequisition->scmPurchaseRequisitionDetails->pluck('remarks') : []);
                     @endphp
                     @foreach ($material_name_with_code as $key => $requisitionDetail)
                         <tr>
@@ -233,11 +235,11 @@
                             </td>
                             <td>
                                 <input type="number" name="unit_price[]" class="form-control unit_price"
-                                    autocomplete="off" value="{{ $unit_price[$key] }}">
+                                    autocomplete="off" step="0.01" value="{{ $unit_price[$key] }}">
                             </td>
                             <td>
                                 <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off"
-                                    value="{{ $quantity[$key] }}">
+                                       step="0.01" value="{{ $quantity[$key] }}">
                             </td>
                             <td>
                                 <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
@@ -246,6 +248,10 @@
                             <td>
                                 <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"
                                     value="{{ $purpose[$key] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off"
+                                       value="{{ $remarks[$key] }}">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
@@ -311,16 +317,19 @@
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off">
                             </td>
                             <td>
-                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off">
+                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off" step="0.01">
                             </td>
                             <td>
-                                <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off">
+                                <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off" step="0.01">
                             </td>
                             <td>
                                 <input name="total_amount[]" class="form-control total_amount" autocomplete="off" readonly>
                             </td>
                             <td>
                                 <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">
+                            </td>
+                            <td>
+                                <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>

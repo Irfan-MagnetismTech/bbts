@@ -149,7 +149,7 @@ return response()->json($results);
             ->with('thana', 'district')
             ->limit(15)
             ->get()
-            ->map(function ($item){ 
+            ->map(function ($item){
                 $tana = $item->district->name ?? '';
                 $data = [
                     'id' => $item->id,
@@ -158,7 +158,7 @@ return response()->json($results);
                     'label' => $item->name . " (" . $item->location . ") - " . $tana. " - " . $item->district->name,
                 ];
                 return $data;
-            }); 
+            });
 
         return response()->json($results);
     }
@@ -483,3 +483,6 @@ return response()->json($results);
         ]);
     }
 }
+
+
+

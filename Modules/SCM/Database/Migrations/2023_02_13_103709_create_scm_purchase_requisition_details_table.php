@@ -25,6 +25,7 @@ return new class extends Migration
             $table->double('unit_price', 22, 2)->nullable();
             $table->double('total_amount', 22, 2)->nullable();
             $table->string('purpose')->nullable();
+            $table->string('remarks')->nullable();
             $table->timestamps();
         });
     }
