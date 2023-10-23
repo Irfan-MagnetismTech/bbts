@@ -127,43 +127,8 @@ class ScmChallanController extends Controller
         $models = [];
         $serial_codes = [];
         $branch_stock = [];
-        $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, $challan, &$branch_stock) {
-            // $materials[$key] = Stockledger::with('material')->where([
-            //     'receiveable_id' => $item->receiveable_id,
-            //     'receiveable_type' => $item->receiveable_type
-            // ])->get()
-            //     ->unique('material_id')
-            //     ->values();
-            // $brands[$key] = Stockledger::with('brand')->where([
-            //     'receiveable_id' => $item->receiveable_id,
-            //     'receiveable_type' => $item->receiveable_type,
-            //     'material_id' => $item->material_id
-            // ])
-            //     ->get()
-            //     ->unique('brand_id')
-            //     ->values();
-
-            // $models[$key] = StockLedger::query()->where([
-            //     'receiveable_id' => $item->receiveable_id,
-            //     'receiveable_type' => $item->receiveable_type,
-            //     'material_id' => $item->material_id,
-            //     'brand_id' => $item->brand_id
-            // ])
-            //     ->get()
-            //     ->unique('model')
-            //     ->values();
-
-            // $serial_codes[$key] = StockLedger::query()->where([
-            //     'receiveable_id' => $item->receiveable_id,
-            //     'receiveable_type' => $item->receiveable_type,
-            //     'material_id' => $item->material_id,
-            //     'brand_id' => $item->brand_id,
-            //     'model' => $item->model,
-            // ])
-            //     ->get()
-            //     ->unique('serial_code')
-            //     ->values();;
-
+        $type_no = [];
+        $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, $challan, &$branch_stock, &$type_no) {
             $materials[$key] = Stockledger::with('material')->dropdownDataListForChallan('material_id', $material = false, $brand = false, $modal = false, $item);
 
             $brands[$key] = Stockledger::with('brand')->dropdownDataListForChallan('brand_id', $material = true, $brand = false, $modal = false, $item);
@@ -172,18 +137,11 @@ class ScmChallanController extends Controller
 
             $serial_codes[$key] = Stockledger::dropdownDataListForChallan('serial_code', $material = true, $brand = true, $modal = true, $item);
 
-            // $branch_stock[] = StockLedger::query()
-            //     ->where([
-            //         'material_id' => $item->material_id,
-            //         'received_type' => $item->received_type,
-            //         'receiveable_id' => $item->receiveable_id,
-            //         'branch_id' => $challan->branch_id,
-            //     ])
-            //     ->sum('quantity');
+            $branch_stock[$key] = StockLedger::StockIn($challan->branch_id, $item->received_type, $item) + $item->quantity + StockLedger::StockOut($challan->branch_id, $item->received_type, $item);
 
-            $branch_stock[] = StockLedger::query()->branchStockForChallan($challan->branch_id, $item);
+            $type_no[$key] = $this->receiveTypeWiseList($item->received_type, $item->material_id, $item->brand_id, $challan->branch_id);
         });
-        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes', 'branch_stock', 'fr_no_list', 'formType'));
+        return view('scm::challans.create', compact('challan', 'brands', 'branchs', 'client_links', 'materials', 'models', 'serial_codes', 'branch_stock', 'fr_no_list', 'formType', 'type_no'));
     }
 
     /**
@@ -388,5 +346,53 @@ class ScmChallanController extends Controller
     {
         $challan = ScmChallan::where('id', $id)->first();
         return view('scm::challans.gate_pass_pdf', compact('challan'));
+    }
+
+    public function receiveTypeWiseList($received_type, $material_id, $brand_id, $branch_id)
+    {
+        $data = StockLedger::query()
+            ->where('received_type', $received_type)
+            ->when($material_id, function ($query) use ($material_id) {
+                $query->where('material_id', $material_id);
+            })
+            ->when($brand_id, function ($query) use ($brand_id) {
+                $query->where('brand_id', $brand_id);
+            })
+            ->when($branch_id, function ($query) use ($branch_id) {
+                $query->where('branch_id', $branch_id);
+            })
+            ->get()
+            ->unique('stockable_id')
+            ->map(function ($item) use ($received_type, $branch_id) {
+                $total_stock = StockLedger::query()
+                    ->where('stockable_id', $item->stockable_id)
+                    ->where('stockable_type', $item->stockable_type)
+                    ->where('received_type', $received_type)
+                    ->where('branch_id', $branch_id)
+                    ->where('material_id', $item->material_id)
+                    ->where('brand_id', $item->brand_id)
+                    ->sum('quantity');
+                $out_stock = StockLedger::query()
+                    ->where('receiveable_id', $item->stockable_id)
+                    ->where('stockable_type', $item->stockable_type)
+                    ->where('received_type', $received_type)
+                    ->where('branch_id', $branch_id)
+                    ->where('material_id', $item->material_id)
+                    ->where('brand_id', $item->brand_id)
+                    ->where('model', $item->model)
+                    ->where('quantity', '<', 0)
+                    ->sum('quantity');
+                if (($total_stock - $out_stock) >= 0) {
+                    if ($item->stockable->mrr_no) {
+                        return [
+                            'id' => $item->stockable_id,
+                            'type_no' => $item->stockable->mrr_no,
+                        ];
+                    }
+                }
+            })
+            ->values();
+        $data = array_filter($data->toArray());
+        return $data;
     }
 }
