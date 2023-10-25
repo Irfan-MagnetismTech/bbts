@@ -142,6 +142,7 @@ class CsController extends Controller
     public function update(CsRequest $request, Cs $c)
     {
         $cs = $c;
+
         try {
             $all_details = $this->getAllDetails($request->toArray());
 
@@ -161,7 +162,7 @@ class CsController extends Controller
 
             DB::commit();
 
-            return redirect()->route('cs.index')->with('message', 'Comparative Statement created');
+            return redirect()->route('cs.index')->with('message', 'Comparative Statement Updated');
         } catch (QueryException $e) {
             DB::rollBack();
             return redirect()->route('cs.create')->withErrors($e->getMessage());
@@ -312,7 +313,6 @@ class CsController extends Controller
 
 
         $results= Material::whereIn('id', $material_ids)
-            ->where('name', 'LIKE', '%' . $request->search . '%')
             ->limit(15)
             ->get()
             ->map(function ($item) {
@@ -335,3 +335,10 @@ class CsController extends Controller
         return response()->json($results);
     }
 }
+
+
+//$material_id = $is_old ? old('material_id')[$material_key] : $material_value->material->id;
+//$material_name = $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode ?? '---';
+//$unit = $is_old ? old('unit')[$material_key] : $material_value->material->unit ?? '---';
+//$brand_id = $is_old ? old('brand_id')[$material_key] : $material_value?->brand_id;
+//$model = $is_old ? old('model')[$material_key] : $material_value->model ?? '---';

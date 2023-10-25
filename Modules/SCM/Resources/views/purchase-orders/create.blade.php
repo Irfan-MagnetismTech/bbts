@@ -149,6 +149,8 @@
             <label for="remarks">Remarks</label>
             <input type="text" class="form-control" id="remarks" aria-describedby="remarks" name="remarks"
                    value="{{ old('remarks') ?? (@$purchaseOrder->remarks ?? '') }}">
+            <input type="hidden" class="is_closed" name="is_closed" id="is_closed"
+                   value="{{ old('is_closed') ?? (@$purchaseOrder->is_closed ?? 'no') }}">
         </div>
     </div>
     {{-- create a loading design --}}
@@ -464,46 +466,6 @@
             }));
         }
 
-        //$(document).on('keyup', "#supplier_name", function () {
-        //    $('.supplier_id').val('');
-        //    $('.cs_id').val('');
-        //    $('.cs_no').val('');
-        //    $('.material_name').text('');
-        //    $('.unit').val('');
-        //    $('.price').val('');
-        //    $('.unit_price').val('');
-        //
-        //    $(this).autocomplete({
-        //                minLength: 1, // Corrected spelling to "minLength"
-        //                source: function (request, response) {
-        //        $.ajax({
-        //                        url: "{{ route('findSupplier') }}",
-        //                        type: 'get',
-        //                        dataType: "json",
-        //                        data: {
-        //            search: request.term
-        //                        },
-        //                        success: function (data) {
-        //            response(data);
-        //        }
-        //                    });
-        //                },
-        //                select: function (event, ui) {
-        //        $('#supplier_name').val(ui.item.label);
-        //        $('#supplier_id').val(ui.item.value);
-        //        $('#cs_id').html('');
-        //        $('#client_links').html('');
-        //        var options = '<option value="">Select CS No</option>';
-        //        for (var i = 0; i < ui.item.cs_no.length; i++) {
-        //            options += `<option value="${ui.item.cs_no[i].id}">${ui.item.cs_no[i].cs_no}</option>`;
-        //        }
-        //                    $('#cs_id').html(options);
-        //                    return false;
-        //                }
-        //            });
-        //        });
-
-
         $(document).on('keyup', "#supplier_name", function () {
             $('.supplier_id').val('');
             $('.cs_id').val('');
@@ -544,35 +506,6 @@
                 }
             });
         });
-
-        {{--$(document).on('keyup', '#indent_no', function () {--}}
-        {{--    if ($('#supplier_name').val() == '') {--}}
-        {{--        alert('Please select supplier name first!');--}}
-        {{--        $('#indent_no').val('');--}}
-        {{--        return false;--}}
-        {{--    }--}}
-        {{--    $(this).autocomplete({--}}
-        {{--        source: function (request, response) {--}}
-        {{--            $.ajax({--}}
-        {{--                url: "{{ url('find-indent-no') }}",--}}
-        {{--                type: 'get',--}}
-        {{--                dataType: "json",--}}
-        {{--                data: {--}}
-        {{--                    search: request.term--}}
-        {{--                },--}}
-        {{--                success: function (data) {--}}
-        {{--                    response(data);--}}
-        {{--                }--}}
-        {{--            });--}}
-        {{--        },--}}
-        {{--        select: function (event, ui) {--}}
-        {{--            $('#indent_no').val(ui.item.label);--}}
-        {{--            $('#indent_id').val(ui.item.value);--}}
-        {{--            console.log(ui.item.requisition_nos);--}}
-        {{--            return false;--}}
-        {{--        }--}}
-        {{--    });--}}
-        {{--});--}}
 
         $(document).on('mouseenter', '.date', function () {
             $(this).datepicker({

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->bigInteger('supplier_id')->nullable();
             $table->bigInteger('indent_id')->nullable();
             $table->text('remarks')->nullable();
+            $table->text('is_closed')->nullable();
             $table->string('delivery_location')->nullable();
             $table->bigInteger('created_by')->nullable();
             $table->bigInteger('branch_id')->nullable();

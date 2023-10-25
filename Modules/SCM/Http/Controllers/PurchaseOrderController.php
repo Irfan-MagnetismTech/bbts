@@ -193,7 +193,7 @@ class PurchaseOrderController extends Controller
             return redirect()->route('purchase-orders.index')->with('message', 'Purchase Order Updated Successfully');
         } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->route('requisitions.index')->withInput()->withErrors($e->getMessage());
+            return redirect()->route('purchase-orders.index')->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -463,4 +463,21 @@ class PurchaseOrderController extends Controller
         }
         return response()->json($response);
     }
+
+    public function closePo($id = null)
+    {
+        try {
+            $po = PurchaseOrder::where('id', $id)->first();
+            DB::beginTransaction();
+            $po->is_closed = 'yes';
+            $po->save();
+
+            DB::commit();
+            return redirect()->route('purchase-orders.index')->with('message', 'Purchase Order Status Updated Successfully');
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('purchase-orders.index')->withInput()->withErrors($e->getMessage());
+        }
+    }
+
 }

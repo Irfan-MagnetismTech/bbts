@@ -115,8 +115,10 @@
                                         title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
 
                                     <a href="{{ route('purchase-orders.edit', $po->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                        title="Edit" class="btn btn-outline-success"><i class="fas fa-pen"></i></a>
 
+                                    <a href="{{ route('closePo', $po->id) }}" data-toggle="tooltip"
+                                       title="Close" class="btn btn-outline-warning"><i class="fas fa-window-close"></i></a>
 
                                     {!! Form::open([
                                         'url' => route('purchase-orders.destroy', $po->id),

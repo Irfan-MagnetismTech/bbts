@@ -180,8 +180,8 @@
                         <th> Unit</th>
                         <th> Brand</th>
                         <th> Model </th>
-                        <th> Unit Price </th>
                         <th> Quantity </th>
+                        <th> Unit Price </th>
                         <th> Total Amount </th>
                         <th> Purpose </th>
                         <th> Remarks </th>
@@ -234,12 +234,12 @@
                                     value="{{ $model[$key] }}">
                             </td>
                             <td>
-                                <input type="number" name="unit_price[]" class="form-control unit_price"
-                                    autocomplete="off" step="0.01" value="{{ $unit_price[$key] }}">
-                            </td>
-                            <td>
                                 <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off"
                                        step="0.01" value="{{ $quantity[$key] }}">
+                            </td>
+                            <td>
+                                <input type="number" name="unit_price[]" class="form-control unit_price"
+                                    autocomplete="off" step="0.01" value="{{ $unit_price[$key] }}">
                             </td>
                             <td>
                                 <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
@@ -317,10 +317,10 @@
                                 <input type="text" name="model[]" class="form-control model" autocomplete="off">
                             </td>
                             <td>
-                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off" step="0.01">
+                                <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off" step="0.01">
                             </td>
                             <td>
-                                <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off" step="0.01">
+                                <input type="number" name="unit_price[]" class="form-control unit_price" autocomplete="off" step="0.01">
                             </td>
                             <td>
                                 <input name="total_amount[]" class="form-control total_amount" autocomplete="off" readonly>

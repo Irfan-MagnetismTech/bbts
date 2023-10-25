@@ -8,6 +8,50 @@
     $form_method = !empty($cs->id) ? 'PUT' : 'POST';
 @endphp
 
+@section('style')
+    <style>
+        .input-group-addon {
+            min-width: 120px;
+        }
+
+        .input-group-info .input-group-addon {
+            /*background-color: #04748a!important;*/
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice span {
+            color: #b10000;
+        }
+
+        .select2_container {
+            max-width: 200px;
+            white-space: inherit;
+        }
+
+        .custom-spinner-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh;
+        }
+
+        .custom-spinner {
+            width: 4rem;
+            height: 4rem;
+            border: .5em solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spinner-animation 1s linear infinite;
+        }
+
+        @keyframes spinner-animation {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+@endsection
+
 @section('breadcrumb-title')
     {{ ucfirst($form_heading) }} Comparative Statement & Supplier
 @endsection
@@ -36,7 +80,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="tableHeading">
-                    <h5> <span> &#10070; </span> Comparative Statement <span>&#10070;</span> </h5>
+                    <h5><span> &#10070; </span> Comparative Statement <span>&#10070;</span></h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -106,7 +150,7 @@
         <div class="mt-4 row">
             <div class="col-md-12">
                 <div class="tableHeading">
-                    <h5> <span>&#10070;</span>Materials<span>&#10070;</span> </h5>
+                    <h5><span>&#10070;</span>Materials<span>&#10070;</span></h5>
                 </div>
                 <div class="table-responsive">
                     <table id="materialTable" class="table text-center table-striped table-sm table-bordered">
@@ -125,18 +169,25 @@
                         @endphp
                         @forelse ($materials as $material_key => $material_value)
                             @php
-                                $material_id = $is_old ? old('material_id')[$material_key] : $material_value->material->id;
-                                $material_name = $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode ?? '---';
-                                $unit = $is_old ? old('unit')[$material_key] : $material_value->material->unit ?? '---';
-                                $brand_id = $is_old ? old('brand_id')[$material_key] : $material_value?->brand_id;
-                                $model = $is_old ? old('model')[$material_key] : $material_value->model ?? '---';
+                                $material_id = $is_old ? (old('material_id')[$material_key] ?? null) : ($material_value->material->id ?? null);
+                                $material_name = $is_old ? (old('material_name')[$material_key] ?? null) : ($material_value->material->materialNameWithCode ?? '---');
+                                $unit = $is_old ? (old('unit')[$material_key] ?? null) : ($material_value->material->unit ?? '---');
+                                $brand_id = $is_old ? (old('brand_id')[$material_key] ?? null) : ($material_value?->brand_id ?? null);
+                                $model = $is_old ? (old('model')[$material_key] ?? null) : ($material_value->model ?? '---');
                             @endphp
                             <tr>
                                 <td>
                                     <input type="hidden" name="material_id[]" value="{{ $material_id }}"
                                            class="material_id">
-                                    <input type="text" name="material_name[]" value="{{ $material_name }}"
-                                           class="form-control material_name text-center" autocomplete="off" required>
+                                    <select class="form-control material_name select2"
+                                            name="material_name[]">
+                                        <option value="{{ $material_id }}" readonly selected>{{ $material_name }}</option>
+                                        @foreach ($materials as $key => $value)
+                                            <option value="{{ $value->material->id ?? ''}}"
+                                                    data-unit="{{ $value->material->unit ?? ''}}">
+                                                {{ $value->material->materialNameWithCode ?? ''}}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" name="unit[]" value="{{ $unit }}"
@@ -172,7 +223,7 @@
         <div class="mt-4 row">
             <div class="col-md-12">
                 <div class="tableHeading">
-                    <h5> <span>&#10070;</span>Suppliers<span>&#10070;</span> </h5>
+                    <h5><span>&#10070;</span>Suppliers<span>&#10070;</span></h5>
                 </div>
                 <div class="table-responsive">
                     <table id="supplierTable" class="table text-center table-striped table-sm table-bordered">
@@ -186,7 +237,7 @@
                                         <i class="fas fa-external-link-square-alt"></i>
                                     </span>
                             </th>
-                            <th> Supplier Info </th>
+                            <th> Supplier Info</th>
                             <th> Quotation No. <span class="text-danger">*</span></th>
                             <th> Vat/Tax <span class="text-danger">*</span></th>
                             <th> Credit Period <span class="text-danger">*</span></th>
@@ -272,7 +323,7 @@
         <div class="mt-4 row">
             <div class="col-md-12">
                 <div class="tableHeading">
-                    <h5> <span>&#10070;</span>Comparative Statement Details<span>&#10070;</span> </h5>
+                    <h5><span>&#10070;</span>Comparative Statement Details<span>&#10070;</span></h5>
                 </div>
                 <div class="table-responsive">
                     <table id="csDetailsTable" class="table text-center table-striped table-sm table-bordered">
@@ -296,7 +347,7 @@
                                 @if ($loop->first)
                                     <tr>
                                         <td class="cs_material text-center">
-                                            {{ $is_old ? old('material_name')[$material_key] : $material_value->material->materialNameWithCode }}
+                                            {{ $is_old ? old('material_name')[$material_key]?? null: $material_value->material->materialNameWithCode ?? null}}
                                         </td>
                                         <td class="cs_brand text-center">
                                             {{ $is_old ? old('cs_brand_name')[$material_key] : $material_value?->brand?->name ?? 'Null' }}
@@ -312,7 +363,7 @@
                                                    value="{{ $is_old
                                                 ? old('price')[$price_index++]
                                                 : $cs->csMaterialsSuppliers->where('cs_material_id', $material_value->id)->where('cs_supplier_id', $supplier_value->id)->first()->price }}"
-                                                   class="form-control text-center" placeholder="Pricez" required />
+                                                   class="form-control text-center" placeholder="Pricez" required/>
                                         </td>
                                         @if ($loop->last)
                                     </tr>
@@ -340,14 +391,21 @@
 
 @section('script')
     <script>
+
         let is_confirmed = false;
 
+        var indx = 0;
+        @if($form_method == 'PUT')
+            indx = {{ count($materials) }};
+        @endif
+
         function addMaterial() {
-            $('#materialTable tbody').append(
-                `<tr>
+                let row = `<tr>
+                    <input type="hidden" name="material_id[]" class="material_id">
                     <td>
-                        <input type="hidden" name="material_id[]" value="" class="material_id">
-                        <input type="text" name="material_name[]" class="form-control material_name text-center" autocomplete="off" required>
+                        <select class="form-control material_name select2" name="material_id[${indx}]">
+                            <option value="material_id[${indx}]" readonly selected>Select Material</option>
+                        </select>
                     </td>
                     <td>
                         <input type="text" name="unit[]" class="form-control unit text-center" readOnly tabindex="-1">
@@ -367,7 +425,11 @@
                 <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
             </td>
         </tr>`
-            );
+            let material_values = $('#materialTable').first().find('.material_name').html();
+            row = row.replace('Select Material', material_values);
+            indx++;
+            $('#materialTable tbody').append(row);
+            $('.select2').select2({});
         }
 
         function addSupplier() {
@@ -417,7 +479,7 @@
             dropdown.append(`<option selected="true" value>Select ${type}</option>`);
             dropdown.prop('selectedIndex', 0);
 
-            $.each(data, function(key, value) {
+            $.each(data, function (key, value) {
                 dropdown.append($(`<option></option>`).attr('value', value[key_name]).text(value[key_name]));
             });
         }
@@ -432,21 +494,21 @@
         }
 
         //on change brand
-        $(document).on('change', '.brand', function() {
+        $(document).on('change', '.brand', function () {
             let brand = $(this).find('option:selected').text();
-            let material_name = $(this).closest('tr').find('.material_name').val();
+            let material_name = $(this).closest('tr').find('option:selected').html();
             let column = $(this).closest('tr');
             changeCsRow(column, material_name, brand);
         });
-
 
 
         function changeCsRowModel(column, model) {
             let cs_details_table_body = $('#csDetailsTable tbody');
             cs_details_table_body.children(`tr:eq(${column.index()})`).find(".cs_model").html(model);
         }
+
         //on change model
-        $(document).on('keyup', '.model', function() {
+        $(document).on('keyup', '.model', function () {
             let column = $(this).closest('tr');
             let model = ($(this).val());
             changeCsRowModel(column, model);
@@ -461,12 +523,38 @@
                 <input type="hidden" name="cs_brand_name[]" class="cs_brand_name">
                 <td colspan="${count_supplier}" class="cs_model">Model</td>`;
 
-            $('.supplier_name').each(function() {
+            $('.supplier_name').each(function () {
                 table_data +=
                     `<td> <input type="number" name="price[]" class="form-control" placeholder="Price" step="0.01" required/> </td>`;
             });
 
             cs_details_table_tbody.append(table_data += `</tr>`);
+        }
+
+        function getMaterial(){
+            var indent_no= $('#indent_no').val();
+            $.ajax({
+                url: "{{ url('scm/search-material-by-indent') }}",
+                type: 'get',
+                dataType: "json",
+                data: {
+                    indent_no: indent_no
+                },
+                success: function (data) {
+                    var material_options =
+                        '<option value="" readonly selected>Select Material</option>';
+                    $.each(data, function (
+                        key,
+                        value) {
+                        material_options += `<option value="${value.material_id}">${value.label}</option>`
+                        $('.unit').val(value.unit);
+                        $('.item_code').val(value.item_code);
+                    })
+                    // $('.material_name').html(material_options);
+                    $('.material_name:last').html(material_options);
+
+                }
+            });
         }
 
         function removeCsRow(index) {
@@ -485,7 +573,7 @@
             cs_details_table_head.append(`<th>Supplier Name</th>`);
 
             let cs_details_table_body = $('#csDetailsTable tbody');
-            $("#csDetailsTable tbody tr").each(function() {
+            $("#csDetailsTable tbody tr").each(function () {
                 $(this).append(
                     `<td> <input type="number" name="price[]" class="form-control" placeholder="Price" step="0.01" required/> </td>`
                 );
@@ -497,15 +585,20 @@
             cs_details_table_head.children(`th:eq(${index + 2})`).remove();
 
             let cs_details_table_body = $('#csDetailsTable tbody');
-            $("#csDetailsTable tbody tr").each(function() {
+            $("#csDetailsTable tbody tr").each(function () {
                 $(this).children(`td:eq(${index + 2})`).remove();
             });
         }
 
-        $(function() {
-            $(document).on('keyup', ".supplier_name", function() {
+        $(function () {
+            $('.select2').select2({
+                maximumSelectionLength: 5,
+                scrollAfterSelect: true
+            });
+
+            $(document).on('keyup', ".supplier_name", function () {
                 $(this).autocomplete({
-                    source: function(request, response) {
+                    source: function (request, response) {
                         $.ajax({
                             url: "{{ route('searchSupplier') }}",
                             type: 'get',
@@ -513,12 +606,12 @@
                             data: {
                                 search: request.term
                             },
-                            success: function(data) {
+                            success: function (data) {
                                 response(data);
                             }
                         });
                     },
-                    select: function(event, ui) {
+                    select: function (event, ui) {
                         $(this).closest('tr').find('.supplier_name').val(ui.item.label);
                         $(this).closest('tr').find('.supplier_id').val(ui.item.value);
                         $(this).closest('tr').find('.checked_supplier_id').val(ui.item.value);
@@ -532,48 +625,40 @@
                 });
             });
 
-            //Search Material
-            $(document).on('keyup focus', '.material_name', function() {
-                $(this).autocomplete({
-                    source: function(request, response) {
-                        var indentNo = $("#indent_no").val();
-                        $.ajax({
-                            url: "{{ url('scm/search-material-by-indent') }}",
-                            type: 'get',
-                            dataType: "json",
-                            data: {
-                                search: request.term,
-                                indent_no: indentNo
-                            },
-                            success: function(data) {
-                                response(data);
-                            }
-                        });
-                    },
-                    select: function(event, ui) {
-                        $(this).closest('tr').find('.material_name').val(ui.item.label);
-                        $(this).closest('tr').find('.material_id').val(ui.item.value);
-                        $(this).closest('tr').find('.item_code').val(ui.item.item_code);
-                        $(this).closest('tr').find('.unit').val(ui.item.unit);
-
-                        return false;
-                    }
-                });
-
+            $("#indent_no").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: window.location.origin + "/scm/get-indent-no",
+                        type: "get",
+                        dataType: "json",
+                        data: {
+                            search: request.term,
+                        },
+                        success: function (data) {
+                            response(data);
+                        },
+                    });
+                },
+                select: function (event, ui) {
+                    $('#indent_no').val(ui.item.label);
+                    $('#materialTable tbody').empty();
+                },
             });
 
-            $("#materialTable").on('click', '.addMaterial', function() {
+            $("#materialTable").on('click', '.addMaterial', function () {
                 addMaterial();
+                $('.material_name:last').html('');
+                getMaterial();
                 addCsRow();
-            }).on('click', '.deleteItem', function() {
+            }).on('click', '.deleteItem', function () {
                 removeCsRow($(this).closest('tr').index());
                 $(this).closest('tr').remove();
             });
 
-            $("#supplierTable").on('click', '.addSupplier', function() {
+            $("#supplierTable").on('click', '.addSupplier', function () {
                 addSupplier();
                 addCsColumn();
-            }).on('click', '.deleteItem', function() {
+            }).on('click', '.deleteItem', function () {
                 removeCsColumn($(this).closest('tr').index() + 1);
                 $(this).closest('tr').remove();
             });
@@ -585,14 +670,14 @@
             //     showOtherMonths: true
             // });
             $('#effective_date').datepicker({
-                format: "yyyy-mm-dd",
+                format: "dd-mm-yyyy",
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
             }).datepicker("setDate", new Date());
         }); // document.ready
 
-        var select_all_projects = function() {
+        var select_all_projects = function () {
             if ($("#select_all_projects").is(":checked")) {
                 $('#plus').prop('disabled', true);
             } else {
@@ -603,5 +688,4 @@
         $(select_all_projects);
         $("#select_all_projects").change(select_all_projects);
     </script>
-    <script src="{{ asset('js/get-indent-no.js') }}"></script>
 @endsection

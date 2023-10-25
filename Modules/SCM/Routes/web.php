@@ -54,6 +54,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('wcr-gate-pass/{id}', [ScmWcrController::class, 'gatePassPdf'])->name('wcr-gate-pass');
     Route::get('find-supplier', [PurchaseOrderController::class, 'findSupplier'])->name('findSupplier');
     Route::get('find-indent-no', [PurchaseOrderController::class, 'findIndentNo'])->name('findIndentNo');
+    Route::get('close-po/{id}', [PurchaseOrderController::class, 'closePo'])->name('closePo');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
 });
