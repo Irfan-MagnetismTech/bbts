@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Schema;
 use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\ScmWcrLine;
 use Modules\SCM\Entities\ScmWor;
+use Modules\SCM\Services\GetTypeNo;
 
 class ScmWcrController extends Controller
 {
@@ -106,7 +107,12 @@ class ScmWcrController extends Controller
         $formType = "edit";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
-        return view('scm::wcrs.create', compact('formType', 'brands', 'branchs', 'warranty_claim'));
+        $materials = Material::latest()->get();
+        $type_no = [];
+        $warranty_claim->lines->each(function ($item) use (&$type_no, $warranty_claim) {
+            $type_no[] = GetTypeNo::receiveTypeWiseList($item->received_type, $item->material_id, $item->brand_id, $warranty_claim->branch_id);
+        });
+        return view('scm::wcrs.create', compact('formType', 'brands', 'branchs', 'warranty_claim', 'materials', 'type_no'));
     }
 
     /**
@@ -125,7 +131,7 @@ class ScmWcrController extends Controller
             $warranty_claim->update($scm_wcr);
             $stock = [];
             $wcr_lines = [];
-            foreach ($request->material_name as $key => $val) {
+            foreach ($request->material_id as $key => $val) {
                 $wcr_lines[] = $this->getLineData($request, $key, $warranty_claim->id);
                 $stock[] = $this->getStockData($request, $key, $warranty_claim->id);
             };
