@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('bill_no')->nullable();
             $table->bigInteger('supplier_id')->nullable();
             $table->bigInteger('amount')->nullable();
+            $table->string('date')->nullable();
             $table->timestamps();
         });
     }

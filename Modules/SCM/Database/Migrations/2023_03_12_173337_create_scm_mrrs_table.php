@@ -22,6 +22,8 @@ return new class extends Migration
             $table->bigInteger('branch_id')->nullable();
             $table->string('challan_no')->nullable();
             $table->date('challan_date')->nullable();
+            $table->string('bill_reg_no')->nullable();
+            $table->string('bill_date')->nullable();
             $table->bigInteger('created_by')->nullable();
             $table->timestamps();
         });

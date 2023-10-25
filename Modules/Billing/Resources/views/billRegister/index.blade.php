@@ -31,6 +31,7 @@
                     <th>Supplier Name</th>
                     <th>Bill No</th>
                     <th>Amount</th>
+                    <th>Bill Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -40,6 +41,7 @@
                     <th>Supplier Name</th>
                     <th>Bill No</th>
                     <th>Amount</th>
+                    <th>Bill Date</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -50,6 +52,7 @@
                         <td class="text-center">{{ $value->supplier->name }}</td>
                         <td class="text-center">{{ $value->bill_no }}</td>
                         <td class="text-center">{{ $value->amount }}</td>
+                        <td class="text-center">{{ $value->date }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

@@ -18,16 +18,6 @@ class BillRegister extends Model
 {
     protected $guarded = [];
 
-
-    /**
-     * @param $input
-     */
-    public function getDateAttribute($input)
-    {
-//        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
-        return !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y') : null;
-    }
-
     public function supplier()
     {
         return $this->hasOne(Supplier::class,'id');

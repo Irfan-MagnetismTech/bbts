@@ -53,7 +53,7 @@ class BillRegisterController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('bill_no', 'supplier_id', 'amount');
+            $data = $request->only('bill_no', 'supplier_id', 'amount', 'date');
             $bill_register = BillRegister::create($data);
             DB::commit();
             return redirect()->route('bill-register.create')->with('message', 'Data has been created successfully');
@@ -93,7 +93,7 @@ class BillRegisterController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('bill_no', 'supplier_id','amount');
+            $data = $request->only('bill_no', 'supplier_id','amount', 'date');
             $billRegister->update($data);
 
             DB::commit();

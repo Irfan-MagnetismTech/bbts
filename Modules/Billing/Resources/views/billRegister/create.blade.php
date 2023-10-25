@@ -41,6 +41,7 @@
                             $supplier_id = $is_old ? old('supplier_id') : $billRegister->supplier_id ?? null;
                             $bill_no = $is_old ? old('bill_no') : $billRegister->bill_no ?? null;
                             $amount = $is_old ? old('amount') : $billRegister->amount ?? null;
+                            $date = $is_old ? old('date') : $billRegister->date ?? null;
                         @endphp
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
@@ -59,6 +60,14 @@
                             <div class="form-item">
                                 <input type="text" class="form-control" name="amount" id="amount" autocomplete="off" required value="{{$amount}}">
                                 <label for="amount">Amount<span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-md-4">
+                            <div class="form-item">
+                                <input type="date" name="date" id="date" class="form-control"
+                                       value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off"
+                                       value="{{$date}}">
+                                <label for="date">Bill Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
                     </div>

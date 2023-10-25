@@ -3,6 +3,7 @@
 namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Billing\Entities\BillRegister;
 use Modules\SCM\Entities\ScmMrr;
 use Modules\Admin\Entities\Brand;
 use Illuminate\Routing\Controller;
@@ -62,7 +63,7 @@ class ScmMrrController extends Controller
      */
     public function store(ScmMrrRequest $request)
     {
-        $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
+        $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date','bill_reg_no','bill_date');
         try {
             DB::beginTransaction();
             $requestData['mrr_no'] =  $this->materialReceiveNo;
@@ -186,7 +187,7 @@ class ScmMrrController extends Controller
      */
     public function update(ScmMrrRequest $request, ScmMrr $materialReceive)
     {
-        $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date');
+        $requestData = $request->only('branch_id', 'date', 'purchase_order_id', 'supplier_id', 'challan_no', 'challan_date','bill_reg_no','bill_date');
         try {
             DB::beginTransaction();
             $mrrDetails = [];
@@ -294,6 +295,21 @@ class ScmMrrController extends Controller
                 'date'           => $item->date,
                 'supplier_id'    => $item?->supplier_id ?? 0,
                 'supplier_name'  => $item?->supplier?->name ?? 0
+            ]);
+
+
+        return response()->json($items);
+    }
+
+    public function searchBillRegisterNoWithDate()
+    {
+        $items = BillRegister::query()
+            ->where("bill_no", "like", "%" . request('search') . "%")
+            ->get()
+            ->map(fn ($item) => [
+                'value'          => $item->id,
+                'label'          => $item->bill_no,
+                'date'           => $item->date
             ]);
 
 

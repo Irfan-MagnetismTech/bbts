@@ -17,7 +17,8 @@
     $supplier_id = old('supplier_id', !empty($materialReceive) ? $materialReceive->supplier_id : null);
     $challan_no = old('challan_no', !empty($materialReceive) ? $materialReceive->challan_no : null);
     $challan_date = old('challan_date', !empty($materialReceive) ? $materialReceive->challan_date : null);
-
+    $bill_reg_no = old('bill_reg_no', !empty($materialReceive) ? $materialReceive->bill_reg_no : null);
+    $bill_date = old('bill_date', !empty($materialReceive) ? $materialReceive->bill_date : null);
 @endphp
 
 @section('breadcrumb-title')
@@ -157,6 +158,18 @@
             <label for="date">Chalan Date:</label>
             <input class="form-control challan_date" name="challan_date" aria-describedby="challan_date" id="challan_date"
                 value="{{ $challan_date }}" placeholder="Select a Date" readonly>
+        </div>
+
+        <div class="form-group col-3">
+            <label for="bill_reg_no">Bill Register No:</label>
+            <input type="text" class="form-control" id="bill_reg_no" aria-describedby="bill_reg_no" name="bill_reg_no"
+                   value="{{ $bill_reg_no }}" autocomplete="off">
+        </div>
+
+        <div class="form-group col-3">
+            <label for="date">Bill Date:</label>
+            <input class="form-control bill_date" name="bill_date" aria-describedby="bill_date" id="bill_date"
+                   value="{{ $bill_date }}" placeholder="Select a Date" readonly>
         </div>
     </div>
     <div class="row loading" style="display: none;">
@@ -389,6 +402,28 @@
                     $('#supplier_id').val(ui.item.supplier_id);
                     $('#supplier_name').val(ui.item.supplier_name);
                     loadMateaials();
+                    return false;
+                }
+            })
+
+            $("#bill_reg_no").autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ route('searchBillRegisterNoWithDate') }}",
+                        type: 'get',
+                        dataType: "json",
+                        data: {
+                            _token: CSRF_TOKEN,
+                            search: request.term
+                        },
+                        success: function(data) {
+                            response(data);
+                        }
+                    });
+                },
+                select: function(event, ui) {
+                    $('#bill_reg_no').val(ui.item.label);
+                    $('#bill_date').val(ui.item.date);
                     return false;
                 }
             })
