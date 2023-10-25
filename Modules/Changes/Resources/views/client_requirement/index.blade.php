@@ -68,7 +68,10 @@
                                             class="btn btn-sm btn-success">Add Survey</a>
                                     @elseif(empty($client_requirement->offerByConnectivity))
                                         <a href="{{ url("changes/add-modified-offer/$client_requirement->id/create") }}"
-                                            class="btn btn-sm btn-success">Add Offer</a>
+                                            class="btn btn-sm btn-success">Add Offer</a> 
+                                    @elseif(!empty($client_requirement->offerByConnectivity) && empty($client_requirement->modificationSale))
+                                        <a href="{{ url("changes/sales-modification/$client_requirement->id/create") }}"
+                                            class="btn btn-sm btn-success">Add Sale</a>
                                     @else
                                     @endif
                                     <a href="{{ route('connectivity-requirement.show', $client_requirement->id) }}"

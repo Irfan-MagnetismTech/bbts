@@ -56,46 +56,47 @@
                             <hr />
                             <table class="table custom_table table-bordered" style="font-size: 12px;">
                                 <tr>
-                                    <th>Client Name</th>
-                                    <td>{{ $plan->lead_generation->client_name }}</td>
-                                    <th>Address</th>
-                                    <td>{{ $plan->lead_generation->address }}</td>
+                                    <th class="table_label">Client Name</th>
+                                    <td>{{ $lead_generation->client_name }}</td>
+                                    <th class="table_label">Landmark</th>
+                                    <td>{{ $lead_generation->landmark }}</td>
+                                    <th class="table_label">Division</th>
+                                    <td>{{ $lead_generation->division->name ?? '' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Division</th>
-                                    <td>{{ $plan->lead_generation->division->name ?? '' }}</td>
-                                    <th>District</th>
-                                    <td>{{ $plan->lead_generation->district->name ?? '' }}</td>
+                                    <th class="table_label">Contact Person</th>
+                                    <td>{{ $lead_generation->contact_person }}</td>
+                                    <th class="table_label">Lat-Long</th>
+                                    <td>{{ $lead_generation->lat }} - {{ $lead_generation->long }}</td>
+                                    <th class="table_label">District</th>
+                                    <td>{{ $lead_generation->district->name ?? '' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Thana</th>
-                                    <td>{{ $plan->lead_generation->thana->name ?? '' }}</td>
-                                    <th>Landmark</th>
-                                    <td>{{ $plan->lead_generation->landmark }}</td>
+                                    <th class="table_label">Contact No</th>
+                                    <td>{{ $lead_generation->contact_no }}</td>
+                                    <th class="table_label">Website</th>
+                                    <td>{{ $lead_generation->website }}</td>
+                                    <th class="table_label">Thana</th>
+                                    <td>{{ $lead_generation->thana->name ?? '' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Lat-Long</th>
-                                    <td>{{ $plan->lead_generation->lat_long }}</td>
-                                    <th>Contact Person</th>
-                                    <td>{{ $plan->lead_generation->contact_person }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Contact No</th>
-                                    <td>{{ $plan->lead_generation->contact_no }}</td>
-                                    <th>Email</th>
-                                    <td>{{ $plan->lead_generation->email }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Website</th>
-                                    <td>{{ $plan->lead_generation->website }}</td>
-                                    <th>Document</th>
+                                    <th class="table_label">Email</th>
+                                    <td>{{ $lead_generation->email }}</td>
+                                    <th class="table_label">Document</th>
                                     <td>
-                                        @if ($plan->lead_generation->document)
-                                            <a href="{{ asset('uploads/lead_generation/' . $plan->lead_generation->document) }}"
+                                        @if ($lead_generation->document)
+                                            <a href="{{ asset('uploads/lead_generation/' . $lead_generation->document) }}"
                                                 target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
                                                     class="fas fa-eye"></i></a>
                                         @endif
                                     </td>
+                                    <th class="table_label">Address</th>
+                                    <td>{{ $lead_generation->address }}</td>
+                                </tr>
+                                <tr colspan="6">
+                                    <th class="table_label">Remarks</th>
+                                    <td colspan="5"><input type="text" name="remarks" id="remarks"
+                                            class="form-control form-control-sm" value="{{ $plan->remarks ?? '' }}">
                                 </tr>
                             </table>
                         </div>
@@ -225,7 +226,8 @@
                                                         value="{{ $equipment_plan->model ?? '' }}">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="equipment_remarks[]" id="equipment_remarks"
+                                                    <input type="text" name="equipment_remarks[]"
+                                                        id="equipment_remarks"
                                                         class="form-control form-control-sm equipment_remarks"
                                                         value="{{ $equipment_plan->remarks ?? '' }}">
                                                 </td>
@@ -647,25 +649,71 @@
             $(document).ready(function() {
                 $('.select2').select2();
             })
+            let plan_equipment_html = `<tr class="equipment_row">
+                                            <td>
+                                                <select name="equipment_id[]" id="equipment_id"
+                                                    class="form-control form-control-sm equipment_id">
+                                                    <option value="">Select Equipment</option>
+                                                    @foreach ($materials as $material)
+                                                        <option value="{{ $material->id }}">
+                                                            {{ $material->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="quantity[]" id="quantity"
+                                                    class="form-control form-control-sm" value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="unit[]" id="unit"
+                                                    class="form-control form-control-sm unit" value="">
+                                            </td>
+                                            <td>
+                                                <select name="brand_id[]" id="brand_id"
+                                                    class="form-control form-control-sm brand_id">
+                                                    <option value="">Select Brand</option>
+                                                    @foreach ($brands as $brand)
+                                                        <option value="{{ $brand->id }}">
+                                                            {{ $brand->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="model[]" id="model"
+                                                    class="form-control form-control-sm model" value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="equipment_remarks[]" id="equipment_remarks"
+                                                    class="form-control form-control-sm equipment_remarks" value="">
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
+                                                        class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr> `;
             $('#addEquipmentRow').on('click', function() {
                 addEquipmentRow();
             });
 
             function addEquipmentRow() {
-                $('.equipment_row').first().clone().appendTo('#equipment_body');
-                $('.equipment_row').last().find('input').val('');
-                $('.equipment_row').last().find('select').val('');
+                let check_first_row = $('#equipment_body').find('.equipment_row');
+                if (check_first_row.length !== 0) {
+                    $('.equipment_row').first().clone().appendTo('#equipment_body');
+                    $('.equipment_row').last().find('input').val('');
+                    $('.equipment_row').last().find('select').val('');
+                } else {
+                    $('#equipment_body').append('<tr>' + plan_equipment_html + '</tr>');
+                }
             };
+
 
             let delete_equipment_id = [];
             $(document).on('click', '.removeEquipmentRow', function(e) {
                 e.preventDefault();
                 var equipment_plan_id = $(this).closest('tr').find('input[name^="equipment_plan_id"]').val();
-                console.log(equipment_plan_id);
                 if (equipment_plan_id) {
                     delete_equipment_id.push(equipment_plan_id);
                     let delete_equipment_id_json = JSON.stringify(delete_equipment_id);
-                    console.log(delete_equipment_id_json);
                     $('#delete_equipment_plan_id').val(delete_equipment_id_json);
                 }
                 $(this).closest('tr').remove();

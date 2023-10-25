@@ -3,13 +3,13 @@
 
 @php
     $is_old = old('client_no') ? true : false;
-    $form_heading = !empty($sale->id) ? 'Update' : 'Add';
+    $form_heading = !empty($sale->id) ? 'Update' : '';
     $form_url = !empty($sale->id) ? route('sales-modification.update', $sale->id) : route('sales-modification.store');
     $form_method = !empty($sale->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
-    {{ ucfirst($form_heading) }} Sale
+    {{ ucfirst($form_heading) }} Sale Modification
 @endsection
 
 @section('breadcrumb-button')
@@ -113,9 +113,9 @@
                         <input type="hidden" id="employee_id" name="employee_id" value="{{ $employee_id }}">
                         <x-input-box colGrid="4" name="offer_id" value="{{ $offer_id }}" label="Offer Id" />
                         <x-input-box colGrid="4" name="remarks" value="{{ $remarks }}" label="Remarks" />
-                        <x-input-box colGrid="4" name="mq_no" value="{{ $mq_no }}" label="MQ No" />
-                        <x-input-box colGrid="4" name="contract_duration" value="{{ $contract_duration }}"
-                            label="Contract Duration" />
+                        {{-- <x-input-box colGrid="4" name="mq_no" value="{{ $mq_no }}" label="MQ No" /> --}}
+                        {{-- <x-input-box colGrid="4" name="contract_duration" value="{{ $contract_duration }}"
+                            label="Contract Duration" /> --}}
                         <x-input-box colGrid="4" name="effective_date" class="date" value="{{ $effective_date }}"
                             label="Effective Date" />
                         <x-input-box colGrid="4" name="wo_no" value="{{ $wo_no }}" label="Wo No" />
@@ -138,7 +138,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-3">
+                                    <div class="col-5">
                                         <div class="checkbox-fade fade-in-primary">
                                             <label>
                                                 <input type="checkbox" class="" value="Primary"
@@ -146,16 +146,17 @@
                                                 <span class="cr">
                                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                 </span>
-                                                <span>{{ $value->frDetails->connectivity_point }} ( {{ $value->fr_no }}
+                                                <span >{{ $value->frDetails->connectivity_point }} ( {{ $value->fr_no }}
                                                     )</span>
                                                 <input type="hidden" class="fr_no" value="{{ $value->fr_no }}">
                                                 <input type="hidden" class="costing_id" value="{{ $value->costing_id }}">
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-9">
+                                    <div class="col-7">
                                         @foreach ($value->saleLinkDetails as $link_key => $link_value)
-                                            <span class="badge badge-primary">{{ $link_value->link_type }}</span>
+                                            <span class="badge badge-info"
+                                            style="font-size:12px">{{ $link_value->link_type }}</span>
                                             <input type="hidden" value="{{ $link_value->link_no }}">
                                             <input type="hidden" value="{{ $link_value->link_type }}">
                                         @endforeach
@@ -168,7 +169,7 @@
                                         value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date"
                                         class="container" attr='readonly' /> --}}
 
-                                    <div class="col-3">
+                                    {{-- <div class="col-3">
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="prepaid">
                                                 <input type="radio" class="form-check-input payment_status"
@@ -183,10 +184,10 @@
                                                 Postpaid
                                             </label>
                                         </div>
-                                    </div>
-                                    <x-input-box colGrid="3" name="" value="{{ $value->mrc }}"
+                                    </div> --}}
+                                    <x-input-box colGrid="2" name="" value="{{ $value->mrc }}"
                                         label="MRC" attr="readonly" />
-                                    <x-input-box colGrid="3" name="" value="{{ $value->otc }}"
+                                    <x-input-box colGrid="2" name="" value="{{ $value->otc }}"
                                         label="OTC" attr="readonly" />
                                 </div>
                                 <div>
@@ -291,7 +292,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-3">
+                                    <div class="col-5">
                                         <div class="checkbox-fade fade-in-primary">
                                             <label>
                                                 <input type="checkbox" class="checkbox" value="Primary" name="checked"
@@ -308,9 +309,10 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-9">
+                                    <div class="col-7">
                                         @foreach ($value->saleLinkDetails as $link_key => $link_value)
-                                            <span class="badge badge-primary">{{ $link_value->link_type }}</span>
+                                            <span class="badge badge-info"
+                                            style="font-size:12px">{{ $link_value->link_type }}</span>
                                             <input type="hidden" name="link_no[]"value="{{ $link_value->link_no }}">
                                             <input type="hidden" name="link_type[]"value="{{ $link_value->link_type }}">
                                         @endforeach
@@ -350,11 +352,11 @@
                                                     onClick="ShowModal('collection','{{ $value->fr_no }}',this)"></i></label>
                                         </div>
                                     </div>
-                                    <x-input-box colGrid="3" name="bill_payment_date"
+                                    {{-- <x-input-box colGrid="3" name="bill_payment_date"
                                         value="{{ $value->bill_payment_date ?? '' }}" label="Bill Payment Date"
-                                        class="container" attr='readonly' />
+                                        class="container" attr='readonly' /> --}}
 
-                                    <div class="col-3">
+                                    {{-- <div class="col-3">
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="prepaid">
                                                 <input type="radio" class="form-check-input payment_status"
@@ -371,10 +373,10 @@
                                                 Postpaid
                                             </label>
                                         </div>
-                                    </div>
-                                    <x-input-box colGrid="3" name="mrc" value="{{ $value->mrc }}"
+                                    </div> --}}
+                                    <x-input-box colGrid="2" name="mrc" value="{{ $value->mrc }}"
                                         label="MRC" attr="readonly" />
-                                    <x-input-box colGrid="3" name="otc" value="{{ $value->otc }}"
+                                    <x-input-box colGrid="2" name="otc" value="{{ $value->otc }}"
                                         label="OTC" attr="readonly" />
                                 </div>
                                 <div>

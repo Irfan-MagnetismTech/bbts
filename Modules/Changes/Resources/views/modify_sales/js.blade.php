@@ -62,7 +62,7 @@
                 appendedData += `<div class="card">
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="col-3">
+                                                <div class="col-5">
                                                     <div class="checkbox-fade fade-in-primary">
                                                     <label>
                                                         <input type="checkbox" class="checkbox" value="Primary" name="checked">
@@ -75,7 +75,7 @@
                                                     </label>
                                                     </div>
                                                 </div>
-                                                <div class="col-9">`
+                                                <div class="col-7">`
                 element.offer_links.forEach(elmnt => {
                     appendedData += `<span>${elmnt.link_type}</span>
                                         <input type="hidden" name="link_no[]"value="${elmnt.link_no}">
@@ -109,26 +109,9 @@
                                                         <label class="input-group-addon input-group-addon-manual"><i class="icofont icofont-ui-add" onClick="ShowModal('collection','${element.fr_no}',this)"></i></label>
                                                     </div>
                                                 </div>
-                                                <x-input-box colGrid="3" name="bill_payment_date" label="Bill Payment Date" class="container" attr='readonly' value=""/>
-                                                <div class="col-3">
-                                                    <div class="form-check-inline">
-                                                        <label class="form-check-label" for="prepaid_${+indx}">
-                                                            <input type="radio" class="form-check-input payment_status" id="prepaid_${+indx}" name="payment_status"
-                                                                value="prepaid" checked>
-                                                            Prepaid
-                                                        </label>
-                                                    </div>
-                                                    
-                                                    <div class="form-check-inline">
-                                                        <label class="form-check-label" for="prepaid_${+indx}">
-                                                            <input type="radio" class="form-check-input payment_status" id="prepaid_${+indx}" name="payment_status"
-                                                                value="postpaid">
-                                                                Postpaid
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <x-input-box colGrid="3" name="mrc" value="${element.grand_total}" label="MRC" attr="readonly" />
-                                                <x-input-box colGrid="3" name="otc" value="${element.total_offer_otc}" label="OTC" attr="readonly"/>
+                                                
+                                                <x-input-box colGrid="2" name="mrc" value="${element.grand_total} " label="MRC" attr="readonly" />
+                                                <x-input-box colGrid="2" name="otc" value="${element.total_offer_otc}" label="OTC" attr="readonly"/>
                                             </div>
                                         <div>
                                         </div>
@@ -225,7 +208,7 @@
                                             <td style="text-align: center;">Total MRC</td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <input type="text" name="total_mrc" class="form-control text-right total_mrc" readonly value="${total.toFixed(2)} ">
+                                                    <input type="text" name="total_mrc" class="form-control text-right total_mrc" readonly value="${total.toFixed(2)}">
                                                 </div>
                                             </td>
                                             <td>

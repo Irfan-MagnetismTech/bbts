@@ -919,21 +919,59 @@
     @section('script')
 
         <script>
-            let plan_equipment_html = '';
+            let plan_equipment_html = `<tr class="equipment_row">
+                                            <td>
+                                                <select name="equipment_id[]" id="equipment_id"
+                                                    class="form-control form-control-sm equipment_id">
+                                                    <option value="">Select Equipment</option>
+                                                    @foreach ($materials as $material)
+                                                        <option value="{{ $material->id }}">
+                                                            {{ $material->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="quantity[]" id="quantity"
+                                                    class="form-control form-control-sm" value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="unit[]" id="unit"
+                                                    class="form-control form-control-sm unit" value="">
+                                            </td>
+                                            <td>
+                                                <select name="brand_id[]" id="brand_id"
+                                                    class="form-control form-control-sm brand_id">
+                                                    <option value="">Select Brand</option>
+                                                    @foreach ($brands as $brand)
+                                                        <option value="{{ $brand->id }}">
+                                                            {{ $brand->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="model[]" id="model"
+                                                    class="form-control form-control-sm model" value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="equipment_remarks[]" id="equipment_remarks"
+                                                    class="form-control form-control-sm equipment_remarks" value="">
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
+                                                        class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr> `;
             $('#addEquipmentRow').on('click', function() {
                 addEquipmentRow();
             });
 
             function addEquipmentRow() {
-                let check_first_row = $('.equipment_row').first();
+                let check_first_row = $('#equipment_body').find('.equipment_row');
                 if (check_first_row.length !== 0) {
-                    console.log('not empty');
                     $('.equipment_row').first().clone().appendTo('#equipment_body');
                     $('.equipment_row').last().find('input').val('');
                     $('.equipment_row').last().find('select').val('');
                 } else {
-                    console.log('empty');
-                    console.log(plan_equipment_html);
                     $('#equipment_body').append('<tr>' + plan_equipment_html + '</tr>');
                 }
             };
@@ -943,13 +981,12 @@
             $(document).on('click', '.removeEquipmentRow', function(e) {
                 e.preventDefault();
                 var equipment_plan_id = $(this).closest('tr').find('input[name^="equipment_plan_id"]').val();
-                console.log(equipment_plan_id);
                 if (equipment_plan_id) {
                     delete_equipment_id.push(equipment_plan_id);
                     let delete_equipment_id_json = JSON.stringify(delete_equipment_id);
-                    console.log(delete_equipment_id_json);
                     $('#delete_equipment_plan_id').val(delete_equipment_id_json);
                 }
+                plan_equipment_html = $(this).closest('tr').html();
                 $(this).closest('tr').remove();
             });
 

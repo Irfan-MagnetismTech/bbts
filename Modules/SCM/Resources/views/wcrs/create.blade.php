@@ -148,8 +148,8 @@
         <thead>
             <tr>
                 <th>Material Name</th>
-                <th>Model</th>
                 <th>Brand</th>
+                <th>Model</th>
                 <th>Received Type</th>
                 <th>Type No</th>
                 <th>Serial Code</th>

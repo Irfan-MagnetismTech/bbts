@@ -44,8 +44,8 @@ class ScmWcrrController extends Controller
     {
         $formType = "create";
         $brands = Brand::latest()->get();
-        $branchs = Branch::latest()->get();
-        return view('scm::wcrrs.create', compact('formType', 'brands', 'branchs'));
+        $branches = Branch::latest()->get();
+        return view('scm::wcrrs.create', compact('formType', 'brands', 'branches'));
     }
 
     /**
@@ -98,8 +98,8 @@ class ScmWcrrController extends Controller
     {
         $formType = "edit";
         $brands = Brand::latest()->get();
-        $branchs = Branch::latest()->get();
-        return view('scm::wcrrs.create', compact('formType', 'brands', 'branchs', 'warranty_claims_receife'));
+        $branches = Branch::latest()->get();
+        return view('scm::wcrrs.create', compact('formType', 'brands', 'branches', 'warranty_claims_receife'));
     }
 
     /**
