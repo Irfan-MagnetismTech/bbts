@@ -48,6 +48,7 @@ class ClientPlanningModificationController extends Controller
     public function create($connectivity_requirement_id = null)
     {
         try {
+            // dd('jj');
             // Retrieve the connectivity requirement with its related data
             $connectivity_requirement = ConnectivityRequirement::with([
                 'connectivityRequirementDetails',
@@ -70,7 +71,7 @@ class ClientPlanningModificationController extends Controller
             $data['previous_products'] = $previous_products;
             return view('changes::modify_planning.create', $data);
         } catch (\Exception $e) {
-            dd($e);
+            // dd($e);
             return redirect()->back()->with('error', 'Error fetching data.');
         }
     }

@@ -85,7 +85,7 @@ class ModifiedSurveyController extends Controller
         $connectivity_requirement_data = $request->only('date', 'client_no', 'fr_no', 'survey_remarks', 'fr_no', 'mq_no', 'feasibility_requirement_details_id', 'connectivity_requirement_id', 'client_no');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
         $connectivity_requirement_data['is_modified'] = 1;
-        $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
+        $connectivity_requirement_data['date'] = $request->date ? date('Y-m-d', strtotime($request->date)) : null;
         if ($request->hasFile('survey_attached')) {
             // $file_name = CommonService::fileUpload($request->file('survey_attached'), 'uploads/survey');
             // $data['survey_attached'] = $file_name;
@@ -97,6 +97,7 @@ class ModifiedSurveyController extends Controller
         DB::beginTransaction();
         try {
             $connectivity_requirement = Survey::create($connectivity_requirement_data);
+            // dd($connectivity_requirement);
             if ($request->has('new_link_type')) {
                 foreach ($request->new_link_type as $key => $value) {
                     $connectivity_requirement_details['survey_id'] = $connectivity_requirement->id;
@@ -116,8 +117,8 @@ class ModifiedSurveyController extends Controller
                     $connectivity_requirement_details['remarks'] = $request->new_remarks[$key];
                     SurveyDetail::create($connectivity_requirement_details);
                 }
-                DB::commit();
             }
+            DB::commit();
             return redirect()->route('survey-modification.index')->with('success', 'Survey Modification Created Successfully');
         } catch (QueryException $e) {
             DB::rollback();

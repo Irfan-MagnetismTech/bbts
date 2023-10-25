@@ -123,4 +123,24 @@ class StockLedger extends Model
         ])
             ->sum('quantity');
     }
+
+    public function scopeStockIn($query, $branch_id, $received_type, $item): int
+    {
+        return $query->where([
+            'material_id' => $item->material_id,
+            'received_type' => $received_type,
+            'stockable_id' => $item->receiveable_id,
+            'branch_id' => $branch_id
+        ])->sum('quantity');
+    }
+
+    public function scopeStockOut($query, $branch_id, $received_type, $item): int
+    {
+        return $query->where([
+            'material_id' => $item->material_id,
+            'received_type' => $received_type,
+            'receiveable_id' => $item->receiveable_id,
+            'branch_id' => $branch_id
+        ])->sum('quantity');
+    }
 }

@@ -45,7 +45,7 @@
                             $connectivity_requirement_id = $is_old ? old('connectivity_requirement_id') : $connectivity_requirement->id ?? null;
                             $offer_validity = $is_old ? old('offer_validity') : $connectivity_requirement->costingByConnectivity->offer_validity ?? null;
                             $row_no = 0;
-                            
+
                         @endphp
                         <div class="col-md-3 col-3">
                             <input type="text" name="client_no" id="client_no" class="form-control"
@@ -57,7 +57,7 @@
                             <input type="text" name="offer_validity" id="offer_validity"
                                 class="form-control form-control-sm date"
                                 value="{{ $is_old ? old('offer_validity') : $offer_validity ?? null }}"
-                                placeholder="Offer Validity" required>
+                                placeholder="Offer Validity" required autocomplete="off">
 
                         </div>
                         @if ($connectivity_requirement->costing)
@@ -245,7 +245,7 @@
                                                         <div class="input-group input-group-sm input-group-primary ">
                                                             <input type="text" name="total_offer_otc"
                                                                 class="form-control form-control-sm total_offer_otc text-right"
-                                                                id="total_offer_otc" readonly>
+                                                                id="total_offer_otc" readonly value="0">
                                                         </div>
                                                     </td>
                                                     <td>
@@ -272,7 +272,7 @@
                                                             <input type="text" name="product_equipment_price"
                                                                 class="form-control form-control-sm product_equipment_price text-right"
                                                                 id="product_equipment_price"
-                                                                value="{{ $connectivity_requirement->costingByConnectivity->client_equipment_total }}"
+                                                                value="{{ $connectivity_requirement->costingByConnectivity->client_equipment_total ?? 0 }}"
                                                                 readonly>
                                                         </div>
                                                     </td>

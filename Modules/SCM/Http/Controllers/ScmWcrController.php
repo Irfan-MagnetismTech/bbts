@@ -18,6 +18,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\SCM\Entities\ScmMrrSerialCodeLine;
 use Illuminate\Support\Facades\Schema;
+use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\ScmWcrLine;
 use Modules\SCM\Entities\ScmWor;
 
@@ -51,8 +52,9 @@ class ScmWcrController extends Controller
     {
         $formType = "create";
         $brands = Brand::latest()->get();
-        $branchs = Branch::latest()->get();
-        return view('scm::wcrs.create', compact('formType', 'brands', 'branchs'));
+        $branches = Branch::latest()->get();
+        $materials = Material::latest()->get();
+        return view('scm::wcrs.create', compact('formType', 'brands', 'branches', 'materials'));
     }
 
     /**
@@ -70,7 +72,7 @@ class ScmWcrController extends Controller
             $wcr = ScmWcr::create($scm_wcr);
             $stock = [];
             $wcr_lines = [];
-            foreach ($request->material_name as $key => $val) {
+            foreach ($request->material_id as $key => $val) {
                 $wcr_lines[] = $this->getLineData($request, $key, $wcr->id);
                 $stock[] = $this->getStockData($request, $key, $wcr->id);
             };
@@ -214,6 +216,7 @@ class ScmWcrController extends Controller
         ];
     }
 
+    //It was used in wcr for get warrent info, now we are using getWarrentyInfoBySerialCode function
     public function searchSerialForWcr(Request $request)
     {
         $data = StockLedger::whereHas('material', function ($item) use ($request) {
@@ -289,5 +292,19 @@ class ScmWcrController extends Controller
     {
         $warranty_claim = ScmWcr::where('id', $id)->first();
         return view('scm::wcrs.gate_pass_pdf', compact('warranty_claim'));
+    }
+
+    public function getWarrentyInfoBySerialCode()
+    {
+        $mrr_line = ScmMrrSerialCodeLine::with('scmMrrLines.scmMrr')->where('serial_or_drum_code', request()->serial_code)->first();
+        $used_days = Carbon::parse($mrr_line->scmMrrLines->created_at)->diffInDays(Carbon::now());
+        $data = [
+            'receiving_date' => date('d-m-Y', strtotime($mrr_line->scmMrrLines->created_at)),
+            'warranty_period' => $mrr_line->scmMrrLines->warranty_period,
+            'used_days' => $used_days,
+            'remaining_days' => $mrr_line->scmMrrLines->warranty_period != 0 ? $mrr_line->scmMrrLines->warranty_period - $used_days : 0,
+            'challan_no' => $mrr_line->scmMrrLines->scmMrr->challan_no,
+        ];
+        return $data;
     }
 }

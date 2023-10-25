@@ -13,7 +13,7 @@ Route::get('get-material-by-cs/{csId}/{supplier_id}', [PurchaseOrderController::
 Route::get('search_mrs_no', [ScmMirController::class, 'searchMrs'])->name('search_mrs_no');
 Route::get('search-type-no', [ScmMirController::class, 'searchTypeNo'])->name('searchTypeNo');
 Route::get('search-mrs-type-wise-aterials', [ScmMirController::class, 'mrsAndTypeWiseMaterials'])->name('mrsAndTypeWiseMaterials');
-Route::get('search-mrs-type-wise-material-for-challan', [ScmMirController::class, 'mrsAndTypeWiseMaterialsForChallan'])->name('search-mrs-type-wise-material-for-challan');
+Route::get('search-mrs-type-wise-material-quantity', [ScmMirController::class, 'mrsAndTypeWiseMaterialsQuantity'])->name('search-mrs-type-wise-material-quantity');
 Route::get('search-materialwise-brand', [ScmMirController::class, 'materialWiseBrands'])->name('materialWiseBrands');
 Route::get('search-brandwise-model', [ScmMirController::class, 'brandWiseModels'])->name('brandWiseModels');
 Route::get('search-model-wise-serial-code', [ScmMirController::class, 'modelWiseSerialCodes'])->name('modelWiseSerialCodes');
@@ -22,6 +22,7 @@ Route::get('get-stock', [ScmMirController::class, 'getChallanMaterialStock'])->n
 Route::get('get-from-and-to-branch-stock', [ScmMirController::class, 'getFromAndToBranchStock'])->name('get-from-and-to-branch-stock');
 Route::get('clientMurWiseMaterials', [ScmErrController::class, 'clientMurWiseMaterials'])->name('clientMurWiseMaterials');
 Route::get('search-serial-for-wor', [ScmWorController::class, 'searchSerialForWor'])->name('searchSerialForWor');
+route::get('receeive-type-wise-list', [ScmMirController::class, 'receiveTypeWiseList'])->name('receeive-type-wise-list');
 
 Route::resources([
     'material-issues' => ScmMirController::class,

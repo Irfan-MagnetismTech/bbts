@@ -272,7 +272,7 @@
             </div>
         </div>
     </div>
-    <div class="row" id="dataContainer" style="display: none;">
+    <div class="row" id="dataContainer" @if (empty($challan) && empty(old('material_name'))) style="display: none;" @endif>
         <table class="table table-bordered" id="challan">
             <thead>
                 <tr>
@@ -291,13 +291,12 @@
                 </tr>
             </thead>
             <tbody id="challanDataBody">
-
                 @php
+
                     $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                     $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
                     $received_no = old('type_no', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
                     $receiveable_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('receiveable_id') : []);
-                    $type_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('type_id') : []);
                     $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
                     $material_type = old('material_type', !empty($challan) ? $challan->scmChallanLines->pluck('material.type') : []);
                     $brand_id = old('brand_id', !empty($challan) ? $challan->scmChallanLines->pluck('brand_id') : []);
@@ -307,6 +306,7 @@
                     $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
                     $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
                     $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
+                    $mrs_quantity = old('mrs_quantity', !empty($challan) ? $challan->scmChallanLines->pluck('mrs_quantity') : []);
 
                 @endphp
                 @foreach ($Challan_Lines as $key => $Challan_Line)
@@ -361,11 +361,16 @@
                                 @endforeach
                             </select>
                         </td>
+
                         <td>
-                            <input type="text" name="type_no[{{ $key }}]" class="form-control type_no"
-                                autocomplete="off" value="{{ $received_no[$key] }}">
-                            <input type="hidden" name="type_id[{{ $key }}]" class="form-control type_id"
-                                autocomplete="off" value="{{ $receiveable_id[$key] }}">
+                            <select name="type_id[{{ $key }}]" class="form-control type_id select2"
+                                autocomplete="off">
+                                <option value="">Select Type</option>
+                                @foreach ($type_no[$key] as $typeKey => $typevalue)
+                                    <option value="{{ $typevalue['id'] }}" @selected($receiveable_id[$key] == $typevalue['id'])>
+                                        {{ $typevalue['type_no'] }}</option>
+                                @endforeach
+                            </select>
                         </td>
 
                         <td class="select2_container">
@@ -388,7 +393,7 @@
                         </td>
                         <td>
                             <input name="mrs_quantity[{{ $key }}]" class="form-control mrs_quantity"
-                                autocomplete="off" value="{{ $branch_stock[$key] }}" readonly>
+                                autocomplete="off" value="{{ $mrs_quantity[$key] }}" readonly>
                         </td>
                         <td>
                             <input name="quantity[{{ $key }}]" class="form-control quantity" autocomplete="off"
@@ -468,8 +473,9 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="type_no[${indx}]" class="form-control type_no" autocomplete="off">
-                                <input type="hidden" name="type_id[${indx}]" class="form-control type_id" autocomplete="off">
+                                <select name="type_id[${indx}]" class="form-control type_id select2" autocomplete="off">
+                                    <option value="">Select Type</option>
+                                </select>
                             </td>
 
                             <td class="select2_container">
@@ -700,94 +706,73 @@
             }
         }
 
-        $(document).on('keyup', '.type_no', function() {
-            var event_this = $(this).closest('tr');
-            let myObject = {
-                type: event_this.find('.received_type').val().toUpperCase(),
-                branch_id: $('#branch_id').val(),
-            }
-            jquaryUiAjax(this, "{{ route('searchTypeNo') }}", uiList, myObject);
-
-            function uiList(item) {
-                event_this.find('.type_no').val(item.label);
-                event_this.find('.type_id').val(item.id);
-                getMaterials(event_this)
-                //get serial code
-                let model = event_this.find('.model').val();
-                let material_id = event_this.find('.material_name').val();
-                let scm_requisition_id = $('#scm_requisition_id').val();
-                let brand_id = event_this.find('.brand').val();
-                let serial_code = event_this.find('.serial_code');
-                let material_type = event_this.find('.material_type').val();
-                let received_type = event_this.find('.received_type').val().toUpperCase();
-                let receiveable_id = event_this.find('.type_id').val();
-
-                populateDropdownByAjax("{{ route('modelWiseSerialCodes') }}", {
-                    model: model,
-                    material_id: material_id,
-                    brand_id: brand_id,
-                    from_branch_id: $('#branch_id').val(),
-                    received_type: received_type,
-                    receiveable_id: receiveable_id,
-                }, serial_code, 'value', 'label', null, false);
+        $(document).on('change', '.received_type', function() {
+            let event_this = $(this);
+            let received_type = $(this).val().toUpperCase();
+            let material_name = $(this).closest('tr').find('.material_name');
+            let brand = $(this).closest('tr').find('.brand');
+            let model = $(this).closest('tr').find('.model');
+            let receiveable_id = $(this).closest('tr').find('.type_id').val();
+            let branch_id = $('#from_branch_id').val();
+            if (received_type == '') {
+                alert('Please Select Received Type');
                 return false;
             }
-        })
-
-        function ClearNext(selector) {
-            let sib = $(selector).parent().nextAll('td');
-            // loop siblings
-            sib.each(function() {
-                let input = $(this).find('input');
-                let select = $(this).find('select');
-                if (!input.hasClass('unit')) {
-                    input.val('');
-                }
-                select.empty();
-            });
-        }
-        $(document).on('change', '.received_type', function() {
-            var event_this = $(this).closest('tr');
-        })
-
-        function getMaterials(event_this) {
-            let scm_requisition_id = $('#scm_requisition_id').val();
-            let material_name = event_this.find('.material_name');
-            let brand = event_this.find('.brand');
-            let model = event_this.find('.model');
-            let receiveable_id = event_this.find('.type_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
-            // populateDropdownByAjax("{{ route('mrsAndTypeWiseMaterials') }}", {
-            //     scm_requisition_id: scm_requisition_id,
-            //     branch: $('#branch_id').val(),
-            //     material_id: material_name.val(),
-            //     brand_id: brand.val(),
-            //     model: model.val(),
-            //     receiveable_id: receiveable_id,
-            //     received_type: received_type,
-            // }, material_name, 'value', 'label', {
-            //     'data-type': 'type',
-            //     'data-unit': 'unit',
-            //     'data-code': 'code',
-            // })
-
             $.ajax({
-                url: "{{ route('search-mrs-type-wise-material-for-challan') }}",
+                url: "{{ route('receeive-type-wise-list') }}",
                 type: 'get',
                 data: {
-                    scm_requisition_id: scm_requisition_id,
+                    scm_requisition_id: $('#scm_requisition_id').val(),
                     branch: $('#branch_id').val(),
                     material_id: material_name.val(),
                     brand_id: brand.val(),
                     model: model.val(),
                     stockable_id: receiveable_id,
                     received_type: received_type,
+                    branch_id: branch_id,
                 },
                 success: function(data) {
-                    (event_this).closest('tr').find('.available_quantity').val(data.current_stock);
+                    var html = '<option value="" readonly selected>Select</option>';
+                    $.each(data, function(key, item) {
+                        html += `<option value="${item.id}">${item.type_no}</option>`;
+                    });
+                    event_this.closest('tr').find('.type_id').html(html);
                 }
             });
-        }
+        })
+
+        $(document).on('change', '.type_id', function() {
+            var event_this = $(this).closest('tr');
+            let model = $(this).val();
+            let material_id = event_this.find('.material_name').val();
+            let scm_requisition_id = $('#scm_requisition_id').val();
+            let received_type = event_this.find('.received_type').val().toUpperCase();
+            let receiveable_id = event_this.find('.type_id').val();
+            let brand_id = event_this.find('.brand').val();
+            let serial_code = $(this).closest('tr').find('.serial_code');
+            let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
+                'type');
+            $.ajax({
+                url: "{{ route('modelWiseSerialCodes') }}",
+                type: 'get',
+                data: {
+                    model: model,
+                    material_id: material_id,
+                    brand_id: brand_id,
+                    received_type: received_type,
+                    receiveable_id: receiveable_id,
+                    branch_id: $('#branch_id').val(),
+                },
+                success: function(data) {
+                    let html = '';
+                    $.each(data, function(key, item) {
+
+                        html += `<option value="${item.value}">${item.label}</option>`;
+                    });
+                    event_this.find('.serial_code').html(html);
+                }
+            });
+        })
 
         $(document).on('change', '.material_name', function() {
             checkUniqueMaterial(this);

@@ -2,6 +2,7 @@
 
 
 use Illuminate\Support\Facades\Route;
+use Modules\SCM\Entities\ScmWcr;
 use Modules\SCM\Entities\ScmWcrr;
 use Modules\SCM\Http\Controllers\ScmMrrController;
 use Modules\SCM\Http\Controllers\ScmMurController;
@@ -34,3 +35,4 @@ Route::post('warranty-claims/sent-to-supplier/{wcr?}', [ScmWcrController::class,
 Route::get('search-wcr-for-wcrr', [ScmWcrrController::class, 'searchWcrForWcrr'])->name('searchWcrForWcrr');
 Route::get('search-material-for-wcrr', [ScmWcrrController::class, 'searchMaterialForWcrr'])->name('searchMaterialForWcrr');
 Route::get('get-requisition-data-by-mrs-no', [ScmChallanController::class, 'getRequisitionDataByMrsNo'])->name('get-requisition-data-by-mrs-no');
+Route::get('get-warrenty-info-by-serial-code', [ScmWcrController::class, 'getWarrentyInfoBySerialCode'])->name('get-warrenty-info-by-serial-code');

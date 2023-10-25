@@ -103,7 +103,7 @@ class ConnectivityRequirement extends Model
 
     public function costing()
     {
-        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no')->where('is_modified',0)->withDafault();
+        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no')->where('is_modified',0);
     }
 
     public function costingByConnectivity()
