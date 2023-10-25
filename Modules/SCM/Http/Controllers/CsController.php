@@ -127,7 +127,16 @@ class CsController extends Controller
             'Include', 'Exclude'
         ];
         $brands = Brand::latest()->get();
-        $all_materials = Material::with(['unit'])->get();
+
+        $indent_id = Indent::where('indent_no', $cs->indent_no)->value('id');
+
+        $scm_purchase_requisition_ids = IndentLine::where('indent_id', $indent_id)->pluck('scm_purchase_requisition_id');
+
+        $material_ids = ScmPurchaseRequisitionDetails::whereIn('scm_purchase_requisition_id', $scm_purchase_requisition_ids)->pluck('material_id');
+
+
+        $all_materials= Material::whereIn('id', $material_ids)
+            ->get();
 
         return view('scm::cs.create', compact('all_materials', 'cs', 'Taxes', 'brands'));
     }
@@ -313,7 +322,6 @@ class CsController extends Controller
 
 
         $results= Material::whereIn('id', $material_ids)
-            ->limit(15)
             ->get()
             ->map(function ($item) {
                 if (request('branch_id')) {

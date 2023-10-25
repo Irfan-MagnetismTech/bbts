@@ -180,14 +180,16 @@
                                     <input type="hidden" name="material_id[]" value="{{ $material_id }}"
                                            class="material_id">
                                     <select class="form-control material_name select2"
-                                            name="material_name[]">
-                                        <option value="{{ $material_id }}" readonly selected>{{ $material_name }}</option>
-                                        @foreach ($materials as $key => $value)
-                                            <option value="{{ $value->material->id ?? ''}}"
-                                                    data-unit="{{ $value->material->unit ?? ''}}">
-                                                {{ $value->material->materialNameWithCode ?? ''}}</option>
+                                            name="material_name[]" autocomplete="off">
+                                        <option value="{{ $material_id }}" readonly selected>Select Material</option>
+                                        @foreach ($all_materials as $key => $value)
+                                            <option value="{{ $value->id ?? ''}}"
+                                                    data-unit="{{ $value->unit ?? ''}}"
+                                                {{ $value->id == $material_id ? 'selected' : '' }}>
+                                                {{ $value->materialNameWithCode ?? ''}}</option>
                                         @endforeach
                                     </select>
+
                                 </td>
                                 <td>
                                     <input type="text" name="unit[]" value="{{ $unit }}"
