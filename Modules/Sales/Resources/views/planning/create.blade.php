@@ -74,9 +74,6 @@
                                     <td>{{ $lead_generation->lat }} - {{ $lead_generation->long }}</td>
                                     <th class="table_label">District</th>
                                     <td>{{ $lead_generation->district->name ?? '' }}</td>
-
-
-
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact No</th>
@@ -85,7 +82,6 @@
                                     <td>{{ $lead_generation->website }}</td>
                                     <th class="table_label">Thana</th>
                                     <td>{{ $lead_generation->thana->name ?? '' }}</td>
-
                                 </tr>
                                 <tr>
                                     <th class="table_label">Email</th>
@@ -100,6 +96,14 @@
                                     </td>
                                     <th class="table_label">Address</th>
                                     <td>{{ $lead_generation->address }}</td>
+                                </tr>
+                                <tr colspan="6">
+                                    <th class="table_label">Remarks</th>
+                                    <td colspan="5" style="padding: 0px !important; margin: 0px !important;">
+                                        <input type="text" name="remarks" id="remarks"
+                                            class="form-control form-control-sm" value=""
+                                            style="height: 25px !important;" placeholder="Remarks">
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -226,6 +230,7 @@
                                                         class="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -560,21 +565,59 @@
 
     @section('script')
         <script>
-            let plan_equipment_html = '';
+            let plan_equipment_html = `<tr class="equipment_row">
+                                            <td>
+                                                <select name="equipment_id[]" id="equipment_id"
+                                                    class="form-control form-control-sm equipment_id">
+                                                    <option value="">Select Equipment</option>
+                                                    @foreach ($materials as $material)
+                                                        <option value="{{ $material->id }}">
+                                                            {{ $material->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="quantity[]" id="quantity"
+                                                    class="form-control form-control-sm" value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="unit[]" id="unit"
+                                                    class="form-control form-control-sm unit" value="">
+                                            </td>
+                                            <td>
+                                                <select name="brand_id[]" id="brand_id"
+                                                    class="form-control form-control-sm brand_id">
+                                                    <option value="">Select Brand</option>
+                                                    @foreach ($brands as $brand)
+                                                        <option value="{{ $brand->id }}">
+                                                            {{ $brand->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="model[]" id="model"
+                                                    class="form-control form-control-sm model" value="">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="equipment_remarks[]" id="equipment_remarks"
+                                                    class="form-control form-control-sm equipment_remarks" value="">
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
+                                                        class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr> `;
             $('#addEquipmentRow').on('click', function() {
                 addEquipmentRow();
             });
 
             function addEquipmentRow() {
-                let check_first_row = $('.equipment_row').first();
+                let check_first_row = $('#equipment_body').find('.equipment_row');
                 if (check_first_row.length !== 0) {
-                    console.log('not empty');
                     $('.equipment_row').first().clone().appendTo('#equipment_body');
                     $('.equipment_row').last().find('input').val('');
                     $('.equipment_row').last().find('select').val('');
                 } else {
-                    console.log('empty');
-                    console.log(plan_equipment_html);
                     $('#equipment_body').append('<tr>' + plan_equipment_html + '</tr>');
                 }
                 // $('.equipment_row').first().clone().appendTo('#equipment_body');

@@ -54,24 +54,25 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route("wcr-gate-pass", $ScmData->id) }}" data-toggle="tooltip" title="GP" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
+                                    <a href="{{ route('wcr-gate-pass', $ScmData->id) }}" data-toggle="tooltip"
+                                        title="GP" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
                                     <a href="{{ route('warranty-claims.show', $ScmData->id) }}" data-toggle="tooltip"
                                         title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    @if (!$ScmData->isDeleteable())
-                                        <a href="{{ route('warranty-claims.edit', $ScmData->id) }}" data-toggle="tooltip"
-                                            title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    {{-- @if (!$ScmData->isDeleteable()) --}}
+                                    <a href="{{ route('warranty-claims.edit', $ScmData->id) }}" data-toggle="tooltip"
+                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
 
-                                        <form action="{{ url("scm/warranty-claims/$ScmData->id") }}" method="POST"
-                                            data-toggle="tooltip" title="Delete" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                    class="fas fa-trash"></i></button>
-                                        </form>
-                                        <button type="button"
-                                            class="btn btn-primary btn-outline-primary waves-effect md-trigger"
-                                            onclick="trig({{ $ScmData->id }})">Sent To Supplier</button>
-                                    @endif
+                                    <form action="{{ url("scm/warranty-claims/$ScmData->id") }}" method="POST"
+                                        data-toggle="tooltip" title="Delete" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                class="fas fa-trash"></i></button>
+                                    </form>
+                                    <button type="button"
+                                        class="btn btn-primary btn-outline-primary waves-effect md-trigger"
+                                        onclick="trig({{ $ScmData->id }})">Sent To Supplier</button>
+                                    {{-- @endif  --}}
                                     {{-- @if (in_array($ScmData->type, ['client', 'pop']))
                                     <a href="{{ route('material-utilizations.create', ['challan_id' => $challan->id]) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-secondary">MUR</a>
