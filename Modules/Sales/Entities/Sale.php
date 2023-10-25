@@ -42,6 +42,11 @@ class Sale extends Model
         return $this->hasMany(SaleDetail::class, 'sale_id', 'id');
     }
 
+    public function scopeActivation($query)
+    {
+        return $query->where('is_modified', 0);
+    }
+
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');

@@ -200,12 +200,13 @@ class SaleModificationController extends Controller
             'delivery_date'         => $raw['delivery_date'],
             'billing_address_id'    => $raw['billing_address_id'],
             'collection_address_id' => $raw['collection_address_id'],
-            'bill_payment_date'     => $raw['bill_payment_date'],
-            'payment_status'        => $raw['payment_status'],
+            // 'bill_payment_date'     => $raw['bill_payment_date'],
+            // 'payment_status'        => $raw['payment_status'],
             'mrc'                   => $raw['mrc'],
             'otc'                   => $raw['otc'],
             'total_mrc'             => $raw['total_mrc']
         ];
+        // dd($data);
         return $data;
     }
 
@@ -240,7 +241,9 @@ class SaleModificationController extends Controller
     private function makeLinkRow($raw, $saleDetail, $includeCreatedAt = false)
     {
         $data = [];
-        foreach ($raw['link_no'] as $key1 => $value) {
+        dd($raw['link_no']);
+        // if(!empty($raw['link_no'])){
+            foreach ($raw['link_no'] as $key1 => $value) {
             $rowData = [
                 'link_no'           => $raw['link_no'][$key1],
                 'client_no'         => $raw['client_no'],
@@ -255,6 +258,8 @@ class SaleModificationController extends Controller
             }
             $data[] = $rowData;
         }
+        // }
+        
         return $data;
     }
 

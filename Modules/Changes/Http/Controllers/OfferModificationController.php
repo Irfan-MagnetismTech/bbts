@@ -191,6 +191,7 @@ class OfferModificationController extends Controller
         ];
         $offerLinks = $this->createOfferLinks($offer, $requestData);
         $offerDetails['offerLinks'] = $offerLinks;
+        // dd($offerDetails);
         return $offerDetails;
     }
 

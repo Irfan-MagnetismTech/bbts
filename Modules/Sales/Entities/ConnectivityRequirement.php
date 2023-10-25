@@ -120,4 +120,9 @@ class ConnectivityRequirement extends Model
     {
         return $this->hasOne(Offer::class, 'connectivity_requirement_id', 'id');
     }
+
+    public function modificationSale()
+    {
+        return $this->hasOne(Sale::class, 'connectivity_requirement_id', 'id');
+    }
 }

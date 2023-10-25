@@ -48,7 +48,7 @@ class SaleController extends Controller
      */
     public function index()
     {
-        $sales = Sale::all();
+        $sales = Sale::activation()->get();
         return view('sales::sales.index', compact('sales'));
     }
 
