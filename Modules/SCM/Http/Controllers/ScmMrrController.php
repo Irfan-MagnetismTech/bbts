@@ -305,14 +305,13 @@ class ScmMrrController extends Controller
     {
         $items = BillRegister::query()
             ->where("bill_no", "like", "%" . request('search') . "%")
+            ->orWhere('id', 'like', '%' . request('search') . '%')
             ->get()
             ->map(fn ($item) => [
                 'value'          => $item->id,
-                'label'          => $item->bill_no,
+                'label'          => $item->id  . ' ( ' . $item->bill_no . ' )',
                 'date'           => $item->date
             ]);
-
-
         return response()->json($items);
     }
 

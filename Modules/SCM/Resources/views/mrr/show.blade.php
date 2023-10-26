@@ -6,9 +6,10 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('material-receives.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
-    class="fa fa-plus"></i></a>
+    <a href="{{ route('material-receives.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-database"></i></a>
 @endsection
+
 
 @section('content-grid', null)
 
@@ -50,6 +51,14 @@
                         <tr>
                             <td> <strong>Branch</strong> </td>
                             <td> {{ $materialReceive?->branch?->name }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Bill Register No</strong> </td>
+                            <td> {{ $materialReceive?->bill_reg_no }}</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Bill Date</strong> </td>
+                            <td> {{ $materialReceive?->bill_date }}</td>
                         </tr>
                     </tbody>
                 </table>

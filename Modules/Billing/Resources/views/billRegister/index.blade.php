@@ -28,6 +28,7 @@
             <thead>
                 <tr>
                     <th>#SL</th>
+                    <th>Bill Register No</th>
                     <th>Supplier Name</th>
                     <th>Bill No</th>
                     <th>Amount</th>
@@ -38,6 +39,7 @@
             <tfoot>
                 <tr>
                     <th>#SL</th>
+                    <th>Bill Register No</th>
                     <th>Supplier Name</th>
                     <th>Bill No</th>
                     <th>Amount</th>
@@ -49,6 +51,7 @@
                 @foreach ($datas as $key => $value)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                        <td class="text-center">{{ $value->id }}</td>
                         <td class="text-center">{{ $value->supplier->name }}</td>
                         <td class="text-center">{{ $value->bill_no }}</td>
                         <td class="text-center">{{ $value->amount }}</td>
