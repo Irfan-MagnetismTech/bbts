@@ -2,6 +2,9 @@
 
 namespace Modules\Admin\Entities;
 
+use App\Models\Dataencoding\District;
+use App\Models\Dataencoding\Division;
+use App\Models\Dataencoding\Thana;
 use Carbon\Carbon;
 use Modules\Admin\Entities\Branch;
 use Modules\Admin\Entities\PopLine;
@@ -17,6 +20,22 @@ class Pop extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+    
+    public function thana()
+    {
+        return $this->belongsTo(Thana::class);
+    } 
+    
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    } 
+    
+    public function division()
+    {
+        return $this->belongsTo(Division::class);
+    } 
 
     public function popLines()
     {
