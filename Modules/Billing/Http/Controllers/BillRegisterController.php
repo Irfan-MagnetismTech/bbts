@@ -4,6 +4,7 @@ namespace Modules\Billing\Http\Controllers;
 
 use Illuminate\Database\QueryException;
 use Modules\Billing\Entities\BillRegister;
+use Modules\Billing\Http\Requests\BillRegisterRequest;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\Supplier;
 use PDF;

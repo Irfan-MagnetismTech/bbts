@@ -62,36 +62,30 @@
                                 <tr>
                                     <th class="table_label">Client Name</th>
                                     <td>{{ $client_name }}</td>
-                                    <th class="table_label">Address</th>
-                                    <td>{{ $client_address }}</td>
-                                </tr>
-                                <tr>
+                                    <th class="table_label">Landmark</th>
+                                    <td>{{ $client_landmark }}</td>
                                     <th class="table_label">Division</th>
                                     <td>{{ $client_division }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="table_label">Contact Person</th>
+                                    <td>{{ $client_contact_person }}</td>
+                                    <th class="table_label">Lat-Long</th>
+                                    <td>{{ $client_lat_long }}</td>
                                     <th class="table_label">District</th>
                                     <td>{{ $client_district }}</td>
                                 </tr>
                                 <tr>
-                                    <th class="table_label">Thana</th>
-                                    <td>{{ $client_thana }}</td>
-                                    <th class="table_label">Landmark</th>
-                                    <td>{{ $client_landmark }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Lat-Long</th>
-                                    <td>{{ $client_lat_long }}</td>
-                                    <th class="table_label">Contact Person</th>
-                                    <td>{{ $client_contact_person }}</td>
-                                </tr>
-                                <tr>
                                     <th class="table_label">Contact No</th>
                                     <td>{{ $client_contact_no }}</td>
-                                    <th class="table_label">Email</th>
-                                    <td>{{ $client_email }}</td>
-                                </tr>
-                                <tr>
                                     <th class="table_label">Website</th>
                                     <td>{{ $client_website }}</td>
+                                    <th class="table_label">Thana</th>
+                                    <td>{{ $client_thana }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="table_label">Email</th>
+                                    <td>{{ $client_email }}</td>
                                     <th class="table_label">Document</th>
                                     <td>
                                         {{-- @if ($lead_generation->document)
@@ -99,6 +93,16 @@
                                                 target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
                                                     class="fas fa-eye"></i></a>
                                         @endif --}}
+                                    </td>
+                                    <th class="table_label">Address</th>
+                                    <td>{{ $client_address }}</td>
+                                </tr>
+                                <tr colspan="6">
+                                    <th class="table_label">Remarks</th>
+                                    <td colspan="5" style="padding: 2px !important; margin: 2px !important;">
+                                        <input type="text" name="remarks" id="remarks"
+                                            class="form-control form-control-sm" style="height: 25px !important;"
+                                            placeholder="Remarks" value="{{ $remarks }}">
                                     </td>
                                 </tr>
                             </table>
@@ -192,8 +196,8 @@
                             </div>
                             <div class="checkbox-fade fade-in-primary">
                                 <label>
-                                    <input type="checkbox" name="change_type[]" value="Redundant Link" id="redundant_link"
-                                        @if (in_array('Redundant Link', $change_type)) checked @endif>
+                                    <input type="checkbox" name="change_type[]" value="Redundant Link"
+                                        id="redundant_link" @if (in_array('Redundant Link', $change_type)) checked @endif>
                                     <span class="cr">
                                         <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                     </span>
@@ -233,8 +237,7 @@
                                             <th>Plan</th>
                                             <th>Remarks</th>
                                             <th>
-                                                <button type="button" class="btn btn-sm btn-success"
-                                                    id="addParticularRow"><i class="fas fa-plus"></i></button>
+
                                             </th>
                                         </tr>
                                     </thead>
@@ -694,7 +697,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="md-col-3 col-3  mt-3">
+                                        <div class="md-col-3 col-3  mt-3 new_transmission_capacity_div">
                                             <div class="form-item">
                                                 <input type="text"
                                                     name="new_transmission_capacity_{{ $total_key }}"
@@ -1124,18 +1127,42 @@
             }
 
             $(document).on('change', '.equipment_id', function() {
+                var this_event = $(this);
                 var equipment_id = $(this).val();
                 var equiments = {!! json_encode($materials) !!};
                 var find_equipment = equiments.find(x => x.id == equipment_id);
                 console.log(find_equipment);
                 $(this).closest('tr').find('.unit').val(find_equipment.unit);
+                $.get('{{ route('getMaterialWiseBrands') }}', {
+                    material_id: equipment_id
+                }, function(data) {
+                    console.log(data);
+                    var html = '<option value="">Select Brand</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item.id + '">' +
+                            item.name + '</option>';
+                    });
+                    this_event.closest('tr').find('.brand_id').html(html);
+                })
             });
 
             $(document).on('change', '.link_material_id', function() {
+                var this_event = $(this);
                 var material_id = $(this).val();
                 var materials = {!! json_encode($materials) !!};
                 var find_material = materials.find(x => x.id == material_id);
                 $(this).closest('tr').find('.link_unit').val(find_material.unit);
+                $.get('{{ route('getMaterialWiseBrands') }}', {
+                    material_id: material_id
+                }, function(data) {
+                    console.log(data);
+                    var html = '<option value="">Select Brand</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item.id + '">' +
+                            item.name + '</option>';
+                    });
+                    this_event.closest('tr').find('.link_brand').html(html);
+                })
             });
 
             let link_array = [];
@@ -1164,10 +1191,15 @@
                             });
                             this_event.closest('.main_link').find('.existing_infrastructure_link').html(
                                 html);
+                            this_event.closest('.main_link').find('.new_transmission_capacity_div').css(
+                                'display',
+                                'block');
                         }
                     });
                 } else {
                     this_event.closest('.main_link').find('.link_list').css('display', 'none');
+                    this_event.closest('.main_link').find('.new_transmission_capacity_div').css('display',
+                        'none');
                 }
             });
 

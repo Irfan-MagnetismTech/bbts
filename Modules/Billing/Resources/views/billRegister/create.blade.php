@@ -47,19 +47,19 @@
                             <div class="form-item">
                                 <input type="hidden" id="supplier_id" name="supplier_id" value="{{$supplier_id}}">
                                 <input type="text" class="form-control" name="supplier_name" id="supplier_name" autocomplete="off" required value="{{$supplier_name}}">
-                                <label for="supplier_name">Supplier Name<span class="text-danger">*</span></label>
+                                <label for="supplier_name">Supplier Name<span class="text-danger"> *</span></label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="bill_no" id="bill_no" autocomplete="off" required value="{{$bill_no}}">
-                                <label for="bill_no">Bill No<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="bill_no" id="bill_no" autocomplete="off" value="{{$bill_no}}">
+                                <label for="bill_no">Bill No</label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
                                 <input type="text" class="form-control" name="amount" id="amount" autocomplete="off" required value="{{$amount}}">
-                                <label for="amount">Amount<span class="text-danger">*</span></label>
+                                <label for="amount">Amount<span class="text-danger"> *</span></label>
                             </div>
                         </div>
                         <div class="col-xl-4 col-md-4">
@@ -67,7 +67,7 @@
                                 <input type="date" name="date" id="date" class="form-control"
                                        value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off"
                                        value="{{$date}}">
-                                <label for="date">Bill Date<span class="text-danger">*</span></label>
+                                <label for="date">Bill Date<span class="text-danger"> *</span></label>
                             </div>
                         </div>
                     </div>

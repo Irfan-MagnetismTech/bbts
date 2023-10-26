@@ -49,7 +49,7 @@
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan
-                @can('lead-generation-list')
+                @can('lead-generation')
                     <li class="{{ request()->routeIs('lead-generation.index') ? 'active' : null }}">
                         <a href="{{ route('lead-generation.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span

@@ -24,9 +24,6 @@
 
 @section('content')
     <style>
-        /* #calculation_table.table-bordered td, .table-bordered th{
-                                                                                    border: 1px solid gainsboro!important;
-                                                                                } */
         #dv {
             background-color: #f6f9f9 !important;
             color: #191818 !important;

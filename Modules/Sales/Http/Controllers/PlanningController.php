@@ -73,7 +73,7 @@ class PlanningController extends Controller
     {
         $feasibility_requirement_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $request->fr_no)->first();
         $request->request->add(['mq_no' => $feasibility_requirement_detail->feasibilityRequirement->mq_no]);
-        $plan_data = $request->only('mq_no', 'fr_no', 'client_no');
+        $plan_data = $request->only('mq_no', 'fr_no', 'client_no', 'remarks');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
         DB::beginTransaction();
@@ -126,7 +126,7 @@ class PlanningController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $plan_data = $request->only('mq_no', 'fr_no', 'client_no');
+        $plan_data = $request->only('mq_no', 'fr_no', 'client_no', 'remarks');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
         DB::beginTransaction();

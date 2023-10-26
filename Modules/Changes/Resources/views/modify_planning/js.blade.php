@@ -86,7 +86,7 @@
                                     </div>
                                 </div>
 
-                                <div class="md-col-3 col-3  mt-3">
+                                <div class="md-col-3 col-3  mt-3 new_transmission_capacity_div">
                                     <div class="form-item">
                                         <input type="text" name="new_transmission_capacity_1"
                                             id="new_transmission_capacity" class="form-control form-control-sm"
