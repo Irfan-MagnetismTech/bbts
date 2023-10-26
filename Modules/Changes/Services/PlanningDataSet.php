@@ -61,6 +61,7 @@ class PlanningDataSet
             'client_email' => $old ? $old['client_email'] : $lead_generation->email ?? '',
             'client_website' => $old ? $old['client_website'] : $lead_generation->website ?? '',
             'client_document' => $old ? $old['client_document'] : $lead_generation->document ?? '',
+            'remarks' => $old ? $old['remarks'] : $lead_generation->remarks ?? '',
             'change_type' => $old ? $old['change_type'] : $change_type,
             'product_details' => $old ? [] : $details,
             'equipment_plans' => $old ? [] : $equipement_plan,

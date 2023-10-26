@@ -99,7 +99,7 @@
                                 </tr>
                                 <tr colspan="6">
                                     <th class="table_label">Remarks</th>
-                                    <td colspan="5" style="padding: 0px !important; margin: 0px !important;">
+                                    <td colspan="5" style="padding: 2px !important; margin: 2px !important;">
                                         <input type="text" name="remarks" id="remarks"
                                             class="form-control form-control-sm" value=""
                                             style="height: 25px !important;" placeholder="Remarks">
@@ -129,8 +129,7 @@
                                             <th>Plan</th>
                                             <th>Remarks</th>
                                             <th>
-                                                <button type="button" class="btn btn-sm btn-success"
-                                                    id="addParticularRow"><i class="fas fa-plus"></i></button>
+
                                             </th>
                                         </tr>
                                     </thead>
@@ -336,7 +335,7 @@
                                     </div>
                                 </div>
 
-                                <div class="md-col-3 col-3  mt-3">
+                                <div class="md-col-3 col-3  mt-3 new_transmission_capacity_div">
                                     <div class="form-item">
                                         <input type="text" name="new_transmission_capacity_1"
                                             id="new_transmission_capacity" class="form-control form-control-sm"
@@ -757,18 +756,42 @@
             }
 
             $(document).on('change', '.equipment_id', function() {
+                var this_event = $(this);
                 var equipment_id = $(this).val();
                 var equiments = {!! json_encode($materials) !!};
                 var find_equipment = equiments.find(x => x.id == equipment_id);
                 console.log(find_equipment);
                 $(this).closest('tr').find('.unit').val(find_equipment.unit);
+                $.get('{{ route('getMaterialWiseBrands') }}', {
+                    material_id: equipment_id
+                }, function(data) {
+                    console.log(data);
+                    var html = '<option value="">Select Brand</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item.id + '">' +
+                            item.name + '</option>';
+                    });
+                    this_event.closest('tr').find('.brand_id').html(html);
+                })
             });
 
             $(document).on('change', '.link_material_id', function() {
+                var this_event = $(this);
                 var material_id = $(this).val();
                 var materials = {!! json_encode($materials) !!};
                 var find_material = materials.find(x => x.id == material_id);
                 $(this).closest('tr').find('.link_unit').val(find_material.unit);
+                $.get('{{ route('getMaterialWiseBrands') }}', {
+                    material_id: material_id
+                }, function(data) {
+                    console.log(data);
+                    var html = '<option value="">Select Brand</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item.id + '">' +
+                            item.name + '</option>';
+                    });
+                    this_event.closest('tr').find('.link_brand').html(html);
+                })
             });
 
             let link_array = [];
@@ -799,8 +822,12 @@
                                 html);
                         }
                     });
+                    this_event.closest('.main_link').find('.new_transmission_capacity_div').css('display',
+                        'none');
                 } else {
                     this_event.closest('.main_link').find('.link_list').css('display', 'none');
+                    this_event.closest('.main_link').find('.new_transmission_capacity_div').css('display',
+                        'block');
                 }
             });
 

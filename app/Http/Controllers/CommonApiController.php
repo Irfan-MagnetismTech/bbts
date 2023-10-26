@@ -31,6 +31,7 @@ use Modules\Sales\Entities\SaleDetail;
 use Modules\Sales\Entities\Vendor;
 use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\Category;
+use Modules\SCM\Entities\MaterialBrand;
 
 class CommonApiController extends Controller
 {
@@ -76,30 +77,30 @@ class CommonApiController extends Controller
 
     public function getClientsByLinkId()
     {
-    $results = Client::query()
-    ->with('feasibility_requirement_details')
-    ->where(function ($query) {
-        $search = request('search');
-        $query->where('client_no', 'LIKE', '%' . $search . '%')
-            ->orWhere('client_name', 'LIKE', '%' . $search . '%');
-    })
-    ->limit(15)
-    ->get()
-    ->map(function ($item) {
-        return [
-            'id' => $item->client_no,
-            'text' => $item->client_no . ' - ' . $item->client_name,
-            'client_name' => $item->client_name,
-            'contact_person' => $item->contact_person,
-            'contact_no' => $item->contact_no,
-            'email' => $item->email,
-            'client_type' => $item->client_type,
-            'address' => $item->location,
-            'fr_list' => $item->feasibility_requirement_details->pluck('fr_no', 'connectivity_point'),
-        ];
-    });
+        $results = Client::query()
+            ->with('feasibility_requirement_details')
+            ->where(function ($query) {
+                $search = request('search');
+                $query->where('client_no', 'LIKE', '%' . $search . '%')
+                    ->orWhere('client_name', 'LIKE', '%' . $search . '%');
+            })
+            ->limit(15)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->client_no,
+                    'text' => $item->client_no . ' - ' . $item->client_name,
+                    'client_name' => $item->client_name,
+                    'contact_person' => $item->contact_person,
+                    'contact_no' => $item->contact_no,
+                    'email' => $item->email,
+                    'client_type' => $item->client_type,
+                    'address' => $item->location,
+                    'fr_list' => $item->feasibility_requirement_details->pluck('fr_no', 'connectivity_point'),
+                ];
+            });
 
-return response()->json($results);
+        return response()->json($results);
     }
 
     public function getClientsPreviousTickets($frNo, $limit)
@@ -149,13 +150,13 @@ return response()->json($results);
             ->with('thana', 'district')
             ->limit(15)
             ->get()
-            ->map(function ($item){
+            ->map(function ($item) {
                 $tana = $item->district->name ?? '';
                 $data = [
                     'id' => $item->id,
-                    'text' => $item->name . " (" . $item->location . ") - " .$tana. " - " . $item->district->name,
+                    'text' => $item->name . " (" . $item->location . ") - " . $tana . " - " . $item->district->name,
                     'value' => $item->name . " (" . $item->location . ") - " . $tana . " - " . $item->district->name,
-                    'label' => $item->name . " (" . $item->location . ") - " . $tana. " - " . $item->district->name,
+                    'label' => $item->name . " (" . $item->location . ") - " . $tana . " - " . $item->district->name,
                 ];
                 return $data;
             });
@@ -250,7 +251,7 @@ return response()->json($results);
                 'label' => $item->name,
                 'designation' => $item->designation->name
             ]);
-    //    dd($results);
+        //    dd($results);
         return response()->json($results);
     }
 
@@ -482,7 +483,15 @@ return response()->json($results);
             'physical_connectivity' => $physicalConnectivity,
         ]);
     }
+
+    public function getMaterialWiseBrands()
+    {
+        $material = MaterialBrand::where('material_id', request('material_id'))->first();
+        if ($material) {
+            $brands = Brand::select('id', 'name')->whereIn('id', explode(',', $material->brand))->get();
+            return response()->json($brands);
+        } else {
+            return response()->json([]);
+        }
+    }
 }
-
-
-
