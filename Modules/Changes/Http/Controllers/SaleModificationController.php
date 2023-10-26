@@ -284,7 +284,7 @@ class SaleModificationController extends Controller
                     $total_otc = $connectivityRequirement->offerDetail->total_offer_otc;
                     $investment = $connectivityRequirement->costing->costingLinks->sum('investment');
                     $product_cost = $connectivityRequirement->costing->product_total_cost + $connectivityRequirement->costing->total_operation_cost;
-                    $monthly_cost = ($investment - $total_otc) / $month + $connectivityRequirement->costing->costingLinks->sum('capacity_amount') ;
+                    $monthly_cost = ($investment - $total_otc) / $month + $connectivityRequirement->costing->costingLinks->sum('capacity_amount');
                     $total_monthly_cost = $monthly_cost + $product_cost;
                     $monthly_revenue = $connectivityRequirement->offerDetail->grand_total;
                     $total_investment += $investment;
@@ -341,6 +341,17 @@ class SaleModificationController extends Controller
             ->with(['client:id,client_name,client_no', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])
             ->where('connectivity_requirement_id', request()->connectivity_requirement_id)
             ->first();
+        // $oldSaleLinks = SaleLinkDetail::where('fr_no', $offer->offerDetails->first()->fr_no)->get();
+
+
+
+        // $offer->offerDetails->map(function ($item) use ($oldSaleLinks) {
+        //     if (empty($item->offerDetails->offerLinks)) {
+        //         // merge old sale link details in offer link details\
+        //         $item->offerDetails->offerLinks = $oldSaleLinks;
+        //     }
+        //     dd($item->offerDetails->offerLinks);
+        // });
 
 
         $offer['billing_address'] = BillingAddress::where('client_no', $offer->client_no)->get();

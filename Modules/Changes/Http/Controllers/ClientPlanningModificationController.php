@@ -84,7 +84,7 @@ class ClientPlanningModificationController extends Controller
      */
     public function store(Request $request)
     {
-        $plan_data = $request->only('fr_no', 'client_no', 'connectivity_requirement_id');
+        $plan_data = $request->only('fr_no', 'client_no', 'connectivity_requirement_id', 'remarks');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
         $plan_data['is_modified'] = 1;
@@ -150,7 +150,7 @@ class ClientPlanningModificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $plan_data = $request->only('fr_no', 'client_no', 'connectivity_requirement_id');
+        $plan_data = $request->only('fr_no', 'client_no', 'connectivity_requirement_id', 'remarks');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
         $plan_data['is_modified'] = 1;

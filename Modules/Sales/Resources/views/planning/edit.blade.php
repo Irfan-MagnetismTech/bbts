@@ -57,46 +57,49 @@
                             <table class="table custom_table table-bordered" style="font-size: 12px;">
                                 <tr>
                                     <th class="table_label">Client Name</th>
-                                    <td>{{ $lead_generation->client_name }}</td>
+                                    <td>{{ $plan->lead_generation->client_name }}</td>
                                     <th class="table_label">Landmark</th>
-                                    <td>{{ $lead_generation->landmark }}</td>
+                                    <td>{{ $plan->lead_generation->landmark }}</td>
                                     <th class="table_label">Division</th>
-                                    <td>{{ $lead_generation->division->name ?? '' }}</td>
+                                    <td>{{ $plan->lead_generation->division->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact Person</th>
-                                    <td>{{ $lead_generation->contact_person }}</td>
+                                    <td>{{ $plan->lead_generation->contact_person }}</td>
                                     <th class="table_label">Lat-Long</th>
-                                    <td>{{ $lead_generation->lat }} - {{ $lead_generation->long }}</td>
+                                    <td>{{ $plan->lead_generation->lat }} - {{ $plan->lead_generation->long }}</td>
                                     <th class="table_label">District</th>
-                                    <td>{{ $lead_generation->district->name ?? '' }}</td>
+                                    <td>{{ $plan->lead_generation->district->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact No</th>
-                                    <td>{{ $lead_generation->contact_no }}</td>
+                                    <td>{{ $plan->lead_generation->contact_no }}</td>
                                     <th class="table_label">Website</th>
-                                    <td>{{ $lead_generation->website }}</td>
+                                    <td>{{ $plan->lead_generation->website }}</td>
                                     <th class="table_label">Thana</th>
-                                    <td>{{ $lead_generation->thana->name ?? '' }}</td>
+                                    <td>{{ $plan->lead_generation->thana->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Email</th>
-                                    <td>{{ $lead_generation->email }}</td>
+                                    <td>{{ $plan->lead_generation->email }}</td>
                                     <th class="table_label">Document</th>
                                     <td>
-                                        @if ($lead_generation->document)
-                                            <a href="{{ asset('uploads/lead_generation/' . $lead_generation->document) }}"
+                                        @if ($plan->lead_generation->document)
+                                            <a href="{{ asset('uploads/lead_generation/' . $plan->lead_generation->document) }}"
                                                 target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
                                                     class="fas fa-eye"></i></a>
                                         @endif
                                     </td>
                                     <th class="table_label">Address</th>
-                                    <td>{{ $lead_generation->address }}</td>
+                                    <td>{{ $plan->lead_generation->address }}</td>
                                 </tr>
                                 <tr colspan="6">
                                     <th class="table_label">Remarks</th>
-                                    <td colspan="5"><input type="text" name="remarks" id="remarks"
-                                            class="form-control form-control-sm" value="{{ $plan->remarks ?? '' }}">
+                                    <td colspan="5" style="padding: 2px !important; margin: 2px !important;">
+                                        <input type="text" name="remarks" id="remarks"
+                                            class="form-control form-control-sm" style="height: 25px !important;"
+                                            placeholder="Remarks" value="{{ $plan->remarks ?? '' }}">
+                                    </td>
                                 </tr>
                             </table>
                         </div>
@@ -122,8 +125,7 @@
                                             <th>Plan</th>
                                             <th>Remarks</th>
                                             <th>
-                                                <button type="button" class="btn btn-sm btn-success"
-                                                    id="addParticularRow"><i class="fas fa-plus"></i></button>
+
                                             </th>
                                         </tr>
                                     </thead>
@@ -381,7 +383,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="md-col-3 col-3  mt-3">
+                                        <div class="md-col-3 col-3 mt-3 new_transmission_capacity_div">
                                             <div class="form-item">
                                                 <input type="text"
                                                     name="new_transmission_capacity_{{ $total_key }}"
@@ -859,19 +861,43 @@
             }
 
             $(document).on('change', '.equipment_id', function() {
+                var this_event = $(this);
                 var equipment_id = $(this).val();
                 var equiments = {!! json_encode($materials) !!};
                 var find_equipment = equiments.find(x => x.id == equipment_id);
                 console.log(find_equipment);
                 $(this).closest('tr').find('.unit').val(find_equipment.unit);
+                $.get('{{ route('getMaterialWiseBrands') }}', {
+                    material_id: equipment_id
+                }, function(data) {
+                    console.log(data);
+                    var html = '<option value="">Select Brand</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item.id + '">' +
+                            item.name + '</option>';
+                    });
+                    this_event.closest('tr').find('.brand_id').html(html);
+                })
             });
 
             $(document).on('change', '.link_material_id', function() {
+                var this_event = $(this);
                 var material_id = $(this).val();
                 var materials = {!! json_encode($materials) !!};
                 var find_material = materials.find(x => x.id == material_id);
                 console.log(find_material);
                 $(this).closest('tr').find('.link_unit').val(find_material.unit);
+                $.get('{{ route('getMaterialWiseBrands') }}', {
+                    material_id: material_id
+                }, function(data) {
+                    console.log(data);
+                    var html = '<option value="">Select Brand</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item.id + '">' +
+                            item.name + '</option>';
+                    });
+                    this_event.closest('tr').find('.link_brand').html(html);
+                })
             });
             let link_array = [];
             $('.existing_infrastructure').on('change', function() {
@@ -896,13 +922,17 @@
                                         value.bbts_link_id + '</option>';
                                 });
                             });
-                            console.log(html)
                             this_event.closest('.main_link').find('.existing_infrastructure_link').html(
                                 html);
+                            this_event.closest('.main_link').find('.new_transmission_capacity_div').css(
+                                'display',
+                                'none');
                         }
                     });
                 } else {
                     this_event.closest('.main_link').find('.link_list').css('display', 'none');
+                    this_event.closest('.main_link').find('.new_transmission_capacity_div').css('display',
+                        'block');
                 }
             });
 

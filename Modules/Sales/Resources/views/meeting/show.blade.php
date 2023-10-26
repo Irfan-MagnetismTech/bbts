@@ -166,11 +166,19 @@
                 'id' => 'content_form',
             ]) }}
             <div class="d-flex justify-content-around mt-2 mb-2">
-                <button type="submit" name="status" value="Accept" class="btn btn-outline-success">Accept</button>
-                <button type="submit" name="status" value="Deny" class="btn btn-outline-danger">Deny</button>
-                <button type="submit" name="status" value="Re-Schedule"
-                    class="btn btn-outline-warning">Re-Schedule</button>
-                <button type="submit" name="status" value="Cancel" class="btn btn-outline-info">Cancel</button>
+                @can('meeting-approve')
+                    <button type="submit" name="status" value="Accept" class="btn btn-outline-success">Accept</button>
+                @endcan
+                @can('meeting-deny')
+                    <button type="submit" name="status" value="Deny" class="btn btn-outline-danger">Deny</button>
+                @endcan
+                @can('meeting-reschedule')
+                    <button type="submit" name="status" value="Re-Schedule"
+                        class="btn btn-outline-warning">Re-Schedule</button>
+                @endcan
+                @can('meeting-cancel')
+                    <button type="submit" name="status" value="Cancel" class="btn btn-outline-info">Cancel</button>
+                @endcan
             </div>
             {{ Form::close() }}
         </div>

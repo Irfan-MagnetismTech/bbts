@@ -66,6 +66,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('get-links-by-fr/{client_id}/{fr_no}', [CommonApiController::class, 'getLinksByFr'])->name('get-links-by-fr');
     Route::get('search-vendor', [CommonApiController::class, 'searchVendor'])->name('searchVendor');
     Route::get('get-logical-connectivity-data', [CommonApiController::class, 'getLogicalConnectivityData'])->name('getLogicalConnectivityData');
+    Route::get('get-material-wise-brands', [CommonApiController::class, 'getMaterialWiseBrands'])->name('getMaterialWiseBrands');
 });
 
 require base_path('routes/dataencoding.php');

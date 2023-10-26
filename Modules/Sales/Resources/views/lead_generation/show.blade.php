@@ -91,10 +91,18 @@
                             </table>
                         </div>
                         <div class="d-flex justify-content-around mt-4">
-                            <button type="submit" value="Accept" class="btn btn-outline-success status">Accept</button>
-                            <button type="button" value="Pending" class="btn btn-outline-danger status">Pending</button>
-                            <button type="button" value="Review" class="btn btn-outline-warning status">Review</button>
-                            <button type="submit" value="Cancel" class="btn btn-outline-info status">Cancel</button>
+                            @can('lead-generation-approve')
+                                <button type="submit" value="Accept" class="btn btn-outline-success status">Accept</button>
+                            @endcan
+                            {{-- @can('lead-generation-pending')
+                                <button type="button" value="Pending" class="btn btn-outline-danger status">Pending</button>
+                            @endcan --}}
+                            @can('lead-generation-review')
+                                <button type="button" value="Review" class="btn btn-outline-warning status">Review</button>
+                            @endcan
+                            @can('lead-generation-cancel')
+                                <button type="submit" value="Cancel" class="btn btn-outline-info status">Cancel</button>
+                            @endcan
                         </div>
                     </div>
                     <input type="hidden" name="status" value="">
