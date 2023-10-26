@@ -65,6 +65,7 @@ class LeadGenerationController extends Controller
             $data['document'] = $file_name;
         }
         $data['client_no'] = date('Y') . '-' . LeadGeneration::count() + 1;
+        $data['created_by'] = auth()->user()->id;
         LeadGeneration::create($data);
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Created Successfully');
     }
