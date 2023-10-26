@@ -29,6 +29,6 @@ class LeadGeneration extends Model
 
     public function createdBy()
     {
-        return $this->hasOne(User::class, 'id', 'created_by')->withDefault();
+        return $this->belongsTo(User::class,'created_by', 'id');
     }
 }
