@@ -94,9 +94,9 @@
                             @can('lead-generation-approve')
                                 <button type="submit" value="Accept" class="btn btn-outline-success status">Accept</button>
                             @endcan
-                            @can('lead-generation-pending')
+                            {{-- @can('lead-generation-pending')
                                 <button type="button" value="Pending" class="btn btn-outline-danger status">Pending</button>
-                            @endcan
+                            @endcan --}}
                             @can('lead-generation-review')
                                 <button type="button" value="Review" class="btn btn-outline-warning status">Review</button>
                             @endcan
