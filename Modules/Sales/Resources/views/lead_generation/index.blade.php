@@ -31,6 +31,7 @@
                     <th>Designation</th>
                     <th>Contact No</th>
                     <th>Created By</th>
+                    <th>Connected Status</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -45,6 +46,7 @@
                     <th>Designation</th>
                     <th>Contact No</th>
                     <th>Created By</th>
+                    <th>Connected Status</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -55,11 +57,22 @@
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $lead_generation->created_at->format('d-m-Y') }}</td>
                         <td>{{ $lead_generation->client_no }}</td>
-                        <td>{{ $lead_generation->client_name }}</td>
+                        <td> 
+                            {{-- @if(!empty($lead_generation->client))
+                            <a href="{{ route('client-profile.show', $lead_generation->client->id) }}"> 
+                            {{ $lead_generation->client_name }}</a>
+                            @else
+                            {{ $lead_generation->client_name }}
+                            @endif --}}
+
+                            {{ $lead_generation->client_name }}
+
+                        </td>
                         <td>{{ $lead_generation->contact_person }}</td>
                         <td>{{ $lead_generation->designation }}</td>
                         <td>{{ $lead_generation->contact_no }}</td>
                         <td>{{ $lead_generation->createdBy->name ?? '' }}</td>
+                        <td>{{ !empty($lead_generation->sale) ? 'Connected' : 'New' }}</td>
                         <td>
                             @if ($lead_generation->status == 'Review')
                                 <span class="badge badge-pill badge-info">{{ $lead_generation->status }}</span>
