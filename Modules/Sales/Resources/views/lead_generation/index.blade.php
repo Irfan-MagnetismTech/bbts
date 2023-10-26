@@ -59,7 +59,7 @@
                         <td>{{ $lead_generation->contact_person }}</td>
                         <td>{{ $lead_generation->designation }}</td>
                         <td>{{ $lead_generation->contact_no }}</td>
-                        <td>{{ $lead_generation->createdBy->name }}</td>
+                        <td>{{ $lead_generation->createdBy->name ?? '' }}</td>
                         <td>
                             @if ($lead_generation->status == 'Review')
                                 <span class="badge badge-pill badge-info">{{ $lead_generation->status }}</span>
