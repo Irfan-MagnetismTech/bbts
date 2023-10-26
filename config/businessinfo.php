@@ -70,7 +70,7 @@ return [
         'Office' => 'Office',
         'DC' => 'DC',
         'DR' => 'DR',
-        'Co-Loc' => 'Co-Loc',
+        'Co-Location' => 'Co-Location',
     ],
 
     //link status
