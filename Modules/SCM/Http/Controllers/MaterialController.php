@@ -17,6 +17,7 @@ use Modules\SCM\Entities\CsMaterial;
 class MaterialController extends Controller
 {
     use HasRoles;
+
     function __construct()
     {
         $this->middleware('permission:material-view|material-create|material-edit|material-delete', ['only' => ['index', 'show']]);
@@ -24,6 +25,7 @@ class MaterialController extends Controller
         $this->middleware('permission:material-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:material-delete', ['only' => ['destroy']]);
     }
+
     public function index()
     {
         $materials = Material::with('unit')->get();
@@ -41,24 +43,24 @@ class MaterialController extends Controller
         $materials = Material::latest()->get();
         $units = Unit::latest()->get();
         $brands = Brand::latest()->get();
-
+        $selectedBrandIdsArray=[];
         $types = ['Drum', 'Item'];
         $categories = ScCategory::latest()->get();
 
-        return view('scm::materials.create', compact('materials', 'formType', 'types', 'units', 'categories','brands'));
+        return view('scm::materials.create', compact('materials', 'formType', 'types', 'units', 'categories', 'brands','selectedBrandIdsArray'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(MaterialRequest $request)
     {
         // dd($request->all());
         try {
-            $data = $request->only('name','unit','type','code','category_id');
+            $data = $request->only('name', 'unit', 'type', 'code', 'category_id');
 
             $material = Material::create($data);
 
@@ -68,8 +70,8 @@ class MaterialController extends Controller
             $selectedBrandIdsString = implode(', ', $selectedBrandIds);
 
             $material_brand = $request->only('material_id', 'brand');
-            $material_brand['material_id'] =  $material->id;
-            $material_brand['brand'] =  $selectedBrandIdsString;
+            $material_brand['material_id'] = $material->id;
+            $material_brand['brand'] = $selectedBrandIdsString;
             MaterialBrand::create($material_brand);
 
             return redirect()->route('materials.index')->with('message', 'Data has been inserted successfully');
@@ -81,7 +83,7 @@ class MaterialController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Material  $material
+     * @param \App\Material $material
      * @return \Illuminate\Http\Response
      */
     public function show(Material $material)
@@ -92,7 +94,7 @@ class MaterialController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Material  $material
+     * @param \App\Material $material
      * @return \Illuminate\Http\Response
      */
     public function edit(Material $material)
@@ -101,43 +103,39 @@ class MaterialController extends Controller
         $materials = Material::latest()->get();
         $units = Unit::latest()->get();
         $brands = Brand::latest()->get();
+        $selectedBrandIds = MaterialBrand::where('material_id', $material->id)->pluck('brand')->toArray();
+        $selectedBrandIdsString=$selectedBrandIds[0];
+        $selectedBrandIdsArray = explode(', ', $selectedBrandIdsString);
+
         $types = ['Drum', 'Item'];
         $categories = ScCategory::latest()->get();
-        return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units', 'categories','brands'));
+        return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units', 'categories', 'brands','selectedBrandIdsArray'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Material  $material
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Material $material
      * @return \Illuminate\Http\Response
      */
 
     public function update(MaterialRequest $request, Material $material, MaterialBrand $materialBrand)
     {
         try {
-            // Update the Material model
             $data = $request->only('name', 'unit', 'type', 'code', 'category_id');
             $material->update($data);
 
-            // Get the selected brand IDs as an array
             $selectedBrandIds = $request->input('brand');
 
-            // Update the MaterialBrand model
+            $selectedBrandIdsString = implode(', ', $selectedBrandIds);
+
             $materialBrand->where('material_id', $material->id)->delete(); // Delete existing records
 
-            if (!empty($selectedBrandIds)) {
-                $brandData = [];
-                foreach ($selectedBrandIds as $brandId) {
-                    $brandData[] = [
-                        'material_id' => $material->id,
-                        'brand' => $brandId,
-                    ];
-                }
-            // Insert new records
-                $materialBrand->insert($brandData);
-            }
+            $material_brand = $request->only('material_id', 'brand');
+            $material_brand['material_id'] = $material->id;
+            $material_brand['brand'] = $selectedBrandIdsString;
+            MaterialBrand::create($material_brand);
 
             return redirect()->route('materials.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
@@ -148,7 +146,7 @@ class MaterialController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Material  $material
+     * @param \App\Material $material
      * @return \Illuminate\Http\Response
      */
     public function destroy(Material $material)

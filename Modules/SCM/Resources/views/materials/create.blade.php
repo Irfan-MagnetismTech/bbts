@@ -111,18 +111,61 @@
                 </div>
                 <div class="col-12">
 
+{{--                    <div class="input-group input-group-sm input-group-primary">--}}
+{{--                        <label class="input-group-addon" for="brand">Brand <span class="text-danger">*</span></label>--}}
+{{--                        <select class="form-control" id="brand" name="brand[]" required multiple>--}}
+{{--                            <option value="">Select Brand</option>--}}
+{{--                            @foreach ($brands as $brand)--}}
+{{--                                <option value="{{ $brand->id }}"--}}
+{{--                                    {{ in_array($brand->id, old('brand', [])) ? 'selected' : '' }}>--}}
+{{--                                    {{ $brand->name }}--}}
+{{--                                </option>--}}
+{{--                            @endforeach--}}
+{{--                        </select>--}}
+{{--                    </div>--}}
+
+{{--                    <div class="input-group input-group-sm input-group-primary">--}}
+{{--                        <label class="input-group-addon" for="brand">Brand <span class="text-danger">*</span></label>--}}
+{{--                        <select class="form-control" id="brand" name="brand[]" required multiple>--}}
+{{--                            <option value="">Select Brand</option>--}}
+{{--                            @foreach ($brands as $brand)--}}
+{{--                                <option value="{{ $brand->id }}"--}}
+{{--                                    {{ in_array($brand->id, old('brand', $selectedBrandIds)) ? 'selected' : '' }}>--}}
+{{--                                    {{ $brand->name }}--}}
+{{--                                </option>--}}
+{{--                            @endforeach--}}
+{{--                        </select>--}}
+{{--                    </div>--}}
+
+{{--                    <div class="input-group input-group-sm input-group-primary">--}}
+{{--                        <label class="input-group-addon" for="brand">Brand <span class="text-danger">*</span></label>--}}
+{{--                        <select class="form-control" id="brand" name="brand[]" required multiple>--}}
+{{--                            <option value="">Select Brand</option>--}}
+{{--                            @foreach ($brands as $brand)--}}
+{{--                                <option value="{{ $brand->id }}"--}}
+{{--                                    {{ in_array($brand->id, old('brand', $selectedBrandIds)) ? 'selected' : '' }}>--}}
+{{--                                    {{ $brand->name }}--}}
+{{--                                </option>--}}
+{{--                            @endforeach--}}
+{{--                        </select>--}}
+{{--                    </div>--}}
+
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="brand">Brand <span class="text-danger">*</span></label>
                         <select class="form-control" id="brand" name="brand[]" required multiple>
                             <option value="">Select Brand</option>
                             @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}"
-                                    {{ in_array($brand->id, old('brand', [])) ? 'selected' : '' }}>
+                                    {{ in_array($brand->id, $selectedBrandIdsArray) ? 'selected' : '' }}>
                                     {{ $brand->name }}
                                 </option>
                             @endforeach
                         </select>
+
                     </div>
+
+
+
 
                 </div>
             </div>
