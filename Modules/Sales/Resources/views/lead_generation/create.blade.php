@@ -98,7 +98,7 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="division_id" id="division" class="form-control ">
+                                <select name="division_id" id="division" class="form-control select2" required>
                                     <option>Select Division</option>
                                     @foreach ($divisons as $division)
                                         <option value="{{ $division->id }}"
@@ -111,7 +111,7 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="district_id" id="district" class="form-control ">
+                                <select name="district_id" id="district" class="form-control select2" required>
                                     <option value="">Select District</option>
                                     @if ($districts)
                                         @foreach ($districts as $district)
@@ -125,7 +125,7 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="thana_id" id="thana" class="form-control ">
+                                <select name="thana_id" id="thana" class="form-control select2" required>
                                     <option value="">Select Thana</option>
                                     @if ($thanas)
                                         @foreach ($thanas as $thana)
@@ -134,7 +134,6 @@
                                             </option>
                                         @endforeach
                                     @endif
-
                                 </select>
                             </div>
                         </div>
@@ -198,7 +197,7 @@
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="input-group input-group-sm input-group-primary">
-                                <select name="business_type" id="business_type" class="form-control ">
+                                <select name="business_type" id="business_type" class="form-control select2">
                                     <option>Business Type</option>
                                     @foreach ($organizations as $organization)
                                         <option value="{{ $organization }}"
@@ -226,21 +225,21 @@
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="form-item">
                                 <input type="text" id="existing_mrc" name="existing_mrc" class="form-control"
-                                    autocomplete="off" value="{{ $existing_mrc }}" required>
+                                    autocomplete="off" value="{{ $existing_mrc }}">
                                 <label for="existing_mrc">Existing MRC</label>
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="form-item">
                                 <input type="text" id="chance_of_business" name="chance_of_business"
-                                    class="form-control" autocomplete="off" value="{{ $chance_of_business }}" required>
+                                    class="form-control" autocomplete="off" value="{{ $chance_of_business }}">
                                 <label for="chance_of_business">Chance of Acquiring Business</label>
                             </div>
                         </div>
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="form-item">
                                 <input type="text" id="potentiality" name="potentiality" class="form-control"
-                                    autocomplete="off" value="{{ $potentiality }}" required>
+                                    autocomplete="off" value="{{ $potentiality }}">
                                 <label for="potentiality">Potentiality</label>
                             </div>
                         </div>
@@ -249,7 +248,7 @@
                         <div class="mt-1 col-xl-4 col-md-4">
                             <div class="form-item">
                                 <input type="text" id="website" name="website" class="form-control"
-                                    autocomplete="off" value="{{ $website }}" required>
+                                    autocomplete="off" value="{{ $website }}">
                                 <label for="website">Website</label>
                             </div>
                         </div>
@@ -274,7 +273,7 @@
                         <div class="mt-1 col-xl-12 col-md-12 ">
                             <div class="form-item">
                                 <input type="text" id="remarks" name="remarks" class="form-control"
-                                    autocomplete="off" value="{{ $remarks }}" required>
+                                    autocomplete="off" value="{{ $remarks }}">
                                 <label for="remarks">Remarks</label>
                             </div>
                         </div>
@@ -298,7 +297,7 @@
         <script>
             $('#division').on('change', function() {
                 var division_id = $(this).val();
-                var html = '';
+                var html = '<option value="">Select District</option>';
                 $.ajax({
                     url: "{{ route('get-districts') }}",
                     data: {
@@ -317,7 +316,7 @@
 
             $('#district').on('change', function() {
                 var district_id = $(this).val();
-                var html = '';
+                var html = '<option value="">Select Thana</option>';
                 $.ajax({
                     url: "{{ route('get-thanas') }}",
                     data: {
@@ -333,5 +332,11 @@
                     }
                 });
             });
+
+            // $(document).ready(function() {
+            //     $('.select2').select2({
+            //         placeholder: 'Select an option'
+            //     });
+            // });
         </script>
     @endsection

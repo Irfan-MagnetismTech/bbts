@@ -19,6 +19,11 @@ class LeadGenerationRequest extends FormRequest
             'contact_person' => 'required',
             'contact_no' => 'required',
             'email' => 'required',
+            'division_id' => 'required',
+            'district_id' => 'required',
+            'thana_id' => 'required',
+            'business_type' => 'required',
+            'designation' => 'required',
         ];
     }
 

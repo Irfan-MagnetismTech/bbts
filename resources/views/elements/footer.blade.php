@@ -46,7 +46,6 @@
     })
 </script>
 <script>
-
     let authUserId = '{{ auth()->user()->id }}';
     Echo.private(`Modules.Admin.Entities.User.${authUserId}`).notification((notification) => {
 
@@ -85,6 +84,8 @@
         console.error(error);
     });
 
-
+    $(document).ready(function() {
+        $('.select2').select2();
+    });
 </script>
 @yield('script')
