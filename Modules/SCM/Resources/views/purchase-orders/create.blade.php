@@ -129,7 +129,8 @@
 
                 @if (!empty($cs_nos))
                     @foreach ($cs_nos as $cs_no)
-                        <option value="{{ $cs_no['id'] }}" {{ $cs_no['id'] == old('cs_id', @$purchaseOrder->cs_no) ? 'selected' : '' }}>
+                        <option
+                            value="{{ $cs_no['id'] }}" {{ $cs_no['id'] == old('cs_id', @$purchaseOrder->cs_no) ? 'selected' : '' }}>
                             {{ $cs_no['cs_no'] }}
                         </option>
                     @endforeach
@@ -142,7 +143,8 @@
         <div class="form-group col-4 indent_no">
             <label for="indent_no">Indent No: <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="indent_no" aria-describedby="indent_no" name="indent_no"
-                   autocomplete="off" value="{{ old('indent_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}" readonly>
+                   autocomplete="off" value="{{ old('indent_no') ?? (@$purchaseOrder->indent->indent_no ?? '') }}"
+                   readonly>
             <input type="hidden" name="indent_id" id="indent_id"
                    value="{{ old('indent_id') ?? @$purchaseOrder?->indent_id }}">
         </div>
@@ -178,7 +180,8 @@
                     <th>Model</th>
                     <th>Description</th>
                     <th>Unit</th>
-                    <th> Quantity</th>
+                    <th>Indent Quantity</th>
+                    <th>Quantity</th>
                     <th>Warranty Period</th>
                     <th>Price</th>
                     <th style="width: 80px !important">Vat</th>
@@ -208,6 +211,8 @@
                     $unit = old('unit', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('material.unit') : []);
 
                     $quantity = old('quantity', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('quantity') : []);
+
+                    $indent_qty = old('indent_qty', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('indent_qty') : []);
 
                     $warranty_period = old('warranty_period', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('warranty_period') : []);
 
@@ -264,6 +269,11 @@
                             <td>
                                 <input type="text" name="unit[]" class="form-control text-center unit"
                                        autocomplete="off" readonly value="{{ $unit[$key] }}">
+                            </td>
+
+                            <td>
+                                <input type="number" name="indent_qty[]" class="form-control text-center indent_qty"
+                                       autocomplete="off" value="{{ $indent_qty[$key] }}" readonly>
                             </td>
 
                             <td>
@@ -531,10 +541,10 @@
                     cs_id: cs_id,
                 },
                 success: function (data) {
-
                     $.each(data, function (key, value) {
                         cs_materials +=
                             `<option value="${value.material.id}">${value.material.name}</option>`;
+                        value.material.indent_qty = value.indent_quantity
                         material_items.push(value.material)
                     });
                     // $('.material_name').html(cs_materials);
@@ -575,9 +585,15 @@
             let cs_id = $('#cs_id').val();
             let supplier_id = $('#supplier_id').val();
             const materialUrl = '{{ url('/scm/get-material-by-cs') }}/' + cs_id + '/' + supplier_id;
+
+            console.log(material_items)
             $.getJSON(materialUrl, function (materials) {
                 $.each(materials, function (key, data) {
                     let model = data.model != null ? data.model : '';
+
+                    let material = material_items.find(material => material.id == data.cs_material.material_id)
+
+
                     let row = `<tr>
                             <td>
                                 <input type="text" name="material_name[]" class="form-control material_name" value="${data.cs_material.material.name}" autocomplete="off">
@@ -598,7 +614,11 @@
                             </td>
 
                             <td>
-                                <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
+                                <input type="text" name="unit[]" class="form-control unit" value="${material.unit}" autocomplete="off" readonly>
+                            </td>
+
+                            <td>
+                               <input type="number" name="indent_qty[]" class="form-control indent_qty" value="${material.indent_qty}" autocomplete="off" readonly>
                             </td>
 
                             <td>

@@ -233,26 +233,57 @@ class PurchaseOrderController extends Controller
         }
     }
 
+//    public function searchMaterialByCsAndRequsiition($cs_id = null)
+//    {
+//        $csId = request()->cs_id ?? $cs_id;
+//
+//
+//         return CsMaterial::with('material', 'brand')
+//             ->orderBy('id')
+//             ->where('cs_id', $csId)
+//             ->whereIn('material_id', function ($query) use ($reqId) {
+//                 $query->select('material_id')
+//                     ->from('scm_purchase_requisition_details')
+//                     ->where('scm_purchase_requisition_id', $reqId);
+//             })
+//             ->get()
+//             ->unique('material_id');
+//    }
+
     public function searchMaterialByCsAndRequsiition($cs_id = null)
     {
         $csId = request()->cs_id ?? $cs_id;
-        return CsMaterial::with('material', 'brand')
-            ->orderBy('id')
-            ->where('cs_id', $csId)
-            ->get()
-            ->unique('material_id');
 
+        $indent_no = Cs::where('id', $csId)->value('indent_no');
 
-        // return CsMaterial::with('material', 'brand')
-        //     ->orderBy('id')
-        //     ->where('cs_id', request()->cs_id)
-        //     ->whereIn('material_id', function ($query) use ($reqId) {
-        //         $query->select('material_id')
-        //             ->from('scm_purchase_requisition_details')
-        //             ->where('scm_purchase_requisition_id', $reqId);
-        //     })
-        //     ->get()
-        //     ->unique('material_id', 'brand_id');
+        if ($indent_no) {
+            $indent_id = Indent::where('indent_no', $indent_no)->value('id');
+
+            if ($indent_id) {
+                // Find all SCM purchase requisition IDs for the materials associated with the indent
+                $scmPurchaseRequisitionIds = IndentLine::where('indent_id', $indent_id)
+                    ->pluck('scm_purchase_requisition_id');
+
+                // Fetch the CsMaterials with relationships
+                $csMaterials = CsMaterial::with('material', 'brand')
+                    ->orderBy('id')
+                    ->where('cs_id', $csId)
+                    ->get()
+                    ->unique('material_id')
+                    ->map(function ($csMaterial) use ($scmPurchaseRequisitionIds) {
+                        // Calculate the sum of quantities for this material
+                        $csMaterial->indent_quantity = ScmPurchaseRequisitionDetails::whereIn('scm_purchase_requisition_id', $scmPurchaseRequisitionIds)
+                            ->where('material_id', $csMaterial->material_id)
+                            ->sum('quantity');
+                        return $csMaterial;
+                    });
+
+                return $csMaterials;
+            }
+        }
+
+        // Handle the case where the SCM purchase requisition ID is not found
+        return [];
     }
 
     public function searchMaterialBrandByCsAndRequsiition($csId, $supplierId, $materialId)
