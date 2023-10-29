@@ -127,13 +127,15 @@
             <select class="form-control select2" name="cs_id" id="cs_id" required>
                 <option value="" disabled selected>Select CS No</option>
 
-                @if (!empty($purchaseOrder->id))
-                    @foreach ($indent_wise_cs as $cs)
-                        <option value="{{ $cs->cs_no }}" @selected($cs->cs_no == @$purchaseOrder->cs_no)>
-                            {{ $cs->cs_no }}</option>
+                @if (!empty($cs_nos))
+                    @foreach ($cs_nos as $cs_no)
+                        <option value="{{ $cs_no['id'] }}" {{ $cs_no['id'] == old('cs_id', @$purchaseOrder->cs_no) ? 'selected' : '' }}>
+                            {{ $cs_no['cs_no'] }}
+                        </option>
                     @endforeach
                 @endif
             </select>
+
         </div>
         <input type="hidden" name="cs_no" id="cs_no" value="{{ old('cs_no') ?? @$purchaseOrder?->cs_no }}">
 
@@ -535,7 +537,9 @@
                             `<option value="${value.material.id}">${value.material.name}</option>`;
                         material_items.push(value.material)
                     });
-                    $('.material_name').html(cs_materials);
+                    // $('.material_name').html(cs_materials);
+                    $('#material_requisition tbody').empty();
+                    $('.material_name:last').html(cs_materials);
                     appendCalculationRow();
 
                     //find cs_no wise indent_no

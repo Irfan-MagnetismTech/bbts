@@ -146,14 +146,28 @@ class PurchaseOrderController extends Controller
                     ];
                 }
             );
-        $indent = Indent::where('id', $purchaseOrder->indent_id)->first();
-        $indent_wise_cs = Cs::select('id', 'cs_no')->where('indent_no', $indent->indent_no)->get();
         $cs_materials = $this->searchMaterialByCsAndRequsiition($purchaseOrder->cs->id);
+        $cs_brands=[];
+        $cs_models=[];
         foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
             $cs_brands = $this->searchMaterialBrandByCsAndRequsiition($purchaseOrder->cs->id, $purchaseOrder->supplier_id, $value->material_id);
             $cs_models = $this->searchMaterialPriceByCsAndRequsiition($purchaseOrder->cs->id, $purchaseOrder->supplier_id, $value->material_id);
         }
-        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions', 'cs_materials', 'cs_brands', 'cs_models', 'indent_wise_cs'));
+
+        $suppliers = Supplier::where('id', $purchaseOrder->supplier_id)
+            ->with(['csSuppliers.cs'])
+            ->limit(10)
+            ->get();
+        $cs_nos=[];
+        foreach ($suppliers as $supplier) {
+            $cs_nos = $supplier->csSuppliers->map(function ($csSupplier) {
+                return [
+                    'id' => $csSupplier->cs->id,
+                    'cs_no' => $csSupplier->cs->cs_no,
+                ];
+            });
+        }
+        return view('scm::purchase-orders.create', compact('purchaseOrder', 'vatOrTax', 'indentWiseRequisitions', 'cs_materials', 'cs_brands', 'cs_models', 'cs_nos'));
     }
 
     /**
