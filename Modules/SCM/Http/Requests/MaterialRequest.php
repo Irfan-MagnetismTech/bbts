@@ -14,7 +14,7 @@ class MaterialRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'unique:materials|required',
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Illuminate\Validation\ValidationException;
 use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\MaterialBrand;
 use Modules\SCM\Entities\Unit;
@@ -58,9 +59,8 @@ class MaterialController extends Controller
      */
     public function store(MaterialRequest $request)
     {
-        // dd($request->all());
         try {
-            $data = $request->only('name', 'unit', 'type', 'code', 'category_id');
+            $data = $request->only('name', 'unit', 'type', 'code', 'category_id', 'min_qty');
 
             $material = Material::create($data);
 
@@ -75,7 +75,7 @@ class MaterialController extends Controller
             MaterialBrand::create($material_brand);
 
             return redirect()->route('materials.index')->with('message', 'Data has been inserted successfully');
-        } catch (QueryException $e) {
+        } catch (ValidationException $e) {
             return redirect()->route('materials.create')->withInput()->withErrors($e->getMessage());
         }
     }
@@ -123,7 +123,7 @@ class MaterialController extends Controller
     public function update(MaterialRequest $request, Material $material, MaterialBrand $materialBrand)
     {
         try {
-            $data = $request->only('name', 'unit', 'type', 'code', 'category_id');
+            $data = $request->only('name', 'unit', 'type', 'code', 'category_id', 'min_qty');
             $material->update($data);
 
             $selectedBrandIds = $request->input('brand');

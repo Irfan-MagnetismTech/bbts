@@ -122,10 +122,14 @@
                             @endforeach
                         </select>
                     </div>
-
-
-
-
+                </div>
+                <div class="col-12">
+                    <div class="input-group input-group-sm input-group-primary">
+                        <label class="input-group-addon" for="min_qty">Min Quantity<span
+                                class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="min_qty" name="min_qty"
+                               placeholder="Enter min quantity" value="{{ old('min_qty') ?? ($material->min_qty ?? '') }}" required>
+                    </div>
                 </div>
             </div>
             <div class="row">
