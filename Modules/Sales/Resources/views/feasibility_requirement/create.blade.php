@@ -50,7 +50,7 @@
                             $date = $is_old ? old('date') : $feasibility_requirement->date ?? null;
                         @endphp
                         {{-- exiting or new radio button --}}
-                        <div class="col-xl-3 col-md-3">
+                        <div class="col-xl-2 col-md-2">
                             <div class="row" style="justify-content: space-evenly">
                                 <div>
                                     <input type="radio" name="is_existing" id="is_new" value="New"
@@ -65,7 +65,7 @@
 
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-3">
+                        <div class="col-xl-2 col-md-2">
                             <div class="form-item">
                                 <input type="text" class="form-control" name="client_no" id="client_id"
                                     value="{{ $client_id }}" autocomplete="off" required>
@@ -73,11 +73,11 @@
                                 <input type="hidden" name="lead_generation_id" id="lead_generation_id" value="">
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-3">
+                        <div class="col-xl-5 col-md-5">
                             <div class="form-item">
                                 <input type="text" class="form-control" name="client_name" id="client_name"
                                     value="{{ $client_name }}" autocomplete="off" required>
-                                <label for="client_name">Client Name<span class="text-danger">*</span></label>
+                                <label for="client_name">Client Name sfsdfsf<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
@@ -293,8 +293,8 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="branch_id[]" class="form-control branch"
-                                                        id="branch" autocomplete="off" placeholder="Select Dranch">
+                                                    <select name="branch_id[]" class="form-control branch" id="branch"
+                                                        autocomplete="off" placeholder="Select Dranch">
                                                         <option value="">Select Division</option>
                                                         @foreach ($branches as $branch)
                                                             <option value="{{ $branch->id }}">
