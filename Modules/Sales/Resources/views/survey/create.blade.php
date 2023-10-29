@@ -95,7 +95,7 @@
                                 $contact_email = $is_old ? old('contact_email') : $fr_detail->contact_email ?? '';
                                 $contact_designation = $is_old ? old('contact_designation') : $fr_detail->contact_designation ?? '';
                             }
-                            
+
                             $client_name = $is_old ? old('client_name') : $fr_detail->feasibilityRequirement->lead_generation->client_name ?? '';
                             $client_no = $is_old ? old('client_no') : $fr_detail->feasibilityRequirement->lead_generation->client_no ?? '';
                             $date = $is_old ? old('date') : $survey->date ?? null;
@@ -373,14 +373,14 @@
                                     <th>Option</th>
                                     <th>Status</th>
                                     <th>Method</th>
-                                    <th>POP</th>
-                                    <th>LDP</th>
-                                    <th>Vendor</th>
-                                    <th>Latitude</th>
-                                    <th>Longitude</th>
-                                    <th>Distance</th>
+                                    <th style="min-width: 200px;">POP</th>
+                                    <th style="min-width: 200px;">LDP</th>
+                                    <th style="min-width: 200px;">Vendor</th>
+                                    <th style="min-width: 200px;">Latitude</th>
+                                    <th style="min-width: 200px;">Longitude</th>
+                                    <th style="min-width: 200px;">Distance</th>
                                     <th>Current Capacity</th>
-                                    <th>Remarks</th>
+                                    <th style="min-width: 200px;">Remarks</th>
                                     <th>
                                         <button type="button" class="btn btn-sm btn-success" id="addRow">
                                             <i class="fa fa-plus"></i>
@@ -399,7 +399,8 @@
                                                         <input type="hidden" name="details_id[]"
                                                             value="{{ $details_ids[$key] }}">
                                                     @endif
-                                                    <select name="link_type[]" id="link_type" class="form-control">
+                                                    <select name="link_type[]" id="link_type"
+                                                        class="form-control select2">
                                                         <option value="">Select Link Type</option>
                                                         <option value="Primary"
                                                             {{ $link_type == 'Primary' ? 'selected' : '' }}>
@@ -415,7 +416,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="option[]" id="option" class="form-control">
+                                                    <select name="option[]" id="option" class="form-control select2">
                                                         <option value="">Select Option</option>
                                                         <option value="Option 1"
                                                             {{ $options[$key] == 'Option 1' ? 'selected' : '' }}>
@@ -431,7 +432,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="status[]" id="status" class="form-control">
+                                                    <select name="status[]" id="status" class="form-control select2">
                                                         <option value="">Select Status</option>
                                                         <option value="Existing"
                                                             {{ $statuses[$key] == 'Existing' ? 'selected' : '' }}>
@@ -443,7 +444,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="method[]" id="method" class="form-control">
+                                                    <select name="method[]" id="method" class="form-control select2">
                                                         <option value="">Select Method</option>
                                                         <option value="Fiber"
                                                             {{ $methods[$key] == 'Fiber' ? 'selected' : '' }}>Fiber
@@ -458,7 +459,8 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="pop[]" id="pop" class="form-control pop">
+                                                    <select name="pop[]" id="pop"
+                                                        class="form-control pop select2">
                                                         <option value="">Select POP</option>
                                                         @foreach ($pops as $pop)
                                                             <option value="{{ $pop->id }}"
@@ -477,7 +479,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="vendor[]" id="vendor" class="form-control">
+                                                    <select name="vendor[]" id="vendor" class="form-control select2">
                                                         <option value="">Select Vendor</option>
                                                         @foreach ($vendors as $vendor)
                                                             <option value="{{ $vendor->id }}"
@@ -544,7 +546,8 @@
                                         <tr class="feasibility_details_row">
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="link_type[]" id="link_type" class="form-control">
+                                                    <select name="link_type[]" id="link_type"
+                                                        class="form-control select2">
                                                         <option value="">Select Link Type</option>
                                                         <option value="Primary">Primary</option>
                                                         <option value="Secondary">Secondary</option>
@@ -554,7 +557,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="option[]" id="option" class="form-control">
+                                                    <select name="option[]" id="option" class="form-control select2">
                                                         <option value="">Select Option</option>
                                                         <option selected value="Option 1">Option 1</option>
                                                         <option value="Option 2">Option 2</option>
@@ -564,7 +567,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="status[]" id="status" class="form-control">
+                                                    <select name="status[]" id="status" class="form-control select2">
                                                         <option value="">Select Status</option>
                                                         <option value="Existing">Existing</option>
                                                         <option value="New">New</option>
@@ -573,7 +576,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="method[]" id="method" class="form-control">
+                                                    <select name="method[]" id="method" class="form-control select2">
                                                         <option value="">Select Method</option>
                                                         <option value="Fiber">Fiber</option>
                                                         <option value="Radio">Radio</option>
@@ -596,7 +599,8 @@
                                         </td> --}}
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="pop[]" class="form-control pop" title=""
+                                                    <select name="pop[]" class="form-control pop select2"
+                                                        title=""
                                                         data-key="
                                             {{ $key1 }}">
                                                         <option value="">Select POP</option>
@@ -618,7 +622,7 @@
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
-                                                    <select name="vendor[]" id="vendor" class="form-control">
+                                                    <select name="vendor[]" id="vendor" class="form-control select2">
                                                         <option value="">Select Vendor</option>
                                                         @foreach ($vendors as $vendor)
                                                             <option value="{{ $vendor->id }}">{{ $vendor->name }}

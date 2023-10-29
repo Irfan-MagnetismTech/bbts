@@ -358,7 +358,7 @@
                                                         value="{{ $equipment_plan->id ?? '' }}">
                                                     <td>
                                                         <select name="equipment_id[]" id="equipment_id"
-                                                            class="form-control form-control-sm equipment_id">
+                                                            class="form-control form-control-sm equipment_id select2">
                                                             <option value="">Select Equipment</option>
                                                             @foreach ($materials as $material)
                                                                 <option value="{{ $material->id }}"
@@ -379,7 +379,7 @@
                                                     </td>
                                                     <td>
                                                         <select name="brand_id[]" id="brand_id"
-                                                            class="form-control form-control-sm brand_id">
+                                                            class="form-control form-control-sm brand_id select2">
                                                             <option value="">Select Brand</option>
                                                             @foreach ($brands as $brand)
                                                                 <option value="{{ $brand->id }}"
@@ -610,7 +610,7 @@
                                         <div class="md-col-3 col-3">
                                             <div class="form-item">
                                                 <select name="link_type_{{ $total_key }}"
-                                                    class="form-control form-control-sm link_type">
+                                                    class="form-control form-control-sm select2 link_type">
                                                     <option value="">Select Type</option>
                                                     <option value="Primary"
                                                         {{ $plan_link->link_type == 'Primary' ? 'selected' : '' }}>Primary
@@ -628,7 +628,7 @@
                                         <div class="md-col-3 col-3">
                                             <div class="form-item">
                                                 <select name="option_{{ $total_key }}" id="option"
-                                                    class="form-control form-control-sm option"
+                                                    class="form-control form-control-sm option select2"
                                                     onchange="optionChange(event)">
                                                     <option value="">Select Option</option>
                                                     <option value="Option 1"
@@ -648,7 +648,7 @@
                                             <div class="form-item">
                                                 <select name="existing_infrastructure_{{ $total_key }}"
                                                     id="existing_infrastructure"
-                                                    class="form-control form-control-sm existing_infrastructure">
+                                                    class="form-control form-control-sm existing_infrastructure select2">
                                                     <option value="">Select Status</option>
                                                     <option value="Existing"
                                                         {{ $plan_link->existing_infrastructure == 'Existing' ? 'selected' : '' }}>
@@ -685,7 +685,7 @@
                                             <div class="form-item">
                                                 <select name="link_availability_status_{{ $total_key }}"
                                                     id="link_availability_status"
-                                                    class="form-control form-control-sm link_availability_status">
+                                                    class="form-control form-control-sm link_availability_status select2">
                                                     <option value="">Select Vendor</option>
                                                     @foreach ($vendors as $vendor)
                                                         <option value="{{ $vendor->id }}"
@@ -835,7 +835,7 @@
                                                             <td>
                                                                 <select name="material_id_{{ $total_key }}[]"
                                                                     id="material_id"
-                                                                    class="form-control form-control-sm link_material_id">
+                                                                    class="form-control form-control-sm link_material_id select2">
                                                                     <option value="">Select Equipment</option>
                                                                     @foreach ($materials as $material)
                                                                         <option value="{{ $material->id }}"
@@ -860,7 +860,7 @@
                                                             <td>
                                                                 <select name="brand_id_{{ $total_key }}[]"
                                                                     id="brand"
-                                                                    class="form-control form-control-sm link_brand">
+                                                                    class="form-control form-control-sm link_brand select2">
                                                                     <option value="">Select Brand</option>
                                                                     @foreach ($brands as $brand)
                                                                         <option value="{{ $brand->id }}"
@@ -925,7 +925,7 @@
             let plan_equipment_html = `<tr class="equipment_row">
                                             <td>
                                                 <select name="equipment_id[]" id="equipment_id"
-                                                    class="form-control form-control-sm equipment_id">
+                                                    class="form-control form-control-sm equipment_id select2">
                                                     <option value="">Select Equipment</option>
                                                     @foreach ($materials as $material)
                                                         <option value="{{ $material->id }}">
@@ -943,7 +943,7 @@
                                             </td>
                                             <td>
                                                 <select name="brand_id[]" id="brand_id"
-                                                    class="form-control form-control-sm brand_id">
+                                                    class="form-control form-control-sm brand_id select2">
                                                     <option value="">Select Brand</option>
                                                     @foreach ($brands as $brand)
                                                         <option value="{{ $brand->id }}">
@@ -966,6 +966,7 @@
                                         </tr> `;
             $('#addEquipmentRow').on('click', function() {
                 addEquipmentRow();
+                $('.select2').select2();
             });
 
             function addEquipmentRow() {

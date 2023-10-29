@@ -23,7 +23,7 @@
                     @foreach ($mod->connectivityProductRequirementDetails as $product)
                         <tr>
                             <td>
-                                <select name="product_category[]" class="form-control category">
+                                <select name="product_category[]" class="form-control category select2">
                                     <option value="">Select Category</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
@@ -33,7 +33,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select name="product[]" class="form-control product">
+                                <select name="product[]" class="form-control product select2">
                                     <option value="">Select Product</option>
                                     @foreach ($products as $data)
                                         <option value="{{ $data->id }}"

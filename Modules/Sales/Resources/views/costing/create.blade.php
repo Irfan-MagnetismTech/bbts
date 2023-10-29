@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'consting')
+@section('title', 'costing')
 
 @php
     $is_old = old('client_id') ? true : false;
@@ -43,7 +43,7 @@
                     $fr_no = $is_old ? old('fr_no') : $planning->feasibilityRequirementDetail->fr_no;
                     $fr_id = $is_old ? old('fr_id') : $planning->feasibilityRequirementDetail->id;
                     $mq_no = $is_old ? old('mq_no') : $planning->feasibilityRequirementDetail->feasibilityRequirement->mq_no;
-                    
+
                 @endphp
                 {{-- exiting or new radio button --}}
                 <div class="col-xl-3 col-md-3">
@@ -89,18 +89,18 @@
                                     <th colspan="12">Product Costing</th>
                                 </tr>
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Rate</th>
-                                    <th>Unit</th>
-                                    <th>Amount</th>
-                                    <th>Operation Cost</th>
-                                    <th>Total Amount</th>
-                                    <th>Price </th>
-                                    <th>Total </th>
-                                    <th>Vat(%)</th>
-                                    <th>Vat Amount</th>
-                                    <th>Total Price</th>
+                                    <th style="min-width: 200px">Product</th>
+                                    <th style="min-width: 100px">Quantity</th>
+                                    <th style="min-width: 100px">Rate</th>
+                                    <th style="min-width: 100px">Unit</th>
+                                    <th style="min-width: 100px">Amount</th>
+                                    <th style="min-width: 100px">Operation Cost</th>
+                                    <th style="min-width: 100px">Total Amount</th>
+                                    <th style="min-width: 100px">Price </th>
+                                    <th style="min-width: 100px">Total </th>
+                                    <th style="min-width: 100px">Vat(%)</th>
+                                    <th style="min-width: 100px">Vat Amount</th>
+                                    <th style="min-width: 100px">Total Price</th>
                                 </tr>
                             </thead>
                             <tbody class="productBody">
@@ -299,7 +299,7 @@
                                             </td>
                                             <td>
                                                 <select name="equipment_ownership[]"
-                                                    class="form-control form-control-sm input equipment_ownership">
+                                                    class="form-control form-control-sm input equipment_ownership select2">
                                                     <option value="BBTCL">BBTCL</option>
                                                     <option value="Client">Client</option>
                                                 </select>
@@ -479,8 +479,9 @@
                 <div class="PlanLinkMainRow"
                     style="border: 2px solid gray; border-radius: 15px; padding: 15px; margin-top: 15px;">
                     <div class="row">
-                        <div class="col-1 col-md-1">
-                            <div class="checkbox-fade fade-in-primary">
+                        <div style="width: 5%; margin: 0px 7px;">
+                            <div class="checkbox-fade fade-in-primary"
+                                style="margin-top: 12px; margin-left: 22px;">
                                 <label>
                                     <input type="checkbox" name="plan_link_status_{{ $row_no }}"
                                         class="input plan_link_status" value="1">
@@ -493,7 +494,7 @@
                         </div>
                         <input type="hidden" name="link_no_{{ $row_no }}"
                             value="{{ $plan_link->finalSurveyDetails->link_no }}">
-                        <div class="col-2 col-md-2">
+                        <div style="width: 14%; margin: 0px 7px;">
                             <div class="form-item">
                                 <input type="text" name="link_type_{{ $row_no }}"
                                     class="form-control form-control-sm link_type input" placeholder="Link Name"
@@ -501,7 +502,7 @@
                                 <label for="link_type">Link Type</label>
                             </div>
                         </div>
-                        <div class="col-2 col-md-2">
+                        <div style="width: 14%; margin: 0px 7px;">
                             <div class="form-item">
                                 <input type="text" name="option_{{ $row_no }}"
                                     class="form-control form-control-sm  plan_link_option input" placeholder="Link Type"
@@ -509,7 +510,7 @@
                                 <label for="plan_link_option">Option</label>
                             </div>
                         </div>
-                        <div class="col-2 col-md-2">
+                        <div style="width: 12%; margin: 0px 7px;">
                             <div class="form-item">
                                 <input type="text" name="capacity_{{ $row_no }}"
                                     class="form-control form-control-sm  plan_link_capacity input" placeholder="Capacity"
@@ -518,7 +519,7 @@
                                 <label for="plan_link_capacity">Capacity</label>
                             </div>
                         </div>
-                        <div class="col-2 col-md-2">
+                        <div style="width: 14%; margin: 0px 7px;">
                             <div class="form-item">
                                 <input type="text" name="quantity_{{ $row_no }}"
                                     class="form-control form-control-sm  plan_link_quantity input" placeholder="Quantity"
@@ -526,7 +527,7 @@
                                 <label for="plan_link_quantity">Quantity</label>
                             </div>
                         </div>
-                        <div class="col-1 col-md-1">
+                        <div style="width: 14%; margin: 0px 7px;">
                             <div class="form-item">
                                 <input type="text" name="rate_{{ $row_no }}"
                                     class="form-control form-control-sm  plan_link_rate input" placeholder="Rate"
@@ -534,7 +535,7 @@
                                 <label for="plan_link_rate">Rate</label>
                             </div>
                         </div>
-                        <div class="col-2 col-md-2">
+                        <div style="width: 14%; margin: 0px 7px;">
                             <div class="form-item">
                                 <input type="text" name="link_total_{{ $row_no }}"
                                     class="form-control form-control-sm  plan_link_total input" placeholder="Total"
