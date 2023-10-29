@@ -22,7 +22,7 @@
                     @foreach ($mod->connectivityRequirementDetails as $details)
                         <tr class="connectivity_details_row">
                             <td>
-                                <select name="link_type[]" class="form-control link_type">
+                                <select name="link_type[]" class="form-control link_type select2">
                                     <option value="">Select Link Type</option>
                                     <option value="Primary" @selected($details->link_type === 'Primary')>
                                         Primary</option>
@@ -33,7 +33,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select name="method[]" class="form-control method">
+                                <select name="method[]" class="form-control method select2">
                                     <option value="">Select Method</option>
                                     <option value="Fiber" @selected($details->method === 'Fiber')>Fiber
                                     </option>
@@ -53,7 +53,7 @@
                                     value="{{ $details->sla }}">
                             </td>
                             <td>
-                                <select name="vendor_id[]" class="form-control vendor_id">
+                                <select name="vendor_id[]" class="form-control vendor_id select2">
                                     <option value="">Select Vendor</option>
                                     @foreach ($vendors as $vendor)
                                         <option value="{{ $vendor->id }}" @selected($details->vendor_id == $vendor->id)>

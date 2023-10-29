@@ -3,7 +3,7 @@
         let table_row = `
                         <tr class="product_details_row">
                             <td>
-                                <select name="product_category[]" class="form-control product_category">
+                                <select name="product_category[]" class="form-control product_category select2">
                                     <option value="">Select Category</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -11,7 +11,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select name="product[]" class="form-control product">
+                                <select name="product[]" class="form-control product select2">
                                     <option value="">Select Product</option>
                                 </select>
                             </td>
@@ -32,6 +32,7 @@
                             </td>
                         </tr>
                     `;
+        $('.select2').select2();
         $('.productBody').append(table_row);
     };
 
@@ -44,7 +45,7 @@
         let table_row = `
                         <tr class="connectivity_details_row">
                             <td>
-                                <select name="link_type[]" class="form-control link_type">
+                                <select name="link_type[]" class="form-control link_type select2">
                                     <option value="">Select Link Type</option>
                                     <option value="Primary">Primary</option>
                                     <option value="Secondary">Secondary</option>
@@ -52,7 +53,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select name="method[]" class="form-control method">
+                                <select name="method[]" class="form-control method select2">
                                     <option value="">Select Method</option>
                                     <option value="Fiber">Fiber</option>
                                     <option value="Radio">Radio</option>
@@ -66,7 +67,7 @@
                                 <input type="text" name="uptime_req[]" class="form-control uptime_req" value="">
                             </td>
                             <td>
-                                <select name="vendor_id[]" class="form-control vendor_id">
+                                <select name="vendor_id[]" class="form-control vendor_id select2">
                                     <option value="">Select Vendor</option>
                                     @foreach ($vendors as $vendor)
                                         <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
@@ -78,6 +79,7 @@
                             </td>
                         </tr>
                     `;
+        $('.select2').select2();
         $('.connectivityEditBody').append(table_row);
     };
 
@@ -134,7 +136,7 @@
                     logical_table += `
                                     <tr class="product_details_row">
                                         <td>
-                                            <select name="product_category[]" class="form-control product_category">
+                                            <select name="product_category[]" class="form-control product_category select2">
                                                 <option value="">Select Category</option>
                                                 @foreach ($categories as $category)
                                                     <option value="{{ $category->id }}" ${value.product_category === "{{ $category->name }}" ? 'selected' : ''}>{{ $category->name }}</option>
@@ -142,7 +144,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select name="product[]" class="form-control product">
+                                            <select name="product[]" class="form-control product select2">
                                                 <option value="">Select Product</option>
                                                 @foreach ($products->where('category_id') as $product)
                                                     <option value="{{ $product->id }}" ${value.product_id == {{ $product->id }} ? 'selected' : ''}>{{ $product->name }}</option>
@@ -164,12 +166,13 @@
                                     </tr>
                                 `;
                 });
+                $('.select2').select2();
                 $('.productBody').html(logical_table);
                 $.each(data.physical_connectivity.lines, function(key, value) {
                     physical_table += `
                                     <tr class="connectivity_details_row">
                                         <td>
-                                            <select class="form-control link_type">
+                                            <select class="form-control link_type select2">
                                                 <option value="">Select Link Type</option>
                                                 <option value="Primary" ${value.link_type === "Primary" ? 'selected' : ''}>Primary</option>
                                                 <option value="Secondary" ${value.link_type === "Secondary" ? 'selected' : ''}>Secondary</option>
@@ -177,7 +180,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control method">
+                                            <select class="form-control method select2">
                                                 <option value="">Select Method</option>
                                                 <option value="Fiber" ${value.method === "Fiber" ? 'selected' : ''}>Fiber</option>
                                                 <option value="Radio" ${value.method === "Radio" ? 'selected' : ''}>Radio</option>
@@ -196,7 +199,9 @@
                                     </tr>
                                 `;
                 });
+               
                 $('.connectivityBody').html(physical_table);
+                $('.select2').select2();
                 $('#logical-table').fadeIn();
                 $('#physical-table').fadeIn();
                 $('#logical-table-edit').fadeIn();
@@ -233,7 +238,7 @@
         let html = `
                         <tr class="connectivity_details_row">
                             <td>
-                                <select name="link_type[]" class="form-control link_type">
+                                <select name="link_type[]" class="form-control link_type select2">
                                     <option value="">Select Link Type</option>
                                     <option value="Primary" ${link_type === "Primary" ? 'selected' : ''}>Primary</option>
                                     <option value="Secondary" ${link_type === "Secondary" ? 'selected' : ''}>Secondary</option>
@@ -241,7 +246,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select name="method[]" class="form-control method">
+                                <select name="method[]" class="form-control method select2">
                                     <option value="">Select Method</option>
                                     <option value="Fiber" ${method === "Fiber" ? 'selected' : ''}>Fiber</option>
                                     <option value="Radio" ${method === "Radio" ? 'selected' : ''}>Radio</option>
@@ -255,7 +260,7 @@
                                 <input type="text" name="uptime_req[]" class="form-control uptime_req" value="">
                             </td>
                             <td>
-                                <select name="vendor_id[]" class="form-control vendor_id">
+                                <select name="vendor_id[]" class="form-control vendor_id select2">
                                     <option value="">Select Vendor</option>
                                     @foreach ($vendors as $vendor)
                                         <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
@@ -267,6 +272,7 @@
                             </td>
                         </tr>
                     `;
+        $('.select2').select2();
         $('.connectivityEditBody').append(html);
     });
 
