@@ -99,8 +99,9 @@ class ClientProfileController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function show(Client $client)
+    public function show(int $id)
     {
+        $client = Client::where('id',$id)->first();
         return view('sales::client_profile.show', compact('client'));
     }
 
