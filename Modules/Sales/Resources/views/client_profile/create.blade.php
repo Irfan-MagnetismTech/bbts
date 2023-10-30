@@ -136,7 +136,7 @@
                                                         <div class="col-xl-4 col-md-4">
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <select name="client_type" id="client_type"
-                                                                    class="form-control " required>
+                                                                    class="form-control select2" required>
                                                                     <option>Client Type</option>
                                                                     <option value="1"
                                                                         {{ $client_type == 1 ? 'selected' : '' }}>
@@ -159,7 +159,7 @@
                                                         <div class="col-xl-4 col-md-4">
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <select name="business_type" id="business_type"
-                                                                    class="form-control ">
+                                                                    class="form-control select2">
                                                                     <option>Business Type</option>
                                                                     @foreach ($organizations as $organization)
                                                                         <option value="{{ $organization }}"
@@ -173,7 +173,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="division_id" id="division"
-                                                                    class="form-control">
+                                                                    class="form-control select2">
                                                                     <option value="">Select Division</option>
                                                                     @foreach ($divisions as $division)
                                                                         <option value="{{ $division->id }}"
@@ -181,13 +181,12 @@
                                                                             {{ $division->name }}</option>
                                                                     @endforeach
                                                                 </select>
-                                                                <label for="division">Division</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="district_id" id="district"
-                                                                    class="form-control">
+                                                                    class="form-control select2">
                                                                     <option value="">Select District</option>
                                                                     @if ($districts)
                                                                         @foreach ($districts as $district)
@@ -197,12 +196,12 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </select>
-                                                                <label for="district">District</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
-                                                                <select name="thana_id" id="thana" class="form-control">
+                                                                <select name="thana_id" id="thana"
+                                                                    class="form-control select2">
                                                                     <option value="">Select Thana</option>
                                                                     @if ($thanas)
                                                                         @foreach ($thanas as $thana)
@@ -212,7 +211,6 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </select>
-                                                                <label for="thana">Thana</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
@@ -326,7 +324,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="billing_division" id="billing_division"
-                                                                    class="form-control"
+                                                                    class="form-control select2"
                                                                     onchange="getDistrict('billing',this.value)">
                                                                     <option value="">Select Division</option>
                                                                     @foreach ($divisions as $division)
@@ -335,13 +333,12 @@
                                                                             {{ $division->name }}</option>
                                                                     @endforeach
                                                                 </select>
-                                                                <label for="billing_division">Division</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="billing_district" id="billing_district"
-                                                                    class="form-control"
+                                                                    class="form-control select2"
                                                                     onchange="getThana('billing',this.value)">
                                                                     <option value="">Select District</option>
                                                                     @if ($districts)
@@ -352,13 +349,12 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </select>
-                                                                <label for="billing_district">District</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="billing_thana" id="billing_thana"
-                                                                    class="form-control">
+                                                                    class="form-control select2">
                                                                     <option value="">Select Thana</option>
                                                                     @if ($thanas)
                                                                         @foreach ($billing_thanas as $thana)
@@ -368,7 +364,6 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </select>
-                                                                <label for="billing_thana">Thana</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
@@ -455,7 +450,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="collection_division"
-                                                                    id="collection_division" class="form-control"
+                                                                    id="collection_division" class="form-control select2"
                                                                     onchange="getDistrict('collection',this.value)">
                                                                     <option value="">Select Division</option>
                                                                     @foreach ($divisions as $division)
@@ -464,13 +459,12 @@
                                                                             {{ $division->name }}</option>
                                                                     @endforeach
                                                                 </select>
-                                                                <label for="collection_division">Division</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="collection_district"
-                                                                    id="collection_district" class="form-control"
+                                                                    id="collection_district" class="form-control select2"
                                                                     onchange="getThana('collection',this.value)">
                                                                     <option value="">Select District</option>
                                                                     @if ($districts)
@@ -481,13 +475,12 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </select>
-                                                                <label for="collection_district">District</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="collection_thana" id="collection_thana"
-                                                                    class="form-control">
+                                                                    class="form-control select2">
                                                                     <option value="">Select Thana</option>
                                                                     @if ($thanas)
                                                                         @foreach ($collection_thanas as $thana)
@@ -497,7 +490,6 @@
                                                                         @endforeach
                                                                     @endif
                                                                 </select>
-                                                                <label for="collection_thana">Thana</label>
                                                             </div>
                                                         </div>
                                                         <div class="col-sm-4">
@@ -608,7 +600,7 @@
 
         <script>
             function getDistrict(prefix, division_id) {
-                var html = '';
+                var html = '<option value="">Select District</option>';
                 $.ajax({
                     url: "{{ route('get-districts') }}",
                     data: {
@@ -627,7 +619,7 @@
             }
 
             function getThana(prefix, district_id) {
-                var html = '';
+                var html = '<option value="">Select Thana</option>';
                 $.ajax({
                     url: "{{ route('get-thanas') }}",
                     data: {
@@ -647,7 +639,6 @@
 
             $(document).ready(function() {
                 $('#division').on('change', function() {
-                    alert('fine')
                     var division_id = $(this).val();
                     var html = '';
                     $.ajax({
@@ -691,7 +682,6 @@
 
                 $('#client_name').on('input', function() {
                     var client_name = $(this).val();
-                    console.log(client_name)
                     $(this).autocomplete({
                         source: function(request, response) {
                             $.ajax({
@@ -708,9 +698,9 @@
                             });
                         },
                         select: function(event, ui) {
-                            console.log(ui.item)
                             $('#client_no').val(ui.item.value).attr('value', ui.item.value);
-                            $('#client_name').val(ui.item.client_name).attr('value', ui.item.client_name);
+                            $('#client_name').val(ui.item.client_name).attr('value', ui.item
+                                .client_name);
                             $('#client_type').val(ui.item.client_type).attr('value', ui.item
                                 .client_type);
                             $('#business_type').val(ui.item.business_type).attr('value', ui.item
@@ -734,8 +724,7 @@
                 });
 
                 function setDistrict(district) {
-                    console.log('district', district)
-                    var html = '';
+                    var html = '<option value="">Select District</option>';
                     district.forEach(element => {
                         html += '<option value="' + element.id + '">' + element.name +
                             '</option>';
@@ -744,7 +733,7 @@
                 }
 
                 function setThana(thana) {
-                    var html = '';
+                    var html = '<option value="">Select Thana</option>';
                     thana.forEach(element => {
                         html += '<option value="' + element.id + '">' + element.name +
                             '</option>';

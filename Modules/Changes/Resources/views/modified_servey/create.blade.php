@@ -486,26 +486,28 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="tableHeading">
+                        <h5> <span>
+                                &#10070;</span> New Requirement Survey <span>&#10070;</span> </h5>
+                    </div>
                     <div class="table-responsive">
-                        <div class="tableHeading">
-                            <h5> <span>
-                                    &#10070;</span> New Requirement Survey <span>&#10070;</span> </h5>
-                        </div>
                         <table class="table table-bordered table-striped">
                             <thead>
-                                <th>Link Type</th>
-                                <th>Option</th>
-                                <th>Existing / New</th>
-                                <th>Method</th>
-                                <th>Vendor</th>
-                                <th>POP</th>
-                                <th>LDP</th>
-                                <th>Lat</th>
-                                <th>Long</th>
-                                <th>Distance</th>
+                                <th style="min-width: 150px;">Link Type</th>
+                                <th style="min-width: 150px;">Option</th>
+                                <th style="min-width: 150px;">Status</th>
+                                <th style="min-width: 150px;">Method</th>
+                                <th style="min-width: 150px;">POP</th>
+                                <th style="min-width: 150px;">LDP</th>
+                                <th style="min-width: 150px;">Vendor</th>
+                                <th style="min-width: 150px;">Latitude</th>
+                                <th style="min-width: 150px;">Longitude</th>
+                                <th style="min-width: 150px;">Distance</th>
                                 <th>Current Capacity</th>
-                                <th>Remarks</th>
-                                <th>Action</th>
+                                <th style="min-width: 200px;">Remarks</th>
+                                <th>
+                                    Action
+                                </th>
                             </thead>
                             <tbody class="requirementBody">
                                 {{-- @dd($connectivity_requirement->connectivityRequirementDetails); --}}

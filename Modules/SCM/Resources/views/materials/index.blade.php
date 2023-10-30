@@ -31,6 +31,7 @@
                 <th>Unit</th>
                 <th>Type</th>
                 <th>Code</th>
+                <th>Min Quantity</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -41,6 +42,7 @@
                 <th>Unit</th>
                 <th>Type</th>
                 <th>Code</th>
+                <th>Min Quantity</th>
                 <th>Action</th>
             </tr>
             </tfoot>
@@ -48,10 +50,11 @@
             @foreach($materials as $key => $material)
                 <tr>
                     <td>{{$key  + 1}}</td>
-                    <td class="text-center">{{$material->name}}</td>
+                    <td class="text-center">{{$material->name ?? ''}}</td>
                     <td class="text-center">{{$material->unit ??''}}</td>
                     <td class="text-center">{{$material->type ??''}}</td>
-                    <td class="text-center">{{$material->code}}</td>
+                    <td class="text-center">{{$material->code ?? ''}}</td>
+                    <td class="text-center">{{$material->min_qty ?? ''}}</td>
                     <td>
                         <div class="icon-btn">
                             <nobr>

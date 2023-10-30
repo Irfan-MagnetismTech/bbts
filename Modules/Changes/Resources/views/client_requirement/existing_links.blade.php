@@ -3,7 +3,7 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th colspan="7">Existing Link</th>
+                    <th colspan="7">Existing Link here</th>
                 </tr>
                 <tr>
                     <th>Link Type</th>
@@ -19,7 +19,7 @@
                         <tr class="connectivity_details_row">
                             <td>
                                 <select class="form-control link_type">
-                                    <option value="">Select Link Type</option>
+                                    <option value="">Select Link Type </option>
                                     <option value="Primary" @selected($line->link_type === 'Primary')>
                                         Primary</option>
                                     <option value="Secondary" @selected($line->link_type === 'Secondary')>
@@ -29,7 +29,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control method">
+                                <select class="form-control method select2">
                                     <option value="">Select Method</option>
                                     <option value="Fiber" @selected($line->method === 'Fiber')>Fiber
                                     </option>
@@ -40,8 +40,8 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control vendor"
-                                    value="{{ $line->connectivityLink->vendor->name ?? ''}}">
+                                <input type="text" class="form-control vendor select2"
+                                    value="{{ $line->connectivityLink->vendor->name ?? '' }}">
                             </td>
                             <td>
                                 <input type="text" class="form-control bts_pop" value="{{ $line->pop }}">

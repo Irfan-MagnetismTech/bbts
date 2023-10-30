@@ -190,7 +190,7 @@
                                         <tr class="equipment_row">
                                             <td>
                                                 <select name="equipment_id[]" id="equipment_id"
-                                                    class="form-control form-control-sm equipment_id">
+                                                    class="form-control form-control-sm equipment_id select2">
                                                     <option value="">Select Equipment</option>
                                                     @foreach ($materials as $material)
                                                         <option value="{{ $material->id }}">
@@ -208,7 +208,7 @@
                                             </td>
                                             <td>
                                                 <select name="brand_id[]" id="brand_id"
-                                                    class="form-control form-control-sm brand_id">
+                                                    class="form-control form-control-sm brand_id select2">
                                                     <option value="">Select Brand</option>
                                                     @foreach ($brands as $brand)
                                                         <option value="{{ $brand->id }}">
@@ -262,43 +262,41 @@
                                 <hr / style="width: 100%; margin-bottom: 10px;">
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
-                                        <select name="link_type_1" class="form-control form-control-sm link_type">
+                                        <select name="link_type_1" class="form-control form-control-sm link_type select2">
                                             <option value="">Select Type</option>
                                             <option value="Primary">Primary</option>
                                             <option value="Secondary">Secondary</option>
                                             <option value="Tertiary">Tertiary</option>
                                         </select>
-                                        <label for="type">Type <span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
                                         <select name="option_1" id="option"
-                                            class="form-control form-control-sm option" onchange="optionChange(event)">
+                                            class="form-control form-control-sm option select2"
+                                            onchange="optionChange(event)">
                                             <option value="">Select Option</option>
                                             <option value="Option 1">Option 1</option>
                                             <option value="Option 2">Option 2</option>
                                             <option value="Option 3">Option 3
                                             </option>
                                         </select>
-                                        <label for="type">Option <span class="text-danger">*</span></label>
                                     </div>
                                 </div>
                                 <div class="col-3 col-md-3  mt-3">
                                     <div class="form-item">
                                         <select name="existing_infrastructure_1" id="existing_infrastructure"
-                                            class="form-control form-control-sm existing_infrastructure">
+                                            class="form-control form-control-sm existing_infrastructure select2">
                                             <option value="">Select Status</option>
                                             <option value="Existing">Existing</option>
                                             <option value="New">New</option>
                                         </select>
-                                        <label for="type">Link Status</label>
                                     </div>
                                 </div>
                                 <div class="col-3 col-md-3 mt-3 link_list" style="display: none;">
                                     <div class="form-item">
                                         <select name="existing_infrastructure_link_1" id="existing_infrastructure_link"
-                                            class="form-control form-control-sm existing_infrastructure_link">
+                                            class="form-control form-control-sm existing_infrastructure_link select2">
                                             <option value="">Select Link</option>
                                         </select>
                                         <label for="type">Link List</label>
@@ -325,13 +323,12 @@
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
                                         <select name="link_availability_status_1" id="link_availability_status"
-                                            class="form-control form-control-sm link_availability_status">
-                                            <option value="">Select Vendor</option>
+                                            class="form-control form-control-sm link_availability_status select2">
+                                            <option value="">New Transmission Link</option>
                                             @foreach ($vendors as $vendor)
                                                 <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
                                             @endforeach
                                         </select>
-                                        <label for="type">New Transmission Link</label>
                                     </div>
                                 </div>
 
@@ -475,7 +472,7 @@
                                                 </td>
                                                 <td>
                                                     <select name="brand_id_1[]" id="brand"
-                                                        class="form-control form-control-sm link_brand">
+                                                        class="form-control form-control-sm link_brand select2">
                                                         <option value="">Select Brand</option>
                                                         @foreach ($brands as $brand)
                                                             <option value="{{ $brand->id }}">
@@ -567,7 +564,7 @@
             let plan_equipment_html = `<tr class="equipment_row">
                                             <td>
                                                 <select name="equipment_id[]" id="equipment_id"
-                                                    class="form-control form-control-sm equipment_id">
+                                                    class="form-control form-control-sm equipment_id select2">
                                                     <option value="">Select Equipment</option>
                                                     @foreach ($materials as $material)
                                                         <option value="{{ $material->id }}">
@@ -585,7 +582,7 @@
                                             </td>
                                             <td>
                                                 <select name="brand_id[]" id="brand_id"
-                                                    class="form-control form-control-sm brand_id">
+                                                    class="form-control form-control-sm brand_id select2">
                                                     <option value="">Select Brand</option>
                                                     @foreach ($brands as $brand)
                                                         <option value="{{ $brand->id }}">
@@ -657,7 +654,6 @@
                         fr_no: fr_no,
                     },
                     success: function(data) {
-                        console.log(data);
                         $(event.target).closest('.main_link').find('input[name^="plan_link_no_"]').val(data
                             ?.link_no);
                         $(event.target).closest('.main_link').find('input[name^="link_vendor_"]').val(data?.vendor
@@ -742,7 +738,6 @@
                 clonedRow.find('.link_no').html(link_no);
                 clonedRow.appendTo('#link_container');
                 var $equipmentRow = clonedRow.find('.link_equipment_table').children('tr').length;
-                console.log($equipmentRow);
                 if ($equipmentRow > 1) {
                     clonedRow.find('.link_equipment_table tr').not(':first').remove();
                 }
@@ -760,12 +755,10 @@
                 var equipment_id = $(this).val();
                 var equiments = {!! json_encode($materials) !!};
                 var find_equipment = equiments.find(x => x.id == equipment_id);
-                console.log(find_equipment);
                 $(this).closest('tr').find('.unit').val(find_equipment.unit);
                 $.get('{{ route('getMaterialWiseBrands') }}', {
                     material_id: equipment_id
                 }, function(data) {
-                    console.log(data);
                     var html = '<option value="">Select Brand</option>';
                     $.each(data, function(key, item) {
                         html += '<option value="' + item.id + '">' +
@@ -784,7 +777,6 @@
                 $.get('{{ route('getMaterialWiseBrands') }}', {
                     material_id: material_id
                 }, function(data) {
-                    console.log(data);
                     var html = '<option value="">Select Brand</option>';
                     $.each(data, function(key, item) {
                         html += '<option value="' + item.id + '">' +
@@ -832,7 +824,6 @@
             });
 
             $('.existing_infrastructure_link').on('change', function() {
-                console.log(link_array);
                 var this_event = $(this);
                 var value = this_event.val();
 
@@ -852,7 +843,6 @@
 
                 // Access the link with the latest date (first element of the sorted array)
                 const latestLink = link[0];
-                console.log('latestLink', latestLink);
                 this_event.closest('.main_link').find('.existing_transmission_capacity').val(latestLink.capacity).attr(
                     'value', latestLink.capacity);
             });

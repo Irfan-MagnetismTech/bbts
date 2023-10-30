@@ -1,29 +1,31 @@
 @extends('layouts.backend-layout')
-@section('title', 'Pre Sale Client')
-
-@section('style')
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
-@endsection
+@section('title', 'Client')
 
 @section('breadcrumb-title')
-    Pre Sale Client
+    Client Information
+@endsection
+
+@section('breadcrumb-button')
+    <a href="{{ route('client-profile.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 
 @section('style')
     <style>
+        .table_header{
+            background-color:#057097!important;
+            font-size: 12px;
+            color: white;
+            font-size: 14px;
+        }
+        .table_header_td{
+            background-color: #ecf4f7;
+            text-align: left;
+            border: 1px solid rgb(205, 207, 208) !important
+        }
     </style>
 @endsection
-@section('breadcrumb-button')
-    <a href="{{ route('client-profile.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-plus"></i></a>
-    <a href="{{ route('client-profile.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-            class="fas fa-database"></i></a>
-@endsection
-@section('sub-title')
-    Client: {{ $client->client_name }}
-@endsection
 
-
+@section('content-grid', null)
 @section('content')
     <div class="container">
         <div class="card">
@@ -32,56 +34,115 @@
                     <!-- table  -->
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table custom_table table-bordered" style="font-size: 12px;">
-                                <tr>
-                                    <th>Client Name</th>
-                                    <td>{{ $client->client_name }}</td>
-                                    <th>Address</th>
-                                    <td>{{ $client->address }}</td>
+                            <table class="table table-bordered" style="">
+                                <tr class="table_header">
+                                    <td colspan="4" style="text-align: center" style=""><b>Client Information</b></td>
                                 </tr>
                                 <tr>
-                                    <th>Division</th>
-                                    <td>{{ $client->division->name ?? '' }}</td>
-                                    <th>District</th>
-                                    <td>{{ $client->district->name ?? '' }}</td>
+                                    <td class="table_header_td">Client Name</td>
+                                    <td><b>{{ $client->client_name ?? '' }}</b></td>
+                                    <td class="table_header_td">Client Type</td>
+                                    <td><b>{{ $client->client_type ?? '' }}</b></td>
                                 </tr>
                                 <tr>
-                                    <th>Thana</th>
-                                    <td>{{ $client->thana->name ?? '' }}</td>
-                                    <th>Landmark</th>
-                                    <td>{{ $client->landmark }}</td>
+                                    <td class="table_header_td">Registration No</td>
+                                    <td><b>{{ $client->reg_no ?? '' }}</b></td>
+                                    <td class="table_header_td">Business Type</td>
+                                    <td><b>{{ $client->business_type ?? '' }}</b></td>
                                 </tr>
                                 <tr>
-                                    <th>Lat-Long</th>
-                                    <td>{{ $client->lat_long }}</td>
-                                    <th>Contact Person</th>
-                                    <td>{{ $client->contact_person }}</td>
+                                    <td class="table_header_td">Thana</td>
+                                    <td><b>{{ $client->thana->name ?? '' }}</b></td>
+                                    <td class="table_header_td">District</td>
+                                    <td><b>{{ $client->district->name ?? '' }}</b></td>
                                 </tr>
                                 <tr>
-                                    <th>Contact No</th>
-                                    <td>{{ $client->contact_no }}</td>
-                                    <th>Email</th>
-                                    <td>{{ $client->email }}</td>
+                                    <td class="table_header_td">Division</td>
+                                    <td><b>{{ $client->division->name ?? '' }}</b></td>
+                                    <td class="table_header_td">Location</td>
+                                    <td><b>{{ $client->location ?? '' }}</b></td>
                                 </tr>
                                 <tr>
-                                    <th>Website</th>
-                                    <td>{{ $client->website }}</td>
-                                    <th>Document</th>
-                                    <td>
-                                        @if ($client->document)
-                                            <a href="{{ asset('uploads/lead_generation/' . $client->document) }}"
-                                                target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
-                                                    class="fas fa-eye"></i></a>
-                                        @endif
-                                    </td>
+                                    <td class="table_header_td">Contact Person</td>
+                                    <td><b>{{ $client->contact_person ?? ''}}</b></td>
+                                    <td class="table_header_td">Designation</td>
+                                    <td><b>{{ $client->designation ?? '' }}</b></td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Contact No</td>
+                                    <td>{{ $client->contact_no ?? '' }}</td>
+                                    <td class="table_header_td">Email</td>
+                                    <td>{{ $client->email ?? '' }}</td>
+                                </tr>
+                                <tr class="table_header">
+                                    <td colspan="4" style="text-align: center" style=""><b>Billing Information</b></td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Contact Person</td>
+                                    <td>{{ $client->billingAddress[0]->contact_person ?? '' }}</td>
+                                    <td class="table_header_td">Designation</td>
+                                    <td>{{ $client->billingAddress[0]->designation ?? '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Contact No</td>
+                                    <td>{{ $client->billingAddress[0]->phone ?? '' }}</td>
+                                    <td class="table_header_td">Email</td>
+                                    <td>{{ $client->billingAddress[0]->email ?? '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Division</td>
+                                    <td>{{ $client->billingAddress[0]->division->name ?? '' }}</td>
+                                    <td class="table_header_td">District</td>
+                                    <td>{{ $client->billingAddress[0]->district->name ?? '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Thana</td>
+                                    <td>{{ $client->billingAddress[0]->thana->name ?? '' }}</td>
+                                    <td class="table_header_td">Billing Address</td>
+                                    <td> {{ $client->billingAddress[0]->address ?? '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">
+                                        Bill to be submission by</td>
+                                    <td>{{ $client->billingAddress[0]->submission_by ?? '' }}</td>
+                                    <td class="table_header_td">
+                                        Bill Submission Date</td>
+                                    <td>{{ $client->billingAddress[0]->submission_date ?? '' }}</td>
+                                </tr>
+                                <tr class="table_header">
+                                    <td colspan="4" style="text-align: center" style=""><b>Collection Information</b></td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Contact Person</td>
+                                    <td>{{ $client->collectionAddress[0]->contact_person ?? '' }}</td>
+                                    <td class="table_header_td">Designation</td>
+                                    <td>{{ $client->collectionAddress[0]->designation ?? '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Contact No</td>
+                                    <td>{{ $client->collectionAddress[0]->phone ?? '' }}</td>
+                                    <td class="table_header_td">Email</td>
+                                    <td>{{ $client->collectionAddress[0]->email ?? '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Division</td>
+                                    <td>{{ $client->collectionAddress[0]->division->name ?? '' }}</td>
+                                    <td class="table_header_td">District</td>
+                                    <td>{{ $client->collectionAddress[0]->district->name ?? '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Thana</td>
+                                    <td>{{ $client->collectionAddress[0]->thana->name ?? '' }}</td>
+                                    <td class="table_header_td">Address</td>
+                                    <td> {{ $client->collectionAddress[0]->address ?? '' }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="table_header_td">Payment Method</td>
+                                    <td>{{ $client->collectionAddress[0]->payment_method ?? '' }}</td>
+                                    <td class="table_header_td">Approximate Payment Date</td>
+                                    <td> {{ $client->collectionAddress[0]->payment_date ?? '' }}</td>
                                 </tr>
                             </table>
-                        </div>
-                        <div class="d-flex justify-content-around mt-4">
-                            <button type="submit" value="Accept" class="btn btn-outline-success status">Accept</button>
-                            <button type="button" value="Deny" class="btn btn-outline-danger status">Deny</button>
-                            <button type="button" value="Review" class="btn btn-outline-warning status">Review</button>
-                            <button type="submit" value="Cancel" class="btn btn-outline-info status">Cancel</button>
                         </div>
                     </div>
                     <input type="hidden" name="status" value="">
@@ -89,62 +150,4 @@
             </div>
         </div>
     </div>
-    <!-- Boostrap Modal  -->
-    <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Comment</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="text" name="comment" class="form-control" placeholder="Comment">
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
-@endsection
-
-@section('script')
-    <script src="{{ asset('js/Datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('js/Datatables/dataTables.bootstrap4.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $('.status').click(function() {
-                $('input[name="status"]').val($(this).val());
-                if ($(this).val() == 'Deny') {
-                    $('#myModal').find('.modal-title').text('Deny Comment');
-                } else if ($(this).val() == 'Review') {
-                    $('#myModal').find('.modal-title').text('Review Comment');
-                } else if ($(this).val() == 'Accept' || $(this).val() == 'Cancel') {
-                    form.submit();
-                }
-                $('#myModal').modal('show');
-            });
-        });
-
-
-        $(window).scroll(function() {
-            //set scroll position in session storage
-            sessionStorage.scrollPos = $(window).scrollTop();
-        });
-        var init = function() {
-            //get scroll position in session storage
-            $(window).scrollTop(sessionStorage.scrollPos || 0)
-        };
-        window.onload = init;
-
-        $(document).ready(function() {
-            $('#dataTable').DataTable({
-                stateSave: true
-            });
-        });
-    </script>
 @endsection
