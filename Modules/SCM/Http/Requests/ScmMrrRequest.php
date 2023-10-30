@@ -89,7 +89,7 @@ class ScmMrrRequest extends FormRequest
             'brand_id.*' => 'required',
             'model.*' => 'required',
             // 'quantity.*' => 'required',
-            'amount.*' => 'required'
+            // 'amount.*' => 'required'
         ];
     }
 

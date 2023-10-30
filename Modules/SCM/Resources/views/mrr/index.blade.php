@@ -32,6 +32,7 @@
                     <th>#PO Date.</th>
                     <th>Supplier Name</th>
                     <th>Challan No</th>
+                    <th>Bill No</th>
                     <th>Submitted By</th>
                     <th>Action</th>
                 </tr>
@@ -44,6 +45,7 @@
                     <th>#PO Date.</th>
                     <th>Supplier Name</th>
                     <th>Challan No</th>
+                    <th>Bill No</th>
                     <th>Submitted By</th>
                     <th>Action</th>
                 </tr>
@@ -57,6 +59,7 @@
                         <td>{{ $mrr->purchaseOrder->date ?? '' }}</td>
                         <td>{{ $mrr->supplier->name }}</td>
                         <td>{{ $mrr->challan_no }}</td>
+                        <td>{{ $mrr->bill_reg_no }}</td>
                         <td>{{ $mrr->createdBy->name }}</td>
                         <td>
                             <div class="icon-btn">
