@@ -5,6 +5,7 @@ namespace Modules\SCM\Entities;
 use Carbon\Carbon;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\User;
+use Modules\Sales\Entities\BillingAddress;
 use Modules\SCM\Entities\ScmMur;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
@@ -19,6 +20,7 @@ use Modules\SCM\Http\Traits\StockLedgerTrait;
 class ScmChallan extends Model
 {
     use StockLedgerTrait;
+
     protected $guarded = [];
 
     public function getDateAttribute($input)
@@ -44,7 +46,7 @@ class ScmChallan extends Model
 
     public function feasibilityRequirementDetail()
     {
-        return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no','fr_no');
+        return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
     }
 
     public function branch()
@@ -75,5 +77,10 @@ class ScmChallan extends Model
     public function challanBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function billingAddress()
+    {
+        return $this->hasOne(BillingAddress::class, 'client_no', 'client_no');
     }
 }
