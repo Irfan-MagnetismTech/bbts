@@ -7,7 +7,7 @@
 
 @section('breadcrumb-button')
     <a href="{{ route('material-utilizations.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
-    class="fas fa-database"></i></a>
+            class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', null)
@@ -36,7 +36,7 @@
                         </tr>
                         <tr>
                             <td> <strong>Client Name</strong> </td>
-                            <td> {{ $material_utilization?->client?->client_name ?? ''}}</td>
+                            <td> {{ $material_utilization?->client?->client_name ?? '' }}</td>
                         </tr>
                         <tr>
                             <td> <strong>FR No</strong> </td>
@@ -107,5 +107,22 @@
                 @endforeach
             </tbody>
         </table>
+
+        <div class="col-md-2 offset-5">
+            @if (
+                $material_utilization->is_approved == 'Pending' &&
+                    auth()->user()->can('MUR-Approval'))
+                {{-- @can('MUR-Approval') --}}
+                <a class="btn btn-outline-info" href="{{ route('mur-approval', $material_utilization->id) }}" title="Approved By "
+                    style="transition: 0.5s"> Approval</a>
+                {{-- @endcan --}}
+            @elseif($material_utilization->is_approved != 'Pending')
+                <a class="btn  btn-secondary" href="#"
+                    title="Approved By {{ $material_utilization->approvedBy?->name }}" style="transition: 0.5s">
+                    Approved</a>
+            @else
+                <a class="btn  btn-success" style="transition: 0.5s">{{ $material_utilization->is_approved }} </a>
+            @endif
+        </div>
     </div>
 @endsection

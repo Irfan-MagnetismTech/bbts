@@ -171,7 +171,7 @@ class ScmMurController extends Controller
     public function update(Request $request, ScmMur $material_utilization)
     {
         try {
-            dd($request->all());
+            // dd($request->all());
             DB::beginTransaction();
             $mur_data = $request->all();
             $material_utilization->update($mur_data);
@@ -267,4 +267,77 @@ class ScmMurController extends Controller
             'unit'              => $req->unit[$ke] ?? null,
         ];
     }
+
+    public function murApproval(ScmMur $scmMur){
+        try {
+            DB::beginTransaction();
+            $scmMur->is_approved = 'Approved';
+            $scmMur->approved_by = auth()->user()->id; 
+            $scmMur->update(); 
+            DB::commit();
+
+            return redirect()->route('material-utilizations.index')->with('message', 'MUR has been approved successfully');
+        }
+        catch (QueryException $err) {
+            DB::rollBack();
+            return redirect()->route('material-utilizations.index')->withInput()->withErrors($err->getMessage());
+        } 
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

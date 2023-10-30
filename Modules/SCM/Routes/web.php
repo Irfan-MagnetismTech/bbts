@@ -16,6 +16,7 @@ use Modules\SCM\Http\Controllers\SupplierController;
 use Modules\SCM\Http\Controllers\ScmRequisitionController;
 use Modules\SCM\Http\Controllers\ScmChallanController;
 use Modules\SCM\Http\Controllers\OpeningStockController;
+use Modules\SCM\Http\Controllers\ScmMurController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,11 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
         'sc-categories'             => ScCategoryController::class,
     ]);
     // Route::get('search-material-by-cs-requisition/{csId}', [PurchaseOrderController::class, 'searchMaterialByCsAndRequsiition'])->name('search-material-by-cs-requisition');
+
+
+    Route::get('mur-approval/{scmMur}', [ScmMurController::class, 'murApproval'])->name('mur-approval');
+    
+    
     Route::get('search-material-by-indent', [CsController::class, 'searchMaterialByIndent'])->name('search-material-by-indent');
     Route::get('search-material-by-cs-requisition', [PurchaseOrderController::class, 'searchMaterialByCsAndRequsiition'])->name('search-material-by-cs-requisition');
     Route::get('get-unique-code', [MaterialController::class, 'getUniqueCode'])->name('get-unique-code');

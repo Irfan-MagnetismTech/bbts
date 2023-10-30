@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('date')->nullable();
             $table->string('mur_no')->nullable();
             $table->bigInteger('created_by');
+            $table->string('is_approved')->default('Pending');
+            $table->integer('approved_by')->nullable();
             $table->timestamps();
         });
     }

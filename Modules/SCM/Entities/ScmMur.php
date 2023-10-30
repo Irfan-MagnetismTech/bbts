@@ -28,7 +28,10 @@ class ScmMur extends Model
         'date',
         'mur_no',
         'equipment_type',
-        'created_by'
+        'created_by',
+        'is_approved',
+        'approved_by',
+
     ];
     public function lines()
     {
@@ -63,5 +66,10 @@ class ScmMur extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }

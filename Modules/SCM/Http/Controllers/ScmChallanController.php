@@ -21,6 +21,7 @@ use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\Material;
+use Modules\SCM\Entities\ScmMurLine;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Entities\ScmWor;
 use Modules\SCM\Http\Requests\ScmChallanRequest;
@@ -108,7 +109,30 @@ class ScmChallanController extends Controller
      */
     public function show(ScmChallan $challan)
     {
-        return view('scm::challans.show', compact('challan'));
+        $challanLines = $challan->scmChallanLines()->get()
+            ->map(function ($item){
+                $murLines = ScmMurLine::where('material_id',$item->material_id)
+                        ->where('brand_id', $item->brand_id)
+                        ->when($item->model, function($q) use($item){
+                            $q->where('model', $item->model);
+                        })->get();
+                $SL_item =  $murLines->pluck('serial_code');
+
+                $data = [
+                    'material_name' => $item->material->name,
+                    'code' => $item->material->code,
+                    'unit' => $item->unit,
+                    'brand_name' => $item->brand->name,
+                    'model' => $item->model,
+                    'serial_code' => $SL_item->implode(','),
+                    'quantity' => $murLines->sum('quantity'),
+                    'purpose' => $item->purpose, 
+                    'remarks' => $item->remarks, 
+                ];
+                return $data;
+            });
+             
+        return view('scm::challans.show', compact('challan','challanLines'));
     }
 
     /**
