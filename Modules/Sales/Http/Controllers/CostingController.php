@@ -60,6 +60,8 @@ class CostingController extends Controller
     {
         // dd($request->all());
         try {
+            $feasibility_requirement_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $request->fr_no)->first();
+
             DB::beginTransaction();
 
             $costingData = $request->all();
@@ -74,7 +76,7 @@ class CostingController extends Controller
 
             DB::commit();
             // return response()->json(['message' => 'Data saved successfully.']);
-            return redirect()->route('costing.index')->with('success', 'Data saved successfully.');
+            return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Failed to save data. Error: ' . $e->getMessage());

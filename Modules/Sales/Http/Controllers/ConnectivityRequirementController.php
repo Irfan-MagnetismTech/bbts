@@ -58,6 +58,8 @@ class ConnectivityRequirementController extends Controller
      */
     public function store(ConnectivityRequirementRequest $request)
     {
+        $feasibility_requirement_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $request->fr_no)->first();
+
         $data = $request->only('date', 'client_no', 'from_location', 'aggregation_type', 'fr_no');
         $data['user_id'] = auth()->id() ?: '';
         $data['branch_id'] = auth()->user()->branch_id ?: '';
@@ -89,7 +91,7 @@ class ConnectivityRequirementController extends Controller
             }
 
             DB::commit();
-            return redirect()->route('connectivity-requirement.index')->with('success', 'Connectivity Requirement Created Successfully');
+            return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->back()->with('error', $e->getMessage())->withInput();

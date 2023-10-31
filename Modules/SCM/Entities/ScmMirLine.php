@@ -18,6 +18,7 @@ class ScmMirLine extends Model
         'brand_id',
         'model',
         'quantity',
+        'mrs_quantity',
         'remarks',
     ];
 
