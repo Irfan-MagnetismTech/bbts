@@ -241,9 +241,8 @@ class SaleModificationController extends Controller
     private function makeLinkRow($raw, $saleDetail, $includeCreatedAt = false)
     {
         $data = [];
-        dd($raw['link_no']);
         // if(!empty($raw['link_no'])){
-            foreach ($raw['link_no'] as $key1 => $value) {
+        foreach ($raw['link_no'] as $key1 => $value) {
             $rowData = [
                 'link_no'           => $raw['link_no'][$key1],
                 'client_no'         => $raw['client_no'],
@@ -259,7 +258,7 @@ class SaleModificationController extends Controller
             $data[] = $rowData;
         }
         // }
-        
+
         return $data;
     }
 
@@ -341,23 +340,39 @@ class SaleModificationController extends Controller
             ->with(['client:id,client_name,client_no', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])
             ->where('connectivity_requirement_id', request()->connectivity_requirement_id)
             ->first();
-        // $oldSaleLinks = SaleLinkDetail::where('fr_no', $offer->offerDetails->first()->fr_no)->get();
+        $oldSaleDetail = SaleLinkDetail::with('planLinkDetail')->where('fr_no', $offer->offerDetails->first()->fr_no)->get();
 
+        $current_plan_links = [];
+        $old_plan_links = [];
+        $offer->offerDetails->map(function ($item) use (&$current_plan_links) {
+            $item->offerLinks->map(function ($item) use (&$current_plan_links) {
+                $current_plan_links[] = [
+                    'link_no' => $item->link_no,
+                    'link_type' => $item->link_type,
+                    'fr_no' => $item->fr_no,
+                ];
+                return $item;
+            });
+        });
 
+        $oldSaleDetail->map(function ($item) use (&$old_plan_links) {
+            $old_plan_links[] = [
+                'link_no' => $item->link_no,
+                'link_type' => $item->planLinkDetail->link_type,
+                'fr_no' => $item->fr_no,
+            ];
+            return $item;
+        });
 
-        // $offer->offerDetails->map(function ($item) use ($oldSaleLinks) {
-        //     if (empty($item->offerDetails->offerLinks)) {
-        //         // merge old sale link details in offer link details\
-        //         $item->offerDetails->offerLinks = $oldSaleLinks;
-        //     }
-        //     dd($item->offerDetails->offerLinks);
-        // });
+        $offerLinks = $current_plan_links + $old_plan_links;
+        $offer->offerDetails->map(function ($item) use ($offerLinks) {
+            $item->mergedLinks = collect($offerLinks)->where('fr_no', $item->fr_no)->toArray();
+        });
 
 
         $offer['billing_address'] = BillingAddress::where('client_no', $offer->client_no)->get();
         $offer['collection_address'] = CollectionAddress::where('client_no', $offer->client_no)->get();
         $offer->toArray();
-
         return response()->json($offer);
     }
 

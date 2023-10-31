@@ -49,7 +49,7 @@ class SurveyController extends Controller
         $fr_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->find($fr_id);
         $all_fr_list = FeasibilityRequirementDetail::get();
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $fr_detail->fr_no)->first();
-        $pops = Pop::get();
+        $pops = $fr_detail->branch_id ? Pop::where('branch_id', $fr_detail->branch_id)->get() : Pop::get();
         $vendors = Vendor::get();
         return view('sales::survey.create', compact('fr_detail', 'all_fr_list', 'connectivity_requirement', 'pops', 'vendors'));
     }
@@ -61,6 +61,7 @@ class SurveyController extends Controller
      */
     public function store(Request $request)
     {
+        $feasibility_requirement_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $request->fr_no)->first();
         $connectivity_requirement_data = $request->only('date', 'client_no', 'fr_no', 'survey_remarks');
         $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
         $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? null;
@@ -93,7 +94,7 @@ class SurveyController extends Controller
                 SurveyDetail::create($connectivity_requirement_details);
             }
             DB::commit();
-            return redirect()->route('survey.index')->with('success', 'Survey Created Successfully');
+            return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
         } catch (QueryException $e) {
             DB::rollback();
             return redirect()->back()->withInput()->with('error', $e->getMessage());

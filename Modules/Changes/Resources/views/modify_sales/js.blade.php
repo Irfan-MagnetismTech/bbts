@@ -76,8 +76,9 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-7">`
-                element.offer_links.forEach(elmnt => {
-                    appendedData += `<span>${elmnt.link_type}</span>
+                element.mergedLinks.forEach(elmnt => {
+                    appendedData += `<span class="badge badge-info"
+                                            style="font-size:12px">${elmnt.link_type}</span>
                                         <input type="hidden" name="link_no[]"value="${elmnt.link_no}">
                                         <input type="hidden" name="link_type[]"value="${elmnt.link_type}">`
                 })

@@ -90,7 +90,7 @@ class PlanningController extends Controller
 
         DB::commit();
 
-        return redirect()->route('planning.index')->with('success', 'Planning created successfully');
+        return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
     }
 
     /**

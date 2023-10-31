@@ -183,6 +183,7 @@
                     <th>Unit</th>
                     <th>Current Stock(Form)</th>
                     <th>Current Stock(To)</th>
+                    <th>MRS Quantity</th>
                     <th>Issued Qty</th>
                     <th>Remarks</th>
                     <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
@@ -201,6 +202,7 @@
                     $serial_code = old('serial_code', !empty($material_issue) ? $material_issue?->lines->pluck('serial_code') : []);
                     $unit_name = old('unit_name', !empty($material_issue) ? $material_issue?->lines->pluck('material.unit') : []);
                     $issued_qty = old('issued_qty', !empty($material_issue) ? $material_issue?->lines->pluck('quantity') : []);
+                    $mrs_quantity = old('mrs_quantity', !empty($material_issue) ? $material_issue?->lines->pluck('mrs_quantity') : []);
                 @endphp
                 @foreach ($receiveable_type as $key => $value)
                     <tr>
@@ -283,6 +285,10 @@
                         <td>
                             <input type="text" class="form-control to_current_quantity" name="to_current_quantity[]"
                                 value="{{ $to_branch_stock[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control mrs_quantity" name="mrs_quantity[]"
+                                value="{{ $mrs_quantity[$key] }}" readonly>
                         </td>
                         <td>
                             <input type="number" class="form-control issued_qty" name="issued_qty[]"
@@ -385,8 +391,8 @@
                         $('#fr_no').val(data.fr_no);
                         $('#link_no').val(data.link_no);
                         $('#client_no').val(data.client_no);
-                        $('#branch_id').val(data.branch?.id);
-                        $('#branch_name').val(data.branch?.name);
+                        $('#to_branch_id').val(data.branch?.id);
+                        $('#to_branch').val(data.branch?.name);
                         $('#client_name').val(data.client?.client_name);
                         $('#client_address').val(data.feasibility_requirement_detail
                             ?.location);
@@ -549,14 +555,18 @@
 
         $(document).on('change', '.model, .material_name, .brand', function() {
             var elemmtn = $(this);
+            let material_id = (elemmtn).closest('tr').find('.material_name').val();
+            let brand_id = (elemmtn).closest('tr').find('.brand').val()
+            let model = (elemmtn).closest('tr').find('.model').val();
+
             $.ajax({
                 url: "{{ route('get-from-and-to-branch-stock') }}",
                 type: 'get',
                 dataType: "json",
                 data: {
-                    material_id: (elemmtn).closest('tr').find('.material_name').val(),
-                    brand_id: (elemmtn).closest('tr').find('.brand').val(),
-                    model: (elemmtn).closest('tr').find('.model').val(),
+                    material_id: material_id,
+                    brand_id: brand_id,
+                    model: model,
                     from_branch_id: $('#from_branch_id').val(),
                     to_branch_id: $('#to_branch_id').val(),
                     scm_requisition_id: $('#scm_requisition_id').val(),
@@ -567,15 +577,16 @@
                     (elemmtn).closest('tr').find('.to_current_quantity').val(data.to_branch_balance);
                 }
             })
+            getMaterials($(this));
         })
 
         function getMaterials(event_this) {
             let scm_requisition_id = $('#scm_requisition_id').val();
-            let material_name = event_this.find('.material_name');
-            let brand = event_this.find('.brand');
-            let model = event_this.find('.model');
-            let receiveable_id = event_this.find('.type_id').val();
-            let received_type = event_this.find('.received_type').val().toUpperCase();
+            let material_name = event_this.closest('tr').find('.material_name');
+            let brand = event_this.closest('tr').find('.brand');
+            let model = event_this.closest('tr').find('.model');
+            // let receiveable_id = event_this.find('.type_id').val();
+            // let received_type = event_this.find('.received_type').val().toUpperCase();
             let from_branch_id = $('#from_branch_id').val();
 
             $.ajax({
@@ -587,13 +598,12 @@
                     material_id: material_name.val(),
                     brand_id: brand.val(),
                     model: model.val(),
-                    stockable_id: receiveable_id,
-                    received_type: received_type,
                     branch_id: from_branch_id,
                 },
                 success: function(data) {
                     console.log(data);
                     (event_this).closest('tr').find('.from-current_quantity').val(data.current_stock);
+                    (event_this).closest('tr').find('.mrs_quantity').val(data.mrs_quantity);
                 }
             });
         }
@@ -723,6 +733,9 @@
                             </td>
                             <td>
                                 <input class="form-control to_current_quantity" name="to_current_quantity[${indx}]" aria-describedby="date" readonly>
+                            </td>
+                            <td>
+                                <input class="form-control mrs_quantity" name="mrs_quantity[${indx}]" aria-describedby="date" readonly>
                             </td>
                             <td>
                                 <input name="issued_qty[${indx}]" class="form-control issued_qty" autocomplete="off" type="number">
