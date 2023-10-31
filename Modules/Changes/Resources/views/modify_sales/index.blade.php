@@ -30,6 +30,7 @@
                     <th>Effective Date</th>
                     <th>Work Order No</th>
                     <th>MQ No</th>
+                    
                     <th>Action</th>
                 </tr>
             </thead>

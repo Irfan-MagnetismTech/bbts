@@ -30,6 +30,7 @@
                     <th>Client No</th>
                     <th>FR No</th>
                     <th>Date</th>
+                    <th>Reason</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -52,7 +53,20 @@
                         <td>{{ $client_requirement->client_no }}</td>
                         <td>{{ $client_requirement->fr_no }}</td>
                         <td>{{ $client_requirement->date }}</td>
-                        <td>{{ $client_requirement->change_type ?? '' }}</td>
+                        <td>
+                            @php
+                                $reasons = json_decode($client_requirement->change_type);
+                            @endphp
+                            @if ($reasons)
+                                @foreach ($reasons as $key => $reason)
+                                    @if ($key == 0)
+                                        {{ $reason }}
+                                    @else
+                                        <br /> {{ $reason }}
+                                    @endif
+                                @endforeach
+                            @endif
+                        </td>
                         <td>
                             <div class="icon-btn">
                                 {{-- @dd(!empty($client_requirement->modificationSurvey)); --}}
