@@ -40,6 +40,7 @@
                     <th>Client No</th>
                     <th>FR No</th>
                     <th>Date</th>
+                    <th>Reason</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -51,6 +52,7 @@
                         <td>{{ $client_requirement->client_no }}</td>
                         <td>{{ $client_requirement->fr_no }}</td>
                         <td>{{ $client_requirement->date }}</td>
+                        <td>{{ $client_requirement->change_type ?? '' }}</td>
                         <td>
                             <div class="icon-btn">
                                 {{-- @dd(!empty($client_requirement->modificationSurvey)); --}}
@@ -68,7 +70,7 @@
                                             class="btn btn-sm btn-success">Add Survey</a>
                                     @elseif(empty($client_requirement->offerByConnectivity))
                                         <a href="{{ url("changes/add-modified-offer/$client_requirement->id/create") }}"
-                                            class="btn btn-sm btn-success">Add Offer</a> 
+                                            class="btn btn-sm btn-success">Add Offer</a>
                                     @elseif(!empty($client_requirement->offerByConnectivity) && empty($client_requirement->modificationSale))
                                         <a href="{{ url("changes/sales-modification/$client_requirement->id/create") }}"
                                             class="btn btn-sm btn-success">Add Sale</a>
