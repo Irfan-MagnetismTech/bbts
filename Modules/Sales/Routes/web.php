@@ -76,4 +76,5 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('get-pop-details', [CommonController::class, 'getPopDetails'])->name('get-pop-details');
     Route::get('get-existing-link-list', [CommonController::class, 'getExistingLinkList'])->name('get-existing-link-list');
     Route::get('export-feasibility-requirement', [FeasibilityRequirementController::class, 'exportFeasibilityRequirement'])->name('export-feasibility-requirement');
+    Route::get('uploadBillingAddress', [ClientProfileController::class, 'uploadBillingAddress'])->name('uploadBillingAddress');
 });

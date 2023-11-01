@@ -268,7 +268,7 @@
             @can('client-list')
                 <ul class="pcoded-submenu">
                     <li class="{{ request()->routeIs('client-profile.index') ? 'active' : null }}">
-                        <a href="{{ route('client-profile.create') }}"> <span class="pcoded-micon"><i
+                        <a href="{{ route('client-profile.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Client List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>

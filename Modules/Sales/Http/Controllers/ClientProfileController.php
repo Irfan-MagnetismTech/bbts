@@ -112,14 +112,14 @@ class ClientProfileController extends Controller
      */
     public function edit($id)
     {
-        $client_profile = Client::with('division', 'district', 'thana', 'billingAddress', 'collectionAddress')->find($id);
+        $client_profile = Client::with('division', 'district', 'thana', 'billingAddres', 'collectionAddres')->find($id);
         $divisions = Division::all();
         $districts = District::where('division_id', $client_profile->division_id)->get();
         $thanas = Thana::where('district_id', $client_profile->district_id)->get();
-        $billing_thanas = Thana::where('district_id', $client_profile->billingAddress->district_id)->get();
-        $collection_thanas = Thana::where('district_id', $client_profile->collectionAddress->district_id)->get();
-        $billing_districts = District::where('division_id', $client_profile->billingAddress->division_id)->get();
-        $collection_districts = District::where('division_id', $client_profile->collectionAddress->division_id)->get();
+        $billing_thanas = Thana::where('district_id', $client_profile->billingAddres?->district_id)->get();
+        $collection_thanas = Thana::where('district_id', $client_profile->collectionAddres?->district_id)->get();
+        $billing_districts = District::where('division_id', $client_profile->billingAddres?->division_id)->get();
+        $collection_districts = District::where('division_id', $client_profile->collectionAddres?->division_id)->get();
         $organizations = [
             '1' => 'School',
             '2' => 'Hospital',
@@ -225,5 +225,30 @@ class ClientProfileController extends Controller
             'client_no' => $information['client_no'],
         ];
         return $client_collection_info;
+    }
+
+    public function uploadBillingAddress(){
+
+        $clients = Client::whereNot('id',1)
+        // ->limit(10)
+        ->get();
+
+        // $data = [];
+        foreach($clients as $client){
+            $data = [
+                'client_no' => $client->client_no,
+                'client_id' => $client->id,
+                'contact_person' => $client->contact_person,
+                'designation' => $client->designation,
+                'phone' => $client->contact_no,
+                'email' => $client->email,
+                'division_id' => $client->division_id,
+                'district_id' => $client->district_id,
+                'thana_id' => $client->thana_id,
+                'address' => $client->location,
+            ];
+            $client->billingAddres()->create($data);
+            $client->collectionAddres()->create($data);
+        } 
     }
 }

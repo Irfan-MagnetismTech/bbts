@@ -43,9 +43,19 @@ class Client extends Model
         return $this->hasMany(BillingAddress::class, 'client_id', 'id');
     }
 
+    public function billingAddres()
+    {
+        return $this->hasOne(BillingAddress::class, 'client_id', 'id')->orderBy('id','asc');
+    }
+
     public function collectionAddress()
     {
         return $this->hasMany(CollectionAddress::class, 'client_id', 'id');
+    }
+
+    public function collectionAddres()
+    {
+        return $this->hasOne(CollectionAddress::class, 'client_id', 'id')->orderBy('id','asc');
     }
 
     public function division()

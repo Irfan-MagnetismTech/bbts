@@ -57,27 +57,27 @@
     $collection_districts = $collection_districts ?? null;
     $reg_no = $is_old ? old('reg_no') : $client_profile->reg_no ?? null;
     //billing info
-    $billing_contact_person = $is_old ? old('billing_contact_person') : $client_profile->billingAddress->contact_person ?? null;
-    $billing_designation = $is_old ? old('billing_designation') : $client_profile->billingAddress->designation ?? null;
-    $billing_contact_no = $is_old ? old('billing_contact_no') : $client_profile->billingAddress->phone ?? null;
-    $billing_email = $is_old ? old('billing_email') : $client_profile->billingAddress->email ?? null;
-    $billing_address = $is_old ? old('billing_address') : $client_profile->billingAddress->address ?? null;
-    $single_billing_division = $is_old ? old('billing_division') : $client_profile->billingAddress->division_id ?? null;
-    $single_billing_district = $is_old ? old('billing_district') : $client_profile->billingAddress->district_id ?? null;
-    $single_billing_thana = $is_old ? old('billing_thana') : $client_profile->billingAddress->thana_id ?? null;
-    $submission_by = $is_old ? old('submission_by') : $client_profile->billingAddress->submission_by ?? null;
-    $submission_date = $is_old ? old('submission_date') : $client_profile->billingAddress->submission_date ?? null;
+    $billing_contact_person = $is_old ? old('billing_contact_person') : $client_profile->billingAddres->contact_person ?? null;
+    $billing_designation = $is_old ? old('billing_designation') : $client_profile->billingAddres->designation ?? null;
+    $billing_contact_no = $is_old ? old('billing_contact_no') : $client_profile->billingAddres->phone ?? null;
+    $billing_email = $is_old ? old('billing_email') : $client_profile->billingAddres->email ?? null;
+    $billing_address = $is_old ? old('billing_address') : $client_profile->billingAddres->address ?? null;
+    $single_billing_division = $is_old ? old('billing_division') : $client_profile->billingAddres->division_id ?? null;
+    $single_billing_district = $is_old ? old('billing_district') : $client_profile->billingAddres->district_id ?? null;
+    $single_billing_thana = $is_old ? old('billing_thana') : $client_profile->billingAddres->thana_id ?? null;
+    $submission_by = $is_old ? old('submission_by') : $client_profile->billingAddres->submission_by ?? null;
+    $submission_date = $is_old ? old('submission_date') : $client_profile->billingAddres->submission_date ?? null;
     //collection info
-    $collection_contact_person = $is_old ? old('collection_contact_person') : $client_profile->collectionAddress->contact_person ?? null;
-    $collection_designation = $is_old ? old('collection_designation') : $client_profile->collectionAddress->designation ?? null;
-    $collection_contact_no = $is_old ? old('collection_contact_no') : $client_profile->collectionAddress->phone ?? null;
-    $collection_email = $is_old ? old('collection_email') : $client_profile->collectionAddress->email ?? null;
-    $collection_address = $is_old ? old('collection_address') : $client_profile->collectionAddress->address ?? null;
-    $single_collection_division = $is_old ? old('collection_division') : $client_profile->collectionAddress->division_id ?? null;
-    $single_collection_district = $is_old ? old('collection_district') : $client_profile->collectionAddress->district_id ?? null;
-    $single_collection_thana = $is_old ? old('collection_thana') : $client_profile->collectionAddress->thana_id ?? null;
-    $payment_method = $is_old ? old('payment_method') : $client_profile->collectionAddress->payment_method ?? null;
-    $payment_date = $is_old ? old('payment_date') : $client_profile->collectionAddress->payment_date ?? null;
+    $collection_contact_person = $is_old ? old('collection_contact_person') : $client_profile->collectionAddres->contact_person ?? null;
+    $collection_designation = $is_old ? old('collection_designation') : $client_profile->collectionAddres->designation ?? null;
+    $collection_contact_no = $is_old ? old('collection_contact_no') : $client_profile->collectionAddres->phone ?? null;
+    $collection_email = $is_old ? old('collection_email') : $client_profile->collectionAddres->email ?? null;
+    $collection_address = $is_old ? old('collection_address') : $client_profile->collectionAddres->address ?? null;
+    $single_collection_division = $is_old ? old('collection_division') : $client_profile->collectionAddres->division_id ?? null;
+    $single_collection_district = $is_old ? old('collection_district') : $client_profile->collectionAddres->district_id ?? null;
+    $single_collection_thana = $is_old ? old('collection_thana') : $client_profile->collectionAddres->thana_id ?? null;
+    $payment_method = $is_old ? old('payment_method') : $client_profile->collectionAddres->payment_method ?? null;
+    $payment_date = $is_old ? old('payment_date') : $client_profile->collectionAddres->payment_date ?? null;
     //document
     $nid = $is_old ? old('nid') : $client_profile->nid ?? null;
     $trade_license = $is_old ? old('trade_license') : $client_profile->trade_license ?? null;
