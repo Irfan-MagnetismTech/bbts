@@ -429,7 +429,7 @@ class SaleController extends Controller
                                 "material_id"   => $planLinkEquipment->material_id,
                                 "item_code"     => $planLinkEquipment->material->code,
                                 "req_key"       => $link_equipment_requisitionData->id . '-' . $planLinkEquipment->material->code,
-                                "brand_id"      => $planLinkEquipment->brand_id, 
+                                "brand_id"      => $planLinkEquipment->brand_id,
                                 "quantity"      => $planLinkEquipment->quantity,
                                 "model"         => $planLinkEquipment->model,
                             ];
@@ -564,7 +564,7 @@ class SaleController extends Controller
                 //             "quantity"      => $values3->quantity,
                 //             "model"         => $values3->model,
                 //         ];
-                //     } 
+                //     }
                 //  }
             }
             // $lastMRSId = ScmRequisition::latest()->first();
@@ -663,8 +663,15 @@ class SaleController extends Controller
         return PDF::loadView('sales::pnl.pnl_summary_pdf', ['feasibility_requirement' => $feasibility_requirement], [], [
             'format'                     => 'A4',
             'orientation'                => 'L',
-            'title'                      => 'PNL Summary',
-        ])->stream('summary.pdf');
+            'title'                      => 'PNL Summary PDF',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('pnl-summary.pdf');
         return view('sales::pnl.pnl_summary_pdf', compact('feasibility_requirement'));
     }
     public function pnlDetailsPdf($mq_no = null)
@@ -686,6 +693,13 @@ class SaleController extends Controller
             'format'                     => 'A4',
             'orientation'                => 'L',
             'title'                      => 'PNL Details',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
         ])->stream('details.pdf');
         return view('sales::pnl.pnl_details_pdf', compact('feasibility_requirement'));
     }

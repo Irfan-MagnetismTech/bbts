@@ -97,6 +97,12 @@
     $iteration = 1;
 @endphp
 <htmlpageheader name="page-header">
+    <div>
+        &nbsp;
+    </div>
+    <div>
+        &nbsp;
+    </div>
     <div style="width: 100%; text-align: center">
         <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
         <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>

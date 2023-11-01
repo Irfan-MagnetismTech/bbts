@@ -4,7 +4,7 @@ namespace Modules\SCM\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Modules\SCM\Entities\ScmErr;
-use Modules\SCM\Entities\ScmGatePass;
+use PDF;
 use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmWcr;
 use Illuminate\Http\JsonResponse;
@@ -369,6 +369,19 @@ class ScmChallanController extends Controller
     public function gatePassPdf($id = null)
     {
         $challan = ScmChallan::where('id', $id)->first();
+
+        return PDF::loadView('scm::challans.gate_pass_pdf', ['challan' => $challan], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'Challan Gate Pass',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('challan-gate-pass.pdf');
         return view('scm::challans.gate_pass_pdf', compact('challan'));
     }
 
@@ -397,6 +410,21 @@ class ScmChallanController extends Controller
                 ];
                 return $data;
             });
+
+        return PDF::loadView('scm::challans.challan_pdf', ['challan' => $challan], ['challanLines' => $challanLines], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'Challan PDF',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('challan.pdf');
+
+
         return view('scm::challans.challan_pdf', compact('challan','challanLines'));
     }
 

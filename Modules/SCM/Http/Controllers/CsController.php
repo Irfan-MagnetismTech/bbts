@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use PDF;
 use App\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
 use Modules\Sales\Entities\Client;
@@ -299,6 +300,18 @@ class CsController extends Controller
         $csMaterials = CsMaterial::latest()->get();
         $csSuppliers = CsSupplier::latest()->get();
 
+        return PDF::loadView('scm::cs.pdf', ['comparativeStatement' => $comparativeStatement, 'csMaterials' => $csMaterials, 'csSuppliers' => $csSuppliers], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'CS PDF',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('cs.pdf');
         return view('scm::cs.pdf', compact('comparativeStatement', 'csMaterials', 'csSuppliers'));
     }
     public function getIndentNo()

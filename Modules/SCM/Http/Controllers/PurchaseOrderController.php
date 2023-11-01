@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use PDF;
 use Modules\SCM\Entities\Supplier;
 use Termwind\Components\Dd;
 use Illuminate\Http\Request;
@@ -453,6 +454,18 @@ class PurchaseOrderController extends Controller
     public function pdf($id = null)
     {
         $purchase_order = PurchaseOrder::where('id', $id)->first();
+        return PDF::loadView('scm::purchase-orders.pdf', ['purchase_order' => $purchase_order], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'Purchase Order PDF',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('purchase-order.pdf');
         return view('scm::purchase-orders.pdf', compact('purchase_order'));
 
     }
