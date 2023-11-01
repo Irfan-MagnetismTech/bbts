@@ -29,7 +29,8 @@ class MaterialController extends Controller
 
     public function index()
     {
-        $materials = Material::with('unit')->get();
+        $materials = Material::with('unit','materialBrand.brands')->get();
+        // dd($materials);
         return view('scm::materials.index', compact('materials'));
     }
 
@@ -104,7 +105,12 @@ class MaterialController extends Controller
         $units = Unit::latest()->get();
         $brands = Brand::latest()->get();
         $selectedBrandIds = MaterialBrand::where('material_id', $material->id)->pluck('brand')->toArray();
-        $selectedBrandIdsString=$selectedBrandIds[0];
+        if (count($selectedBrandIds) > 0) {
+            $selectedBrandIdsString = $selectedBrandIds[0];
+        } else {
+            $selectedBrandIdsString = '';
+        }
+        // $selectedBrandIdsString=$selectedBrandIds[0];
         $selectedBrandIdsArray = explode(', ', $selectedBrandIdsString);
 
         $types = ['Drum', 'Item'];

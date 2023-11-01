@@ -13,8 +13,9 @@ class MaterialRequest extends FormRequest
      */
     public function rules()
     {
+        $id = request()->id;
         return [
-            'name' => 'unique:materials|required',
+            'name' => "required|unique:materials,name,$id",
         ];
     }
 

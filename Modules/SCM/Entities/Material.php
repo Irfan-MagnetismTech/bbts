@@ -23,4 +23,8 @@ class Material extends Model
     {
         return $this->belongsTo(MaterialBrand::class,'id','material_id');
     }
+
+    public function materialBrand(){
+        return $this->hasOne(MaterialBrand::class,'material_id');
+    }
 }

@@ -48,6 +48,7 @@
                 @method('PUT')
             @endif
             @csrf
+            <input type="hidden" name="id" value="{{ !empty($material) ? $material->id : null }}">
             <div class="row">
 
                 <div class="col-12">
