@@ -168,7 +168,7 @@
                                    readonly value="{{ $unit[$key] }}" id="unit">
                         </td>
                         <td>
-                            <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                            <select name="brand_id[]" class="form-control brand select2" autocomplete="off">
                                 <option value="">Select Brand</option>
                                 @foreach ($brands as $brand)
                                     <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
@@ -255,7 +255,7 @@
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                              <td>
-                             <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                             <select name="brand_id[]" class="form-control brand select2" autocomplete="off">
                              <option value="">Select Brand</option>
                              @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}">{{ $brand->name }}</option>

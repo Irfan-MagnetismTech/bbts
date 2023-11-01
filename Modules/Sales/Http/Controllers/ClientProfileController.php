@@ -247,8 +247,8 @@ class ClientProfileController extends Controller
                 'thana_id' => $client->thana_id,
                 'address' => $client->location,
             ];
-            $client->billingAddres()->create($data);
-            $client->collectionAddres()->create($data);
+            // $client->billingAddres()->create($data);
+            // $client->collectionAddres()->create($data);
         } 
     }
 }
