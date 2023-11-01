@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use PDF;
 use Illuminate\Http\Request;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\SCM\Entities\ScmMir;
@@ -182,6 +183,18 @@ class ScmGatePassController extends Controller
     public function pdf($id = null)
     {
         $gate_pass = ScmGatePass::where('id', $id)->first();
+        return PDF::loadView('scm::gate-passes.pdf', ['gate_pass' => $gate_pass], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'Gate Pass PDF',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('gate-pass.pdf');
         return view('scm::gate-passes.pdf', compact('gate_pass'));
     }
 }

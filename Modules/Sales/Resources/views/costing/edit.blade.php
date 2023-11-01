@@ -959,403 +959,399 @@
 @endsection
 
 @section('script')
-    <script>
-        $('#date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());
+<script>
+    $('#date').datepicker({
+        format: "dd-mm-yyyy",
+        autoclose: true,
+        todayHighlight: true,
+        showOtherMonths: true
+    }).datepicker("setDate", new Date());
 
-        $('.product_rate').on('keyup', function() {
-            var product_rate = $(this).val();
-            var product_quantity = $(this).closest('tr').find('.product_quantity').val();
-            var product_total = product_rate * product_quantity;
-            $(this).closest('tr').find('.product_price').val(product_total);
-            // var vat_perchant = $(this).closest('tr').find('.product_vat').val();
-            // var vat_amount = (product_total * vat_perchant) / 100;
-            // $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
-            productPartialTotal();
-        });
+    $('.product_rate, .product_quantity').on('keyup', function() {
+        var product_rate = $(this).val();
+        var product_quantity = $(this).closest('tr').find('.product_quantity').val();
+        var product_total = product_rate * product_quantity;
+        $(this).closest('tr').find('.product_price').val(product_total);
+        // var vat_perchant = $(this).closest('tr').find('.product_vat').val();
+        // var vat_amount = (product_total * vat_perchant) / 100;
+        // $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
+        productPartialTotal();
+    });
 
-        $('.product_operation_cost').on('keyup', function() {
-            var product_operation_cost = $(this).val();
-            var product_price = $(this).closest('tr').find('.product_price').val();
-            // var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
-            var product_total = parseInt(product_operation_cost) + parseInt(product_price);
-            $(this).closest('tr').find('.product_operation_cost_total').val(product_total);
-            // $('#total_product_cost').val(product_total); 
-            // $('#total_mrc').val(product_total); 
-            productPartialTotal();
-        });
+    $('.product_operation_cost').on('keyup', function() {
+        var product_operation_cost = $(this).val();
+        var product_price = $(this).closest('tr').find('.product_price').val();
+        // var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
+        var product_total = parseFloat(product_operation_cost) + parseFloat(product_price)
+        $(this).closest('tr').find('.product_operation_cost_total').val(product_total.toFixed(2));
+        // $('#total_product_cost').val(product_total); 
+        // $('#total_mrc').val(product_total); 
+        productPartialTotal();
+    });
 
-        function productPartialTotal() {
-            var product_total = 0;
-            $('.product_operation_cost').each(function() {
-                var value = parseInt($(this).val());
-                if (!isNaN(value)) {
-                    product_total += value;
-                }
-            });
-            $('#total_operation_cost').val(product_total);
+    function productPartialTotal() {
+        var product_total = 0;
+        const product_total_cost = $('.product_price').map(function() {
+            return parseFloat($(this).val()) || 0;
+        }).get().reduce((acc, val) => acc + val, 0).toFixed(2);
+        console.log('product_total_cost', product_total_cost)
 
-            var total_with_operation = 0;
-            $('.product_operation_cost_total').each(function() {
-                var value = parseInt($(this).val());
-                if (!isNaN(value)) {
-                    total_with_operation += value;
-                }
-            });
 
-            const product_total_cost = $('.product_price').map(function() {
-                return parseInt($(this).val()) || 0;
-            }).get().reduce((acc, val) => acc + val, 0);
-            $('#product_total_cost').val(product_total_cost);
+        const product_operation_cost = $('.product_operation_cost').map(function() {
+            return parseFloat($(this).val()) || 0;
+        }).get().reduce((acc, val) => acc + val, 0).toFixed(2);
 
-            $('#total_with_operation_amount').val(total_with_operation);
+        const product_operation_cost_total = $('.product_operation_cost_total').map(function() {
+            return parseFloat($(this).val()) || 0;
+        }).get().reduce((acc, val) => acc + val, 0).toFixed(2);
 
-            $('#total_product_cost').val(total_with_operation);
-            $('#total_mrc').val(total_with_operation);
+        $('#product_total_cost').val(product_total_cost);
+        $('#total_operation_cost').val(product_operation_cost);
+        $('#total_with_operation_amount').val(product_operation_cost_total);
 
-        }
+    }
 
-        $('.equipment_rate').on('keyup', function() {
-            var equipment_rate = $(this).val();
-            var equipment_quantity = $(this).closest('tr').find('.equipment_quantity').val();
-            var equipment_total = parseInt(equipment_rate) * parseInt(equipment_quantity);
-            $(this).closest('tr').find('.equipment_total').val(equipment_total);
+    $('.equipment_rate').on('keyup', function() {
+        var equipment_rate = $(this).val();
+        var equipment_quantity = $(this).closest('tr').find('.equipment_quantity').val();
+        var equipment_total = parseFloat(equipment_rate) * parseFloat(equipment_quantity);
+        $(this).closest('tr').find('.equipment_total').val(equipment_total.toFixed(2));
+        equipmentPartialTotal();
+    });
+
+    $('#equipment_deployment_cost, #equipment_perchantage_interest, #equipment_perchantage_vat, #equipment_perchantage_tax')
+        .on('keyup', function() {
             equipmentPartialTotal();
         });
 
-        $('#equipment_deployment_cost, #equipment_perchantage_interest, #equipment_perchantage_vat, #equipment_perchantage_tax')
-            .on('keyup', function() {
-                equipmentPartialTotal();
-            });
+    function equipmentPartialTotal() {
+        var equipment_total = 0;
+        var client_equipment_total = 0;
 
-        function equipmentPartialTotal() {
-            var equipment_total = 0;
-            var client_equipment_total = 0;
+        $('.equipment_total').each(function() {
+            var value = parseFloat($(this).val())
+            if (!isNaN(value)) {
+                equipment_total += value;
+            }
+            var ownership = $(this).closest('tr').find('.equipment_ownership').val();
+            console.log('ownership', ownership)
+            if (ownership == 'Client' && !isNaN(value)) {
+                client_equipment_total += value;
 
-            $('.equipment_total').each(function() {
-                var value = parseInt($(this).val());
-                if (!isNaN(value)) {
-                    equipment_total += value;
-                }
-                var ownership = $(this).closest('tr').find('.equipment_ownership').val();
-                console.log('ownership', ownership)
-                if (ownership == 'Client' && !isNaN(value)) {
-                    client_equipment_total += value;
-
-                }
-            });
-
-            $('#equipment_wise_total').val(equipment_total);
-            $('#client_equipment_total').val(client_equipment_total);
-            var partial_total = equipment_total - client_equipment_total;
-            $('#equipment_partial_total').val(equipment_total - client_equipment_total);
-            var development_cost = $('#equipment_deployment_cost').val() ? $('#equipment_deployment_cost').val() : 0;
-            var interest_perchat_amount = (partial_total * $('#equipment_perchantage_interest').val()) / 100;
-            var interest = $('#equipment_perchantage_interest').val() ? interest_perchat_amount : 0;
-            $('#equipment_interest').val(interest_perchat_amount)
-            var perchantage_vat_amount = (partial_total * $('#equipment_perchantage_vat').val()) / 100;
-            $('#equipment_vat').val(perchantage_vat_amount)
-            var vat = $('#equipment_perchantage_vat').val() ? perchantage_vat_amount : 0;
-            var perchantage_tax_amount = (partial_total * $('#equipment_perchantage_tax').val()) / 100;
-            var tax = $('#equipment_perchantage_tax').val() ? perchantage_tax_amount : 0;
-            $('#equipment_tax').val(perchantage_tax_amount)
-            var total = parseInt(partial_total) + parseInt(development_cost) + parseInt(interest) + parseInt(
-                vat) + parseInt(tax);
-            $('#equipment_grand_total').val(total);
-        }
-
-        $('#calculate_data').on('click', function() {
-            // alert('fine')
-            equipmentPartialTotal()
-        })
-
-        $('#equipment_otc').on('keyup', function() {
-            var equipment_otc = $(this).val();
-            var equipment_total = $('#equipment_grand_total').val();
-            var month = $('#month').val();
-            var equipment_roi = (parseInt(equipment_total) - parseInt(equipment_otc)) / parseInt(month);
-            $('#equipment_roi').val(equipment_roi);
-        });
-
-        $('.plan_link_rate').on('keyup', function() {
-            var plan_link_rate = $(this).val();
-            var plan_link_quantity = $(this).closest('.PlanLinkMainRow').find('.plan_link_quantity').val();
-            var plan_link_total = parseInt(plan_link_quantity) * parseInt(plan_link_rate);
-            $(this).closest('.PlanLinkMainRow').find('.plan_equipment_capacity').val(plan_link_total);
-            $(this).closest('.PlanLinkMainRow').find('.plan_link_total').val(plan_link_total);
-        });
-
-        $('.plan_equipment_rate').on('keyup', function() {
-            var plan_equipment_rate = $(this).val();
-            var plan_all_equipment_total = 0;
-            var plan_client_equipment_total = 0;
-            var plan_equipment_quantity = $(this).closest('tr').find(
-                '.plan_equipment_quantity').val();
-            var equipment_total = parseInt(plan_equipment_quantity) * parseInt(plan_equipment_rate);
-            $(this).closest('tr').find('.plan_equipment_total').val(equipment_total);
-            $(this).closest('.PlanLinkMainRow').find('.plan_equipment_total').each(function() {
-                var value = parseInt($(this).val());
-                if (!isNaN(value)) {
-                    plan_all_equipment_total += value;
-                }
-                var ownership = $(this).closest('tr').find('.plan_equipment_ownership').val();
-                if (ownership == 'Client' && !isNaN(value)) {
-                    plan_client_equipment_total += value;
-                }
-            });
-            console.log('plan_all_equipment_total', plan_all_equipment_total)
-            console.log('plan_client_equipment_total', plan_client_equipment_total)
-            var plan_equipment_partial_total = plan_all_equipment_total - plan_client_equipment_total;
-            $(this).closest('.PlanLinkMainRow').find('.plan_all_equipment_total').val(plan_all_equipment_total);
-            $(this).closest('.PlanLinkMainRow').find('.plan_client_equipment_total').val(
-                plan_client_equipment_total);
-            $(this).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total').val(
-                plan_equipment_partial_total);
-            // planEquipmentPartialTotal(this);
-            // planEquipmentInvestTotal(this);
-            // calculatePlanEquipmentROI(this)
-        });
-
-        $('.plan_equipment_deployment_cost, .plan_equipment_perchantage_interest, .plan_equipment_perchantage_vat, .plan_equipment_perchantage_tax')
-            .on('keyup',
-                function() {
-                    var event = this;
-                    planEquipmentPartialTotal(event);
-                    planEquipmentInvestTotal(event);
-                    calculatePlanEquipmentROI(event);
-                });
-
-        function planEquipmentPartialTotal(event) {
-            var plan_equipment_partial_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total')
-                .val();
-            var deployment_cost = $(event).closest('.PlanLinkMainRow').find(
-                '.plan_equipment_deployment_cost').val();
-            var plan_equipment_deployment_cost = deployment_cost ? deployment_cost : 0;
-            var equipment_perchantage_interest = $(event).closest('.PlanLinkMainRow').find(
-                '.plan_equipment_perchantage_interest').val();
-            var plan_equipment_perchantage_interest_amount = (plan_equipment_partial_total *
-                equipment_perchantage_interest) / 100;
-
-            var plan_equipment_interest = plan_equipment_perchantage_interest_amount ?
-                plan_equipment_perchantage_interest_amount : 0;
-            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_interest').val(plan_equipment_interest);
-            var plan_equipment_total = parseInt(plan_equipment_partial_total) + parseInt(plan_equipment_deployment_cost) +
-                parseInt(plan_equipment_interest);
-            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_grand_total').val(plan_equipment_total);
-        }
-
-
-        $('.plan_equipment_perchantage_vat, .plan_equipment_perchantage_tax').on('keyup', function() {
-            var event = this;
-            planEquipmentPartialTotal(event);
-            planEquipmentInvestTotal(event);
-            calculatePlanEquipmentROI(event)
-
-        });
-
-        function planEquipmentInvestTotal(event) {
-            var plan_equipment_grand_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_grand_total').val();
-            var equipment_perchantage_vat = $(event).closest('.PlanLinkMainRow').find(
-                '.plan_equipment_perchantage_vat').val() || 0;
-            var plan_equipment_perchantage_vat_amount = (plan_equipment_grand_total * equipment_perchantage_vat) / 100;
-            var plan_equipment_vat = plan_equipment_perchantage_vat_amount ? plan_equipment_perchantage_vat_amount : 0;
-            var equipment_perchantage_tax = $(event).closest('.PlanLinkMainRow').find(
-                '.plan_equipment_perchantage_tax').val() || 0;
-
-            var plan_equipment_perchantage_tax_amount = (plan_equipment_grand_total * equipment_perchantage_tax) / 100;
-            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_tax').val(plan_equipment_perchantage_tax_amount);
-            var plan_equipment_tax = plan_equipment_perchantage_tax_amount ? plan_equipment_perchantage_tax_amount : 0;
-            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_vat').val(plan_equipment_vat);
-            var plan_equipment_invest_total = parseInt(plan_equipment_grand_total) + parseInt(plan_equipment_vat) +
-                parseInt(plan_equipment_tax);
-            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_inv').val(plan_equipment_invest_total);
-        }
-
-        $('.plan_equipment_otc, .plan_equipment_operation_cost').on('keyup', function() {
-            var event = this;
-            calculatePlanEquipmentROI(event);
-        });
-
-        function calculatePlanEquipmentROI(event) {
-            var plan_equipment_otc = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_otc').val();
-            var plan_equipment_total_inv = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_inv').val();
-            var plan_equipment_month = $('#month').val();
-            var plan_equipment_roi = ((parseInt(plan_equipment_total_inv) - parseInt(plan_equipment_otc)) / parseInt(
-                plan_equipment_month)).toFixed(2);
-            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_roi').val(plan_equipment_roi);
-            var capacity_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_capacity').val();
-            var plan_equipment_operation_cost = $(event).closest('.PlanLinkMainRow').find(
-                '.plan_equipment_operation_cost').val();
-            var plan_equipment_operation_cost = plan_equipment_operation_cost ? plan_equipment_operation_cost : 0;
-            var plan_equipment_total = parseInt(capacity_total) + parseInt(plan_equipment_operation_cost) + parseInt(
-                plan_equipment_roi);
-            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_mrc').val(plan_equipment_total);
-        }
-
-        $('.plan_link_status').click(function(event) {
-            let total_mrc = 0;
-            let total_otc = 0;
-            let total_equipment_investment = 0;
-            let total_plan_equipment_otc = 0;
-            const planLinkMainRows = $('.PlanLinkMainRow');
-
-            $('.plan_link_status:checked').each(function() {
-                const $this = $(this);
-                const plan_link_total_mrc = $this.closest('.PlanLinkMainRow').find(
-                    '.plan_equipment_total_mrc').val();
-                total_mrc += parseFloat(plan_link_total_mrc);
-
-                total_equipment_investment += parseFloat($(this).closest('.PlanLinkMainRow').find(
-                    '.plan_equipment_total_inv').val()) || 0;
-
-                total_plan_equipment_otc += parseFloat($(this).closest('.PlanLinkMainRow').find(
-                    '.plan_equipment_otc').val()) || 0;
-
-            });
-
-            console.log('total_mrc', total_mrc)
-
-            const equipment_grand_total = parseInt($('#equipment_grand_total').val()) || 0;
-            const total_investment = equipment_grand_total + total_equipment_investment;
-            $('#total_investment').val(total_investment);
-            const total_equipment_otc = parseInt($('#equipment_otc').val()) || 0;
-            total_otc = total_plan_equipment_otc + total_equipment_otc;
-            $('#total_otc').val(total_otc);
-            const equipment_roi = parseInt($('#equipment_roi').val()) || 0;
-            const total_service_cost = (total_mrc + equipment_roi) || 0;
-            $('#total_service_cost').val(total_service_cost);
-
-            const total_product_cost = parseInt($('#total_with_operation_amount').val()) || 0;
-            $('#total_product_cost').val(total_product_cost);
-            $('#total_mrc').val(total_service_cost + total_product_cost);
-        });
-
-
-        //  Margin Calculation
-        $('#management_perchantage').on('keyup', function() {
-            var margin = $(this).val();
-            var total_mrc = parseFloat($('#total_mrc').val());
-            var total_mrc_amount = total_mrc * margin / 100;
-            $('#management_cost_amount').val(total_mrc_amount);
-
-            var product_total_cost = parseFloat($('#product_total_cost').val());
-            var management_cost_total = total_mrc + total_mrc_amount;
-            $('#management_cost_total').val(management_cost_total);
-
-            var perchantage = (management_cost_total / product_total_cost) * 100 - 100;
-            $('.product_rate').each(function() {
-
-                var product_rate = parseFloat($(this).val());
-                var product_rate_perchantage = product_rate.toFixed(2) * (perchantage / 100);
-                var product_margin_rate = (product_rate + product_rate_perchantage).toFixed(2);
-                $(this).closest('tr').find('.offer_price').val(product_margin_rate);
-                var total_margin_amount = product_margin_rate * parseFloat($(this).closest('tr').find(
-                    '.product_quantity').val());
-                $(this).closest('tr').find('.product_offer_total').val(total_margin_amount.toFixed(2));
-
-                var vat_perchant = $(this).closest('tr').find('.product_vat').val();
-                var vat_amount = (total_margin_amount * vat_perchant) / 100;
-                $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
-                $(this).closest('tr').find('.total_price').val((total_margin_amount + vat_amount).toFixed(
-                    2));
-            });
-            var product_grand_total = $('.product_offer_total').get()
-                .reduce(function(sum, el) {
-                    return sum + parseFloat(el.value);
-                }, 0);
-            var total_vat = $('.product_vat_amount').get()
-                .reduce(function(sum, el) {
-                    return sum + parseFloat(el.value);
-                }, 0);
-            var grand_total_price = $('.total_price').get()
-                .reduce(function(sum, el) {
-                    return sum + parseFloat(el.value);
-                }, 0);
-
-            const client_equipment_total = parseFloat($('#client_equipment_total').val());
-
-            //client equipment total
-            let plan_client_equipment_total = 0;
-            let plan_equipment_otc = 0;
-
-            $('.plan_link_status').each(function() {
-                if ($(this).is(':checked')) {
-                    plan_client_equipment_total += parseFloat($(this).closest('.PlanLinkMainRow').find(
-                        '.plan_client_equipment_total').val()) ?? 0;
-                    plan_equipment_otc += parseFloat($(this).closest('.PlanLinkMainRow').find(
-                        '.plan_equipment_otc').val()) ?? 0;
-                }
-            });
-
-            let equipment_price_for_client = client_equipment_total + plan_client_equipment_total;
-            $('#equipment_price_for_client').val(equipment_price_for_client.toFixed(2));
-
-            let equipment_otc = parseFloat($('#equipment_otc').val());
-            let total_equipment_otc = equipment_otc + plan_equipment_otc + equipment_price_for_client
-            $('#total_otc_with_client_equipment').val(total_equipment_otc);
-            $('#product_grand_total').val(product_grand_total.toFixed(2));
-            $('#total_vat').val(total_vat.toFixed(2));
-            $('#grand_total_price').val(grand_total_price.toFixed(2));
-        });
-
-        //This is button function for add new row in plan link
-
-        $(".input").on("keydown", function(e) {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                var currentIndex = $(".input").index(this);
-                var nextIndex = currentIndex + 1;
-                var inputs = $(".input");
-
-                if (nextIndex < inputs.length) {
-                    var nextInput = inputs.eq(nextIndex);
-                    nextInput.focus();
-                }
-            } else if (e.keyCode === 40 || e.which === 40) {
-                e.preventDefault();
-                var currentIndex = $(".input").index(this);
-                var nextIndex = currentIndex + 1;
-                var inputs = $(".input");
-
-                if (nextIndex < inputs.length) {
-                    var nextInput = inputs.eq(nextIndex);
-                    nextInput.focus();
-                }
-            } else if (e.keyCode === 38 || e.which === 38) {
-                e.preventDefault();
-                var currentIndex = $(".input").index(this);
-                var nextIndex = currentIndex - 1;
-                var inputs = $(".input");
-
-                if (nextIndex < inputs.length) {
-                    var nextInput = inputs.eq(nextIndex);
-                    nextInput.focus();
-                }
-            } else if (e.keyCode === 37 || e.which === 37) {
-                e.preventDefault();
-                var currentIndex = $(".input").index(this);
-                var nextIndex = currentIndex - 1;
-                var inputs = $(".input");
-
-                if (nextIndex < inputs.length) {
-                    var nextInput = inputs.eq(nextIndex);
-                    nextInput.focus();
-                }
-            } else if (e.keyCode === 39 || e.which === 39) {
-                e.preventDefault();
-                var currentIndex = $(".input").index(this);
-                var nextIndex = currentIndex + 1;
-                var inputs = $(".input");
-
-                if (nextIndex < inputs.length) {
-                    var nextInput = inputs.eq(nextIndex);
-                    nextInput.focus();
-                }
             }
         });
-    </script>
+
+        $('#equipment_wise_total').val(equipment_total);
+        $('#client_equipment_total').val(client_equipment_total);
+        var partial_total = equipment_total - client_equipment_total;
+        $('#equipment_partial_total').val(equipment_total - client_equipment_total);
+        var development_cost = $('#equipment_deployment_cost').val() ? $('#equipment_deployment_cost').val() : 0;
+        var interest_perchat_amount = (partial_total * $('#equipment_perchantage_interest').val()) / 100;
+        var interest = $('#equipment_perchantage_interest').val() ? interest_perchat_amount : 0;
+        $('#equipment_interest').val(interest_perchat_amount)
+        var perchantage_vat_amount = (partial_total * $('#equipment_perchantage_vat').val()) / 100;
+        $('#equipment_vat').val(perchantage_vat_amount)
+        var vat = $('#equipment_perchantage_vat').val() ? perchantage_vat_amount : 0;
+        var perchantage_tax_amount = (partial_total * $('#equipment_perchantage_tax').val()) / 100;
+        var tax = $('#equipment_perchantage_tax').val() ? perchantage_tax_amount : 0;
+        $('#equipment_tax').val(perchantage_tax_amount)
+        var total = parseFloat(partial_total) + parseFloat(development_cost) + parseFloat(
+            interest) + parseFloat(
+            vat) + parseFloat(tax);
+        $('#equipment_grand_total').val(total.toFixed(2));
+    }
+
+    $('#calculate_data').on('click', function() {
+        // alert('fine')
+        equipmentPartialTotal()
+    })
+
+    $('#equipment_otc').on('keyup', function() {
+        var equipment_otc = $(this).val();
+        var equipment_total = $('#equipment_grand_total').val();
+        var month = $('#month').val();
+        var equipment_roi = (parseFloat(equipment_total).toFixed(2) - parseFloat(equipment_otc)).toFixed(2) /
+            parseInt(month);
+        $('#equipment_roi').val(equipment_roi);
+    });
+
+    $('.plan_link_rate').on('keyup', function() {
+        var plan_link_rate = $(this).val();
+        var plan_link_quantity = $(this).closest('.PlanLinkMainRow').find('.plan_link_quantity').val();
+        var plan_link_total = parseFloat(plan_link_quantity).toFixed(2) * parseFloat(plan_link_rate).toFixed(2);
+        $(this).closest('.PlanLinkMainRow').find('.plan_equipment_capacity').val(plan_link_total);
+        $(this).closest('.PlanLinkMainRow').find('.plan_link_total').val(plan_link_total);
+    });
+
+    $('.plan_equipment_rate').on('keyup', function() {
+        var plan_equipment_rate = $(this).val();
+        var plan_all_equipment_total = 0;
+        var plan_client_equipment_total = 0;
+        var plan_equipment_quantity = $(this).closest('tr').find(
+            '.plan_equipment_quantity').val();
+        var equipment_total = parseFloat(plan_equipment_quantity).toFixed(2) * parseInt(plan_equipment_rate)
+            .toFixed(2);
+        $(this).closest('tr').find('.plan_equipment_total').val(equipment_total);
+        $(this).closest('.PlanLinkMainRow').find('.plan_equipment_total').each(function() {
+            var value = parseInt($(this).val());
+            if (!isNaN(value)) {
+                plan_all_equipment_total += value;
+            }
+            var ownership = $(this).closest('tr').find('.plan_equipment_ownership').val();
+            if (ownership == 'Client' && !isNaN(value)) {
+                plan_client_equipment_total += value;
+            }
+        });
+        console.log('plan_all_equipment_total', plan_all_equipment_total)
+        console.log('plan_client_equipment_total', plan_client_equipment_total)
+        var plan_equipment_partial_total = plan_all_equipment_total - plan_client_equipment_total;
+        $(this).closest('.PlanLinkMainRow').find('.plan_all_equipment_total').val(plan_all_equipment_total);
+        $(this).closest('.PlanLinkMainRow').find('.plan_client_equipment_total').val(
+            plan_client_equipment_total);
+        $(this).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total').val(
+            plan_equipment_partial_total);
+        // planEquipmentPartialTotal(this);
+        // planEquipmentInvestTotal(this);
+        // calculatePlanEquipmentROI(this)
+    });
+
+    $('.plan_equipment_deployment_cost, .plan_equipment_perchantage_interest, .plan_equipment_perchantage_vat, .plan_equipment_perchantage_tax')
+        .on('keyup',
+            function() {
+                var event = this;
+                planEquipmentPartialTotal(event);
+                planEquipmentInvestTotal(event);
+                calculatePlanEquipmentROI(event);
+            });
+
+    function planEquipmentPartialTotal(event) {
+        var plan_equipment_partial_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_partial_total')
+            .val();
+        var deployment_cost = $(event).closest('.PlanLinkMainRow').find(
+            '.plan_equipment_deployment_cost').val();
+        var plan_equipment_deployment_cost = deployment_cost ? deployment_cost : 0;
+        var equipment_perchantage_interest = $(event).closest('.PlanLinkMainRow').find(
+            '.plan_equipment_perchantage_interest').val();
+        var plan_equipment_perchantage_interest_amount = (plan_equipment_partial_total *
+            equipment_perchantage_interest) / 100;
+
+        var plan_equipment_interest = plan_equipment_perchantage_interest_amount ?
+            plan_equipment_perchantage_interest_amount : 0;
+        $(event).closest('.PlanLinkMainRow').find('.plan_equipment_interest').val(plan_equipment_interest);
+        var plan_equipment_total = parseFloat(plan_equipment_partial_total)+ parseFloat(
+                plan_equipment_deployment_cost) +
+            parseFloat(plan_equipment_interest);
+        $(event).closest('.PlanLinkMainRow').find('.plan_equipment_grand_total').val(plan_equipment_total.toFixed(2));
+    }
+
+
+    $('.plan_equipment_perchantage_vat, .plan_equipment_perchantage_tax').on('keyup', function() {
+        var event = this;
+        planEquipmentPartialTotal(event);
+        planEquipmentInvestTotal(event);
+        calculatePlanEquipmentROI(event)
+
+    });
+
+    function planEquipmentInvestTotal(event) {
+        var plan_equipment_grand_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_grand_total').val();
+        var equipment_perchantage_vat = $(event).closest('.PlanLinkMainRow').find(
+            '.plan_equipment_perchantage_vat').val() || 0;
+        var plan_equipment_perchantage_vat_amount = (plan_equipment_grand_total * equipment_perchantage_vat) / 100;
+        var plan_equipment_vat = plan_equipment_perchantage_vat_amount ? plan_equipment_perchantage_vat_amount : 0;
+        var equipment_perchantage_tax = $(event).closest('.PlanLinkMainRow').find(
+            '.plan_equipment_perchantage_tax').val() || 0;
+
+        var plan_equipment_perchantage_tax_amount = (plan_equipment_grand_total * equipment_perchantage_tax) / 100;
+        $(event).closest('.PlanLinkMainRow').find('.plan_equipment_tax').val(plan_equipment_perchantage_tax_amount);
+        var plan_equipment_tax = plan_equipment_perchantage_tax_amount ? plan_equipment_perchantage_tax_amount : 0;
+        $(event).closest('.PlanLinkMainRow').find('.plan_equipment_vat').val(plan_equipment_vat);
+        var plan_equipment_invest_total = parseInt(plan_equipment_grand_total) + parseInt(plan_equipment_vat) +
+            parseInt(plan_equipment_tax);
+        $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_inv').val(plan_equipment_invest_total);
+    }
+
+    $('.plan_equipment_otc, .plan_equipment_operation_cost').on('keyup', function() {
+        var event = this;
+        calculatePlanEquipmentROI(event);
+    });
+
+    function calculatePlanEquipmentROI(event) {
+        var plan_equipment_otc = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_otc').val();
+        var plan_equipment_total_inv = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_inv').val();
+        var plan_equipment_month = $('#month').val();
+        var plan_equipment_roi = ((parseInt(plan_equipment_total_inv) - parseInt(plan_equipment_otc)) / parseInt(
+            plan_equipment_month)).toFixed(2);
+        $(event).closest('.PlanLinkMainRow').find('.plan_equipment_roi').val(plan_equipment_roi);
+        var capacity_total = $(event).closest('.PlanLinkMainRow').find('.plan_equipment_capacity').val();
+        var plan_equipment_operation_cost = $(event).closest('.PlanLinkMainRow').find(
+            '.plan_equipment_operation_cost').val();
+        var plan_equipment_operation_cost = plan_equipment_operation_cost ? plan_equipment_operation_cost : 0;
+        var plan_equipment_total = parseInt(capacity_total) + parseInt(plan_equipment_operation_cost) + parseInt(
+            plan_equipment_roi);
+        $(event).closest('.PlanLinkMainRow').find('.plan_equipment_total_mrc').val(plan_equipment_total);
+    }
+
+    $('.plan_link_status').click(function(event) {
+        let total_mrc = 0;
+        let total_otc = 0;
+        let total_equipment_investment = 0;
+        let total_plan_equipment_otc = 0;
+        const planLinkMainRows = $('.PlanLinkMainRow');
+
+        $('.plan_link_status:checked').each(function() {
+            const $this = $(this);
+            const plan_link_total_mrc = $this.closest('.PlanLinkMainRow').find(
+                '.plan_equipment_total_mrc').val();
+            total_mrc += parseFloat(plan_link_total_mrc);
+
+            total_equipment_investment += parseFloat($(this).closest('.PlanLinkMainRow').find(
+                '.plan_equipment_total_inv').val()) || 0;
+
+            total_plan_equipment_otc += parseFloat($(this).closest('.PlanLinkMainRow').find(
+                '.plan_equipment_otc').val()) || 0;
+
+        });
+
+        console.log('total_mrc', total_mrc)
+
+        const equipment_grand_total = parseInt($('#equipment_grand_total').val()) || 0;
+        const total_investment = equipment_grand_total + total_equipment_investment;
+        $('#total_investment').val(total_investment);
+        const total_equipment_otc = parseInt($('#equipment_otc').val()) || 0;
+        total_otc = total_plan_equipment_otc + total_equipment_otc;
+        $('#total_otc').val(total_otc);
+        const equipment_roi = parseInt($('#equipment_roi').val()) || 0;
+        const total_service_cost = (total_mrc + equipment_roi) || 0;
+        $('#total_service_cost').val(total_service_cost);
+
+        const total_product_cost = parseInt($('#total_with_operation_amount').val()) || 0;
+        $('#total_product_cost').val(total_product_cost);
+        $('#total_mrc').val(total_service_cost + total_product_cost);
+    });
+
+
+    //  Margin Calculation
+    $('#management_perchantage').on('keyup', function() {
+        var margin = $(this).val();
+        var total_mrc = parseFloat($('#total_mrc').val()).toFixed(2)
+        var total_mrc_amount = total_mrc * parseFloat(margin).toFixed(2) / 100;
+        $('#management_cost_amount').val(total_mrc_amount);
+
+        var product_total_cost = parseFloat($('#product_total_cost').val()).toFixed(2);
+        var management_cost_total = total_mrc + total_mrc_amount;
+        $('#management_cost_total').val(management_cost_total);
+
+        var perchantage = (management_cost_total / product_total_cost) * 100 - 100;
+        $('.product_rate').each(function() {
+
+            var product_rate = parseFloat($(this).val()).toFixed(2);
+            var product_rate_perchantage = product_rate * (perchantage / 100);
+            var product_margin_rate = (product_rate + product_rate_perchantage).toFixed(2);
+            $(this).closest('tr').find('.offer_price').val(product_margin_rate);
+            var total_margin_amount = product_margin_rate * parseFloat($(this).closest('tr').find(
+                '.product_quantity').val());
+            $(this).closest('tr').find('.product_offer_total').val(total_margin_amount.toFixed(2));
+
+            var vat_perchant = $(this).closest('tr').find('.product_vat').val();
+            var vat_amount = (total_margin_amount * vat_perchant) / 100;
+            $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
+            $(this).closest('tr').find('.total_price').val((total_margin_amount + vat_amount).toFixed(
+                2));
+        });
+        var product_grand_total = $('.product_offer_total').get()
+            .reduce(function(sum, el) {
+                return sum + parseFloat(el.value).toFixed(2);
+            }, 0);
+        var total_vat = $('.product_vat_amount').get()
+            .reduce(function(sum, el) {
+                return sum + parseFloat(el.value).toFixed(2);
+            }, 0);
+        var grand_total_price = $('.total_price').get()
+            .reduce(function(sum, el) {
+                return sum + parseFloat(el.value).toFixed(2);
+            }, 0);
+
+        const client_equipment_total = parseFloat($('#client_equipment_total').val());
+
+        //client equipment total
+        let plan_client_equipment_total = 0;
+        let plan_equipment_otc = 0;
+
+        $('.plan_link_status').each(function() {
+            if ($(this).is(':checked')) {
+                plan_client_equipment_total += parseFloat($(this).closest('.PlanLinkMainRow').find(
+                    '.plan_client_equipment_total').val()) ?? 0;
+                plan_equipment_otc += parseFloat($(this).closest('.PlanLinkMainRow').find(
+                    '.plan_equipment_otc').val()) ?? 0;
+            }
+        });
+
+        let equipment_price_for_client = client_equipment_total + plan_client_equipment_total;
+        $('#equipment_price_for_client').val(equipment_price_for_client.toFixed(2));
+
+        let equipment_otc = parseFloat($('#equipment_otc').val());
+        let total_equipment_otc = equipment_otc + plan_equipment_otc + equipment_price_for_client
+        $('#total_otc_with_client_equipment').val(total_equipment_otc);
+        $('#product_grand_total').val(product_grand_total.toFixed(2));
+        $('#total_vat').val(total_vat.toFixed(2));
+        $('#grand_total_price').val(grand_total_price.toFixed(2));
+    });
+
+    //This is button function for add new row in plan link
+
+    $(".input").on("keydown", function(e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            var currentIndex = $(".input").index(this);
+            var nextIndex = currentIndex + 1;
+            var inputs = $(".input");
+
+            if (nextIndex < inputs.length) {
+                var nextInput = inputs.eq(nextIndex);
+                nextInput.focus();
+            }
+        } else if (e.keyCode === 40 || e.which === 40) {
+            e.preventDefault();
+            var currentIndex = $(".input").index(this);
+            var nextIndex = currentIndex + 1;
+            var inputs = $(".input");
+
+            if (nextIndex < inputs.length) {
+                var nextInput = inputs.eq(nextIndex);
+                nextInput.focus();
+            }
+        } else if (e.keyCode === 38 || e.which === 38) {
+            e.preventDefault();
+            var currentIndex = $(".input").index(this);
+            var nextIndex = currentIndex - 1;
+            var inputs = $(".input");
+
+            if (nextIndex < inputs.length) {
+                var nextInput = inputs.eq(nextIndex);
+                nextInput.focus();
+            }
+        } else if (e.keyCode === 37 || e.which === 37) {
+            e.preventDefault();
+            var currentIndex = $(".input").index(this);
+            var nextIndex = currentIndex - 1;
+            var inputs = $(".input");
+
+            if (nextIndex < inputs.length) {
+                var nextInput = inputs.eq(nextIndex);
+                nextInput.focus();
+            }
+        } else if (e.keyCode === 39 || e.which === 39) {
+            e.preventDefault();
+            var currentIndex = $(".input").index(this);
+            var nextIndex = currentIndex + 1;
+            var inputs = $(".input");
+
+            if (nextIndex < inputs.length) {
+                var nextInput = inputs.eq(nextIndex);
+                nextInput.focus();
+            }
+        }
+    });
+</script>
 @endsection

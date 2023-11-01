@@ -75,6 +75,12 @@
 
 <body>
 <htmlpageheader name="page-header">
+    <div>
+        &nbsp;
+    </div>
+    <div>
+        &nbsp;
+    </div>
     <div style="width: 100%; text-align: center">
         <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
         <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
@@ -92,26 +98,31 @@
             <span>Ref Indent No: {{$purchase_order->indent->indent_no ?? ''}}</span>
         </div>
         <br>
-        <div style="display: flex;">
-            <table class="table table-striped table-bordered" style="width: 20%;text-align: left">
-                <thead>
-                <tr style="background-color: #668ba6;color: black">
-                    <th style="text-align: start">To</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td style="text-align: start">{{ $purchase_order->supplier->name ?? ''}}<br>
-                        {{ $purchase_order->supplier->address_1 ?? ''}}<br>
-                        {{ $purchase_order->supplier->mobile_no ?? '' }}<br>
-                        {{ $purchase_order->supplier->email ?? ''}}<br>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <table class="table table-striped table-bordered" style="width: 20%; text-align: end; margin: 0 auto">
+
+        <div style="width: 100%;">
+            <div style="width: 25%; float: left;">
+                <table class="table table-striped table-bordered" style="width: 100%;">
                     <thead>
-                    <tr style="background-color: #668ba6;color: black">
+                    <tr style="background-color: #668ba6; color: black">
+                        <th style="text-align: start">To</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td style="text-align: start">{{ $purchase_order->supplier->name ??''}}<br>
+                            {{ $purchase_order->supplier->address_1 ??''}}<br>
+                            {{ $purchase_order->supplier->mobile_no??'' }}<br>
+                            {{ $purchase_order->supplier->email ??''}}<br>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="width: 25%; float: right;">
+                <table class="table table-striped table-bordered" style="width: 100%;">
+                    <thead>
+                    <tr style="background-color: #668ba6; color: black">
                         <th style="text-align: start">Ship To</th>
                     </tr>
                     </thead>
@@ -126,7 +137,9 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
         </div>
+
         <br>
         <div>
             Dear Sir,<br>

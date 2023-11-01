@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use PDF;
 use Illuminate\Http\Request;
 use Modules\SCM\Entities\Indent;
 use Illuminate\Routing\Controller;
@@ -136,6 +137,19 @@ class IndentController extends Controller
     public function pdf($id = null)
     {
         $indent = Indent::where('id', $id)->first();
+
+        return PDF::loadView('scm::indents.pdf', ['indent' => $indent], [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'Indent PDF',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('indent.pdf');
         return view('scm::indents.pdf', compact('indent'));
 
     }
