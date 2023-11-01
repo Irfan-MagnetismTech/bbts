@@ -61,7 +61,7 @@
                         <td>{{ $client_profile->contact_person }}</td>
                         <td>{{ $client_profile->designation }}</td>
                         <td>{{ $client_profile->contact_no }}</td>
-                        <td>{{ $client_profile->createdBy->name }}</td>
+                        <td>{{ $client_profile->createdBy->name ?? '' }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
