@@ -47,8 +47,8 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
 
 
     Route::get('mur-approval/{scmMur}', [ScmMurController::class, 'murApproval'])->name('mur-approval');
-    
-    
+
+
     Route::get('search-material-by-indent', [CsController::class, 'searchMaterialByIndent'])->name('search-material-by-indent');
     Route::get('search-material-by-cs-requisition', [PurchaseOrderController::class, 'searchMaterialByCsAndRequsiition'])->name('search-material-by-cs-requisition');
     Route::get('get-unique-code', [MaterialController::class, 'getUniqueCode'])->name('get-unique-code');
@@ -57,6 +57,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('gate-pass/{id}', [ScmGatePassController::class, 'pdf'])->name('gate-pass');
     Route::get('po-pdf/{id}', [PurchaseOrderController::class, 'pdf'])->name('po-pdf');
     Route::get('indent-pdf/{id}', [IndentController::class, 'pdf'])->name('indent-pdf');
+    Route::get('challan-pdf/{id}', [ScmChallanController::class, 'challanPdf'])->name('challan-pdf');
     Route::get('challan-gate-pass/{id}', [ScmChallanController::class, 'gatePassPdf'])->name('challan-gate-pass');
     Route::get('wcr-gate-pass/{id}', [ScmWcrController::class, 'gatePassPdf'])->name('wcr-gate-pass');
     Route::get('find-supplier', [PurchaseOrderController::class, 'findSupplier'])->name('findSupplier');

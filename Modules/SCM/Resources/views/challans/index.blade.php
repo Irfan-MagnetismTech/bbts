@@ -61,15 +61,16 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
+                                    <a href="{{ route("challan-pdf", $challan->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-success"><i class="fas fa-file-pdf"></i></a>
                                     <a href="{{ route("challan-gate-pass", $challan->id) }}" data-toggle="tooltip" title="GP" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
                                     <a href="{{ url("scm/challans/$challan->id") }}" data-toggle="tooltip" title="Details"
                                         class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
-                                    
+
                                     @if (!$challan->mur)
 
                                     <a href="{{ route('challans.edit', $challan->id) }}" data-toggle="tooltip"
                                         title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                        
+
                                         <form action="{{ url("scm/challans/$challan->id") }}" method="POST"
                                             data-toggle="tooltip" title="Delete" class="d-inline">
                                             @csrf
