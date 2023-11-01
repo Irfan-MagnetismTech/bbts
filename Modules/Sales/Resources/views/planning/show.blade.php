@@ -12,40 +12,47 @@
 @section('sub-title')
     <span class="text-danger">*</span> Marked are required.
 @endsection
-@section('style')<style>
-        .table th {
-            background: #006b8d !important;
+@section('style')
+    <style>
+        table.client-information tr th {
+            background: #dceaeb !important;
+            color: #000;
+            border: 1px solid #000 !important;
         }
 
-        .table-responsive {
-            overflow-x: auto;
+        table.service-table tr th {
+            background: #dceaeb !important;
+            color: #000;
+            border: 1px solid #626c71 !important;
         }
 
-        .table-bordered {
-            border: 1px solid #dee2e6 !important;
+        table.equipment-table tr th {
+            background: #dceaeb !important;
+            color: #000;
+            border: 1px solid #626c71 !important;
         }
 
-        .table-bordered th,
-        .table-bordered td {
-            border: 1px solid #dee2e6 !important;
+        table.link-details tr th {
+            background: #dceaeb !important;
+            color: #000;
+            border: 1px solid #626c71 !important;
         }
 
-        .table thead th {
-            background-color: #00b5d6;
-            border-color: #00b5d6;
+        table.link-equipment tr th {
+            background: #dceaeb !important;
+            color: #000;
+            border: 1px solid #626c71 !important;
         }
 
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #f7f7f7;
+        table.survey-information tr th {
+            background: #dceaeb !important;
+            color: #000;
+            border: 1px solid #626c71 !important;
         }
 
-        /* Colors */
-        .table-particulars {
-            background-color: #8ccce1;
-        }
-
-        .table-equipment {
-            background-color: #8ccce1;
+        table td {
+            border: 1px solid #626c71 !important;
+            background: #e8f0dd !important;
         }
     </style>
 @endsection
@@ -66,7 +73,7 @@
                         <div class="table-responsive">
                             <h5 class="text-center">Client Information</h5>
                             <hr />
-                            <table class="table table-bordered table-particulars">
+                            <table class="table table-bordered client-information">
                                 <tr>
                                     <th>Client Name</th>
                                     <td>{{ $plan->lead_generation->client_name }}</td>
@@ -121,10 +128,10 @@
                     <div class="row">
                         <div class="col-md-5 col-5">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-particulars">
+                                <table class="table table-bordered service-table">
                                     <thead>
                                         <tr>
-                                            <th colspan="5">Service Plan for
+                                            <th colspan="5" style="background: #cfeaec !important;">Service Plan for
                                                 {{ $plan->feasibilityRequirementDetail->connectivity_point }}</th>
                                         </tr>
                                         <tr>
@@ -149,10 +156,11 @@
                         </div>
                         <div class="col-md-7 col-7">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-equipment">
+                                <table class="table table-bordered equipment-table">
                                     <thead>
                                         <tr>
-                                            <th colspan="6">Equipment Plan for product</th>
+                                            <th colspan="6" style="background: #cfeaec !important;">Equipment Plan for
+                                                product</th>
                                         </tr>
                                         <tr>
                                             <th>Equipment Name</th>
@@ -190,9 +198,10 @@
                             <hr />
                             <div class="main_link row">
                                 <div class="table-responsive col-md-6 col-6">
-                                    <table class="table table-bordered table-particulars text-right">
+                                    <table class="table table-bordered link-details text-right">
                                         <tr>
-                                            <th colspan="2">Link {{ $total_key }} Information</th>
+                                            <th colspan="2" style="background: #cfeaec !important;">Link
+                                                {{ $total_key }} Information</th>
                                         </tr>
                                         <tr>
                                             <th class="text-left" style="width: 50%;">Type</th>
@@ -231,9 +240,10 @@
 
                                 <div class="col-md-6">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-particulars">
+                                        <table class="table table-bordered survey-information">
                                             <tr>
-                                                <th colspan="4">Survey Information</th>
+                                                <th colspan="4" style="background: #cfeaec !important;">Survey
+                                                    Information</th>
                                             </tr>
                                             <tr>
                                                 <th class="text-left" style="width: 50%;">Link Vendor</th>
@@ -288,7 +298,8 @@
                                                 <td class="connectivity_route"></td>
                                             </tr>
                                             <tr>
-                                                <th class="text-left" style="width: 50%;">Last Connectivity Point Longitute
+                                                <th class="text-left" style="width: 50%;">Last Connectivity Point
+                                                    Longitute
                                                 </th>
                                                 <td class="connectivity_lat_long">
                                                     {{ $plan_link->finalSurveyDetails->long ?? '' }}
@@ -304,7 +315,7 @@
                                     </div>
                                     <hr />
                                     <div class="table-responsive">
-                                        <table class="table table-bordered" style="font-size: 12px;">
+                                        <table class="table table-bordered link-equipment" style="font-size: 12px;">
                                             <thead>
                                                 <tr>
                                                     <th>Equipment Name</th>
