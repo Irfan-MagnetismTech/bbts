@@ -447,4 +447,23 @@ class ScmChallanController extends Controller
         $data = array_filter($data->toArray());
         return $data;
     }
+
+    public function searchMrs()
+    {
+        $scm_requisition_ids = ScmChallan::select('scm_requisition_id')
+            ->distinct()
+            ->pluck('scm_requisition_id');
+
+        $items = ScmRequisition::query()
+            ->where("mrs_no", "like", "%" . request()->search . "%")
+            ->whereNotIn('id', $scm_requisition_ids)
+            ->take(10)
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->mrs_no,
+                'label' => $item->mrs_no,
+                'scm_requisition_id' => $item->id,
+            ]);
+        return response()->json($items);
+    }
 }

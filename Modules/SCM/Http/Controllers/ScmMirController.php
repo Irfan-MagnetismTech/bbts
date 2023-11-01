@@ -155,7 +155,7 @@ class ScmMirController extends Controller
 
     /**
      * Update the specified resource in storage.
-     * 
+     *
      * @param Request $request
      * @param int $id
      * @return Renderable
@@ -195,7 +195,7 @@ class ScmMirController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * 
+     *
      * @param ScmMir $material_issue
      * @return Renderable
      */
@@ -216,13 +216,13 @@ class ScmMirController extends Controller
 
     /**
      * Get Stock Ledger Data From Request
-     * 
+     *
      * @param Request $request
      * @param int $key1
      * @param int $key2
      * @param int $branch_id
      * @param bool $qty
-     * 
+     *
      * @return array
      */
     public function getStockLedgerData($request, $key1, $key2 = null, $branch_id, $qty): array
@@ -244,7 +244,7 @@ class ScmMirController extends Controller
 
     /**
      * Get MIR Details From Request
-     * 
+     *
      * @param Request $request
      * @param int $key1
      * @return array
@@ -669,7 +669,7 @@ class ScmMirController extends Controller
      * Get branch wise stock for from and to branch
      *
      * @return JsonResponse
-     * 
+     *
      */
     public function getMaterialStock(): JsonResponse
     {

@@ -64,6 +64,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('find-indent-no', [PurchaseOrderController::class, 'findIndentNo'])->name('findIndentNo');
     Route::get('close-po/{id}', [PurchaseOrderController::class, 'closePo'])->name('closePo');
     Route::get('search_bill_reg_no', [ScmMrrController::class, 'searchBillRegisterNoWithDate'])->name('searchBillRegisterNoWithDate');
+    Route::get('search_mrs_for_challan', [ScmChallanController::class, 'searchMrs'])->name('search_mrs_for_challan');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
 });

@@ -180,11 +180,11 @@
                     <th> Material Name</th>
                     <th> Item Code</th>
                     <th> Unit</th>
+                    <th> Brand</th>
+                    <th> Model </th>
                     <th> Description</th>
                     <th class="current_stock" style="display: none"> Current Stock</th>
                     <th> Requisition Qty.</th>
-                    <th> Brand</th>
-                    <th> Model </th>
                     <th> Purpose </th>
                     <th><i class="btn btn-primary btn-sm fa fa-plus add-requisition-row"></i></th>
                 </tr>
@@ -220,6 +220,19 @@
                                 value="{{ $unit[$key] }}">
                         </td>
                         <td>
+                            <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <option value="">Select Brand</option>
+                                @foreach ($brands as $brand)
+                                    <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
+                                        {{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" name="model[]" class="form-control model" autocomplete="off"
+                                   value="{{ $model[$key] }}">
+                        </td>
+                        <td>
                             <input type="text" name="description[]" class="form-control description"
                                 autocomplete="off" value="{{ $description[$key] }}">
                         </td>
@@ -231,19 +244,6 @@
                         <td>
                             <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
                                 value="{{ $quantity[$key] }}">
-                        </td>
-                        <td>
-                            <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                <option value="">Select Brand</option>
-                                @foreach ($brands as $brand)
-                                    <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
-                                        {{ $brand->name }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                                value="{{ $model[$key] }}">
                         </td>
                         <td>
                             <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off"

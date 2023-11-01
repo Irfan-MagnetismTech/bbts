@@ -25,6 +25,17 @@
                             <td>
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
+                             <td>
+                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <option value="">Select Brand</option>
+                                    @foreach ($brands as $brand)
+                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
+                            </td>
                             <td>
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off">
                             </td>
@@ -39,17 +50,6 @@
                             }
                             <td>
                                 <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off">
-                            </td>
-                            <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                <option value="">Select Brand</option>
-                                    @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
                             </td>
                             <td>
                                 <input type="text" name="purpose[]" class="form-control purpose" autocomplete="off">

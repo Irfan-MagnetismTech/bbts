@@ -544,7 +544,7 @@
             $("#mrs_no").autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url: "{{ route('search_mrs_no') }}",
+                        url: "{{ route('search_mrs_for_challan') }}",
                         type: 'get',
                         dataType: "json",
                         data: {
