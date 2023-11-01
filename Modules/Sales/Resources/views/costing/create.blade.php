@@ -480,8 +480,7 @@
                     style="border: 2px solid gray; border-radius: 15px; padding: 15px; margin-top: 15px;">
                     <div class="row">
                         <div style="width: 5%; margin: 0px 7px;">
-                            <div class="checkbox-fade fade-in-primary"
-                                style="margin-top: 12px; margin-left: 22px;">
+                            <div class="checkbox-fade fade-in-primary" style="margin-top: 12px; margin-left: 22px;">
                                 <label>
                                     <input type="checkbox" name="plan_link_status_{{ $row_no }}"
                                         class="input plan_link_status" value="1">
@@ -953,7 +952,7 @@
             showOtherMonths: true
         }).datepicker("setDate", new Date());
 
-        $('.product_rate').on('keyup', function() {
+        $('.product_rate, .product_quantity').on('keyup', function() {
             var product_rate = $(this).val();
             var product_quantity = $(this).closest('tr').find('.product_quantity').val();
             var product_total = product_rate * product_quantity;
@@ -968,8 +967,8 @@
             var product_operation_cost = $(this).val();
             var product_price = $(this).closest('tr').find('.product_price').val();
             // var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
-            var product_total = parseInt(product_operation_cost) + parseInt(product_price);
-            $(this).closest('tr').find('.product_operation_cost_total').val(product_total);
+            var product_total = parseFloat(product_operation_cost) + parseFloat(product_price)
+            $(this).closest('tr').find('.product_operation_cost_total').val(product_total.toFixed(2));
             // $('#total_product_cost').val(product_total); 
             // $('#total_mrc').val(product_total); 
             productPartialTotal();
@@ -977,39 +976,31 @@
 
         function productPartialTotal() {
             var product_total = 0;
-            $('.product_operation_cost').each(function() {
-                var value = parseInt($(this).val());
-                if (!isNaN(value)) {
-                    product_total += value;
-                }
-            });
-            $('#total_operation_cost').val(product_total);
-
-            var total_with_operation = 0;
-            $('.product_operation_cost_total').each(function() {
-                var value = parseInt($(this).val());
-                if (!isNaN(value)) {
-                    total_with_operation += value;
-                }
-            });
-
             const product_total_cost = $('.product_price').map(function() {
-                return parseInt($(this).val()) || 0;
-            }).get().reduce((acc, val) => acc + val, 0);
+                return parseFloat($(this).val()) || 0;
+            }).get().reduce((acc, val) => acc + val, 0).toFixed(2);
+            console.log('product_total_cost', product_total_cost)
+
+
+            const product_operation_cost = $('.product_operation_cost').map(function() {
+                return parseFloat($(this).val()) || 0;
+            }).get().reduce((acc, val) => acc + val, 0).toFixed(2);
+
+            const product_operation_cost_total = $('.product_operation_cost_total').map(function() {
+                return parseFloat($(this).val()) || 0;
+            }).get().reduce((acc, val) => acc + val, 0).toFixed(2);
+
             $('#product_total_cost').val(product_total_cost);
-
-            $('#total_with_operation_amount').val(total_with_operation);
-
-            $('#total_product_cost').val(total_with_operation);
-            $('#total_mrc').val(total_with_operation);
+            $('#total_operation_cost').val(product_operation_cost);
+            $('#total_with_operation_amount').val(product_operation_cost_total);
 
         }
 
         $('.equipment_rate').on('keyup', function() {
             var equipment_rate = $(this).val();
             var equipment_quantity = $(this).closest('tr').find('.equipment_quantity').val();
-            var equipment_total = parseInt(equipment_rate) * parseInt(equipment_quantity);
-            $(this).closest('tr').find('.equipment_total').val(equipment_total);
+            var equipment_total = parseFloat(equipment_rate) * parseFloat(equipment_quantity);
+            $(this).closest('tr').find('.equipment_total').val(equipment_total.toFixed(2));
             equipmentPartialTotal();
         });
 
@@ -1023,7 +1014,7 @@
             var client_equipment_total = 0;
 
             $('.equipment_total').each(function() {
-                var value = parseInt($(this).val());
+                var value = parseFloat($(this).val())
                 if (!isNaN(value)) {
                     equipment_total += value;
                 }
@@ -1049,9 +1040,10 @@
             var perchantage_tax_amount = (partial_total * $('#equipment_perchantage_tax').val()) / 100;
             var tax = $('#equipment_perchantage_tax').val() ? perchantage_tax_amount : 0;
             $('#equipment_tax').val(perchantage_tax_amount)
-            var total = parseInt(partial_total) + parseInt(development_cost) + parseInt(interest) + parseInt(
-                vat) + parseInt(tax);
-            $('#equipment_grand_total').val(total);
+            var total = parseFloat(partial_total) + parseFloat(development_cost) + parseFloat(
+                interest) + parseFloat(
+                vat) + parseFloat(tax);
+            $('#equipment_grand_total').val(total.toFixed(2));
         }
 
         $('#calculate_data').on('click', function() {
@@ -1063,14 +1055,15 @@
             var equipment_otc = $(this).val();
             var equipment_total = $('#equipment_grand_total').val();
             var month = $('#month').val();
-            var equipment_roi = (parseInt(equipment_total) - parseInt(equipment_otc)) / parseInt(month);
+            var equipment_roi = (parseFloat(equipment_total).toFixed(2) - parseFloat(equipment_otc)).toFixed(2) /
+                parseInt(month);
             $('#equipment_roi').val(equipment_roi);
         });
 
         $('.plan_link_rate').on('keyup', function() {
             var plan_link_rate = $(this).val();
             var plan_link_quantity = $(this).closest('.PlanLinkMainRow').find('.plan_link_quantity').val();
-            var plan_link_total = parseInt(plan_link_quantity) * parseInt(plan_link_rate);
+            var plan_link_total = parseFloat(plan_link_quantity).toFixed(2) * parseFloat(plan_link_rate).toFixed(2);
             $(this).closest('.PlanLinkMainRow').find('.plan_equipment_capacity').val(plan_link_total);
             $(this).closest('.PlanLinkMainRow').find('.plan_link_total').val(plan_link_total);
         });
@@ -1081,7 +1074,8 @@
             var plan_client_equipment_total = 0;
             var plan_equipment_quantity = $(this).closest('tr').find(
                 '.plan_equipment_quantity').val();
-            var equipment_total = parseInt(plan_equipment_quantity) * parseInt(plan_equipment_rate);
+            var equipment_total = parseFloat(plan_equipment_quantity).toFixed(2) * parseInt(plan_equipment_rate)
+                .toFixed(2);
             $(this).closest('tr').find('.plan_equipment_total').val(equipment_total);
             $(this).closest('.PlanLinkMainRow').find('.plan_equipment_total').each(function() {
                 var value = parseInt($(this).val());
@@ -1129,9 +1123,10 @@
             var plan_equipment_interest = plan_equipment_perchantage_interest_amount ?
                 plan_equipment_perchantage_interest_amount : 0;
             $(event).closest('.PlanLinkMainRow').find('.plan_equipment_interest').val(plan_equipment_interest);
-            var plan_equipment_total = parseInt(plan_equipment_partial_total) + parseInt(plan_equipment_deployment_cost) +
-                parseInt(plan_equipment_interest);
-            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_grand_total').val(plan_equipment_total);
+            var plan_equipment_total = parseFloat(plan_equipment_partial_total)+ parseFloat(
+                    plan_equipment_deployment_cost) +
+                parseFloat(plan_equipment_interest);
+            $(event).closest('.PlanLinkMainRow').find('.plan_equipment_grand_total').val(plan_equipment_total.toFixed(2));
         }
 
 
@@ -1224,19 +1219,19 @@
         //  Margin Calculation
         $('#management_perchantage').on('keyup', function() {
             var margin = $(this).val();
-            var total_mrc = parseFloat($('#total_mrc').val());
-            var total_mrc_amount = total_mrc * margin / 100;
+            var total_mrc = parseFloat($('#total_mrc').val()).toFixed(2)
+            var total_mrc_amount = total_mrc * parseFloat(margin).toFixed(2) / 100;
             $('#management_cost_amount').val(total_mrc_amount);
 
-            var product_total_cost = parseFloat($('#product_total_cost').val());
+            var product_total_cost = parseFloat($('#product_total_cost').val()).toFixed(2);
             var management_cost_total = total_mrc + total_mrc_amount;
             $('#management_cost_total').val(management_cost_total);
 
             var perchantage = (management_cost_total / product_total_cost) * 100 - 100;
             $('.product_rate').each(function() {
 
-                var product_rate = parseFloat($(this).val());
-                var product_rate_perchantage = product_rate.toFixed(2) * (perchantage / 100);
+                var product_rate = parseFloat($(this).val()).toFixed(2);
+                var product_rate_perchantage = product_rate * (perchantage / 100);
                 var product_margin_rate = (product_rate + product_rate_perchantage).toFixed(2);
                 $(this).closest('tr').find('.offer_price').val(product_margin_rate);
                 var total_margin_amount = product_margin_rate * parseFloat($(this).closest('tr').find(
@@ -1251,15 +1246,15 @@
             });
             var product_grand_total = $('.product_offer_total').get()
                 .reduce(function(sum, el) {
-                    return sum + parseFloat(el.value);
+                    return sum + parseFloat(el.value).toFixed(2);
                 }, 0);
             var total_vat = $('.product_vat_amount').get()
                 .reduce(function(sum, el) {
-                    return sum + parseFloat(el.value);
+                    return sum + parseFloat(el.value).toFixed(2);
                 }, 0);
             var grand_total_price = $('.total_price').get()
                 .reduce(function(sum, el) {
-                    return sum + parseFloat(el.value);
+                    return sum + parseFloat(el.value).toFixed(2);
                 }, 0);
 
             const client_equipment_total = parseFloat($('#client_equipment_total').val());

@@ -507,7 +507,6 @@
                                                                 value="{{ $plan_equipment->id ?? '' }}">
                                                             <td>
                                                                 <select name="material_id_{{ $total_key }}[]"
-                                                                    id="material_id"
                                                                     class="form-control form-control-sm link_material_id select2">
                                                                     <option value="">Select Equipment</option>
                                                                     @foreach ($materials as $material)
@@ -520,19 +519,16 @@
 
                                                             <td>
                                                                 <input type="text"
-                                                                    name="quantity_{{ $total_key }}[]" id="quantity"
-                                                                    class="form-control form-control-sm link_quantity"
+                                                                    name="quantity_{{ $total_key }}[]" class="form-control form-control-sm link_quantity"
                                                                     value="{{ $plan_equipment->quantity ?? '' }}">
                                                             </td>
                                                             <td>
                                                                 <input type="text" name="unit_{{ $total_key }}[]"
-                                                                    id="unit"
                                                                     class="form-control form-control-sm link_unit"
                                                                     value="{{ $plan_equipment->unit ?? '' }}">
                                                             </td>
                                                             <td>
                                                                 <select name="brand_id_{{ $total_key }}[]"
-                                                                    id="brand"
                                                                     class="form-control form-control-sm link_brand select2">
                                                                     <option value="">Select Brand</option>
                                                                     @foreach ($brands as $brand)
@@ -544,20 +540,18 @@
                                                             </td>
                                                             <td>
                                                                 <input type="text" name="model_{{ $total_key }}[]"
-                                                                    id="model"
                                                                     class="form-control form-control-sm link_model"
                                                                     value="{{ $plan_equipment->model ?? '' }}">
                                                             </td>
                                                             <td>
                                                                 <input type="text"
                                                                     name="description_{{ $total_key }}[]"
-                                                                    id="description"
                                                                     class="form-control form-control-sm link_description"
                                                                     value="{{ $plan_equipment->description ?? '' }}">
                                                             </td>
                                                             <td>
                                                                 <input type="text"
-                                                                    name="remarks_{{ $total_key }}[]" id="remarks"
+                                                                    name="remarks_{{ $total_key }}[]"
                                                                     class="form-control form-control-sm link_remarks"
                                                                     value="{{ $plan_equipment->remarks ?? '' }}">
                                                             </td>
@@ -776,12 +770,8 @@
                 var $table = $(event).closest('.table-bordered');
                 var $clone = $table.find('tbody tr:first').clone();
                 $clone.find('input').val('');
-                $clone.find('select').val('');
-                $table.find('tbody').append($clone);
-                var $table = $(event).closest('.table-bordered');
-                var $clone = $table.find('tbody tr:first').clone();
-                $clone.find('input').val('');
                 $clone.find('span').remove();
+                $clone.find('select').val('');
                 $table.find('tbody').append($clone);
                 $(".select2").select2();
             }
