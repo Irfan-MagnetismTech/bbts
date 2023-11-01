@@ -24,24 +24,26 @@
         <li class="pcoded-hasmenu {{ request()->routeIs(['connectivity.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
-                <span class="pcoded-mtext">Connectivity</span>
+                <span class="pcoded-mtext">Transmission Link</span>
                 <span class="pcoded-mcaret"></span>
             </a>
             <ul class="pcoded-submenu">
                 <li class="{{ request()->routeIs('connectivity.create') ? 'active' : null }}">
                     <a href="{{ route('connectivity.create') }}"> <span class="pcoded-micon"><i
-                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Add New Links</span><span
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Add New Link</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
             </ul>
             <ul class="pcoded-submenu">
                 <li class="{{ request()->routeIs('connectivity.index') ? 'active' : null }}">
                     <a href="{{ route('connectivity.index') }}"> <span class="pcoded-micon"><i
-                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Connectivity List</span><span
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext"> List List</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-            </ul>
+            </ul> 
+            </li>
         </li>
+        
         <li class="pcoded-hasmenu {{ request()->routeIs(['vas-services.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
@@ -199,12 +201,12 @@
         </ul>
     </li>
 
-    <li class="pcoded-submenu {{ request()->routeIs(['cc-schedules.*']) ? 'active pcoded-trigger' : null }}">
+    {{-- <li class="pcoded-submenu {{ request()->routeIs(['cc-schedules.*']) ? 'active pcoded-trigger' : null }}">
         <a href="{{ route('cc-schedules.index') }}">
             <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
             <span>Client Schedules</span>
         </a>
-    </li>
+    </li> --}}
     <li
         class="pcoded-hasmenu {{ request()->routeIs(['fiber-managements.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">

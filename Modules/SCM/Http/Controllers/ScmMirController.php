@@ -259,6 +259,7 @@ class ScmMirController extends Controller
             'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
             'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
             'quantity' => $request->issued_qty[$key1],
+            'mrs_quantity' => $request->mrs_quantity[$key1],
             'remarks' => $request->remarks[$key1],
         ];
     }
@@ -437,15 +438,13 @@ class ScmMirController extends Controller
             })
             ->sum('quantity');
 
+        $brand_id = request()->brand_id == 'null' ? '' : request()->brand_id;
         $scmDetail = ScmRequisitionDetail::where('scm_requisition_id', request()->scm_requisition_id)
             ->when(request()->material_id, function ($query) {
                 return $query->where('material_id', request()->material_id);
             })
-            ->when(request()->brand_id, function ($query) {
-                return $query->where('brand_id', request()->brand_id);
-            })
-            ->when(request()->model, function ($query) {
-                return $query->where('model', request()->model);
+            ->when($brand_id, function ($query) use ($brand_id) {
+                return $query->where('brand_id', $brand_id);
             })
             ->first();
         $data['current_stock'] = $total_in + $total_out;
@@ -599,8 +598,11 @@ class ScmMirController extends Controller
      * @param  integer $branch branch id form request()
      * @return integer sum of stock
      */
-    public function branchWiseStock($branch): int
+    public function branchWiseStock($branch)
     {
+
+        $brand_id = request()->brand_id == 'null' ? '' : request()->brand_id;
+        $model = request()->model == 'null' ? '' : request()->model;
         $branch_balance = StockLedger::query()
             ->where([
                 'branch_id' => $branch,
@@ -610,19 +612,21 @@ class ScmMirController extends Controller
             ->when(request()->material_id, function ($query) {
                 $query->where('material_id', request()->material_id);
             })
-            ->when(request()->brand_id, function ($query) {
-                $query->where('brand_id', request()->brand_id);
+            ->when($brand_id, function ($query) use ($brand_id) {
+                $query->where('brand_id', $brand_id);
             })
-            ->when(request()->model, function ($query) {
-                $query->where('model', request()->model);
+            ->when($model, function ($query) use ($model) {
+                $query->where('model', $model);
             })
             ->sum('quantity');
 
         return $branch_balance;
     }
 
-    public function branchWiseMaterialStock($branch): int
+    public function branchWiseMaterialStock($branch)
     {
+        $brand_id = request()->brand_id == 'null' ? '' : request()->brand_id;
+        $model = request()->model == 'null' ? '' : request()->model;
         $branch_balance = StockLedger::query()
             ->where([
                 'branch_id' => $branch
@@ -630,11 +634,11 @@ class ScmMirController extends Controller
             ->when(request()->material_id, function ($query) {
                 $query->where('material_id', request()->material_id);
             })
-            ->when(request()->brand_id, function ($query) {
-                $query->where('brand_id', request()->brand_id);
+            ->when($brand_id, function ($query) use ($brand_id) {
+                $query->where('brand_id', $brand_id);
             })
-            ->when(request()->model, function ($query) {
-                $query->where('model', request()->model);
+            ->when($model, function ($query) use ($model) {
+                $query->where('model', $model);
             })
             ->sum('quantity');
 

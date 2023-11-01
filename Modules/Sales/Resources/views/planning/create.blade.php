@@ -168,7 +168,7 @@
                         </div>
                         <div class="md-col-7 col-7">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped">
+                                <table class="table table-bordered table-striped" id="equipment_table">
                                     <thead>
                                         <tr>
                                             <th colspan="7">Equipment Plan for product</th>
@@ -186,42 +186,46 @@
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody id="equipment_body">
+                                    <tbody class="equipment_body">
                                         <tr class="equipment_row">
                                             <td>
-                                                <select name="equipment_id[]" id="equipment_id"
-                                                    class="form-control form-control-sm equipment_id select2">
-                                                    <option value="">Select Equipment</option>
-                                                    @foreach ($materials as $material)
-                                                        <option value="{{ $material->id }}">
-                                                            {{ $material->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <div>
+                                                    <select name="equipment_id[]"
+                                                        class="form-control form-control-sm equipment_id select2">
+                                                        <option value="">Select Equipment</option>
+                                                        @foreach ($materials as $material)
+                                                            <option value="{{ $material->id }}">
+                                                                {{ $material->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td>
-                                                <input type="text" name="quantity[]" id="quantity"
-                                                    class="form-control form-control-sm" value="">
+                                                <input type="text" name="quantity[]" class="form-control form-control-sm"
+                                                    value="">
                                             </td>
                                             <td>
-                                                <input type="text" name="unit[]" id="unit"
+                                                <input type="text" name="unit[]"
                                                     class="form-control form-control-sm unit" value="">
                                             </td>
                                             <td>
-                                                <select name="brand_id[]" id="brand_id"
-                                                    class="form-control form-control-sm brand_id select2">
-                                                    <option value="">Select Brand</option>
-                                                    @foreach ($brands as $brand)
-                                                        <option value="{{ $brand->id }}">
-                                                            {{ $brand->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <div>
+                                                    <select name="brand_id[]"
+                                                        class="form-control form-control-sm brand_id select2">
+                                                        <option value="">Select Brand</option>
+                                                        @foreach ($brands as $brand)
+                                                            <option value="{{ $brand->id }}">
+                                                                {{ $brand->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td>
-                                                <input type="text" name="model[]" id="model"
+                                                <input type="text" name="model[]"
                                                     class="form-control form-control-sm model" value="">
                                             </td>
                                             <td>
-                                                <input type="text" name="equipment_remarks[]" id="equipment_remarks"
+                                                <input type="text" name="equipment_remarks[]"
                                                     class="form-control form-control-sm equipment_remarks" value="">
                                             </td>
                                             <td>
@@ -272,8 +276,7 @@
                                 </div>
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
-                                        <select name="option_1" id="option"
-                                            class="form-control form-control-sm option select2"
+                                        <select name="option_1" class="form-control form-control-sm option select2"
                                             onchange="optionChange(event)">
                                             <option value="">Select Option</option>
                                             <option value="Option 1">Option 1</option>
@@ -285,7 +288,7 @@
                                 </div>
                                 <div class="col-3 col-md-3  mt-3">
                                     <div class="form-item">
-                                        <select name="existing_infrastructure_1" id="existing_infrastructure"
+                                        <select name="existing_infrastructure_1"
                                             class="form-control form-control-sm existing_infrastructure select2">
                                             <option value="">Select Status</option>
                                             <option value="Existing">Existing</option>
@@ -295,7 +298,7 @@
                                 </div>
                                 <div class="col-3 col-md-3 mt-3 link_list" style="display: none;">
                                     <div class="form-item">
-                                        <select name="existing_infrastructure_link_1" id="existing_infrastructure_link"
+                                        <select name="existing_infrastructure_link_1"
                                             class="form-control form-control-sm existing_infrastructure_link select2">
                                             <option value="">Select Link</option>
                                         </select>
@@ -305,7 +308,6 @@
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
                                         <input type="text" name="existing_transmission_capacity_1"
-                                            id="existing_transmission_capacity"
                                             class="form-control form-control-sm existing_transmission_capacity"
                                             value="">
                                         <label for="type">Existing Transmission Capacity</label>
@@ -314,7 +316,7 @@
 
                                 <div class="md-col-3 col-3 mt-3">
                                     <div class="form-item">
-                                        <input type="text" name="increase_capacity_1" id="increase_capacity"
+                                        <input type="text" name="increase_capacity_1"
                                             class="form-control form-control-sm increase_capacity" value="">
                                         <label for="type">Increase Capacity</label>
                                     </div>
@@ -322,7 +324,7 @@
 
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
-                                        <select name="link_availability_status_1" id="link_availability_status"
+                                        <select name="link_availability_status_1"
                                             class="form-control form-control-sm link_availability_status select2">
                                             <option value="">New Transmission Link</option>
                                             @foreach ($vendors as $vendor)
@@ -335,16 +337,15 @@
                                 <div class="md-col-3 col-3  mt-3 new_transmission_capacity_div">
                                     <div class="form-item">
                                         <input type="text" name="new_transmission_capacity_1"
-                                            id="new_transmission_capacity" class="form-control form-control-sm"
-                                            value="">
+                                            class="form-control form-control-sm" value="">
                                         <label for="type">New Transmission Capacity</label>
                                     </div>
                                 </div>
 
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
-                                        <input type="text" name="link_remarks_1" id="link_remarks"
-                                            class="form-control form-control-sm" value="">
+                                        <input type="text" name="link_remarks_1" class="form-control form-control-sm"
+                                            value="">
                                         <label for="type">Remarks</label>
                                     </div>
                                 </div>
@@ -358,7 +359,7 @@
                                         <tr>
                                             <th>Link Vendor</th>
                                             <td class="link_vendor" style="width:30%">
-                                                <input type="text" name="link_vendor_1" id="link_vendor"
+                                                <input type="text" name="link_vendor_1"
                                                     class="form-control form-control-sm link_vendor_1" value=""
                                                     style="height: 25px !important">
                                                 <input type="hidden" name="link_vender_id_1" id="link_vendor_id"
@@ -371,7 +372,6 @@
                                             <th>Link Connectivity POP</th>
                                             <td class="link_connecting_pop" style="width:30%">
                                                 <input type="text" name="link_connecting_pop_1"
-                                                    id="link_connecting_pop"
                                                     class="form-control form-control-sm link_connecting_pop_1"
                                                     style="height: 25px !important" value="">
                                                 <input type="hidden" name="link_connecting_pop_id_1"
@@ -384,7 +384,6 @@
                                             <th>Last Mile Connectivity Method</th>
                                             <td class="last_mile_connectivity_method" style="width:30%">
                                                 <input type="text" name="last_mile_connectivity_method_1"
-                                                    id="last_mile_connectivity_method"
                                                     class="form-control form-control-sm last_mile_connectivity_method_1"
                                                     style="height: 25px !important" value="">
                                             </td>
@@ -395,7 +394,6 @@
                                             <th>Last Connectivity Point Latitute</th>
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="connectivity_lat_1"
-                                                    id="connectivity_lat_long"
                                                     class="form-control form-control-sm connectivity_lat_1"
                                                     style="height: 25px !important" value="">
                                             </td>
@@ -406,7 +404,6 @@
                                             <th>Last Connectivity Point Longitute</th>
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="connectivity_long_1"
-                                                    id="connectivity_lat_long"
                                                     class="form-control form-control-sm connectivity_long_1"
                                                     style="height: 25px !important" value="">
                                             </td>
@@ -416,7 +413,7 @@
                                         <tr>
                                             <th>Connectivity Point Last Mile Distance</th>
                                             <td class="connectivity_lat_long" style="width:30%">
-                                                <input type="text" name="distance_1" id="connectivity_lat_long"
+                                                <input type="text" name="distance_1"
                                                     class="form-control form-control-sm distance_1"
                                                     style="height: 25px !important" value="">
                                             </td>
@@ -453,44 +450,48 @@
                                         <tbody class="link_equipment_table">
                                             <tr>
                                                 <td>
-                                                    <select name="material_id_1[]" id="material_id"
-                                                        class="form-control form-control-sm link_material_id select2">
-                                                        <option value="">Select Equipment</option>
-                                                        @foreach ($materials as $material)
-                                                            <option value="{{ $material->id }}">
-                                                                {{ $material->name }}</option>
-                                                        @endforeach
-                                                    </select>
+                                                    <div>
+                                                        <select name="material_id_1[]"
+                                                            class="form-control form-control-sm link_material_id select2">
+                                                            <option value="">Select Equipment</option>
+                                                            @foreach ($materials as $material)
+                                                                <option value="{{ $material->id }}">
+                                                                    {{ $material->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="quantity_1[]" id="quantity"
+                                                    <input type="text" name="quantity_1[]"
                                                         class="form-control form-control-sm link_quantity" value="">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="unit_1[]" id="unit"
+                                                    <input type="text" name="unit_1[]"
                                                         class="form-control form-control-sm link_unit" value="">
                                                 </td>
                                                 <td>
-                                                    <select name="brand_id_1[]" id="brand"
-                                                        class="form-control form-control-sm link_brand select2">
-                                                        <option value="">Select Brand</option>
-                                                        @foreach ($brands as $brand)
-                                                            <option value="{{ $brand->id }}">
-                                                                {{ $brand->name }}</option>
-                                                        @endforeach
-                                                    </select>
+                                                    <div>
+                                                        <select name="brand_id_1[]"
+                                                            class="form-control form-control-sm link_brand select2">
+                                                            <option value="">Select Brand</option>
+                                                            @foreach ($brands as $brand)
+                                                                <option value="{{ $brand->id }}">
+                                                                    {{ $brand->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="model_1[]" id="model"
+                                                    <input type="text" name="model_1[]"
                                                         class="form-control form-control-sm link_model" value="">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="description_1[]" id="description"
+                                                    <input type="text" name="description_1[]"
                                                         class="form-control form-control-sm link_description"
                                                         value="">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="remarks_1[]" id="remarks"
+                                                    <input type="text" name="remarks_1[]"
                                                         class="form-control form-control-sm link_remarks" value="">
                                                 </td>
                                                 <td>
@@ -563,39 +564,43 @@
         <script>
             let plan_equipment_html = `<tr class="equipment_row">
                                             <td>
-                                                <select name="equipment_id[]" id="equipment_id"
+                                                <div>
+                                                    <select name="equipment_id[]"
                                                     class="form-control form-control-sm equipment_id select2">
-                                                    <option value="">Select Equipment</option>
-                                                    @foreach ($materials as $material)
-                                                        <option value="{{ $material->id }}">
-                                                            {{ $material->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                        <option value="">Select Equipment</option>
+                                                        @foreach ($materials as $material)
+                                                            <option value="{{ $material->id }}">
+                                                                {{ $material->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td>
-                                                <input type="text" name="quantity[]" id="quantity"
+                                                <input type="text" name="quantity[]"
                                                     class="form-control form-control-sm" value="">
                                             </td>
                                             <td>
-                                                <input type="text" name="unit[]" id="unit"
+                                                <input type="text" name="unit[]"
                                                     class="form-control form-control-sm unit" value="">
                                             </td>
                                             <td>
-                                                <select name="brand_id[]" id="brand_id"
+                                                <div>
+                                                    <select name="brand_id[]"
                                                     class="form-control form-control-sm brand_id select2">
-                                                    <option value="">Select Brand</option>
-                                                    @foreach ($brands as $brand)
-                                                        <option value="{{ $brand->id }}">
-                                                            {{ $brand->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                        <option value="">Select Brand</option>
+                                                        @foreach ($brands as $brand)
+                                                            <option value="{{ $brand->id }}">
+                                                                {{ $brand->name }}</option>
+                                                        @endforeach
+                                                    </select>    
+                                                </div>
                                             </td>
                                             <td>
-                                                <input type="text" name="model[]" id="model"
+                                                <input type="text" name="model[]"
                                                     class="form-control form-control-sm model" value="">
                                             </td>
                                             <td>
-                                                <input type="text" name="equipment_remarks[]" id="equipment_remarks"
+                                                <input type="text" name="equipment_remarks[]"
                                                     class="form-control form-control-sm equipment_remarks" value="">
                                             </td>
                                             <td>
@@ -605,20 +610,20 @@
                                         </tr> `;
             $('#addEquipmentRow').on('click', function() {
                 addEquipmentRow();
+                $(".select2").select2();
             });
 
             function addEquipmentRow() {
-                let check_first_row = $('#equipment_body').find('.equipment_row');
-                if (check_first_row.length !== 0) {
-                    $('.equipment_row').first().clone().appendTo('#equipment_body');
-                    $('.equipment_row').last().find('input').val('');
-                    $('.equipment_row').last().find('select').val('');
+                let check_first_row = $('.equipment_row').length;
+                if (check_first_row !== 0) {
+                    let row = $('.equipment_row').first().clone();
+                    row.find('input').val('');
+                    row.find("span").remove();
+                    row.appendTo('.equipment_body');
                 } else {
-                    $('#equipment_body').append('<tr>' + plan_equipment_html + '</tr>');
+                    $('.equipment_body').append('<tr>' + plan_equipment_html + '</tr>');
                 }
-                // $('.equipment_row').first().clone().appendTo('#equipment_body');
-                // $('.equipment_row').last().find('input').val('');
-                // $('.equipment_row').last().find('select').val('');
+
             };
 
 
@@ -700,8 +705,9 @@
                 var $table = $(event).closest('.table-bordered');
                 var $clone = $table.find('tbody tr:first').clone();
                 $clone.find('input').val('');
-                $clone.find('select').val('');
+                $clone.find('span').remove();
                 $table.find('tbody').append($clone);
+                $(".select2").select2();
             }
 
             function removeLinkEquipmentRow(event) {
@@ -733,14 +739,17 @@
                         }
                     }
                 });
+                // clonedRow.find('span').remove();
+                clonedRow.find('span:not(.link_no)').remove();
                 clonedRow.find('#addLinkEquipmentRow').attr('id', 'addLinkEquipmentRow_' + link_no);
                 clonedRow.find('#removeLinkEquipmentRow').attr('id', 'removeLinkEquipmentRow_' + link_no);
-                clonedRow.find('.link_no').html(link_no);
                 clonedRow.appendTo('#link_container');
+                clonedRow.find('.link_no').html(link_no);
                 var $equipmentRow = clonedRow.find('.link_equipment_table').children('tr').length;
                 if ($equipmentRow > 1) {
                     clonedRow.find('.link_equipment_table tr').not(':first').remove();
                 }
+                $(".select2").select2();
             }
 
             function removeLinkRow(event) {
@@ -788,7 +797,8 @@
 
             let link_array = [];
 
-            $('.existing_infrastructure').on('change', function() {
+            $(document).on('change', '.existing_infrastructure', function() {
+                console.log('change');
                 var this_event = $(this);
                 var value = this_event.val();
                 let pop_id = this_event.closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val();
@@ -823,7 +833,7 @@
                 }
             });
 
-            $('.existing_infrastructure_link').on('change', function() {
+            $(document).on('change', '.existing_infrastructure_link', function() {
                 var this_event = $(this);
                 var value = this_event.val();
 
