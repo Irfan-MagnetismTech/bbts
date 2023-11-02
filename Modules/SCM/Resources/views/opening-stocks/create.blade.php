@@ -284,6 +284,7 @@
                             </td>
                         </tr>`;
             $('#opening_stock tbody').append(row);
+            $('.select2').select2({});
         }
 
         $(document).ready(function() {
