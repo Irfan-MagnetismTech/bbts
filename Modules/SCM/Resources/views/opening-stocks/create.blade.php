@@ -99,7 +99,7 @@
                 </div>
                 <div class="form-group col-3">
                 <label for="branch">Warehouse:</label>
-                <select name="branch_id" class="form-control branch" autocomplete="off">
+                <select name="branch_id" class="form-control branch select2" autocomplete="off">
                     <option value="">{{ old('branch_id') ?? (@$openingStock->branch->name ?? 'Select Branch') }}</option>
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}">
