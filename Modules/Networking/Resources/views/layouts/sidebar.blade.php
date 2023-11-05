@@ -1,3 +1,4 @@
+@can('infrastructure-module')
 <div class="pcoded-navigation-label text-uppercase bg-primary">Infrastructure</div>
     <ul class="pcoded-item pcoded-left-item">
         <li class="pcoded-hasmenu {{ request()->routeIs(['pops.*']) ? 'active pcoded-trigger' : null }}">
@@ -70,6 +71,7 @@
             </a>
         </li>
     </ul>
+@endcan    
 <div class="pcoded-navigation-label text-uppercase bg-primary">Networking</div>
 <ul class="pcoded-item pcoded-left-item">
 
