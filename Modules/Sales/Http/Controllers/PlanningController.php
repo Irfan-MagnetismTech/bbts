@@ -21,6 +21,7 @@ use Modules\Sales\Entities\Survey;
 use Modules\Sales\Entities\PlanLinkEquipment;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Brand;
+use Modules\Admin\Entities\Pop;
 use Modules\Sales\Entities\Vendor;
 use Modules\SCM\Entities\Material;
 
@@ -59,7 +60,8 @@ class PlanningController extends Controller
         $materials = Material::get();
         $brands = Brand::get();
         $vendors = Vendor::get();
-        return view('sales::planning.create', compact('feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors'));
+        $pops = Pop::get();
+        return view('sales::planning.create', compact('feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors', 'pops'));
     }
 
     /**
@@ -115,7 +117,9 @@ class PlanningController extends Controller
         $particulars = Product::get();
         $materials = Material::get();
         $brands = Brand::get();
-        return view('sales::planning.edit', compact('plan', 'particulars', 'materials', 'brands'));
+        $pops = Pop::get();
+        $vendors = Vendor::get();
+        return view('sales::planning.edit', compact('plan', 'particulars', 'materials', 'brands', 'pops', 'vendors'));
     }
 
     /**
@@ -126,6 +130,7 @@ class PlanningController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $plan_data = $request->only('mq_no', 'fr_no', 'client_no', 'remarks');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
@@ -234,16 +239,14 @@ class PlanningController extends Controller
                     'link_remarks' => request("link_remarks_{$i}"),
                     'planning_id' => $plan->id,
                 ];
-
                 $planLinkId = request("plan_link_id_{$i}");
                 $planLink = $planLinkId ? PlanLink::find($planLinkId) : new PlanLink();
 
                 $planLink->fill($planLinkData);
                 $planLink->save();
-
                 $finalSurveyData = [
                     'link_no' => $surveyDetails ? $surveyDetails->link_no : $finalSurvey->link_no ?? $request->fr_no . '-' . substr($linkType, 0, 1) . $i,
-                    'vendor_id' => request("link_vender_id_{$i}") ?? '',
+                    'vendor_id' => request("link_vendor_id_{$i}") ?? '',
                     'link_type' => $linkType,
                     'method' => request("last_mile_connectivity_method_{$i}"),
                     'option' => request("option_{$i}"),
