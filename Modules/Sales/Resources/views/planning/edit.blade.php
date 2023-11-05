@@ -28,7 +28,8 @@
             margin-top: 10px;
         }
 
-        .surveyTable th {
+        .surveyTable th,
+        .client_information th {
             background-color: #e7e7dc !important;
             color: black !important;
         }
@@ -59,7 +60,7 @@
                         <div class="table-responsive">
                             <h5 class="text-center">Client Information</h5>
                             <hr />
-                            <table class="table custom_table table-bordered" style="font-size: 12px;">
+                            <table class="table table-bordered client_information" style="font-size: 12px;">
                                 <tr>
                                     <th class="table_label">Client Name</th>
                                     <td>{{ $plan->lead_generation->client_name }}</td>
@@ -230,7 +231,7 @@
                                                 </td>
                                                 <td>
                                                     <button type="button"
-                                                        class="btn btn-sm btn-danger removeEquipmentRow"><i
+                                                        class="btn btn-sm btn-outline-danger removeEquipmentRow"><i
                                                             class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
@@ -248,7 +249,7 @@
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
                         </div>
                         <div class="col-md-1" style="float: right">
-                            <button type="button" class="btn btn-sm btn-success text-left" id="addLinkRow"><i
+                            <button type="button" class="btn btn-sm btn-outline-success text-left" id="addLinkRow"><i
                                     class="fas fa-plus"></i></button>
                         </div>
                     </div>
@@ -273,7 +274,8 @@
                                                     class="link_no">{{ $total_key }}</span></h5>
                                         </div>
                                         <div class="col-md-1 col-1">
-                                            <button type="button" class="btn btn-sm btn-danger text-left removeLinkRow"
+                                            <button type="button"
+                                                class="btn btn-sm btn-outline-danger text-left removeLinkRow"
                                                 onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
                                         </div>
                                         <hr / style="width: 100%; margin-bottom: 10px;">
@@ -564,7 +566,7 @@
                                                             </td>
                                                             <td>
                                                                 <button type="button"
-                                                                    class="btn btn-danger btn-sm removeLinkEquipmentRow"
+                                                                    class="btn btn-outline-danger btn-sm removeLinkEquipmentRow"
                                                                     onclick="removeLinkEquipmentRow(this)">
                                                                     <i class="fas fa-minus"></i>
                                                                 </button>
