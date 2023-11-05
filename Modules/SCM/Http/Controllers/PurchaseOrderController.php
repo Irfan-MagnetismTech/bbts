@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Modules\SCM\Entities\PurchaseOrderLine;
 use PDF;
 use Modules\SCM\Entities\Supplier;
 use Termwind\Components\Dd;
@@ -286,6 +287,48 @@ class PurchaseOrderController extends Controller
         // Handle the case where the SCM purchase requisition ID is not found
         return [];
     }
+
+//    public function searchMaterialByCsAndRequsiition($cs_id = null)
+//    {
+//        $csId = request()->cs_id ?? $cs_id;
+//
+//        $indent_no = Cs::where('id', $csId)->value('indent_no');
+//
+//        if ($indent_no) {
+//            $indent_id = Indent::where('indent_no', $indent_no)->value('id');
+//
+//            if ($indent_id) {
+//                // Find all SCM purchase requisition IDs for the materials associated with the indent
+//                $scmPurchaseRequisitionIds = IndentLine::where('indent_id', $indent_id)
+//                    ->pluck('scm_purchase_requisition_id');
+//
+//                $purchaseOrders = PurchaseOrder::where('indent_id', $indent_id)
+//                    ->pluck('id');
+//
+//                $po_composit_keys = PurchaseOrderLine::where('indent_id', $indent_id)
+//                    ->pluck('id');
+//
+//                // Fetch the CsMaterials with relationships
+//                $csMaterials = CsMaterial::with('material', 'brand')
+//                    ->orderBy('id')
+//                    ->where('cs_id', $csId)
+//                    ->get()
+//                    ->unique('material_id')
+//                    ->map(function ($csMaterial) use ($scmPurchaseRequisitionIds) {
+//                        // Calculate the sum of quantities for this material
+//                        $csMaterial->indent_quantity = ScmPurchaseRequisitionDetails::whereIn('scm_purchase_requisition_id', $scmPurchaseRequisitionIds)
+//                            ->where('material_id', $csMaterial->material_id)
+//                            ->sum('quantity');
+//                        return $csMaterial;
+//                    });
+//
+//                return $csMaterials;
+//            }
+//        }
+//
+//        // Handle the case where the SCM purchase requisition ID is not found
+//        return [];
+//    }
 
     public function searchMaterialBrandByCsAndRequsiition($csId, $supplierId, $materialId)
     {
