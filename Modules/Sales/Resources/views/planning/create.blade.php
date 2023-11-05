@@ -21,7 +21,8 @@
             text-align: left !important;
         }
 
-        .surveyTable th {
+        .surveyTable th,
+        .client_information th {
             background-color: #e7e7dc !important;
             color: black !important;
         }
@@ -63,7 +64,7 @@
                     <div class="col-md-12">
                         <div class="table-responsive">
                             <h5 class="text-center">Client Information</h5>
-                            <table class="table custom_table table-bordered" style="font-size: 12px;">
+                            <table class="table table-bordered client_information" style="font-size: 12px;">
                                 <tr>
                                     <th class="table_label">Client Name</th>
                                     <td>{{ $lead_generation->client_name }}</td>
@@ -133,9 +134,6 @@
                                             <th>Client Req.</th>
                                             <th>Plan</th>
                                             <th>Remarks</th>
-                                            <th>
-
-                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody id="particular_body">
@@ -160,11 +158,6 @@
                                                 <td style="width:30%">
                                                     <span
                                                         class="form-control form-control-sm">{{ $detail->remarks ?? '' }}</span>
-                                                </td>
-                                                <td>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-danger removeParticularRow"><i
-                                                            class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -234,7 +227,8 @@
                                                     class="form-control form-control-sm equipment_remarks" value="">
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-danger removeEquipmentRow"><i
                                                         class="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
@@ -252,7 +246,7 @@
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
                         </div>
                         <div class="col-md-1" style="float: right">
-                            <button type="button" class="btn btn-sm btn-success text-left" id="addLinkRow"><i
+                            <button type="button" class="btn btn-sm btn-outline-success text-left" id="addLinkRow"><i
                                     class="fas fa-plus"></i></button>
                         </div>
                     </div>
@@ -265,7 +259,7 @@
                                     <h5 class="text-center mb-2">Link <span class="link_no">1</span></h5>
                                 </div>
                                 <div class="col-md-1 col-1">
-                                    <button type="button" class="btn btn-sm btn-danger text-left removeLinkRow"
+                                    <button type="button" class="btn btn-sm btn-outline-danger text-left removeLinkRow"
                                         onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
                                 </div>
                                 <hr / style="width: 100%; margin-bottom: 10px;">
@@ -509,7 +503,7 @@
                                                 </td>
                                                 <td>
                                                     <button type="button"
-                                                        class="btn btn-danger btn-sm removeLinkEquipmentRow"
+                                                        class="btn btn-outline-danger btn-sm removeLinkEquipmentRow"
                                                         onclick="removeLinkEquipmentRow(this)">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
