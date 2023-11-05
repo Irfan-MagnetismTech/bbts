@@ -960,35 +960,19 @@
             // var vat_perchant = $(this).closest('tr').find('.product_vat').val();
             // var vat_amount = (product_total * vat_perchant) / 100;
             // $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
-            productOperationSumCalculation($(this));
             productPartialTotal();
         });
 
         $('.product_operation_cost').on('keyup', function() {
-            productOperationSumCalculation($(this));
-        });
-
-        function productOperationSumCalculation(thisEvent) {
-            var product_operation_cost = thisEvent.val();
-            console.log('product_operation_cost', product_operation_cost)
-            var product_price = thisEvent.closest('tr').find('.product_price').val();
-            console.log('product_price', product_price)
+            var product_operation_cost = $(this).val();
+            var product_price = $(this).closest('tr').find('.product_price').val();
+            // var vat_amount = $(this).closest('tr').find('.product_vat_amount').val();
             var product_total = parseFloat(product_operation_cost) + parseFloat(product_price)
-            console.log('product_total', product_total)
-            thisEvent.closest('tr').find('.product_operation_cost_total').val(product_total.toFixed(2));
-            totalOperationCost();
-        }
-
-        function totalOperationCost() {
-            var total_operation_cost = 0;
-            $('.product_operation_cost').each(function() {
-                var value = parseFloat($(this).val())
-                if (!isNaN(value)) {
-                    total_operation_cost += value;
-                }
-            });
-            $('#total_operation_cost').val(total_operation_cost.toFixed(2));
-        }
+            $(this).closest('tr').find('.product_operation_cost_total').val(product_total.toFixed(2));
+            // $('#total_product_cost').val(product_total); 
+            // $('#total_mrc').val(product_total); 
+            productPartialTotal();
+        });
 
         function productPartialTotal() {
             var product_total = 0;
@@ -1139,7 +1123,7 @@
             var plan_equipment_interest = plan_equipment_perchantage_interest_amount ?
                 plan_equipment_perchantage_interest_amount : 0;
             $(event).closest('.PlanLinkMainRow').find('.plan_equipment_interest').val(plan_equipment_interest);
-            var plan_equipment_total = parseFloat(plan_equipment_partial_total) + parseFloat(
+            var plan_equipment_total = parseFloat(plan_equipment_partial_total)+ parseFloat(
                     plan_equipment_deployment_cost) +
                 parseFloat(plan_equipment_interest);
             $(event).closest('.PlanLinkMainRow').find('.plan_equipment_grand_total').val(plan_equipment_total.toFixed(2));

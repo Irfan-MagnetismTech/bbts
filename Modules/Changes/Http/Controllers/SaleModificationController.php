@@ -345,10 +345,10 @@ class SaleModificationController extends Controller
         $current_plan_links = [];
         $old_plan_links = [];
         $offer->offerDetails->map(function ($item) use (&$current_plan_links) {
-            $item->offerLinks->map(function ($item) use (&$current_plan_links) {
+            $item->offerLinks->map(function ($link) use (&$current_plan_links, $item) {
                 $current_plan_links[] = [
-                    'link_no' => $item->link_no,
-                    'link_type' => $item->link_type,
+                    'link_no' => $link->link_no,
+                    'link_type' => $link->link_type,
                     'fr_no' => $item->fr_no,
                 ];
                 return $item;
