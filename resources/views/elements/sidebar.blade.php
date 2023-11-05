@@ -33,7 +33,7 @@
             @endhasanyrole
                 @can('admin-configuration')
                     <li
-                        class="pcoded-hasmenu {{ request()->routeIs(['branches.*', 'apsections.*', 'teams.*', 'departments.*', 'designations.*', 'employees.*', 'sellCollectionHeads.*', 'services.*']) ? 'active pcoded-trigger' : null }}">
+                        class="pcoded-hasmenu {{ request()->routeIs(['branches.*', 'teams.*', 'departments.*', 'designations.*', 'employees.*', 'services.*']) ? 'active pcoded-trigger' : null }}">
                         <a href="javascript:void(0)">
                             <span class="pcoded-micon"><i class="ti-settings"></i><b>P</b></span>
                             <span class="pcoded-mtext">Configurations</span>
@@ -61,11 +61,7 @@
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
-                            <li class="{{ request()->routeIs('brands.*') ? 'active' : null }}">
-                                <a href="{{ route('brands.index') }}"> <span class="pcoded-micon"><i
-                                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Brands</span><span
-                                        class="pcoded-mcaret"></span></a>
-                            </li>
+                            
                             <li class="{{ request()->routeIs('branchs.*') ? 'active' : null }}">
                                 <a href="{{ route('branchs.index') }}"> <span class="pcoded-micon"><i
                                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Branches</span><span

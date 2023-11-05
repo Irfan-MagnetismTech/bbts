@@ -35,7 +35,7 @@
                 <th> Unit</th>
                 <th> Brand</th>
                 <th> Model</th>
-                <th>Serial Code</th>
+                <th>    Serial Code</th>
                 <th> Unit Price</th>
                 <th> Quantity</th>
                 <th> Amount</th>

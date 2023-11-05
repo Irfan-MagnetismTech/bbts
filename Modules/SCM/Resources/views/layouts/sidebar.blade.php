@@ -19,6 +19,11 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Categories</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
+            <li class="{{ request()->routeIs('brands.*') ? 'active' : null }}">
+                <a href="{{ route('brands.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Brands</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
             @can('material-view')
             <li class="{{ request()->routeIs('materials.*') ? 'active' : null }}">
                 <a href="{{ route('materials.index') }}"> <span class="pcoded-micon"><i
