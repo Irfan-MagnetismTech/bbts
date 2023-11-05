@@ -463,7 +463,7 @@ class ScmChallanController extends Controller
                     ->where('quantity', '<', 0)
                     ->sum('quantity');
                 if (($total_stock - $out_stock) >= 0) {
-                    if ($item->stockable->mrr_no) {
+                    if ($item?->stockable?->mrr_no) {
                         return [
                             'id' => $item->stockable_id,
                             'type_no' => $item->stockable->mrr_no,

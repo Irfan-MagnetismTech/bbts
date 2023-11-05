@@ -27,6 +27,7 @@ use Modules\SCM\Http\Requests\PurchaseOrderRequest;
 use Spatie\Permission\Traits\HasRoles;
 
 
+use function Ramsey\Collection\add;
 use function Termwind\render;
 
 class PurchaseOrderController extends Controller
@@ -152,8 +153,10 @@ class PurchaseOrderController extends Controller
         $cs_brands=[];
         $cs_models=[];
         foreach ($purchaseOrder->purchaseOrderLines as $key => $value) {
-            $cs_brands = $this->searchMaterialBrandByCsAndRequsiition($purchaseOrder->cs->id, $purchaseOrder->supplier_id, $value->material_id);
-            $cs_models = $this->searchMaterialPriceByCsAndRequsiition($purchaseOrder->cs->id, $purchaseOrder->supplier_id, $value->material_id);
+//            $cs_brands = $this->searchMaterialBrandByCsAndRequsiition($purchaseOrder->cs->id, $purchaseOrder->supplier_id, $value->material_id);
+//            $cs_models = $this->searchMaterialPriceByCsAndRequsiition($purchaseOrder->cs->id, $purchaseOrder->supplier_id, $value->material_id);
+            $cs_brands[] = $value;
+            $cs_models[] = $value->model;
         }
 
         $suppliers = Supplier::where('id', $purchaseOrder->supplier_id)
@@ -266,17 +269,30 @@ class PurchaseOrderController extends Controller
                 $scmPurchaseRequisitionIds = IndentLine::where('indent_id', $indent_id)
                     ->pluck('scm_purchase_requisition_id');
 
+                $purchaseOrderIds = PurchaseOrder::where('indent_id', $indent_id)
+                    ->pluck('id');
+
+                $po_composit_keys = PurchaseOrderLine::whereIn('purchase_order_id', $purchaseOrderIds)
+                    ->pluck('po_composit_key');
+
                 // Fetch the CsMaterials with relationships
                 $csMaterials = CsMaterial::with('material', 'brand')
                     ->orderBy('id')
                     ->where('cs_id', $csId)
                     ->get()
                     ->unique('material_id')
-                    ->map(function ($csMaterial) use ($scmPurchaseRequisitionIds) {
+                    ->map(function ($csMaterial) use ($scmPurchaseRequisitionIds,$po_composit_keys) {
                         // Calculate the sum of quantities for this material
                         $csMaterial->indent_quantity = ScmPurchaseRequisitionDetails::whereIn('scm_purchase_requisition_id', $scmPurchaseRequisitionIds)
                             ->where('material_id', $csMaterial->material_id)
                             ->sum('quantity');
+
+                        $poQuantity = PoMaterial::whereIn('po_composit_key', $po_composit_keys)
+                            ->where('material_id', $csMaterial->material_id)
+                            ->sum('quantity');
+
+                        $csMaterial->indent_left_quantity = $csMaterial->indent_quantity - $poQuantity;
+
                         return $csMaterial;
                     });
 
@@ -287,48 +303,6 @@ class PurchaseOrderController extends Controller
         // Handle the case where the SCM purchase requisition ID is not found
         return [];
     }
-
-//    public function searchMaterialByCsAndRequsiition($cs_id = null)
-//    {
-//        $csId = request()->cs_id ?? $cs_id;
-//
-//        $indent_no = Cs::where('id', $csId)->value('indent_no');
-//
-//        if ($indent_no) {
-//            $indent_id = Indent::where('indent_no', $indent_no)->value('id');
-//
-//            if ($indent_id) {
-//                // Find all SCM purchase requisition IDs for the materials associated with the indent
-//                $scmPurchaseRequisitionIds = IndentLine::where('indent_id', $indent_id)
-//                    ->pluck('scm_purchase_requisition_id');
-//
-//                $purchaseOrders = PurchaseOrder::where('indent_id', $indent_id)
-//                    ->pluck('id');
-//
-//                $po_composit_keys = PurchaseOrderLine::where('indent_id', $indent_id)
-//                    ->pluck('id');
-//
-//                // Fetch the CsMaterials with relationships
-//                $csMaterials = CsMaterial::with('material', 'brand')
-//                    ->orderBy('id')
-//                    ->where('cs_id', $csId)
-//                    ->get()
-//                    ->unique('material_id')
-//                    ->map(function ($csMaterial) use ($scmPurchaseRequisitionIds) {
-//                        // Calculate the sum of quantities for this material
-//                        $csMaterial->indent_quantity = ScmPurchaseRequisitionDetails::whereIn('scm_purchase_requisition_id', $scmPurchaseRequisitionIds)
-//                            ->where('material_id', $csMaterial->material_id)
-//                            ->sum('quantity');
-//                        return $csMaterial;
-//                    });
-//
-//                return $csMaterials;
-//            }
-//        }
-//
-//        // Handle the case where the SCM purchase requisition ID is not found
-//        return [];
-//    }
 
     public function searchMaterialBrandByCsAndRequsiition($csId, $supplierId, $materialId)
     {
@@ -418,6 +392,8 @@ class PurchaseOrderController extends Controller
                 'model' => $request->model[$key] ?? null,
                 'description' => $request->description[$key] ?? null,
                 'quantity' => $request->quantity[$key] ?? null,
+                'indent_qty' => $request->indent_qty[$key] ?? null,
+                'indent_left_qty' => $request->indent_left_qty[$key] ?? null,
                 'warranty_period' => $request->warranty_period[$key] ?? null,
                 'unit_price' => $request->unit_price[$key] ?? null,
                 'vat' => $request->vat[$key] ?? null,

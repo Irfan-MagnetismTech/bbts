@@ -125,17 +125,14 @@
             <label for="cs_no">CS No: <span class="text-danger">*</span></label>
 
             <select class="form-control select2" name="cs_id" id="cs_id" required>
-                <option value="" disabled selected>Select CS No</option>
-
-                @if (!empty($cs_nos))
-                    @foreach ($cs_nos as $cs_no)
-                        <option
-                            value="{{ $cs_no['id'] }}" {{ $cs_no['id'] == old('cs_id', @$purchaseOrder->cs_no) ? 'selected' : '' }}>
-                            {{ $cs_no['cs_no'] }}
-                        </option>
-                    @endforeach
-                @endif
+                <option value="" disabled>Select CS No</option>
+                @foreach ($cs_nos as $cs_no)
+                    <option value="{{ $cs_no['id'] }}" {{ (old('cs_id', @$purchaseOrder->cs_no) == $cs_no['cs_no']) ? 'selected' : '' }}>
+                        {{ $cs_no['cs_no'] }}
+                    </option>
+                @endforeach
             </select>
+
 
         </div>
         <input type="hidden" name="cs_no" id="cs_no" value="{{ old('cs_no') ?? @$purchaseOrder?->cs_no }}">
@@ -181,6 +178,7 @@
                     <th>Description</th>
                     <th>Unit</th>
                     <th>Indent Quantity</th>
+                    <th>Indent Left Quantity</th>
                     <th>Quantity</th>
                     <th>Warranty Period</th>
                     <th>Price</th>
@@ -214,6 +212,8 @@
 
                     $indent_qty = old('indent_qty', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('indent_qty') : []);
 
+                    $indent_left_qty = old('indent_left_qty', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('indent_left_qty') : []);
+
                     $warranty_period = old('warranty_period', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('warranty_period') : []);
 
                     $unit_price = old('unit_price', !empty($purchaseOrder) ? $purchaseOrder->purchaseOrderLines->pluck('unit_price') : []);
@@ -238,9 +238,8 @@
                                     @endforeach
                                 </select>
                             </td>
-                            {{-- @dd($cs_brands, $brand_id) --}}
                             <td>
-                                <select class="form-control text-center brand_name select2" name="brand_id[]">
+                                <select class="form-control text-center brand_name" name="brand_id[]">
                                     <option value="" readonly selected>Select Brand</option>
                                     @foreach ($cs_brands as $cs_brand)
                                         <option value="{{ $cs_brand->brand_id }}"
@@ -249,17 +248,22 @@
                                     @endforeach
                                 </select>
                             </td>
-                            <td>
-                                <select class="form-control text-center model select2" name="model[]">
-                                    <option value="" readonly selected>Select Model</option>
-                                    @foreach ($cs_models as $cs_model)
-                                        <option value="{{ $cs_model->model }}"
-                                            {{ $cs_model->model == $single_model[$key] ? 'selected' : '' }}>
-                                            {{ $cs_model->model }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
+{{--                            <td>--}}
+{{--                                <select class="form-control text-center model select2" name="model[]">--}}
+{{--                                    <option value="" readonly selected>Select Model</option>--}}
+{{--                                    @foreach ($cs_models as $cs_model)--}}
+{{--                                        <option value="{{ $cs_model->model }}"--}}
+{{--                                            {{ $cs_model->model == $single_model[$key] ? 'selected' : '' }}>--}}
+{{--                                            {{ $cs_model->model }}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
+{{--</td>--}}
 
+                            <td>
+                                <input type="text" name="model[]"
+                                       class="form-control text-center model" autocomplete="off"
+                                       value="{{ $cs_models[$key] }}">
+                            </td>
                             <td>
                                 <input type="text" name="description[]"
                                        class="form-control text-center description" autocomplete="off"
@@ -274,6 +278,12 @@
                             <td>
                                 <input type="number" name="indent_qty[]" class="form-control text-center indent_qty"
                                        autocomplete="off" value="{{ $indent_qty[$key] }}" readonly>
+                            </td>
+
+                            <td>
+                                <input type="number" name="indent_left_qty[]"
+                                       class="form-control text-center indent_left_qty"
+                                       autocomplete="off" value="{{ $indent_left_qty[$key] }}" readonly>
                             </td>
 
                             <td>
@@ -545,6 +555,7 @@
                         cs_materials +=
                             `<option value="${value.material.id}">${value.material.name}</option>`;
                         value.material.indent_qty = value.indent_quantity
+                        value.material.indent_left_qty = value.indent_left_quantity
                         material_items.push(value.material)
                     });
                     // $('.material_name').html(cs_materials);
@@ -619,6 +630,10 @@
 
                             <td>
                                <input type="number" name="indent_qty[]" class="form-control indent_qty" value="${material.indent_qty}" autocomplete="off" readonly>
+                            </td>
+
+                            <td>
+                               <input type="number" name="indent_left_qty[]" class="form-control indent_left_qty" value="${material.indent_left_qty}" autocomplete="off" readonly>
                             </td>
 
                             <td>

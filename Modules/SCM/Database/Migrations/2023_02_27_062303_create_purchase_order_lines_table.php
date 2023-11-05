@@ -24,6 +24,8 @@ return new class extends Migration
             $table->bigInteger('brand_id')->nullable();
             $table->text('description')->nullable();
             $table->float('quantity')->nullable();
+            $table->float('indent_qty')->nullable();
+            $table->float('indent_left_qty')->nullable();
             $table->float('warranty_period')->nullable();
             $table->float('installation_cost')->nullable();
             $table->float('transport_cost')->nullable();

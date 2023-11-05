@@ -18,7 +18,7 @@ use Modules\SCM\Http\Requests\MaterialRequest;
 class PurchaseOrderLine extends Model
 {
     protected $fillable = [
-        'purchase_order_id', 'scm_purchase_requisition_id', 'po_composit_key', 'cs_id', 'quotation_no', 'material_id', 'brand_id', 'model', 'description', 'quantity', 'warranty_period', 'installation_cost', 'transport_cost', 'unit_price', 'vat', 'tax', 'total_amount', 'required_date'
+        'purchase_order_id', 'scm_purchase_requisition_id', 'po_composit_key', 'cs_id', 'quotation_no', 'material_id', 'brand_id', 'model', 'description', 'quantity', 'indent_qty', 'indent_left_qty', 'warranty_period', 'installation_cost', 'transport_cost', 'unit_price', 'vat', 'tax', 'total_amount', 'required_date'
     ];
 
     public function setRequiredDateAttribute($input)
