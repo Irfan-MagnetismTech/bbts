@@ -29,8 +29,14 @@ class MaterialController extends Controller
 
     public function index()
     {
-        $materials = Material::with('unit','materialBrand.brands')->get();
-        // dd($materials);
+        $materials = Material::with('unit','materialBrand')->get()
+        ->map(function ($material, $key) {
+            $brand = $material->materialBrand?->brand;
+            $brandArray = str_getcsv($brand); 
+            $material->brand = Brand::whereIn('id',$brandArray)->get()->toArray();
+            return $material;
+        });
+        // dd($materials->brand);
         return view('scm::materials.index', compact('materials'));
     }
 

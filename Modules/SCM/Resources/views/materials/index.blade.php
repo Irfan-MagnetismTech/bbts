@@ -57,9 +57,10 @@
                         <td class="text-center">{{ $material->type ?? '' }}</td>
                         <td class="text-center">{{ $material->code ?? '' }}</td>
                         <td class="text-center">
-                            @php $brands = $material->materialBrand?->brands ?? [] @endphp
+                            @php $brands = $material->brand ?? [] @endphp
+                            {{-- @dd($brands); --}}
                             @foreach ($brands as $brand)
-                                {{ $brand->name }} <br>
+                                {{ $brand['name'] ?? '' }} <br>
                             @endforeach
                             {{-- {{ $material->materialBrand?->brands->pluck('name')->flatten() ?? '' }} --}}
                         </td>
