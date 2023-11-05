@@ -20,11 +20,6 @@
             width: 30px;
             text-align: left !important;
         }
-
-        .surveyTable th {
-            background-color: #e7e7dc !important;
-            color: black !important;
-        }
     </style>
 @endsection
 
@@ -331,7 +326,7 @@
                                     <div class="form-item">
                                         <select name="link_availability_status_1"
                                             class="form-control form-control-sm link_availability_status select2">
-                                            <option value="">Vendor</option>
+                                            <option value="">New Transmission Link</option>
                                             @foreach ($vendors as $vendor)
                                                 <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
                                             @endforeach
@@ -360,75 +355,67 @@
                                     <hr />
                                     <h5 class="text-center">Survey Information</h5>
                                     <hr />
-                                    <table class="table table-bordered surveyTable" style="font-size: 12px;">
+                                    <table class="table custom_table table-bordered surveyTable" style="font-size: 12px;">
                                         <tr>
-                                            <th>Vendor</th>
+                                            <th>Link Vendor</th>
                                             <td class="link_vendor" style="width:30%">
-                                                <select name="link_vendor_id_1"
-                                                    class="form-control form-control-sm link_vendor_id_1 select2"
-                                                    style="display: none">
-                                                    <option value="">Select Vendor</option>
-                                                    @foreach ($vendors as $vendor)
-                                                        <option value="{{ $vendor->id }}">
-                                                            {{ $vendor->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <input type="text" name="link_vendor_1"
+                                                    class="form-control form-control-sm link_vendor_1" value=""
+                                                    style="height: 25px !important">
+                                                <input type="hidden" name="link_vender_id_1" id="link_vendor_id"
+                                                    class="form-control form-control-sm link_vender_id_1" value="">
                                             </td>
                                             <th>Connecting POP Running Vendor</th>
                                             <td class="running_vendor_pop" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>POP</th>
+                                            <th>Link Connectivity POP</th>
                                             <td class="link_connecting_pop" style="width:30%">
-                                                <select name="link_connecting_pop_id_1"
-                                                    class="form-control form-control-sm link_connecting_pop_id_1 select2"
-                                                    style="display: none">
-                                                    <option value="">Select POP</option>
-                                                    @foreach ($pops as $pop)
-                                                        <option value="{{ $pop->id }}">
-                                                            {{ $pop->name }}</option>
-                                                    @endforeach
-                                                </select>
+                                                <input type="text" name="link_connecting_pop_1"
+                                                    class="form-control form-control-sm link_connecting_pop_1"
+                                                    style="height: 25px !important" value="">
+                                                <input type="hidden" name="link_connecting_pop_id_1"
+                                                    id="link_connecting_pop_id" class="link_connecting_pop_id_1">
                                             </td>
                                             <th>Connecting POP Running Vendor Capacity</th>
                                             <td class="running_vendor_capacity" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Method</th>
+                                            <th>Last Mile Connectivity Method</th>
                                             <td class="last_mile_connectivity_method" style="width:30%">
                                                 <input type="text" name="last_mile_connectivity_method_1"
                                                     class="form-control form-control-sm last_mile_connectivity_method_1"
-                                                    style="height: 25px !important" value="" readonly>
+                                                    style="height: 25px !important" value="">
                                             </td>
                                             <th>Zone Area Running NTTN Vendor</th>
                                             <td class="nttn_vendor_zone" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Latitute</th>
+                                            <th>Last Connectivity Point Latitute</th>
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="connectivity_lat_1"
                                                     class="form-control form-control-sm connectivity_lat_1"
-                                                    style="height: 25px !important" value="" readonly>
+                                                    style="height: 25px !important" value="">
                                             </td>
                                             <th>Zone Area Running NTTN BW</th>
                                             <td class="running_nttn_bw" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Longitute</th>
+                                            <th>Last Connectivity Point Longitute</th>
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="connectivity_long_1"
                                                     class="form-control form-control-sm connectivity_long_1"
-                                                    style="height: 25px !important" value="" readonly>
+                                                    style="height: 25px !important" value="">
                                             </td>
                                             <th>Connectivity Route</th>
                                             <td class="connectivity_route" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Distance</th>
+                                            <th>Connectivity Point Last Mile Distance</th>
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="distance_1"
                                                     class="form-control form-control-sm distance_1"
-                                                    style="height: 25px !important" value="" readonly>
+                                                    style="height: 25px !important" value="">
                                             </td>
                                         </tr>
                                     </table>
@@ -674,20 +661,22 @@
                     success: function(data) {
                         $(event.target).closest('.main_link').find('input[name^="plan_link_no_"]').val(data
                             ?.link_no);
-                        $(event.target).closest('.main_link').find('select[name^="link_vendor_id_"]').val(data
+                        $(event.target).closest('.main_link').find('input[name^="link_vendor_"]').val(data?.vendor
+                            ?.name);
+                        $(event.target).closest('.main_link').find('input[name^="link_vender_id_"]').val(data
                             ?.vendor
-                            ?.id).trigger('change');
-
+                            ?.id);
                         //set existing_infrastructure_ select box value
                         $(event.target).closest('.main_link').find('select[name^="existing_infrastructure_"]').val(
                             data
                             ?.status);
                         $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(data
                             .status);
-                        $(event.target).closest('.main_link').find('select[name^="link_connecting_pop_id_"]').val(
-                            data
-                            .pop
-                            .id).trigger('change');
+                        $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_"]').val(data
+                            .pop.name);
+                        $(event.target).closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val(
+                            data.pop
+                            .id);
                         $(event.target).closest('.main_link').find('input[name^="last_mile_connectivity_method_"]')
                             .val(data
                                 .method);
@@ -833,11 +822,6 @@
                             });
                             this_event.closest('.main_link').find('.existing_infrastructure_link').html(
                                 html);
-                            this_event.closest('.main_link').find('.existing_transmission_capacity').parent(
-                                'div').parent(
-                                'div').show();
-                            this_event.closest('.main_link').find('.increase_capacity').parent('div')
-                                .parent('div').show();
                         }
                     });
                     this_event.closest('.main_link').find('.new_transmission_capacity_div').css('display',
@@ -846,9 +830,6 @@
                     this_event.closest('.main_link').find('.link_list').css('display', 'none');
                     this_event.closest('.main_link').find('.new_transmission_capacity_div').css('display',
                         'block');
-                    this_event.closest('.main_link').find('.existing_transmission_capacity').parent('div').parent(
-                        'div').hide();
-                    this_event.closest('.main_link').find('.increase_capacity').parent('div').parent('div').hide();
                 }
             });
 

@@ -28,13 +28,14 @@
             <thead>
             <tr>
                 <th>#SL</th>
+                <th>ID</th>
                 <th>Date</th>
                 <th>Branch</th>
                 <th> Material Name</th>
                 <th> Unit</th>
                 <th> Brand</th>
                 <th> Model</th>
-                <th>Serial Code</th>
+                <th>    Serial Code</th>
                 <th> Unit Price</th>
                 <th> Quantity</th>
                 <th> Amount</th>
@@ -44,6 +45,7 @@
             <tfoot>
             <tr>
                 <th>#SL</th>
+                <th>ID</th>
                 <th>Date</th>
                 <th>Branch</th>
                 <th> Material Name</th>
@@ -58,12 +60,15 @@
             </tr>
             </tfoot>
             <tbody>
+                @php($i=1);
             @foreach ($openingStocks as $key => $openingStock)
                 @foreach ($openingStock->lines as $key => $data)
                     <tr>
-                        @if ($loop->first)
-                            <td rowspan="{{ count($openingStock->lines) }}">{{ $loop->parent->iteration }}</td>
-                        @endif
+                        {{-- @if ($loop->first) --}}
+                            {{-- <td rowspan="{{ count($openingStock->lines) }}">{{ $loop->parent->iteration }}</td> --}}
+                            <td rowspan="">{{ $i++ }}</td>
+                        {{-- @endif --}}
+                        <td class="text-center">{{ $openingStock->id }}</td>
                         <td class="text-center">{{ $openingStock->date }}</td>
                         <td class="text-center">{{ $openingStock->branch->name ?? ''}}</td>
                         <td class="text-center">{{ $data->material->name }}</td>
@@ -74,8 +79,9 @@
                         <td class="text-center">{{ $data->unit_price }}</td>
                         <td class="text-center">{{ $data->quantity }}</td>
                         <td class="text-center">{{ $data->total_amount }}</td>
-                        @if ($loop->first)
-                            <td rowspan="{{ count($openingStock->lines) }}">
+                        {{-- @if ($loop->first) --}}
+                            {{-- <td rowspan="{{ count($openingStock->lines) }}"> --}}
+                            <td rowspan="">
                                 <div class="icon-btn">
                                     <nobr>
                                         <a href="{{ url("scm/opening-stocks/$openingStock->id") }}"
@@ -97,7 +103,7 @@
                                     </nobr>
                                 </div>
                             </td>
-                        @endif
+                        {{-- @endif --}}
                     </tr>
                 @endforeach
             @endforeach
