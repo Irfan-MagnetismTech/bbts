@@ -95,20 +95,20 @@
                 <div class="form-check-inline">
                     <label class="form-check-label" for="client">
                         <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                            value="client" @checked(@$type == 'client' || ($form_method == 'POST' && !old()))> Client
+                               value="client" @checked(@$type == 'client' || ($form_method == 'POST' && !old()))> Client
                     </label>
                 </div>
                 <div class="form-check-inline">
                     <label class="form-check-label" for="pop">
                         <input type="radio" class="form-check-input radioButton" id="pop" name="type"
-                            value="pop" @checked(@$type == 'pop')>
+                               value="pop" @checked(@$type == 'pop')>
                         POP
                     </label>
                 </div>
                 <div class="form-check-inline">
                     <label class="form-check-label" for="general">
                         <input type="radio" class="form-check-input radioButton" id="general" name="type"
-                            value="general" @checked(@$type == 'general')>
+                               value="general" @checked(@$type == 'general')>
                         General
                     </label>
                 </div>
@@ -120,15 +120,15 @@
         <div class="form-group col-3 date">
             <label for="date">Applied Date:</label>
             <input class="form-control" id="date" name="date" aria-describedby="date"
-                value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
+                   value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
         </div>
         <div class="form-group col-3 mrs_no">
             <label for="select2">MRS No</label>
             <input class="form-control" id="mrs_no" name="mrs_no" aria-describedby="mrs_no"
-                value="{{ old('mrs_no') ?? (@$scm_requisition_no ?? '') }}" placeholder="Search a MRS No">
+                   value="{{ old('mrs_no') ?? (@$scm_requisition_no ?? '') }}" placeholder="Search a MRS No">
             <input class="form-control" id="scm_requisition_id" name="scm_requisition_id"
-                aria-describedby="scm_requisition_id"
-                value="{{ old('scm_requisition_id') ?? (@$scm_requisition_id ?? '') }}" type="hidden">
+                   aria-describedby="scm_requisition_id"
+                   value="{{ old('scm_requisition_id') ?? (@$scm_requisition_id ?? '') }}" type="hidden">
         </div>
         <div class="form-group col-3">
             <label for="select2">Purpose</label>
@@ -144,7 +144,7 @@
         <div class="form-group col-3 branch_name">
             <label for="select2">Branch Name</label>
             <input class="form-control" type="text" id="branch_name" name="branch_name" readonly
-                value="{{ old('branch_name') ?? (@$branch_name ?? '') }}">
+                   value="{{ old('branch_name') ?? (@$branch_name ?? '') }}">
             <input type="hidden" name="branch_id" value="{{ old('branch_id') ?? (@$branch_id ?? '') }}" id="branch_id">
         </div>
         {{-- <div class="form-group col-3 branch_name">
@@ -160,10 +160,10 @@
         <div class="form-group col-3 employee">
             {{-- @dd($requisition) --}}
             <input type="hidden" id="employee_id" name="employee_id"
-                value="{{ !empty($requisition->employee) ? $requisition->employee->id : '' }}">
+                   value="{{ !empty($requisition->employee) ? $requisition->employee->id : '' }}">
             <label for="employee">Employee</label>
             <input type="text" class="form-control" readonly id="employee" aria-describedby="employee" name="employee"
-                value="{{ old('employee') ?? (@$requisition->employee->name ?? '') }}" placeholder="Employee Name">
+                   value="{{ old('employee') ?? (@$requisition->employee->name ?? '') }}" placeholder="Employee Name">
 
         </div>
         {{-- <div class="pop-up-type">
@@ -181,7 +181,7 @@
         <div class="form-group col-3 equipment_type type" id="pop-up-type">
             <label for="client_name">Type:</label>
             <input type="text" class="form-control" id="equipment_type" aria-describedby="equipment_type"
-                name="equipment_type" readonly value="{{ old('equipment_type') ?? (@$equipment_type ?? '') }}">
+                   name="equipment_type" readonly value="{{ old('equipment_type') ?? (@$equipment_type ?? '') }}">
         </div>
 
 
@@ -190,7 +190,7 @@
         <div class="form-group col-3 client_no">
             <label for="client_no">Client Name:</label>
             <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
-                readonly value="{{ old('client_name') ?? (@$client_name ?? '') }}">
+                   readonly value="{{ old('client_name') ?? (@$client_name ?? '') }}">
         </div>
         {{-- <div class="form-group col-3 fr_no">
             <label for="select2">FR No</label>
@@ -210,7 +210,7 @@
         <div class="form-group col-3 client_no">
             <label for="client_no">Fr No:</label>
             <input type="text" class="form-control" id="fr_no" aria-describedby="fr_no" name="fr_no" readonly
-                value="{{ old('fr_no') ?? (@$fr_no ?? '') }}">
+                   value="{{ old('fr_no') ?? (@$fr_no ?? '') }}">
         </div>
 
         {{-- <div class="form-group col-3 link_no">
@@ -231,33 +231,33 @@
         <div class="form-group col-3 client_no">
             <label for="client_no">Link No:</label>
             <input type="text" class="form-control" id="link_no" aria-describedby="link_no" name="link_no"
-                readonly value="{{ old('link_no') ?? (@$link_no ?? '') }}">
+                   readonly value="{{ old('link_no') ?? (@$link_no ?? '') }}">
         </div>
 
         <div class="form-group col-3 client_no">
             <label for="client_no">Client No:</label>
             <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
+                   readonly value="{{ old('client_no') ?? (@$client_no ?? '') }}">
         </div>
 
         <div class="form-group col-3 client_address">
             <label for="client_address">Client Address:</label>
             <input type="text" class="form-control" id="client_address" name="client_address"
-                aria-describedby="client_address" readonly
-                value="{{ old('client_address') ?? (@$client_address ?? '') }}">
+                   aria-describedby="client_address" readonly
+                   value="{{ old('client_address') ?? (@$client_address ?? '') }}">
         </div>
 
         <div class="form-group col-3 pop_name">
             <label for="select2">Pop Name</label>
             <input class="form-control" id="pop_name" name="pop_name" aria-describedby="pop_name"
-                value="{{ old('pop_name') ?? (@$pop_name ?? '') }}" readonly placeholder="POP Name">
+                   value="{{ old('pop_name') ?? (@$pop_name ?? '') }}" readonly placeholder="POP Name">
             <input type="hidden" class="form-control" id="pop_id" name="pop_id" aria-describedby="pop_id"
-                value="{{ old('pop_id') ?? (@$pop_id ?? '') }}">
+                   value="{{ old('pop_id') ?? (@$pop_id ?? '') }}">
         </div>
         <div class="form-group col-3 pop_address">
             <label for="select2">Pop Address</label>
             <input class="form-control" id="pop_address" name="pop_address" readonly aria-describedby="pop_address"
-                value="{{ old('pop_address') ?? (@$pop_address ?? '') }}" readonly placeholder="POP Address">
+                   value="{{ old('pop_address') ?? (@$pop_address ?? '') }}" readonly placeholder="POP Address">
         </div>
     </div>
     <div class="row loading" style="display: none;">
@@ -275,139 +275,139 @@
     <div class="row" id="dataContainer" @if (empty($challan) && empty(old('material_name'))) style="display: none;" @endif>
         <table class="table table-bordered" id="challan">
             <thead>
-                <tr>
-                    <th>Material Name</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Received Type</th>
-                    <th>Type No</th>
-                    <th>Serial/Drum Code <br /> No</th>
-                    <th>Unit</th>
-                    <th>Available</th>
-                    <th>MRS Quantity</th>
-                    <th>Issued Qty</th>
-                    <th>Remarks</th>
-                    <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
-                </tr>
+            <tr>
+                <th>Material Name</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Received Type</th>
+                <th>Type No</th>
+                <th>Serial/Drum Code <br /> No</th>
+                <th>Unit</th>
+                <th>Available</th>
+                <th>MRS Quantity</th>
+                <th>Issued Qty</th>
+                <th>Remarks</th>
+                <th><i class="btn btn-primary btn-sm fa fa-plus add-challan-row"></i></th>
+            </tr>
             </thead>
             <tbody id="challanDataBody">
-                @php
+            @php
 
-                    $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
-                    $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
-                    $received_no = old('type_no', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
-                    $receiveable_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('receiveable_id') : []);
-                    $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
-                    $material_type = old('material_type', !empty($challan) ? $challan->scmChallanLines->pluck('material.type') : []);
-                    $brand_id = old('brand_id', !empty($challan) ? $challan->scmChallanLines->pluck('brand_id') : []);
-                    $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
-                    $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
-                    $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
-                    $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
-                    $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
-                    $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
-                    $mrs_quantity = old('mrs_quantity', !empty($challan) ? $challan->scmChallanLines->pluck('mrs_quantity') : []);
+                $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
+                $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
+                $received_no = old('type_no', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
+                $receiveable_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('receiveable_id') : []);
+                $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
+                $material_type = old('material_type', !empty($challan) ? $challan->scmChallanLines->pluck('material.type') : []);
+                $brand_id = old('brand_id', !empty($challan) ? $challan->scmChallanLines->pluck('brand_id') : []);
+                $model = old('model', !empty($challan) ? $challan->scmChallanLines->pluck('model') : []);
+                $material_id = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
+                $serial_code = old('material_id', !empty($challan) ? json_decode($challan->scmChallanLines->pluck('serial_code')) : []);
+                $unit = old('unit', !empty($challan) ? $challan->scmChallanLines->pluck('material.unit') : []);
+                $quantity = old('final_mark', !empty($challan) ? $challan->scmChallanLines->pluck('quantity') : []);
+                $remarks = old('warranty_period', !empty($challan) ? $challan->scmChallanLines->pluck('remarks') : []);
+                $mrs_quantity = old('mrs_quantity', !empty($challan) ? $challan->scmChallanLines->pluck('mrs_quantity') : []);
 
-                @endphp
-                @foreach ($Challan_Lines as $key => $Challan_Line)
-                    <tr>
-                        <td class="form-group">
-                            <select class="form-control material_name select2" name="material_name[{{ $key }}]">
-                                <option value="" readonly selected>Select Material</option>
-                                @foreach ($materials[$key] as $key1 => $value)
-                                    <option value="{{ $value->material->id }}" data-type="{{ $value->material->type }}"
+            @endphp
+            @foreach ($Challan_Lines as $key => $Challan_Line)
+                <tr>
+                    <td class="form-group">
+                        <select class="form-control material_name select2" name="material_name[{{ $key }}]">
+                            <option value="" readonly selected>Select Material</option>
+                            @foreach ($materials[$key] as $key1 => $value)
+                                <option value="{{ $value->material->id }}" data-type="{{ $value->material->type }}"
                                         data-unit="{{ $value->material->unit }}"
                                         data-code="{{ $value->material->code }}" readonly @selected($material_id[$key] == $value->material->id)>
-                                        {{ $value->material->name }}</option>
-                                @endforeach
-                            </select>
-                            <input type="hidden" name="item_code[{{ $key }}]" class="form-control item_code"
-                                autocomplete="off" value="{{ $item_code[$key] }}">
-                            <input type="hidden" name="material_type[{{ $key }}]"
-                                class="form-control material_type" autocomplete="off"
-                                value="{{ $material_type[$key] }}">
-                        </td>
+                                    {{ $value->material->name }}</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="item_code[{{ $key }}]" class="form-control item_code"
+                               autocomplete="off" value="{{ $item_code[$key] }}">
+                        <input type="hidden" name="material_type[{{ $key }}]"
+                               class="form-control material_type" autocomplete="off"
+                               value="{{ $material_type[$key] }}">
+                    </td>
 
-                        <td>
+                    <td>
 
-                            <select name="brand[{{ $key }}]" class="form-control brand select2"
+                        <select name="brand[{{ $key }}]" class="form-control brand select2"
                                 autocomplete="off">
-                                <option value="">Select Brand</option>
-                                @foreach ($brands[$key] as $key1 => $value)
-                                    <option value="{{ $value?->brand?->id ?? null }}" @selected($value?->brand?->id == $brand_id[$key])>
-                                        {{ $value?->brand?->name ?? null }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </td>
+                            <option value="">Select Brand</option>
+                            @foreach ($brands[$key] as $key1 => $value)
+                                <option value="{{ $value?->brand?->id ?? null }}" @selected($value?->brand?->id == $brand_id[$key])>
+                                    {{ $value?->brand?->name ?? null }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
 
-                        <td>
-                            <select class="form-control model select2" name="model[{{ $key }}]">
-                                <option value="" readonly selected>Select Model</option>
-                                @foreach ($models[$key] as $key1 => $value)
-                                    <option value="{{ $value->model }}" @selected($value->model == $model[$key])>
-                                        {{ $value->model }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <select name="received_type[{{ $key }}]" class="form-control received_type"
+                    <td>
+                        <select class="form-control model select2" name="model[{{ $key }}]">
+                            <option value="" readonly selected>Select Model</option>
+                            @foreach ($models[$key] as $key1 => $value)
+                                <option value="{{ $value->model }}" @selected($value->model == $model[$key])>
+                                    {{ $value->model }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <select name="received_type[{{ $key }}]" class="form-control received_type"
                                 autocomplete="off">
-                                <option value="">Select Out From</option>
-                                @foreach (config('businessinfo.receivedTypes') as $typeKey => $typevalue)
-                                    <option value="{{ $typevalue }}" @selected($received_type[$key] == $typevalue)>
-                                        {{ strToUpper($typevalue) }}</option>
-                                @endforeach
-                            </select>
-                        </td>
+                            <option value="">Select Out From</option>
+                            @foreach (config('businessinfo.receivedTypes') as $typeKey => $typevalue)
+                                <option value="{{ $typevalue }}" @selected($received_type[$key] == $typevalue)>
+                                    {{ strToUpper($typevalue) }}</option>
+                            @endforeach
+                        </select>
+                    </td>
 
-                        <td>
-                            <select name="type_id[{{ $key }}]" class="form-control type_id select2"
+                    <td>
+                        <select name="type_id[{{ $key }}]" class="form-control type_id select2"
                                 autocomplete="off">
-                                <option value="">Select Type</option>
-                                @foreach ($type_no[$key] as $typeKey => $typevalue)
-                                    <option value="{{ $typevalue['id'] }}" @selected($receiveable_id[$key] == $typevalue['id'])>
-                                        {{ $typevalue['type_no'] }}</option>
-                                @endforeach
-                            </select>
-                        </td>
+                            <option value="">Select Type</option>
+                            @foreach ($type_no[$key] as $typeKey => $typevalue)
+                                <option value="{{ $typevalue['id'] }}" @selected($receiveable_id[$key] == $typevalue['id'])>
+                                {{ $typevalue['type_no'] }}</option>
+                            @endforeach
+                        </select>
+                    </td>
 
-                        <td class="select2_container">
-                            <select class="form-control select2 serial_code" multiple
+                    <td class="select2_container">
+                        <select class="form-control select2 serial_code" multiple
                                 name="serial_code[{{ $key }}][]">
-                                @foreach ($serial_codes[$key] as $key1 => $value)
-                                    <option value="{{ $value->serial_code }}" @selected(in_array($value->serial_code, json_decode($serial_code[$key])))>
-                                        {{ $value->serial_code }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <input name="unit[{{ $key }}]" class="form-control unit" readonly
-                                autocomplete="off" type="text" value="{{ $unit[$key] }}">
-                        </td>
-                        <td>
-                            <input name="avaiable_quantity[{{ $key }}]" class="form-control avaiable_quantity"
-                                autocomplete="off" value="{{ $branch_stock[$key] }}" readonly>
-                        </td>
-                        <td>
-                            <input name="mrs_quantity[{{ $key }}]" class="form-control mrs_quantity"
-                                autocomplete="off" value="{{ $mrs_quantity[$key] }}" readonly>
-                        </td>
-                        <td>
-                            <input name="quantity[{{ $key }}]" class="form-control quantity" autocomplete="off"
-                                @if ($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
-                        </td>
-                        <td>
-                            <input name="remarks[{{ $key }}]" class="form-control remarks" autocomplete="off"
-                                value="{{ $remarks[$key] }}">
-                        </td>
-                        <td>
-                            <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
-                        </td>
-                    </tr>
-                @endforeach
+                            @foreach ($serial_codes[$key] as $key1 => $value)
+                                <option value="{{ $value->serial_code }}" @selected(in_array($value->serial_code, json_decode($serial_code[$key])))>
+                                    {{ $value->serial_code }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <input name="unit[{{ $key }}]" class="form-control unit" readonly
+                               autocomplete="off" type="text" value="{{ $unit[$key] }}">
+                    </td>
+                    <td>
+                        <input name="avaiable_quantity[{{ $key }}]" class="form-control avaiable_quantity"
+                               autocomplete="off" value="{{ $branch_stock[$key] }}" readonly>
+                    </td>
+                    <td>
+                        <input name="mrs_quantity[{{ $key }}]" class="form-control mrs_quantity"
+                               autocomplete="off" value="{{ $mrs_quantity[$key] }}" readonly>
+                    </td>
+                    <td>
+                        <input name="quantity[{{ $key }}]" class="form-control quantity" autocomplete="off"
+                               @if ($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
+                    </td>
+                    <td>
+                        <input name="remarks[{{ $key }}]" class="form-control remarks" autocomplete="off"
+                               value="{{ $remarks[$key] }}">
+                    </td>
+                    <td>
+                        <i class="btn btn-danger btn-sm fa fa-minus remove-challan-row"></i>
+                    </td>
+                </tr>
+            @endforeach
 
             </tbody>
             <tfoot>
@@ -436,15 +436,15 @@
         /* Append row */
         $(document).ready(function() {
             @if (empty($challan) && empty(old('material_name')))
-                appendCalculationRow();
+            appendCalculationRow();
             @endif
         })
 
         var indx = 0;
         @if ($form_method == 'PUT')
             indx = {{ count($Challan_Lines) }}
-        @endif
-        function appendCalculationRow() {
+            @endif
+            function appendCalculationRow() {
             let row = `<tr>
                             <td class="form-group">
                                 <select class="form-control material_name select2" name="material_name[${indx}]">
@@ -468,12 +468,12 @@
                                 <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
                                     <option value="">Select Out From</option>
                                     @foreach (config('businessinfo.receivedTypes') as $value)
-                                        <option value="{{ $value }}">{{ strToUpper($value) }}</option>
+            <option value="{{ $value }}">{{ strToUpper($value) }}</option>
                                     @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <select name="type_id[${indx}]" class="form-control type_id select2" autocomplete="off">
+            </select>
+        </td>
+        <td>
+            <select name="type_id[${indx}]" class="form-control type_id select2" autocomplete="off">
                                     <option value="">Select Type</option>
                                 </select>
                             </td>
@@ -612,8 +612,8 @@
                                 key,
                                 value) {
                                 material_options += '<option value="' + value
-                                    .material_id + '"data-unit="' + value.material
-                                    .unit +
+                                        .material_id + '"data-unit="' + value.material
+                                        .unit +
                                     '"data-code="' + value.material.code +
                                     '"data-type="' + value.material.type +
                                     '">' + value.material.name +
@@ -656,10 +656,10 @@
 
         @if ($form_method == 'PUT')
 
-            $(document).on('DOMNodeInserted', '#branch_id', function() {
-                let selectedValue = "{{ $branch_id }}"
-                $('#branch_id').val(selectedValue)
-            });
+        $(document).on('DOMNodeInserted', '#branch_id', function() {
+            let selectedValue = "{{ $branch_id }}"
+            $('#branch_id').val(selectedValue)
+        });
         @endif
 
         function onChangeRadioButton() {
@@ -788,7 +788,7 @@
                 ':selected').data(
                 'code'));
             event_this.find('.material_type').val($(this).closest('tr').find('.material_name').find(
-                    ':selected')
+                ':selected')
                 .data('type'));
 
             populateDropdownByAjax("{{ route('materialWiseBrands') }}", {

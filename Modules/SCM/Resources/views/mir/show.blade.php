@@ -1,13 +1,13 @@
 @extends('layouts.backend-layout')
-@section('title', 'MRR Show')
+@section('title', 'MIR Show')
 
 @section('breadcrumb-title')
-    MRR Show
+    MIR Show
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('material-receives.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
-    class="fa fa-plus"></i></a>
+    <a href="{{ route('material-issues.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+            class="fas fa-database"></i></a>
 @endsection
 
 @section('content-grid', null)

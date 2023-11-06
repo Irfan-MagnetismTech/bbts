@@ -112,10 +112,10 @@ class ScmChallanController extends Controller
         $challanLines = $challan->scmChallanLines()->get()
             ->map(function ($item){
                 $murLines = ScmMurLine::where('material_id',$item->material_id)
-                        ->where('brand_id', $item->brand_id)
-                        ->when($item->model, function($q) use($item){
-                            $q->where('model', $item->model);
-                        })->get();
+                    ->where('brand_id', $item->brand_id)
+                    ->when($item->model, function($q) use($item){
+                        $q->where('model', $item->model);
+                    })->get();
                 $SL_item =  $murLines->pluck('serial_code');
 
                 $data = [
