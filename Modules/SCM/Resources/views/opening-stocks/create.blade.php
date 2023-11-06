@@ -6,7 +6,7 @@
     $form_heading = !empty($openingStock) ? 'Update' : 'Add';
     $form_url = !empty($openingStock) ? route('errs.update', $openingStock->id) : route('errs.store');
     $form_method = !empty($openingStock) ? 'PUT' : 'POST';
-
+    $branch_id = old('branch_id', !empty($openingStock) ? $openingStock->branch_id : null);
     $date = old('client_id', !empty($openingStock) ? $openingStock->date : null);
 @endphp
 
@@ -100,9 +100,9 @@
                 <div class="form-group col-3">
                 <label for="branch">Warehouse:</label>
                 <select name="branch_id" class="form-control branch select2" autocomplete="off">
-                    <option value="">{{ old('branch_id') ?? (@$openingStock->branch->name ?? 'Select Branch') }}</option>
+                    <option value="">Select Branch</option>
                     @foreach ($branches as $branch)
-                        <option value="{{ $branch->id }}">
+                        <option value="{{ $branch->id }}" @selected($branch->id == $branch_id)>
                             {{ $branch->name }}
                         </option>
                     @endforeach
