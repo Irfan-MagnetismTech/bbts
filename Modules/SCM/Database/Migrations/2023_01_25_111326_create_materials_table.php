@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('code')->nullable();
             $table->string('category_id')->nullable();
-            $table->string('min_qty')->nullable();
+            $table->double('min_qty', 22, 2)->nullable();
             $table->timestamps();
         });
     }
