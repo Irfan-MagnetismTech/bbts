@@ -82,7 +82,7 @@
                                     <th rowspan="2">FR No</th>
                                     <th rowspan="2">Name of the Link</th>
                                     <th colspan="6">Connectivity Address</th>
-                                    <th colspan="6">Local Contact Details</th>
+                                    <th colspan="7">Contact Details</th>
                                 </tr>
                                 <tr>
                                     <th>Branch</th>
@@ -96,6 +96,7 @@
                                     <th>Designation</th>
                                     <th>Con. No.</th>
                                     <th>Email</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -168,6 +169,17 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <span class="form-control">{!! $item->contact_email ?? '&nbsp;' !!}</span>
                                                 </div>
+                                            </td>
+                                            <td>
+                                                @if (!empty($item->planning) && !empty($item->survey) && !empty($item->connectivityRequirement))
+                                                    <span class="badge badge-pill badge-info"> Costing</span>
+                                                @elseif (!empty($item->survey && $item->connectivityRequirement))
+                                                    <span class="badge badge-pill badge-info"> Planning</span>
+                                                @elseif ($item->connectivityRequirement)
+                                                    <span class="badge badge-pill badge-info">Survey</span>
+                                                @else
+                                                    <span class="badge badge-pill badge-info"> Requirment</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 @if (!empty($item->planning) && !empty($item->survey) && !empty($item->connectivityRequirement))

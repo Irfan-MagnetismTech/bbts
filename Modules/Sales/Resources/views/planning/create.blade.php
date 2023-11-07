@@ -262,10 +262,10 @@
                                     <button type="button" class="btn btn-sm btn-outline-danger text-left removeLinkRow"
                                         onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
                                 </div>
-                                <hr / style="width: 100%; margin-bottom: 10px;">
+                                <hr style="width: 100%; margin-bottom: 10px;">
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
-                                        <select name="link_type_1" class="form-control form-control-sm link_type select2">
+                                        <select name="link_type_1" class="form-control form-control-sm link_type ">
                                             <option value="">Select Type</option>
                                             <option value="Primary">Primary</option>
                                             <option value="Secondary">Secondary</option>
@@ -275,7 +275,7 @@
                                 </div>
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
-                                        <select name="option_1" class="form-control form-control-sm option select2"
+                                        <select name="option_1" class="form-control form-control-sm option "
                                             onchange="optionChange(event)">
                                             <option value="">Select Option</option>
                                             <option value="Option 1">Option 1</option>
@@ -288,17 +288,17 @@
                                 <div class="col-3 col-md-3  mt-3">
                                     <div class="form-item">
                                         <select name="existing_infrastructure_1"
-                                            class="form-control form-control-sm existing_infrastructure select2">
+                                            class="form-control form-control-sm existing_infrastructure">
                                             <option value="">Select Status</option>
                                             <option value="Existing">Existing</option>
                                             <option value="New">New</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-3 col-md-3 mt-3 link_list" style="display: none;">
+                                <div class="col-3 col-md-3 mt-3 link_list">
                                     <div class="form-item">
                                         <select name="existing_infrastructure_link_1"
-                                            class="form-control form-control-sm existing_infrastructure_link select2">
+                                            class="form-control form-control-sm existing_infrastructure_link ">
                                             <option value="">Select Link</option>
                                         </select>
                                         <label for="type">Link List</label>
@@ -321,7 +321,7 @@
                                     </div>
                                 </div>
 
-                                <div class="md-col-3 col-3  mt-3">
+                                {{-- <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
                                         <select name="link_availability_status_1"
                                             class="form-control form-control-sm link_availability_status select2">
@@ -331,7 +331,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="md-col-3 col-3  mt-3 new_transmission_capacity_div">
                                     <div class="form-item">
@@ -368,7 +368,7 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <th>Connecting POP Running Vendor</th>
+                                            <th> POP Vendor</th>
                                             <td class="running_vendor_pop" style="width:30%"></td>
                                         </tr>
                                         <tr>
@@ -384,17 +384,24 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <th>Connecting POP Running Vendor Capacity</th>
+                                            <th> POP Capacity</th>
                                             <td class="running_vendor_capacity" style="width:30%"></td>
                                         </tr>
                                         <tr>
                                             <th>Method</th>
                                             <td class="last_mile_connectivity_method" style="width:30%">
-                                                <input type="text" name="last_mile_connectivity_method_1"
+                                                {{-- <input type="text" name="last_mile_connectivity_method_1"
                                                     class="form-control form-control-sm last_mile_connectivity_method_1"
-                                                    style="height: 25px !important" value="" readonly>
+                                                    style="height: 25px !important" value="" > --}}
+                                                    <select name="last_mile_connectivity_method_1"
+                                                        class="form-control form-control-sm last_mile_connectivity_method_1" >
+                                                        <option value="">Select Method</option>
+                                                        @foreach ($methods as $key => $method)
+                                                            <option value="{{ $key }}">{{ $method }}</option>
+                                                        @endforeach
+                                                    </select>
                                             </td>
-                                            <th>Zone Area Running NTTN Vendor</th>
+                                            <th>Zone Vendor</th>
                                             <td class="nttn_vendor_zone" style="width:30%"></td>
                                         </tr>
                                         <tr>
@@ -402,9 +409,9 @@
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="connectivity_lat_1"
                                                     class="form-control form-control-sm connectivity_lat_1"
-                                                    style="height: 25px !important" value="" readonly>
+                                                    style="height: 25px !important" value="" >
                                             </td>
-                                            <th>Zone Area Running NTTN BW</th>
+                                            <th>Zone Capacity</th>
                                             <td class="running_nttn_bw" style="width:30%"></td>
                                         </tr>
                                         <tr>
@@ -412,7 +419,7 @@
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="connectivity_long_1"
                                                     class="form-control form-control-sm connectivity_long_1"
-                                                    style="height: 25px !important" value="" readonly>
+                                                    style="height: 25px !important" value="" >
                                             </td>
                                             <th>Connectivity Route</th>
                                             <td class="connectivity_route" style="width:30%"></td>
@@ -422,7 +429,7 @@
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="distance_1"
                                                     class="form-control form-control-sm distance_1"
-                                                    style="height: 25px !important" value="" readonly>
+                                                    style="height: 25px !important" value="" >
                                             </td>
                                         </tr>
                                     </table>
@@ -682,9 +689,9 @@
                             data
                             .pop
                             .id).trigger('change');
-                        $(event.target).closest('.main_link').find('input[name^="last_mile_connectivity_method_"]')
+                        $(event.target).closest('.main_link').find('select[name^="last_mile_connectivity_method_"]')
                             .val(data
-                                .method);
+                                .method).trigger('change');
                         $(event.target).closest('.main_link').find('input[name^="connectivity_long_"]').val(data
                             .long);
                         $(event.target).closest('.main_link').find('input[name^="connectivity_lat_"]').val(data
@@ -702,6 +709,7 @@
                         // $(event.target).closest('.main_link').find('.distance').val(data.distance);
                         // $(event.target).closest('.main_link').find('.gps').val(data.gps);
                         // $(event.target).closest('.main_link').find('.connectivity_point').val(data.bts_pop_ldp)
+                        changeLink($(event.target));
                     }
                 });
             }
@@ -803,11 +811,22 @@
             let link_array = [];
 
             $(document).on('change', '.existing_infrastructure', function() {
-                console.log('change');
-                var this_event = $(this);
-                var value = this_event.val();
-                let pop_id = this_event.closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val();
+                
+                changeLink($(this));
+            });
 
+            $(document).on('change', '.link_connecting_pop_id_1', function() {
+                changeLink($(this));
+            });
+
+
+            function changeLink(this_event){
+                // alert('change');
+                // var this_event = $(this);
+                // alert(this_event);
+                let pop_id = this_event.closest('.main_link').find('.link_connecting_pop_id_1').val();
+                var value = this_event.closest('.main_link').find('.existing_infrastructure').val();
+                alert(value);
                 if (value == 'Existing') {
                     $.ajax({
                         url: "{{ route('get-existing-link-list') }}",
@@ -844,7 +863,7 @@
                         'div').hide();
                     this_event.closest('.main_link').find('.increase_capacity').parent('div').parent('div').hide();
                 }
-            });
+            }
 
             $(document).on('change', '.existing_infrastructure_link', function() {
                 var this_event = $(this);
