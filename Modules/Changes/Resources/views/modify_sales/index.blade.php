@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    Sales List
+    Sales Modified List
 @endsection
 
 @section('style')
