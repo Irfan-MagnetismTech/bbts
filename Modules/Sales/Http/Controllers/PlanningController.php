@@ -61,7 +61,8 @@ class PlanningController extends Controller
         $brands = Brand::get();
         $vendors = Vendor::get();
         $pops = Pop::get();
-        return view('sales::planning.create', compact('feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors', 'pops'));
+        $methods = ['Fiber' => 'Fiber','Radio' => 'Radio','GSM' => 'GSM'];
+        return view('sales::planning.create', compact('methods','feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors', 'pops'));
     }
 
     /**
