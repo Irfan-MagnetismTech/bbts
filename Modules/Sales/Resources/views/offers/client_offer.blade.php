@@ -52,7 +52,7 @@
                 <div style="border: 2px solid gray; border-radius: 15px; margin-top: 30px;" class="row">
                     <div class="col-12 col-md-12" style="margin-top: -11px;">
                         <span class="section-label">
-                            {{ $data->frDetails->connectivity_point }}</span>
+                            {{ $data->frDetails->connectivity_point ?? ''}}</span>
                     </div>
                     <div class="col-12 mt-3">
                         <table class="table table-bordered">

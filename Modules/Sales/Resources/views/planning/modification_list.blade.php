@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    Planning List
+    Modified Planning List
 @endsection
 
 @section('breadcrumb-button')

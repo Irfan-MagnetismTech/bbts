@@ -36,7 +36,7 @@ class OfferController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     * @return Renderable                                                                  
+     * @return Renderable
      */
     public function create($mq_no = null)
     {
@@ -233,5 +233,14 @@ class OfferController extends Controller
             }
         }
         return $offerLinks;
+    }
+
+    public function modifiedList()
+    {
+        $offers = Offer::with('offerDetails.offerLinks')
+            ->where('is_modified', 1)
+            ->latest()
+            ->get();
+        return view('sales::offers.modification_list', compact('offers'));
     }
 }

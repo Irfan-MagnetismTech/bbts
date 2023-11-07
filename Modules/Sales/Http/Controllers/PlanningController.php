@@ -317,4 +317,13 @@ class PlanningController extends Controller
             }
         }
     }
+
+    public function modifiedList()
+    {
+        $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')
+            ->where('is_modified',1)
+            ->latest()
+            ->get();
+        return view('sales::planning.modification_list', compact('plans'));
+    }
 }
