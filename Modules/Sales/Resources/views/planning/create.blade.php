@@ -57,41 +57,57 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="tableHeading">
+                {{-- <div class="tableHeading">
                     <h5> <span> &#10070; </span> Planning <span>&#10070;</span> </h5>
-                </div>
+                </div> --}}
                 <div class="card-body">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <h5 class="text-center">Client Information</h5>
+                            {{-- <h5 class="text-center">Client Information</h5> --}}
                             <table class="table table-bordered client_information" style="font-size: 12px;">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" colspan="6"
+                                            style="background-color: #007af5!important; color:white!important">Connectivity
+                                            Point
+                                            Information</th>
+                                    </tr>
+                                </thead>
+
                                 <tr>
-                                    <th class="table_label">Client Name</th>
-                                    <td>{{ $lead_generation->client_name }}</td>
-                                    <th class="table_label">Landmark</th>
-                                    <td>{{ $lead_generation->landmark }}</td>
+                                    <th class="table_label">
+                                        Client Name
+                                    </th>
+                                    <td>
+                                        {{ $lead_generation->client_name }}
+                                    </td>
+                                    <th class="table_label">Connectivity Point</th>
+                                    <td>{{ $feasibilityRequirementDetail->connectivity_point }}</td>
                                     <th class="table_label">Division</th>
-                                    <td>{{ $lead_generation->division->name ?? '' }}</td>
+                                    <td>{{ $feasibilityRequirementDetail->division->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact Person</th>
-                                    <td>{{ $lead_generation->contact_person }}</td>
+                                    <td>{{ $feasibilityRequirementDetail->contact_name }}</td>
                                     <th class="table_label">Lat-Long</th>
-                                    <td>{{ $lead_generation->lat }} - {{ $lead_generation->long }}</td>
+                                    <td>{{ $feasibilityRequirementDetail->lat }} - {{ $feasibilityRequirementDetail->long }}
+                                    </td>
                                     <th class="table_label">District</th>
-                                    <td>{{ $lead_generation->district->name ?? '' }}</td>
+                                    <td>{{ $feasibilityRequirementDetail->district->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact No</th>
-                                    <td>{{ $lead_generation->contact_no }}</td>
-                                    <th class="table_label">Website</th>
-                                    <td>{{ $lead_generation->website }}</td>
+                                    <td>{{ $feasibilityRequirementDetail->contact_no }}</td>
+                                    <th class="table_label">Branch</th>
+                                    <td>{{ $feasibilityRequirementDetail->branch->name ?? '' }}</td>
                                     <th class="table_label">Thana</th>
-                                    <td>{{ $lead_generation->thana->name ?? '' }}</td>
+                                    <td>{{ $feasibilityRequirementDetail->thana->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Email</th>
-                                    <td>{{ $lead_generation->email }}</td>
+                                    <td>{{ $feasibilityRequirementDetail->contact_email }}</td>
+                                    <th class="table_label">Address</th>
+                                    <td> {{ $feasibilityRequirementDetail->location }}</td>
                                     <th class="table_label">Document</th>
                                     <td>
                                         @if ($lead_generation->document)
@@ -100,8 +116,6 @@
                                                     class="fas fa-eye"></i></a>
                                         @endif
                                     </td>
-                                    <th class="table_label">Address</th>
-                                    <td>{{ $lead_generation->address }}</td>
                                 </tr>
                                 <tr colspan="6">
                                     <th class="table_label">Remarks</th>
@@ -114,11 +128,11 @@
                             </table>
                         </div>
                     </div>
-                    <hr />
-                    <div class="text-center">
+                    {{-- <hr /> --}}
+                    {{-- <div class="text-center">
                         <h5> <span> &#10070; </span> Plan Details <span>&#10070;</span> </h5>
-                    </div>
-                    <hr />
+                    </div> --}}
+                    {{-- <hr /> --}}
                     {{-- create a responsive table --}}
                     <div class="row ">
                         <div class="md-col-5 col-5">
@@ -126,8 +140,9 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th colspan="5">Service Plan for
-                                                {{ $feasibilityRequirementDetail->location }}</th>
+                                            <th colspan="5">Service Plan 
+                                                {{-- {{ $feasibilityRequirementDetail->location }} --}}
+                                            </th>
                                         </tr>
                                         <tr>
                                             <th>Particulars</th>
@@ -179,8 +194,11 @@
                                             <th>Model</th>
                                             <th>Remarks</th>
                                             <th>
-                                                <button type="button" class="btn btn-sm btn-success"
-                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button>
+                                                <button type="button" class="" id="addEquipmentRow">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                                {{-- <button type="button" class="btn btn-sm btn-success"
+                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button> --}}
                                             </th>
                                         </tr>
                                     </thead>
@@ -246,11 +264,12 @@
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
                         </div>
                         <div class="col-md-1" style="float: right">
-                            <button type="button" class="btn btn-sm btn-outline-success text-left" id="addLinkRow"><i
-                                    class="fas fa-plus"></i></button>
+                            <button type="button" class="btn btn-sm btn-outline-success" id="addLinkRow">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                     </div>
-                    <hr />
+                    {{-- <hr /> --}}
                     <div id="link_container">
                         <div class="main_link">
                             <input type="hidden" name="plan_link_no_1" value="">
@@ -309,7 +328,7 @@
                                         <input type="text" name="existing_transmission_capacity_1"
                                             class="form-control form-control-sm existing_transmission_capacity"
                                             value="">
-                                        <label for="type">Existing Transmission Capacity</label>
+                                        <label for="type">Existing T.Capacity</label>
                                     </div>
                                 </div>
 
@@ -337,7 +356,7 @@
                                     <div class="form-item">
                                         <input type="text" name="new_transmission_capacity_1"
                                             class="form-control form-control-sm" value="">
-                                        <label for="type">New Transmission Capacity</label>
+                                        <label for="type">New T.Capacity</label>
                                     </div>
                                 </div>
 
@@ -351,12 +370,16 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <hr />
+                                    {{-- <hr />
                                     <h5 class="text-center">Survey Information</h5>
-                                    <hr />
+                                    <hr /> --}}
                                     <table class="table table-bordered surveyTable" style="font-size: 12px;">
                                         <tr>
-                                            <th>Vendor</th>
+                                            <th class="text-center" colspan="4"
+                                            style="background-color: #007af5!important; color:white!important"> Survey Information</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-left">Vendor</th>
                                             <td class="link_vendor" style="width:30%">
                                                 <select name="link_vendor_id_1"
                                                     class="form-control form-control-sm link_vendor_id_1 select2"
@@ -368,11 +391,11 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <th> POP Vendor</th>
+                                            <th class="text-left"> POP Vendors</th>
                                             <td class="running_vendor_pop" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>POP</th>
+                                            <th class="text-left">POP</th>
                                             <td class="link_connecting_pop" style="width:30%">
                                                 <select name="link_connecting_pop_id_1"
                                                     class="form-control form-control-sm link_connecting_pop_id_1 select2"
@@ -384,66 +407,70 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <th> POP Capacity</th>
+                                            <th class="text-left"> POP Capacity</th>
                                             <td class="running_vendor_capacity" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Method</th>
+                                            <th class="text-left">Method</th>
                                             <td class="last_mile_connectivity_method" style="width:30%">
                                                 {{-- <input type="text" name="last_mile_connectivity_method_1"
                                                     class="form-control form-control-sm last_mile_connectivity_method_1"
                                                     style="height: 25px !important" value="" > --}}
-                                                    <select name="last_mile_connectivity_method_1"
-                                                        class="form-control form-control-sm last_mile_connectivity_method_1" >
-                                                        <option value="">Select Method</option>
-                                                        @foreach ($methods as $key => $method)
-                                                            <option value="{{ $key }}">{{ $method }}</option>
-                                                        @endforeach
-                                                    </select>
+                                                <select name="last_mile_connectivity_method_1"
+                                                    class="form-control form-control-sm last_mile_connectivity_method_1">
+                                                    <option value="">Select Method</option>
+                                                    @foreach ($methods as $key => $method)
+                                                        <option value="{{ $key }}">{{ $method }}</option>
+                                                    @endforeach
+                                                </select>
                                             </td>
-                                            <th>Zone Vendor</th>
+                                            <th class="text-left">Zone Vendors</th>
                                             <td class="nttn_vendor_zone" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Latitute</th>
+                                            <th class="text-left">Latitute</th>
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="connectivity_lat_1"
                                                     class="form-control form-control-sm connectivity_lat_1"
-                                                    style="height: 25px !important" value="" >
+                                                    style="height: 25px !important" value="">
                                             </td>
-                                            <th>Zone Capacity</th>
+                                            <th class="text-left">Zone Capacity</th>
                                             <td class="running_nttn_bw" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Longitute</th>
+                                            <th class="text-left">Longitute</th>
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="connectivity_long_1"
                                                     class="form-control form-control-sm connectivity_long_1"
-                                                    style="height: 25px !important" value="" >
+                                                    style="height: 25px !important" value="">
                                             </td>
-                                            <th>Connectivity Route</th>
+                                            <th class="text-left">Connectivity Route</th>
                                             <td class="connectivity_route" style="width:30%"></td>
                                         </tr>
                                         <tr>
-                                            <th>Distance</th>
+                                            <th class="text-left">Distance</th>
                                             <td class="connectivity_lat_long" style="width:30%">
                                                 <input type="text" name="distance_1"
                                                     class="form-control form-control-sm distance_1"
-                                                    style="height: 25px !important" value="" >
+                                                    style="height: 25px !important" value="">
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <div class="text-center">
+                                {{-- <div class="text-center">
                                     <hr />
                                     <h5> <span> &#10070; </span> Link Equipment <span>&#10070;</span> </h5>
-                                </div>
-                                <hr />
+                                </div> --}}
+                                {{-- <hr /> --}}
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" style="font-size: 12px;">
+                                    <table class="table table-bordered" style="font-size: 12px;"> 
                                         <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="8"
+                                                style="background-color: #007af5!important; color:white!important"> <span> &#10070; </span> Link Equipment <span>&#10070;</span></th>
+                                            </tr>
                                             <tr>
                                                 <th>Equipment Name</th>
                                                 <th>Quantity</th>
@@ -811,7 +838,6 @@
             let link_array = [];
 
             $(document).on('change', '.existing_infrastructure', function() {
-                
                 changeLink($(this));
             });
 
@@ -820,7 +846,7 @@
             });
 
 
-            function changeLink(this_event){
+            function changeLink(this_event) {
                 // alert('change');
                 // var this_event = $(this);
                 // alert(this_event);
