@@ -77,4 +77,8 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('get-existing-link-list', [CommonController::class, 'getExistingLinkList'])->name('get-existing-link-list');
     Route::get('export-feasibility-requirement', [FeasibilityRequirementController::class, 'exportFeasibilityRequirement'])->name('export-feasibility-requirement');
     Route::get('uploadBillingAddress', [ClientProfileController::class, 'uploadBillingAddress'])->name('uploadBillingAddress');
+    Route::get('modified-planning-list', [PlanningController::class, 'modifiedList'])->name('modified-planning-list');
+    Route::get('modified-costing-list', [CostingController::class, 'modifiedList'])->name('modified-costing-list');
+    Route::get('modified-offer-list', [OfferController::class, 'modifiedList'])->name('modified-offer-list');
+    Route::get('modified-sale-list', [SaleController::class, 'modifiedList'])->name('modified-sale-list');
 });

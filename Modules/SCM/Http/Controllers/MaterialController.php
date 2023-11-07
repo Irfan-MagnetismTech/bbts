@@ -32,7 +32,7 @@ class MaterialController extends Controller
         $materials = Material::with('unit','materialBrand')->get()
         ->map(function ($material, $key) {
             $brand = $material->materialBrand?->brand;
-            $brandArray = str_getcsv($brand); 
+            $brandArray = str_getcsv($brand);
             $material->brand = Brand::whereIn('id',$brandArray)->get()->toArray();
             return $material;
         });
@@ -48,9 +48,9 @@ class MaterialController extends Controller
     public function create()
     {
         $formType = "create";
-        $materials = Material::latest()->get();
-        $units = Unit::latest()->get();
-        $brands = Brand::latest()->get();
+        $materials = Material::get();
+        $units = Unit::get();
+        $brands = Brand::get();
         $selectedBrandIdsArray=[];
         $types = ['Drum', 'Item'];
         $categories = ScCategory::latest()->get();
@@ -74,7 +74,7 @@ class MaterialController extends Controller
             // Get the selected brand IDs as an array
             $selectedBrandIds = $request->input('brand');
 
-            $selectedBrandIdsString = implode(', ', $selectedBrandIds);
+            $selectedBrandIdsString = implode(',', $selectedBrandIds);
 
             $material_brand = $request->only('material_id', 'brand');
             $material_brand['material_id'] = $material->id;
@@ -107,18 +107,18 @@ class MaterialController extends Controller
     public function edit(Material $material)
     {
         $formType = "edit";
-        $materials = Material::latest()->get();
-        $units = Unit::latest()->get();
-        $brands = Brand::latest()->get();
+        $materials = Material::get();
+        $units = Unit::get();
+        $brands = Brand::get();
+
         $selectedBrandIds = MaterialBrand::where('material_id', $material->id)->pluck('brand')->toArray();
+
         if (count($selectedBrandIds) > 0) {
             $selectedBrandIdsString = $selectedBrandIds[0];
         } else {
             $selectedBrandIdsString = '';
         }
-        // $selectedBrandIdsString=$selectedBrandIds[0];
-        $selectedBrandIdsArray = explode(', ', $selectedBrandIdsString);
-
+        $selectedBrandIdsArray = explode(',', $selectedBrandIdsString);
         $types = ['Drum', 'Item'];
         $categories = ScCategory::latest()->get();
         return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units', 'categories', 'brands','selectedBrandIdsArray'));
@@ -140,7 +140,7 @@ class MaterialController extends Controller
 
             $selectedBrandIds = $request->input('brand');
 
-            $selectedBrandIdsString = implode(', ', $selectedBrandIds);
+            $selectedBrandIdsString = implode(',', $selectedBrandIds);
 
             $materialBrand->where('material_id', $material->id)->delete(); // Delete existing records
 

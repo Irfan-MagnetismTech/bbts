@@ -52,7 +52,8 @@
                 @can('lead-generation')
                     <li class="{{ request()->routeIs('lead-generation.index') ? 'active' : null }}">
                         <a href="{{ route('lead-generation.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">My Customers</span><span
+                                    class="ti-angle-right"></i></span><span
+                                class="pcoded-mtext">My Customers</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan
@@ -155,7 +156,8 @@
             @can('connectivity-requirement-create')
                 <ul class="pcoded-submenu">
                     <li class="{{ request()->routeIs('client-requirement-modification.create') ? 'active' : null }}">
-                        <a href="{{ url('changes/client-requirement-modification/create') }}"> <span class="pcoded-micon"><i
+                        <a href="{{ url('changes/client-requirement-modification/create') }}"> <span
+                                class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification
                                 Requirment</span><span class="pcoded-mcaret"></span></a>
                     </li>
@@ -164,7 +166,8 @@
             <ul class="pcoded-submenu">
                 <li class="{{ request()->routeIs('client-requirement-modification.index') ? 'active' : null }}">
                     <a href="{{ route('client-requirement-modification.index') }}"> <span class="pcoded-micon"><i
-                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification List</span><span
+                                class="ti-angle-right"></i></span><span
+                            class="pcoded-mtext">Modification List</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
             </ul>
@@ -209,6 +212,12 @@
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
+                    <li class="{{ request()->routeIs('modified-planning-list') ? 'active' : null }}">
+                        <a href="{{ route('modified-planning-list') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span
+                                class="pcoded-mtext">Modification List</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
                 @endcan
             </ul>
         </li>
@@ -227,6 +236,12 @@
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
+                    <li class="{{ request()->routeIs('modified-costing-list') ? 'active' : null }}">
+                        <a href="{{ route('modified-costing-list') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span
+                                class="pcoded-mtext">Modification List</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
                 @endcan
             </ul>
         </li>
@@ -243,6 +258,12 @@
                     <li class="{{ request()->routeIs('offer.index') ? 'active' : null }}">
                         <a href="{{ route('offer.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('modified-offer-list') ? 'active' : null }}">
+                        <a href="{{ route('modified-offer-list') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span
+                                class="pcoded-mtext">Modification List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan
@@ -295,6 +316,11 @@
                     <li class="{{ request()->routeIs('sales.index') ? 'active' : null }}">
                         <a href="{{ route('sales.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
+                                class="pcoded-mcaret"></span></a>
+                    </li>
+                    <li class="{{ request()->routeIs('modified-sale-list') ? 'active' : null }}">
+                        <a href="{{ route('modified-sale-list') }}"> <span class="pcoded-micon"><i
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan

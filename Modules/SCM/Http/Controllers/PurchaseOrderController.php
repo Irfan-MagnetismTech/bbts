@@ -72,12 +72,12 @@ class PurchaseOrderController extends Controller
     public function create()
     {
         $brands = Brand::latest()->get();
-
+        $cs_nos=[];
         $vatOrTax = [
             'Include', 'Exclude'
         ];
 
-        return view('scm::purchase-orders.create', compact('brands', 'vatOrTax'));
+        return view('scm::purchase-orders.create', compact('brands', 'vatOrTax','cs_nos'));
     }
 
     /**

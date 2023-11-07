@@ -703,4 +703,11 @@ class SaleController extends Controller
         ])->stream('details.pdf');
         return view('sales::pnl.pnl_details_pdf', compact('feasibility_requirement'));
     }
+    public function modifiedList()
+    {
+        $sales = Sale::activation()
+            ->where('is_modified', 1)
+            ->get();
+        return view('sales::sales.modification_list', compact('sales'));
+    }
 }

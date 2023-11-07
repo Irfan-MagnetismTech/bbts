@@ -279,4 +279,12 @@ class CostingController extends Controller
             }
         }
     }
+    public function modifiedList()
+    {
+        $costings = Costing::with('costingProducts', 'costingLinks', 'costingLinks.costingLinkEquipments')
+            ->where('is_modified',1)
+            ->latest()
+            ->get();
+        return view('sales::costing.modification_list', compact('costings'));
+    }
 }

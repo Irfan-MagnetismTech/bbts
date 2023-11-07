@@ -1,20 +1,24 @@
 @extends('layouts.backend-layout')
-@section('title', 'Planning List')
+@section('title', 'Modified Costing List')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Planning List
+    Modified Costing List
 @endsection
 
+@section('style')
+    <style>
+    </style>
+@endsection
 @section('breadcrumb-button')
     {{-- <a href="{{ route('connectivity-requirement.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-plus"></i></a> --}}
 @endsection
 @section('sub-title')
-    Total: {{ count($plans) }}
+    Total: {{ count($costings) }}
 @endsection
 
 
@@ -28,10 +32,8 @@
                     <th>Client id</th>
                     <th>MQ No</th>
                     <th>FR No</th>
-                    <th>Connectivity Point</th>
-                    <th>Method</th>
-                    <th>Type</th>
-                    <th>Option</th>
+                    <th>Per month Investment</th>
+                    <th>Per month Revenue</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -42,54 +44,40 @@
                     <th>Client id</th>
                     <th>MQ No</th>
                     <th>FR No</th>
-                    <th>Connectivity Point</th>
-                    <th>Method</th>
-                    <th>Type</th>
-                    <th>Option</th>
+                    <th>Per month Investment</th>
+                    <th>Per month Revenue</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
             <tbody>
-                @foreach ($plans as $key => $plan)
+                @foreach ($costings as $key => $costing)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $plan->lead_generation->client_name }}</td>
-                        <td>{{ $plan->client_no }}</td>
-                        <td>{{ $plan->mq_no }}</td>
-                        <td>{{ $plan->fr_no }}</td>
-                        <td>{{ $plan->feasibilityRequirementDetail->connectivity_point ?? '' }}</td>
-                        <td>
-                            @foreach ($plan->planLinks as $link)
-                                {{ $link->method }}<br>
-                            @endforeach
+                        <td>{{ $costing->lead_generation->client_name }}</td>
+                        <td>{{ $costing->client_no }}</td>
+                        <td>{{ $costing->mq_no }}</td>
+                        <td>{{ $costing->planning->feasibilityRequirementDetail->connectivity_point ?? '' }}
+                            ({{ $costing->fr_no }})
                         </td>
-                        <td>
-                            @foreach ($plan->planLinks as $link)
-                                {{ $link->link_type }}<br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($plan->planLinks as $link)
-                                {{ $link->option }}<br>
-                            @endforeach
-                        </td>
+                        <td>{{ number_format($costing->total_investment / $costing->month, 2) }}</td>
+                        <td>{{ $costing->total_mrc }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    @can('plan-view')
-                                        <a href="{{ route('planning.show', $plan->id) }}" data-toggle="tooltip" title="Details"
+                                    @can('cost-view')
+                                        <a href="{{ route('costing.show', $costing->id) }}" data-toggle="tooltip" title="Details"
                                             class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                                     @endcan
-                                    @can('plan-edit')
-                                        <a href="{{ route('planning.edit', $plan->id) }}" data-toggle="tooltip" title="Edit"
-                                            class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
+                                    @can('cost-edit')
+                                        <a href="{{ route('costing.edit', $costing->id) }}" data-toggle="tooltip"
+                                            title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     @endcan
-                                    @can('plan-delete')
-                                        <form action="{{ route('planning.destroy', $plan->id) }}" method="POST"
-                                            data-toggle="tooltip" title="Delete" class="d-inline">
+                                    @can('cost-delete')
+                                        <form action="{{ route('costing.destroy', $costing->id) }}" method="POST"
+                                            class="d-inline" id="deleteClientProfile">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"><i
                                                     class="fas fa-trash"></i></button>
                                         </form>
                                     @endcan
