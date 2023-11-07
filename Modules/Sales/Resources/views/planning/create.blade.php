@@ -26,6 +26,12 @@
             background-color: #e7e7dc !important;
             color: black !important;
         }
+
+        /* .table_heading {
+            background-color: #007af5 !important;
+            color: white !important;
+            font-size: 14px !important;
+        } */
     </style>
 @endsection
 
@@ -67,8 +73,7 @@
                             <table class="table table-bordered client_information" style="font-size: 12px;">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" colspan="6"
-                                            style="background-color: #007af5!important; color:white!important">Connectivity
+                                        <th class="text-center" colspan="6" style="background-color: #edeef0 !important; font-size: 14px !important;"  >Connectivity
                                             Point
                                             Information</th>
                                     </tr>
@@ -117,7 +122,7 @@
                                         @endif
                                     </td>
                                 </tr>
-                                <tr colspan="6">
+                                <tr>
                                     <th class="table_label">Remarks</th>
                                     <td colspan="5" style="padding: 2px !important; margin: 2px !important;">
                                         <input type="text" name="remarks" id="remarks"
@@ -140,7 +145,7 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th colspan="5">Service Plan 
+                                            <th colspan="5">Service Plan
                                                 {{-- {{ $feasibilityRequirementDetail->location }} --}}
                                             </th>
                                         </tr>
@@ -184,7 +189,14 @@
                                 <table class="table table-bordered table-striped" id="equipment_table">
                                     <thead>
                                         <tr>
-                                            <th colspan="7">Equipment Plan for product</th>
+                                            <th colspan="6">Equipment Plan for product</th>
+                                            <th rowspan="2">
+                                                {{-- <button type="button" class="" id="addEquipmentRow">
+                                                    <i class="fas fa-plus"></i>
+                                                </button> --}}
+                                                <button type="button" class="btn btn-sm btn-success" style="padding: 5px 10px"
+                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button>
+                                            </th>
                                         </tr>
                                         <tr>
                                             <th>Equipment Name</th>
@@ -193,13 +205,7 @@
                                             <th>Brand</th>
                                             <th>Model</th>
                                             <th>Remarks</th>
-                                            <th>
-                                                <button type="button" class="" id="addEquipmentRow">
-                                                    <i class="fas fa-plus"></i>
-                                                </button>
-                                                {{-- <button type="button" class="btn btn-sm btn-success"
-                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button> --}}
-                                            </th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody class="equipment_body">
@@ -246,7 +252,7 @@
                                             </td>
                                             <td>
                                                 <button type="button"
-                                                    class="btn btn-sm btn-outline-danger removeEquipmentRow"><i
+                                                    class="btn btn-sm btn-outline-danger removeEquipmentRow" style="padding: 5px 10px"><i
                                                         class="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
@@ -264,7 +270,7 @@
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
                         </div>
                         <div class="col-md-1" style="float: right">
-                            <button type="button" class="btn btn-sm btn-outline-success" id="addLinkRow">
+                            <button type="button" class="btn btn-sm btn-outline-success" style="padding: 5px 10px" id="addLinkRow">
                                 <i class="fas fa-plus"></i>
                             </button>
                         </div>
@@ -278,10 +284,10 @@
                                     <h5 class="text-center mb-2">Link <span class="link_no">1</span></h5>
                                 </div>
                                 <div class="col-md-1 col-1">
-                                    <button type="button" class="btn btn-sm btn-outline-danger text-left removeLinkRow"
+                                    <button type="button" class="btn btn-sm btn-outline-danger text-left removeLinkRow" style="padding: 5px 10px"
                                         onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
                                 </div>
-                                <hr style="width: 100%; margin-bottom: 10px;">
+                                {{-- <hr style="width: 100%; margin-bottom: 10px;"> --}}
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
                                         <select name="link_type_1" class="form-control form-control-sm link_type ">
@@ -314,7 +320,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-3 col-md-3 mt-3 link_list">
+                                <div class="col-3 col-md-3 mt-3 link_list" style="display: none">
                                     <div class="form-item">
                                         <select name="existing_infrastructure_link_1"
                                             class="form-control form-control-sm existing_infrastructure_link ">
@@ -323,7 +329,7 @@
                                         <label for="type">Link List</label>
                                     </div>
                                 </div>
-                                <div class="md-col-3 col-3  mt-3">
+                                <div class="md-col-3 col-3  mt-3" style="display: none">
                                     <div class="form-item">
                                         <input type="text" name="existing_transmission_capacity_1"
                                             class="form-control form-control-sm existing_transmission_capacity"
@@ -332,7 +338,7 @@
                                     </div>
                                 </div>
 
-                                <div class="md-col-3 col-3 mt-3">
+                                <div class="md-col-3 col-3 mt-3" style="display: none">
                                     <div class="form-item">
                                         <input type="text" name="increase_capacity_1"
                                             class="form-control form-control-sm increase_capacity" value="">
@@ -360,13 +366,13 @@
                                     </div>
                                 </div>
 
-                                <div class="md-col-3 col-3  mt-3">
+                                {{-- <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
                                         <input type="text" name="link_remarks_1" class="form-control form-control-sm"
                                             value="">
                                         <label for="type">Remarks</label>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="col-md-12">
                                 <div class="table-responsive">
@@ -375,12 +381,11 @@
                                     <hr /> --}}
                                     <table class="table table-bordered surveyTable" style="font-size: 12px;">
                                         <tr>
-                                            <th class="text-center" colspan="4"
-                                            style="background-color: #007af5!important; color:white!important"> Survey Information</th>
+                                            <th class="text-center" style="background-color: #e1e7ec !important; font-size: 14px !important;"  colspan="4" > Survey Information</th>
                                         </tr>
                                         <tr>
-                                            <th class="text-left">Vendor</th>
-                                            <td class="link_vendor" style="width:30%">
+                                            <th class="text-left table_label">Vendor</th>
+                                            <td class="link_vendor" style="width:40%">
                                                 <select name="link_vendor_id_1"
                                                     class="form-control form-control-sm link_vendor_id_1 select2"
                                                     style="display: none">
@@ -391,28 +396,27 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <th class="text-left"> POP Vendors</th>
-                                            <td class="running_vendor_pop" style="width:30%"></td>
+                                            <th class="text-left table_label"> POP Vendors</th>
+                                            <td class="running_vendor_pop" style="width:40%"></td>
                                         </tr>
                                         <tr>
                                             <th class="text-left">POP</th>
-                                            <td class="link_connecting_pop" style="width:30%">
+                                            <td class="link_connecting_pop" style="width:40%">
                                                 <select name="link_connecting_pop_id_1"
                                                     class="form-control form-control-sm link_connecting_pop_id_1 select2"
                                                     style="display: none">
                                                     <option value="">Select POP</option>
                                                     @foreach ($pops as $pop)
-                                                        <option value="{{ $pop->id }}">
-                                                            {{ $pop->name }}</option>
+                                                        <option value="{{ $pop->id }}"> {{ $pop->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </td>
                                             <th class="text-left"> POP Capacity</th>
-                                            <td class="running_vendor_capacity" style="width:30%"></td>
+                                            <td class="running_vendor_capacity" style="width:40%"></td>
                                         </tr>
                                         <tr>
                                             <th class="text-left">Method</th>
-                                            <td class="last_mile_connectivity_method" style="width:30%">
+                                            <td class="last_mile_connectivity_method" style="width:40%">
                                                 {{-- <input type="text" name="last_mile_connectivity_method_1"
                                                     class="form-control form-control-sm last_mile_connectivity_method_1"
                                                     style="height: 25px !important" value="" > --}}
@@ -425,34 +429,41 @@
                                                 </select>
                                             </td>
                                             <th class="text-left">Zone Vendors</th>
-                                            <td class="nttn_vendor_zone" style="width:30%"></td>
+                                            <td class="nttn_vendor_zone" style="width:40%"></td>
                                         </tr>
                                         <tr>
                                             <th class="text-left">Latitute</th>
-                                            <td class="connectivity_lat_long" style="width:30%">
+                                            <td class="connectivity_lat_long" style="width:40%">
                                                 <input type="text" name="connectivity_lat_1"
                                                     class="form-control form-control-sm connectivity_lat_1"
                                                     style="height: 25px !important" value="">
                                             </td>
                                             <th class="text-left">Zone Capacity</th>
-                                            <td class="running_nttn_bw" style="width:30%"></td>
+                                            <td class="running_nttn_bw" style="width:40%"></td>
                                         </tr>
                                         <tr>
                                             <th class="text-left">Longitute</th>
-                                            <td class="connectivity_lat_long" style="width:30%">
+                                            <td class="connectivity_lat_long" style="width:40%">
                                                 <input type="text" name="connectivity_long_1"
                                                     class="form-control form-control-sm connectivity_long_1"
                                                     style="height: 25px !important" value="">
                                             </td>
                                             <th class="text-left">Connectivity Route</th>
-                                            <td class="connectivity_route" style="width:30%"></td>
+                                            <td class="connectivity_route" style="width:40%"></td>
+
                                         </tr>
                                         <tr>
                                             <th class="text-left">Distance</th>
-                                            <td class="connectivity_lat_long" style="width:30%">
+                                            <td class="connectivity_lat_long" style="width:40%">
                                                 <input type="text" name="distance_1"
                                                     class="form-control form-control-sm distance_1"
                                                     style="height: 25px !important" value="">
+                                            </td>
+                                            <th class="text-left">Remarks</th>
+                                            <td class="connectivity_route" style="width:40%">
+                                                <input type="text" name="link_remarks_1"
+                                                    class="form-control form-control-sm" style="height: 25px !important"
+                                                    value="">
                                             </td>
                                         </tr>
                                     </table>
@@ -465,11 +476,18 @@
                                 </div> --}}
                                 {{-- <hr /> --}}
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" style="font-size: 12px;"> 
+                                    <table class="table table-bordered" style="font-size: 12px;">
                                         <thead>
                                             <tr>
-                                                <th class="text-center" colspan="8"
-                                                style="background-color: #007af5!important; color:white!important"> <span> &#10070; </span> Link Equipment <span>&#10070;</span></th>
+                                                <th class="text-center" style="font-size: 14px!important" colspan="7">
+                                                    <span> &#10070; </span> Link Equipment <span>&#10070;</span></th>
+                                                <th rowspan="2">
+                                                    <button type="button"
+                                                        class="btn btn-success btn-sm addLinkEquipmentRow" style="padding: 5px 10px"
+                                                        onclick="addLinkEquipmentRow(this)">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </th>
                                             </tr>
                                             <tr>
                                                 <th>Equipment Name</th>
@@ -479,13 +497,7 @@
                                                 <th>Model</th>
                                                 <th>Description</th>
                                                 <th>Remarks</th>
-                                                <th>
-                                                    <button type="button"
-                                                        class="btn btn-success btn-sm addLinkEquipmentRow"
-                                                        onclick="addLinkEquipmentRow(this)">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
-                                                </th>
+
                                             </tr>
                                         </thead>
                                         <tbody class="link_equipment_table">
@@ -538,7 +550,7 @@
                                                 <td>
                                                     <button type="button"
                                                         class="btn btn-outline-danger btn-sm removeLinkEquipmentRow"
-                                                        onclick="removeLinkEquipmentRow(this)">
+                                                        style="padding: 5px 10px" onclick="removeLinkEquipmentRow(this)">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                 </td>
@@ -546,7 +558,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <hr />
+                                {{-- <hr /> --}}
                             </div>
                         </div>
                     </div>
