@@ -852,7 +852,7 @@
                 // alert(this_event);
                 let pop_id = this_event.closest('.main_link').find('.link_connecting_pop_id_1').val();
                 var value = this_event.closest('.main_link').find('.existing_infrastructure').val();
-                alert(value);
+                // alert(value);
                 if (value == 'Existing') {
                     $.ajax({
                         url: "{{ route('get-existing-link-list') }}",
