@@ -261,31 +261,41 @@
                             </div>
                         </div>
                     </div>
-                    <hr />
+                    {{-- <hr /> --}}
                     <div class="row">
                         <input type="hidden" id="client_id" name="client_id"
                             value="{{ $lead_generation->client_id }}">
                         <input type="hidden" name="total_key" id="total_key" value="1">
-                        <div class="col-md-11 text-center">
+                        {{-- <div class="col-md-11 text-center">
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
-                        </div>
-                        <div class="col-md-1" style="float: right">
+                        </div> --}}
+                        {{-- <div class="col-md-1" style="float: right">
                             <button type="button" class="btn btn-sm btn-outline-success" style="padding: 5px 10px" id="addLinkRow">
                                 <i class="fas fa-plus"></i>
                             </button>
-                        </div>
+                        </div> --}}
                     </div>
                     {{-- <hr /> --}}
                     <div id="link_container">
                         <div class="main_link">
                             <input type="hidden" name="plan_link_no_1" value="">
                             <div class="row">
-                                <div class="col-md-11 col-11">
-                                    <h5 class="text-center mb-2">Link <span class="link_no">1</span></h5>
+                                <div class="col-md-10 col-10">
+                                    <h5 class="text-center mb-2"> <span>&#10070;</span> Link -  <span class="link_no">1</span> <span>&#10070;</span></h5>
                                 </div>
+                                {{-- <div class="col-md-1 col-1">
+                                    <button type="button" class="btn btn-sm btn-outline-success" style="padding: 5px 10px" id="addLinkRow">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div> --}}
                                 <div class="col-md-1 col-1">
+                                    <nobr>
+                                    <button type="button" class="btn btn-sm btn-outline-success addLinkRow" style="padding: 5px 10px" >
+                                        <i class="fas fa-plus"></i>
+                                    </button>
                                     <button type="button" class="btn btn-sm btn-outline-danger text-left removeLinkRow" style="padding: 5px 10px"
                                         onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
+                                    </nobr>
                                 </div>
                                 {{-- <hr style="width: 100%; margin-bottom: 10px;"> --}}
                                 <div class="md-col-3 col-3  mt-3">
@@ -769,9 +779,13 @@
                     $(event).closest('tr').remove();
                 }
             }
-            $('#addLinkRow').on('click', function() {
+            $(document).on('click', '.addLinkRow', function() {
                 addLinkRow();
             });
+
+            // $('.addLinkRow').on('click', function() {
+            //     addLinkRow();
+            // });
 
             function addLinkRow() {
                 var clonedRow = $('.main_link').first().clone();
