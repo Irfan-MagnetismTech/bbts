@@ -82,6 +82,13 @@
                         aria-describedby="client_type" readonly value="{{ $client_type }}">
                 </div>
 
+{{--                <div class="form-group col-3 client_type">--}}
+{{--                    <label for="client_type">Client Type:</label>--}}
+{{--                    <input type="text" class="form-control" id="client_type" name="client_type" aria-describedby="client_type" readonly--}}
+{{--                           value="<?php echo ($client_type == 1) ? 'Corporate' : 'Individual'; ?>">--}}
+{{--                </div>--}}
+
+
                 <div class="form-group col-3 connectivity_point1">
                     <label for="select2">Connectivity Point and FR</label>
                     <select class="form-control select2" id="connectivity_point" name="connectivity_point">

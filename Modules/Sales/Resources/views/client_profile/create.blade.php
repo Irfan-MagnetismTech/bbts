@@ -3,9 +3,9 @@
 
 @php
     $is_old = old('client_name') ? true : false;
-    $form_heading = !empty($lead_generation->id) ? 'Update' : 'Add';
-    $form_url = !empty($lead_generation->id) ? route('client-profile.update', $lead_generation->id) : route('client-profile.store');
-    $form_method = !empty($lead_generation->id) ? 'PUT' : 'POST';
+    $form_heading = !empty($client_profile->id) ? 'Update' : 'Add';
+    $form_url = !empty($client_profile->id) ? route('client-profile.update', $client_profile->id) : route('client-profile.store');
+    $form_method = !empty($client_profile->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
@@ -138,11 +138,11 @@
                                                                 <select name="client_type" id="client_type"
                                                                     class="form-control select2" required>
                                                                     <option>Client Type</option>
-                                                                    <option value="1"
-                                                                        {{ $client_type == 1 ? 'selected' : '' }}>
+                                                                    <option value="Corporate"
+                                                                        {{ $client_type == 'Corporate' ? 'selected' : '' }}>
                                                                         Corporate</option>
-                                                                    <option value="2"
-                                                                        {{ $client_type == 2 ? 'selected' : '' }}>
+                                                                    <option value="Individual"
+                                                                        {{ $client_type == 'Individual' ? 'selected' : '' }}>
                                                                         Individual</option>
                                                                 </select>
                                                             </div>
