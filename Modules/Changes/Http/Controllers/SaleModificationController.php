@@ -340,7 +340,7 @@ class SaleModificationController extends Controller
             ->with(['client:id,client_name,client_no', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])
             ->where('connectivity_requirement_id', request()->connectivity_requirement_id)
             ->first();
-        $oldSaleDetail = SaleLinkDetail::with('planLinkDetail')->where('fr_no', $offer->offerDetails->first()->fr_no)->get();
+        $oldSale = Sale::with('saleDetails.saleLinkDetails.planLinkDetail')->where('connectivity_requirement_id', '!=', null)->orderBy('id', 'desc')->first();
 
         $current_plan_links = [];
         $old_plan_links = [];
@@ -355,7 +355,8 @@ class SaleModificationController extends Controller
             });
         });
 
-        $oldSaleDetail->map(function ($item) use (&$old_plan_links) {
+        // dd($oldSale->saleDetails->first()->saleLinkDetails);
+        $oldSale->saleDetails->first()->saleLinkDetails->map(function ($item) use (&$old_plan_links) {
             $old_plan_links[] = [
                 'link_no' => $item->link_no,
                 'link_type' => $item->planLinkDetail->link_type,
@@ -363,6 +364,18 @@ class SaleModificationController extends Controller
             ];
             return $item;
         });
+
+
+
+        // $oldSaleDetail->map(function ($item) use (&$old_plan_links) {
+        //     $old_plan_links[] = [
+        //         'link_no' => $item->link_no,
+        //         'link_type' => $item->planLinkDetail->link_type,
+        //         'fr_no' => $item->fr_no,
+        //     ];
+        //     return $item;
+        // });
+        // dd('current_plan_links', $current_plan_links, 'old_plan_links', $old_plan_links);
 
         $offerLinks = $current_plan_links + $old_plan_links;
         $offer->offerDetails->map(function ($item) use ($offerLinks) {
