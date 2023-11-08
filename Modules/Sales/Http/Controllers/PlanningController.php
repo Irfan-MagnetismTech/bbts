@@ -61,8 +61,8 @@ class PlanningController extends Controller
         $brands = Brand::get();
         $vendors = Vendor::get();
         $pops = Pop::get();
-        $methods = ['Fiber' => 'Fiber','Radio' => 'Radio','GSM' => 'GSM'];
-        return view('sales::planning.create', compact('methods','feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors', 'pops'));
+        $methods = ['Fiber' => 'Fiber', 'Radio' => 'Radio', 'GSM' => 'GSM'];
+        return view('sales::planning.create', compact('methods', 'feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors', 'pops'));
     }
 
     /**
@@ -115,12 +115,14 @@ class PlanningController extends Controller
     public function edit($id)
     {
         $plan = Planning::with('planLinks', 'equipmentPlans', 'servicePlans',)->where('id', $id)->first();
+        $connectivityRequirement = ConnectivityRequirement::where('fr_no', $plan->fr_no)->first();
+        $connectivityProductRequirementDetails = ConnectivityProductRequirementDetail::where('connectivity_requirement_id', $connectivityRequirement->id)->get();
         $particulars = Product::get();
         $materials = Material::get();
         $brands = Brand::get();
         $pops = Pop::get();
         $vendors = Vendor::get();
-        return view('sales::planning.edit', compact('plan', 'particulars', 'materials', 'brands', 'pops', 'vendors'));
+        return view('sales::planning.edit', compact('plan', 'particulars', 'materials', 'brands', 'pops', 'vendors', 'connectivityProductRequirementDetails'));
     }
 
     /**
@@ -322,7 +324,7 @@ class PlanningController extends Controller
     public function modifiedList()
     {
         $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')
-            ->where('is_modified',1)
+            ->where('is_modified', 1)
             ->latest()
             ->get();
         return view('sales::planning.modification_list', compact('plans'));

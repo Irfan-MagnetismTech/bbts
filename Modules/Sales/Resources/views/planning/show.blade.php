@@ -10,7 +10,7 @@
 @endsection
 
 @section('sub-title')
-    <span class="text-danger">*</span> Marked are required.
+    {{-- <span class="text-danger">*</span> Marked are required. --}}
 @endsection
 @section('style')
     <style>
@@ -65,15 +65,13 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="tableHeading">
-                    <h5> <span> &#10070; </span> Planning <span>&#10070;</span> </h5>
-                </div>
                 <div class="card-body">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <h5 class="text-center">Client Information</h5>
-                            <hr />
                             <table class="table table-bordered client-information">
+                                <tr>
+                                    <th colspan="4" style="background: #cfeaec !important;">Client Information</th>
+                                </tr>
                                 <tr>
                                     <th>Client Name</th>
                                     <td>{{ $plan->lead_generation->client_name }}</td>
@@ -81,16 +79,17 @@
                                     <td>{{ $plan->lead_generation->address }}</td>
                                 </tr>
                                 <tr>
+                                    <th>Branch</th>
+                                    <td>{{ $plan->feasibilityRequirementDetail->branch->name ?? '' }}</td>
                                     <th>Division</th>
                                     <td>{{ $plan->lead_generation->division->name ?? '' }}</td>
-                                    <th>District</th>
-                                    <td>{{ $plan->lead_generation->district->name ?? '' }}</td>
                                 </tr>
                                 <tr>
+                                    <th>District</th>
+                                    <td>{{ $plan->lead_generation->district->name ?? '' }}</td>
                                     <th>Thana</th>
                                     <td>{{ $plan->lead_generation->thana->name ?? '' }}</td>
-                                    <th>Landmark</th>
-                                    <td>{{ $plan->lead_generation->landmark }}</td>
+
                                 </tr>
                                 <tr>
                                     <th>Lat-Long</th>
@@ -116,14 +115,14 @@
                                         @endif
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th>Landmark</th>
+                                    <td colspan="3" class="text-left">{{ $plan->lead_generation->landmark }}</td>
+                                </tr>
                             </table>
                         </div>
                     </div>
-                    <hr />
-                    <div class="text-center">
-                        <h5> <span> &#10070; </span> Plan Details <span>&#10070;</span> </h5>
-                    </div>
-                    <hr />
+
                     {{-- create a responsive table --}}
                     <div class="row">
                         <div class="col-md-5 col-5">
@@ -191,10 +190,6 @@
                     <div>
                         @foreach ($plan->planLinks as $key => $plan_link)
                             @php $total_key = $key + 1; @endphp
-                            <hr />
-                            <div class="text-center">
-                                <h5> <span> &#10070; </span> Link Details <span>&#10070;</span> </h5>
-                            </div>
                             <hr />
                             <div class="main_link row">
                                 <div class="table-responsive col-md-6 col-6">
@@ -309,14 +304,13 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12">
-                                    <div class="text-center">
-                                        <hr />
-                                        <h5> <span> &#10070; </span> Link Equipment <span>&#10070;</span> </h5>
-                                    </div>
-                                    <hr />
                                     <div class="table-responsive">
                                         <table class="table table-bordered link-equipment" style="font-size: 12px;">
                                             <thead>
+                                                <tr>
+                                                    <th colspan="7" style="background: #cfeaec !important;">Link
+                                                        {{ $total_key }} Equipment</th>
+                                                </tr>
                                                 <tr>
                                                     <th>Equipment Name</th>
                                                     <th>Quantity</th>
@@ -356,7 +350,6 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <hr />
                                 </div>
                             </div>
                         @endforeach
