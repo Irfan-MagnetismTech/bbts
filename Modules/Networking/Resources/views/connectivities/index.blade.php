@@ -55,6 +55,8 @@
                             <span class="badge badge-primary">
                                 <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                     class="text-white" target="_blank">Physical Connectivity</a>
+                                {{-- <a href="{{ route('physical-connectivities.edit', $physicalConnectivity->id) }}" data-toggle="tooltip" 
+                                    title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a> --}}
                             </span>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-internet-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
