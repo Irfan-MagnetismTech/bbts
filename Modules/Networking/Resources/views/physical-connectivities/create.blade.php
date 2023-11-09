@@ -191,6 +191,7 @@
                                     value="{{ $physicalConnectivityLine->finalSurveyDetails->ldp ?? '' }}" readonly>
                             </td>
                             <td>
+                                {{-- @dd($physicalConnectivityLine); --}}
                                 <select class="form-control select2 link_id" name="bbts_link_id[]">
                                     <option value="" readonly selected>Select Link ID</option>
                                     @forelse ($connectivity_links as $key => $value)

@@ -75,7 +75,7 @@ class PhysicalConnectivityController extends Controller
             //     ->where('fr_no', $physicalConnectivity->fr_no)
             //     ->first();
 
-            $connectivity_links = ConnectivityLink::latest()->get();
+            // $connectivity_links = ConnectivityLink::latest()->get();
 
             $fiber_cores = NetFiberManagement::latest()->get();
         }
