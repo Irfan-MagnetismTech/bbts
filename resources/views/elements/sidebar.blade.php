@@ -88,7 +88,7 @@
             @can('support-and-ticketing-module')
                 @include('ticketing::layouts.sidebar')
             @endcan
-            @can('networking-module')
+            @can('networking-module' || 'infrastructure-module')
                 @include('networking::layouts.sidebar')
             @endcan
             @can('supply-chain-module')
