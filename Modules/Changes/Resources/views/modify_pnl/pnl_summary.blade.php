@@ -132,7 +132,7 @@
             style="transition: 0.5s" href="{{ route('modify-pnl-approve-by-cmo', $connectivity_requirement_id) }}">CMO
             {{ $sale->finance_approval == '' ? 'Approval' : 'Approved' }}</a>
         <a class="btn btn-outline-success"
-            @if ($sale->management_approval == '') href="{{ route('modity-pnl-approve-by-management', $connectivity_requirement_id) }}" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @else href="#" @endif
+            @if ($sale->management_approval == '') href="{{ route('modify-pnl-approve-by-management', $connectivity_requirement_id) }}" title="Approved By {{ $sale?->managementApprovedBy?->name }}" @else href="#" @endif
             style="transition: 0.5s"
             href="{{ route('modify-pnl-approve-by-management', $connectivity_requirement_id) }}">Management
             {{ $sale->finance_approval == '' ? 'Approval' : 'Approved' }}</a>
