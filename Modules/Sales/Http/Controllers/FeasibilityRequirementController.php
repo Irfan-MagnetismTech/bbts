@@ -88,21 +88,21 @@ class FeasibilityRequirementController extends Controller
                     $frNo = 'fr' . '-' . $data['client_no'] . '-' . $fr_serial;
                     $fr_serial++;
                     $feasibilityDetails[] = [
-                        'connectivity_point' => $connectivityPoint,
-                        'aggregation_type' => $request['aggregation_type'][$key],
-                        'client_no' => $data['client_no'],
-                        'fr_no' => $frNo,
-                        'branch_id' => $request['branch_id'][$key],
-                        'division_id' => $request['division_id'][$key],
-                        'district_id' => $request['district_id'][$key],
-                        'thana_id' => $request['thana_id'][$key],
-                        'location' => $request['location'][$key],
-                        'lat' => $request['lat'][$key],
-                        'long' => $request['long'][$key],
-                        'contact_name' => $request['contact_name'][$key],
-                        'contact_designation' => $request['contact_designation'][$key],
-                        'contact_number' => $request['contact_number'][$key],
-                        'contact_email' => $request['contact_email'][$key],
+                        'connectivity_point' => $connectivityPoint ?? null,
+                        'aggregation_type' => $request['aggregation_type'][$key] ?? null,
+                        'client_no' => $data['client_no'] ?? '',
+                        'fr_no' => $frNo ?? '',
+                        'branch_id' => $request['branch_id'][$key] ?? null,
+                        'division_id' => $request['division_id'][$key] ?? null,
+                        'district_id' => $request['district_id'][$key] ?? null,
+                        'thana_id' => $request['thana_id'][$key] ?? null,
+                        'location' => $request['location'][$key] ?? null,
+                        'lat' => $request['lat'][$key] ?? null,
+                        'long' => $request['long'][$key] ?? null,
+                        'contact_name' => $request['contact_name'][$key] ?? null,
+                        'contact_designation' => $request['contact_designation'][$key] ?? null,
+                        'contact_number' => $request['contact_number'][$key] ?? null,
+                        'contact_email' => $request['contact_email'][$key] ?? null,
                     ];
                 }
 
@@ -171,20 +171,20 @@ class FeasibilityRequirementController extends Controller
                 $detailId = $request['detail_id'][$key] ?? null;
                 $frNo = 'fr' . '-' . $data['client_no'] . '-';
                 $detailsData = [
-                    'connectivity_point' => $request['connectivity_point'][$key],
-                    'client_no' => $data['client_no'],
-                    'aggregation_type' => $request['aggregation_type'][$key],
-                    'branch_id' => $request['branch_id'][$key],
-                    'division_id' => $request['division_id'][$key],
-                    'district_id' => $request['district_id'][$key],
-                    'thana_id' => $request['thana_id'][$key],
-                    'location' => $request['location'][$key],
-                    'lat' => $request['lat'][$key],
-                    'long' => $request['long'][$key],
-                    'contact_name' => $request['contact_name'][$key],
-                    'contact_designation' => $request['contact_designation'][$key],
-                    'contact_number' => $request['contact_number'][$key],
-                    'contact_email' => $request['contact_email'][$key],
+                    'connectivity_point' => $request['connectivity_point'][$key] ?? null,
+                    'client_no' => $data['client_no'] ?? '',
+                    'aggregation_type' => $request['aggregation_type'][$key] ?? null,
+                    'branch_id' => $request['branch_id'][$key] ?? null,
+                    'division_id' => $request['division_id'][$key] ?? null,
+                    'district_id' => $request['district_id'][$key] ?? null,
+                    'thana_id' => $request['thana_id'][$key] ?? null,
+                    'location' => $request['location'][$key] ?? null,
+                    'lat' => $request['lat'][$key] ?? null,
+                    'long' => $request['long'][$key] ?? null,
+                    'contact_name' => $request['contact_name'][$key] ?? null,
+                    'contact_designation' => $request['contact_designation'][$key] ?? null,
+                    'contact_number' => $request['contact_number'][$key] ?? null,
+                    'contact_email' => $request['contact_email'][$key] ?? null,
                 ];
 
                 if ($detailId) {

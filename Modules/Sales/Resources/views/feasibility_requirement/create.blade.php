@@ -77,7 +77,7 @@
                             <div class="form-item">
                                 <input type="text" class="form-control" name="client_name" id="client_name"
                                     value="{{ $client_name }}" autocomplete="off" required>
-                                <label for="client_name">Client Name sfsdfsf<span class="text-danger">*</span></label>
+                                <label for="client_name">Client Name<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
