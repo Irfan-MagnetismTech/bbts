@@ -70,13 +70,13 @@ class FeasibilityRequirementController extends Controller
                 $data['user_id'] = auth()->user()->id;
                 $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
-                $maxMqNo = FeasibilityRequirement::where('client_no', $data['client_no'])->max('mq_no');
+                $maxMqNo = FeasibilityRequirement::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first()->mq_no;
                 $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($maxMqNo ? (explode('-', $maxMqNo)[3] + 1) : '1');
 
                 $feasibilityRequirement = FeasibilityRequirement::create($data);
 
                 $feasibilityDetails = [];
-                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
+                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first()->fr_no;
                 if ($maxFrNo) {
                     $frArray = explode('-', $maxFrNo);
                     $fr_serial = intval($frArray[count($frArray) - 1]) + 1;
@@ -86,7 +86,7 @@ class FeasibilityRequirementController extends Controller
 
                 foreach ($request['connectivity_point'] as $key => $connectivityPoint) {
                     $frNo = 'fr' . '-' . $data['client_no'] . '-' . $fr_serial;
-                    $fr_serial++;
+                    $fr_serial += 1;
                     $feasibilityDetails[] = [
                         'connectivity_point' => $connectivityPoint ?? null,
                         'aggregation_type' => $request['aggregation_type'][$key] ?? null,
@@ -193,7 +193,8 @@ class FeasibilityRequirementController extends Controller
                         $feasibility->update($detailsData);
                     }
                 } else {
-                    $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->max('fr_no');
+                    $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first()->fr_no;
+
 
                     if ($maxFrNo) {
                         $frArray = explode('-', $maxFrNo);
