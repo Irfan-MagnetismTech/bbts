@@ -70,9 +70,9 @@ legend {
     $vendor_link_id = old('vendor_link_id', !empty($connectivity) ? $connectivity->vendor_link_id : null);
     $vendor_vlan = old('vendor_vlan', !empty($connectivity) ? $connectivity->vendor_vlan : null);
     $port = old('port', !empty($connectivity) ? $connectivity->port : null);
-    $date_of_commissioning = old('date_of_commissioning', !empty($connectivity) ? $connectivity->date_of_commissioning : today()->format('d-m-Y'));
-    $date_of_termination = old('date_of_termination', !empty($connectivity) ? $connectivity->date_of_termination :  today()->format('d-m-Y'));
-    $activation_date = old('activation_date', !empty($connectivity) ? $connectivity->activation_date : today()->format('d-m-Y'));
+    $date_of_commissioning = old('date_of_commissioning', !empty($connectivity) ? $connectivity->date_of_commissioning : null);
+    $date_of_termination = old('date_of_termination', !empty($connectivity) ? $connectivity->date_of_termination :  null);
+    $activation_date = old('activation_date', !empty($connectivity) ? $connectivity->activation_date : null);
     $remarks = old('remarks', !empty($connectivity) ? $connectivity->remarks : null);
     $capacity_type = old('capacity_type', !empty($connectivity) ? $connectivity->capacity_type : null);
     $existing_capacity = old('existing_capacity', !empty($connectivity) ? $connectivity->existing_capacity : null);

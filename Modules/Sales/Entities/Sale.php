@@ -4,12 +4,9 @@ namespace Modules\Sales\Entities;
 
 use Modules\Admin\Entities\User;
 use Carbon\Carbon;
-use Modules\Sales\Entities\Client;
-use Modules\Sales\Entities\SaleDetail;
+use Modules\Networking\Entities\LogicalConnectivity;
+use Modules\Networking\Entities\PhysicalConnectivity;
 use Illuminate\Database\Eloquent\Model;
-use Modules\Sales\Entities\OfferDetail;
-use Modules\Sales\Entities\SaleLinkDetail;
-use Modules\Sales\Entities\SaleProductDetail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sale extends Model
