@@ -44,6 +44,11 @@ class Sale extends Model
         return $query->where('is_modified', 0);
     }
 
+    // public function scopeExisting($query)
+    // {
+    //     return $query->where('is_modified', 1);
+    // }
+
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');

@@ -140,7 +140,8 @@
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="aggregation_type[]" class="form-control select2"
-                                                            autocomplete="off" placeholder="Select Aggregation Type">
+                                                            autocomplete="off" placeholder="Select Aggregation Type"
+                                                            required>
                                                             <option value="">Select Aggregation Type</option>
                                                             <option value="DC"
                                                                 {{ $item->aggregation_type == 'DC' ? 'selected' : '' }}>
@@ -157,8 +158,8 @@
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="branch_id[]" class="form-control branch select2"
-                                                            id="branch" autocomplete="off"
-                                                            placeholder="Select Branch">
+                                                            id="branch" autocomplete="off" placeholder="Select Branch"
+                                                            required>
                                                             <option value="">Select Branch</option>
                                                             @foreach ($branches as $branch)
                                                                 <option value="{{ $branch->id }}"
@@ -173,7 +174,7 @@
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="division_id[]" class="form-control division select2"
                                                             id="division" autocomplete="off"
-                                                            placeholder="Select Division">
+                                                            placeholder="Select Division" required>
                                                             <option value="">Select Division</option>
                                                             @foreach ($divisions as $division)
                                                                 <option value="{{ $division->id }}"
@@ -188,7 +189,7 @@
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="district_id[]"
                                                             class="form-control district_name select2" autocomplete="off"
-                                                            placeholder="Select District">
+                                                            placeholder="Select District" required>
                                                             <option value="">Select District</option>
                                                             @if ($item->division_id)
                                                                 @foreach ($districts as $district)
@@ -204,7 +205,8 @@
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="thana_id[]" class="form-control thana select2"
-                                                            id="thana" autocomplete="off" placeholder="Select Thana">
+                                                            id="thana" autocomplete="off" placeholder="Select Thana"
+                                                            required>
                                                             @if ($item->thana_id)
                                                                 @foreach ($thanas as $thana)
                                                                     <option value="{{ $thana->id }}"
@@ -284,7 +286,7 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="aggregation_type[]" class="form-control select2"
-                                                        autocomplete="off" placeholder="Select Aggregation Type">
+                                                        autocomplete="off" placeholder="Select Aggregation Type" required>
                                                         <option value="">Select Aggregation Type</option>
                                                         <option value="DC">DC</option>
                                                         <option value="DR">DR</option>
@@ -295,7 +297,8 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="branch_id[]" class="form-control branch select2"
-                                                        id="branch" autocomplete="off" placeholder="Select Dranch">
+                                                        id="branch" autocomplete="off" placeholder="Select Dranch"
+                                                        required>
                                                         <option value="">Select Branch</option>
                                                         @foreach ($branches as $branch)
                                                             <option value="{{ $branch->id }}">
@@ -308,7 +311,8 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="division_id[]" class="form-control division select2"
-                                                        id="division" autocomplete="off" placeholder="Select Division">
+                                                        id="division" autocomplete="off" placeholder="Select Division"
+                                                        required>
                                                         <option value="">Select Division</option>
                                                         @foreach ($divisions as $division)
                                                             <option value="{{ $division->id }}">
@@ -322,7 +326,7 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="district_id[]"
                                                         class="form-control district_name select2" autocomplete="off"
-                                                        placeholder="Select District">
+                                                        placeholder="Select District" required>
                                                         <option value="">Select District</option>
                                                     </select>
                                                 </div>
@@ -330,7 +334,8 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="thana_id[]" class="form-control thana select2"
-                                                        id="thana" autocomplete="off" placeholder="Select Thana">
+                                                        id="thana" autocomplete="off" placeholder="Select Thana"
+                                                        required>
                                                         <option value="">Select Thana</option>
                                                     </select>
                                                 </div>

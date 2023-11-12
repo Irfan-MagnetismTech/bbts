@@ -58,36 +58,53 @@
                 <div class="card-body">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <h5 class="text-center">Client Information</h5>
-                            <hr />
+                            {{-- <h5 class="text-center">Client Information</h5> --}}
                             <table class="table table-bordered client_information" style="font-size: 12px;">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" colspan="6"
+                                            style="background-color: #edeef0 !important; font-size: 14px !important;">
+                                            Connectivity
+                                            Point
+                                            Information</th>
+                                    </tr>
+                                </thead>
+
                                 <tr>
-                                    <th class="table_label">Client Name</th>
-                                    <td>{{ $plan->lead_generation->client_name }}</td>
-                                    <th class="table_label">Landmark</th>
-                                    <td>{{ $plan->lead_generation->landmark }}</td>
+                                    <th class="table_label">
+                                        Client Name
+                                    </th>
+                                    <td>
+                                        {{ $plan->lead_generation->client_name }}
+                                    </td>
+                                    <th class="table_label">Connectivity Point</th>
+                                    <td>{{ $plan->feasibilityRequirementDetail->connectivity_point }}</td>
                                     <th class="table_label">Division</th>
-                                    <td>{{ $plan->lead_generation->division->name ?? '' }}</td>
+                                    <td>{{ $plan->feasibilityRequirementDetail->division->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact Person</th>
-                                    <td>{{ $plan->lead_generation->contact_person }}</td>
+                                    <td>{{ $plan->feasibilityRequirementDetail->contact_name }}</td>
                                     <th class="table_label">Lat-Long</th>
-                                    <td>{{ $plan->lead_generation->lat }} - {{ $plan->lead_generation->long }}</td>
+                                    <td>{{ $plan->feasibilityRequirementDetail->lat }} -
+                                        {{ $plan->feasibilityRequirementDetail->long }}
+                                    </td>
                                     <th class="table_label">District</th>
-                                    <td>{{ $plan->lead_generation->district->name ?? '' }}</td>
+                                    <td>{{ $plan->feasibilityRequirementDetail->district->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Contact No</th>
-                                    <td>{{ $plan->lead_generation->contact_no }}</td>
-                                    <th class="table_label">Website</th>
-                                    <td>{{ $plan->lead_generation->website }}</td>
+                                    <td>{{ $plan->feasibilityRequirementDetail->contact_no }}</td>
+                                    <th class="table_label">Branch</th>
+                                    <td>{{ $plan->feasibilityRequirementDetail->branch->name ?? '' }}</td>
                                     <th class="table_label">Thana</th>
-                                    <td>{{ $plan->lead_generation->thana->name ?? '' }}</td>
+                                    <td>{{ $plan->feasibilityRequirementDetail->thana->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th class="table_label">Email</th>
-                                    <td>{{ $plan->lead_generation->email }}</td>
+                                    <td>{{ $plan->feasibilityRequirementDetail->contact_email }}</td>
+                                    <th class="table_label">Address</th>
+                                    <td> {{ $plan->feasibilityRequirementDetail->location }}</td>
                                     <th class="table_label">Document</th>
                                     <td>
                                         @if ($plan->lead_generation->document)
@@ -96,15 +113,13 @@
                                                     class="fas fa-eye"></i></a>
                                         @endif
                                     </td>
-                                    <th class="table_label">Address</th>
-                                    <td>{{ $plan->lead_generation->address }}</td>
                                 </tr>
-                                <tr colspan="6">
+                                <tr>
                                     <th class="table_label">Remarks</th>
                                     <td colspan="5" style="padding: 2px !important; margin: 2px !important;">
                                         <input type="text" name="remarks" id="remarks"
-                                            class="form-control form-control-sm" style="height: 25px !important;"
-                                            placeholder="Remarks" value="{{ $plan->remarks ?? '' }}">
+                                            class="form-control form-control-sm" value=""
+                                            style="height: 25px !important;" placeholder="Remarks">
                                     </td>
                                 </tr>
                             </table>
@@ -168,7 +183,11 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th colspan="7">Equipment Plan for product</th>
+                                            <th colspan="6">Equipment Plan for product</th>
+                                            <th rowspan="2">
+                                                <button type="button" class="btn btn-sm btn-success"
+                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button>
+                                            </th>
                                         </tr>
                                         <tr>
                                             <th>Equipment Name</th>
@@ -177,10 +196,6 @@
                                             <th>Brand</th>
                                             <th>Model</th>
                                             <th>Remarks</th>
-                                            <th>
-                                                <button type="button" class="btn btn-sm btn-success"
-                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button>
-                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody class="equipment_body">
@@ -245,13 +260,15 @@
                     <div class="row">
                         <input type="hidden" id="client_id" name="client_id"
                             value="{{ $plan->lead_generation->client_no }}">
-                        <div class="col-md-11 text-center">
+                        {{-- <div class="col-md-11 text-center">
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
-                        </div>
-                        <div class="col-md-1" style="float: right">
-                            <button type="button" class="btn btn-sm btn-outline-success text-left" id="addLinkRow"><i
-                                    class="fas fa-plus"></i></button>
-                        </div>
+                        </div> --}}
+                        {{-- <div class="col-md-1" style="float: right">
+                            
+                            <button type="button" class="btn btn-sm btn-outline-success text-left" id="addLinkRow">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div> --}}
                     </div>
                     <hr />
                     @if ($plan->planLinks->count() > 0)
@@ -274,9 +291,17 @@
                                                     class="link_no">{{ $total_key }}</span></h5>
                                         </div>
                                         <div class="col-md-1 col-1">
-                                            <button type="button"
-                                                class="btn btn-sm btn-outline-danger text-left removeLinkRow"
-                                                onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
+                                            <nobr>
+                                                <button type="button" class="btn btn-sm btn-outline-success addLinkRow"
+                                                    style="padding: 5px 10px">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                                <button type="button" style="padding: 5px 10px"
+                                                    class="btn btn-sm btn-outline-danger text-left removeLinkRow"
+                                                    onclick="removeLinkRow(this)"><i class="fas fa-trash"></i>
+                                                </button>
+                                            </nobr>
+
                                         </div>
                                         <hr / style="width: 100%; margin-bottom: 10px;">
                                         <div class="md-col-3 col-3">
@@ -337,7 +362,6 @@
                                                     class="form-control form-control-sm existing_infrastructure_link select2">
                                                     <option value="">Select Link</option>
                                                 </select>
-                                                <label for="type">Link List</label>
                                             </div>
                                         </div>
                                         <div class="md-col-3 col-3">
@@ -768,6 +792,7 @@
                         // $(event.target).closest('.main_link').find('.distance').val(data.distance);
                         // $(event.target).closest('.main_link').find('.gps').val(data.gps);
                         // $(event.target).closest('.main_link').find('.connectivity_point').val(data.bts_pop_ldp)
+                        changeLink($(event.target));
                     }
                 });
             }
@@ -799,7 +824,7 @@
                 var $tr = $table.find('tbody tr');
                 $(event).closest('tr').remove();
             }
-            $('#addLinkRow').on('click', function() {
+            $('.addLinkRow').on('click', function() {
                 addLinkRow();
             });
 
@@ -884,11 +909,22 @@
                 })
             });
             let link_array = [];
-            $(document).on('change', '.existing_infrastructure', function() {
-                var this_event = $(this);
-                var value = this_event.val();
-                let pop_id = this_event.closest('.main_link').find('input[name^="link_connecting_pop_id_"]').val();
 
+            $(document).on('change', '.existing_infrastructure', function() {
+                changeLink($(this));
+            });
+
+            $(document).on('change', '.link_connecting_pop_id_1', function() {
+                changeLink($(this));
+            });
+
+            function changeLink(this_event) {
+                // alert('change');
+                // var this_event = $(this);
+                // alert(this_event);
+                let pop_id = this_event.closest('.main_link').find('.link_connecting_pop_id_1').val();
+                var value = this_event.closest('.main_link').find('.existing_infrastructure').val();
+                // alert(value);
                 if (value == 'Existing') {
                     $.ajax({
                         url: "{{ route('get-existing-link-list') }}",
@@ -908,9 +944,6 @@
                             });
                             this_event.closest('.main_link').find('.existing_infrastructure_link').html(
                                 html);
-                            this_event.closest('.main_link').find('.new_transmission_capacity_div').css(
-                                'display',
-                                'none');
                             this_event.closest('.main_link').find('.existing_transmission_capacity').parent(
                                 'div').parent(
                                 'div').show();
@@ -918,6 +951,8 @@
                                 .parent('div').show();
                         }
                     });
+                    this_event.closest('.main_link').find('.new_transmission_capacity_div').css('display',
+                        'none');
                 } else {
                     this_event.closest('.main_link').find('.link_list').css('display', 'none');
                     this_event.closest('.main_link').find('.new_transmission_capacity_div').css('display',
@@ -926,7 +961,7 @@
                         'div').hide();
                     this_event.closest('.main_link').find('.increase_capacity').parent('div').parent('div').hide();
                 }
-            });
+            }
 
             $(document).on('change', '.existing_infrastructure_link', function() {
                 var this_event = $(this);

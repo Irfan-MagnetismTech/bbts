@@ -1263,46 +1263,44 @@
         //  Margin Calculation
         $('#management_perchantage').on('keyup', function() {
             var margin = $(this).val();
-            var total_mrc = parseFloat($('#total_mrc').val()).toFixed(2)
-            var total_mrc_amount = total_mrc * parseFloat(margin).toFixed(2) / 100;
+            var total_mrc = parseInt($('#total_mrc').val());
+            var total_mrc_amount = parseInt(total_mrc) * parseInt(margin) / 100;
             $('#management_cost_amount').val(total_mrc_amount);
 
-            var product_total_cost = parseFloat($('#product_total_cost').val()).toFixed(2);
+            var product_total_cost = parseInt($('#product_total_cost').val());
             var management_cost_total = total_mrc + total_mrc_amount;
             $('#management_cost_total').val(management_cost_total);
 
             var perchantage = (management_cost_total / product_total_cost) * 100 - 100;
             $('.product_rate').each(function() {
 
-                var product_rate = parseFloat($(this).val()).toFixed(2);
+                var product_rate = parseInt($(this).val()) || 0;
                 var product_rate_perchantage = product_rate * (perchantage / 100);
-                var product_margin_rate = (product_rate + product_rate_perchantage).toFixed(2);
+                var product_margin_rate = (product_rate + product_rate_perchantage);
                 $(this).closest('tr').find('.offer_price').val(product_margin_rate);
-                var total_margin_amount = product_margin_rate * parseFloat($(this).closest('tr').find(
+                var total_margin_amount = product_margin_rate * parseInt($(this).closest('tr').find(
                     '.product_quantity').val());
-                $(this).closest('tr').find('.product_offer_total').val(total_margin_amount.toFixed(2));
+                $(this).closest('tr').find('.product_offer_total').val(total_margin_amount);
 
                 var vat_perchant = $(this).closest('tr').find('.product_vat').val();
                 var vat_amount = (total_margin_amount * vat_perchant) / 100;
                 $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
-                $(this).closest('tr').find('.total_price').val((total_margin_amount + vat_amount)
-                    .toFixed(
-                        2));
+                $(this).closest('tr').find('.total_price').val(total_margin_amount + vat_amount);
             });
             var product_grand_total = $('.product_offer_total').get()
                 .reduce(function(sum, el) {
-                    return sum + parseFloat(el.value).toFixed(2);
+                    return sum + parseInt(el.value) || 0;
                 }, 0);
             var total_vat = $('.product_vat_amount').get()
                 .reduce(function(sum, el) {
-                    return sum + parseFloat(el.value).toFixed(2);
+                    return sum + parseInt(el.value) || 0;
                 }, 0);
             var grand_total_price = $('.total_price').get()
                 .reduce(function(sum, el) {
-                    return sum + parseFloat(el.value).toFixed(2);
+                    return sum + parseInt(el.value) || 0;
                 }, 0);
 
-            const client_equipment_total = parseFloat($('#client_equipment_total').val());
+            const client_equipment_total = parseInt($('#client_equipment_total').val());
 
             //client equipment total
             let plan_client_equipment_total = 0;
@@ -1310,22 +1308,22 @@
 
             $('.plan_link_status').each(function() {
                 if ($(this).is(':checked')) {
-                    plan_client_equipment_total += parseFloat($(this).closest('.PlanLinkMainRow').find(
+                    plan_client_equipment_total += parseInt($(this).closest('.PlanLinkMainRow').find(
                         '.plan_client_equipment_total').val()) ?? 0;
-                    plan_equipment_otc += parseFloat($(this).closest('.PlanLinkMainRow').find(
+                    plan_equipment_otc += parseInt($(this).closest('.PlanLinkMainRow').find(
                         '.plan_equipment_otc').val()) ?? 0;
                 }
             });
 
             let equipment_price_for_client = client_equipment_total + plan_client_equipment_total;
-            $('#equipment_price_for_client').val(equipment_price_for_client.toFixed(2));
+            $('#equipment_price_for_client').val(equipment_price_for_client);
 
-            let equipment_otc = parseFloat($('#equipment_otc').val());
+            let equipment_otc = parseInt($('#equipment_otc').val());
             let total_equipment_otc = equipment_otc + plan_equipment_otc + equipment_price_for_client
             $('#total_otc_with_client_equipment').val(total_equipment_otc);
-            $('#product_grand_total').val(product_grand_total.toFixed(2));
-            $('#total_vat').val(total_vat.toFixed(2));
-            $('#grand_total_price').val(grand_total_price.toFixed(2));
+            $('#product_grand_total').val(product_grand_total);
+            $('#total_vat').val(total_vat);
+            $('#grand_total_price').val(grand_total_price);
         });
 
         //This is button function for add new row in plan link

@@ -184,8 +184,8 @@ class SaleController extends Controller
                 'delivery_date'         => $raw['delivery_date'][$key],
                 'billing_address_id'    => $raw['billing_address_id'][$key],
                 'collection_address_id' => $raw['collection_address_id'][$key],
-                'bill_payment_date'     => $raw['bill_payment_date'][$key],
-                'payment_status'        => $raw['payment_status'][$key],
+                // 'bill_payment_date'     => $raw['bill_payment_date'][$key],
+                // 'payment_status'        => $raw['payment_status'][$key],
                 'mrc'                   => $raw['mrc'][$key],
                 'otc'                   => $raw['otc'][$key],
                 'total_mrc'             => $raw['total_mrc'][$key]

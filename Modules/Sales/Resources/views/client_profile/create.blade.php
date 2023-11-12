@@ -702,12 +702,17 @@
                             $('#client_name').val(ui.item.client_name).attr('value', ui.item
                                 .client_name);
                             $('#client_type').val(ui.item.client_type).attr('value', ui.item
-                                .client_type);
+                                .client_type).trigger(
+                                'change');
                             $('#business_type').val(ui.item.business_type).attr('value', ui.item
-                                .business_type);
-                            $('#division').val(ui.item.division).attr('value', ui.item.division);
-                            $('#district').val(ui.item.district).attr('value', ui.item.district);
-                            $('#thana').val(ui.item.thana).attr('value', ui.item.thana);
+                                .business_type).trigger(
+                                'change');
+                            $('#division').val(ui.item.division).attr('value', ui.item.division).trigger(
+                                'change');
+                            $('#district').val(ui.item.district).attr('value', ui.item.district)
+                                .trigger('change');
+                            $('#thana').val(ui.item.thana).attr('value', ui.item.thana).trigger(
+                                'change');
                             $('#location').val(ui.item.location).attr('value', ui.item.location);
                             $('#contact_person').val(ui.item.contact_person).attr('value', ui.item
                                 .contact_person);

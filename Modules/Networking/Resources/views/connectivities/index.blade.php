@@ -47,14 +47,16 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $details->client->client_name }}</td>
                         <td>{{ $details->fr_no }}</td>
-                        <td class="noWrapStyle">{{ $details->frDetails->connectivity_point }}</td>
-                        <td></td>
+                        <td class="noWrapStyle">{{ $details->frDetails->connectivity_point }}  </td>
+                        <td> {{ $details->sale->is_modified == 1 ? 'Existing' : 'New' }} </td>
                         <td>{{ $details->delivery_date ? $details->delivery_date : '' }}</td>
                         <td>{{ $details->connectivities ? $details->connectivities->commissioning_date : '' }}</td>
                         <td>
                             <span class="badge badge-primary">
                                 <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                     class="text-white" target="_blank">Physical Connectivity</a>
+                                {{-- <a href="{{ route('physical-connectivities.edit', $physicalConnectivity->id) }}" data-toggle="tooltip" 
+                                    title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a> --}}
                             </span>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-internet-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
