@@ -6,6 +6,7 @@ use Modules\Admin\Entities\ConnectivityLink;
 use Modules\Admin\Http\Controllers\IpController;
 use Modules\Admin\Http\Controllers\PopController;
 use Modules\Admin\Http\Controllers\AuthController;
+use Modules\Admin\Http\Controllers\ThanaController;
 use Modules\Admin\Http\Controllers\BankController;
 use Modules\Admin\Http\Controllers\RoleController;
 use Modules\Admin\Http\Controllers\UserController;
@@ -41,6 +42,7 @@ Route::prefix('admin')->group(function () {
             'users'         => UserController::class,
             'brands'        => BrandController::class,
             'branchs'       => BranchController::class,
+            'thanas'       => ThanaController::class,
             'pops'          => PopController::class,
             'connectivity'  => ConnectivityLinkController::class,
             'particulars'   => ParticularController::class,
