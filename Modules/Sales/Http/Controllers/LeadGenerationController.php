@@ -47,6 +47,7 @@ class LeadGenerationController extends Controller
             '4' => 'Restaurant',
             '5' => 'Office',
             '6' => 'Others',
+            '7' => 'Bank',
         ];
 
         return view('sales::lead_generation.create', compact('divisons', 'organizations'));
@@ -99,6 +100,7 @@ class LeadGenerationController extends Controller
             '4' => 'Restaurant',
             '5' => 'Office',
             '6' => 'Others',
+            '7' => 'Bank',
         ];
         return view('sales::lead_generation.create', compact('lead_generation', 'divisons', 'districts', 'thanas', 'organizations'));
     }

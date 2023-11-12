@@ -290,7 +290,7 @@ class CommonApiController extends Controller
     public function getDistricts()
     {
         $division_id = request('division_id');
-        $districts = District::where('division_id', $division_id)->limit(15)
+        $districts = District::where('division_id', $division_id)
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,
@@ -303,7 +303,7 @@ class CommonApiController extends Controller
     public function getThanas()
     {
         $district_id = request('district_id');
-        $thanas = Thana::where('district_id', $district_id)->limit(15)
+        $thanas = Thana::where('district_id', $district_id)
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,

@@ -77,7 +77,7 @@
                             <div class="form-item">
                                 <input type="text" class="form-control" name="client_name" id="client_name"
                                     value="{{ $client_name }}" autocomplete="off" required>
-                                <label for="client_name">Client Name sfsdfsf<span class="text-danger">*</span></label>
+                                <label for="client_name">Client Name<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
@@ -118,8 +118,7 @@
                                         <th style="min-width: 200px;">Con. No.</th>
                                         <th style="min-width: 200px;">Email</th>
                                         <th>
-                                            <button type="button" class="btn btn-sm btn-warning" id="addRow"><i
-                                                    class="fas fa-plus"></i></button>
+                                            Action
                                         </th>
                                     </tr>
                                 </thead>
@@ -158,8 +157,7 @@
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="branch_id[]" class="form-control branch select2"
-                                                            id="branch" autocomplete="off" placeholder="Select Branch"
-                                                            required>
+                                                            autocomplete="off" placeholder="Select Branch" required>
                                                             <option value="">Select Branch</option>
                                                             @foreach ($branches as $branch)
                                                                 <option value="{{ $branch->id }}"
@@ -173,8 +171,7 @@
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="division_id[]" class="form-control division select2"
-                                                            id="division" autocomplete="off"
-                                                            placeholder="Select Division" required>
+                                                            autocomplete="off" placeholder="Select Division" required>
                                                             <option value="">Select Division</option>
                                                             @foreach ($divisions as $division)
                                                                 <option value="{{ $division->id }}"
@@ -205,8 +202,7 @@
                                                 <td>
                                                     <div class="input-group input-group-sm input-group-primary">
                                                         <select name="thana_id[]" class="form-control thana select2"
-                                                            id="thana" autocomplete="off" placeholder="Select Thana"
-                                                            required>
+                                                            autocomplete="off" placeholder="Select Thana" required>
                                                             @if ($item->thana_id)
                                                                 @foreach ($thanas as $thana)
                                                                     <option value="{{ $thana->id }}"
@@ -297,8 +293,7 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="branch_id[]" class="form-control branch select2"
-                                                        id="branch" autocomplete="off" placeholder="Select Dranch"
-                                                        required>
+                                                        autocomplete="off" placeholder="Select Dranch" required>
                                                         <option value="">Select Branch</option>
                                                         @foreach ($branches as $branch)
                                                             <option value="{{ $branch->id }}">
@@ -311,8 +306,7 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="division_id[]" class="form-control division select2"
-                                                        id="division" autocomplete="off" placeholder="Select Division"
-                                                        required>
+                                                        autocomplete="off" placeholder="Select Division" required>
                                                         <option value="">Select Division</option>
                                                         @foreach ($divisions as $division)
                                                             <option value="{{ $division->id }}">
@@ -334,8 +328,7 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <select name="thana_id[]" class="form-control thana select2"
-                                                        id="thana" autocomplete="off" placeholder="Select Thana"
-                                                        required>
+                                                        autocomplete="off" placeholder="Select Thana" required>
                                                         <option value="">Select Thana</option>
                                                     </select>
                                                 </div>
@@ -343,7 +336,7 @@
                                             <td>
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="location[]" class="form-control"
-                                                        id="location" autocomplete="off" placeholder="Location">
+                                                        autocomplete="off" placeholder="Location">
                                                 </div>
                                             </td>
                                             <td>
@@ -393,14 +386,28 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div style="display: flex; width: 100%; justify-content: space-between;">
+                            <div>
+                                <button type="button" id="addRow" style="float: right;"
+                                    class=" mt-2 py-2 mr-3 btn btn-outline-success">
+                                    <i class="fas fa-plus"></i><span style="margin:0px 5px;">New
+                                        Row</span>
+                                </button>
 
-                        <input id="csv-file" type="file" name="file" class="form-control d-none" />
+                            </div>
+                            <div>
+                                <input id="csv-file" type="file" name="file" class="form-control d-none" />
 
-                        <button class="mt-2 py-2 btn btn-warning mr-3" id="toggle-csv" type="button">Upload Csv</button>
-                        <button class="mt-2 py-2 btn btn-warning mr-3 d-none" id="upload-via-table" type="button">Upload
-                            via table</button>
-                        <button
-                            class=" mt-2 py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
+                                <button class="mt-2 py-2 btn btn-outline-warning mr-3 id="toggle-csv"
+                                    type="button">Upload
+                                    Csv</button>
+                                <button class="mt-2 py-2 btn btn-outline-warning mr-3 d-none" id="upload-via-table"
+                                    type="button">Upload
+                                    via table</button>
+                                <button
+                                    class="mt-2 py-2 btn btn-outline-primary">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
+                            </div>
+                        </div>
                     </div>
                     {!! Form::close() !!}
                     {{-- <div class="mt-3">
@@ -463,7 +470,7 @@
                 },
                 success: function(data) {
                     row.empty();
-                    row.append('<option value="">Select District</option>');
+                    row.append('<option value="">Select Thana</option>');
                     data.forEach(element => {
                         row.append('<option value="' + element.id + '">' + element.text +
                             '</option>');
@@ -479,9 +486,11 @@
         });
 
         function addRow() {
-            $('.feasibility_details_row').first().clone().appendTo('.feasibiltyBody');
-            $('.feasibility_details_row').last().find('input').val('');
-            $('.feasibility_details_row').last().find('select').val('');
+            var clone = $('.feasibility_details_row').first().clone();
+            clone.find('input').val('');
+            clone.find('span').remove();
+            clone.appendTo('.feasibiltyBody')
+            $(".select2").select2();
         };
 
         $(document).keydown(function(event) {

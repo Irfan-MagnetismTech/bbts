@@ -41,7 +41,7 @@
         <div class="col-12">
             <div class="input-group input-group-sm input-group-primary">
                 <label class="input-group-addon" for="name">Department</label>
-                {{ Form::select('department_id', $departments, old('department_id') ? old('department_id') : (!empty($user->employee) ? $user->employee->department_id : null), ['class' => 'form-control', 'id' => 'department_id', 'placeholder' => 'Select Department']) }}
+                {{ Form::select('department_id', $departments, old('department_id') ? old('department_id') : (!empty($user->employee) ? $user->employee->department_id : null), ['class' => 'form-control select2', 'id' => 'department_id', 'placeholder' => 'Select Department']) }}
                 @error('department_id')
                     <p class="text-danger">{{ $errors->first('department_id') }}</p>
                 @enderror
@@ -50,7 +50,7 @@
         <div class="col-12">
             <div class="input-group input-group-sm input-group-primary">
                 <label class="input-group-addon" for="name">Employee</label>
-                {{ Form::select('employee_id', $employees, old('employee_id') ? old('employee_id') : (!empty($user) ? $user->employee_id : null), ['class' => 'form-control', 'id' => 'employee_id', 'placeholder' => 'Select Name', 'onchange' => 'getEmployeeInfo(this)']) }}
+                {{ Form::select('employee_id', $employees, old('employee_id') ? old('employee_id') : (!empty($user) ? $user->employee_id : null), ['class' => 'form-control select2', 'id' => 'employee_id', 'placeholder' => 'Select Name', 'onchange' => 'getEmployeeInfo(this)']) }}
             </div>
         </div>
         <div class="col-12">
