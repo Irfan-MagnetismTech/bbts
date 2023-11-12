@@ -118,8 +118,7 @@
                                         <th style="min-width: 200px;">Con. No.</th>
                                         <th style="min-width: 200px;">Email</th>
                                         <th>
-                                            <button type="button" class="btn btn-sm btn-warning" id="addRow"><i
-                                                    class="fas fa-plus"></i></button>
+                                            Action
                                         </th>
                                     </tr>
                                 </thead>
@@ -387,14 +386,28 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div style="display: flex; width: 100%; justify-content: space-between;">
+                            <div>
+                                <button type="button" id="addRow" style="float: right;"
+                                    class=" mt-2 py-2 mr-3 btn btn-outline-success">
+                                    <i class="fas fa-plus"></i><span style="margin:0px 5px;">New
+                                        Row</span>
+                                </button>
 
-                        <input id="csv-file" type="file" name="file" class="form-control d-none" />
+                            </div>
+                            <div>
+                                <input id="csv-file" type="file" name="file" class="form-control d-none" />
 
-                        <button class="mt-2 py-2 btn btn-warning mr-3" id="toggle-csv" type="button">Upload Csv</button>
-                        <button class="mt-2 py-2 btn btn-warning mr-3 d-none" id="upload-via-table" type="button">Upload
-                            via table</button>
-                        <button
-                            class=" mt-2 py-2 btn btn-success ">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
+                                <button class="mt-2 py-2 btn btn-outline-warning mr-3 id="toggle-csv"
+                                    type="button">Upload
+                                    Csv</button>
+                                <button class="mt-2 py-2 btn btn-outline-warning mr-3 d-none" id="upload-via-table"
+                                    type="button">Upload
+                                    via table</button>
+                                <button
+                                    class="mt-2 py-2 btn btn-outline-primary">{{ !empty($lead_generation->id) ? 'Update' : 'Save' }}</button>
+                            </div>
+                        </div>
                     </div>
                     {!! Form::close() !!}
                     {{-- <div class="mt-3">
@@ -457,7 +470,7 @@
                 },
                 success: function(data) {
                     row.empty();
-                    row.append('<option value="">Select District</option>');
+                    row.append('<option value="">Select Thana</option>');
                     data.forEach(element => {
                         row.append('<option value="' + element.id + '">' + element.text +
                             '</option>');
