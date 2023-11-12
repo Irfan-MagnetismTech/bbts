@@ -61,21 +61,26 @@
                                     <span class="pcoded-mcaret"></span>
                                 </a>
                             </li>
-                            
+
                             <li class="{{ request()->routeIs('branchs.*') ? 'active' : null }}">
                                 <a href="{{ route('branchs.index') }}"> <span class="pcoded-micon"><i
                                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Branches</span><span
                                         class="pcoded-mcaret"></span></a>
                             </li>
-                          
+
                             <li class="{{ request()->routeIs('particulars.*') ? 'active' : null }}">
                                 <a href="{{ route('particulars.create') }}"> <span class="pcoded-micon"><i
                                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Particulars</span><span
                                         class="pcoded-mcaret"></span></a>
-                            </li> 
+                            </li>
                             <li class="{{ request()->routeIs('services.*') ? 'active' : null }}">
                                 <a href="{{ route('services.create') }}"> <span class="pcoded-micon"><i
                                             class="ti-angle-right"></i></span><span class="pcoded-mtext">Services</span><span
+                                        class="pcoded-mcaret"></span></a>
+                            </li>
+                            <li class="{{ request()->routeIs('thanas.*') ? 'active' : null }}">
+                                <a href="{{ route('thanas.create') }}"> <span class="pcoded-micon"><i
+                                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Thanas</span><span
                                         class="pcoded-mcaret"></span></a>
                             </li>
                         </ul>
