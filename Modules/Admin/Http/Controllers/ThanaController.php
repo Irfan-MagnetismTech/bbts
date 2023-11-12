@@ -35,7 +35,6 @@ class ThanaController extends Controller
         $formType = "create";
         $divisions = Division::latest()->get();
         $districts = District::latest()->get();
-
         return view('admin::thanas.create', compact('divisions', 'districts', 'formType'));
     }
 

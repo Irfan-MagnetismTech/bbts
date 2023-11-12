@@ -56,9 +56,17 @@
                                 class="text-danger">*</span></label>
                         <select class="form-control" id="division_id" name="division_id" required>
                             <option value="">Select division</option>
+                            @if ($formType == 'edit')
                             @foreach (@$divisions as $division)
                                 <option value="{{ $division->id }}"
                                     {{ $selectedDivision[0]->id == $division->id ? 'selected' : '' }}>
+                                    {{ $division->name }}
+                                </option>
+                            @endforeach
+                            @endif
+                            @foreach (@$divisions as $division)
+                                <option value="{{ $division->id }}"
+                                    {{ (old('division_id') ?? ($branch->division_id ?? '')) == $division->id ? 'selected' : '' }}>
                                     {{ $division->name }}
                                 </option>
                             @endforeach
