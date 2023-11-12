@@ -42,9 +42,9 @@
                         <td>{{ $team?->department?->name }}</td>
                         <td>{{ $team?->user?->employee?->designation?->name }}</td>
                         <td>
-                            <x:action-button :show="route('support-teams.show', ['support_team' => $team - > id])"
-                                :edit="route('support-teams.edit', ['support_team' => $team - > id])"
-                                :delete="route('support-teams.show', ['support_team' => $team - > id])" />
+                            <x:action-button :show="route('support-teams.show', ['support_team' => $team->id])"
+                                :edit="route('support-teams.edit', ['support_team' => $team->id])"
+                                :delete="route('support-teams.show', ['support_team' => $team->id])" />
                         </td>
                     </tr>
                 @endforeach
