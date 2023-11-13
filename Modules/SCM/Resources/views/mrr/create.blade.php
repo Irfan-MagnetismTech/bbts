@@ -163,13 +163,13 @@
         <div class="form-group col-3">
             <label for="bill_reg_no">Bill Register No:</label>
             <input type="text" class="form-control" id="bill_reg_no" aria-describedby="bill_reg_no" name="bill_reg_no"
-                   value="{{ $bill_reg_no }}" autocomplete="off">
+                value="{{ $bill_reg_no }}" autocomplete="off">
         </div>
 
         <div class="form-group col-3">
             <label for="date">Bill Date:</label>
             <input class="form-control bill_date" name="bill_date" aria-describedby="bill_date" id="bill_date"
-                   value="{{ $bill_date }}" placeholder="Select a Date" readonly>
+                value="{{ $bill_date }}" placeholder="Select a Date" readonly>
         </div>
     </div>
     <div class="row loading" style="display: none;">
@@ -330,12 +330,12 @@
                                 value="{{ $quantity[$key] }}">
                         </td>
                         <td>
-                            <input name="unit_price[]" class="form-control unit_price" autocomplete="off" readonly
-                                value="10" value="{{ $unit_price[$key] }}" readonly>
+                            <input type="text" name="unit_price[]" class="form-control unit_price" autocomplete="off"
+                                readonly value="{{ $unit_price[$key] }}" readonly>
                         </td>
                         <td>
-                            <input name="amount[]" class="form-control amount" autocomplete="off" readonly
-                                value="{{ $amount[$key] }}" readonly>
+                            <input type="text" name="amount[]" class="form-control amount" autocomplete="off"
+                                readonly value="{{ $amount[$key] }}" readonly>
                         </td>
                         <td>
                             <i class="btn btn-danger btn-sm fa fa-minus remove-requisition-row"></i>
@@ -506,15 +506,15 @@
                                     </div>
                                 </td>
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                            <td>
-                                                                                                                                                <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
-                                                                                                                                            </td>
-                                                                                                                                            ` : ''}
+                                                                                                                                                        <td>
+                                                                                                                                                            <input type="text" name="initial_mark[]" class="form-control initial_mark" autocomplete="off" readonly>
+                                                                                                                                                        </td>
+                                                                                                                                                        ` : ''}
                                 ${data.material.type == 'Drum' ? `
-                                                                                                                                        <td>
-                                                                                                                                            <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
-                                                                                                                                        </td>
-                                                                                                                                            ` : ''}
+                                                                                                                                                    <td>
+                                                                                                                                                        <input type="text" name="final_mark[]" class="form-control final_mark" autocomplete="off" readonly>
+                                                                                                                                                    </td>
+                                                                                                                                                        ` : ''}
 
                                 <td>
                                     <input type="text" name="warranty_period[]" class="form-control warranty_period" autocomplete="off" value="${data.warranty_period ?? 0}" readonly>
