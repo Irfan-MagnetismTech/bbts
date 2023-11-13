@@ -70,14 +70,17 @@ class FeasibilityRequirementController extends Controller
                 $data['user_id'] = auth()->user()->id;
                 $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
-                $maxMqNo = FeasibilityRequirement::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first()->mq_no;
+                $maxMqNo = FeasibilityRequirement::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first();
+                if ($maxMqNo) {
+                    $maxMqNo = $maxMqNo->mq_no;
+                }
                 $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($maxMqNo ? (explode('-', $maxMqNo)[3] + 1) : '1');
-
                 $feasibilityRequirement = FeasibilityRequirement::create($data);
 
                 $feasibilityDetails = [];
-                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first()->fr_no;
+                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first();
                 if ($maxFrNo) {
+                    $maxFrNo = $maxFrNo->fr_no;
                     $frArray = explode('-', $maxFrNo);
                     $fr_serial = intval($frArray[count($frArray) - 1]) + 1;
                 } else {

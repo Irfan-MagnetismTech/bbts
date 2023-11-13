@@ -95,12 +95,12 @@
                         <td>{{ $scmMrrLine->model ?? '---' }}</td>
                         <td>{{ $scmMrrLine->warranty_period ?? null }}</td>
                         <td>
-                            @if(count($scmMrrLine->scmMrrSerialCodeLines))
+                            @if (count($scmMrrLine->scmMrrSerialCodeLines))
                                 @foreach ($scmMrrLine->scmMrrSerialCodeLines as $value)
-                                        {{$value->serial_or_drum_code}}
-                                        @if (!($loop->last))
-                                            ,
-                                        @endif
+                                    <span>{{ $value->serial_or_drum_code }}</span>
+                                    @if (!$loop->last)
+                                        ,
+                                    @endif
                                 @endforeach
                             @endif
                         </td>
@@ -110,7 +110,7 @@
                         {{-- <td> {{ $scmMrrLine->transport_cost }}</td> --}}
                         <td> {{ $scmMrrLine->unit_price }}</td>
                         <td class="text-right"> {{ $scmMrrLine->quantity * $scmMrrLine->unit_price }}</td>
-                        @php($total += ($scmMrrLine->quantity * $scmMrrLine->unit_price))
+                        @php($total += $scmMrrLine->quantity * $scmMrrLine->unit_price)
                     </tr>
                 @endforeach
             </tbody>

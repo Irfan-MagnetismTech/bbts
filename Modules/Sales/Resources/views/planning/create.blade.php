@@ -496,7 +496,8 @@
                                                         class="btn btn-success btn-sm addLinkEquipmentRow" style="padding: 5px 10px"
                                                         onclick="addLinkEquipmentRow(this)">
                                                         <i class="fas fa-plus"></i>
-                                                    </button>
+                                                    </button>-+
+                                                    
                                                 </th>
                                             </tr>
                                             <tr>
