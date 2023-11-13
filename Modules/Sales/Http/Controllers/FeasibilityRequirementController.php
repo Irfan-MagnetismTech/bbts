@@ -73,15 +73,14 @@ class FeasibilityRequirementController extends Controller
                 $maxMqNo = FeasibilityRequirement::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first();
                 if ($maxMqNo) {
                     $maxMqNo = $maxMqNo->mq_no;
-                    $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($maxMqNo ? (explode('-', $maxMqNo)[3] + 1) : '1');
                 }
-
-
+                $data['mq_no'] = 'MQ' . '-' . $data['client_no'] . '-' . ($maxMqNo ? (explode('-', $maxMqNo)[3] + 1) : '1');
                 $feasibilityRequirement = FeasibilityRequirement::create($data);
 
                 $feasibilityDetails = [];
-                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first()->fr_no;
+                $maxFrNo = FeasibilityRequirementDetail::where('client_no', $data['client_no'])->orderBy('id', 'desc')->first();
                 if ($maxFrNo) {
+                    $maxFrNo = $maxFrNo->fr_no;
                     $frArray = explode('-', $maxFrNo);
                     $fr_serial = intval($frArray[count($frArray) - 1]) + 1;
                 } else {
