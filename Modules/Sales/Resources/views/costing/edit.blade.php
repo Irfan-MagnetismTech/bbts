@@ -171,7 +171,7 @@
                                                         class="form-control form-control-sm input product_offer_total"
                                                         placeholder="Margin Price"
                                                         value="{{ $costing_product->offer_price * $costing_product->quantity }}"
-                                                        readonly>
+                                                        readonly> 
                                                 </span>
                                             </td>
                                             <td>
