@@ -13,10 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('material_brands', function (Blueprint $table) {
+        Schema::create('material_models', function (Blueprint $table) {
             $table->id();
             $table->integer('material_id')->nullable();
             $table->integer('brand_id')->nullable();
+            $table->string('model')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('material_brands');
+        Schema::dropIfExists('material_models');
     }
 };

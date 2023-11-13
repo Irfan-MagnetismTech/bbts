@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Entities;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\SCM\Entities\Unit;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,12 +20,17 @@ class Material extends Model
         return $this->name . '-' . $this->code;
     }
 
-    public function material_brand()
+    public function material_brand():HasMany
     {
-        return $this->belongsTo(MaterialBrand::class,'id','material_id');
+        return $this->hasMany(MaterialBrand::class,'material_id','id');
     }
 
     public function materialBrand(){
         return $this->hasOne(MaterialBrand::class,'material_id');
+    }
+
+    public function material_model():HasMany
+    {
+        return $this->hasMany(MaterialModel::class,'material_id','id');
     }
 }

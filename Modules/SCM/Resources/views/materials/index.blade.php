@@ -56,14 +56,7 @@
                         <td class="text-center">{{ $material->unit ?? '' }}</td>
                         <td class="text-center">{{ $material->type ?? '' }}</td>
                         <td class="text-center">{{ $material->code ?? '' }}</td>
-                        <td class="text-center">
-                            @php $brands = $material->brand ?? [] @endphp
-                            {{-- @dd($brands); --}}
-                            @foreach ($brands as $brand)
-                                {{ $brand['name'] ?? '' }} <br>
-                            @endforeach
-                            {{-- {{ $material->materialBrand?->brands->pluck('name')->flatten() ?? '' }} --}}
-                        </td>
+                        <td class="text-center">{{ $material->material_brand[0]->brands->name ?? '' }}</td>
                         <td class="text-center">{{ $material->min_qty ?? '' }}</td>
                         <td>
                             <div class="icon-btn">
