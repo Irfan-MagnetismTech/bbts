@@ -171,7 +171,7 @@
                                                         class="form-control form-control-sm input product_offer_total"
                                                         placeholder="Margin Price"
                                                         value="{{ $costing_product->offer_price * $costing_product->quantity }}"
-                                                        readonly> 
+                                                        readonly>
                                                 </span>
                                             </td>
                                             <td>
@@ -192,7 +192,7 @@
                                             <td>
                                                 <span>
                                                     <input type="number" name="product_offer_total[]"
-                                                        class="form-control form-control-sm input product_offer_total"
+                                                        class="form-control form-control-sm input total_price"
                                                         placeholder="Total Price" value="{{ $costing_product->total }}"
                                                         readonly>
                                                 </span>
@@ -1308,7 +1308,11 @@
                 var vat_perchant = $(this).closest('tr').find('.product_vat').val();
                 var vat_amount = (total_margin_amount * vat_perchant) / 100;
                 $(this).closest('tr').find('.product_vat_amount').val(vat_amount);
-                $(this).closest('tr').find('.total_price').val(total_margin_amount + vat_amount);
+                console.log('total_margin_amount', total_margin_amount)
+                console.log('vat_amount', vat_amount)
+                let total_price = total_margin_amount + vat_amount;
+                console.log('total_price', total_price)
+                $(this).closest('tr').find('.total_price').val(total_price);
             });
             var product_grand_total = $('.product_offer_total').get()
                 .reduce(function(sum, el) {
