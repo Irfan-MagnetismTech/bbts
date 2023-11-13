@@ -172,13 +172,13 @@
             <table class="table table-bordered" id="material_requisition">
                 <thead>
                 <tr>
-                    <th>Material Name</th>
+                    <th>Material</th>
                     <th>Brand</th>
                     <th>Model</th>
                     <th>Description</th>
                     <th>Unit</th>
-                    <th>Indent Quantity</th>
-                    <th>Indent Left Quantity</th>
+                    <th>Indent Qty</th>
+                    <th>Indent Left Qty</th>
                     <th>Quantity</th>
                     <th>Warranty Period</th>
                     <th>Price</th>
