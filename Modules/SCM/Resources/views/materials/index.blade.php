@@ -56,7 +56,18 @@
                         <td class="text-center">{{ $material->unit ?? '' }}</td>
                         <td class="text-center">{{ $material->type ?? '' }}</td>
                         <td class="text-center">{{ $material->code ?? '' }}</td>
-                        <td class="text-center">{{ $material->material_brand[0]->brands->name ?? '' }}</td>
+                        <td class="text-center">
+                            @if (!empty($material->material_brand))
+                                @foreach ($material->material_brand as $brand)
+                                    {{ $brand->brands->name }}
+                                    {{-- You can add a separator if needed, e.g., comma --}}
+                                    @unless($loop->last)
+                                        ,
+                                    @endunless
+                                @endforeach
+                            @endif
+                        </td>
+
                         <td class="text-center">{{ $material->min_qty ?? '' }}</td>
                         <td>
                             <div class="icon-btn">
