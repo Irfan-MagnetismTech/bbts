@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('sale_id');
             $table->string('client_no');
-            $table->string('fr_no');
+            $table->string('fr_no')->nullable();
+            $table->string('connectivity_requirement_id')->nullable();
             $table->integer('attendant_engineer')->nullable();
             $table->date('commissioning_date')->nullable();
+            $table->date('modified_date')->nullable();
             $table->integer('is_modify')->default('0');
             $table->integer('billing_date')->nullable();
             $table->timestamps();
