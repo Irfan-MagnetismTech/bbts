@@ -117,5 +117,4 @@ class MrrRequest extends FormRequest
     {
         return true;
     }
-
 }

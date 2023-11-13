@@ -114,8 +114,8 @@
                                     </form>
                                 </div>
                             @endif
-                            <x:action-button :show="route('support-tickets.show', ['support_ticket' => $ticket - > id])"
-                                :edit="route('support-tickets.edit', ['support_ticket' => $ticket - > id])"
+                            <x:action-button :show="route('support-tickets.show', ['support_ticket' => $ticket->id])"
+                                :edit="route('support-tickets.edit', ['support_ticket' => $ticket->id])"
                                 :delete="false" />
 
                             <div class="icon-btn ml-1">
