@@ -125,11 +125,11 @@
                             </table>
                         </div>
                     </div>
-                    <hr />
+                    {{-- <hr />
                     <div class="text-center">
                         <h5> <span> &#10070; </span> Plan Details <span>&#10070;</span> </h5>
                     </div>
-                    <hr />
+                    <hr /> --}}
                     {{-- create a responsive table --}}
                     <div class="row ">
                         <div class="md-col-5 col-5">
@@ -138,7 +138,7 @@
                                     <thead>
                                         <tr>
                                             <th colspan="5">Service Plan for
-                                                {{ $plan->feasibilityRequirementDetail->connectivity_point }}</th>
+                                                {{-- {{ $plan->feasibilityRequirementDetail->connectivity_point }}</th> --}}
                                         </tr>
                                         <tr>
                                             <th>Particulars</th>
@@ -152,7 +152,7 @@
                                             <tr class="particular_row">
                                                 <input type="hidden" name="service_plan_id[]"
                                                     value="{{ $service_plan->id ?? '' }}">
-                                                <td style="width:30%">
+                                                <td style="width:40%">
                                                     <input type="hidden" name="detail_id[]" id="detail_id"
                                                         class="form-control form-control-sm"
                                                         value="{{ $service_plan->connectivityProductRequirementDetails->id ?? '' }}">
@@ -169,7 +169,7 @@
                                                         class="form-control form-control-sm"
                                                         value="{{ $service_plan->plan ?? '' }}">
                                                 </td>
-                                                <td style="width:30%">
+                                                <td style="width:40%">
                                                     <span
                                                         class="form-control form-control-sm">{{ $service_plan->connectivityProductRequirementDetails->remarks ?? '' }}</span>
                                                 </td>
@@ -186,7 +186,8 @@
                                             <th colspan="6">Equipment Plan for product</th>
                                             <th rowspan="2">
                                                 <button type="button" class="btn btn-sm btn-success"
-                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button>
+                                                    style="padding: 5px 10px" id="addEquipmentRow"><i
+                                                        class="fas fa-plus"></i></button>
                                             </th>
                                         </tr>
                                         <tr>
@@ -246,8 +247,8 @@
                                                 </td>
                                                 <td>
                                                     <button type="button"
-                                                        class="btn btn-sm btn-outline-danger removeEquipmentRow"><i
-                                                            class="fas fa-trash"></i></button>
+                                                        class="btn btn-sm btn-outline-danger removeEquipmentRow"
+                                                        style="padding: 5px 10px"><i class="fas fa-trash"></i></button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -256,7 +257,7 @@
                             </div>
                         </div>
                     </div>
-                    <hr />
+                    {{-- <hr /> --}}
                     <div class="row">
                         <input type="hidden" id="client_id" name="client_id"
                             value="{{ $plan->lead_generation->client_no }}">
@@ -270,7 +271,7 @@
                             </button>
                         </div> --}}
                     </div>
-                    <hr />
+                    {{-- <hr /> --}}
                     @if ($plan->planLinks->count() > 0)
                         <div id="link_container">
                             <input type="hidden" name="total_key" id="total_key"
@@ -286,7 +287,7 @@
                                     <input type="hidden" name="final_survey_id_{{ $total_key }}"
                                         value="{{ $plan_link->finalSurveyDetails->id ?? '' }}">
                                     <div class="row">
-                                        <div class="col-md-11 col-11">
+                                        <div class="col-md-10 col-10">
                                             <h5 class="text-center mb-2">Link <span
                                                     class="link_no">{{ $total_key }}</span></h5>
                                         </div>
@@ -303,7 +304,8 @@
                                             </nobr>
 
                                         </div>
-                                        <hr / style="width: 100%; margin-bottom: 10px;">
+                                        {{-- <br> --}}
+                                        <hr style="width: 100%; margin-bottom: 10px;">
                                         <div class="md-col-3 col-3">
                                             <div class="form-item">
                                                 <select name="link_type_{{ $total_key }}"
@@ -371,7 +373,7 @@
                                                     id="existing_transmission_capacity"
                                                     class="form-control form-control-sm existing_transmission_capacity"
                                                     value="{{ $plan_link->existing_transmission_capacity ?? '' }}">
-                                                <label for="type">Existing Transmission Capacity</label>
+                                                <label for="type">Existing T.Capacity</label>
                                             </div>
                                         </div>
 
@@ -385,7 +387,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="md-col-3 col-3">
+                                        {{-- <div class="md-col-3 col-3">
                                             <div class="form-item">
                                                 <select name="link_availability_status_{{ $total_key }}"
                                                     class="form-control form-control-sm link_availability_status select2">
@@ -397,7 +399,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="md-col-3 col-3 new_transmission_capacity_div">
                                             <div class="form-item">
@@ -405,28 +407,33 @@
                                                     name="new_transmission_capacity_{{ $total_key }}"
                                                     id="new_transmission_capacity" class="form-control form-control-sm"
                                                     value="{{ $plan_link->new_transmission_capacity ?? '' }}">
-                                                <label for="type">New Transmission Capacity</label>
+                                                <label for="type">New T.Capacity</label>
                                             </div>
                                         </div>
 
-                                        <div class="md-col-3 col-3">
+                                        {{-- <div class="md-col-3 col-3">
                                             <div class="form-item">
                                                 <input type="text" name="link_remarks_{{ $total_key }}"
                                                     id="link_remarks" class="form-control form-control-sm"
                                                     value="{{ $plan_link->link_remarks ?? '' }}">
                                                 <label for="type">Remarks</label>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="col-md-12">
                                         <div class="table-responsive">
-                                            <hr />
+                                            {{-- <hr />
                                             <h5 class="text-center">Survey Information</h5>
-                                            <hr />
+                                            <hr /> --}}
                                             <table class="table table-bordered surveyTable" style="font-size: 12px;">
                                                 <tr>
+                                                    <th class="text-center"
+                                                        style="background-color: #e1e7ec !important; font-size: 14px !important;"
+                                                        colspan="4"> Survey Information</th>
+                                                </tr>
+                                                <tr>
                                                     <th>Vendor</th>
-                                                    <td class="link_vendor" style="width:30%">
+                                                    <td class="link_vendor" style="width:40%">
                                                         <select name="link_vendor_id_{{ $total_key }}"
                                                             class="form-control form-control-sm link_vendor_id_1 select2">
                                                             <option value="">Select Vendor</option>
@@ -437,12 +444,12 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <th>Connecting POP Running Vendor</th>
-                                                    <td class="running_vendor_pop" style="width:30%"></td>
+                                                    <th> POP Vendor</th>
+                                                    <td class="running_vendor_pop" style="width:40%"></td>
                                                 </tr>
                                                 <tr>
                                                     <th>POP</th>
-                                                    <td class="link_connecting_pop" style="width:30%">
+                                                    <td class="link_connecting_pop" style="width:40%">
                                                         <select name="link_connecting_pop_id_{{ $total_key }}"
                                                             class="form-control form-control-sm link_connecting_pop_id_1 select2">
                                                             <option value="">Select POP</option>
@@ -453,36 +460,36 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <th>Connecting POP Running Vendor Capacity</th>
-                                                    <td class="running_vendor_capacity" style="width:30%"></td>
+                                                    <th> POP Capacity</th>
+                                                    <td class="running_vendor_capacity" style="width:40%"></td>
                                                 </tr>
                                                 <tr>
                                                     <th>Method</th>
-                                                    <td class="last_mile_connectivity_method" style="width:30%">
+                                                    <td class="last_mile_connectivity_method" style="width:40%">
                                                         <input type="text" name="last_mile_connectivity_method_1"
                                                             id="last_mile_connectivity_method"
                                                             class="form-control form-control-sm last_mile_connectivity_method_1"
                                                             style="height: 25px !important"
                                                             value="{{ $plan_link->finalSurveyDetails->method }}" readonly>
                                                     </td>
-                                                    <th>Zone Area Running NTTN Vendor</th>
-                                                    <td class="nttn_vendor_zone" style="width:30%"></td>
+                                                    <th>Zone Vendor</th>
+                                                    <td class="nttn_vendor_zone" style="width:40%"></td>
                                                 </tr>
                                                 <tr>
                                                     <th>Latitute</th>
-                                                    <td class="connectivity_lat_long" style="width:30%">
+                                                    <td class="connectivity_lat_long" style="width:40%">
                                                         <input type="text" name="connectivity_lat_1"
                                                             id="connectivity_lat_long"
                                                             class="form-control form-control-sm connectivity_lat_1"
                                                             style="height: 25px !important"
                                                             value="{{ $plan_link->finalSurveyDetails->lat }}" readonly>
                                                     </td>
-                                                    <th>Zone Area Running NTTN BW</th>
-                                                    <td class="running_nttn_bw" style="width:30%"></td>
+                                                    <th>Zone Capacity</th>
+                                                    <td class="running_nttn_bw" style="width:40%"></td>
                                                 </tr>
                                                 <tr>
                                                     <th>Longitute</th>
-                                                    <td class="connectivity_lat_long" style="width:30%">
+                                                    <td class="connectivity_lat_long" style="width:40%">
                                                         <input type="text" name="connectivity_long_1"
                                                             id="connectivity_lat_long"
                                                             class="form-control form-control-sm connectivity_long_1"
@@ -490,16 +497,23 @@
                                                             value="{{ $plan_link->finalSurveyDetails->long }}" readonly>
                                                     </td>
                                                     <th>Connectivity Route</th>
-                                                    <td class="connectivity_route" style="width:30%"></td>
+                                                    <td class="connectivity_route" style="width:40%"></td>
                                                 </tr>
                                                 <tr>
                                                     <th>Distance</th>
-                                                    <td class="connectivity_lat_long" style="width:30%">
+                                                    <td class="connectivity_lat_long" style="width:40%">
                                                         <input type="text" name="distance_1"
                                                             class="form-control form-control-sm distance_1"
                                                             style="height: 25px !important"
                                                             value="{{ $plan_link->finalSurveyDetails->distance }}"
                                                             readonly>
+                                                    </td>
+                                                    <th>Remarks</th>
+                                                    <td>
+                                                        <input type="text" name="link_remarks_{{ $total_key }}"
+                                                            style="height: 25px !important" id="link_remarks"
+                                                            class="form-control form-control-sm"
+                                                            value="{{ $plan_link->link_remarks ?? '' }}">
                                                     </td>
                                                 </tr>
                                             </table>
@@ -507,102 +521,112 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="text-center">
-                                            <hr />
-                                            <h5> <span> &#10070; </span> Link Equipment <span>&#10070;</span> </h5>
-                                        </div>
-                                        <hr />
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered" style="font-size: 12px;">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Equipment Name</th>
-                                                        <th>Quantity</th>
-                                                        <th>Unit</th>
-                                                        <th>Brand</th>
-                                                        <th>Model</th>
-                                                        <th>Description</th>
-                                                        <th>Remarks</th>
-                                                        <th>
-                                                            <button type="button"
-                                                                class="btn btn-success btn-sm addLinkEquipmentRow"
-                                                                onclick="addLinkEquipmentRow(this)">
-                                                                <i class="fas fa-plus"></i>
-                                                            </button>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="link_equipment_table">
-                                                    @foreach ($plan_link->PlanLinkEquipments as $plan_equipment)
+                                            {{-- <hr />
+                                                <h5> <span> &#10070; </span> Link Equipment <span>&#10070;</span> </h5>
+                                            </div>
+                                            <hr /> --}}
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" style="font-size: 12px;">
+                                                    <thead>
                                                         <tr>
-                                                            <input type="hidden"
-                                                                name="plan_link_equipment_id_{{ $total_key }}[]"
-                                                                value="{{ $plan_equipment->id ?? '' }}">
-                                                            <td>
-                                                                <select name="material_id_{{ $total_key }}[]"
-                                                                    class="form-control form-control-sm link_material_id select2">
-                                                                    <option value="">Select Equipment</option>
-                                                                    @foreach ($materials as $material)
-                                                                        <option value="{{ $material->id }}"
-                                                                            {{ $plan_equipment->material_id == $material->id ? 'selected' : '' }}>
-                                                                            {{ $material->name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </td>
-
-                                                            <td>
-                                                                <input type="text"
-                                                                    name="quantity_{{ $total_key }}[]"
-                                                                    class="form-control form-control-sm link_quantity"
-                                                                    value="{{ $plan_equipment->quantity ?? '' }}">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" name="unit_{{ $total_key }}[]"
-                                                                    class="form-control form-control-sm link_unit"
-                                                                    value="{{ $plan_equipment->unit ?? '' }}">
-                                                            </td>
-                                                            <td>
-                                                                <select name="brand_id_{{ $total_key }}[]"
-                                                                    class="form-control form-control-sm link_brand select2">
-                                                                    <option value="">Select Brand</option>
-                                                                    @foreach ($brands as $brand)
-                                                                        <option value="{{ $brand->id }}"
-                                                                            {{ $plan_equipment->brand_id == $brand->id ? 'selected' : '' }}>
-                                                                            {{ $brand->name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <input type="text" name="model_{{ $total_key }}[]"
-                                                                    class="form-control form-control-sm link_model"
-                                                                    value="{{ $plan_equipment->model ?? '' }}">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text"
-                                                                    name="description_{{ $total_key }}[]"
-                                                                    class="form-control form-control-sm link_description"
-                                                                    value="{{ $plan_equipment->description ?? '' }}">
-                                                            </td>
-                                                            <td>
-                                                                <input type="text"
-                                                                    name="remarks_{{ $total_key }}[]"
-                                                                    class="form-control form-control-sm link_remarks"
-                                                                    value="{{ $plan_equipment->remarks ?? '' }}">
-                                                            </td>
-                                                            <td>
+                                                            <th class="text-center" style="font-size: 14px!important"
+                                                                colspan="7">
+                                                                <span> &#10070; </span> Link Equipment <span>&#10070;</span>
+                                                            </th>
+                                                            <th rowspan="2">
                                                                 <button type="button"
-                                                                    class="btn btn-outline-danger btn-sm removeLinkEquipmentRow"
-                                                                    onclick="removeLinkEquipmentRow(this)">
-                                                                    <i class="fas fa-minus"></i>
+                                                                    class="btn btn-success btn-sm addLinkEquipmentRow"
+                                                                    style="padding: 5px 10px"
+                                                                    onclick="addLinkEquipmentRow(this)">
+                                                                    <i class="fas fa-plus"></i>
                                                                 </button>
-                                                            </td>
+                                                            </th>
                                                         </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
+                                                        <tr>
+                                                            <th>Equipment Name</th>
+                                                            <th>Quantity</th>
+                                                            <th>Unit</th>
+                                                            <th>Brand</th>
+                                                            <th>Model</th>
+                                                            <th>Description</th>
+                                                            <th>Remarks</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="link_equipment_table">
+                                                        @foreach ($plan_link->PlanLinkEquipments as $plan_equipment)
+                                                            <tr>
+                                                                <input type="hidden"
+                                                                    name="plan_link_equipment_id_{{ $total_key }}[]"
+                                                                    value="{{ $plan_equipment->id ?? '' }}">
+                                                                <td>
+                                                                    <select name="material_id_{{ $total_key }}[]"
+                                                                        class="form-control form-control-sm link_material_id select2">
+                                                                        <option value="">Select Equipment</option>
+                                                                        @foreach ($materials as $material)
+                                                                            <option value="{{ $material->id }}"
+                                                                                {{ $plan_equipment->material_id == $material->id ? 'selected' : '' }}>
+                                                                                {{ $material->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+
+                                                                <td>
+                                                                    <input type="text"
+                                                                        name="quantity_{{ $total_key }}[]"
+                                                                        class="form-control form-control-sm link_quantity"
+                                                                        value="{{ $plan_equipment->quantity ?? '' }}">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        name="unit_{{ $total_key }}[]"
+                                                                        class="form-control form-control-sm link_unit"
+                                                                        value="{{ $plan_equipment->unit ?? '' }}">
+                                                                </td>
+                                                                <td>
+                                                                    <select name="brand_id_{{ $total_key }}[]"
+                                                                        class="form-control form-control-sm link_brand select2">
+                                                                        <option value="">Select Brand</option>
+                                                                        @foreach ($brands as $brand)
+                                                                            <option value="{{ $brand->id }}"
+                                                                                {{ $plan_equipment->brand_id == $brand->id ? 'selected' : '' }}>
+                                                                                {{ $brand->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        name="model_{{ $total_key }}[]"
+                                                                        class="form-control form-control-sm link_model"
+                                                                        value="{{ $plan_equipment->model ?? '' }}">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        name="description_{{ $total_key }}[]"
+                                                                        class="form-control form-control-sm link_description"
+                                                                        value="{{ $plan_equipment->description ?? '' }}">
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        name="remarks_{{ $total_key }}[]"
+                                                                        class="form-control form-control-sm link_remarks"
+                                                                        value="{{ $plan_equipment->remarks ?? '' }}">
+                                                                </td>
+                                                                <td>
+                                                                    <button type="button"
+                                                                        class="btn btn-outline-danger btn-sm removeLinkEquipmentRow"
+                                                                        style="padding: 5px 10px"
+                                                                        onclick="removeLinkEquipmentRow(this)">
+                                                                        <i class="fas fa-minus"></i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
-                                        <hr />
                                     </div>
-                                </div>
                             @endforeach
                         </div>
                     @endif
@@ -702,7 +726,7 @@
                                                     class="form-control form-control-sm equipment_remarks" value="">
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow"><i
+                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow" style="padding: 5px 10px"><i
                                                         class="fas fa-trash"></i></button>
                                             </td>
                                         </tr> `;
