@@ -76,7 +76,7 @@ class ScmMrrRequest extends FormRequest
                 ->whereNotIn('serial_or_drum_key', $excludedKeys)
                 ->pluck('serial_or_drum_key');
             if (count($data)) {
-                throw ValidationException::withMessages(['sl_code' => 'The serial codes' . $data . 'already been taken .'])
+                throw ValidationException::withMessages(['sl_code' => 'The serial-- codes' . $data . 'already been taken .'])
                     ->redirectTo($this->getRedirectUrl());
             }
         }

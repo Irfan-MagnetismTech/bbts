@@ -537,7 +537,7 @@
                             <div class="form-item">
                                 <input type="text" name="quantity_{{ $row_no }}"
                                     class="form-control form-control-sm  plan_link_quantity input" placeholder="Quantity"
-                                    value="{{ $costing_link->quantity }}" readonly>
+                                    value="{{ $costing_link->quantity }}">
                                 <label for="plan_link_quantity">Quantity</label>
                             </div>
                         </div>
@@ -545,7 +545,7 @@
                             <div class="form-item">
                                 <input type="text" name="rate_{{ $row_no }}"
                                     class="form-control form-control-sm  plan_link_rate input" placeholder="Rate"
-                                    value="{{ $costing_link->rate }}" readonly>
+                                    value="{{ $costing_link->rate }}">
                                 <label for="plan_link_rate">Rate</label>
                             </div>
                         </div>
