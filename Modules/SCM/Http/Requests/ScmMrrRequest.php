@@ -58,13 +58,22 @@ class ScmMrrRequest extends FormRequest
                     ->redirectTo($this->getRedirectUrl());
             }
         } else {
+            // $id = request()->route('material_receive')->id;
+            // $excludedIds = ScmMrrSerialCodeLine::whereHas('scmMrrLines', function ($item) use ($id) {
+            //     return $item->where('scm_mrr_id', $id);
+            // })->pluck('id');
+            //     $data = ScmMrrSerialCodeLine::whereIn('serial_or_drum_key', $cities)
+            //     ->whereNot('serial_or_drum_key', '')
+            //     ->whereNotIn('id', $excludedIds)
+            //     ->pluck('serial_or_drum_key');
+
             $id = request()->route('material_receive')->id;
-            $excludedIds = ScmMrrSerialCodeLine::whereHas('scmMrrLines', function ($item) use ($id) {
+            $excludedKeys = ScmMrrSerialCodeLine::whereHas('scmMrrLines', function ($item) use ($id) {
                 return $item->where('scm_mrr_id', $id);
-            })->pluck('id');
+            })->pluck('serial_or_drum_key');
             $data = ScmMrrSerialCodeLine::whereIn('serial_or_drum_key', $cities)
                 ->whereNot('serial_or_drum_key', '')
-                ->whereNotIn('id', $excludedIds)
+                ->whereNotIn('serial_or_drum_key', $excludedKeys)
                 ->pluck('serial_or_drum_key');
             if (count($data)) {
                 throw ValidationException::withMessages(['sl_code' => 'The serial codes' . $data . 'already been taken .'])
