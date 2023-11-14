@@ -22,14 +22,14 @@
 
     <div class="card card-primary card-outline">
         <div class="card-header">
-            <h3 class="card-title text-center">Client Offer</h3>
+            <h3 class="card-title text-center">Client Offer </h3>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-xl-4 col-md-4">
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="client_id">Client Name<span class="text-danger">*</span></label>
-                        <span class="form-control">{{ $offer->client->client_name ?? null }}</span>
+                        <span class="form-control">{{ $offer->lead_generation->client_name ?? null }}</span>
                     </div>
                 </div>
                 <div class="col-xl-3 col-md-3">
@@ -52,7 +52,7 @@
                 <div style="border: 2px solid gray; border-radius: 15px; margin-top: 30px;" class="row">
                     <div class="col-12 col-md-12" style="margin-top: -11px;">
                         <span class="section-label">
-                            {{ $data->frDetails->connectivity_point ?? ''}}</span>
+                            {{ $data->frDetails->connectivity_point ?? '' }}</span>
                     </div>
                     <div class="col-12 mt-3">
                         <table class="table table-bordered">
