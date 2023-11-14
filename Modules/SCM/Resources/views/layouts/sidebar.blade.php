@@ -150,7 +150,6 @@
             </ul>
         </li>
     @endcan
-    
     @can('scm-purchase-order-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['purchase-orders.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
@@ -357,6 +356,27 @@
             </li>
         </ul>
     </li>
+    @endcan
+    @can('scm-report-view')
+        <li class="pcoded-hasmenu {{ request()->routeIs(['scm-reports.*']) ? 'active pcoded-trigger' : null }}">
+            <a href="javascript:void(0)">
+                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-mtext">Report</span>
+                <span class="pcoded-mcaret"></span>
+            </a>
+            <ul class="pcoded-submenu">
+                <li class="{{ request()->routeIs('scm-material-reports') ? 'active' : null }}">
+                    <a href="{{ route('scm-material-reports') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Material Report</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+{{--                <li class="{{ request()->routeIs('work-order-receives.index') ? 'active' : null }}">--}}
+{{--                    <a href="{{ route('work-order-receives.index') }}"> <span class="pcoded-micon"><i--}}
+{{--                                class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span--}}
+{{--                            class="pcoded-mcaret"></span></a>--}}
+{{--                </li>--}}
+            </ul>
+        </li>
     @endcan
     {{-- @endhasanyrole --}}
 </ul>

@@ -5,6 +5,7 @@ namespace Modules\SCM\Http\Controllers;
 use Illuminate\Validation\ValidationException;
 use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\MaterialBrand;
+use Modules\SCM\Entities\MaterialModel;
 use Modules\SCM\Entities\Unit;
 use Illuminate\Routing\Controller;
 use Modules\SCM\Entities\Material;
@@ -29,14 +30,7 @@ class MaterialController extends Controller
 
     public function index()
     {
-        $materials = Material::with('unit','materialBrand')->get()
-        ->map(function ($material, $key) {
-            $brand = $material->materialBrand?->brand;
-            $brandArray = str_getcsv($brand);
-            $material->brand = Brand::whereIn('id',$brandArray)->get()->toArray();
-            return $material;
-        });
-        // dd($materials->brand);
+        $materials = Material::with('unit','material_brand')->get();
         return view('scm::materials.index', compact('materials'));
     }
 
@@ -51,11 +45,11 @@ class MaterialController extends Controller
         $materials = Material::get();
         $units = Unit::get();
         $brands = Brand::get();
-        $selectedBrandIdsArray=[];
+        $material_models = MaterialModel::pluck('model');
         $types = ['Drum', 'Item'];
         $categories = ScCategory::latest()->get();
 
-        return view('scm::materials.create', compact('materials', 'formType', 'types', 'units', 'categories', 'brands','selectedBrandIdsArray'));
+        return view('scm::materials.create', compact('materials', 'formType', 'types', 'units', 'categories', 'brands','material_models'));
     }
 
     /**
@@ -67,19 +61,25 @@ class MaterialController extends Controller
     public function store(MaterialRequest $request)
     {
         try {
-            $data = $request->only('name', 'unit', 'type', 'code', 'category_id', 'min_qty');
+            $material_data = $request->only('name', 'unit', 'type', 'code', 'category_id', 'min_qty');
 
-            $material = Material::create($data);
+            $material = Material::create($material_data);
 
-            // Get the selected brand IDs as an array
-            $selectedBrandIds = $request->input('brand');
-
-            $selectedBrandIdsString = implode(',', $selectedBrandIds);
-
-            $material_brand = $request->only('material_id', 'brand');
-            $material_brand['material_id'] = $material->id;
-            $material_brand['brand'] = $selectedBrandIdsString;
-            MaterialBrand::create($material_brand);
+            $brands = [];
+            $models = [];
+            foreach ($request->brand_id as $key => $value) {
+                $brands[] = [
+                    'material_id' => $material->id,
+                    'brand_id' => $request->brand_id[$key],
+                ];
+                $models[] = [
+                    'material_id' => $material->id,
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                ];
+            }
+            $brand_detail = $material->material_brand()->createMany($brands);
+            $model_detail = $material->material_model()->createMany($models);
 
             return redirect()->route('materials.index')->with('message', 'Data has been inserted successfully');
         } catch (ValidationException $e) {
@@ -110,18 +110,12 @@ class MaterialController extends Controller
         $materials = Material::get();
         $units = Unit::get();
         $brands = Brand::get();
+        $material_brands = MaterialBrand::where('material_id', $material->id)->pluck('brand_id');
+        $material_models = MaterialModel::where('material_id', $material->id)->pluck('model');
 
-        $selectedBrandIds = MaterialBrand::where('material_id', $material->id)->pluck('brand')->toArray();
-
-        if (count($selectedBrandIds) > 0) {
-            $selectedBrandIdsString = $selectedBrandIds[0];
-        } else {
-            $selectedBrandIdsString = '';
-        }
-        $selectedBrandIdsArray = explode(',', $selectedBrandIdsString);
         $types = ['Drum', 'Item'];
         $categories = ScCategory::latest()->get();
-        return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units', 'categories', 'brands','selectedBrandIdsArray'));
+        return view('scm::materials.create', compact('material', 'materials', 'formType', 'types', 'units', 'categories', 'brands', 'material_brands','material_models'));
     }
 
     /**
@@ -135,18 +129,18 @@ class MaterialController extends Controller
     public function update(MaterialRequest $request, Material $material, MaterialBrand $materialBrand)
     {
         try {
-            $data = $request->only('name', 'unit', 'type', 'code', 'category_id', 'min_qty');
-            $material->update($data);
+            $material_data = $request->only('name', 'unit', 'type', 'code', 'category_id', 'min_qty');
+            $material->update($material_data);
 
-            $selectedBrandIds = $request->input('brand');
+            $selectedBrandIds = $request->input('brand_id');
 
             $selectedBrandIdsString = implode(',', $selectedBrandIds);
 
             $materialBrand->where('material_id', $material->id)->delete(); // Delete existing records
 
-            $material_brand = $request->only('material_id', 'brand');
+            $material_brand = $request->only('material_id', 'brand_id');
             $material_brand['material_id'] = $material->id;
-            $material_brand['brand'] = $selectedBrandIdsString;
+            $material_brand['brand_id'] = $selectedBrandIdsString;
             MaterialBrand::create($material_brand);
 
             return redirect()->route('materials.index')->with('message', 'Data has been updated successfully');

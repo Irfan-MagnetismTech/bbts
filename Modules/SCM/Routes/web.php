@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\SCM\Http\Controllers\ScmGatePassController;
 use Modules\SCM\Http\Controllers\ScmMrrController;
+use Modules\SCM\Http\Controllers\ScmReportController;
 use Modules\SCM\Http\Controllers\ScmWcrController;
 use Modules\SCM\Http\Controllers\UnitController;
 use Modules\SCM\Http\Controllers\CourierController;
@@ -65,6 +66,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('close-po/{id}', [PurchaseOrderController::class, 'closePo'])->name('closePo');
     Route::get('search_bill_reg_no', [ScmMrrController::class, 'searchBillRegisterNoWithDate'])->name('searchBillRegisterNoWithDate');
     Route::get('search_mrs_for_challan', [ScmChallanController::class, 'searchMrs'])->name('search_mrs_for_challan');
+    Route::get('scm-material-reports', [ScmReportController::class, 'materialReport'])->name('scm-material-reports');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
 });
