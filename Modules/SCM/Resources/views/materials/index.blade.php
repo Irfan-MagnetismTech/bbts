@@ -59,7 +59,7 @@
                         <td class="text-center">
                             @if (!empty($material->material_brand))
                                 @foreach ($material->material_brand as $brand)
-                                    {{ $brand->brands->name ?? ''}}
+                                    {{ $brand->brands->name ?? '' }}
                                     @unless($loop->last)
                                         ,
                                     @endunless
