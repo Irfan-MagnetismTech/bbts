@@ -12,6 +12,7 @@ use App\Models\Dataencoding\Thana;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\SCM\Entities\Material;
+use Modules\SCM\Entities\MaterialModel;
 use Modules\SCM\Entities\Supplier;
 use Modules\SCM\Entities\CsSupplier;
 use App\Models\Dataencoding\District;
@@ -484,14 +485,42 @@ class CommonApiController extends Controller
         ]);
     }
 
+//    public function getMaterialWiseBrands()
+//    {
+//        $material = MaterialBrand::where('material_id', request('material_id'))->first();
+//        if ($material) {
+//            $brands = Brand::select('id', 'name')->whereIn('id', explode(',', $material->brand))->get();
+//            return response()->json($brands);
+//        } else {
+//            return response()->json([]);
+//        }
+//    }
+
     public function getMaterialWiseBrands()
     {
-        $material = MaterialBrand::where('material_id', request('material_id'))->first();
-        if ($material) {
-            $brands = Brand::select('id', 'name')->whereIn('id', explode(',', $material->brand))->get();
+        $materialId = request('material_id');
+
+        $materialBrands = MaterialBrand::where('material_id', $materialId)->pluck('brand_id')->toArray();
+
+        if (!empty($materialBrands)) {
+            $brands = Brand::select('id', 'name')->whereIn('id', $materialBrands)->get();
             return response()->json($brands);
         } else {
             return response()->json([]);
         }
     }
+
+    public function getMaterialWiseModels()
+    {
+        $materialId = request('material_id');
+
+        $models = MaterialModel::where('material_id', $materialId)->pluck('model');
+
+        if ($models->isNotEmpty() && !$models->contains(null)) {
+            return response()->json($models);
+        } else {
+            return response()->json([]);
+        }
+    }
+
 }
