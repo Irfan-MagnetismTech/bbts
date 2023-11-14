@@ -130,18 +130,27 @@ class MaterialController extends Controller
     {
         try {
             $material_data = $request->only('name', 'unit', 'type', 'code', 'category_id', 'min_qty');
+
             $material->update($material_data);
 
-            $selectedBrandIds = $request->input('brand_id');
+            $brands = [];
+            $models = [];
+            foreach ($request->brand_id as $key => $value) {
+                $brands[] = [
+                    'material_id' => $material->id,
+                    'brand_id' => $request->brand_id[$key],
+                ];
+                $models[] = [
+                    'material_id' => $material->id,
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                ];
+            }
+            $material->material_brand()->delete();
+            $material->material_model()->delete();
 
-            $selectedBrandIdsString = implode(',', $selectedBrandIds);
-
-            $materialBrand->where('material_id', $material->id)->delete(); // Delete existing records
-
-            $material_brand = $request->only('material_id', 'brand_id');
-            $material_brand['material_id'] = $material->id;
-            $material_brand['brand_id'] = $selectedBrandIdsString;
-            MaterialBrand::create($material_brand);
+            $brand_detail = $material->material_brand()->createMany($brands);
+            $model_detail = $material->material_model()->createMany($models);
 
             return redirect()->route('materials.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
@@ -159,7 +168,8 @@ class MaterialController extends Controller
     {
         try {
             $material->delete();
-            $material->material_brand->delete();
+            $material->material_brand()->delete();
+            $material->material_model()->delete();
             return redirect()->route('materials.index')->with('message', 'Data has been deleted successfully');
         } catch (QueryException $e) {
             return redirect()->route('materials.index')->withErrors($e->getMessage());

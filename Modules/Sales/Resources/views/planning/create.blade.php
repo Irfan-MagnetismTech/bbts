@@ -205,7 +205,7 @@
                                             <th>Brand</th>
                                             <th>Model</th>
                                             <th>Remarks</th>
-                                            
+
                                         </tr>
                                     </thead>
                                     <tbody class="equipment_body">
@@ -496,8 +496,7 @@
                                                         class="btn btn-success btn-sm addLinkEquipmentRow" style="padding: 5px 10px"
                                                         onclick="addLinkEquipmentRow(this)">
                                                         <i class="fas fa-plus"></i>
-                                                    </button>-+
-                                                    
+                                                    </button>
                                                 </th>
                                             </tr>
                                             <tr>
@@ -656,7 +655,7 @@
                                                             <option value="{{ $brand->id }}">
                                                                 {{ $brand->name }}</option>
                                                         @endforeach
-                                                    </select>    
+                                                    </select>
                                                 </div>
                                             </td>
                                             <td>
