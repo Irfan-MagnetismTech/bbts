@@ -6,6 +6,7 @@ use Modules\Networking\Http\Controllers\ConnectivityModificationController;
 use Modules\Networking\Http\Controllers\NetworkingController;
 use Modules\Billing\Http\Controllers\BrokenDaysBillController;
 use Modules\Networking\Http\Controllers\ConnectivityController;
+use Modules\Networking\Http\Controllers\ImportController;
 use Modules\Networking\Http\Controllers\NetPopEquipmentController;
 use Modules\Networking\Http\Controllers\LogicalConnectivityController;
 
@@ -28,6 +29,9 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('connectivities/create/{fr_id?}', [ConnectivityController::class, 'create'])->name('connectivities.create');
     Route::post('connectivities-billing-date-update', [BrokenDaysBillController::class, 'updateBillingDate'])->name('connectivities.billing.date.update');
     // Route::get('add-survey/{fr_id?}', [SurveyController::class, 'create'])->name('add-survey');
+    
+    
+    // Route::get('ip-import', [ImportController::class, 'ip_import'])->name('ip-import');
 
     Route::resource('connectivities', ConnectivityController::class);
     Route::resource('logical-connectivities', LogicalConnectivityController::class);
