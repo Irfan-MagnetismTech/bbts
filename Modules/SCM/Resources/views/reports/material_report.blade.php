@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Material')
+@section('title', 'Material Report')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of Material
+    Material Report
 @endsection
 
 @section('style')
@@ -27,12 +27,12 @@
             <thead>
                 <tr>
                     <th>#SL</th>
-                    <th>Name</th>
+                    <th>Material</th>
                     <th>Unit</th>
                     <th>Type</th>
                     <th>Code</th>
                     <th>Brands</th>
-                    <th>Min Quantity</th>
+                    <th>Quantity</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -44,7 +44,7 @@
                     <th>Type</th>
                     <th>Code</th>
                     <th>Brands</th>
-                    <th>Min Quantity</th>
+                    <th>Quantity</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -57,16 +57,12 @@
                         <td class="text-center">{{ $material->type ?? '' }}</td>
                         <td class="text-center">{{ $material->code ?? '' }}</td>
                         <td class="text-center">
-                            @if (!empty($material->material_brand))
-                                @foreach ($material->material_brand as $brand)
-                                    {{ $brand->brands->name ?? '' }}
-                                    @unless($loop->last)
-                                        ,
-                                    @endunless
-                                @endforeach
-                            @endif
+                            @php $brands = $material->brand ?? [] @endphp
+                            @foreach ($brands as $brand)
+                                {{ $brand['name'] ?? '' }} <br>
+                            @endforeach
+                            {{-- {{ $material->materialBrand?->brands->pluck('name')->flatten() ?? '' }} --}}
                         </td>
-
                         <td class="text-center">{{ $material->min_qty ?? '' }}</td>
                         <td>
                             <div class="icon-btn">

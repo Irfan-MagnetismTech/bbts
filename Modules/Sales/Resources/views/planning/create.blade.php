@@ -205,7 +205,7 @@
                                             <th>Brand</th>
                                             <th>Model</th>
                                             <th>Remarks</th>
-                                            
+
                                         </tr>
                                     </thead>
                                     <tbody class="equipment_body">
@@ -243,9 +243,21 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="text" name="model[]"
-                                                    class="form-control form-control-sm model" value="">
+                                                <div>
+                                                    <select name="model[]"
+                                                            class="form-control form-control-sm model select2">
+                                                        <option value="">Select Model</option>
+                                                        @foreach ($models as $model)
+                                                            <option value="{{ $model }}">
+                                                                {{ $model }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </td>
+{{--                                            <td>--}}
+{{--                                                <input type="text" name="model[]"--}}
+{{--                                                    class="form-control form-control-sm model" value="">--}}
+{{--                                            </td>--}}
                                             <td>
                                                 <input type="text" name="equipment_remarks[]"
                                                     class="form-control form-control-sm equipment_remarks" value="">
@@ -496,8 +508,7 @@
                                                         class="btn btn-success btn-sm addLinkEquipmentRow" style="padding: 5px 10px"
                                                         onclick="addLinkEquipmentRow(this)">
                                                         <i class="fas fa-plus"></i>
-                                                    </button>-+
-                                                    
+                                                    </button>
                                                 </th>
                                             </tr>
                                             <tr>
@@ -546,9 +557,21 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="model_1[]"
-                                                        class="form-control form-control-sm link_model" value="">
+                                                    <div>
+                                                        <select name="model_1[]"
+                                                                class="form-control form-control-sm link_model select2">
+                                                            <option value="">Select Model</option>
+                                                            @foreach ($models as $model)
+                                                                <option value="{{ $model }}">
+                                                                    {{ $model }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </td>
+{{--                                                <td>--}}
+{{--                                                    <input type="text" name="model_1[]"--}}
+{{--                                                        class="form-control form-control-sm link_model" value="">--}}
+{{--                                                </td>--}}
                                                 <td>
                                                     <input type="text" name="description_1[]"
                                                         class="form-control form-control-sm link_description"
@@ -656,12 +679,20 @@
                                                             <option value="{{ $brand->id }}">
                                                                 {{ $brand->name }}</option>
                                                         @endforeach
-                                                    </select>    
+                                                    </select>
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="text" name="model[]"
-                                                    class="form-control form-control-sm model" value="">
+                                                <div>
+                                                    <select name="model[]"
+                                                    class="form-control form-control-sm model select2">
+                                                        <option value="">Select Model</option>
+                                                        @foreach ($models as $model)
+                                                            <option value="{{ $model }}">
+                                                                {{ $model }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </td>
                                             <td>
                                                 <input type="text" name="equipment_remarks[]"
@@ -842,6 +873,16 @@
                     });
                     this_event.closest('tr').find('.brand_id').html(html);
                 })
+
+                $.get('{{ route('getMaterialWiseModels') }}', {
+                    material_id: equipment_id
+                }, function(data) {
+                    var html = '<option value="">Select Model</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item + '">' + item + '</option>';
+                    });
+                    this_event.closest('tr').find('.model').html(html);
+                });
             });
 
             $(document).on('change', '.link_material_id', function() {
@@ -860,6 +901,16 @@
                     });
                     this_event.closest('tr').find('.link_brand').html(html);
                 })
+
+                $.get('{{ route('getMaterialWiseModels') }}', {
+                    material_id: material_id
+                }, function(data) {
+                    var html = '<option value="">Select Model</option>';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item + '">' + item + '</option>';
+                    });
+                    this_event.closest('tr').find('.link_model').html(html);
+                });
             });
 
             let link_array = [];

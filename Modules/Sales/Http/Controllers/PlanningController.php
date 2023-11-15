@@ -24,6 +24,7 @@ use Modules\Admin\Entities\Brand;
 use Modules\Admin\Entities\Pop;
 use Modules\Sales\Entities\Vendor;
 use Modules\SCM\Entities\Material;
+use Modules\SCM\Entities\MaterialModel;
 
 class PlanningController extends Controller
 {
@@ -59,10 +60,11 @@ class PlanningController extends Controller
         $particulars = Product::get();
         $materials = Material::get();
         $brands = Brand::get();
+        $models = MaterialModel::pluck('model');
         $vendors = Vendor::get();
         $pops = Pop::get();
         $methods = ['Fiber' => 'Fiber', 'Radio' => 'Radio', 'GSM' => 'GSM'];
-        return view('sales::planning.create', compact('methods', 'feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors', 'pops'));
+        return view('sales::planning.create', compact('methods', 'feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors', 'pops','models'));
     }
 
     /**
@@ -120,9 +122,10 @@ class PlanningController extends Controller
         $particulars = Product::get();
         $materials = Material::get();
         $brands = Brand::get();
+        $models = MaterialModel::pluck('model');
         $pops = Pop::get();
         $vendors = Vendor::get();
-        return view('sales::planning.edit', compact('plan', 'particulars', 'materials', 'brands', 'pops', 'vendors', 'connectivityProductRequirementDetails'));
+        return view('sales::planning.edit', compact('plan', 'particulars', 'materials', 'brands', 'pops', 'vendors', 'connectivityProductRequirementDetails','models'));
     }
 
     /**

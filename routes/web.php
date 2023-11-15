@@ -67,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-vendor', [CommonApiController::class, 'searchVendor'])->name('searchVendor');
     Route::get('get-logical-connectivity-data', [CommonApiController::class, 'getLogicalConnectivityData'])->name('getLogicalConnectivityData');
     Route::get('get-material-wise-brands', [CommonApiController::class, 'getMaterialWiseBrands'])->name('getMaterialWiseBrands');
+    Route::get('get-material-wise-models', [CommonApiController::class, 'getMaterialWiseModels'])->name('getMaterialWiseModels');
 });
 
 require base_path('routes/dataencoding.php');
