@@ -244,20 +244,14 @@
                                             </td>
                                             <td>
                                                 <div>
-                                                    <select name="model[]"
-                                                            class="form-control form-control-sm model select2">
-                                                        <option value="">Select Model</option>
+                                                    <input list="models" name="model[]" id="model[]" class="form-control model" value="">
+                                                    <datalist id="models">
                                                         @foreach ($models as $model)
                                                             <option value="{{ $model }}">
-                                                                {{ $model }}</option>
                                                         @endforeach
-                                                    </select>
+                                                    </datalist>
                                                 </div>
                                             </td>
-{{--                                            <td>--}}
-{{--                                                <input type="text" name="model[]"--}}
-{{--                                                    class="form-control form-control-sm model" value="">--}}
-{{--                                            </td>--}}
                                             <td>
                                                 <input type="text" name="equipment_remarks[]"
                                                     class="form-control form-control-sm equipment_remarks" value="">
@@ -558,20 +552,14 @@
                                                 </td>
                                                 <td>
                                                     <div>
-                                                        <select name="model_1[]"
-                                                                class="form-control form-control-sm link_model select2">
-                                                            <option value="">Select Model</option>
+                                                        <input list="models" name="model_1[]" id="model_1[]" class="form-control link_model" value="">
+                                                        <datalist id="models">
                                                             @foreach ($models as $model)
                                                                 <option value="{{ $model }}">
-                                                                    {{ $model }}</option>
                                                             @endforeach
-                                                        </select>
+                                                        </datalist>
                                                     </div>
                                                 </td>
-{{--                                                <td>--}}
-{{--                                                    <input type="text" name="model_1[]"--}}
-{{--                                                        class="form-control form-control-sm link_model" value="">--}}
-{{--                                                </td>--}}
                                                 <td>
                                                     <input type="text" name="description_1[]"
                                                         class="form-control form-control-sm link_description"
@@ -684,14 +672,12 @@
                                             </td>
                                             <td>
                                                 <div>
-                                                    <select name="model[]"
-                                                    class="form-control form-control-sm model select2">
-                                                        <option value="">Select Model</option>
+                                                    <input list="models" name="model[]" id="model[]" class="form-control model">
+                                                    <datalist id="models">
                                                         @foreach ($models as $model)
-                                                            <option value="{{ $model }}">
-                                                                {{ $model }}</option>
+                                                    <option value="{{ $model }}">
                                                         @endforeach
-                                                    </select>
+                                                    </datalist>
                                                 </div>
                                             </td>
                                             <td>

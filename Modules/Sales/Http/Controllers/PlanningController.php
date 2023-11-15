@@ -24,6 +24,7 @@ use Modules\Admin\Entities\Brand;
 use Modules\Admin\Entities\Pop;
 use Modules\Sales\Entities\Vendor;
 use Modules\SCM\Entities\Material;
+use Modules\SCM\Entities\MaterialBrand;
 use Modules\SCM\Entities\MaterialModel;
 
 class PlanningController extends Controller
@@ -195,6 +196,8 @@ class PlanningController extends Controller
     private function createOrUpdateEquipmentPlans($request, $plan)
     {
         if (!empty($request->equipment_id)) {
+            $brands = [];
+            $models = [];
             foreach ($request->equipment_id as $key => $equipment_id) {
                 $equipment_plan_data = [
                     'material_id' => $request->equipment_id[$key],
@@ -205,11 +208,36 @@ class PlanningController extends Controller
                     'remarks' => $request->equipment_remarks[$key],
                     'planning_id' => $plan->id
                 ];
+                $brands[] = [
+                    'material_id' => $request->equipment_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                ];
+                $models[] = [
+                    'material_id' => $request->equipment_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                ];
                 if (isset($request->equipment_plan_id[$key])) {
                     EquipmentPlan::where('id', $request->equipment_plan_id[$key])->update($equipment_plan_data);
                 } else {
                     EquipmentPlan::create($equipment_plan_data);
                 }
+
+                $material_brand = MaterialBrand::updateOrCreate(
+                    [
+                        'material_id' => $request->equipment_id[$key],
+                        'brand_id' => $request->brand_id[$key]
+                    ],
+                    $brands
+                );
+                $material_model = MaterialModel::updateOrCreate(
+                    [
+                        'material_id' => $request->equipment_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                        'model' => $request->model[$key],
+                    ],
+                    $models
+                );
             }
         }
     }
@@ -217,7 +245,8 @@ class PlanningController extends Controller
 
     private function createOrUpdatePlanLinks($request, $plan)
     {
-
+        $brands = [];
+        $models = [];
         for ($i = 1; $i <= $request->total_key; $i++) {
             $linkType = request("link_type_{$i}");
             $survey = Survey::where('fr_no', $request->fr_no)
@@ -288,12 +317,35 @@ class PlanningController extends Controller
                             'planning_id' => $plan->id,
                             'plan_link_id' => $planLink->id,
                         ];
-
+                        $brands[] = [
+                            'material_id' => $materialId,
+                            'brand_id' => request("brand_id_{$i}")[$key],
+                        ];
+                        $models[] = [
+                            'material_id' => $materialId,
+                            'brand_id' => request("brand_id_{$i}")[$key],
+                            'model' => request("model_{$i}")[$key],
+                        ];
                         if ($planLinkEquipmentIds && isset($planLinkEquipmentIds[$key])) {
                             PlanLinkEquipment::where('id', $planLinkEquipmentIds[$key])->update($planLinkEquipment);
                         } else {
                             PlanLinkEquipment::create($planLinkEquipment);
                         }
+                        $material_brand = MaterialBrand::updateOrCreate(
+                            [
+                                'material_id' => $materialId,
+                                'brand_id' => request("brand_id_{$i}")[$key]
+                            ],
+                            $brands
+                        );
+                        $material_model = MaterialModel::updateOrCreate(
+                            [
+                                'material_id' => $materialId,
+                                'brand_id' => request("brand_id_{$i}")[$key],
+                                'model' => request("model_{$i}")[$key],
+                            ],
+                            $models
+                        );
                     }
                 }
             }
