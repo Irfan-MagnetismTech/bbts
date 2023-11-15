@@ -236,9 +236,14 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="model[]"
-                                                        class="form-control form-control-sm model"
-                                                        value="{{ $equipment_plan->model ?? '' }}">
+                                                    <div>
+                                                        <input list="models" name="model[]" id="model[]" class="form-control model" value="{{ $equipment_plan->model ?? '' }}">
+                                                        <datalist id="models">
+                                                            @foreach ($models as $model)
+                                                                <option value="{{ $model }}">
+                                                            @endforeach
+                                                        </datalist>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <input type="text" name="equipment_remarks[]"
@@ -265,7 +270,7 @@
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
                         </div> --}}
                         {{-- <div class="col-md-1" style="float: right">
-                            
+
                             <button type="button" class="btn btn-sm btn-outline-success text-left" id="addLinkRow">
                                 <i class="fas fa-plus"></i>
                             </button>
@@ -595,10 +600,14 @@
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text"
-                                                                        name="model_{{ $total_key }}[]"
-                                                                        class="form-control form-control-sm link_model"
-                                                                        value="{{ $plan_equipment->model ?? '' }}">
+                                                                    <div>
+                                                                        <input list="models" name="model_{{ $total_key }}[]" id="model[]" class="form-control link_model" value="{{ $plan_equipment->model ?? '' }}">
+                                                                        <datalist id="models">
+                                                                            @foreach ($models as $model)
+                                                                                <option value="{{ $model }}">
+                                                                            @endforeach
+                                                                        </datalist>
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <input type="text"
@@ -718,18 +727,24 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="text" name="model[]"
-                                                    class="form-control form-control-sm model" value="">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="equipment_remarks[]"
-                                                    class="form-control form-control-sm equipment_remarks" value="">
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow" style="padding: 5px 10px"><i
-                                                        class="fas fa-trash"></i></button>
-                                            </td>
-                                        </tr> `;
+                                                     <div>
+                                                    <input list="models" name="model[]" id="model[]" class="form-control model">
+                                                    <datalist id="models">
+                                                        @foreach ($models as $model)
+                                                            <option value="{{ $model }}">
+                                                        @endforeach
+                                                            </datalist>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="equipment_remarks[]"
+                                                            class="form-control form-control-sm equipment_remarks" value="">
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-danger removeEquipmentRow" style="padding: 5px 10px"><i
+                                                                class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr> `;
             $('#addEquipmentRow').on('click', function() {
                 addEquipmentRow();
                 $('.select2').select2();

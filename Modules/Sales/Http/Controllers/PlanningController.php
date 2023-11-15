@@ -242,7 +242,6 @@ class PlanningController extends Controller
         }
     }
 
-
     private function createOrUpdatePlanLinks($request, $plan)
     {
         $brands = [];
@@ -351,7 +350,6 @@ class PlanningController extends Controller
             }
         }
     }
-
 
     private function deleteRequestedItems($delete_plan_link_id, $delete_equipment_plan_id, $delete_link_equipment_id)
     {
