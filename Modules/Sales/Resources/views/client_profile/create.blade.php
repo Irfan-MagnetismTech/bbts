@@ -101,9 +101,9 @@
                             <div id="wizarda">
                                 <section>
                                     <form class="wizard-form" id="basic-forms"
-                                        action="{{ !empty($client_no) ? route('client-profile.update', $client_profile->id) : route('client-profile.store') }}"
+                                        action="{{ !empty($client_profile->id) ? route('client-profile.update', $client_profile->id) : route('client-profile.store') }}"
                                         method="post" enctype="multipart/form-data">
-                                        @if (!empty($client_no))
+                                        @if (!empty($client_profile->id))
                                             @method('PUT')
                                         @endif
                                         @csrf
