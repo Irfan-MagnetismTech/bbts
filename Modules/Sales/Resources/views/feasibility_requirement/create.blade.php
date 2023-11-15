@@ -131,9 +131,9 @@
 
                                                         <input type="text" name="connectivity_point[]"
                                                             class="form-control" value="{{ $item->connectivity_point }}"
-                                                            autocomplete="off" placeholder="Connectivity Point">
+                                                            autocomplete="off" placeholder="Connectivity Point" required>
                                                         <input type="hidden" name="detail_id[]"
-                                                            value="{{ $item->id }}">
+                                                            value="{{ $item->id }}" />
                                                     </div>
                                                 </td>
                                                 <td>
@@ -276,7 +276,7 @@
                                                 <div class="input-group input-group-sm input-group-primary">
                                                     <input type="text" name="connectivity_point[]"
                                                         class="form-control" id="connectivity_point" autocomplete="off"
-                                                        placeholder="Connectivity Point">
+                                                        placeholder="Connectivity Point" required>
                                                 </div>
                                             </td>
                                             <td>
