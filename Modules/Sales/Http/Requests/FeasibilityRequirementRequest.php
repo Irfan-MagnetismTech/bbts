@@ -16,7 +16,7 @@ class FeasibilityRequirementRequest extends FormRequest
         return [
             'client_no' => 'required',
             'is_existing' => 'required',
-
+            'connectivity_point' => 'required|unique:feasibility_requirement_details,connectivity_point,' . $this->id,
         ];
     }
 
@@ -28,7 +28,10 @@ class FeasibilityRequirementRequest extends FormRequest
     public function messages()
     {
         return [
-            //
+            'client_no.required' => 'The client name field is required.',
+            'is_existing.required' => 'The is existing field is required.',
+            'connectivity_point.required' => 'The connectivity point field is required.',
+            'connectivity_point.unique' => 'The connectivity point has already been taken.',
         ];
     }
 

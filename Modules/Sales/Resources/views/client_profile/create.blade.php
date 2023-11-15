@@ -35,7 +35,7 @@
 @endsection
 
 @php
-    $client_id = $is_old ? old('client_id') : $client_profile->client_id ?? null;
+    $client_no = $is_old ? old('client_id') : $client_profile->client_no ?? null;
     $client_name = $is_old ? old('client_name') : $client_profile->client_name ?? null;
     $location = $is_old ? old('location') : $client_profile->location ?? null;
     $single_division = $is_old ? old('division') : $client_profile->division_id ?? null;
@@ -101,9 +101,9 @@
                             <div id="wizarda">
                                 <section>
                                     <form class="wizard-form" id="basic-forms"
-                                        action="{{ $client_id ? route('client-profile.update', $client_profile->id) : route('client-profile.store') }}"
+                                        action="{{ !empty($client_profile->id) ? route('client-profile.update', $client_profile->id) : route('client-profile.store') }}"
                                         method="post" enctype="multipart/form-data">
-                                        @if ($client_id)
+                                        @if (!empty($client_profile->id))
                                             @method('PUT')
                                         @endif
                                         @csrf
@@ -129,7 +129,7 @@
                                                             <div class="form-item">
                                                                 <input type="text" id="client_no" name="client_no"
                                                                     class="form-control" autocomplete="off"
-                                                                    value="{{ $client_id }}" required readonly>
+                                                                    value="{{ $client_no }}" required readonly>
                                                                 <label for="client_id">Client ID</label>
                                                             </div>
                                                         </div>
@@ -707,8 +707,9 @@
                             $('#business_type').val(ui.item.business_type).attr('value', ui.item
                                 .business_type).trigger(
                                 'change');
-                            $('#division').val(ui.item.division).attr('value', ui.item.division).trigger(
-                                'change');
+                            $('#division').val(ui.item.division).attr('value', ui.item.division)
+                                .trigger(
+                                    'change');
                             $('#district').val(ui.item.district).attr('value', ui.item.district)
                                 .trigger('change');
                             $('#thana').val(ui.item.thana).attr('value', ui.item.thana).trigger(

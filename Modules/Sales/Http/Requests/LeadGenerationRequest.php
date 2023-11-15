@@ -17,13 +17,13 @@ class LeadGenerationRequest extends FormRequest
             'client_name' => 'required',
             'address' => 'required',
             'contact_person' => 'required',
-            'contact_no' => 'required',
-            'email' => 'required',
+            // 'contact_no' => 'required',
+            // 'email' => 'required',
             'division_id' => 'required',
             'district_id' => 'required',
             'thana_id' => 'required',
             'business_type' => 'required',
-            'designation' => 'required',
+            // 'designation' => 'required',
         ];
     }
 
