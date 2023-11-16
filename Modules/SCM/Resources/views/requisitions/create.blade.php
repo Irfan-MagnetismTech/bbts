@@ -220,7 +220,7 @@
                                 value="{{ $unit[$key] }}">
                         </td>
                         <td>
-                            <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                            <select name="brand_id[]" class="form-control form-control-sm brand select2">
                                 <option value="">Select Brand</option>
                                 @foreach ($brands as $brand)
                                     <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
@@ -229,8 +229,12 @@
                             </select>
                         </td>
                         <td>
-                            <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                                   value="{{ $model[$key] }}">
+                                <input list="models" name="model[]" id="model[]" class="form-control model" value="{{ $model[$key] }}">
+                                <datalist id="models">
+                                    @foreach ($models as $model)
+                                        <option value="{{ $model }}">
+                                    @endforeach
+                                </datalist>
                         </td>
                         <td>
                             <input type="text" name="description[]" class="form-control description"

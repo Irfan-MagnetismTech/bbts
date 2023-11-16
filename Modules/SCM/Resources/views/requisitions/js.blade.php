@@ -26,20 +26,25 @@
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                              <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                <option value="">Select Brand</option>
+                                <select name="brand_id[]" class="form-control form-control-sm brand_id select2">
+                                    <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
                                 </select>
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
-                            </td>
-                            <td>
+                                </td>
+                                <td>
+                                <input list="models" name="model[]" id="model[]" class="form-control model">
+                                <datalist id="models">
+                                @foreach ($models as $model)
+                                <option value="{{ $model }}">
+                                @endforeach
+                                </datalist>
+                                </td>
+                                <td>
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                            </td>
-                            ${ type === 'warehouse' || type === 'pop' ?
+                                </td>
+                                ${ type === 'warehouse' || type === 'pop' ?
                             `<td class="current_stock" style="display: block">
                                     <input type="text" class="form-control current_stock" autocomplete="off" readonly>
                                 </td>`
@@ -60,6 +65,7 @@
                     </tr>
                     `;
             $('#material_requisition tbody').append(row);
+            $('.select2').select2({});
         }
 
         /* Adds and removes quantity row on click */
