@@ -13,7 +13,7 @@ use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\CollectionAddress;
 use Illuminate\Support\Facades\DB;
-
+use Modules\Sales\Entities\LeadGeneration;
 
 class ClientProfileController extends Controller
 {
@@ -101,7 +101,7 @@ class ClientProfileController extends Controller
      */
     public function show(int $id)
     {
-        $client = Client::where('id',$id)->first();
+        $client = Client::where('id', $id)->first();
         return view('sales::client_profile.show', compact('client'));
     }
 
@@ -140,6 +140,8 @@ class ClientProfileController extends Controller
     public function update(Request $request, $id)
     {
         $client_profile_data = $request->only('client_no', 'client_name', 'address', 'division_id', 'district_id', 'thana_id', 'location', 'lat_long', 'contact_person', 'designation', 'contact_no',  'email', 'business_type', 'client_type');
+        $lead_generation_data = $request->only('client_no', 'client_name', 'address', 'division_id', 'district_id', 'thana_id', 'contact_person', 'designation', 'contact_no',  'email', 'business_type', 'client_type');
+        $lead_generation_data['address'] = $request->location;
         $client_billing_info = $request->only('billing_address', 'billing_division', 'billing_district', 'billing_thana', 'billing_contact_person', 'billing_designation', 'billing_contact_no',  'billing_email', 'submitted_user_id', 'bill_submission_date');
         $client_collection_info = $request->only('collection_address', 'collection_division', 'collection_district', 'collection_thana', 'collection_contact_person', 'collection_designation', 'collection_contact_no',  'collection_email', 'payment_method', 'approximate_payment_date');
         if ($request->hasFile('trade_license')) {
@@ -159,9 +161,11 @@ class ClientProfileController extends Controller
 
         $client_profile_data['user_id'] = auth()->user()->id;
 
-        DB::transaction(function () use ($client_profile_data, $client_billing_info, $client_collection_info, $id) {
+        DB::transaction(function () use ($client_profile_data, $client_billing_info, $client_collection_info, $id, $lead_generation_data) {
             $client_profile = Client::find($id);
+            $lead_generation = LeadGeneration::where('client_no', $client_profile->client_no)->first();
             $client_profile->update($client_profile_data);
+            $lead_generation->update($lead_generation_data);
             $client_billing_info['client_id'] = $client_profile->id;
             $client_billing_info['client_no'] = $client_profile_data['client_no'];
             $client_collection_info['client_id'] = $client_profile->id;
@@ -180,12 +184,15 @@ class ClientProfileController extends Controller
     public function destroy($id)
     {
         $client_profile = Client::find($id);
-        $client_profile->trade_license ? CommonService::deleteFile('uploads/client_profile/trade_license/' . $client_profile->trade_license) : '';
-        $client_profile->nid ? CommonService::deleteFile('uploads/client_profile/nid/' . $client_profile->nid) : '';
-        $client_profile->photo ? CommonService::deleteFile('uploads/client_profile/photo/' . $client_profile->photo) : '';
-        $client_profile->delete();
-        $client_profile->billingAddress()->delete();
-        $client_profile->collectionAddress()->delete();
+        if ($client_profile) {
+            $client_profile->trade_license ? CommonService::deleteFile('uploads/client_profile/trade_license/' . $client_profile->trade_license) : '';
+            $client_profile->nid ? CommonService::deleteFile('uploads/client_profile/nid/' . $client_profile->nid) : '';
+            $client_profile->photo ? CommonService::deleteFile('uploads/client_profile/photo/' . $client_profile->photo) : '';
+            $client_profile->delete();
+            $client_profile->billingAddress()->delete();
+            $client_profile->collectionAddress()->delete();
+        }
+
         return redirect()->route('client-profile.index')->with('success', 'Client Profile Deleted Successfully');
     }
 
@@ -227,14 +234,15 @@ class ClientProfileController extends Controller
         return $client_collection_info;
     }
 
-    public function uploadBillingAddress(){
+    public function uploadBillingAddress()
+    {
 
-        $clients = Client::whereNot('id',1)
-        // ->limit(10)
-        ->get();
+        $clients = Client::whereNot('id', 1)
+            // ->limit(10)
+            ->get();
 
         // $data = [];
-        foreach($clients as $client){
+        foreach ($clients as $client) {
             $data = [
                 'client_no' => $client->client_no,
                 'client_id' => $client->id,
@@ -249,6 +257,6 @@ class ClientProfileController extends Controller
             ];
             // $client->billingAddres()->create($data);
             // $client->collectionAddres()->create($data);
-        } 
+        }
     }
 }
