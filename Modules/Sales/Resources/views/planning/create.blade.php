@@ -851,26 +851,26 @@
                 $(this).closest('tr').find('.unit').val(find_equipment.unit);
                 $.get('{{ route('getMaterialWiseBrands') }}', {
                     material_id: equipment_id
-                }, function(data) {
+                }, function (data) {
                     var html = '<option value="">Select Brand</option>';
-                    $.each(data, function(key, item) {
+                    $.each(data, function (key, item) {
                         html += '<option value="' + item.id + '">' +
                             item.name + '</option>';
                     });
                     this_event.closest('tr').find('.brand_id').html(html);
                 })
-
                 $.get('{{ route('getMaterialWiseModels') }}', {
                     material_id: equipment_id
                 }, function(data) {
-                    var html = '<option value="">Select Model</option>';
+                    var html = '';
                     $.each(data, function(key, item) {
-                        html += '<option value="' + item + '">' + item + '</option>';
+                        html += '<option value="' + item + '">';
                     });
-                    this_event.closest('tr').find('.model').html(html);
+
+                    // Update the datalist options with the retrieved data
+                    $('#models').empty().append(html);
                 });
             });
-
             $(document).on('change', '.link_material_id', function() {
                 var this_event = $(this);
                 var material_id = $(this).val();
@@ -887,15 +887,16 @@
                     });
                     this_event.closest('tr').find('.link_brand').html(html);
                 })
-
                 $.get('{{ route('getMaterialWiseModels') }}', {
                     material_id: material_id
                 }, function(data) {
-                    var html = '<option value="">Select Model</option>';
+                    var html = '';
                     $.each(data, function(key, item) {
-                        html += '<option value="' + item + '">' + item + '</option>';
+                        html += '<option value="' + item + '">';
                     });
-                    this_event.closest('tr').find('.link_model').html(html);
+
+                    // Update the datalist options with the retrieved data
+                    $('#models').empty().append(html);
                 });
             });
 
