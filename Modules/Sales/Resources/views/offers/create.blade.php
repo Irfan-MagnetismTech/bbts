@@ -20,6 +20,15 @@
     <span class="text-danger">*</span> Marked are required.
 @endsection
 
+@section('style')
+    <style>
+        table th {
+           background-color:#c0e4ce !important;
+           color: black !important;
+        }
+    </style>
+@endsection
+
 @section('content-grid', null)
 
 @section('content')
@@ -69,28 +78,32 @@
                                 <input type="hidden" name="row_no" value="{{ $row_no }}">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="tableHeading" style="background-color: #024FA7">
-                                            <h5> <span> &#10070; </span> {{ $details->connectivity_point }}
-                                                ({{ $details->fr_no }}) <span>&#10070;</span>
+                                        <div class="tableHeading" style="background-color: #b8d2d7;">
+                                            <h5 style="color:rgb(35, 33, 33);">{{ $details->connectivity_point }}
+                                                ({{ $details->fr_no }}) <span class="btn btn-sm"
+                                                    style="background: #2272a0;  padding: 5px 10px; margin-left: 10px;">
+                                                    <a href="{{ route('planning.show', $details->planning->id) }}"
+                                                        class="text-white" target="_blank">Plan</a>
+                                                </span>
                                             </h5>
                                         </div>
                                         <div class="table-responsive">
                                             <table class="table table-bordered ">
                                                 <thead>
                                                     <tr>
-                                                        <th style="background-color:#057097">Select</th>
-                                                        <th style="background-color:#057097">Link Type</th>
-                                                        <th style="background-color:#057097">Option</th>
-                                                        <th style="background-color:#057097">Existing/New</th>
-                                                        <th style="background-color:#057097">Method</th>
-                                                        <th style="background-color:#057097">Vendor</th>
-                                                        <th style="background-color:#057097">BBTS/POP/LDP</th>
-                                                        <th style="background-color:#057097">Client <br> Equipment</th>
-                                                        <th style="background-color:#057097">OTC</th>
-                                                        <th style="background-color:#057097">Mo <br> Cost</th>
-                                                        <th style="background-color:#057097">Offer <br> OTC</th>
-                                                        <th style="background-color:#057097">Total <br> OTC</th>
-                                                        <th style="background-color:#057097">Offer <br> MRC</th>
+                                                        <th>Select</th>
+                                                        <th>Link Type</th>
+                                                        <th>Option</th>
+                                                        <th>Existing/New</th>
+                                                        <th>Method</th>
+                                                        <th>Vendor</th>
+                                                        <th>BBTS/POP/LDP</th>
+                                                        <th>Client <br> Equipment</th>
+                                                        <th>OTC</th>
+                                                        <th>Mo <br> Cost</th>
+                                                        <th>Offer <br> OTC</th>
+                                                        <th>Total <br> OTC</th>
+                                                        <th>Offer <br> MRC</th>
                                                     </tr>
                                                 </thead>
 
@@ -158,8 +171,7 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <div
-                                                                    class="input-group input-group-sm input-group-primary">
+                                                                <div class="input-group input-group-sm input-group-primary">
                                                                     <input type="text"
                                                                         name="bbts_pop_ldp_{{ $row_no }}[]"
                                                                         value="{{ $link->finalSurveyDetails->bbts_pop_ldp }}"
