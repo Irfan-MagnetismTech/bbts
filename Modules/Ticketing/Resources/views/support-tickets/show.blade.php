@@ -112,6 +112,7 @@
                 <div class="col-12">
                     <h4 class="text-center mt-5">Physibility Information</h4>
                 </div>
+                @if(!empty($supportTicket->physicalConnectivity))
                 @foreach ($supportTicket->physicalConnectivity->lines as $line)
                     <hr />
                     <div class="row align-items-center mt-2">
@@ -153,6 +154,7 @@
                         </div>
                     </div>
                 @endforeach
+                @endif
                 <div class="row align-items-center mt-2">
                     <div class="col-2 text-right">
                         Ticket Closed By

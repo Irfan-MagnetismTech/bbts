@@ -75,6 +75,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Ticket No</th>
+                    <th>Client</th>
                     <th>Priority</th>
                     <th style="width: 100px">Complain</th>
                     <th>Source</th>
@@ -90,6 +91,8 @@
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
                         <td>{{ $ticket->ticket_no }}</td>
+                        <td>{{ $ticket->client->client_name ?? '' }} <br>
+                            {{ $ticket->feasibilityRequirementDetails->connectivity_point ?? '' }}</td>
                         <td>{{ $ticket->priority }}</td>
                         <td style="width: 100px; white-space: normal">{{ $ticket->supportComplainType->name }}</td>
                         <td>{{ $ticket->ticketSource->name }}</td>
