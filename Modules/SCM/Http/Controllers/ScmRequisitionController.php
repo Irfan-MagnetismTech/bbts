@@ -61,8 +61,6 @@ class ScmRequisitionController extends Controller
      */
     public function store(ScmRequisitionRequest $request)
     {
-        $brands = [];
-        $models = [];
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
@@ -94,6 +92,8 @@ class ScmRequisitionController extends Controller
 
             $requisition = ScmRequisition::create($requestData);
             $requisitionDetails = [];
+            $brands = [];
+            $models = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
                     'material_id' => $request->material_id[$key],
@@ -207,6 +207,8 @@ class ScmRequisitionController extends Controller
             $requisition->update($requestData);
 
             $requisitionDetails = [];
+            $brands = [];
+            $models = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
                     'material_id' => $request->material_id[$key],
@@ -219,6 +221,30 @@ class ScmRequisitionController extends Controller
                     'purpose' => $request->purpose[$key],
                     'current_stock' => $request->current_stock[$key] ?? 0,
                 ];
+                $brands[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                ];
+                $models[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                ];
+                $material_brand = MaterialBrand::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                    ],
+                    $brands
+                );
+                $material_model = MaterialModel::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                        'model' => $request->model[$key],
+                    ],
+                    $models
+                );
             }
 
             $requisition->scmRequisitiondetails()->delete();

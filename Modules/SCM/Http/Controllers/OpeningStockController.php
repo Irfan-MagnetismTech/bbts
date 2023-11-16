@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use App\Services\BbtsGlobalService;
+use Modules\SCM\Entities\MaterialBrand;
+use Modules\SCM\Entities\MaterialModel;
 use Modules\SCM\Entities\OpeningStock;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
@@ -40,7 +42,8 @@ class OpeningStockController extends Controller
     {
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
-        return view('scm::opening-stocks.create', compact('brands','branches'));
+        $models = MaterialModel::pluck('model');
+        return view('scm::opening-stocks.create', compact('brands','branches','models'));
     }
 
     /**
@@ -54,7 +57,8 @@ class OpeningStockController extends Controller
         try {
             DB::beginTransaction();
             $openingStock = OpeningStock::create($request->all());
-
+            $brands = [];
+            $models = [];
             $stockDetails = [];
             $serialCode = [];
             foreach ($request->material_id as $key => $data) {
@@ -67,6 +71,31 @@ class OpeningStockController extends Controller
                     'total_amount' => $request->unit_price[$key] * $request->quantity[$key],
                 ];
                 $serialCode[] = explode(',', $request->serial_code[$key]);
+
+                $brands[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                ];
+                $models[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                ];
+                $material_brand = MaterialBrand::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                    ],
+                    $brands
+                );
+                $material_model = MaterialModel::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                        'model' => $request->model[$key],
+                    ],
+                    $models
+                );
             }
 
             $detail= $openingStock->lines()->createMany($stockDetails);
@@ -138,8 +167,8 @@ class OpeningStockController extends Controller
         $formType = "edit";
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
-
-        return view('scm::opening-stocks.create', compact('openingStock', 'formType', 'brands', 'branches'));
+        $models = MaterialModel::pluck('model');
+        return view('scm::opening-stocks.create', compact('openingStock', 'formType', 'brands', 'branches','models'));
     }
 
     /**
@@ -155,7 +184,8 @@ class OpeningStockController extends Controller
             DB::beginTransaction();
 
             $openingStock->update($request->all());
-
+            $brands = [];
+            $models = [];
             $stockDetails = [];
             $serialCode = [];
             foreach ($request->material_id as $key => $data) {
@@ -168,6 +198,31 @@ class OpeningStockController extends Controller
                     'total_amount' => $request->unit_price[$key] * $request->quantity[$key],
                 ];
                 $serialCode[] = explode(',', $request->serial_code[$key]);
+
+                $brands[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                ];
+                $models[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                ];
+                $material_brand = MaterialBrand::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                    ],
+                    $brands
+                );
+                $material_model = MaterialModel::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                        'model' => $request->model[$key],
+                    ],
+                    $models
+                );
             }
 
             foreach ($openingStock->lines as $openingStockLine) {
