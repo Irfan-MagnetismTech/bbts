@@ -119,10 +119,40 @@
                     $(this).closest('tr').find('.item_code').val(ui.item.item_code);
                     $(this).closest('tr').find('.unit').val(ui.item.unit);
                     $(this).closest('tr').find('.current_stock').val(ui.item.stock_data);
+
+                    //get brand
+                    var this_event = $(this);
+                    var material_id = ui.item.value;
+                    $.get('{{ route('getMaterialWiseBrands') }}', {
+                        material_id: material_id
+                    }, function (data) {
+                        var html = '<option value="">Select Brand</option>';
+                        $.each(data, function (key, item) {
+                            html += '<option value="' + item.id + '">' +
+                                item.name + '</option>';
+                        });
+                        this_event.closest('tr').find('.brand_id').html(html);
+                    })
                     return false;
                 }
             });
+        });
+        //get model
+        $(document).on('change', '.brand_id', function() {
+            var material_id = $('.material_id').val();
+            var brand_id = $('.brand_id').val();
+            $.get('{{ route('getMaterialWiseModels') }}', {
+                material_id: material_id,
+                brand_id: brand_id,
+            }, function(data) {
+                var html = '';
+                $.each(data, function(key, item) {
+                    html += '<option value="' + item + '">';
+                });
 
+                // Update the datalist options with the retrieved data
+                $('#models').empty().append(html);
+            });
         });
 
         $(function() {
