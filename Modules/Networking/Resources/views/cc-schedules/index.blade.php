@@ -132,9 +132,9 @@
                                         class="text-white" target="_blank">Scheduling</a>
                                 </span>
                             @endif
-                            <span class="badge badge-info">
-                                <a href="{{ route('cc-schedules.create', ['physical_connectivity_id' => $details->id]) }}"
-                                    class="text-white" target="_blank">Plan</a>
+                            <span class="badge badge-success">
+                                <a href="{{ route('planning.show', $details->planning->id) }}" class="text-white"
+                                    target="_blank">Plan</a>
                             </span>
                             @if (!empty($details?->connectivities?->id))
                                 <span class="badge badge-info">

@@ -26,7 +26,7 @@ class SaleDetail extends Model
      */
     public function getDeliveryDateAttribute($input)
     {
-        if(!empty($input)){
+        if (!empty($input)) {
             return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y') ?: null;
         }
     }
@@ -42,12 +42,12 @@ class SaleDetail extends Model
     public function saleLinkDetails()
     {
         return $this->hasMany(SaleLinkDetail::class, 'sale_detail_id', 'id');
-    } 
+    }
 
     public function connectivities()
     {
         return $this->hasOne(Connectivity::class, 'fr_no', 'fr_no')->where('is_modify', '0');
-    } 
+    }
 
     public function saleProductDetails()
     {
@@ -77,6 +77,11 @@ class SaleDetail extends Model
     public function costing()
     {
         return $this->belongsTo(Costing::class, 'fr_no', 'fr_no')->where('is_modified', '0');
+    }
+
+    public function planning()
+    {
+        return $this->belongsTo(Planning::class, 'fr_no', 'fr_no')->where('is_modified', '0');
     }
 
     public function billingAddress()
