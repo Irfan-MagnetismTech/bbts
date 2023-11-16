@@ -159,7 +159,7 @@
                                                         <div class="col-xl-4 col-md-4">
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <select name="business_type" id="business_type"
-                                                                    class="form-control select2">
+                                                                    class="form-control select2" required>
                                                                     <option>Business Type</option>
                                                                     @foreach ($organizations as $organization)
                                                                         <option value="{{ $organization }}"
@@ -173,7 +173,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="division_id" id="division"
-                                                                    class="form-control select2">
+                                                                    class="form-control select2" required>
                                                                     <option value="">Select Division</option>
                                                                     @foreach ($divisions as $division)
                                                                         <option value="{{ $division->id }}"
@@ -186,7 +186,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="district_id" id="district"
-                                                                    class="form-control select2">
+                                                                    class="form-control select2" required>
                                                                     <option value="">Select District</option>
                                                                     @if ($districts)
                                                                         @foreach ($districts as $district)
@@ -201,7 +201,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="form-item">
                                                                 <select name="thana_id" id="thana"
-                                                                    class="form-control select2">
+                                                                    class="form-control select2" required>
                                                                     <option value="">Select Thana</option>
                                                                     @if ($thanas)
                                                                         @foreach ($thanas as $thana)

@@ -39,31 +39,27 @@
 
                         {{-- exiting or new radio button --}}
                         <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_id">Status<span
-                                        class="text-danger">*</span></label>
+                            <div>
+                                <label>Status</label>
                                 <span class="form-control">{{ $feasibility_requirement->is_existing ?? '' }}</span>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_id">Client ID<span
-                                        class="text-danger">*</span></label>
+                            <div>
+                                <label>Client ID</label>
                                 <span class="form-control">{{ $feasibility_requirement->client_no ?? '' }}</span>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_name">Client Name<span
-                                        class="text-danger">*</span></label>
+                            <div>
+                                <label>Client Name</label>
                                 <span
                                     class="form-control">{{ $feasibility_requirement->lead_generation->client_name ?? '' }}</span>
                             </div>
                         </div>
                         <div class="col-xl-3 col-md-3">
-                            <div class="input-group input-group-sm input-group-primary">
-                                <label class="input-group-addon" for="client_type">Date<span
-                                        class="text-danger">*</span></label>
+                            <div>
+                                <label>Date</label>
                                 <span class="form-control">{{ $feasibility_requirement->date ?? '' }}</span>
                             </div>
                         </div>

@@ -26,20 +26,25 @@
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                              <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
-                                <option value="">Select Brand</option>
+                                <select name="brand_id[]" class="form-control form-control-sm brand_id select2">
+                                    <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
                                 </select>
-                            </td>
-                            <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
-                            </td>
-                            <td>
+                                </td>
+                                <td>
+                                <input list="models" name="model[]" id="model[]" class="form-control model">
+                                <datalist id="models">
+                                @foreach ($models as $model)
+                                <option value="{{ $model }}">
+                                @endforeach
+                                </datalist>
+                                </td>
+                                <td>
                                 <input type="text" name="description[]" class="form-control description" autocomplete="off">
-                            </td>
-                            ${ type === 'warehouse' || type === 'pop' ?
+                                </td>
+                                ${ type === 'warehouse' || type === 'pop' ?
                             `<td class="current_stock" style="display: block">
                                     <input type="text" class="form-control current_stock" autocomplete="off" readonly>
                                 </td>`
@@ -60,6 +65,7 @@
                     </tr>
                     `;
             $('#material_requisition tbody').append(row);
+            $('.select2').select2({});
         }
 
         /* Adds and removes quantity row on click */
@@ -113,10 +119,40 @@
                     $(this).closest('tr').find('.item_code').val(ui.item.item_code);
                     $(this).closest('tr').find('.unit').val(ui.item.unit);
                     $(this).closest('tr').find('.current_stock').val(ui.item.stock_data);
+
+                    //get brand
+                    var this_event = $(this);
+                    var material_id = ui.item.value;
+                    $.get('{{ route('getMaterialWiseBrands') }}', {
+                        material_id: material_id
+                    }, function (data) {
+                        var html = '<option value="">Select Brand</option>';
+                        $.each(data, function (key, item) {
+                            html += '<option value="' + item.id + '">' +
+                                item.name + '</option>';
+                        });
+                        this_event.closest('tr').find('.brand_id').html(html);
+                    })
                     return false;
                 }
             });
+        });
+        //get model
+        $(document).on('change', '.brand_id', function() {
+            var material_id = $('.material_id').val();
+            var brand_id = $('.brand_id').val();
+            $.get('{{ route('getMaterialWiseModels') }}', {
+                material_id: material_id,
+                brand_id: brand_id,
+            }, function(data) {
+                var html = '';
+                $.each(data, function(key, item) {
+                    html += '<option value="' + item + '">';
+                });
 
+                // Update the datalist options with the retrieved data
+                $('#models').empty().append(html);
+            });
         });
 
         $(function() {

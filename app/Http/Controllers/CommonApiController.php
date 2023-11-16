@@ -513,14 +513,14 @@ class CommonApiController extends Controller
     public function getMaterialWiseModels()
     {
         $materialId = request('material_id');
+        $brandId = request('brand_id');
+        $models = MaterialModel::where('material_id', $materialId)
+            ->where('brand_id', $brandId)
+            ->pluck('model')
+            ->filter()
+            ->values();
 
-        $models = MaterialModel::where('material_id', $materialId)->pluck('model');
-
-        if ($models->isNotEmpty() && !$models->contains(null)) {
-            return response()->json($models);
-        } else {
-            return response()->json([]);
-        }
+        return response()->json($models);
     }
 
 }

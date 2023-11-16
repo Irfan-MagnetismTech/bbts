@@ -3,6 +3,8 @@
 namespace Modules\SCM\Http\Controllers;
 
 use App\Models\Dataencoding\Employee;
+use Modules\SCM\Entities\MaterialBrand;
+use Modules\SCM\Entities\MaterialModel;
 use Termwind\Components\Dd;
 use Modules\Admin\Entities\Pop;
 use Modules\Admin\Entities\Brand;
@@ -43,11 +45,12 @@ class ScmRequisitionController extends Controller
     public function create()
     {
         $formType = "create";
-        $requisitions = ScmRequisition::latest()->get();
-        $brands = Brand::latest()->get();
-        $branchs = Branch::latest()->get();
+        $requisitions = ScmRequisition::get();
+        $brands = Brand::get();
+        $models = MaterialModel::pluck('model');
+        $branchs = Branch::get();
 
-        return view('scm::requisitions.create', compact('requisitions', 'formType', 'brands', 'branchs'));
+        return view('scm::requisitions.create', compact('requisitions', 'formType', 'brands', 'branchs','models'));
     }
 
     /**
@@ -58,7 +61,8 @@ class ScmRequisitionController extends Controller
      */
     public function store(ScmRequisitionRequest $request)
     {
-        // dd($request->all());
+        $brands = [];
+        $models = [];
         try {
             DB::beginTransaction();
             if (request()->type == 'client') {
@@ -102,6 +106,30 @@ class ScmRequisitionController extends Controller
                     'purpose' => $request->purpose[$key],
                     'current_stock' => $request->current_stock[$key] ?? 0,
                 ];
+                $brands[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                ];
+                $models[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                ];
+                $material_brand = MaterialBrand::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                    ],
+                    $brands
+                );
+                $material_model = MaterialModel::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                        'model' => $request->model[$key],
+                    ],
+                    $models
+                );
             }
 
             $requisition->scmRequisitiondetails()->createMany($requisitionDetails);
@@ -136,16 +164,17 @@ class ScmRequisitionController extends Controller
     {
         // dd($requisition->employee_id);
         $formType = "edit";
-        $brands = Brand::latest()->get();
-        $branchs = Branch::latest()->get();
-        $pops = Pop::latest()->get();
-        $clients = Client::latest()->get();
+        $brands = Brand::get();
+        $branchs = Branch::get();
+        $models = MaterialModel::pluck('model');
+        $pops = Pop::get();
+        $clients = Client::get();
         $fr_nos = Client::with('saleDetails')->where('client_no', $requisition->client_no)->first()?->saleDetails ?? [];
         $client_links = Client::with('saleLinkDetails')->where('client_no', $requisition->client_no)->first()?->saleLinkDetails ?? [];
         // $branchwisePops = ScmRequisition::with('pop')->where('id', $requisition->id)->get();
         $branchwisePops = Pop::where('branch_id', $requisition->branch_id)->get();
         // $fr_composite_key = $requisition->fr_composite_key;
-        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs', 'branchwisePops'));
+        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs', 'branchwisePops','models'));
     }
 
     /**

@@ -28,10 +28,10 @@
         }
 
         /* .table_heading {
-            background-color: #007af5 !important;
-            color: white !important;
-            font-size: 14px !important;
-        } */
+                                                                                                                                                        background-color: #007af5 !important;
+                                                                                                                                                        color: white !important;
+                                                                                                                                                        font-size: 14px !important;
+                                                                                                                                                    } */
     </style>
 @endsection
 
@@ -73,7 +73,9 @@
                             <table class="table table-bordered client_information" style="font-size: 12px;">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" colspan="6" style="background-color: #edeef0 !important; font-size: 14px !important;"  >Connectivity
+                                        <th class="text-center" colspan="6"
+                                            style="background-color: #edeef0 !important; font-size: 14px !important;">
+                                            Connectivity
                                             Point
                                             Information</th>
                                     </tr>
@@ -194,8 +196,9 @@
                                                 {{-- <button type="button" class="" id="addEquipmentRow">
                                                     <i class="fas fa-plus"></i>
                                                 </button> --}}
-                                                <button type="button" class="btn btn-sm btn-success" style="padding: 5px 10px"
-                                                    id="addEquipmentRow"><i class="fas fa-plus"></i></button>
+                                                <button type="button" class="btn btn-sm btn-success"
+                                                    style="padding: 5px 10px" id="addEquipmentRow"><i
+                                                        class="fas fa-plus"></i></button>
                                             </th>
                                         </tr>
                                         <tr>
@@ -244,7 +247,8 @@
                                             </td>
                                             <td>
                                                 <div>
-                                                    <input list="models" name="model[]" id="model[]" class="form-control model" value="">
+                                                    <input list="models" name="model[]" id="model[]"
+                                                        class="form-control model" value="">
                                                     <datalist id="models">
                                                         @foreach ($models as $model)
                                                             <option value="{{ $model }}">
@@ -258,8 +262,8 @@
                                             </td>
                                             <td>
                                                 <button type="button"
-                                                    class="btn btn-sm btn-outline-danger removeEquipmentRow" style="padding: 5px 10px"><i
-                                                        class="fas fa-trash"></i></button>
+                                                    class="btn btn-sm btn-outline-danger removeEquipmentRow"
+                                                    style="padding: 5px 10px"><i class="fas fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -287,7 +291,8 @@
                             <input type="hidden" name="plan_link_no_1" value="">
                             <div class="row">
                                 <div class="col-md-10 col-10">
-                                    <h5 class="text-center mb-2"> <span>&#10070;</span> Link -  <span class="link_no">1</span> <span>&#10070;</span></h5>
+                                    <h5 class="text-center mb-2"> <span>&#10070;</span> Link - <span
+                                            class="link_no">1</span> <span>&#10070;</span></h5>
                                 </div>
                                 {{-- <div class="col-md-1 col-1">
                                     <button type="button" class="btn btn-sm btn-outline-success" style="padding: 5px 10px" id="addLinkRow">
@@ -296,17 +301,21 @@
                                 </div> --}}
                                 <div class="col-md-1 col-1">
                                     <nobr>
-                                    <button type="button" class="btn btn-sm btn-outline-success addLinkRow" style="padding: 5px 10px" >
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger text-left removeLinkRow" style="padding: 5px 10px"
-                                        onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
+                                        <button type="button" class="btn btn-sm btn-outline-success addLinkRow"
+                                            style="padding: 5px 10px">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-danger text-left removeLinkRow"
+                                            style="padding: 5px 10px" onclick="removeLinkRow(this)"><i
+                                                class="fas fa-trash"></i></button>
                                     </nobr>
                                 </div>
                                 {{-- <hr style="width: 100%; margin-bottom: 10px;"> --}}
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
-                                        <select name="link_type_1" class="form-control form-control-sm link_type ">
+                                        <select name="link_type_1" class="form-control form-control-sm link_type "
+                                            required>
                                             <option value="">Select Type</option>
                                             <option value="Primary">Primary</option>
                                             <option value="Secondary">Secondary</option>
@@ -317,7 +326,7 @@
                                 <div class="md-col-3 col-3  mt-3">
                                     <div class="form-item">
                                         <select name="option_1" class="form-control form-control-sm option "
-                                            onchange="optionChange(event)">
+                                            onchange="optionChange(event)" required>
                                             <option value="">Select Option</option>
                                             <option value="Option 1">Option 1</option>
                                             <option value="Option 2">Option 2</option>
@@ -397,7 +406,9 @@
                                     <hr /> --}}
                                     <table class="table table-bordered surveyTable" style="font-size: 12px;">
                                         <tr>
-                                            <th class="text-center" style="background-color: #e1e7ec !important; font-size: 14px !important;"  colspan="4" > Survey Information</th>
+                                            <th class="text-center"
+                                                style="background-color: #e1e7ec !important; font-size: 14px !important;"
+                                                colspan="4"> Survey Information</th>
                                         </tr>
                                         <tr>
                                             <th class="text-left table_label">Vendor</th>
@@ -496,11 +507,12 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-center" style="font-size: 14px!important" colspan="7">
-                                                    <span> &#10070; </span> Link Equipment <span>&#10070;</span></th>
+                                                    <span> &#10070; </span> Link Equipment <span>&#10070;</span>
+                                                </th>
                                                 <th rowspan="2">
                                                     <button type="button"
-                                                        class="btn btn-success btn-sm addLinkEquipmentRow" style="padding: 5px 10px"
-                                                        onclick="addLinkEquipmentRow(this)">
+                                                        class="btn btn-success btn-sm addLinkEquipmentRow"
+                                                        style="padding: 5px 10px" onclick="addLinkEquipmentRow(this)">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </th>
@@ -552,7 +564,8 @@
                                                 </td>
                                                 <td>
                                                     <div>
-                                                        <input list="models" name="model_1[]" id="model_1[]" class="form-control link_model" value="">
+                                                        <input list="models" name="model_1[]" id="model_1[]"
+                                                            class="form-control link_model" value="">
                                                         <datalist id="models">
                                                             @foreach ($models as $model)
                                                                 <option value="{{ $model }}">
@@ -727,58 +740,101 @@
             }).datepicker("setDate", new Date());
 
             function optionChange(event) {
-                let option = $(event.target).val();
-                var link_type = $(event.target).closest('.main_link').find('.link_type').val();
-                let client_id = $('#client_no').val();
-                let fr_no = $('#fr_no').val();
-                $.ajax({
-                    url: "{{ route('get-survey-details') }}",
-                    data: {
-                        option: option,
-                        link_type: link_type,
-                        client_id: client_id,
-                        fr_no: fr_no,
-                    },
-                    success: function(data) {
-                        $(event.target).closest('.main_link').find('input[name^="plan_link_no_"]').val(data
-                            ?.link_no);
-                        $(event.target).closest('.main_link').find('select[name^="link_vendor_id_"]').val(data
-                            ?.vendor
-                            ?.id).trigger('change');
+                var check_validation = checkUniqueTypeAndOption(event.target);
+                console.log('check_validation', check_validation);
+                if (check_validation == false) {
+                    return false;
+                } else {
+                    let option = $(event.target).val();
+                    var link_type = $(event.target).closest('.main_link').find('.link_type').val();
+                    let client_id = $('#client_no').val();
+                    let fr_no = $('#fr_no').val();
+                    $.ajax({
+                        url: "{{ route('get-survey-details') }}",
+                        data: {
+                            option: option,
+                            link_type: link_type,
+                            client_id: client_id,
+                            fr_no: fr_no,
+                        },
+                        success: function(data) {
+                            $(event.target).closest('.main_link').find('input[name^="plan_link_no_"]').val(data
+                                ?.link_no);
+                            $(event.target).closest('.main_link').find('select[name^="link_vendor_id_"]').val(data
+                                ?.vendor
+                                ?.id).trigger('change');
 
-                        //set existing_infrastructure_ select box value
-                        $(event.target).closest('.main_link').find('select[name^="existing_infrastructure_"]').val(
-                            data
-                            ?.status);
-                        $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(data
-                            .status);
-                        $(event.target).closest('.main_link').find('select[name^="link_connecting_pop_id_"]').val(
-                            data
-                            .pop
-                            .id).trigger('change');
-                        $(event.target).closest('.main_link').find('select[name^="last_mile_connectivity_method_"]')
-                            .val(data
-                                .method).trigger('change');
-                        $(event.target).closest('.main_link').find('input[name^="connectivity_long_"]').val(data
-                            .long);
-                        $(event.target).closest('.main_link').find('input[name^="connectivity_lat_"]').val(data
-                            .lat);
-                        $(event.target).closest('.main_link').find('input[name^="distance_"]').val(data.distance);
-                        $(event.target).closest('.main_link').find('input[name^="gps_"]').val(data.gps);
-                        $(event.target).closest('.main_link').find('input[name^="connectivity_point_"]').val(data
-                            .bts_pop_ldp)
-                        // $(event.target).closest('.main_link').find('.link_vendor').html(data.vendor);
-                        // $(event.target).closest('.main_link').find('.availability_status').html(data.status);
-                        // $(event.target).closest('.main_link').find('.link_connecting_pop').html(data.bts_pop_ldp);
-                        // $(event.target).closest('.main_link').find('.last_mile_connectivity_method').html(data
-                        //     .method);
-                        // $(event.target).closest('.main_link').find('.connectivity_lat_long').html(data.gps);
-                        // $(event.target).closest('.main_link').find('.distance').val(data.distance);
-                        // $(event.target).closest('.main_link').find('.gps').val(data.gps);
-                        // $(event.target).closest('.main_link').find('.connectivity_point').val(data.bts_pop_ldp)
-                        changeLink($(event.target));
+                            //set existing_infrastructure_ select box value
+                            $(event.target).closest('.main_link').find('select[name^="existing_infrastructure_"]')
+                                .val(
+                                    data
+                                    ?.status);
+                            $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(
+                                data
+                                ?.status);
+                            $(event.target).closest('.main_link').find('select[name^="link_connecting_pop_id_"]')
+                                .val(
+                                    data?.pop?.id).trigger('change');
+                            $(event.target).closest('.main_link').find(
+                                    'select[name^="last_mile_connectivity_method_"]')
+                                .val(data?.method).trigger('change');
+                            $(event.target).closest('.main_link').find('input[name^="connectivity_long_"]').val(data
+                                ?.long);
+                            $(event.target).closest('.main_link').find('input[name^="connectivity_lat_"]').val(data
+                                ?.lat);
+                            $(event.target).closest('.main_link').find('input[name^="distance_"]').val(data
+                                ?.distance);
+                            $(event.target).closest('.main_link').find('input[name^="gps_"]').val(data?.gps);
+                            $(event.target).closest('.main_link').find('input[name^="connectivity_point_"]').val(
+                                data
+                                ?.bts_pop_ldp)
+                            // $(event.target).closest('.main_link').find('.link_vendor').html(data.vendor);
+                            // $(event.target).closest('.main_link').find('.availability_status').html(data.status);
+                            // $(event.target).closest('.main_link').find('.link_connecting_pop').html(data.bts_pop_ldp);
+                            // $(event.target).closest('.main_link').find('.last_mile_connectivity_method').html(data
+                            //     .method);
+                            // $(event.target).closest('.main_link').find('.connectivity_lat_long').html(data.gps);
+                            // $(event.target).closest('.main_link').find('.distance').val(data.distance);
+                            // $(event.target).closest('.main_link').find('.gps').val(data.gps);
+                            // $(event.target).closest('.main_link').find('.connectivity_point').val(data.bts_pop_ldp)
+                            changeLink($(event.target));
+                        }
+                    });
+                }
+            }
+
+            function checkUniqueTypeAndOption(currentValue) {
+                let checkValidation = true;
+                var current_selector = $(currentValue);
+                var current_link_type = $(currentValue).closest('.main_link').find('.link_type').val();
+                var current_option = $(currentValue).closest('.main_link').find('.option').val();
+                var current_key = `${current_link_type}_${current_option}`;
+                console.log('current_key', current_key);
+                var count_row = $('.main_link').length;
+                var thisOption = $(currentValue).closest('.main_link').find('.option');
+                let options = $('.option').not($(thisOption));
+
+                options.each(function() {
+                    var link_type = $(this).closest('.main_link').find('.link_type').val();
+                    var option = $(this).closest('.main_link').find('.option').val();
+                    var key = `${link_type}_${option}`;
+                    console.log('key', key);
+                    if (key === current_key && count_row > 1) {
+                        swal.fire({
+                            title: "Same Link Type and Option already exists!",
+                            type: "warning",
+                        }).then(function() {
+                            $(current_selector).closest('.main_link').find('.option').val('').trigger(
+                                'change');
+                        });
+                        checkValidation = false;
+                        return false;
+
+                    } else {
+                        checkValidation = true;
                     }
                 });
+                return checkValidation;
             }
 
             function addLinkEquipmentRow(event) {
@@ -851,26 +907,26 @@
                 $(this).closest('tr').find('.unit').val(find_equipment.unit);
                 $.get('{{ route('getMaterialWiseBrands') }}', {
                     material_id: equipment_id
-                }, function(data) {
+                }, function (data) {
                     var html = '<option value="">Select Brand</option>';
-                    $.each(data, function(key, item) {
+                    $.each(data, function (key, item) {
                         html += '<option value="' + item.id + '">' +
                             item.name + '</option>';
                     });
                     this_event.closest('tr').find('.brand_id').html(html);
                 })
-
                 $.get('{{ route('getMaterialWiseModels') }}', {
                     material_id: equipment_id
                 }, function(data) {
-                    var html = '<option value="">Select Model</option>';
+                    var html = '';
                     $.each(data, function(key, item) {
-                        html += '<option value="' + item + '">' + item + '</option>';
+                        html += '<option value="' + item + '">';
                     });
-                    this_event.closest('tr').find('.model').html(html);
+
+                    // Update the datalist options with the retrieved data
+                    $('#models').empty().append(html);
                 });
             });
-
             $(document).on('change', '.link_material_id', function() {
                 var this_event = $(this);
                 var material_id = $(this).val();
@@ -887,15 +943,16 @@
                     });
                     this_event.closest('tr').find('.link_brand').html(html);
                 })
-
                 $.get('{{ route('getMaterialWiseModels') }}', {
                     material_id: material_id
                 }, function(data) {
-                    var html = '<option value="">Select Model</option>';
+                    var html = '';
                     $.each(data, function(key, item) {
-                        html += '<option value="' + item + '">' + item + '</option>';
+                        html += '<option value="' + item + '">';
                     });
-                    this_event.closest('tr').find('.link_model').html(html);
+
+                    // Update the datalist options with the retrieved data
+                    $('#models').empty().append(html);
                 });
             });
 

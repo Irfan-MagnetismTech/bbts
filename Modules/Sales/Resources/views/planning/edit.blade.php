@@ -236,9 +236,16 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="model[]"
-                                                        class="form-control form-control-sm model"
-                                                        value="{{ $equipment_plan->model ?? '' }}">
+                                                    <div>
+                                                        <input list="models" name="model[]" id="model[]"
+                                                            class="form-control model"
+                                                            value="{{ $equipment_plan->model ?? '' }}">
+                                                        <datalist id="models">
+                                                            @foreach ($models as $model)
+                                                                <option value="{{ $model }}">
+                                                            @endforeach
+                                                        </datalist>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <input type="text" name="equipment_remarks[]"
@@ -265,7 +272,7 @@
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
                         </div> --}}
                         {{-- <div class="col-md-1" style="float: right">
-                            
+
                             <button type="button" class="btn btn-sm btn-outline-success text-left" id="addLinkRow">
                                 <i class="fas fa-plus"></i>
                             </button>
@@ -309,7 +316,7 @@
                                         <div class="md-col-3 col-3">
                                             <div class="form-item">
                                                 <select name="link_type_{{ $total_key }}"
-                                                    class="form-control form-control-sm link_type select2">
+                                                    class="form-control form-control-sm link_type select2" required>
                                                     <option value="">Select Type</option>
                                                     <option value="Primary"
                                                         {{ $plan_link->link_type == 'Primary' ? 'selected' : '' }}>
@@ -328,7 +335,7 @@
                                             <div class="form-item">
                                                 <select name="option_{{ $total_key }}" id="option"
                                                     class="form-control form-control-sm option select2"
-                                                    onchange="optionChange(event)">
+                                                    onchange="optionChange(event)" required>
                                                     <option value="">Select Option</option>
                                                     <option value="Option 1"
                                                         {{ $plan_link->option == 'Option 1' ? 'selected' : '' }}>
@@ -595,10 +602,17 @@
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text"
-                                                                        name="model_{{ $total_key }}[]"
-                                                                        class="form-control form-control-sm link_model"
-                                                                        value="{{ $plan_equipment->model ?? '' }}">
+                                                                    <div>
+                                                                        <input list="models"
+                                                                            name="model_{{ $total_key }}[]"
+                                                                            id="model[]" class="form-control link_model"
+                                                                            value="{{ $plan_equipment->model ?? '' }}">
+                                                                        <datalist id="models">
+                                                                            @foreach ($models as $model)
+                                                                                <option value="{{ $model }}">
+                                                                            @endforeach
+                                                                        </datalist>
+                                                                    </div>
                                                                 </td>
                                                                 <td>
                                                                     <input type="text"
@@ -718,18 +732,24 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input type="text" name="model[]"
-                                                    class="form-control form-control-sm model" value="">
-                                            </td>
-                                            <td>
-                                                <input type="text" name="equipment_remarks[]"
-                                                    class="form-control form-control-sm equipment_remarks" value="">
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-sm btn-danger removeEquipmentRow" style="padding: 5px 10px"><i
-                                                        class="fas fa-trash"></i></button>
-                                            </td>
-                                        </tr> `;
+                                                     <div>
+                                                    <input list="models" name="model[]" id="model[]" class="form-control model">
+                                                    <datalist id="models">
+                                                        @foreach ($models as $model)
+                                                            <option value="{{ $model }}">
+                                                        @endforeach
+                                                            </datalist>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" name="equipment_remarks[]"
+                                                            class="form-control form-control-sm equipment_remarks" value="">
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-danger removeEquipmentRow" style="padding: 5px 10px"><i
+                                                                class="fas fa-trash"></i></button>
+                                                    </td>
+                                                </tr> `;
             $('#addEquipmentRow').on('click', function() {
                 addEquipmentRow();
                 $('.select2').select2();
@@ -768,57 +788,104 @@
             }).datepicker("setDate", new Date());
 
             function optionChange(event) {
-                let option = $(event.target).val();
-                var link_type = $(event.target).closest('.main_link').find('.link_type').val();
-                let client_id = $('#client_no').val();
-                let fr_no = $('#fr_no').val();
-                $.ajax({
-                    url: "{{ route('get-survey-details') }}",
-                    data: {
-                        option: option,
-                        link_type: link_type,
-                        client_id: client_id,
-                        fr_no: fr_no,
-                    },
-                    success: function(data) {
-                        $(event.target).closest('.main_link').find('input[name^="plan_link_no_"]').val(data
-                            ?.link_no);
-                        $(event.target).closest('.main_link').find('select[name^="link_vendor_id_"]').val(data
-                            ?.vendor
-                            ?.id).trigger('change');
-                        //set existing_infrastructure_ select box value
-                        $(event.target).closest('.main_link').find('select[name^="existing_infrastructure_"]').val(
-                            data
-                            ?.status);
-                        $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(data
-                            .status);
-                        $(event.target).closest('.main_link').find('select[name^="link_connecting_pop_id_"]').val(
-                            data
-                            .pop
-                            .id).trigger('change');
-                        $(event.target).closest('.main_link').find('input[name^="last_mile_connectivity_method_"]')
-                            .val(data
-                                .method);
-                        $(event.target).closest('.main_link').find('input[name^="connectivity_long_"]').val(data
-                            .long);
-                        $(event.target).closest('.main_link').find('input[name^="connectivity_lat_"]').val(data
-                            .lat);
-                        $(event.target).closest('.main_link').find('input[name^="distance_"]').val(data.distance);
-                        $(event.target).closest('.main_link').find('input[name^="gps_"]').val(data.gps);
-                        $(event.target).closest('.main_link').find('input[name^="connectivity_point_"]').val(data
-                            .bts_pop_ldp)
-                        // $(event.target).closest('.main_link').find('.link_vendor').html(data.vendor);
-                        // $(event.target).closest('.main_link').find('.availability_status').html(data.status);
-                        // $(event.target).closest('.main_link').find('.link_connecting_pop').html(data.bts_pop_ldp);
-                        // $(event.target).closest('.main_link').find('.last_mile_connectivity_method').html(data
-                        //     .method);
-                        // $(event.target).closest('.main_link').find('.connectivity_lat_long').html(data.gps);
-                        // $(event.target).closest('.main_link').find('.distance').val(data.distance);
-                        // $(event.target).closest('.main_link').find('.gps').val(data.gps);
-                        // $(event.target).closest('.main_link').find('.connectivity_point').val(data.bts_pop_ldp)
-                        changeLink($(event.target));
+                var check_validation = checkUniqueTypeAndOption(event.target);
+                console.log('check_validation', check_validation);
+                if (check_validation == false) {
+                    return false;
+                } else {
+                    let option = $(event.target).val();
+                    var link_type = $(event.target).closest('.main_link').find('.link_type').val();
+                    let client_id = $('#client_no').val();
+                    let fr_no = $('#fr_no').val();
+                    $.ajax({
+                        url: "{{ route('get-survey-details') }}",
+                        data: {
+                            option: option,
+                            link_type: link_type,
+                            client_id: client_id,
+                            fr_no: fr_no,
+                        },
+                        success: function(data) {
+                            $(event.target).closest('.main_link').find('input[name^="plan_link_no_"]').val(data
+                                ?.link_no);
+                            $(event.target).closest('.main_link').find('select[name^="link_vendor_id_"]').val(data
+                                ?.vendor
+                                ?.id).trigger('change');
+                            //set existing_infrastructure_ select box value
+                            $(event.target).closest('.main_link').find('select[name^="existing_infrastructure_"]')
+                                .val(
+                                    data
+                                    ?.status);
+                            $(event.target).closest('.main_link').find('input[name^="availability_status_"]').val(
+                                data
+                                .status);
+                            $(event.target).closest('.main_link').find('select[name^="link_connecting_pop_id_"]')
+                                .val(
+                                    data
+                                    .pop
+                                    .id).trigger('change');
+                            $(event.target).closest('.main_link').find(
+                                    'input[name^="last_mile_connectivity_method_"]')
+                                .val(data
+                                    .method);
+                            $(event.target).closest('.main_link').find('input[name^="connectivity_long_"]').val(data
+                                .long);
+                            $(event.target).closest('.main_link').find('input[name^="connectivity_lat_"]').val(data
+                                .lat);
+                            $(event.target).closest('.main_link').find('input[name^="distance_"]').val(data
+                                .distance);
+                            $(event.target).closest('.main_link').find('input[name^="gps_"]').val(data.gps);
+                            $(event.target).closest('.main_link').find('input[name^="connectivity_point_"]').val(
+                                data
+                                .bts_pop_ldp)
+                            // $(event.target).closest('.main_link').find('.link_vendor').html(data.vendor);
+                            // $(event.target).closest('.main_link').find('.availability_status').html(data.status);
+                            // $(event.target).closest('.main_link').find('.link_connecting_pop').html(data.bts_pop_ldp);
+                            // $(event.target).closest('.main_link').find('.last_mile_connectivity_method').html(data
+                            //     .method);
+                            // $(event.target).closest('.main_link').find('.connectivity_lat_long').html(data.gps);
+                            // $(event.target).closest('.main_link').find('.distance').val(data.distance);
+                            // $(event.target).closest('.main_link').find('.gps').val(data.gps);
+                            // $(event.target).closest('.main_link').find('.connectivity_point').val(data.bts_pop_ldp)
+                            changeLink($(event.target));
+                        }
+                    });
+                }
+            }
+
+            function checkUniqueTypeAndOption(currentValue) {
+
+                let checkValidation = true;
+                var current_selector = $(currentValue);
+                var current_link_type = $(currentValue).closest('.main_link').find('.link_type').val();
+                var current_option = $(currentValue).closest('.main_link').find('.option').val();
+                var current_key = `${current_link_type}_${current_option}`;
+                console.log('current_key', current_key);
+                var count_row = $('.main_link').length;
+                var thisOption = $(currentValue).closest('.main_link').find('.option');
+                let options = $('.option').not($(thisOption));
+
+                options.each(function() {
+                    var link_type = $(this).closest('.main_link').find('.link_type').val();
+                    var option = $(this).closest('.main_link').find('.option').val();
+                    var key = `${link_type}_${option}`;
+                    console.log('key', key);
+                    if (key === current_key && count_row > 1) {
+                        swal.fire({
+                            title: "Same Link Type and Option already exists!",
+                            type: "warning",
+                        }).then(function() {
+                            $(current_selector).closest('.main_link').find('.option').val('').trigger(
+                                'change');
+                        });
+                        checkValidation = false;
+                        return false;
+
+                    } else {
+                        checkValidation = true;
                     }
                 });
+                return checkValidation;
             }
 
             function addLinkEquipmentRow(event) {
