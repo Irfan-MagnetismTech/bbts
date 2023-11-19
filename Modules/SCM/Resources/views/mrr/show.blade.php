@@ -5,6 +5,16 @@
     MRR Show
 @endsection
 
+@section('style')
+    <style>
+        .noWrapStyle {
+            white-space: normal;
+            min-width: 12rem;
+            text-align: justify;
+        }
+    </style>
+@endsection
+
 @section('breadcrumb-button')
     <a href="{{ route('material-receives.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
@@ -94,7 +104,7 @@
                         <td>{{ $scmMrrLine->brand->name ?? '---' }}</td>
                         <td>{{ $scmMrrLine->model ?? '---' }}</td>
                         <td>{{ $scmMrrLine->warranty_period ?? null }}</td>
-                        <td>
+                        <td class="noWrapStyle">
                             @if (count($scmMrrLine->scmMrrSerialCodeLines))
                                 @foreach ($scmMrrLine->scmMrrSerialCodeLines as $value)
                                     <span>{{ $value->serial_or_drum_code }}</span>
