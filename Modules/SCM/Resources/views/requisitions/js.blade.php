@@ -114,6 +114,7 @@
                     });
                 },
                 select: function(event, ui) {
+                    $('.loading').show();
                     $(this).closest('tr').find('.material_name').val(ui.item.label);
                     $(this).closest('tr').find('.material_id').val(ui.item.value);
                     $(this).closest('tr').find('.item_code').val(ui.item.item_code);
@@ -132,6 +133,7 @@
                                 item.name + '</option>';
                         });
                         this_event.closest('tr').find('.brand_id').html(html);
+                        $('.loading').hide();
                     })
                     return false;
                 }
@@ -139,6 +141,7 @@
         });
 
         $(document).on('change', '.brand_id', function() {
+            $('.loading').show();
             var material_id = $(this).closest('tr').find('.material_id').val();
             var brand_id = $(this).val();
             getModel(material_id, brand_id);
@@ -154,6 +157,7 @@
                     html += '<option value="' + item + '">' + item + '</option>';
                 });
                 $('#models').empty().append(html);
+                $('.loading').hide();
             });
         }
 

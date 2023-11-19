@@ -26,12 +26,33 @@
             background-color: #e7e7dc !important;
             color: black !important;
         }
+        .custom-spinner-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh;
+        }
 
+        .custom-spinner {
+            width: 4rem;
+            height: 4rem;
+            border: .5em solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spinner-animation 1s linear infinite;
+        }
+
+        @keyframes spinner-animation {
+            to {
+                transform: rotate(360deg);
+            }
+        }
         /* .table_heading {
-                                                                                                                                                        background-color: #007af5 !important;
-                                                                                                                                                        color: white !important;
-                                                                                                                                                        font-size: 14px !important;
-                                                                                                                                                    } */
+            background-color: #007af5 !important;
+            color: white !important;
+            font-size: 14px !important;
+        } */
     </style>
 @endsection
 
@@ -139,6 +160,20 @@
                     </div> --}}
                     {{-- <hr /> --}}
                     {{-- create a responsive table --}}
+
+                    <div class="row loading" style="display: none;">
+                        <div class="col-md-12">
+                            <div class="custom-spinner-container">
+                                <div class="custom-spinner text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+
+                                <!-- Optional text -->
+                                <div class="mt-2">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row ">
                         <div class="md-col-5 col-5">
                             <div class="table-responsive">
@@ -270,6 +305,7 @@
                         </div>
                     </div>
                     {{-- <hr /> --}}
+
                     <div class="row">
                         <input type="hidden" id="client_id" name="client_id"
                             value="{{ $lead_generation->client_id }}">
@@ -457,7 +493,7 @@
                                             <td class="nttn_vendor_zone" style="width:40%"></td>
                                         </tr>
                                         <tr>
-                                            <th class="text-left">Latitute</th>
+                                            <th class="text-left">Latitude</th>
                                             <td class="connectivity_lat_long" style="width:40%">
                                                 <input type="text" name="connectivity_lat_1"
                                                     class="form-control form-control-sm connectivity_lat_1"
@@ -467,7 +503,7 @@
                                             <td class="running_nttn_bw" style="width:40%"></td>
                                         </tr>
                                         <tr>
-                                            <th class="text-left">Longitute</th>
+                                            <th class="text-left">Longitude</th>
                                             <td class="connectivity_lat_long" style="width:40%">
                                                 <input type="text" name="connectivity_long_1"
                                                     class="form-control form-control-sm connectivity_long_1"
@@ -494,12 +530,25 @@
                                     </table>
                                 </div>
                             </div>
+                            <div class="row loading1" style="display: none;">
+                                <div class="col-md-12">
+                                    <div class="custom-spinner-container">
+                                        <div class="custom-spinner text-primary" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+
+                                        <!-- Optional text -->
+                                        <div class="mt-2">Loading...</div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-12">
                                 {{-- <div class="text-center">
                                     <hr />
                                     <h5> <span> &#10070; </span> Link Equipment <span>&#10070;</span> </h5>
                                 </div> --}}
                                 {{-- <hr /> --}}
+
                                 <div class="table-responsive">
                                     <table class="table table-bordered" style="font-size: 12px;">
                                         <thead>
@@ -898,6 +947,7 @@
             }
 
             $(document).on('change', '.equipment_id', function() {
+                $('.loading').show();
                 var this_event = $(this);
                 var equipment_id = $(this).val();
                 var equiments = {!! json_encode($materials) !!};
@@ -912,10 +962,12 @@
                             item.name + '</option>';
                     });
                     this_event.closest('tr').find('.brand_id').html(html);
+                    $('.loading').hide();
                 })
             });
 
             $(document).on('change', '.link_material_id', function() {
+                $('.loading1').show();
                 var this_event = $(this);
                 var material_id = $(this).val();
                 var materials = {!! json_encode($materials) !!};
@@ -930,16 +982,19 @@
                             item.name + '</option>';
                     });
                     this_event.closest('tr').find('.link_brand').html(html);
+                    $('.loading1').hide();
                 })
             });
 
             $(document).on('change', '.brand_id', function() {
+                $('.loading').show();
                 var material_id = $(this).closest('tr').find('.equipment_id').val();
                 var brand_id = $(this).val();
                 getModel(material_id, brand_id);
             });
 
             $(document).on('change', '.link_brand', function() {
+                $('.loading1').show();
                 var material_id = $(this).closest('tr').find('.link_material_id').val();
                 var brand_id = $(this).val();
                 getModel(material_id, brand_id);
@@ -955,6 +1010,8 @@
                         html += '<option value="' + item + '">' + item + '</option>';
                     });
                     $('#models').empty().append(html);
+                    $('.loading').hide();
+                    $('.loading1').hide();
                 });
             }
 

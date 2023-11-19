@@ -41,6 +41,28 @@
             max-width: 200px;
             white-space: inherit;
         }
+        .custom-spinner-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh;
+        }
+
+        .custom-spinner {
+            width: 4rem;
+            height: 4rem;
+            border: .5em solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spinner-animation 1s linear infinite;
+        }
+
+        @keyframes spinner-animation {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -171,7 +193,18 @@
                     </select>
                 </div>
             </div>
+                <div class="row loading" style="display: none;">
+                    <div class="col-md-12">
+                        <div class="custom-spinner-container">
+                            <div class="custom-spinner text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
 
+                            <!-- Optional text -->
+                            <div class="mt-2">Loading...</div>
+                        </div>
+                    </div>
+                </div>
             <table class="table table-bordered" id="material_requisition">
                 <thead>
                     <tr>
@@ -378,6 +411,7 @@
                     });
                 },
                 select: function(event, ui) {
+                    $('.loading').show();
                     $(this).closest('tr').find('.material_name').val(ui.item.label);
                     $(this).closest('tr').find('.material_id').val(ui.item.value);
                     $(this).closest('tr').find('.item_code').val(ui.item.item_code);
@@ -395,6 +429,7 @@
                                 item.name + '</option>';
                         });
                         this_event.closest('tr').find('.brand_id').html(html);
+                        $('.loading').hide();
                     })
                     return false;
                 }
@@ -402,6 +437,7 @@
         });
 
         $(document).on('change', '.brand_id', function() {
+            $('.loading').show();
             var material_id = $(this).closest('tr').find('.material_id').val();
             var brand_id = $(this).val();
             getModel(material_id, brand_id);
@@ -417,6 +453,7 @@
                     html += '<option value="' + item + '">' + item + '</option>';
                 });
                 $('#models').empty().append(html);
+                $('.loading').hide();
             });
         }
 
