@@ -47,8 +47,6 @@
     <span class="text-danger">*</span> Marked are required.
 @endsection
 
-
-
 @section('content-grid', null)
 
 @section('content')
@@ -915,18 +913,8 @@
                     });
                     this_event.closest('tr').find('.brand_id').html(html);
                 })
-                $.get('{{ route('getMaterialWiseModels') }}', {
-                    material_id: equipment_id
-                }, function(data) {
-                    var html = '';
-                    $.each(data, function(key, item) {
-                        html += '<option value="' + item + '">';
-                    });
-
-                    // Update the datalist options with the retrieved data
-                    $('#models').empty().append(html);
-                });
             });
+
             $(document).on('change', '.link_material_id', function() {
                 var this_event = $(this);
                 var material_id = $(this).val();
@@ -943,18 +931,32 @@
                     });
                     this_event.closest('tr').find('.link_brand').html(html);
                 })
+            });
+
+            $(document).on('change', '.brand_id', function() {
+                var material_id = $(this).closest('tr').find('.equipment_id').val();
+                var brand_id = $(this).val();
+                getModel(material_id, brand_id);
+            });
+
+            $(document).on('change', '.link_brand', function() {
+                var material_id = $(this).closest('tr').find('.link_material_id').val();
+                var brand_id = $(this).val();
+                getModel(material_id, brand_id);
+            });
+
+            function getModel(material_id,brand_id) {
                 $.get('{{ route('getMaterialWiseModels') }}', {
-                    material_id: material_id
+                    material_id: material_id,
+                    brand_id: brand_id,
                 }, function(data) {
                     var html = '';
                     $.each(data, function(key, item) {
-                        html += '<option value="' + item + '">';
+                        html += '<option value="' + item + '">' + item + '</option>';
                     });
-
-                    // Update the datalist options with the retrieved data
                     $('#models').empty().append(html);
                 });
-            });
+            }
 
             let link_array = [];
 
