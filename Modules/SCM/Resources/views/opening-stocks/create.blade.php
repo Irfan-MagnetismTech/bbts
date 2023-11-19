@@ -333,7 +333,7 @@
                     $(this).closest('tr').find('.material_id').val(ui.item.value);
                     $(this).closest('tr').find('.unit').val(ui.item.unit);
 
-                    //get brand
+                    //Search Brand
                     var this_event = $(this);
                     var material_id = ui.item.value;
                     $.get('{{ route('getMaterialWiseBrands') }}', {
@@ -351,22 +351,23 @@
             });
         });
 
-        //get model
         $(document).on('change', '.brand_id', function() {
-            var material_id = $('.material_id').val();
-            var brand_id = $('.brand_id').val();
-            $.get('{{ route('getMaterialWiseModels') }}', {
-                material_id: material_id,
-                brand_id: brand_id,
-            }, function(data) {
-                var html = '';
-                $.each(data, function(key, item) {
-                    html += '<option value="' + item + '">';
-                });
-
-                // Update the datalist options with the retrieved data
-                $('#models').empty().append(html);
-            });
+            var material_id = $(this).closest('tr').find('.material_id').val();
+            var brand_id = $(this).val();
+            getModel(material_id, brand_id);
         });
+
+        function getModel(material_id,brand_id) {
+                $.get('{{ route('getMaterialWiseModels') }}', {
+                    material_id: material_id,
+                    brand_id: brand_id,
+                }, function(data) {
+                    var html = '';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item + '">' + item + '</option>';
+                    });
+                    $('#models').empty().append(html);
+                });
+        }
     </script>
 @endsection
