@@ -2,6 +2,8 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Modules\SCM\Entities\MaterialBrand;
+use Modules\SCM\Entities\MaterialModel;
 use PDF;
 use App\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
@@ -66,8 +68,8 @@ class CsController extends Controller
         ];
         $brands = Brand::latest()->get();
         $all_materials = Material::with(['unit'])->get();
-
-        return view('scm::cs.create', compact('all_materials', 'Taxes', 'brands'));
+        $models = MaterialModel::pluck('model');
+        return view('scm::cs.create', compact('all_materials', 'Taxes', 'brands','models'));
     }
 
     /**
@@ -127,6 +129,7 @@ class CsController extends Controller
         $Taxes = [
             'Include', 'Exclude'
         ];
+        $models = MaterialModel::pluck('model');
         $brands = Brand::latest()->get();
 
         $indent_id = Indent::where('indent_no', $cs->indent_no)->value('id');
@@ -139,7 +142,7 @@ class CsController extends Controller
         $all_materials= Material::whereIn('id', $material_ids)
             ->get();
 
-        return view('scm::cs.create', compact('all_materials', 'cs', 'Taxes', 'brands'));
+        return view('scm::cs.create', compact('all_materials', 'cs', 'Taxes', 'brands','models'));
     }
 
     /**
@@ -220,12 +223,38 @@ class CsController extends Controller
     private function getAllDetails(array $request): array
     {
         $cs_materials = [];
+        $brands = [];
+        $models = [];
         foreach (array_keys($request['material_id']) as $material_key) {
             $cs_materials[] = [
                 'material_id' => $request['material_id'][$material_key],
                 'brand_id'    => $request['brand_id'][$material_key],
                 'model'      => $request['model'][$material_key],
             ];
+            $brands[] = [
+                'material_id' => $request['material_id'][$material_key],
+                'brand_id' => $request['brand_id'][$material_key],
+            ];
+            $models[] = [
+                'material_id' => $request['material_id'][$material_key],
+                'brand_id'    => $request['brand_id'][$material_key],
+                'model'      => $request['model'][$material_key],
+            ];
+            $material_brand = MaterialBrand::updateOrCreate(
+                [
+                    'material_id' => $request['material_id'][$material_key],
+                    'brand_id' => $request['brand_id'][$material_key],
+                ],
+                $brands
+            );
+            $material_model = MaterialModel::updateOrCreate(
+                [
+                    'material_id' => $request['material_id'][$material_key],
+                    'brand_id'    => $request['brand_id'][$material_key],
+                    'model'      => $request['model'][$material_key],
+                ],
+                $models
+            );
         }
 
         $cs_suppliers = [];

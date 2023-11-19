@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use App\Services\BbtsGlobalService;
+use Modules\SCM\Entities\MaterialBrand;
+use Modules\SCM\Entities\MaterialModel;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\QueryException;
 use Modules\Sales\Entities\ClientDetail;
@@ -47,8 +49,8 @@ class ScmPurchaseRequisitionController extends Controller
     public function create()
     {
         $brands = Brand::latest()->get();
-
-        return view('scm::purchase-requisitions.create', compact('brands'));
+        $models = MaterialModel::pluck('model');
+        return view('scm::purchase-requisitions.create', compact('brands','models'));
     }
 
     /**
@@ -59,7 +61,6 @@ class ScmPurchaseRequisitionController extends Controller
      */
     public function store(ScmPurchaseRequisitionRequest $request)
     {
-        // dd($request->all());
         try {
             DB::beginTransaction();
             $fr_no = json_encode($request->fr_no);
@@ -81,6 +82,8 @@ class ScmPurchaseRequisitionController extends Controller
             $purchaseRequisition = ScmPurchaseRequisition::create($requestData);
 
             $requisitionDetails = [];
+            $brands = [];
+            $models = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
                     'material_id' => $request->material_id[$key],
@@ -94,6 +97,30 @@ class ScmPurchaseRequisitionController extends Controller
                     'purpose' => $request->purpose[$key],
                     'remarks' => $request->remarks[$key],
                 ];
+                $brands[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                ];
+                $models[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                ];
+                $material_brand = MaterialBrand::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                    ],
+                    $brands
+                );
+                $material_model = MaterialModel::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                        'model' => $request->model[$key],
+                    ],
+                    $models
+                );
             }
 
             $purchaseRequisition->scmPurchaseRequisitionDetails()->createMany($requisitionDetails);
@@ -132,8 +159,8 @@ class ScmPurchaseRequisitionController extends Controller
         $clients = Client::latest()->get();
         $fr_nos = Client::with('saleDetails')->where('client_no', $purchaseRequisition->client_no)->first()?->saleDetails ?? [];
         $client_links = Client::with('saleLinkDetails')->where('client_no', $purchaseRequisition->client_no)->first()?->saleLinkDetails ?? [];
-
-        return view('scm::purchase-requisitions.create', compact('purchaseRequisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs'));
+        $models = MaterialModel::pluck('model');
+        return view('scm::purchase-requisitions.create', compact('purchaseRequisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs','models'));
     }
 
     /**
@@ -159,6 +186,8 @@ class ScmPurchaseRequisitionController extends Controller
             $purchaseRequisition->update($requestData);
 
             $requisitionDetails = [];
+            $brands = [];
+            $models = [];
             foreach ($request->material_id as $key => $data) {
                 $requisitionDetails[] = [
                     'material_id' => $request->material_id[$key],
@@ -172,6 +201,30 @@ class ScmPurchaseRequisitionController extends Controller
                     'purpose' => $request->purpose[$key],
                     'remarks' => $request->remarks[$key],
                 ];
+                $brands[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                ];
+                $models[] = [
+                    'material_id' => $request->material_id[$key],
+                    'brand_id' => $request->brand_id[$key],
+                    'model' => $request->model[$key],
+                ];
+                $material_brand = MaterialBrand::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                    ],
+                    $brands
+                );
+                $material_model = MaterialModel::updateOrCreate(
+                    [
+                        'material_id' => $request->material_id[$key],
+                        'brand_id' => $request->brand_id[$key],
+                        'model' => $request->model[$key],
+                    ],
+                    $models
+                );
             }
 
             $purchaseRequisition->scmPurchaseRequisitionDetails()->delete();

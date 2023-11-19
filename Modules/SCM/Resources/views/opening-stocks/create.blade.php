@@ -109,7 +109,18 @@
                 </select>
                 </div>
             </div>
+                <div class="row loading" style="display: none;">
+                    <div class="col-md-12">
+                        <div class="custom-spinner-container">
+                            <div class="custom-spinner text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
 
+                            <!-- Optional text -->
+                            <div class="mt-2">Loading...</div>
+                        </div>
+                    </div>
+                </div>
             <table class="table table-bordered" id="opening_stock">
                 <thead>
                 <tr>
@@ -329,11 +340,12 @@
                     });
                 },
                 select: function (event, ui) {
+                    $('.loading').show();
                     $(this).closest('tr').find('.material_name').val(ui.item.label);
                     $(this).closest('tr').find('.material_id').val(ui.item.value);
                     $(this).closest('tr').find('.unit').val(ui.item.unit);
 
-                    //get brand
+                    //Search Brand
                     var this_event = $(this);
                     var material_id = ui.item.value;
                     $.get('{{ route('getMaterialWiseBrands') }}', {
@@ -345,28 +357,32 @@
                                 item.name + '</option>';
                         });
                         this_event.closest('tr').find('.brand_id').html(html);
+                        $('.loading').hide();
                     })
                     return false;
                 }
             });
         });
 
-        //get model
         $(document).on('change', '.brand_id', function() {
-            var material_id = $('.material_id').val();
-            var brand_id = $('.brand_id').val();
-            $.get('{{ route('getMaterialWiseModels') }}', {
-                material_id: material_id,
-                brand_id: brand_id,
-            }, function(data) {
-                var html = '';
-                $.each(data, function(key, item) {
-                    html += '<option value="' + item + '">';
-                });
-
-                // Update the datalist options with the retrieved data
-                $('#models').empty().append(html);
-            });
+            $('.loading').show();
+            var material_id = $(this).closest('tr').find('.material_id').val();
+            var brand_id = $(this).val();
+            getModel(material_id, brand_id);
         });
+
+        function getModel(material_id,brand_id) {
+                $.get('{{ route('getMaterialWiseModels') }}', {
+                    material_id: material_id,
+                    brand_id: brand_id,
+                }, function(data) {
+                    var html = '';
+                    $.each(data, function(key, item) {
+                        html += '<option value="' + item + '">' + item + '</option>';
+                    });
+                    $('#models').empty().append(html);
+                    $('.loading').hide();
+                });
+        }
     </script>
 @endsection

@@ -41,6 +41,28 @@
             max-width: 200px;
             white-space: inherit;
         }
+        .custom-spinner-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh;
+        }
+
+        .custom-spinner {
+            width: 4rem;
+            height: 4rem;
+            border: .5em solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spinner-animation 1s linear infinite;
+        }
+
+        @keyframes spinner-animation {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -171,7 +193,18 @@
                     </select>
                 </div>
             </div>
+                <div class="row loading" style="display: none;">
+                    <div class="col-md-12">
+                        <div class="custom-spinner-container">
+                            <div class="custom-spinner text-primary" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
 
+                            <!-- Optional text -->
+                            <div class="mt-2">Loading...</div>
+                        </div>
+                    </div>
+                </div>
             <table class="table table-bordered" id="material_requisition">
                 <thead>
                     <tr>
@@ -220,7 +253,7 @@
                                     readonly value="{{ $unit[$key] }}" id="unit">
                             </td>
                             <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <select name="brand_id[]" class="form-control brand_id select2" autocomplete="off">
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
                                         <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
@@ -230,8 +263,16 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off"
-                                    value="{{ $model[$key] }}">
+                                @if(isset($model[$key]))
+                                    <input list="models" name="model[]" id="model[]" class="form-control model" value="{{ $model[$key] }}">
+                                @else
+                                    <input list="models" name="model[]" id="model[]" class="form-control model" value="">
+                                @endif
+                                <datalist id="models">
+                                    @foreach ($models as $model)
+                                        <option value="{{ $model }}">
+                                    @endforeach
+                                </datalist>
                             </td>
                             <td>
                                 <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off"
@@ -306,7 +347,7 @@
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                             <td>
-                                <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                                <select name="brand_id[]" class="form-control brand_id select2" autocomplete="off">
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
@@ -314,7 +355,12 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" name="model[]" class="form-control model" autocomplete="off">
+                             <input list="models" name="model[]" id="model[]" class="form-control model">
+                             <datalist id="models">
+                            @foreach ($models as $model)
+                            <option value="{{ $model }}">
+                            @endforeach
+                            </datalist>
                             </td>
                             <td>
                                 <input type="number" name="quantity[]" class="form-control quantity" autocomplete="off" step="0.01">
@@ -336,6 +382,7 @@
                             </td>
                         </tr>`;
             $('#material_requisition tbody').append(row);
+            $('.select2').select2({});
         }
 
         /* Adds and removes quantity row on click */
@@ -364,14 +411,51 @@
                     });
                 },
                 select: function(event, ui) {
+                    $('.loading').show();
                     $(this).closest('tr').find('.material_name').val(ui.item.label);
                     $(this).closest('tr').find('.material_id').val(ui.item.value);
                     $(this).closest('tr').find('.item_code').val(ui.item.item_code);
                     $(this).closest('tr').find('.unit').val(ui.item.unit);
+
+                    //Search Brand
+                    var this_event = $(this);
+                    var material_id = ui.item.value;
+                    $.get('{{ route('getMaterialWiseBrands') }}', {
+                        material_id: material_id
+                    }, function (data) {
+                        var html = '<option value="">Select Brand</option>';
+                        $.each(data, function (key, item) {
+                            html += '<option value="' + item.id + '">' +
+                                item.name + '</option>';
+                        });
+                        this_event.closest('tr').find('.brand_id').html(html);
+                        $('.loading').hide();
+                    })
                     return false;
                 }
             });
         });
+
+        $(document).on('change', '.brand_id', function() {
+            $('.loading').show();
+            var material_id = $(this).closest('tr').find('.material_id').val();
+            var brand_id = $(this).val();
+            getModel(material_id, brand_id);
+        });
+
+        function getModel(material_id,brand_id) {
+            $.get('{{ route('getMaterialWiseModels') }}', {
+                material_id: material_id,
+                brand_id: brand_id,
+            }, function(data) {
+                var html = '';
+                $.each(data, function(key, item) {
+                    html += '<option value="' + item + '">' + item + '</option>';
+                });
+                $('#models').empty().append(html);
+                $('.loading').hide();
+            });
+        }
 
         $(function() {
             onChangeRadioButton();

@@ -19,6 +19,28 @@
         .input-group-info .input-group-addon {
             /*background-color: #04748a!important;*/
         }
+        .custom-spinner-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh;
+        }
+
+        .custom-spinner {
+            width: 4rem;
+            height: 4rem;
+            border: .5em solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spinner-animation 1s linear infinite;
+        }
+
+        @keyframes spinner-animation {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 @endsection
 @section('breadcrumb-button')
@@ -173,7 +195,18 @@
                     value="{{ old('remarks') ?? (@$requisition->remarks ?? '') }}">
             </div>
         </div>
+            <div class="row loading" style="display: none;">
+                <div class="col-md-12">
+                    <div class="custom-spinner-container">
+                        <div class="custom-spinner text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
 
+                        <!-- Optional text -->
+                        <div class="mt-2">Loading...</div>
+                    </div>
+                </div>
+            </div>
         <table class="table table-bordered" id="material_requisition">
             <thead>
                 <tr>

@@ -178,6 +178,7 @@ class OpeningStockController extends Controller
      * @param  \App\OpeningStock  $openingStock
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request, OpeningStock $openingStock)
     {
         try {
