@@ -145,6 +145,18 @@
         </div>
     </div>
     <hr>
+    <div class="row loading" style="display: none;">
+        <div class="col-md-12">
+            <div class="custom-spinner-container">
+                <div class="custom-spinner text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+
+                <!-- Optional text -->
+                <div class="mt-2">Loading...</div>
+            </div>
+        </div>
+    </div>
     <div id="cs">
         {{-- Projects & Materials --}}
         <div class="mt-4 row">
@@ -196,7 +208,7 @@
                                            class="form-control unit text-center" readOnly tabindex="-1">
                                 </td>
                                 <td>
-                                    <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
+                                    <select name="brand_id[]" class="form-control brand_id text-center select2" autocomplete="off">
                                         <option value="">Select Brand</option>
                                         @foreach ($brands as $brand)
                                             <option value="{{ $brand->id }}" @selected($brand->id == $brand_id)>
@@ -206,8 +218,12 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" name="model[]" value="{{ $model }}"
-                                           class="form-control model text-center" autocomplete="off">
+                                    <input list="models" name="model[]" id="model[]" class="form-control model" value="{{ $model }}">
+                                    <datalist id="models">
+                                        @foreach ($models as $model)
+                                            <option value="{{ $model }}">
+                                        @endforeach
+                                    </datalist>
                                 </td>
                                 <td>
                                     <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
@@ -413,7 +429,7 @@
                         <input type="text" name="unit[]" class="form-control unit text-center" readOnly tabindex="-1">
                     </td>
                     <td>
-                        <select name="brand_id[]" class="form-control brand text-center" autocomplete="off">
+                        <select name="brand_id[]" class="form-control brand_id text-center select2" autocomplete="off">
                             <option value="">Select Brand</option>
                             @foreach ($brands as $brand)
                 <option value="{{ $brand->id }}" @selected($brand->id == @$brand_id[$key])>{{ $brand->name }}</option>
@@ -421,12 +437,17 @@
                 </select>
             </td>
             <td>
-                <input type="text" name="model[]" class="form-control model text-center" autocomplete="off">
+                <input list="models" name="model[]" id="model[]" class="form-control model">
+                             <datalist id="models">
+                            @foreach ($models as $model)
+                <option value="{{ $model }}">
+                            @endforeach
+                </datalist>
             </td>
             <td>
                 <i class="btn btn-danger btn-sm fa fa-minus deleteItem"></i>
             </td>
-        </tr>`
+            </tr>`
             let material_values = $('#materialTable').first().find('.material_name').html();
             row = row.replace('Select Material', material_values);
             indx++;
@@ -495,14 +516,49 @@
             cs_details_table_body.children(`tr:eq(${column.index()})`).find(".cs_brand").html(brand);
         }
 
-        //on change brand
-        $(document).on('change', '.brand', function () {
+        //Search Material
+        $(document).on('change', '.material_name', function () {
+                    $('.loading').show();
+                    var this_event = $(this);
+                    var material_id = $(this).val();
+                    $.get('{{ route('getMaterialWiseBrands') }}', {
+                        material_id: material_id
+                    }, function (data) {
+                        var html = '<option value="">Select Brand</option>';
+                        $.each(data, function (key, item) {
+                            html += '<option value="' + item.id + '">' +
+                                item.name + '</option>';
+                        });
+                        this_event.closest('tr').find('.brand_id').html(html);
+                        $('.loading').hide();
+                    })
+                    return false;
+        });
+
+        $(document).on('change', '.brand_id', function() {
+            $('.loading').show();
+            var material_id = $(this).closest('tr').find('.material_name').val();
+            var brand_id = $(this).val();
+            getModel(material_id, brand_id);
             let brand = $(this).find('option:selected').text();
             let material_name = $(this).closest('tr').find('option:selected').html();
             let column = $(this).closest('tr');
             changeCsRow(column, material_name, brand);
         });
 
+        function getModel(material_id,brand_id) {
+            $.get('{{ route('getMaterialWiseModels') }}', {
+                material_id: material_id,
+                brand_id: brand_id,
+            }, function(data) {
+                var html = '';
+                $.each(data, function(key, item) {
+                    html += '<option value="' + item + '">' + item + '</option>';
+                });
+                $('#models').empty().append(html);
+                $('.loading').hide();
+            });
+        }
 
         function changeCsRowModel(column, model) {
             let cs_details_table_body = $('#csDetailsTable tbody');
@@ -552,9 +608,7 @@
                         $('.unit').val(value.unit);
                         $('.item_code').val(value.item_code);
                     })
-                    // $('.material_name').html(material_options);
                     $('.material_name:last').html(material_options);
-
                 }
             });
         }
