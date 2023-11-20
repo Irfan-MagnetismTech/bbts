@@ -267,7 +267,7 @@
                                                         value="{{ $product_detail['plan'] ?? '' }}">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="remarks[]" class="form-control"
+                                                    <input type="text" class="form-control"
                                                         value="{{ $product_detail['remarks'] ?? '' }}" />
                                                 </td>
                                                 <td>
