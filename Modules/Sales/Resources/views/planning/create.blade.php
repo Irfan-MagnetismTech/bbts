@@ -161,18 +161,18 @@
                     {{-- <hr /> --}}
                     {{-- create a responsive table --}}
 
-                    <div class="row loading" style="display: none;">
-                        <div class="col-md-12">
-                            <div class="custom-spinner-container">
-                                <div class="custom-spinner text-primary" role="status">
-                                    <span class="sr-only">Loading...</span>
-                                </div>
+{{--                    <div class="row loading" style="display: none;">--}}
+{{--                        <div class="col-md-12">--}}
+{{--                            <div class="custom-spinner-container">--}}
+{{--                                <div class="custom-spinner text-primary" role="status">--}}
+{{--                                    <span class="sr-only">Loading...</span>--}}
+{{--                                </div>--}}
 
-                                <!-- Optional text -->
-                                <div class="mt-2">Loading...</div>
-                            </div>
-                        </div>
-                    </div>
+{{--                                <!-- Optional text -->--}}
+{{--                                <div class="mt-2">Loading...</div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
 
                     <div class="row ">
                         <div class="md-col-5 col-5">
@@ -530,18 +530,18 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="row loading1" style="display: none;">
-                                <div class="col-md-12">
-                                    <div class="custom-spinner-container">
-                                        <div class="custom-spinner text-primary" role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
+{{--                            <div class="row loading1" style="display: none;">--}}
+{{--                                <div class="col-md-12">--}}
+{{--                                    <div class="custom-spinner-container">--}}
+{{--                                        <div class="custom-spinner text-primary" role="status">--}}
+{{--                                            <span class="sr-only">Loading...</span>--}}
+{{--                                        </div>--}}
 
-                                        <!-- Optional text -->
-                                        <div class="mt-2">Loading...</div>
-                                    </div>
-                                </div>
-                            </div>
+{{--                                        <!-- Optional text -->--}}
+{{--                                        <div class="mt-2">Loading...</div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                             <div class="col-md-12">
                                 {{-- <div class="text-center">
                                     <hr />
@@ -947,7 +947,7 @@
             }
 
             $(document).on('change', '.equipment_id', function() {
-                $('.loading').show();
+                // $('.loading').show();
                 var this_event = $(this);
                 var equipment_id = $(this).val();
                 var equiments = {!! json_encode($materials) !!};
@@ -962,12 +962,12 @@
                             item.name + '</option>';
                     });
                     this_event.closest('tr').find('.brand_id').html(html);
-                    $('.loading').hide();
+                    // $('.loading').hide();
                 })
             });
 
             $(document).on('change', '.link_material_id', function() {
-                $('.loading1').show();
+                // $('.loading1').show();
                 var this_event = $(this);
                 var material_id = $(this).val();
                 var materials = {!! json_encode($materials) !!};
@@ -982,19 +982,19 @@
                             item.name + '</option>';
                     });
                     this_event.closest('tr').find('.link_brand').html(html);
-                    $('.loading1').hide();
+                    // $('.loading1').hide();
                 })
             });
 
             $(document).on('change', '.brand_id', function() {
-                $('.loading').show();
+                // $('.loading').show();
                 var material_id = $(this).closest('tr').find('.equipment_id').val();
                 var brand_id = $(this).val();
                 getModel(material_id, brand_id);
             });
 
             $(document).on('change', '.link_brand', function() {
-                $('.loading1').show();
+                // $('.loading1').show();
                 var material_id = $(this).closest('tr').find('.link_material_id').val();
                 var brand_id = $(this).val();
                 getModel(material_id, brand_id);
@@ -1010,8 +1010,8 @@
                         html += '<option value="' + item + '">' + item + '</option>';
                     });
                     $('#models').empty().append(html);
-                    $('.loading').hide();
-                    $('.loading1').hide();
+                    // $('.loading').hide();
+                    // $('.loading1').hide();
                 });
             }
 
