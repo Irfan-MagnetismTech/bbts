@@ -28,7 +28,7 @@ class ConnectivityModificationController extends Controller
         $salesDetails = SaleDetail::query()
             ->with('sale', 'client', 'frDetails')
             ->whereHas('sale', function ($query) {
-                $query->where('is_modified', '!=', '0');
+                $query->where('is_modified', '1');
             })
             ->latest()
             ->get();
