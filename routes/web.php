@@ -32,7 +32,6 @@ Route::get('/welcome', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::get('search-client', [CommonApiController::class, 'searchClient'])->name('searchClient');
-    Route::get('search-client', [CommonApiController::class, 'searchClient'])->name('searchClient');
     Route::get('search-client-with-fr-details', [CommonApiController::class, 'searchClientWithFrDetails'])->name('searchClientWithFrDetails');
     Route::get('get-fr-details-data', [CommonApiController::class, 'getFrDetailsData'])->name('getFrDetailsData');
     Route::get('search-material', [CommonApiController::class, 'searchMaterial'])->name('searchMaterial');

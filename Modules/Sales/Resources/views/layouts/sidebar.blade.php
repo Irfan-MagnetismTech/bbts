@@ -159,7 +159,7 @@
                         <a href="{{ url('changes/client-requirement-modification/create') }}"> <span
                                 class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification
-                                Requirment</span><span class="pcoded-mcaret"></span></a>
+                                Requirement</span><span class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>
             @endcan

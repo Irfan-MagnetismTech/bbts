@@ -27,6 +27,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Client Name</th>
+                    <th>Connectivity Point</th>
                     <th>Client No</th>
                     <th>FR No</th>
                     <th>Date</th>
@@ -38,6 +39,7 @@
                 <tr>
                     <th>#SL</th>
                     <th>Client Name</th>
+                    <th>Connectivity Point</th>
                     <th>Client No</th>
                     <th>FR No</th>
                     <th>Date</th>
@@ -49,10 +51,11 @@
                 @foreach ($client_requirements as $key => $client_requirement)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $client_requirement->lead_generation->client_name }}</td>
-                        <td>{{ $client_requirement->client_no }}</td>
-                        <td>{{ $client_requirement->fr_no }}</td>
-                        <td>{{ $client_requirement->date }}</td>
+                        <td>{{ $client_requirement->lead_generation->client_name  ?? ''}}</td>
+                        <td>{{ $client_requirement->FeasibilityRequirementDetail->connectivity_point ?? ''}}</td>
+                        <td>{{ $client_requirement->client_no  ?? ''}}</td>
+                        <td>{{ $client_requirement->fr_no  ?? ''}}</td>
+                        <td>{{ $client_requirement->date  ?? ''}}</td>
                         <td>
                             @php
                                 $reasons = json_decode($client_requirement->change_type);

@@ -51,4 +51,5 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
     Route::get('modify-pnl-approve-by-finance/{connectivity_requirement_id}', [SaleModificationController::class, 'pnlApproveByFinance'])->name('modify-pnl-approve-by-finance');
     Route::get('modify-pnl-approve-by-cmo/{connectivity_requirement_id}', [SaleModificationController::class, 'pnlApproveByCmo'])->name('modify-pnl-approve-by-cmo');
     Route::get('modify-pnl-approve-by-management/{connectivity_requirement_id}', [SaleModificationController::class, 'pnlApproveByManagement'])->name('modify-pnl-approve-by-management');
+    Route::get('search-client', [ClientRequirementController::class, 'searchClient'])->name('searchClient');
 });

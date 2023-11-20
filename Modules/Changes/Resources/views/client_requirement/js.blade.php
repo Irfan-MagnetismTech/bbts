@@ -95,7 +95,7 @@
         $(this).autocomplete({
             source: function(request, response) {
                 $.ajax({
-                    url: "{{ route('searchClient') }}",
+                    url: "{{ url('changes/search-client') }}",
                     data: {
                         client_id: client_id,
                     },
@@ -107,10 +107,8 @@
             select: function(event, ui) {
                 $('#client_no').val(ui.item.value).attr('value', ui.item.value);
                 $('#client_name').val(ui.item.label).attr('value', ui.item.label);
-                //foreach loop for fr no
-                $.each(ui.item.frDetails, function(key, value) {
-                    html += '<option value="' + value + '">' + value +
-                        '</option>';
+                ui.item.frDetails.forEach(function (element) {
+                    html += `<option value="${element.fr_no}">${element.connectivity_point} ( ${element.fr_no} )</option>`;
                 });
                 $('#fr_no').html(html);
                 return false;
@@ -199,7 +197,7 @@
                                     </tr>
                                 `;
                 });
-               
+
                 $('.connectivityBody').html(physical_table);
                 $('.select2').select2();
                 $('#logical-table').fadeIn();

@@ -2,6 +2,7 @@
 
 namespace Modules\Changes\Http\Controllers;
 
+use Modules\Sales\Entities\Client;
 use Mpdf\Tag\Dd;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -108,11 +109,11 @@ class ClientRequirementController extends Controller
 
     /**
      * Creating or updating the connectivity requirement
-     * 
+     *
      * @param Request $request
      * @param ConnectivityRequirement|null $requirement
      * @return RedirectResponse
-     * 
+     *
      * @throws QueryException
      */
     protected function storeOrUpdate($request, ConnectivityRequirement $clientRequirementModification = null): RedirectResponse
@@ -143,7 +144,7 @@ class ClientRequirementController extends Controller
 
     /**
      * Adding extra data to the parent data
-     * 
+     *
      * @param Request $request
      * @return array
      */
@@ -159,7 +160,7 @@ class ClientRequirementController extends Controller
 
     /**
      * Creating or updating the connectivity requirement
-     * 
+     *
      * @param array $parentData
      * @param ConnectivityRequirement|null $requirement
      * @return ConnectivityRequirement
@@ -178,7 +179,7 @@ class ClientRequirementController extends Controller
 
     /**
      * Creating product requirement lines data
-     * 
+     *
      * @param $request
      * @return array
      */
@@ -201,7 +202,7 @@ class ClientRequirementController extends Controller
 
     /**
      * Creating requirement lines data
-     * 
+     *
      * @param $request
      * @return array
      */
@@ -227,7 +228,7 @@ class ClientRequirementController extends Controller
 
     /**
      * Redirecting to index page with message
-     * 
+     *
      * @param ConnectivityRequirement $clientRequirementModification
      * @return RedirectResponse
      */
@@ -235,5 +236,29 @@ class ClientRequirementController extends Controller
     {
         $message = 'Connectivity Requirement ' . ($clientRequirementModification->wasRecentlyCreated ? 'Created' : 'Updated') . ' Successfully';
         return redirect()->route('client-requirement-modification.index')->with('success', $message);
+    }
+
+    public function searchClient()
+    {
+        $results = Client::query()->with('feasibility_requirement_details')
+            ->where('client_name', 'LIKE', '%' . request('search') . '%')
+            ->limit(15)
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->client_no,
+                'id' => $item->id,
+                'label' => $item->client_name,
+                'text' => $item->client_name,
+                'client_no' => $item->client_no,
+                'address' => $item->location,
+                'contact_person' => $item->contact_person,
+                'contact_no' => $item->contact_no,
+                'email' => $item->email,
+                'client_type' => $item->client_type,
+                'saleDetails' => $item->saleDetails,
+                'frDetails' => $item->feasibility_requirement_details
+            ]);
+
+        return response()->json($results);
     }
 }
