@@ -29,11 +29,12 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('connectivities/create/{fr_id?}', [ConnectivityController::class, 'create'])->name('connectivities.create');
     Route::post('connectivities-billing-date-update', [BrokenDaysBillController::class, 'updateBillingDate'])->name('connectivities.billing.date.update');
     // Route::get('add-survey/{fr_id?}', [SurveyController::class, 'create'])->name('add-survey');
-    
-    
+
+
     // Route::get('ip-import', [ImportController::class, 'ip_import'])->name('ip-import');
 
     Route::resource('connectivities', ConnectivityController::class);
+    Route::resource('connectivities-modification', ConnectivityModificationController::class);
     Route::resource('logical-connectivities', LogicalConnectivityController::class);
     Route::resource('modify-connectivities', ConnectivityModificationController::class);
     require __DIR__ . '/irfan.php';

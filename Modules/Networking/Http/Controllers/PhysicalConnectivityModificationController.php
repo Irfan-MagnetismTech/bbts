@@ -11,6 +11,7 @@ use Modules\SCM\Entities\ScmChallan;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Admin\Entities\ConnectivityLink;
+use Modules\Networking\Entities\NetFiberManagement;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\SaleDetail;
@@ -48,12 +49,6 @@ class PhysicalConnectivityModificationController extends Controller
                 ->with('saleLinkDetails')
                 ->whereSaleIdAndFrNo(request()->get('sale_id'), request()->get('fr_no'))
                 ->first();
-            $oldSaleDetails = SaleDetail::query()
-                ->with('saleLinkDetails')
-                ->whereFrNo(request()->get('fr_no'))
-                ->first();
-
-            $saleDetails->saleLinkDetails = $saleDetails->saleLinkDetails->merge($oldSaleDetails->saleLinkDetails)->unique('link_type');
 
             // $physicalConnectivity = PhysicalConnectivity::query()
             // ->whereSaleId(request()->get('sale_id'))
@@ -67,7 +62,7 @@ class PhysicalConnectivityModificationController extends Controller
 
             $challanInfo = ScmChallan::query()
                 ->where('fr_no', $saleDetails->fr_no)
-                ->get() ?? null;
+                ->get();
 
             // dd($saleDetails->client_no);
 
@@ -80,10 +75,12 @@ class PhysicalConnectivityModificationController extends Controller
             //     ->where('fr_no', $physicalConnectivity->fr_no)
             //     ->first();
 
-            $connectivity_links = ConnectivityLink::latest()->get();
+            // $connectivity_links = ConnectivityLink::latest()->get();
+
+            $fiber_cores = NetFiberManagement::latest()->get();
         }
 
-        return view('networking::physical-connectivities.create', compact('challanInfo', 'connectivity_points', 'saleDetails', 'connectivity_links'));
+        return view('networking::physical-connectivities.create', compact('challanInfo', 'connectivity_points', 'saleDetails', 'connectivity_links', 'fiber_cores'));
         // return view('networking::physical-connectivities.create', compact('connectivity_links','saleDetails', 'feasibility_details', 'challanInfo', 'connectivity_points', 'clientInfo'));
     }
 
