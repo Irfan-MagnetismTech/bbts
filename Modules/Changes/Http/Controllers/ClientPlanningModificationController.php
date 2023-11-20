@@ -89,28 +89,28 @@ class ClientPlanningModificationController extends Controller
         $plan_data['user_id'] = auth()->user()->id ?? '';
         $plan_data['is_modified'] = 1;
 
-        try {
-            DB::beginTransaction();
+        // try {
+        DB::beginTransaction();
 
-            $plan = Planning::create($plan_data);
+        $plan = Planning::create($plan_data);
 
-            $this->createOrUpdateServicePlans($request, $plan);
+        $this->createOrUpdateServicePlans($request, $plan);
 
-            $this->createOrUpdateEquipmentPlans($request, $plan);
+        $this->createOrUpdateEquipmentPlans($request, $plan);
 
-            if ($request->total_key > 0) {
-                $this->createOrUpdatePlanLinks($request, $plan);
-            }
-
-            DB::commit();
-            return redirect()->route('client-plan-modification.index')->with('success', 'Planning created successfully');
-        } catch (\Exception $e) {
-
-            $old = $request->input();
-            $data = PlanningDataSet::setData($old, $connectivity_requirement = null, $plan = null);
-            DB::rollback();
-            return view('changes::modify_planning.create', $data)->with('error', 'Error saving data.');
+        if ($request->total_key > 0) {
+            $this->createOrUpdatePlanLinks($request, $plan);
         }
+
+        DB::commit();
+        return redirect()->route('client-plan-modification.index')->with('success', 'Planning created successfully');
+        // } catch (\Exception $e) {
+
+        //     $old = $request->input();
+        //     $data = PlanningDataSet::setData($old, $connectivity_requirement = null, $plan = null);
+        //     DB::rollback();
+        //     return view('changes::modify_planning.create', $data)->with('error', 'Error saving data.');
+        // }
     }
 
     /**

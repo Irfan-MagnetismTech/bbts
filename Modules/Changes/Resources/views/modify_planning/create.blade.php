@@ -8,16 +8,17 @@
 @endphp
 @section('style')
     <style>
-        #link_container .main_link {
+        .main_link {
             border: 2px solid gray;
             border-radius: 15px;
             padding: 8px;
             margin-top: 10px;
         }
 
-        .table_label {
-            width: 30px;
-            text-align: left !important;
+        .surveyTable th,
+        .client_information th {
+            background-color: #e7e7dc !important;
+            color: black !important;
         }
     </style>
 @endsection
@@ -56,55 +57,65 @@
                 <div class="card-body">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <h5 class="text-center">Client Information</h5>
-                            <hr />
-                            <table class="table custom_table table-bordered" style="font-size: 12px;">
-                                <tr>
-                                    <th class="table_label">Client Name</th>
-                                    <td>{{ $client_name }}</td>
-                                    <th class="table_label">Landmark</th>
-                                    <td>{{ $client_landmark }}</td>
-                                    <th class="table_label">Division</th>
-                                    <td>{{ $client_division }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Contact Person</th>
-                                    <td>{{ $client_contact_person }}</td>
-                                    <th class="table_label">Lat-Long</th>
-                                    <td>{{ $client_lat_long }}</td>
-                                    <th class="table_label">District</th>
-                                    <td>{{ $client_district }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Contact No</th>
-                                    <td>{{ $client_contact_no }}</td>
-                                    <th class="table_label">Website</th>
-                                    <td>{{ $client_website }}</td>
-                                    <th class="table_label">Thana</th>
-                                    <td>{{ $client_thana }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Email</th>
-                                    <td>{{ $client_email }}</td>
-                                    <th class="table_label">Document</th>
-                                    <td>
-                                        {{-- @if ($lead_generation->document)
-                                            <a href="{{ asset('uploads/lead_generation/' . $lead_generation->document) }}"
+                            <table class="table table-bordered client_information" style="font-size: 12px;">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" colspan="6"
+                                            style="background-color: #edeef0 !important; font-size: 14px !important;">
+                                            Connectivity
+                                            Point
+                                            Information</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr>
+                                        <th class="table_label"> Client Name </th>
+                                        <td> {{ $client_name }} </td>
+                                        <th class="table_label">Connectivity Point</th>
+                                        <td>{{ $connectivity_point }}</td>
+                                        <th class="table_label">Division</th>
+                                        <td>{{ $client_division }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table_label">Contact Person</th>
+                                        <td>{{ $client_contact_person }}</td>
+                                        <th class="table_label">Lat-Long</th>
+                                        <td>{{ $client_lat }} - {{ $client_long }} </td>
+                                        <th class="table_label">District</th>
+                                        <td>{{ $client_district }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table_label">Contact No</th>
+                                        <td>{{ $client_contact_no }}</td>
+                                        <th class="table_label">Branch</th>
+                                        <td>{{ $branch }}</td>
+                                        <th class="table_label">Thana</th>
+                                        <td>{{ $client_thana }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table_label">Email</th>
+                                        <td>{{ $client_email }}</td>
+                                        <th class="table_label">Address</th>
+                                        <td> {{ $client_address }}</td>
+                                        <th class="table_label">Document</th>
+                                        <td>
+                                            {{-- @if ($plan->lead_generation->document)
+                                            <a href="{{ asset('uploads/lead_generation/' . $plan->lead_generation->document) }}"
                                                 target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
                                                     class="fas fa-eye"></i></a>
                                         @endif --}}
-                                    </td>
-                                    <th class="table_label">Address</th>
-                                    <td>{{ $client_address }}</td>
-                                </tr>
-                                <tr colspan="6">
-                                    <th class="table_label">Remarks</th>
-                                    <td colspan="5" style="padding: 2px !important; margin: 2px !important;">
-                                        <input type="text" name="remarks" id="remarks"
-                                            class="form-control form-control-sm" style="height: 25px !important;"
-                                            placeholder="Remarks" value="{{ $remarks }}">
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table_label">Remarks</th>
+                                        <td colspan="5" style="padding: 2px !important; margin: 2px !important;">
+                                            <input type="text" name="remarks" id="remarks"
+                                                class="form-control form-control-sm" value=""
+                                                style="height: 25px !important;" placeholder="Remarks">
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                             <input type="hidden" id="connectivity_requirement_id" name="connectivity_requirement_id"
                                 value="{{ $connectivity_requirement_id }}">
@@ -357,7 +368,7 @@
                                                     <input type="hidden" name="equipment_plan_id[]"
                                                         value="{{ $equipment_plan->id ?? '' }}">
                                                     <td>
-                                                        <select name="equipment_id[]" id="equipment_id"
+                                                        <select name="equipment_id[]"
                                                             class="form-control form-control-sm equipment_id select2">
                                                             <option value="">Select Equipment</option>
                                                             @foreach ($materials as $material)
@@ -578,10 +589,6 @@
                         <div class="col-md-11 text-center">
                             <h5> <span> &#10070; </span> Link Information <span>&#10070;</span> </h5>
                         </div>
-                        <div class="col-md-1" style="float: right">
-                            <button type="button" class="btn btn-sm btn-success text-left" id="addLinkRow"><i
-                                    class="fas fa-plus"></i></button>
-                        </div>
                     </div>
                     <hr />
                     <div id="link_container">
@@ -603,8 +610,16 @@
                                                     class="link_no">{{ $total_key }}</span></h5>
                                         </div>
                                         <div class="col-md-1 col-1">
-                                            <button type="button" class="btn btn-sm btn-danger text-left removeLinkRow"
-                                                onclick="removeLinkRow(this)"><i class="fas fa-trash"></i></button>
+                                            <nobr>
+                                                <button type="button" class="btn btn-sm btn-outline-success addLinkRow"
+                                                    style="padding: 5px 10px">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                                <button type="button"
+                                                    class="btn btn-sm btn-danger text-left removeLinkRow"
+                                                    style="padding: 5px 10px" onclick="removeLinkRow(this)"><i
+                                                        class="fas fa-trash"></i></button>
+                                            </nobr>
                                         </div>
                                         <hr / style="width: 100%; margin-bottom: 10px;">
                                         <div class="md-col-3 col-3">
@@ -1081,7 +1096,7 @@
                 $(event).closest('tr').remove();
             }
 
-            $('#addLinkRow').on('click', function() {
+            $(document).on('click', '.addLinkRow', function() {
                 addLinkRow();
             });
 

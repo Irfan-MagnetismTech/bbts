@@ -12,7 +12,7 @@ class PlanningDataSet
     public static function setData($old, $connectivity_requirement, $plan)
     {
         $change_type = $connectivity_requirement ? json_decode($connectivity_requirement->change_type) : json_decode($plan->ConnectivityRequirement->change_type);
-        
+
         $details = [];
         if ($connectivity_requirement) {
             foreach ($connectivity_requirement->connectivityProductRequirementDetails as $key => $value) {
@@ -49,13 +49,15 @@ class PlanningDataSet
             'type' => $connectivity_requirement ? 'create' : 'edit',
             'client_no' => $old ? $old['client_no'] : $lead_generation->client_no ?? '',
             'client_name' => $old ? $old['client_name'] : $lead_generation->client_name ?? '',
-            'client_address' => $old ? $old['client_address'] : $lead_generation->client_address ?? '',
+            'client_address' => $old ? $old['client_address'] : $connectivity_requirement->feasibilityRequirementDetail->location ?? '',
             'client_division' => $old ? $old['client_division'] : $lead_generation->division->name ?? '',
             'client_district' => $old ? $old['client_district'] : $lead_generation->district->name ?? '',
             'client_thana' => $old ? $old['client_thana'] : $lead_generation->thana->name ?? '',
+            'branch' => $old ? $old['branch'] : $connectivity_requirement->feasibilityRequirementDetail->branch->name ?? '',
+            'connectivity_point' => $old ? $old['connectivity_point'] : $connectivity_requirement->feasibilityRequirementDetail->connectivity_point ?? '',
             'client_landmark' => $old ? $old['client_landmark'] : $lead_generation->client_landmark ?? '',
-            'client_lat_long' => $old ? $old['client_lat'] : $lead_generation->lat ?? '',
-            'client_lat_long' => $old ? $old['client_long'] : $lead_generation->long ?? '',
+            'client_lat' => $old ? $old['client_lat'] : $connectivity_requirement->feasibilityRequirementDetail->lat ?? '',
+            'client_long' => $old ? $old['client_long'] : $connectivity_requirement->feasibilityRequirementDetail->long ?? '',
             'client_contact_person' => $old ? $old['client_contact_person'] : $lead_generation->contact_person ?? '',
             'client_contact_no' => $old ? $old['client_contact_no'] : $lead_generation->contact_no ?? '',
             'client_email' => $old ? $old['client_email'] : $lead_generation->email ?? '',
