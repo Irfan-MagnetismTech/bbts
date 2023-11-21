@@ -66,7 +66,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('close-po/{id}', [PurchaseOrderController::class, 'closePo'])->name('closePo');
     Route::get('search_bill_reg_no', [ScmMrrController::class, 'searchBillRegisterNoWithDate'])->name('searchBillRegisterNoWithDate');
     Route::get('search_mrs_for_challan', [ScmChallanController::class, 'searchMrs'])->name('search_mrs_for_challan');
-    Route::get('scm-material-reports', [ScmReportController::class, 'materialReport'])->name('scm-material-reports');
+    Route::get('scm-material-stock-report', [ScmReportController::class, 'materialStockReport'])->name('scm-material-stock-report');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
 });

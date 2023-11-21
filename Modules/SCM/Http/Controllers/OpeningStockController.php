@@ -40,8 +40,8 @@ class OpeningStockController extends Controller
      */
     public function create()
     {
-        $brands = Brand::latest()->get();
-        $branches = Branch::latest()->get();
+        $brands = Brand::get();
+        $branches = Branch::get();
         $models = MaterialModel::pluck('model');
         return view('scm::opening-stocks.create', compact('brands','branches','models'));
     }

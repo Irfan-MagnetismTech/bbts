@@ -1,90 +1,72 @@
 @extends('layouts.backend-layout')
-@section('title', 'Material Report')
+@section('title', 'Material Stock Report')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Material Report
+    Material Stock Report
 @endsection
 
 @section('style')
     <style>
     </style>
 @endsection
-@section('breadcrumb-button')
-    <a href="{{ route('materials.create') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-plus"></i></a>
-@endsection
-@section('sub-title')
-    Total: {{ count($materials) }}
-@endsection
-
 
 @section('content')
-    <div class="dt-responsive table-responsive">
-        <table id="dataTable" class="table table-striped table-bordered">
-            <thead>
+    <form
+        action="{{ url("scm/scm-material-stock-report") }}"
+        method="get" class="custom-form">
+        @csrf
+        <div class="form-group col-3" style="display: flex">
+            <div>
+                <label for="branch">Warehouse:</label>
+                <select name="branch_id" class="form-control branch select2" autocomplete="off">
+                    <option value="">Select Branch</option>
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}" @selected($branch->id == $branch_id)>
+                            {{ $branch->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="icon-btn" style="margin: 30px">
+                <button data-toggle="tooltip" title="Search" class="btn btn-outline-primary"><i
+                        class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <div class="dt-responsive table-responsive">
+            <table id="dataTable" class="table table-striped table-bordered">
+                <thead>
                 <tr>
-                    <th>#SL</th>
-                    <th>Material</th>
+                    <th>Material Name</th>
                     <th>Unit</th>
-                    <th>Type</th>
-                    <th>Code</th>
-                    <th>Brands</th>
+                    <th>Brand</th>
+                    <th>Model</th>
                     <th>Quantity</th>
-                    <th>Action</th>
                 </tr>
-            </thead>
-            <tfoot>
-                <tr>
-                    <th>#SL</th>
-                    <th>Name</th>
-                    <th>Unit</th>
-                    <th>Type</th>
-                    <th>Code</th>
-                    <th>Brands</th>
-                    <th>Quantity</th>
-                    <th>Action</th>
-                </tr>
-            </tfoot>
-            <tbody>
-                @foreach ($materials as $key => $material)
-                    <tr>
-                        <td>{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $material->name ?? '' }}</td>
-                        <td class="text-center">{{ $material->unit ?? '' }}</td>
-                        <td class="text-center">{{ $material->type ?? '' }}</td>
-                        <td class="text-center">{{ $material->code ?? '' }}</td>
-                        <td class="text-center">
-                            @php $brands = $material->brand ?? [] @endphp
-                            @foreach ($brands as $brand)
-                                {{ $brand['name'] ?? '' }} <br>
-                            @endforeach
-                            {{-- {{ $material->materialBrand?->brands->pluck('name')->flatten() ?? '' }} --}}
-                        </td>
-                        <td class="text-center">{{ $material->min_qty ?? '' }}</td>
-                        <td>
-                            <div class="icon-btn">
-                                <nobr>
-                                    <a href="{{ route('materials.edit', $material->id) }}" data-toggle="tooltip"
-                                        title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    <form action="{{ url("scm/materials/$material->id") }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
-                                </nobr>
-                            </div>
-                        </td>
-                    </tr>
+                </thead>
+                <tbody>
+                @foreach($groupedStocks as $materialName => $brandStocks)
+                    @foreach($brandStocks as $brandId => $material)
+                        <tr>
+                            <td>{{ $material['name'] }}</td>
+                            <td>{{ $material['unit'] }}</td>
+                            <td>{{ $material['brand'] }}</td>
+                            @if($material['model'] == null || $material['model'] == 'null')
+                                <td></td>
+                            @else
+                                <td>{{ $material['model'] }}</td>
+                            @endif
+                            <td>{{ $material['quantity'] }}</td>
+                        </tr>
+                    @endforeach
                 @endforeach
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
+    </form>
 @endsection
 
-@section('script')
-@endsection

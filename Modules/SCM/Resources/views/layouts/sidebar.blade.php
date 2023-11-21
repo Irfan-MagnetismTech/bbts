@@ -365,9 +365,9 @@
                 <span class="pcoded-mcaret"></span>
             </a>
             <ul class="pcoded-submenu">
-                <li class="{{ request()->routeIs('scm-material-reports') ? 'active' : null }}">
-                    <a href="{{ route('scm-material-reports') }}"> <span class="pcoded-micon"><i
-                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Material Report</span><span
+                <li class="{{ request()->routeIs('scm-material-stock-report') ? 'active' : null }}">
+                    <a href="{{ route('scm-material-stock-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Material Stock Report</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
 {{--                <li class="{{ request()->routeIs('work-order-receives.index') ? 'active' : null }}">--}}
