@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Brand;
+use Modules\Admin\Entities\Pop;
 use Modules\Networking\Entities\PhysicalConnectivityLines;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\EquipmentPlan;
@@ -24,6 +25,7 @@ use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\ServicePlan;
 use Modules\Sales\Entities\Survey;
 use Modules\Sales\Entities\SurveyDetail;
+use Modules\SCM\Entities\MaterialModel;
 use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmMur;
 
@@ -67,8 +69,22 @@ class ClientPlanningModificationController extends Controller
                 ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
                     return $qr->where('fr_no', $connectivity_requirement->fr_no)->where('is_modified', 0);
                 })->get();
+            $particulars = Product::get();
+            $materials = Material::get();
+            $brands = Brand::get();
+            $models = MaterialModel::pluck('model');
+            $vendors = Vendor::get();
+            $pops = Pop::get();
+            $methods = ['Fiber' => 'Fiber', 'Radio' => 'Radio', 'GSM' => 'GSM'];
             $data['existingConnections'] = $existingConnections;
             $data['previous_products'] = $previous_products;
+            $data['particulars'] = $particulars;
+            $data['materials'] = $materials;
+            $data['brands'] = $brands;
+            $data['models'] = $models;
+            $data['vendors'] = $vendors;
+            $data['pops'] = $pops;
+            $data['methods'] = $methods;
             return view('changes::modify_planning.create', $data);
         } catch (\Exception $e) {
             // dd($e);
@@ -89,28 +105,28 @@ class ClientPlanningModificationController extends Controller
         $plan_data['user_id'] = auth()->user()->id ?? '';
         $plan_data['is_modified'] = 1;
 
-        try {
-            DB::beginTransaction();
+        // try {
+        DB::beginTransaction();
 
-            $plan = Planning::create($plan_data);
+        $plan = Planning::create($plan_data);
 
-            $this->createOrUpdateServicePlans($request, $plan);
+        $this->createOrUpdateServicePlans($request, $plan);
 
-            $this->createOrUpdateEquipmentPlans($request, $plan);
+        $this->createOrUpdateEquipmentPlans($request, $plan);
 
-            if ($request->total_key > 0) {
-                $this->createOrUpdatePlanLinks($request, $plan);
-            }
-
-            DB::commit();
-            return redirect()->route('client-plan-modification.index')->with('success', 'Planning created successfully');
-        } catch (\Exception $e) {
-
-            $old = $request->input();
-            $data = PlanningDataSet::setData($old, $connectivity_requirement = null, $plan = null);
-            DB::rollback();
-            return view('changes::modify_planning.create', $data)->with('error', 'Error saving data.');
+        if ($request->total_key > 0) {
+            $this->createOrUpdatePlanLinks($request, $plan);
         }
+
+        DB::commit();
+        return redirect()->route('client-plan-modification.index')->with('success', 'Planning created successfully');
+        // } catch (\Exception $e) {
+
+        //     $old = $request->input();
+        //     $data = PlanningDataSet::setData($old, $connectivity_requirement = null, $plan = null);
+        //     DB::rollback();
+        //     return view('changes::modify_planning.create', $data)->with('error', 'Error saving data.');
+        // }
     }
 
     /**
@@ -130,15 +146,29 @@ class ClientPlanningModificationController extends Controller
      */
     public function edit($id)
     {
-        $plan = Planning::with('lead_generation', 'planLinks', 'equipmentPlans', 'servicePlans.connectivityProductRequirementDetails.product', 'servicePlans.product', 'ConnectivityRequirement')->where('id', $id)->first();
+        $plan = Planning::with('lead_generation', 'planLinks.PlanLinkEquipments', 'planLinks.finalSurveyDetails', 'equipmentPlans', 'servicePlans.connectivityProductRequirementDetails.product', 'servicePlans.product', 'ConnectivityRequirement')->where('id', $id)->first();
         $data = PlanningDataSet::setData($old = null, $connectivity_requirement = null, $plan);
         $previous_products = ScmMur::with('lines')->where('client_no', $plan->client_no)->where('fr_no', $plan->fr_no)->where('link_no', '=', null)->first();
         $existingConnections = PhysicalConnectivityLines::query()
             ->whereHas('physicalConnectivity', function ($qr) use ($plan) {
                 return $qr->where('fr_no', $plan->fr_no)->where('is_modified', 0);
             })->get();
+        $particulars = Product::get();
+        $materials = Material::get();
+        $brands = Brand::get();
+        $models = MaterialModel::pluck('model');
+        $vendors = Vendor::get();
+        $pops = Pop::get();
+        $methods = ['Fiber' => 'Fiber', 'Radio' => 'Radio', 'GSM' => 'GSM'];
         $data['existingConnections'] = $existingConnections;
         $data['previous_products'] = $previous_products;
+        $data['particulars'] = $particulars;
+        $data['materials'] = $materials;
+        $data['brands'] = $brands;
+        $data['models'] = $models;
+        $data['vendors'] = $vendors;
+        $data['pops'] = $pops;
+        $data['methods'] = $methods;
         return view('changes::modify_planning.create', $data);
     }
 
@@ -150,6 +180,7 @@ class ClientPlanningModificationController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $plan_data = $request->only('fr_no', 'client_no', 'connectivity_requirement_id', 'remarks');
         $plan_data['date'] = date('Y-m-d');
         $plan_data['user_id'] = auth()->user()->id ?? '';
@@ -200,16 +231,18 @@ class ClientPlanningModificationController extends Controller
 
     private function createOrUpdateServicePlans($request, $plan)
     {
-        foreach ($request->detail_id as $key => $detail_id) {
-            $service_plan_data = [
-                'connectivity_product_requirement_details_id' => $request->detail_id[$key],
-                'plan' => $request->plan[$key],
-                'planning_id' => $plan->id
-            ];
-            if (isset($request->service_plan_id[$key])) {
-                ServicePlan::where('id', $request->service_plan_id[$key])->update($service_plan_data);
-            } else {
-                ServicePlan::create($service_plan_data);
+        if ($request->detail_id) {
+            foreach ($request->detail_id as $key => $detail_id) {
+                $service_plan_data = [
+                    'connectivity_product_requirement_details_id' => $request->detail_id[$key],
+                    'plan' => $request->plan[$key],
+                    'planning_id' => $plan->id
+                ];
+                if (isset($request->service_plan_id[$key])) {
+                    ServicePlan::where('id', $request->service_plan_id[$key])->update($service_plan_data);
+                } else {
+                    ServicePlan::create($service_plan_data);
+                }
             }
         }
     }
@@ -272,10 +305,9 @@ class ClientPlanningModificationController extends Controller
 
                 $planLink->fill($planLinkData);
                 $planLink->save();
-
                 $finalSurveyData = [
                     'link_no' => $surveyDetails ? $surveyDetails->link_no : $finalSurvey->link_no ?? $request->fr_no . '-' . substr($linkType, 0, 1) . $i,
-                    'vendor_id' => request("link_vender_id_{$i}") ?? '',
+                    'vendor_id' => $request->link_vendor_id_ . $i,
                     'link_type' => $linkType,
                     'method' => request("last_mile_connectivity_method_{$i}"),
                     'option' => request("option_{$i}"),
@@ -283,7 +315,7 @@ class ClientPlanningModificationController extends Controller
                     'pop_id' => request("link_connecting_pop_id_{$i}"),
                     'lat' => request("connectivity_lat_{$i}"),
                     'long' => request("connectivity_long_{$i}"),
-                    'distance' => $surveyDetails->distance ?? '',
+                    'distance' => $surveyDetails->distance ?? request("distance_{$i}"),
                     'current_capacity' => $surveyDetails->current_capacity ?? '',
                     'survey_detail_id' => $surveyDetails->id ?? null,
                     'planning_id' => $plan->id,

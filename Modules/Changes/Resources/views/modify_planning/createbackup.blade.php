@@ -258,7 +258,7 @@
                                                 <input type="hidden" name="service_plan_id[]"
                                                     value="{{ $product_detail['id'] ?? '' }}">
                                                 <td>
-                                                    <input type="hidden" name="detail_id[]"
+                                                    <input type="hidden" name="detail_id[]" id="detail_id"
                                                         class="form-control form-control-sm"
                                                         value="{{ $product_detail['connectivity_product_requirement_details_id'] ?? '' }}">
                                                     <span
@@ -273,7 +273,7 @@
                                                         class="form-control form-control-sm">{{ $product_detail['capacity'] ?? '' }}</span>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="plan[]"
+                                                    <input type="text" name="plan[]" id="plan"
                                                         class="form-control form-control-sm"
                                                         value="{{ $product_detail['plan'] ?? '' }}">
                                                 </td>
@@ -330,6 +330,7 @@
                                                     </td>
                                                     <td>
                                                         <input type="text" name="equipment_remarks[]"
+                                                            id="equipment_remarks"
                                                             class="form-control form-control-sm equipment_remarks"
                                                             value="{{ $previous_product->remarks ?? '' }}">
                                                     </td>
@@ -378,17 +379,17 @@
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input type="text" name="quantity[]"
+                                                        <input type="text" name="quantity[]" id="quantity"
                                                             class="form-control form-control-sm"
                                                             value="{{ $equipment_plan->quantity ?? '' }}">
                                                     </td>
                                                     <td>
-                                                        <input type="text" name="unit[]"
+                                                        <input type="text" name="unit[]" id="unit"
                                                             class="form-control form-control-sm unit"
                                                             value="{{ $equipment_plan->unit ?? '' }}">
                                                     </td>
                                                     <td>
-                                                        <select name="brand_id[]"
+                                                        <select name="brand_id[]" id="brand_id"
                                                             class="form-control form-control-sm brand_id select2">
                                                             <option value="">Select Brand</option>
                                                             @foreach ($brands as $brand)
@@ -399,12 +400,13 @@
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input type="text" name="model[]"
+                                                        <input type="text" name="model[]" id="model"
                                                             class="form-control form-control-sm model"
                                                             value="{{ $equipment_plan->model ?? '' }}">
                                                     </td>
                                                     <td>
                                                         <input type="text" name="equipment_remarks[]"
+                                                            id="equipment_remarks"
                                                             class="form-control form-control-sm equipment_remarks"
                                                             value="{{ $equipment_plan->remarks ?? '' }}">
                                                     </td>
@@ -519,6 +521,7 @@
                                                                                 <td>
                                                                                     <input type="text"
                                                                                         name="existing_product[]"
+                                                                                        id="existing_product"
                                                                                         class="form-control form-control-sm existing_product"
                                                                                         value="{{ $existing_product->material->name ?? '' }}"
                                                                                         readonly>
@@ -638,7 +641,7 @@
                                         </div>
                                         <div class="md-col-3 col-3">
                                             <div class="form-item">
-                                                <select name="option_{{ $total_key }}"
+                                                <select name="option_{{ $total_key }}" id="option"
                                                     class="form-control form-control-sm option select2"
                                                     onchange="optionChange(event)">
                                                     <option value="">Select Option</option>
@@ -658,6 +661,7 @@
                                         <div class="col-3 col-md-3">
                                             <div class="form-item">
                                                 <select name="existing_infrastructure_{{ $total_key }}"
+                                                    id="existing_infrastructure"
                                                     class="form-control form-control-sm existing_infrastructure select2">
                                                     <option value="">Select Status</option>
                                                     <option value="Existing"
@@ -672,6 +676,7 @@
                                         <div class="col-3 col-md-3 link_list" style="display: none;">
                                             <div class="form-item">
                                                 <select name="existing_infrastructure_link_1"
+                                                    id="existing_infrastructure_link"
                                                     class="form-control form-control-sm existing_infrastructure_link select2">
                                                     <option value="">Select Link</option>
                                                 </select>
@@ -681,6 +686,7 @@
                                             <div class="form-item">
                                                 <input type="text"
                                                     name="existing_transmission_capacity_{{ $total_key }}"
+                                                    id="existing_transmission_capacity"
                                                     class="form-control form-control-sm existing_transmission_capacity"
                                                     value="{{ $plan_link->existing_transmission_capacity ?? '' }}">
                                                 <label for="type">Existing T. Capacity</label>
@@ -690,6 +696,7 @@
                                         <div class="md-col-3 col-3 mt-3">
                                             <div class="form-item">
                                                 <input type="text" name="increase_capacity_{{ $total_key }}"
+                                                    id="increase_capacity"
                                                     class="form-control form-control-sm increase_capacity"
                                                     value="{{ $plan_link->increase_capacity ?? '' }}">
                                                 <label for="type">Increase Capacity</label>
@@ -716,7 +723,7 @@
                                             <div class="form-item">
                                                 <input type="text"
                                                     name="new_transmission_capacity_{{ $total_key }}"
-                                                    class="form-control form-control-sm"
+                                                    id="new_transmission_capacity" class="form-control form-control-sm"
                                                     value="{{ $plan_link->new_transmission_capacity ?? '' }}">
                                                 <label for="type">New Transmission Capacity</label>
                                             </div>
@@ -773,8 +780,8 @@
                                                 <tr>
                                                     <th>Method</th>
                                                     <td class="last_mile_connectivity_method" style="width:40%">
-                                                        <input type="text"
-                                                            name="last_mile_connectivity_method_{{ $total_key }}"
+                                                        <input type="text" name="last_mile_connectivity_method_1"
+                                                            id="last_mile_connectivity_method"
                                                             class="form-control form-control-sm last_mile_connectivity_method_1"
                                                             style="height: 25px !important"
                                                             value="{{ $plan_link->finalSurveyDetails->method }}" readonly>
@@ -785,7 +792,8 @@
                                                 <tr>
                                                     <th>Latitute</th>
                                                     <td class="connectivity_lat_long" style="width:40%">
-                                                        <input type="text" name="connectivity_lat_{{ $total_key }}"
+                                                        <input type="text" name="connectivity_lat_1"
+                                                            id="connectivity_lat_long"
                                                             class="form-control form-control-sm connectivity_lat_1"
                                                             style="height: 25px !important"
                                                             value="{{ $plan_link->finalSurveyDetails->lat }}" readonly>
@@ -796,8 +804,8 @@
                                                 <tr>
                                                     <th>Longitute</th>
                                                     <td class="connectivity_lat_long" style="width:40%">
-                                                        <input type="text"
-                                                            name="connectivity_long_{{ $total_key }}"
+                                                        <input type="text" name="connectivity_long_1"
+                                                            id="connectivity_lat_long"
                                                             class="form-control form-control-sm connectivity_long_1"
                                                             style="height: 25px !important"
                                                             value="{{ $plan_link->finalSurveyDetails->long }}" readonly>
@@ -808,7 +816,7 @@
                                                 <tr>
                                                     <th>Distance</th>
                                                     <td class="connectivity_lat_long" style="width:40%">
-                                                        <input type="text" name="distance_{{ $total_key }}"
+                                                        <input type="text" name="distance_1"
                                                             class="form-control form-control-sm distance_1"
                                                             style="height: 25px !important"
                                                             value="{{ $plan_link->finalSurveyDetails->distance }}"
@@ -852,13 +860,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody class="link_equipment_table">
-                                                    @foreach ($plan_link->PlanLinkEquipments as $plan_equipment)
+                                                    @foreach ($equipment_plans as $plan_equipment)
                                                         <tr>
                                                             <input type="hidden"
                                                                 name="plan_link_equipment_id_{{ $total_key }}[]"
                                                                 value="{{ $plan_equipment->id ?? '' }}">
                                                             <td>
                                                                 <select name="material_id_{{ $total_key }}[]"
+                                                                    id="material_id"
                                                                     class="form-control form-control-sm link_material_id select2">
                                                                     <option value="">Select Equipment</option>
                                                                     @foreach ($materials as $material)
@@ -871,17 +880,19 @@
 
                                                             <td>
                                                                 <input type="text"
-                                                                    name="quantity_{{ $total_key }}[]"
+                                                                    name="quantity_{{ $total_key }}[]" id="quantity"
                                                                     class="form-control form-control-sm link_quantity"
                                                                     value="{{ $plan_equipment->quantity ?? '' }}">
                                                             </td>
                                                             <td>
                                                                 <input type="text" name="unit_{{ $total_key }}[]"
+                                                                    id="unit"
                                                                     class="form-control form-control-sm link_unit"
                                                                     value="{{ $plan_equipment->unit ?? '' }}">
                                                             </td>
                                                             <td>
                                                                 <select name="brand_id_{{ $total_key }}[]"
+                                                                    id="brand"
                                                                     class="form-control form-control-sm link_brand select2">
                                                                     <option value="">Select Brand</option>
                                                                     @foreach ($brands as $brand)
@@ -893,18 +904,20 @@
                                                             </td>
                                                             <td>
                                                                 <input type="text" name="model_{{ $total_key }}[]"
+                                                                    id="model"
                                                                     class="form-control form-control-sm link_model"
                                                                     value="{{ $plan_equipment->model ?? '' }}">
                                                             </td>
                                                             <td>
                                                                 <input type="text"
                                                                     name="description_{{ $total_key }}[]"
+                                                                    id="description"
                                                                     class="form-control form-control-sm link_description"
                                                                     value="{{ $plan_equipment->description ?? '' }}">
                                                             </td>
                                                             <td>
                                                                 <input type="text"
-                                                                    name="remarks_{{ $total_key }}[]"
+                                                                    name="remarks_{{ $total_key }}[]" id="remarks"
                                                                     class="form-control form-control-sm link_remarks"
                                                                     value="{{ $plan_equipment->remarks ?? '' }}">
                                                             </td>
@@ -1047,7 +1060,6 @@
                             link_type: link_type,
                             client_id: client_id,
                             fr_no: fr_no,
-                            connectivity_requirement_id: $('#connectivity_requirement_id').val(),
                         },
                         success: function(data) {
                             $(event.target).closest('.main_link').find('input[name^="plan_link_no_"]').val(data
