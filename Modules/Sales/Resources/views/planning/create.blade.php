@@ -26,6 +26,7 @@
             background-color: #e7e7dc !important;
             color: black !important;
         }
+
         .custom-spinner-container {
             display: flex;
             flex-direction: column;
@@ -48,11 +49,12 @@
                 transform: rotate(360deg);
             }
         }
+
         /* .table_heading {
-            background-color: #007af5 !important;
-            color: white !important;
-            font-size: 14px !important;
-        } */
+                background-color: #007af5 !important;
+                color: white !important;
+                font-size: 14px !important;
+            } */
     </style>
 @endsection
 
@@ -161,18 +163,18 @@
                     {{-- <hr /> --}}
                     {{-- create a responsive table --}}
 
-{{--                    <div class="row loading" style="display: none;">--}}
-{{--                        <div class="col-md-12">--}}
-{{--                            <div class="custom-spinner-container">--}}
-{{--                                <div class="custom-spinner text-primary" role="status">--}}
-{{--                                    <span class="sr-only">Loading...</span>--}}
-{{--                                </div>--}}
+                    {{--                    <div class="row loading" style="display: none;"> --}}
+                    {{--                        <div class="col-md-12"> --}}
+                    {{--                            <div class="custom-spinner-container"> --}}
+                    {{--                                <div class="custom-spinner text-primary" role="status"> --}}
+                    {{--                                    <span class="sr-only">Loading...</span> --}}
+                    {{--                                </div> --}}
 
-{{--                                <!-- Optional text -->--}}
-{{--                                <div class="mt-2">Loading...</div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
+                    {{--                                <!-- Optional text --> --}}
+                    {{--                                <div class="mt-2">Loading...</div> --}}
+                    {{--                            </div> --}}
+                    {{--                        </div> --}}
+                    {{--                    </div> --}}
 
                     <div class="row ">
                         <div class="md-col-5 col-5">
@@ -404,19 +406,6 @@
                                         <label for="type">Increase Capacity</label>
                                     </div>
                                 </div>
-
-                                {{-- <div class="md-col-3 col-3  mt-3">
-                                    <div class="form-item">
-                                        <select name="link_availability_status_1"
-                                            class="form-control form-control-sm link_availability_status select2">
-                                            <option value="">Vendor</option>
-                                            @foreach ($vendors as $vendor)
-                                                <option value="{{ $vendor->id }}">{{ $vendor->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div> --}}
-
                                 <div class="md-col-3 col-3  mt-3 new_transmission_capacity_div">
                                     <div class="form-item">
                                         <input type="text" name="new_transmission_capacity_1"
@@ -424,20 +413,9 @@
                                         <label for="type">New T.Capacity</label>
                                     </div>
                                 </div>
-
-                                {{-- <div class="md-col-3 col-3  mt-3">
-                                    <div class="form-item">
-                                        <input type="text" name="link_remarks_1" class="form-control form-control-sm"
-                                            value="">
-                                        <label for="type">Remarks</label>
-                                    </div>
-                                </div> --}}
                             </div>
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    {{-- <hr />
-                                    <h5 class="text-center">Survey Information</h5>
-                                    <hr /> --}}
                                     <table class="table table-bordered surveyTable" style="font-size: 12px;">
                                         <tr>
                                             <th class="text-center"
@@ -530,25 +508,7 @@
                                     </table>
                                 </div>
                             </div>
-{{--                            <div class="row loading1" style="display: none;">--}}
-{{--                                <div class="col-md-12">--}}
-{{--                                    <div class="custom-spinner-container">--}}
-{{--                                        <div class="custom-spinner text-primary" role="status">--}}
-{{--                                            <span class="sr-only">Loading...</span>--}}
-{{--                                        </div>--}}
-
-{{--                                        <!-- Optional text -->--}}
-{{--                                        <div class="mt-2">Loading...</div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
                             <div class="col-md-12">
-                                {{-- <div class="text-center">
-                                    <hr />
-                                    <h5> <span> &#10070; </span> Link Equipment <span>&#10070;</span> </h5>
-                                </div> --}}
-                                {{-- <hr /> --}}
-
                                 <div class="table-responsive">
                                     <table class="table table-bordered" style="font-size: 12px;">
                                         <thead>
@@ -640,7 +600,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                {{-- <hr /> --}}
                             </div>
                         </div>
                     </div>
@@ -955,9 +914,9 @@
                 $(this).closest('tr').find('.unit').val(find_equipment.unit);
                 $.get('{{ route('getMaterialWiseBrands') }}', {
                     material_id: equipment_id
-                }, function (data) {
+                }, function(data) {
                     var html = '<option value="">Select Brand</option>';
-                    $.each(data, function (key, item) {
+                    $.each(data, function(key, item) {
                         html += '<option value="' + item.id + '">' +
                             item.name + '</option>';
                     });
@@ -1000,7 +959,7 @@
                 getModel(material_id, brand_id);
             });
 
-            function getModel(material_id,brand_id) {
+            function getModel(material_id, brand_id) {
                 $.get('{{ route('getMaterialWiseModels') }}', {
                     material_id: material_id,
                     brand_id: brand_id,
