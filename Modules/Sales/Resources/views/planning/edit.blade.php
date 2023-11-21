@@ -69,59 +69,60 @@
                                             Information</th>
                                     </tr>
                                 </thead>
-
-                                <tr>
-                                    <th class="table_label">
-                                        Client Name
-                                    </th>
-                                    <td>
-                                        {{ $plan->lead_generation->client_name }}
-                                    </td>
-                                    <th class="table_label">Connectivity Point</th>
-                                    <td>{{ $plan->feasibilityRequirementDetail->connectivity_point }}</td>
-                                    <th class="table_label">Division</th>
-                                    <td>{{ $plan->feasibilityRequirementDetail->division->name ?? '' }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Contact Person</th>
-                                    <td>{{ $plan->feasibilityRequirementDetail->contact_name }}</td>
-                                    <th class="table_label">Lat-Long</th>
-                                    <td>{{ $plan->feasibilityRequirementDetail->lat }} -
-                                        {{ $plan->feasibilityRequirementDetail->long }}
-                                    </td>
-                                    <th class="table_label">District</th>
-                                    <td>{{ $plan->feasibilityRequirementDetail->district->name ?? '' }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Contact No</th>
-                                    <td>{{ $plan->feasibilityRequirementDetail->contact_no }}</td>
-                                    <th class="table_label">Branch</th>
-                                    <td>{{ $plan->feasibilityRequirementDetail->branch->name ?? '' }}</td>
-                                    <th class="table_label">Thana</th>
-                                    <td>{{ $plan->feasibilityRequirementDetail->thana->name ?? '' }}</td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Email</th>
-                                    <td>{{ $plan->feasibilityRequirementDetail->contact_email }}</td>
-                                    <th class="table_label">Address</th>
-                                    <td> {{ $plan->feasibilityRequirementDetail->location }}</td>
-                                    <th class="table_label">Document</th>
-                                    <td>
-                                        @if ($plan->lead_generation->document)
-                                            <a href="{{ asset('uploads/lead_generation/' . $plan->lead_generation->document) }}"
-                                                target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
-                                                    class="fas fa-eye"></i></a>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th class="table_label">Remarks</th>
-                                    <td colspan="5" style="padding: 2px !important; margin: 2px !important;">
-                                        <input type="text" name="remarks" id="remarks"
-                                            class="form-control form-control-sm" value=""
-                                            style="height: 25px !important;" placeholder="Remarks">
-                                    </td>
-                                </tr>
+                                <tbody>
+                                    <tr>
+                                        <th class="table_label">
+                                            Client Name
+                                        </th>
+                                        <td>
+                                            {{ $plan->lead_generation->client_name }}
+                                        </td>
+                                        <th class="table_label">Connectivity Point</th>
+                                        <td>{{ $plan->feasibilityRequirementDetail->connectivity_point }}</td>
+                                        <th class="table_label">Division</th>
+                                        <td>{{ $plan->feasibilityRequirementDetail->division->name ?? '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table_label">Contact Person</th>
+                                        <td>{{ $plan->feasibilityRequirementDetail->contact_name }}</td>
+                                        <th class="table_label">Lat-Long</th>
+                                        <td>{{ $plan->feasibilityRequirementDetail->lat }} -
+                                            {{ $plan->feasibilityRequirementDetail->long }}
+                                        </td>
+                                        <th class="table_label">District</th>
+                                        <td>{{ $plan->feasibilityRequirementDetail->district->name ?? '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table_label">Contact No</th>
+                                        <td>{{ $plan->feasibilityRequirementDetail->contact_no }}</td>
+                                        <th class="table_label">Branch</th>
+                                        <td>{{ $plan->feasibilityRequirementDetail->branch->name ?? '' }}</td>
+                                        <th class="table_label">Thana</th>
+                                        <td>{{ $plan->feasibilityRequirementDetail->thana->name ?? '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table_label">Email</th>
+                                        <td>{{ $plan->feasibilityRequirementDetail->contact_email }}</td>
+                                        <th class="table_label">Address</th>
+                                        <td> {{ $plan->feasibilityRequirementDetail->location }}</td>
+                                        <th class="table_label">Document</th>
+                                        <td>
+                                            @if ($plan->lead_generation->document)
+                                                <a href="{{ asset('uploads/lead_generation/' . $plan->lead_generation->document) }}"
+                                                    target="_blank" class="btn btn-sm btn-warning"
+                                                    style="font-size:14px;"><i class="fas fa-eye"></i></a>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table_label">Remarks</th>
+                                        <td colspan="5" style="padding: 2px !important; margin: 2px !important;">
+                                            <input type="text" name="remarks" id="remarks"
+                                                class="form-control form-control-sm" value=""
+                                                style="height: 25px !important;" placeholder="Remarks">
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
