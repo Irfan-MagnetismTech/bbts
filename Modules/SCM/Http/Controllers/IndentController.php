@@ -2,6 +2,8 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Modules\SCM\Entities\IndentLine;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 use PDF;
 use Illuminate\Http\Request;
 use Modules\SCM\Entities\Indent;
@@ -152,5 +154,22 @@ class IndentController extends Controller
         ])->stream('indent.pdf');
         return view('scm::indents.pdf', compact('indent'));
 
+    }
+    public function searchIndentPrsNo()
+    {
+        $scm_purchase_requisition_ids = IndentLine::select('scm_purchase_requisition_id')
+            ->distinct()
+            ->pluck('scm_purchase_requisition_id');
+        $results = ScmPurchaseRequisition::query()
+            ->where('prs_no', 'LIKE', '%' . request('search') . '%')
+            ->whereNotIn('id', $scm_purchase_requisition_ids)
+            ->limit(15)
+            ->get()
+            ->map(fn ($item) => [
+                'value' => $item->id,
+                'label' => $item->prs_no,
+            ]);
+
+        return response()->json($results);
     }
 }

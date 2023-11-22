@@ -110,6 +110,18 @@
                 </select>
             </div>
 
+            <div class="form-group col-3 to_branch">
+                <label for="select2">To Branch</label>
+                <select class="form-control select2" id="to_branch" name="to_branch">
+                    <option value="20" selected>Select Branch</option>
+                    @foreach ($branchs as $option)
+                        <option value="{{ $option->id }}"
+                            {{ old('to_branch', @$requisition->to_branch) == $option->id ? 'selected' : '' }}>
+                            {{ $option->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
             <div class="form-group col-3 client_name">
                 <label for="client_name">Client Name:</label>

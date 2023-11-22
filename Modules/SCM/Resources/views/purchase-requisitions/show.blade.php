@@ -61,12 +61,12 @@
             <tbody>
                 @foreach ($purchaseRequisition->scmPurchaseRequisitionDetails as $key => $requisitionDetail)
                     <tr>
-                        <td> {{ $requisitionDetail->material->name }} </td>
-                        <td> {{ $requisitionDetail->material->unit }} </td>
-                        <td> {{ $requisitionDetail->quantity }} </td>
-                        <td> {{ $requisitionDetail->brand->name }} </td>
-                        <td> {{ $requisitionDetail->model }} </td>
-                        <td> {{ $requisitionDetail->purpose }} </td>
+                        <td> {{ $requisitionDetail->material->name ?? ''}} </td>
+                        <td> {{ $requisitionDetail->material->unit  ?? ''}} </td>
+                        <td> {{ $requisitionDetail->quantity  ?? ''}} </td>
+                        <td> {{ $requisitionDetail->brand->name  ?? ''}} </td>
+                        <td> {{ $requisitionDetail->model  ?? ''}} </td>
+                        <td> {{ $requisitionDetail->purpose  ?? ''}} </td>
                     </tr>
                 @endforeach
             </tbody>

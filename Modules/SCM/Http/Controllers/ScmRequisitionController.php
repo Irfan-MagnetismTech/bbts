@@ -66,7 +66,7 @@ class ScmRequisitionController extends Controller
             if (request()->type == 'client') {
                 $requestData = $request->only('type', 'client_no', 'fr_no', 'link_no', 'date', 'branch_id', 'remarks');
             } elseif (request()->type == 'warehouse') {
-                $requestData = $request->only('type', 'date', 'branch_id', 'remarks');
+                $requestData = $request->only('type', 'date', 'branch_id', 'to_branch','remarks');
             } elseif (request()->type == 'general') {
                 $requestData = $request->only('type', 'date', 'branch_id', 'employee_id', 'pop_id', 'remarks');
                 // dd($request->employee_id);
@@ -192,7 +192,7 @@ class ScmRequisitionController extends Controller
             if (request()->type == 'client') {
                 $requestData = $request->only('type', 'date', 'branch_id', 'client_no', 'fr_no', 'link_no', 'remarks');
             } elseif (request()->type == 'warehouse') {
-                $requestData = $request->only('type', 'date', 'branch_id', 'remarks');
+                $requestData = $request->only('type', 'date', 'branch_id', 'to_branch', 'remarks');
             } elseif (request()->type == 'general') {
                 $requestData = $request->only('type', 'date', 'branch_id', 'employee_id', 'pop_id', 'remarks');
                 // dd($request->employee_id);

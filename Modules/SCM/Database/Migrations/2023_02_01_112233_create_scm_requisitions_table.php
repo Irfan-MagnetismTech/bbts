@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->string('remarks')->nullable();
             $table->integer('branch_id')->nullable();
+            $table->integer('to_branch')->nullable();
             $table->integer('employee_id')->nullable();
             $table->integer('pop_id')->nullable();
             $table->integer('requisition_by')->nullable();

@@ -180,6 +180,7 @@
             var radioValue = $("input[name='type']:checked").val();
             if (radioValue == 'client') {
                 $('.pop_id').hide('slow');
+                $('.to_branch').hide('slow');
                 $('.client_address').show('slow').removeClass("d-none");
                 $('.client_no').show('slow').removeClass("d-none");
                 $('.link_no').show('slow').removeClass("d-none");
@@ -189,6 +190,7 @@
                 $('.current_stock').hide('slow');
             } else if (radioValue == 'warehouse') {
                 $('.pop_id').hide('slow');
+                $('.to_branch').show('slow');
                 $('.client_address').show('slow').addClass("d-none");
                 $('.client_no').show('slow').addClass("d-none");
                 $('.link_no').show('slow').addClass("d-none");
@@ -198,6 +200,7 @@
                 $('.current_stock').show('slow');
             } else if (radioValue == 'pop') {
                 $('.pop_id').show('slow');
+                $('.to_branch').hide('slow');
                 $('.client_address').show('slow').addClass("d-none");
                 $('.client_no').show('slow').addClass("d-none");
                 $('.link_no').show('slow').addClass("d-none");
@@ -205,10 +208,9 @@
                 $('.client_name').show('slow').addClass("d-none");
                 $('.employee').show('slow').addClass("d-none");
                 $('.current_stock').show('slow');
-
-
             } else if (radioValue == 'general') {
                 $('.pop_id').show('slow');
+                $('.to_branch').hide('slow');
                 $('.client_address').show('slow').addClass("d-none");
                 $('.client_no').show('slow').addClass("d-none");
                 $('.link_no').show('slow').addClass("d-none");

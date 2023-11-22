@@ -80,7 +80,7 @@
                     </div>
                 @empty
                     <div class="input-group input-group-sm input-group-primary" id="">
-                        <label class="input-group-addon" for="prs_no">Prs Np <span class="text-danger">*</span></label>
+                        <label class="input-group-addon" for="prs_no">Prs No <span class="text-danger">*</span></label>
                         <input type="text" class="form-control prs_no" name="prs_no[]" placeholder="Search Prs No"
                             value="" required>
                         <input type="hidden" name="prs_id[]" class="prs_id" value="">
@@ -131,7 +131,7 @@
             $(this).autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url: "{{ url('search-prs-no') }}",
+                        url: "{{ url('scm/search-indent-prs-no') }}",
                         type: 'get',
                         dataType: "json",
                         data: {
