@@ -143,7 +143,7 @@
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text" name="vendor[]" class="form-control"
-                                                                    value="{{ $link->finalSurveyDetails->vendor }}"
+                                                                    value="{{ $link->finalSurveyDetails->vendor->name }}"
                                                                     id="vendor" readonly>
                                                             </div>
                                                         </td>
