@@ -1336,24 +1336,24 @@
             const client_equipment_total = Number($('#client_equipment_total').val());
             console.log('error cal 2')
             //client equipment total
-            let plan_client_equipment_total = 0;
-            let plan_equipment_otc = 0;
+            // let plan_client_equipment_total = 0;
+            // let plan_equipment_otc = 0;
 
-            $('.plan_link_status').each(function() {
-                if ($(this).is(':checked')) {
-                    plan_client_equipment_total += Number($(this).closest('.PlanLinkMainRow').find(
-                        '.plan_client_equipment_total').val()) || 0;
-                    plan_equipment_otc += Number($(this).closest('.PlanLinkMainRow').find(
-                        '.plan_equipment_otc').val()) || 0;
-                }
-            });
-            console.log('error cal 3')
-            let equipment_price_for_client = client_equipment_total + plan_client_equipment_total;
-            $('#equipment_price_for_client').val(equipment_price_for_client);
-            console.log('error cal 4')
-            let equipment_otc = Number($('#equipment_otc').val());
-            let total_equipment_otc = equipment_otc + plan_equipment_otc + equipment_price_for_client
-            $('#total_otc_with_client_equipment').val(total_equipment_otc);
+            // $('.plan_link_status').each(function() {
+            //     if ($(this).is(':checked')) {
+            //         plan_client_equipment_total += Number($(this).closest('.PlanLinkMainRow').find(
+            //             '.plan_client_equipment_total').val()) || 0;
+            //         plan_equipment_otc += Number($(this).closest('.PlanLinkMainRow').find(
+            //             '.plan_equipment_otc').val()) || 0;
+            //     }
+            // });
+            // console.log('error cal 3')
+            // let equipment_price_for_client = client_equipment_total + plan_client_equipment_total;
+            // $('#equipment_price_for_client').val(equipment_price_for_client);
+            // console.log('error cal 4')
+            // let equipment_otc = Number($('#equipment_otc').val());
+            // let total_equipment_otc = equipment_otc + plan_equipment_otc + equipment_price_for_client
+            // $('#total_otc_with_client_equipment').val(total_equipment_otc);
             $('#product_grand_total').val(product_grand_total.toFixed(2));
             $('#total_vat').val(total_vat.toFixed(2));
             $('#grand_total_price').val(grand_total_price.toFixed(2));

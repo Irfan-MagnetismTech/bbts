@@ -1319,6 +1319,6 @@
                 this_event.closest('.main_link').find('.existing_transmission_capacity').val(latestLink.capacity).attr(
                     'value', latestLink.capacity);
             });
-        </script>
+            </script>
         @include('changes::modify_planning.js')
     @endsection
