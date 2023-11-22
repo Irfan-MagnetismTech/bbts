@@ -145,7 +145,7 @@ class CostingModificationController extends Controller
     public function show($id)
     {
         $costing = Costing::with('costingProducts', 'costingProductEquipments', 'costingLinks.costingLinkEquipments', 'lead_generation', 'feasibilityRequirementDetail')->find($id);
-        return view('sales::modify_costing.edit', compact('costing'));
+        return view('changes::modify_costing.show', compact('costing'));
     }
 
     /**
@@ -187,7 +187,7 @@ class CostingModificationController extends Controller
 
             DB::commit();
             // return response()->json(['message' => 'Data saved successfully.']);
-            return redirect()->route('costing.index')->with('success', 'Data saved successfully.');
+            return redirect()->route('costing-modification.index')->with('success', 'Data saved successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Failed to save data. Error: ' . $e->getMessage());
@@ -359,8 +359,8 @@ class CostingModificationController extends Controller
                     'connectivity_point' => $details->connectivity_point,
                     'pnl' => $monthly_pnl
                 ];
+                array_push($pnl_data, $data);
             }
-            array_push($pnl_data, $data);
         }
         $existing_connection_data = [
             'total_fr' => $feasibility_requirement->feasibilityRequirementDetails->count(),
