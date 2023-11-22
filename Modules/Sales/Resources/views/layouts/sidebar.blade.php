@@ -212,8 +212,8 @@
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
-                    <li class="{{ request()->routeIs('modified-planning-list') ? 'active' : null }}">
-                        <a href="{{ route('modified-planning-list') }}"> <span class="pcoded-micon"><i
+                    <li class="{{ request()->routeIs('client-plan-modification.index') ? 'active' : null }}">
+                        <a href="{{ route('client-plan-modification.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span
                                 class="pcoded-mtext">Modification List</span><span
                                 class="pcoded-mcaret"></span></a>
