@@ -136,7 +136,8 @@ class ClientPlanningModificationController extends Controller
      */
     public function show($id)
     {
-        return view('changes::show');
+        $plan = Planning::with('planLinks', 'equipmentPlans', 'servicePlans',)->where('id', $id)->first();
+        return view('changes::modify_planning.show', compact('plan'));
     }
 
     /**
