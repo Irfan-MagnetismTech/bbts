@@ -50,18 +50,36 @@
                 </thead>
                 <tbody>
                 @foreach($groupedStocks as $materialName => $brandStocks)
-                    @foreach($brandStocks as $brandId => $material)
-                        <tr>
-                            <td>{{ $material['name'] }}</td>
-                            <td>{{ $material['unit'] }}</td>
-                            <td>{{ $material['brand'] }}</td>
-                            @if($material['model'] == null || $material['model'] == 'null')
-                                <td></td>
-                            @else
-                                <td>{{ $material['model'] }}</td>
-                            @endif
-                            <td>{{ $material['quantity'] }}</td>
-                        </tr>
+                    @foreach($brandStocks as $brandId => $modelStocks)
+                        @foreach($modelStocks as $model => $material)
+                            <tr>
+                                {{--                                @if ($loop->first)--}}
+                                {{--                                    <td rowspan="{{ count($modelStocks) }}">{{ $material['name'] }}</td>--}}
+                                {{--                                @endif--}}
+                                {{--                                @if ($loop->first)--}}
+                                {{--                                    <td rowspan="{{ count($modelStocks) }}">{{ $material['unit'] }}</td>--}}
+                                {{--                                @endif--}}
+                                {{--                                <td>{{ $material['brand'] }}</td>--}}
+                                {{--                                @if($material['model'] == null || $material['model'] == 'null')--}}
+                                {{--                                    <td></td>--}}
+                                {{--                                @else--}}
+                                {{--                                    <td>{{ $material['model'] }}</td>--}}
+                                {{--                                @endif--}}
+                                {{--                                <td>{{ $material['quantity'] }}</td>--}}
+
+                                <td>{{ $material['name'] }}</td>
+
+                                <td>{{ $material['unit'] }}</td>
+
+                                <td>{{ $material['brand'] }}</td>
+                                @if($material['model'] == null || $material['model'] == 'null')
+                                    <td></td>
+                                @else
+                                    <td>{{ $material['model'] }}</td>
+                                @endif
+                                <td>{{ $material['quantity'] }}</td>
+                            </tr>
+                        @endforeach
                     @endforeach
                 @endforeach
                 </tbody>
