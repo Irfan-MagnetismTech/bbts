@@ -645,7 +645,7 @@
 
         $(document).on('change', '.type_no', function() {
             var event_this = $(this).closest('tr');
-            let model = $(this).val();
+            let model = event_this.find('.model').val();
             let material_id = event_this.find('.material_name').val();
             let scm_requisition_id = $('#scm_requisition_id').val();
             let received_type = event_this.find('.received_type').val().toUpperCase();
