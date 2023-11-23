@@ -95,7 +95,16 @@
             <h3>PURCHASE ORDER</h3>
             <span>Purchase Order No: {{$purchase_order->po_no ?? ''}}</span><br>
             <span>Date Issued: {{$purchase_order->date ?? ''}}</span><br>
-            <span>Ref Indent No: {{$purchase_order->indent->indent_no ?? ''}}</span>
+            <span>Ref Indent No: {{$purchase_order->indent->indent_no ?? ''}}</span><br>
+            <span>
+                PRS No:
+                @foreach ($purchase_order->indent->indentLines as $line)
+                    {{ $line->scmPurchaseRequisition->prs_no ?? ''}}
+                    @if (!$loop->last)
+                        ,
+                    @endif
+                @endforeach
+            </span>
         </div>
         <br>
 

@@ -42,6 +42,17 @@
                             <td> {{ $purchaseOrder->indent->indent_no ?? ''}}</td>
                         </tr>
                         <tr>
+                            <td> <strong>PRS No</strong> </td>
+                            <td>
+                                @foreach ($purchaseOrder->indent->indentLines as $line)
+                                    {{ $line->scmPurchaseRequisition->prs_no ?? ''}}
+                                    @if (!$loop->last)
+                                        ,
+                                    @endif
+                                @endforeach
+                            </td>
+                        </tr>
+                        <tr>
                             <td> <strong>Delivery Location</strong> </td>
                             <td> {{ $purchaseOrder->delivery_location ?? ''}}</td>
                         </tr>
