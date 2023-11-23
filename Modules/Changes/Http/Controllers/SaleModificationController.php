@@ -56,6 +56,7 @@ class SaleModificationController extends Controller
     {
         $connectivity = ConnectivityRequirement::find($connectivity_requirement_id);
         $frNo = $connectivity->fr_no;
+        // dd($frNo);
         $oldSale = Sale::whereHas('saleDetails', function ($query) use ($frNo) {
             $query->where('fr_no', $frNo);
         })->with(['saleDetails' => function ($query) use ($frNo) {
@@ -340,8 +341,7 @@ class SaleModificationController extends Controller
             ->with(['client:id,client_name,client_no', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])
             ->where('connectivity_requirement_id', request()->connectivity_requirement_id)
             ->first();
-        $oldSale = Sale::with('saleDetails.saleLinkDetails.planLinkDetail')->where('connectivity_requirement_id', '!=', null)->orderBy('id', 'desc')->first();
-
+        $saleDetails = SaleDetail::where('fr_no', $offer->offerDetails->first()->fr_no)->orderBy('id', 'desc')->first();
         $current_plan_links = [];
         $old_plan_links = [];
         $offer->offerDetails->map(function ($item) use (&$current_plan_links) {
@@ -356,7 +356,7 @@ class SaleModificationController extends Controller
         });
 
         // dd($oldSale->saleDetails->first()->saleLinkDetails);
-        $oldSale->saleDetails->first()->saleLinkDetails->map(function ($item) use (&$old_plan_links) {
+        $saleDetails->saleLinkDetails->map(function ($item) use (&$old_plan_links) {
             $old_plan_links[] = [
                 'link_no' => $item->link_no,
                 'link_type' => $item->planLinkDetail->link_type,
@@ -377,7 +377,8 @@ class SaleModificationController extends Controller
         // });
         // dd('current_plan_links', $current_plan_links, 'old_plan_links', $old_plan_links);
 
-        $offerLinks = $current_plan_links + $old_plan_links;
+        $offerLinks = array_merge($old_plan_links, $current_plan_links);
+        $offerLinks = array_unique($offerLinks, SORT_REGULAR);
         $offer->offerDetails->map(function ($item) use ($offerLinks) {
             $item->mergedLinks = collect($offerLinks)->where('fr_no', $item->fr_no)->toArray();
         });
