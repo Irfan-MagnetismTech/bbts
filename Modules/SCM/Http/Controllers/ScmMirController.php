@@ -364,10 +364,30 @@ class ScmMirController extends Controller
                     ->where('quantity', '<', 0)
                     ->sum('quantity');
                 if (($total_stock - $out_stock) >= 0) {
-                    if ($item->stockable->mrr_no) {
+                    if ($received_type == 'MRR') {
                         return [
                             'id' => $item->stockable_id,
                             'type_no' => $item->stockable->mrr_no,
+                        ];
+                    } else if ($received_type == 'ERR') {
+                        return [
+                            'id' => $item->stockable_id,
+                            'type_no' => $item->stockable->err_no,
+                        ];
+                    } else if ($received_type == 'WCR') {
+                        return [
+                            'id' => $item->stockable_id,
+                            'type_no' => $item->stockable->wcr_no,
+                        ];
+                    } else if ($received_type == 'WOR') {
+                        return [
+                            'id' => $item->stockable_id,
+                            'type_no' => $item->stockable->wor_no,
+                        ];
+                    } else if ($received_type == 'OS') {
+                        return [
+                            'id' => $item->stockable_id,
+                            'type_no' => $item->stockable->id,
                         ];
                     }
                 }
