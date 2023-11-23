@@ -26,7 +26,7 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>#Po No.</th>
+                    <th>Po No.</th>
                     <th>PO type</th>
                     <th>Supplier Name</th>
                     <th>Purchaased Date</th>
@@ -38,7 +38,7 @@
             <tfoot>
                 <tr>
                     <th>SL</th>
-                    <th>#Po No.</th>
+                    <th>Po No.</th>
                     <th>PO type</th>
                     <th>Supplier Name</th>
                     <th>Purchaased Date</th>
@@ -51,7 +51,7 @@
                 @foreach ($all_pos as $key => $po)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><strong>#{{ $po->po_no ?? ''}}</strong></td>
+                        <td><strong>{{ $po->po_no ?? ''}}</strong></td>
                         <td>{{ $po->po_type ?? ''}}</td>
                         <td>{{ $po->supplier->name ?? ''}}</td>
                         <td>{{ $po->date ?? ''}}</td>

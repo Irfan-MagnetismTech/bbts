@@ -127,7 +127,8 @@
             <select class="form-control select2" name="cs_id" id="cs_id" required>
                 <option value="" disabled>Select CS No</option>
                 @foreach ($cs_nos as $cs_no)
-                    <option value="{{ $cs_no['id'] }}" {{ (old('cs_id', @$purchaseOrder->cs_no) == $cs_no['cs_no']) ? 'selected' : '' }}>
+                    <option
+                        value="{{ $cs_no['id'] }}" {{ (old('cs_id', @$purchaseOrder->cs_no) == $cs_no['cs_no']) ? 'selected' : '' }}>
                         {{ $cs_no['cs_no'] }}
                     </option>
                 @endforeach
@@ -248,16 +249,16 @@
                                     @endforeach
                                 </select>
                             </td>
-{{--                            <td>--}}
-{{--                                <select class="form-control text-center model select2" name="model[]">--}}
-{{--                                    <option value="" readonly selected>Select Model</option>--}}
-{{--                                    @foreach ($cs_models as $cs_model)--}}
-{{--                                        <option value="{{ $cs_model->model }}"--}}
-{{--                                            {{ $cs_model->model == $single_model[$key] ? 'selected' : '' }}>--}}
-{{--                                            {{ $cs_model->model }}</option>--}}
-{{--                                    @endforeach--}}
-{{--                                </select>--}}
-{{--</td>--}}
+                            {{--                            <td>--}}
+                            {{--                                <select class="form-control text-center model select2" name="model[]">--}}
+                            {{--                                    <option value="" readonly selected>Select Model</option>--}}
+                            {{--                                    @foreach ($cs_models as $cs_model)--}}
+                            {{--                                        <option value="{{ $cs_model->model }}"--}}
+                            {{--                                            {{ $cs_model->model == $single_model[$key] ? 'selected' : '' }}>--}}
+                            {{--                                            {{ $cs_model->model }}</option>--}}
+                            {{--                                    @endforeach--}}
+                            {{--                                </select>--}}
+                            {{--</td>--}}
 
                             <td>
                                 <input type="text" name="model[]"
@@ -467,25 +468,45 @@
             $(this).closest('div').remove();
         });
 
-        $(document).on('keyup', '.unit_price, .quantity', function () {
-            var unit_price = $(this).closest('tr').find('.unit_price').val();
-            var quantity = $(this).closest('tr').find('.quantity').val();
-            var total_amount = unit_price * quantity;
-            $(this).closest('tr').find('.total_amount').val(total_amount);
-            calculateTotalAmount()
+        // $(document).on('keyup', '.unit_price, .quantity', function () {
+        //     var indent_left_qty = $(this).closest('tr').find('.indent_left_qty').val();
+        //     var unit_price = $(this).closest('tr').find('.unit_price').val();
+        //     var quantity = $(this).closest('tr').find('.quantity').val();
+        //     if (quantity > indent_left_qty) {
+        //         $(this).closest('tr').find('.quantity').val('');
+        //     } else {
+        //         var total_amount = unit_price * quantity;
+        //         $(this).closest('tr').find('.total_amount').val(total_amount);
+        //         calculateTotalAmount()
+        //     }
+        // });
 
+        $(document).on('keyup', '.unit_price, .quantity', function () {
+            var indent_left_qty = parseFloat($(this).closest('tr').find('.indent_left_qty').val());
+            var unit_price = parseFloat($(this).closest('tr').find('.unit_price').val());
+            var quantity = parseFloat($(this).closest('tr').find('.quantity').val());
+
+            if (quantity > indent_left_qty || isNaN(quantity)) {
+                $(this).closest('tr').find('.quantity').val('');
+            } else {
+                var total_amount = unit_price * quantity;
+                $(this).closest('tr').find('.total_amount').val(total_amount);
+                calculateTotalAmount();
+            }
         });
 
         //function for calculate total amount from all sub total amount
         function calculateTotalAmount() {
             var final_total_amount = 0;
             $('.total_amount').each(function () {
-                final_total_amount += parseFloat($(this).val()) || 0;
+                // final_total_amount += parseInt($(this).val()) || 0;
+                final_total_amount += Math.ceil(parseFloat($(this).val())) || 0;
             });
-            $('.final_total_amount').val(final_total_amount.toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }));
+            // $('.final_total_amount').val(final_total_amount.toLocaleString('en-US', {
+            //     minimumFractionDigits: 2,
+            //     maximumFractionDigits: 2
+            // }));
+            $('.final_total_amount').val(final_total_amount);
         }
 
         $(document).on('keyup', "#supplier_name", function () {

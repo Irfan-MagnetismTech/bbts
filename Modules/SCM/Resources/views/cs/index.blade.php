@@ -25,7 +25,7 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>#Cs Ref</th>
+                    <th>Cs Ref</th>
                     <th>Effective Date</th>
 {{--                    <th>Expiry Date</th>--}}
                     <th>Remarks</th>
@@ -37,7 +37,7 @@
             <tfoot>
                 <tr>
                     <th>SL</th>
-                    <th>#Cs Ref</th>
+                    <th>Cs Ref</th>
                     <th>Effective Date</th>
 {{--                    <th>Expiry Date</th>--}}
                     <th>Remarks</th>
@@ -51,8 +51,12 @@
                 @foreach ($all_cs as $key => $cs)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><strong>#{{ $cs->cs_no }}</strong></td>
+                        <td><strong>{{ $cs->cs_no }}</strong></td>
+                        @if($cs->effective_date==null)
+                        <td></td>
+                        @else
                         <td>{{ \Carbon\Carbon::parse($cs->effective_date)->format('d-m-Y') }}</td>
+                        @endif
                         {{--                        <td>{{ $cs->expiry_date }}</td>--}}
                         <td>{{ $cs->remarks }}</td>
                         <td>

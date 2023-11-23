@@ -101,14 +101,14 @@
                         <td> {{ $purchaseOrderLine->required_date ?? '---' }}</td>
                         <td> {{ $purchaseOrderLine->quantity ?? '---' }}</td>
                         <td> {{ $purchaseOrderLine->unit_price ?? '---' }}</td>
-                        <td class="text-right"> {{ $purchaseOrderLine->total_amount ?? '---' }}</td>
+                        <td class="text-right"> {{ number_format($purchaseOrderLine->total_amount) ?? '---' }}</td>
                     </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan="12" class="text-right"> Total Amount </td>
-                    <td class="text-right">{{ $purchaseOrder->purchaseOrderLines->sum('total_amount') ?? ''}}</td>
+                    <td class="text-right">{{ number_format(ceil($purchaseOrder->purchaseOrderLines->sum('total_amount'))) ?? '' }}</td>
                 </tr>
             </tfoot>
         </table>

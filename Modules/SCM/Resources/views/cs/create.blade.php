@@ -86,7 +86,8 @@
                     <div class="row">
                         @php
                             $cs_no = $is_old ? old('cs_no') : $cs->cs_no ?? null;
-                            $effective_date = $is_old ? old('effective_date') : $cs->effective_date ?? null;
+                            $e_date = $is_old ? old('effective_date') : $cs->effective_date ?? null;
+                            $effective_date = $is_old ? old('effective_date') : (($e_date) ? \Carbon\Carbon::parse($e_date)->format('d-m-Y') : null);
                             /*$expiry_date = $is_old ? old('expiry_date') : $cs->expiry_date ?? null;*/
                             $indent_no = $is_old ? old('indent_no') : $cs->indent_no ?? null;
                             $remarks = $is_old ? old('remarks') : $cs->remarks ?? null;
@@ -267,7 +268,6 @@
                             $suppliers = $is_old ? old('supplier_id') ?? [] : $cs->csSuppliers ?? [];
                         @endphp
                         @forelse (@$suppliers as $supplier_key => $supplier_value)
-
                             @php
                                 $supplier_id = $is_old ? old('supplier_id')[$supplier_key] : $supplier_value->supplier->id;
                                 $supplier_name = $is_old ? old('supplier_name')[$supplier_key] : $supplier_value->supplier->name;
@@ -317,7 +317,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" name="credit_period[]" value="{{ $credit_period }}"
+                                    <input type="text" name="credit_period[]" value="{{ $credit_period }}"
                                            class="form-control credit_period text-center" placeholder="Credit Period"
                                            autocomplete="off" required>
                                 </td>
@@ -725,12 +725,22 @@
             //     todayHighlight: true,
             //     showOtherMonths: true
             // });
-            $('#effective_date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            }).datepicker("setDate", new Date());
+            if ($('#effective_date').val() != null)
+            {
+                $('#effective_date').datepicker({
+                    format: "dd-mm-yyyy",
+                    autoclose: true,
+                    todayHighlight: true,
+                    showOtherMonths: true
+                });
+            }else {
+                $('#effective_date').datepicker({
+                    format: "dd-mm-yyyy",
+                    autoclose: true,
+                    todayHighlight: true,
+                    showOtherMonths: true
+                }).datepicker("setDate", new Date());
+            }
         }); // document.ready
 
         var select_all_projects = function () {

@@ -153,6 +153,7 @@
             <th>Item</th>
             <th>Brand</th>
             <th>Model</th>
+            <th>Warranty Period</th>
             <th>Description</th>
             <th>Quantity</th>
             <th>Unit</th>
@@ -166,18 +167,21 @@
                         <td class="text-center">{{ $value->material->name ?? ''}}</td>
                         <td class="text-center">{{ $value->brand->name ?? ''}}</td>
                         <td class="text-center">{{ $value->model ?? ''}}</td>
+                        <td class="text-center">{{ $value->warranty_period ?? '' }}</td>
                         <td class="text-center">{{ $value->description ?? ''}}</td>
                         <td class="text-center">{{ $value->quantity ?? '' }}</td>
                         <td class="text-center">{{ $value->material->unit ?? ''}}
                         <td class="text-center">{{ $value->unit_price ?? '' }}</td>
-                        <td class="text-center">{{ $value->total_amount ?? '' }}</td>
+                        <td class="text-center">{{ number_format($value->total_amount) ?? '' }}</td>
                     </tr>
                 @endforeach
         </tbody>
         <tfoot>
         <tr>
-            <td colspan="7" class="text-right"><b>Total Amount</b></td>
-            <td class="text-center"><b>{{ $purchase_order->purchaseOrderLines->sum('total_amount') ?? ''}}</b></td>
+            <td colspan="8" class="text-right"><b>Total Amount</b></td>
+{{--            <td class="text-center"><b>{{ $purchase_order->purchaseOrderLines->sum('total_amount') ?? ''}}</b></td>--}}
+            <td class="text-center"><b>{{ number_format(ceil($purchase_order->purchaseOrderLines->sum('total_amount'))) ?? '' }}</b></td>
+
         </tr>
         </tfoot>
     </table>
@@ -195,12 +199,11 @@
                 </ol>
             </div>
         </div>
-        <br>
-        <br>
+
         <br>
         <div style="text-align: end">
             <div>
-                For Broad Band Telecom Services Ltd.<br><br><br><br>
+                For Broad Band Telecom Services Ltd.<br><br><br>
                 General Manager --Supply Chain
             </div>
             <br>
