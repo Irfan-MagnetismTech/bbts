@@ -118,8 +118,6 @@ class OpeningStockController extends Controller
                     $stock[] = [
                         'received_type'     => 'OS',
                         'material_id'       => $value->material_id,
-                        'receiveable_type'  => OpeningStock::class,
-                        'receiveable_id'    => $openingStock->id,
                         'brand_id'          => $value->brand_id,
                         'branch_id'         => $request->branch_id,
                         'model'             => $value->model,
@@ -251,8 +249,6 @@ class OpeningStockController extends Controller
                     $stock[] = [
                         'received_type'     => 'OS',
                         'material_id'       => $value->material_id,
-                        'receiveable_type'  => OpeningStock::class,
-                        'receiveable_id'    => $openingStock->id,
                         'brand_id'          => $value->brand_id,
                         'branch_id'         => $request->branch_id,
                         'model'             => $value->model,
