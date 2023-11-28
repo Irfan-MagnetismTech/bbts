@@ -30,7 +30,7 @@ class PhysicalConnectivityModificationController extends Controller
             ->with('lines')
             ->latest()
             ->get();
-        return view('networking::physical-connectivities.index', compact('physicalConnectivities'));
+        return view('networking::modify-physical-connectivities.index', compact('physicalConnectivities'));
     }
 
     /**
@@ -50,11 +50,13 @@ class PhysicalConnectivityModificationController extends Controller
                 ->whereSaleIdAndFrNo(request()->get('sale_id'), request()->get('fr_no'))
                 ->first();
 
-            // $physicalConnectivity = PhysicalConnectivity::query()
-            // ->whereSaleId(request()->get('sale_id'))
-            // ->with('lines')
-            // ->latest()
-            // ->first();
+
+
+            $physicalConnectivity = PhysicalConnectivity::query()
+                ->whereFrNo($saleDetails->fr_no)
+                ->with('lines')
+                ->latest()
+                ->first();
 
             // dd($physicalConnectivity);
 
