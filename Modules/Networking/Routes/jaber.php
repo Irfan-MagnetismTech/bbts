@@ -19,7 +19,7 @@ Route::resources([
     'logical-vas-connectivities' => LogicalConnectivityVasController::class,
     'modify-logical-vas-connectivities' => LogicalConnectivityVasController::class,
     'logical-internet-connectivities' => LogicalConnectivityInternetController::class,
-    // 'modify-logical-internet-connectivities' => LogicalConnectivityInternetController::class,
+    'modify-logical-connectivities' => LogicalConnectivityInternetController::class,
     'vas-services' => VasServiceController::class,
     'data-types' => DataTypeController::class,
     'cc-schedules' => CCScheduleController::class,

@@ -65,7 +65,7 @@
                             </span>
                             <span class="badge badge-info">
                                 @if ($details->sale->is_modified == 1)
-                                    <a href="{{ route('modify-logical-internet-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                    <a href="{{ route('modify-logical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                         class="text-white" target="_blank">Internet</a>
                                 @else
                                     <a href="{{ route('logical-internet-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
