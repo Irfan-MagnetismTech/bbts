@@ -30,6 +30,7 @@
                     <th>#MRR No.</th>
                     <th>#PO No.</th>
                     <th>#PO Date.</th>
+                    <th>Branch</th>
                     <th>Supplier Name</th>
                     <th>Challan No</th>
                     <th>Bill No</th>
@@ -43,6 +44,7 @@
                     <th>#MRR No.</th>
                     <th>#PO No.</th>
                     <th>#PO Date.</th>
+                    <th>Branch</th>
                     <th>Supplier Name</th>
                     <th>Challan No</th>
                     <th>Bill No</th>
@@ -57,6 +59,7 @@
                         <td><strong>#{{ $mrr->mrr_no }}</strong></td>
                         <td>{{ $mrr->purchaseOrder->po_no ?? '' }}</td>
                         <td>{{ $mrr->purchaseOrder->date ?? '' }}</td>
+                        <td>{{ $mrr->branch->name }}</td>
                         <td>{{ $mrr->supplier->name }}</td>
                         <td>{{ $mrr->challan_no }}</td>
                         <td>{{ $mrr->bill_reg_no }}</td>
