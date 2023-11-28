@@ -127,12 +127,13 @@ class ScmMirController extends Controller
         $to_branch_stock = [];
         $type_no = [];
         $material_issue->lines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, &$from_branch_stock, &$material_issue, &$to_branch_stock, &$type_no) {
+            // dd($material_issue);
             $materials[] = StockLedger::query()
                 ->with('material')
                 ->where([
                     'receiveable_id' => $item->receiveable_id,
                     'receiveable_type' => $item->receiveable_type,
-                    'branch_id' => $material_issue->branch_id,
+                    'branch_id' => $material_issue->to_branch_id,
                 ])
                 ->get()
                 ->unique('material_id');
@@ -227,9 +228,20 @@ class ScmMirController extends Controller
      */
     public function getStockLedgerData($request, $key1, $key2 = null, $branch_id, $qty): array
     {
+
+        $ClassAarray = [
+            'MRR' => ScmMrr::class,
+            'WCR' => ScmWcr::class,
+            'ERR' => ScmErr::class,
+            'WOR' => ScmWor::class,
+            'OS' => OpeningStock::class,
+        ];
+
+
         return [
-            'receiveable_id' => $request->type_id[$key1],
-            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : (($request->received_type[$key1] == 'WOR') ? ScmWor::class : NULL))),
+            'receiveable_id' => (!$qty ? $request->type_id[$key1] : null),
+            // 'receiveable_type' => (!$qty ? ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : (($request->received_type[$key1] == 'OS') ? OpeningStock::class : NULL))) : null),
+            'receiveable_type' => (!$qty ? $ClassAarray[$request->received_type[$key1]] : null),
             'received_type' => $request->received_type[$key1],
             'branch_id' => $branch_id,
             'material_id' => $request->material_name[$key1],
@@ -251,11 +263,18 @@ class ScmMirController extends Controller
      */
     public function getMirDetails($request, $key1): array
     {
+        $ClassAarray = [
+            'MRR' => ScmMrr::class,
+            'WCR' => ScmWcr::class,
+            'ERR' => ScmErr::class,
+            'WOR' => ScmWor::class,
+            'OS' => OpeningStock::class,
+        ];
         return  [
             'material_id'   => $request->material_name[$key1],
             'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : '[]',
             'receiveable_id' => $request->type_id[$key1],
-            'receiveable_type' => ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : (($request->received_type[$key1] == 'WOR') ? ScmWor::class : null))),
+            'receiveable_type' => ($request->received_type[$key1] ?  $ClassAarray[$request->received_type[$key1]] : null),
             'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,
             'model' => isset($request->model[$key1]) ? $request->model[$key1] : null,
             'quantity' => $request->issued_qty[$key1],
@@ -299,11 +318,11 @@ class ScmMirController extends Controller
                     $query->where('wcr_no', 'like', '%' . request()->search . '%');
                 });
             })
-            ->when(request()->customQueryFields['type'] == 'WOR', function ($query) {
-                $query->whereHasMorph('stockable', ScmWor::class, function ($query) {
-                    $query->where('wor_no', 'like', '%' . request()->search . '%');
-                });
-            })
+            // ->when(request()->customQueryFields['type'] == 'WOR', function ($query) {
+            //     $query->whereHasMorph('stockable', ScmWor::class, function ($query) {
+            //         $query->where('wor_no', 'like', '%' . request()->search . '%');
+            //     });
+            // })
             ->when(request()->customQueryFields['type'] == 'OS', function ($query) {
                 $query->whereHasMorph('stockable', OpeningStock::class, function ($query) {
                     $query->where('id', 'like', '%' . request()->search . '%');
@@ -313,7 +332,7 @@ class ScmMirController extends Controller
             ->unique(function ($item) {
                 return $item->stockable->mrr_no ?? $item->stockable->err_no ?? $item->stockable->wcr_no ?? $item->stockable->wor_no ?? $item->stockable->id;
             })
-            ->take(10)
+            // ->take(10)
             ->map(fn ($item) => [
                 'value' => $item->stockable->mrr_no ?? $item->stockable->err_no ?? $item->stockable->wcr_no ?? $item->stockable->wor_no ?? $item->stockable->id,
                 'label' => $item->stockable->mrr_no ?? $item->stockable->err_no ?? $item->stockable->wcr_no ?? $item->stockable->wor_no ?? $item->stockable->id,
@@ -364,27 +383,27 @@ class ScmMirController extends Controller
                     ->where('quantity', '<', 0)
                     ->sum('quantity');
                 if (($total_stock - $out_stock) >= 0) {
-                    if($received_type == 'MRR'){
+                    if ($received_type == 'MRR') {
                         return [
                             'id' => $item->stockable_id,
                             'type_no' => $item->stockable->mrr_no,
                         ];
-                    }else if($received_type == 'ERR'){
+                    } else if ($received_type == 'ERR') {
                         return [
                             'id' => $item->stockable_id,
                             'type_no' => $item->stockable->err_no,
                         ];
-                    }else if($received_type == 'WCR'){
+                    } else if ($received_type == 'WCR') {
                         return [
                             'id' => $item->stockable_id,
                             'type_no' => $item->stockable->wcr_no,
                         ];
-                    }else if($received_type == 'WOR'){
+                    } else if ($received_type == 'WOR') {
                         return [
                             'id' => $item->stockable_id,
                             'type_no' => $item->stockable->wor_no,
                         ];
-                    }else if($received_type == 'OS'){
+                    } else if ($received_type == 'OS') {
                         return [
                             'id' => $item->stockable_id,
                             'type_no' => $item->stockable->id,

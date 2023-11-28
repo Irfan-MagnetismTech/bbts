@@ -192,17 +192,17 @@
             <tbody id="materialRequisitionBody">
                 @php
                     $receiveable_type = old('received_type', !empty($material_issue) ? $material_issue?->lines->pluck('received_type') : []);
-                    $mrr_no = old('type_no', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable.mrr_no') : []);
-                    $mrr_id = old('type_id', !empty($material_issue) ? $material_issue?->lines->pluck('receiveable_id') : []);
-                    $material_id = old('material_id', !empty($material_issue) ? $material_issue?->lines->pluck('material_id') : []);
-                    $material_data = old('material_name', !empty($material_issue) ? $material_issue?->lines->pluck('material') : []);
-                    $brand_id = old('brand_id', !empty($material_issue) ? $material_issue?->lines->pluck('brand_id') : []);
-                    $brand_name = old('brand_name', !empty($material_issue) ? $material_issue?->lines->pluck('brand.name') : []);
-                    $model = old('model', !empty($material_issue) ? $material_issue?->lines->pluck('model') : []);
-                    $serial_code = old('serial_code', !empty($material_issue) ? $material_issue?->lines->pluck('serial_code') : []);
-                    $unit_name = old('unit_name', !empty($material_issue) ? $material_issue?->lines->pluck('material.unit') : []);
-                    $issued_qty = old('issued_qty', !empty($material_issue) ? $material_issue?->lines->pluck('quantity') : []);
-                    $mrs_quantity = old('mrs_quantity', !empty($material_issue) ? $material_issue?->lines->pluck('mrs_quantity') : []);
+                    $mrr_no = old('type_no', !empty($material_issue) ? $material_issue?->lines?->pluck('receiveable.mrr_no') : []);
+                    $mrr_id = old('type_id', !empty($material_issue) ? $material_issue?->lines?->pluck('receiveable_id') : []);
+                    $material_id = old('material_id', !empty($material_issue) ? $material_issue?->lines?->pluck('material_id') : []);
+                    $material_data = old('material_name', !empty($material_issue) ? $material_issue?->lines?->pluck('material') : []);
+                    $brand_id = old('brand_id', !empty($material_issue) ? $material_issue?->lines?->pluck('brand_id') : []);
+                    $brand_name = old('brand_name', !empty($material_issue) ? $material_issue?->lines?->pluck('brand.name') : []);
+                    $model = old('model', !empty($material_issue) ? $material_issue?->lines?->pluck('model') : []);
+                    $serial_code = old('serial_code', !empty($material_issue) ? $material_issue?->lines?->pluck('serial_code') : []);
+                    $unit_name = old('unit_name', !empty($material_issue) ? $material_issue?->lines?->pluck('material.unit') : []);
+                    $issued_qty = old('issued_qty', !empty($material_issue) ? $material_issue?->lines?->pluck('quantity') : []);
+                    $mrs_quantity = old('mrs_quantity', !empty($material_issue) ? $material_issue?->lines?->pluck('mrs_quantity') : []);
                 @endphp
                 @foreach ($receiveable_type as $key => $value)
                     <tr>
