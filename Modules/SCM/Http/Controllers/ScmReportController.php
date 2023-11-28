@@ -10,6 +10,9 @@ use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\StockLedger;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Http\Request;
+use Modules\SCM\Entities\OpeningStock;
+use Modules\SCM\Entities\ScmErr;
+use Modules\SCM\Entities\ScmMrr;
 
 class ScmReportController extends Controller
 {
@@ -26,11 +29,8 @@ class ScmReportController extends Controller
     public function materialStockReport(Request $request)
     {
         $branches = Branch::get();
-        $stockTypes = [
-            'Modules\SCM\Entities\ScmMrr',
-            'Modules\SCM\Entities\ScmErr',
-            'Modules\SCM\Entities\ScmChallan',
-            'Modules\SCM\Entities\ScmMir',
+        $stockTypes = [ 
+            ScmMrr::class, ScmErr::class, ScmChallan::class, ScmMir::class, OpeningStock::class
         ];
         $branch_id = $request->branch_id;
 
