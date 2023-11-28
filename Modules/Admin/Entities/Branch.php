@@ -34,7 +34,7 @@ class Branch extends Model
 
     public function getFormattedAddressAttribute()
     {
-        $formatted = "{$this->name} ({$this->location}) - {$this->thana->name} - {$this->district->name}";
+        $formatted = "{$this?->name} ({$this?->location}) - {$this?->thana?->name} - {$this?->district?->name}";
 
         return $formatted;
     }

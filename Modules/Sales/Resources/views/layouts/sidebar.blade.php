@@ -75,7 +75,7 @@
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan
-                @can('client-meeting-list')
+                @can('client-meeting-view')
                     <li class="{{ request()->routeIs('meeting.index') ? 'active' : null }}">
                         <a href="{{ route('meeting.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
