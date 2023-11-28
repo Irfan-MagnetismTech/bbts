@@ -43,7 +43,7 @@ class OpeningStockController extends Controller
         $brands = Brand::get();
         $branches = Branch::get();
         $models = MaterialModel::pluck('model');
-        return view('scm::opening-stocks.create', compact('brands','branches','models'));
+        return view('scm::opening-stocks.create', compact('brands', 'branches', 'models'));
     }
 
     /**
@@ -98,14 +98,14 @@ class OpeningStockController extends Controller
                 );
             }
 
-            $detail= $openingStock->lines()->createMany($stockDetails);
+            $detail = $openingStock->lines()->createMany($stockDetails);
 
             $stock = [];
             foreach ($detail as $key => $value) {
                 $value->serialCodeLines()->createMany(array_map(function ($serial) use ($request, $key, $value, $openingStock, &$stock) {
                     if ($request->material_type[$key] == 'Drum') {
                         $serial_code = 'F-' . $serial;
-                        $quantity = 1;
+                        $quantity = $value->quantity;
                     } else {
                         if ($serial == '') {
                             $serial_code = Null;
@@ -168,7 +168,7 @@ class OpeningStockController extends Controller
         $brands = Brand::latest()->get();
         $branches = Branch::latest()->get();
         $models = MaterialModel::pluck('model');
-        return view('scm::opening-stocks.create', compact('openingStock', 'formType', 'brands', 'branches','models'));
+        return view('scm::opening-stocks.create', compact('openingStock', 'formType', 'brands', 'branches', 'models'));
     }
 
     /**
@@ -231,7 +231,7 @@ class OpeningStockController extends Controller
             }
             $openingStock->lines()->delete();
             $openingStock->stockable()->delete();
-            $detail= $openingStock->lines()->createMany($stockDetails);
+            $detail = $openingStock->lines()->createMany($stockDetails);
 
             $stock = [];
             foreach ($detail as $key => $value) {
