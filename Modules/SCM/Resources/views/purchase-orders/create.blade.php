@@ -680,7 +680,7 @@
 
                 <td>
                     <select class="form-control" name="tax[]">
-@foreach ($vatOrTax as $key => $value)
+                                    @foreach ($vatOrTax as $key => $value)
                     <option value="{{ $value }}" @selected($key == @$purchaseOrder->tax)>
                                             {{ $value }}</option>
                                     @endforeach
