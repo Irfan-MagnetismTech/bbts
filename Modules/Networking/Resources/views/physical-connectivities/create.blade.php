@@ -82,11 +82,11 @@
                         aria-describedby="client_type" readonly value="{{ $client_type }}">
                 </div>
 
-{{--                <div class="form-group col-3 client_type">--}}
-{{--                    <label for="client_type">Client Type:</label>--}}
-{{--                    <input type="text" class="form-control" id="client_type" name="client_type" aria-describedby="client_type" readonly--}}
-{{--                           value="<?php echo ($client_type == 1) ? 'Corporate' : 'Individual'; ?>">--}}
-{{--                </div>--}}
+                {{--                <div class="form-group col-3 client_type"> --}}
+                {{--                    <label for="client_type">Client Type:</label> --}}
+                {{--                    <input type="text" class="form-control" id="client_type" name="client_type" aria-describedby="client_type" readonly --}}
+                {{--                           value="<?php echo $client_type == 1 ? 'Corporate' : 'Individual'; ?>"> --}}
+                {{--                </div> --}}
 
 
                 <div class="form-group col-3 connectivity_point1">
@@ -151,96 +151,100 @@
                 </div>
             </div>
 
-            <table class="table table-bordered" id="physical_connectivity">
-                <thead>
-                    <tr>
-                        <th> Link Type</th>
-                        <th> Method</th>
-                        <th> POP</th>
-                        <th>LDP</th>
-                        <th> Link ID </th>
-                        <th> Fiber Core ID</th>
-                        <th> Device IP </th>
-                        <th> PORT </th>
-                        <th> VLAN </th>
-                        <th> Connectivity Details </th>
-                        <th> Comment </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{-- @if (!empty($physicalConnectivity)) --}}
-                    @foreach ($Connectivity_links as $key => $physicalConnectivityLine)
+            <div class="table-responsive">
+                <table class="table table-bordered" id="physical_connectivity">
+                    <thead>
                         <tr>
-                            <td>
-                                <input type="text" name="link_type[]" class="form-control link_type"
-                                    autocomplete="off" value="{{ $physicalConnectivityLine->link_type }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="method[]" class="form-control method" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->finalSurveyDetails->method ?? '' }}" readonly>
-                                <input type="hidden" name="link_no[]"
-                                    value="{{ $physicalConnectivityLine->finalSurveyDetails?->link_no }}">
-                            </td>
-                            <td>
-                                <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->finalSurveyDetails->pop->name ?? '' }}" readonly>
-                            </td>
-                            <td>
-                                <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->finalSurveyDetails->ldp ?? '' }}" readonly>
-                            </td>
-                            <td>
-                                {{-- @dd($physicalConnectivityLine); --}}
-                                <select class="form-control select2 link_id" name="bbts_link_id[]">
-                                    <option value="" readonly selected>Select Link ID</option>
-                                    @forelse ($connectivity_links as $key => $value)
-                                        <option value="{{ $value->bbts_link_id }}" @selected($physicalConnectivityLine->bbts_link_id == $value->bbts_link_id)>
-                                            {{ $value->bbts_link_id }}
-                                        </option>
-                                    @empty
-                                    @endforelse
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2 fiber_core_id" name="fiber_core_composite_key[]">
-                                    <option value="" readonly selected>Select Fiber Core ID</option>
-                                    @forelse ($fiber_cores as $key => $value)
-                                        <option value="{{ $value->composite_key }}" @selected($physicalConnectivityLine->fiber_core_composite_key == $value->composite_key)>
-                                            {{ $value->composite_key }}
-                                        </option>
-                                    @empty
-                                    @endforelse
-                            </td>
-                            <td>
-                                <input type="text" name="device_ip[]" class="form-control device_ip"
-                                    autocomplete="off" value="{{ $physicalConnectivityLine->device_ip }}">
-                            </td>
-                            <td>
-                                <input type="text" name="port[]" class="form-control port" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->port }}">
-                            </td>
-                            <td>
-                                <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->vlan }}">
-                            </td>
-                            <td>
-                                <input type="text" name="connectivity_details[]"
-                                    class="form-control connectivity_details" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->connectivity_details }}">
-                            </td>
-                            <td>
-                                <input type="text" name="comment[]" class="form-control comment" autocomplete="off"
-                                    value="{{ $physicalConnectivityLine->comment }}">
-                            </td>
-                            <td>
-                                <i class="btn btn-danger btn-sm fa fa-minus remove-network-info-row"></i>
-                            </td>
+                            <th> Link Type</th>
+                            <th> Method</th>
+                            <th> POP</th>
+                            <th>LDP</th>
+                            <th> Link ID </th>
+                            <th> Fiber Core ID</th>
+                            <th> Device IP </th>
+                            <th> PORT </th>
+                            <th> VLAN </th>
+                            <th> Connectivity Details </th>
+                            <th> Comment </th>
+                            <th></th>
                         </tr>
-                    @endforeach
-                    {{-- @endif --}}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {{-- @if (!empty($physicalConnectivity)) --}}
+                        @foreach ($Connectivity_links as $key => $physicalConnectivityLine)
+                            <tr>
+                                <td>
+                                    <input type="text" name="link_type[]" class="form-control link_type"
+                                        autocomplete="off" value="{{ $physicalConnectivityLine->link_type }}" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="method[]" class="form-control method" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->finalSurveyDetails->method ?? '' }}"
+                                        readonly>
+                                    <input type="hidden" name="link_no[]"
+                                        value="{{ $physicalConnectivityLine->finalSurveyDetails?->link_no }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->finalSurveyDetails->pop->name ?? '' }}"
+                                        readonly>
+                                </td>
+                                <td>
+                                    <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->finalSurveyDetails->ldp ?? '' }}" readonly>
+                                </td>
+                                <td>
+                                    {{-- @dd($physicalConnectivityLine); --}}
+                                    <select class="form-control select2 link_id" name="bbts_link_id[]">
+                                        <option value="" readonly selected>Select Link ID</option>
+                                        @forelse ($connectivity_links as $key => $value)
+                                            <option value="{{ $value->bbts_link_id }}" @selected($physicalConnectivityLine->bbts_link_id == $value->bbts_link_id)>
+                                                {{ $value->bbts_link_id . ' (' . $value->link_name . ')' }}
+                                            </option>
+                                        @empty
+                                        @endforelse
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select2 fiber_core_id" name="fiber_core_composite_key[]">
+                                        <option value="" readonly selected>Select Fiber Core ID</option>
+                                        @forelse ($fiber_cores as $key => $value)
+                                            <option value="{{ $value->composite_key }}" @selected($physicalConnectivityLine->fiber_core_composite_key == $value->composite_key)>
+                                                {{ $value->composite_key }}
+                                            </option>
+                                        @empty
+                                        @endforelse
+                                </td>
+                                <td>
+                                    <input type="text" name="device_ip[]" class="form-control device_ip"
+                                        autocomplete="off" value="{{ $physicalConnectivityLine->device_ip }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="port[]" class="form-control port" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->port }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="vlan[]" class="form-control vlan" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->vlan }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="connectivity_details[]"
+                                        class="form-control connectivity_details" autocomplete="off"
+                                        value="{{ $physicalConnectivityLine->connectivity_details }}">
+                                </td>
+                                <td>
+                                    <input type="text" name="comment[]" class="form-control comment"
+                                        autocomplete="off" value="{{ $physicalConnectivityLine->comment }}">
+                                </td>
+                                <td>
+                                    <i class="btn btn-danger btn-sm fa fa-minus remove-network-info-row"></i>
+                                </td>
+                            </tr>
+                        @endforeach
+                        {{-- @endif --}}
+                    </tbody>
+                </table>
+            </div>
 
             {{-- @if (!empty($physicalConnectivity)) --}}
             <h6>Material Utilizations</h6>
@@ -256,7 +260,7 @@
             <div class="row">
                 <div class="offset-md-4 col-md-4 mt-2">
                     <div class="input-group input-group-sm ">
-                        <button class="btn btn-success btn-round btn-block py-2">Submit</button>
+                        <button class="btn btn-success btn-round btn-block py-2" type="submit">Submit</button>
                     </div>
                 </div>
             </div>
