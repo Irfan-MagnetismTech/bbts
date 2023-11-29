@@ -16,6 +16,7 @@ use Modules\SCM\Entities\StockLedger;
 use Modules\SCM\Entities\FiberTracking;
 use Modules\SCM\Entities\ScmRequisition;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\OpeningStock;
 use Modules\SCM\Entities\OpeningStockLine;
 use Modules\SCM\Entities\ScmErr;
@@ -74,17 +75,24 @@ class ScmMirController extends Controller
 
             $mir_details = [];
             foreach ($request->material_name as $key => $val) {
-                if (isset($request->serial_code[$key]) && count($request->serial_code[$key])) {
+                $material = Material::where('id',$request->material_name)->first(); 
+                if (isset($request->serial_code[$key]) && $material->type == 'Item') {
                     foreach ($request->serial_code[$key] as $keyValue => $value) {
-                        $stock_ledgers[] = $this->getStockLedgerData($request, $key, $keyValue, $request->branch_id, true);
-                        $stock_ledgers[] = $this->getStockLedgerData($request, $key, $keyValue, $request->to_branch_id, false);
+                        $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $key, $keyValue, $request->branch_id, true);
+                        $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $key, $keyValue, $request->to_branch_id, false);
                     };
-                } elseif (isset($request->material_name[$key])) {
-                    $stock_ledgers[] = $this->getStockLedgerData($request, $key, $key2 = null, $request->branch_id, true);
-                    $stock_ledgers[] = $this->getStockLedgerData($request, $key, $key2 = null, $request->to_branch_id, false);
+                }
+                elseif((isset($request->serial_code[$key]) && $material->type == 'Drum')){
+                    $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $key, $key2 = null, $request->branch_id, true);
+                    $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $key, $key2 = null, $request->to_branch_id, false);
+                }
+                 elseif (isset($request->material_name[$key])) {
+                    $stock_ledgers[] = $this->getStockLedgerData('', $request, $key, $key2 = null, $request->branch_id, true);
+                    $stock_ledgers[] = $this->getStockLedgerData('', $request, $key, $key2 = null, $request->to_branch_id, false);
                 }
                 $mir_details[] = $this->getMirDetails($request, $key);
             };
+            // dd($stock_ledgers);
 
             $mir_data['mir_no'] = $this->mirNo;
             $mir_data['created_by'] = auth()->user()->id;
@@ -168,14 +176,20 @@ class ScmMirController extends Controller
 
             $mir_details = [];
             foreach ($request->material_name as $key => $val) {
-                if (isset($request->serial_code[$key]) && count($request->serial_code[$key])) {
+                $material = Material::where('id',$request->material_name)->first(); 
+                if (isset($request->serial_code[$key]) && $material->type == 'Item') {
                     foreach ($request->serial_code[$key] as $keyValue => $value) {
-                        $stock_ledgers[] = $this->getStockLedgerData($request, $key, $keyValue, $request->branch_id, true);
-                        $stock_ledgers[] = $this->getStockLedgerData($request, $key, $keyValue, $request->to_branch_id, false);
+                        $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $key, $keyValue, $request->branch_id, true);
+                        $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $key, $keyValue, $request->to_branch_id, false);
                     };
-                } elseif (isset($request->material_name[$key])) {
-                    $stock_ledgers[] = $this->getStockLedgerData($request, $key, $key2 = null, $request->branch_id, true);
-                    $stock_ledgers[] = $this->getStockLedgerData($request, $key, $key2 = null, $request->to_branch_id, false);
+                } 
+                elseif((isset($request->serial_code[$key]) && $material->type == 'Drum')){
+                    $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $key, $key2 = null, $request->branch_id, true);
+                    $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $key, $key2 = null, $request->to_branch_id, false);
+                }
+                elseif (isset($request->material_name[$key])) {
+                    $stock_ledgers[] = $this->getStockLedgerData('', $request, $key, $key2 = null, $request->branch_id, true);
+                    $stock_ledgers[] = $this->getStockLedgerData('', $request, $key, $key2 = null, $request->to_branch_id, false);
                 }
                 $mir_details[] = $this->getMirDetails($request, $key);
             };
@@ -226,7 +240,7 @@ class ScmMirController extends Controller
      *
      * @return array
      */
-    public function getStockLedgerData($request, $key1, $key2 = null, $branch_id, $qty): array
+    public function getStockLedgerData($type, $request, $key1, $key2 = null, $branch_id, $qty): array
     {
 
         $ClassAarray = [
@@ -236,7 +250,13 @@ class ScmMirController extends Controller
             'WOR' => ScmWor::class,
             'OS' => OpeningStock::class,
         ];
-
+        $sl = null;
+        if(isset($request->serial_code[$key1]) && $type == 'Item'){
+            $sl = $request->serial_code[$key1][$key2];
+        }elseif(isset($request->serial_code[$key1]) && $type == 'Drum'){
+            $sl =  implode(', ', $request->serial_code[$key1]);
+        }
+        // dump($sl);
 
         return [
             'receiveable_id' => (!$qty ? $request->type_id[$key1] : null),
@@ -249,7 +269,8 @@ class ScmMirController extends Controller
             'unit' => $request->unit[$key1],
             'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : NULL,
             'model' => isset($request->model[$key1]) ? $request->model[$key1] : NULL,
-            'serial_code' => (isset($request->serial_code[$key1]) && isset($request->serial_code[$key1][$key2])) ? $request->serial_code[$key1][$key2] : NULL,
+            // 'serial_code' => (isset($request->serial_code[$key1]) && isset($request->serial_code[$key1][$key2])) ? $request->serial_code[$key1][$key2] : NULL,
+            'serial_code' => $sl,
             'quantity' => ($qty ? -1 : 1) * (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1])
         ];
     }

@@ -36,7 +36,7 @@ return [
         'MRR' => 'MRR',
         'ERR' => 'ERR',
         'WCR' => 'WCR',
-        'WOR' => 'WOR',
+        'MIR' => 'MIR',
         'OS' => 'OS'
     ],
 
