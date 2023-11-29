@@ -120,12 +120,29 @@
             $(e).parent().remove();
         }
 
-        $('#date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());
+        // $('#date').datepicker({
+        //     format: "dd-mm-yyyy",
+        //     autoclose: true,
+        //     todayHighlight: true,
+        //     showOtherMonths: true
+        // }).datepicker("setDate", new Date());
+
+        if ($('#date').val() != null)
+        {
+            $('#date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            });
+        }else {
+            $('#date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
+        }
 
         $(document).on('keyup focus', '.prs_no', function() {
             $(this).autocomplete({

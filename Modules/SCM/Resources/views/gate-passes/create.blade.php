@@ -205,12 +205,29 @@
 
             })
 
-        $('#date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());
+        // $('#date').datepicker({
+        //     format: "dd-mm-yyyy",
+        //     autoclose: true,
+        //     todayHighlight: true,
+        //     showOtherMonths: true
+        // }).datepicker("setDate", new Date());
+
+        if ($('#date').val() != null)
+        {
+            $('#date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            });
+        }else {
+            $('#date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
+        }
 
         $(function() {
             onChangeRadioButton();

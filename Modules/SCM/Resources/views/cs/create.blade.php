@@ -755,3 +755,4 @@
         $("#select_all_projects").change(select_all_projects);
     </script>
 @endsection
+

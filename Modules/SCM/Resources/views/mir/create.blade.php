@@ -319,12 +319,29 @@
 
 @section('script')
     <script>
-        $('#applied_date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());
+        // $('#applied_date').datepicker({
+        //     format: "dd-mm-yyyy",
+        //     autoclose: true,
+        //     todayHighlight: true,
+        //     showOtherMonths: true
+        // }).datepicker("setDate", new Date());
+
+        if ($('#applied_date').val() != null)
+        {
+            $('#applied_date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            });
+        }else {
+            $('#applied_date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
+        }
         const CSRF_TOKEN = "{{ csrf_token() }}";
         $(document).ready(function() {
             let tr_length = $('#material_requisition tbody tr').length;
@@ -696,9 +713,9 @@
                                 <select class="form-control material_name select2" name="material_name[${indx}]">
                                     <option value="">Select Material</option>
                                 </select>
-                                <input type="hidden" name="code[${indx}]" class="form-control code" autocomplete="off"> 
-                                <input type="hidden" name="type[${indx}]" class="form-control type" autocomplete="off"> 
-                            </td>                            
+                                <input type="hidden" name="code[${indx}]" class="form-control code" autocomplete="off">
+                                <input type="hidden" name="type[${indx}]" class="form-control type" autocomplete="off">
+                            </td>
                             <td>
                                 <select class="form-control brand select2" name="brand[${indx}]">
                                 </select>
@@ -727,7 +744,7 @@
                             </td>
                             <td>
                                 <input name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly>
-                            </td>                                           
+                            </td>
                             <td>
                                 <input class="form-control from_current_quantity" name="from_current_quantity[${indx}]" aria-describedby="date" readonly>
                             </td>

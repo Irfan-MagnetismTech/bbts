@@ -441,12 +441,30 @@
                 todayHighlight: true,
                 showOtherMonths: true
             }).datepicker("setDate", new Date());
-            $('#applied_date').datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-                todayHighlight: true,
-                showOtherMonths: true
-            }).datepicker("setDate", new Date());
+
+            // $('#applied_date').datepicker({
+            //     format: "dd-mm-yyyy",
+            //     autoclose: true,
+            //     todayHighlight: true,
+            //     showOtherMonths: true
+            // }).datepicker("setDate", new Date());
+
+            if ($('#applied_date').val() != null)
+            {
+                $('#applied_date').datepicker({
+                    format: "dd-mm-yyyy",
+                    autoclose: true,
+                    todayHighlight: true,
+                    showOtherMonths: true
+                });
+            }else {
+                $('#applied_date').datepicker({
+                    format: "dd-mm-yyyy",
+                    autoclose: true,
+                    todayHighlight: true,
+                    showOtherMonths: true
+                }).datepicker("setDate", new Date());
+            }
 
             @if (empty($materialReceive) && empty(old('material_id')))
                 // appendCalculationRow();
