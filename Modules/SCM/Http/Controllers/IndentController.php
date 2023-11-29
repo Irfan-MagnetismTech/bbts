@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Modules\SCM\Entities\Cs;
 use Modules\SCM\Entities\IndentLine;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
 use PDF;
@@ -139,8 +140,10 @@ class IndentController extends Controller
     public function pdf($id = null)
     {
         $indent = Indent::where('id', $id)->first();
+        $indent_no = Indent::where('id', $id)->value('indent_no');
+        $csNos = Cs::where('indent_no', $indent_no)->pluck('cs_no');
 
-        return PDF::loadView('scm::indents.pdf', ['indent' => $indent], [], [
+        return PDF::loadView('scm::indents.pdf', ['indent' => $indent, 'csNos' => $csNos], [], [
             'format'                     => 'A4',
             'orientation'                => 'L',
             'title'                      => 'Indent PDF',
@@ -152,7 +155,7 @@ class IndentController extends Controller
             'watermark_image_size'       => 'D',
             'watermark_image_position'   => 'P',
         ])->stream('indent.pdf');
-        return view('scm::indents.pdf', compact('indent'));
+        return view('scm::indents.pdf', compact('indent','csNos'));
 
     }
     public function searchIndentPrsNo()

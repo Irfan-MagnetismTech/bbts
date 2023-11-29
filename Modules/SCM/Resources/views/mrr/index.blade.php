@@ -56,14 +56,14 @@
                 @foreach ($mrrs as $key => $mrr)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><strong>#{{ $mrr->mrr_no }}</strong></td>
+                        <td><strong>#{{ $mrr->mrr_no ?? '' }}</strong></td>
                         <td>{{ $mrr->purchaseOrder->po_no ?? '' }}</td>
                         <td>{{ $mrr->purchaseOrder->date ?? '' }}</td>
-                        <td>{{ $mrr->branch->name }}</td>
-                        <td>{{ $mrr->supplier->name }}</td>
-                        <td>{{ $mrr->challan_no }}</td>
-                        <td>{{ $mrr->bill_reg_no }}</td>
-                        <td>{{ $mrr->createdBy->name }}</td>
+                        <td>{{ $mrr->branch->name ?? '' }}</td>
+                        <td>{{ $mrr->supplier->name ?? '' }}</td>
+                        <td>{{ $mrr->challan_no ?? '' }}</td>
+                        <td>{{ $mrr->bill_reg_no ?? '' }}</td>
+                        <td>{{ $mrr->createdBy->name ?? '' }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

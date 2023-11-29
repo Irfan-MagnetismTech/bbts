@@ -139,6 +139,7 @@
             float: left;
             width: 33.333333%;
         }
+
         .col-5 {
             float: right;
             width: 33.333333%;
@@ -152,97 +153,100 @@
 </head>
 
 <body>
-<htmlpageheader name="page-header">
-    <div>
-        &nbsp;
-    </div>
-    <div>
-        <div id="logo" class="pdflogo">
-            <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
-            <div class="clearfix"></div>
-            <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
-        </div>
-    </div>
-</htmlpageheader>
-<html-separator/>
-<div class="container">
-    <div class="row" style="padding:30px 0 30px;">
-        <div class="col-4" style="border: 1px solid #000000; border-radius: 5px;margin-top: 40px;margin-left: 20px">
-            <table class="table rounded-table infoTable">
-                <thead>
-                <tr>
-                    <td>Gate Pass No :</td>
-                    <td>{{$challan->challan_no ?? ''}}</td>
-                </tr>
-                <tr>
-                    <td>Client :</td>
-                    <td>{{$challan->client->client_name ?? ''}}</td>
-                </tr>
-                <tr>
-                    <td>Purpose :</td>
-                    <td>{{$challan->purpose ?? ''}}</td>
-                </tr>
-                <tr>
-                    <td>Connectivity Point :</td>
-                    <td>{{ $challan->feasibilityRequirementDetail->connectivity_point ?? ''}}</td>
-                </tr>
-                <tr>
-                    <td>Address :</td>
-                    <td>{{$challan->billingAddress->address ?? ''}}</td>
-                </tr>
-                <tr>
-                    <td>Contact Person :</td>
-                    <td>{{$challan->billingAddress->contact_person ?? ''}}</td>
-                </tr>
-                <tr>
-                    <td>Contact Number :</td>
-                    <td>{{$challan->billingAddress->phone ?? ''}}</td>
-                </tr>
-                <tr>
-                    <td>Date :</td>
-                    <td>{{$challan->date ?? ''}}</td>
-                </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-    <div class="">
+    <htmlpageheader name="page-header">
         <div>
-            <h2 style="text-align: center; width: 30%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
-                GATE PASS</h2>
+            &nbsp;
         </div>
         <div>
-            <table class="table table-striped table-bordered" style="width: 100%">
-                <thead>
-                <tr>
-                    <th>Challan No.</th>
-                    <th>Material Name</th>
-                    <th>Item Code</th>
-                    <th>Unit</th>
-                    <th>Quantity</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Purpose</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($challan->scmChallanLines as $key => $scmChallanLine)
-                    <tr>
-                        <td> {{ $challan->challan_no }} </td>
-                        <td> {{ $scmChallanLine->material->name }} </td>
-                        <td> {{ $scmChallanLine->item_code }} </td>
-                        <td> {{ $scmChallanLine->material->unit }} </td>
-                        <td> {{ $scmChallanLine->quantity }} </td>
-                        <td> {{ $scmChallanLine->brand->name }} </td>
-                        <td> {{ $scmChallanLine->model }} </td>
-                        <td> {{ $scmChallanLine->purpose }} </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+            <div id="logo" class="pdflogo">
+                <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
+                <div class="clearfix"></div>
+                <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+            </div>
+        </div>
+    </htmlpageheader>
+    <html-separator />
+    <div class="container">
+        <div class="row" style="padding:30px 0 30px;">
+            <div class="col-4"
+                style="border: 1px solid #000000; border-radius: 5px;margin-top: 40px;margin-left: 20px">
+                <table class="table rounded-table infoTable">
+                    <thead>
+                        <tr>
+                            <td>Gate Pass No :</td>
+                            <td>{{ $challan->challan_no ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Client :</td>
+                            <td>{{ $challan->client->client_name ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Purpose :</td>
+                            <td>{{ $challan->purpose ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td>FR no - Connectivity Point :</td>
+                            <td> {{ $challan->fr_no . ' (' . $challan->feasibilityRequirementDetail->connectivity_point . ')' }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Address :</td>
+                            <td>{{ $challan->billingAddress->address ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Contact Person :</td>
+                            <td>{{ $challan->billingAddress->contact_person ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Contact Number :</td>
+                            <td>{{ $challan->billingAddress->phone ?? '' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Date :</td>
+                            <td>{{ $challan->date ?? '' }}</td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="">
+            <div>
+                <h2
+                    style="text-align: center; width: 30%; border: 1px solid #000000; border-radius: 5px; margin: 10px auto">
+                    GATE PASS</h2>
+            </div>
+            <div>
+                <table class="table table-striped table-bordered" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>Challan No.</th>
+                            <th>Material Name</th>
+                            <th>Item Code</th>
+                            <th>Unit</th>
+                            <th>Quantity</th>
+                            <th>Brand</th>
+                            <th>Model</th>
+                            <th>Purpose</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($challan->scmChallanLines as $key => $scmChallanLine)
+                            <tr>
+                                <td> {{ $challan->challan_no }} </td>
+                                <td> {{ $scmChallanLine->material->name }} </td>
+                                <td> {{ $scmChallanLine->item_code }} </td>
+                                <td> {{ $scmChallanLine->material->unit }} </td>
+                                <td> {{ $scmChallanLine->quantity }} </td>
+                                <td> {{ $scmChallanLine->brand->name }} </td>
+                                <td> {{ $scmChallanLine->model }} </td>
+                                <td> {{ $scmChallanLine->purpose }} </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 
 </body>
 
