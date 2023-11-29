@@ -128,6 +128,15 @@
                     @endif
                 @endforeach
             </div>
+            <div>
+                CS No:
+                @foreach ($csNos as $csNo)
+                    {{ $csNo ?? ''}}
+                    @if (!$loop->last)
+                        ,
+                    @endif
+                @endforeach
+            </div>
             <span>Date: {{$indent->date}}</span><br>
         </div>
         <br>

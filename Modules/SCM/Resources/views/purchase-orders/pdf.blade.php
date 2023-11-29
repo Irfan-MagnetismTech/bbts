@@ -93,18 +93,19 @@
     <div style="text-align: start">
         <div>
             <h3>PURCHASE ORDER</h3>
-            <span>Purchase Order No: {{$purchase_order->po_no ?? ''}}</span><br>
-            <span>Date Issued: {{$purchase_order->date ?? ''}}</span><br>
-            <span>Ref Indent No: {{$purchase_order->indent->indent_no ?? ''}}</span><br>
+            <span><b>Purchase Order No:</b> {{$purchase_order->po_no ?? ''}}</span><br>
+            <span><b>CS No:</b> {{$purchase_order->cs_no ?? ''}}</span><br>
+            <span><b>Ref Indent No:</b> {{$purchase_order->indent->indent_no ?? ''}}</span><br>
             <span>
-                PRS No:
+                <b>PRS No:</b>
                 @foreach ($purchase_order->indent->indentLines as $line)
                     {{ $line->scmPurchaseRequisition->prs_no ?? ''}}
                     @if (!$loop->last)
                         ,
                     @endif
                 @endforeach
-            </span>
+            </span><br>
+            <span><b>Date Issued:</b> {{$purchase_order->date ?? ''}}</span>
         </div>
         <br>
 
