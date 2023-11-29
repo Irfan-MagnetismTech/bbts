@@ -81,7 +81,7 @@
             <div class="col-md-12 col-xl-12">
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="parent_id">Core Ref ID.<span class="text-danger">*</span></label>
-                    <select class="form-control" id="parent_id" name="parent_id" required>
+                    <select class="form-control" id="parent_id" name="parent_id" >
                         <option value="">Select Parent</option>
                         @foreach ($CoreRefIds as $key2 => $value2)
                             <option value="{{ $key2 }}" @if ($key2 == $parent_id) selected @endif>                      
