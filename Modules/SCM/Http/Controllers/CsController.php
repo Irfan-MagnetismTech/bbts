@@ -371,7 +371,6 @@ class CsController extends Controller
             foreach ($purchaseOrders as $po) {
                 $poQuantity += PurchaseOrderLine::where('purchase_order_id', $po->id)
                     ->sum('quantity');
-
                 $materialIds = PurchaseOrderLine::where('purchase_order_id', $po->id)
                     ->pluck('material_id')
                     ->unique()
