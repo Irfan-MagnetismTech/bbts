@@ -117,7 +117,8 @@
                             </tr>
                             <tr>
                                 <td> <strong>FR No</strong> </td>
-                                <td> {{ $challan->fr_no }}</td>
+                                <td> {{ $challan->fr_no . ' (' . $challan->feasibilityRequirementDetail->connectivity_point . ')' }}
+                                </td>
                             </tr>
                             <tr>
                                 <td> <strong>Link No</strong> </td>
