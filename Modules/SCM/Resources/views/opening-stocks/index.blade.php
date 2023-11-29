@@ -60,7 +60,7 @@
             </tr>
             </tfoot>
             <tbody>
-                @php($i=1);
+                @php($i=1)
             @foreach ($openingStocks as $key => $openingStock)
                 @foreach ($openingStock->lines as $key => $data)
                     <tr>

@@ -7,7 +7,7 @@
     $form_heading = !empty($material_utilization) ? 'Update' : 'Add';
     $form_url = !empty($material_utilization) ? route('material-utilizations.update', $material_utilization->id) : route('material-utilizations.store');
     $form_method = !empty($material_utilization) ? 'PUT' : 'POST';
-    
+
     $type = $is_old ? old('type') : (!empty($material_utilization) ? $material_utilization->type : (!empty($challanData) ? $challanData->type: null));
     $date = $is_old ? old('date') : (!empty($material_utilization) ? $material_utilization->date : now());
     $purpose = $is_old ? old('purpose') : (!empty($material_utilization) ? $material_utilization->purpose : (!empty($challanData) ? $challanData->purpose : null));
@@ -69,14 +69,14 @@
             @endif
             {{-- @php
             $challan_id = old('challan_id', !empty($challanData) ? $challanData->id: null);
-            
+
         @endphp --}}
             @csrf
             <div class="row">
                 <div class="col-md-3">
                     <div class="
                      mt-2 mb-4">
-                        
+
                         <label for="type">Type:</label>
                     <input class="form-control" id="type" name="type" aria-describedby="type"
                         value="{{ old('type') ?? ($type ?? '') }}" readonly>
@@ -89,7 +89,7 @@
                     <input class="form-control" id="date" name="date" aria-describedby="date"
                         value="{{ old('date') ?? ($date ?? '') }}" readonly placeholder="Select a Date" readonly>
                 </div>
-               
+
                 <div class="form-group col-3">
                     <label for="purpose">Purpose</label>
                     <input type="text" class="form-control" id="purpose" aria-describedby="purpose"
@@ -118,7 +118,7 @@
                 </div>
             </div>
             <div class="row">
-               
+
             </div>
             <div class="row">
                 <div class="form-group col-3 equipment_type client">
@@ -140,7 +140,7 @@
                     placeholder="Search...">
                 </div>
 
-              
+
                 <div class="form-group col-3 client_no client">
                     <label for="client_no">Client No:</label>
                     <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
@@ -176,7 +176,7 @@
                     <input class="form-control" id="branch_name" name="branch_name" aria-describedby="branch_name"
                     value="{{ old('branch_name') ?? ($branch_name ?? '') }}">
                 </div>
-                
+
             </div>
                 {{-- @dd($challanData->scmChallanLines) --}}
             <table class="table table-bordered" id="material_requisition">
@@ -201,7 +201,7 @@
                 </thead>
                 <tbody>
                     @if($formType == 'create')
-                   
+
                     @foreach ($challanLines as $item)
                     @php
                         $item = collect($item);
@@ -214,7 +214,7 @@
                             <input type="hidden" name="receiveable_id[]" class="form-control receiveable_id" autocomplete="off" value="{{ $item['receiveable_id'] }}">
                             </td>
                         <td class="form-group">
-                            <input type="text" name="description[]" class="form-control description">  
+                            <input type="text" name="description[]" class="form-control description">
                         </td>
                         <td>
                             <input type="text" name="item_code[]" class="form-control item_code" readonly value="{{ $item['item_code'] }}">
@@ -231,11 +231,11 @@
                         </td>
                         <td>
                             <input name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly value="{{ $item['serial_code'] }}">
-                        </td>                                        
+                        </td>
                         <td>
                             <input name="quantity[]" class="form-control quantity" autocomplete="off" readonly value="{{ $item['quantity'] }}">
                         </td>
-                      
+
                         <td>
                             <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" value="{{ $item['quantity'] }}">
                         </td>
@@ -261,7 +261,7 @@
                         $model = old('model', !empty($material_utilization) ? $material_utilization->lines->pluck('model') : []);
                         $brand_id = old('brand_id', !empty($material_utilization) ? $material_utilization->lines->pluck('brand_id') : []);
                         $serial_code = old('serial_code', !empty($material_utilization) ? json_decode($material_utilization->lines->pluck('serial_code')) : []);
-                        
+
                         $utilized_quantity = old('utilized_quantity', !empty($material_utilization) ? $material_utilization->lines->pluck('utilized_quantity') : []);
                         $quantity = old('quantity', !empty($material_utilization) ? $material_utilization->lines->pluck('quantity') : []);
                         $bbts_ownership = old('bbts_ownership', !empty($material_utilization) ? $material_utilization->lines->pluck('bbts_ownership') : []);
@@ -269,7 +269,7 @@
                         $remarks = old('remarks', !empty($material_utilization) ? $material_utilization->lines->pluck('remarks') : []);
                         $receiveable_id = old('receiveable_id', !empty($material_utilization) ? $material_utilization->lines->pluck('receiveable_id') : []);
                         $receiveable_type = old('receiveable_type', !empty($material_utilization) ? $material_utilization->lines->pluck('receiveable_type') : []);
-                        
+
                     @endphp
                     @foreach ($material_name as $key => $item)
                     <tr>
@@ -280,7 +280,7 @@
                             <input type="hidden" name="receiveable_id[]" class="form-control receiveable_id" autocomplete="off" value="{{ $receiveable_id[$key] }}">
                             </td>
                         <td class="form-group">
-                            <input type="text" name="description[]" class="form-control description" value="{{ $description[$key] }}">  
+                            <input type="text" name="description[]" class="form-control description" value="{{ $description[$key] }}">
                         </td>
                         <td>
                             <input type="text" name="item_code[]" class="form-control item_code" readonly value="{{ $item_code[$key] }}">
@@ -297,11 +297,11 @@
                         </td>
                         <td>
                             <input name="serial_code[]" class="form-control serial_code" autocomplete="off" readonly value="{{ $serial_code[$key] }}">
-                        </td>                                        
+                        </td>
                         <td>
                             <input name="quantity[]" class="form-control quantity" autocomplete="off" readonly value="{{ $quantity[$key] }}">
                         </td>
-                      
+
                         <td>
                             <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" value="{{ $bbts_ownership[$key] }}">
                         </td>
@@ -337,20 +337,37 @@
     <script src="{{ asset('/js/switchery.min.js')}}"></script>
     <script>
         const CSRF_TOKEN = "{{ csrf_token() }}";
-        $('#date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());;
+        // $('#date').datepicker({
+        //     format: "dd-mm-yyyy",
+        //     autoclose: true,
+        //     todayHighlight: true,
+        //     showOtherMonths: true
+        // }).datepicker("setDate", new Date());
+
+        if ($('#date').val() != null)
+        {
+            $('#date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            });
+        }else {
+            $('#date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
+        }
         /* Append row */
         @if (empty($requisition) && empty(old('material_name')))
             // appendCalculationRow();
         @endif
-       
-       
 
-      
+
+
+
         $(document).on('keyup focus', '#client_name', function() {
             $(this).autocomplete({
                 source: function(request, response) {
@@ -386,7 +403,7 @@
             });
         });
 
-       
+
 
         //Search Material
         $(document).on('keyup focus', '.material_name', function() {
@@ -421,7 +438,7 @@
             //using form custom function js file
             // fillSelect2Options("{{ route('searchBranch') }}", '#branch_id');
             // associativeDropdown("{{ route('searchPop') }}", 'search', '#branch_id', '#pop_name', 'get', null)
-        
+
             $("#mrs_no").autocomplete({
                 source: function(request, response) {
                     $.ajax({
@@ -453,7 +470,7 @@
                     $('#mrs_no').val(ui.item.label);
                     return false;
                 }
-            })                      
+            })
         });
 
         $(document).on('change keyup', '.type_no', function() {
@@ -615,11 +632,11 @@
                 let client_ownership = Number($(this).closest('tr').find('.client_ownership').val());
                 let quantity = Number($(this).closest('tr').find('.quantity').val());
                 var classNames = this.classList;
-                
+
                 if(quantity >= (bbts_ownership + client_ownership)){
-                    
-                    
-                    $(this).closest('tr').find('.utilized_quantity').val(bbts_ownership + client_ownership);	
+
+
+                    $(this).closest('tr').find('.utilized_quantity').val(bbts_ownership + client_ownership);
                 }else{
                     alert('utilized quantity can not greater than provided quantity');
                     if (classNames.contains('client_ownership')) {
@@ -629,9 +646,9 @@
                         $(this).closest('tr').find('.client_ownership').val(0);
                         $(this).closest('tr').find('.bbts_ownership').val(quantity);
                     }
-                    $(this).closest('tr').find('.utilized_quantity').val(quantity);	
+                    $(this).closest('tr').find('.utilized_quantity').val(quantity);
                 }
-              
+
             })
 
             $('.utilized_quantity').on('keyup',function(){
@@ -640,7 +657,7 @@
 
                 if(utilized_qty > challan_qty){
                     alert('utilized quantity can not be greater than challan quantity');
-                    $(this).val(challan_qty);   
+                    $(this).val(challan_qty);
                 }
             })
     </script>

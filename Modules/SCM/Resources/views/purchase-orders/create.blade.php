@@ -406,12 +406,29 @@
         @endif
 
         $('.select2').select2();
-        $('.purchase_date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-            todayHighlight: true,
-            showOtherMonths: true
-        }).datepicker("setDate", new Date());
+        // $('.purchase_date').datepicker({
+        //     format: "dd-mm-yyyy",
+        //     autoclose: true,
+        //     todayHighlight: true,
+        //     showOtherMonths: true
+        // }).datepicker("setDate", new Date());
+
+        if ($('.purchase_date').val() != null)
+        {
+            $('.purchase_date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            });
+        }else {
+            $('.purchase_date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
+        }
 
         //submit form with ajax and validation response
         // document.querySelector('.custom-form').addEventListener('submit', function(e) {
