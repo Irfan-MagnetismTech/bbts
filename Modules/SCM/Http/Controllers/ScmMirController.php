@@ -419,10 +419,10 @@ class ScmMirController extends Controller
                             'id' => $item->stockable_id,
                             'type_no' => $item->stockable->wcr_no,
                         ];
-                    } else if ($received_type == 'WOR') {
+                    } else if ($received_type == 'MIR') {
                         return [
                             'id' => $item->stockable_id,
-                            'type_no' => $item->stockable->wor_no,
+                            'type_no' => $item->stockable->mir_no,
                         ];
                     } else if ($received_type == 'OS') {
                         return [
