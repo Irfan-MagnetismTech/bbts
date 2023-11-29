@@ -165,7 +165,31 @@
                 Comparative Statement & Supplier Selection</h2>
         </div>
     </div>
+    <div style="margin-left: 25px; margin-top: 10px">
+{{--        <span><b>Date Issued:</b> {{$comparativeStatement->effective_date ?? ''}}</span><br>--}}
+        <?php
+        $effectiveDate = $comparativeStatement->effective_date ?? '';
+        if (!empty($effectiveDate)) {
+            $formattedDate = date('d/m/y', strtotime($effectiveDate));
+            echo '<span><b>Date Issued:</b> ' . $formattedDate . '</span><br>';
+        } else {
+            echo '<span><b>Date Issued:</b> </span><br>';
+        }
+        ?>
 
+        <span><b>CS No:</b> {{$comparativeStatement->cs_no ?? ''}}</span><br>
+        <span><b>Indent No:</b> {{$comparativeStatement->indent_no ?? ''}}</span><br>
+        <span>
+            <b>PRS No:</b>
+                @foreach ($prsNos as $prsNo)
+                {{ $prsNo ?? ''}}
+                @if (!$loop->last)
+                    ,
+                @endif
+            @endforeach
+            </span>
+    </div>
+    <br>
     <div class="container" style="margin-top: 10px; clear: both; display: block; width: 96%;">
         <table id="table">
             <thead>

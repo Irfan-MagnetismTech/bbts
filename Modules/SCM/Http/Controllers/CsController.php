@@ -6,6 +6,7 @@ use Modules\SCM\Entities\MaterialBrand;
 use Modules\SCM\Entities\MaterialModel;
 use Modules\SCM\Entities\PurchaseOrder;
 use Modules\SCM\Entities\PurchaseOrderLine;
+use Modules\SCM\Entities\ScmPurchaseRequisition;
 use PDF;
 use App\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
@@ -330,8 +331,12 @@ class CsController extends Controller
         $comparativeStatement = Cs::where('id', $id)->first();
         $csMaterials = CsMaterial::latest()->get();
         $csSuppliers = CsSupplier::latest()->get();
+        $indent_no = Cs::where('id', $id)->value('indent_no');
+        $indent_id = Indent::where('indent_no', $indent_no)->value('id');
+        $scm_purchase_requisition_id = IndentLine::where('indent_id', $indent_id)->pluck('scm_purchase_requisition_id');
+        $prsNos = ScmPurchaseRequisition::whereIn('id', $scm_purchase_requisition_id)->pluck('prs_no');
 
-        return PDF::loadView('scm::cs.pdf', ['comparativeStatement' => $comparativeStatement, 'csMaterials' => $csMaterials, 'csSuppliers' => $csSuppliers], [], [
+        return PDF::loadView('scm::cs.pdf', ['comparativeStatement' => $comparativeStatement, 'csMaterials' => $csMaterials, 'csSuppliers' => $csSuppliers, 'prsNos' => $prsNos], [], [
             'format'                     => 'A4',
             'orientation'                => 'L',
             'title'                      => 'CS PDF',
@@ -343,7 +348,7 @@ class CsController extends Controller
             'watermark_image_size'       => 'D',
             'watermark_image_position'   => 'P',
         ])->stream('cs.pdf');
-        return view('scm::cs.pdf', compact('comparativeStatement', 'csMaterials', 'csSuppliers'));
+        return view('scm::cs.pdf', compact('comparativeStatement', 'csMaterials', 'csSuppliers', 'prsNos'));
     }
     public function getIndentNo()
     {
