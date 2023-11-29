@@ -587,16 +587,14 @@
                             // console.log(data);
                             scmMatareialDetailWithMaterial = data
                                 .scm_requisitiondetails_with_material;
-                            $('#fr_no').val(data.fr_no + ' (' + data
-                                ?.feasibility_requirement_detail?.connectivity_point +
-                                ')');
+                            $('#fr_no').val(data.fr_no);
                             $('#link_no').val(data.link_no);
                             $('#client_no').val(data.client_no);
                             $('#branch_id').val(data.branch?.id);
                             $('#branch_name').val(data.branch?.name);
                             $('#client_name').val(data.client?.client_name);
                             $('#client_address').val(data.feasibility_requirement_detail
-                                ?.location);
+                                ?.connectivity_point);
                             if (data.link_no != null) {
                                 $('#equipment_type').val('Link');
                             } else {

@@ -114,6 +114,8 @@ class PhysicalConnectivityController extends Controller
                 ];
             }
 
+            // dd($request->all());
+
             $connectivity_point = explode('_', $request->connectivity_point);
             $request->merge([
                 'connectivity_point' => $connectivity_point[0],
