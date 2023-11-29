@@ -54,7 +54,7 @@
                                     <input type="hidden" name="client_link_id" id="client_link_id">
                                 </div>
                                 <div class="col-6">
-                                    <label for="fr_no" class="font-weight-bold">FR List <span
+                                    <label for="fr_no" class="font-weight-bold">Connectivity Point<span
                                             class="text-danger font-bold">*</span></label>
                                     <select name="fr_no" id="fr_no" class="form-control">
                                         @if (!empty($supportTicket))
@@ -87,60 +87,61 @@
                             <div class="row">
 
 
-                            <div class="form-group col-6">
-                                <label for="support_complain_type_id">Complain Type:</label>
-                                <select class="form-control select2" id="support_complain_type_id"
-                                    name="support_complain_type_id">
-                                    <option value="" selected>Select Complain Type</option>
-                                    @foreach ($complainTypes as $complainType)
-                                        <option value="{{ $complainType->id }}"
-                                            {{ old('support_complain_type_id', !empty($supportTicket) ? $supportTicket->support_complain_type_id : null) == $complainType->id ? 'selected' : '' }}>
-                                            {{ $complainType->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="description">Description:</label>
-                                <input type="text" class="form-control" id="description" name="description"
-                                    aria-describedby="description"
-                                    value="{{ old('description') ?? (!empty($supportTicket) ? $supportTicket?->description : '') }}"
-                                    placeholder="Description">
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="ticket_source_id">Source: <span class="text-danger font-bold">*</span></label>
-                                <select class="form-control select2" id="ticket_source_id" name="ticket_source_id">
-                                    <option value="20" selected>Select Source</option>
-                                    @foreach ($ticketSources as $complainSource)
-                                        <option value="{{ $complainSource->id }}"
-                                            {{ old('ticket_source_id', !empty($supportTicket) ? $supportTicket->ticket_source_id : null) == $complainSource->id ? 'selected' : '' }}>
-                                            {{ $complainSource->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="priority">Priority:</label>
-                                <select class="form-control select2" id="priority" name="priority">
-                                    <option value="20" selected>Select Priority</option>
-                                    @foreach ($priorities as $priority)
-                                        <option value="{{ $priority }}"
-                                            {{ old('priority', !empty($supportTicket) ? $supportTicket->priority : null) == $priority ? 'selected' : '' }}>
-                                            {{ $priority }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-6">
-                                <label for="remarks">Remarks:</label>
-                                <input type="text" class="form-control" id="remarks" name="remarks"
-                                    aria-describedby="remarks"
-                                    value="{{ old('remarks') ?? (!empty($supportTicket) ? $supportTicket?->remarks : '') }}"
-                                    placeholder="Remarks">
-                            </div>
+                                <div class="form-group col-6">
+                                    <label for="support_complain_type_id">Complain Type:</label>
+                                    <select class="form-control select2" id="support_complain_type_id"
+                                        name="support_complain_type_id">
+                                        <option value="" selected>Select Complain Type</option>
+                                        @foreach ($complainTypes as $complainType)
+                                            <option value="{{ $complainType->id }}"
+                                                {{ old('support_complain_type_id', !empty($supportTicket) ? $supportTicket->support_complain_type_id : null) == $complainType->id ? 'selected' : '' }}>
+                                                {{ $complainType->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="description">Description:</label>
+                                    <input type="text" class="form-control" id="description" name="description"
+                                        aria-describedby="description"
+                                        value="{{ old('description') ?? (!empty($supportTicket) ? $supportTicket?->description : '') }}"
+                                        placeholder="Description">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="ticket_source_id">Source: <span
+                                            class="text-danger font-bold">*</span></label>
+                                    <select class="form-control select2" id="ticket_source_id" name="ticket_source_id">
+                                        <option value="20" selected>Select Source</option>
+                                        @foreach ($ticketSources as $complainSource)
+                                            <option value="{{ $complainSource->id }}"
+                                                {{ old('ticket_source_id', !empty($supportTicket) ? $supportTicket->ticket_source_id : null) == $complainSource->id ? 'selected' : '' }}>
+                                                {{ $complainSource->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="priority">Priority:</label>
+                                    <select class="form-control select2" id="priority" name="priority">
+                                        <option value="20" selected>Select Priority</option>
+                                        @foreach ($priorities as $priority)
+                                            <option value="{{ $priority }}"
+                                                {{ old('priority', !empty($supportTicket) ? $supportTicket->priority : null) == $priority ? 'selected' : '' }}>
+                                                {{ $priority }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="remarks">Remarks:</label>
+                                    <input type="text" class="form-control" id="remarks" name="remarks"
+                                        aria-describedby="remarks"
+                                        value="{{ old('remarks') ?? (!empty($supportTicket) ? $supportTicket?->remarks : '') }}"
+                                        placeholder="Remarks">
+                                </div>
 
 
-                        </div>
+                            </div>
 
 
 
