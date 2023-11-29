@@ -4,6 +4,8 @@ namespace Modules\SCM\Http\Controllers;
 
 use Modules\SCM\Entities\MaterialBrand;
 use Modules\SCM\Entities\MaterialModel;
+use Modules\SCM\Entities\PurchaseOrder;
+use Modules\SCM\Entities\PurchaseOrderLine;
 use PDF;
 use App\Services\BbtsGlobalService;
 use Illuminate\Http\Request;
@@ -345,6 +347,7 @@ class CsController extends Controller
     }
     public function getIndentNo()
     {
+        $items = [];
         $items = Indent::query()
             ->where('indent_no', 'like', '%' . request()->search . '%')
             ->get()
@@ -352,8 +355,59 @@ class CsController extends Controller
                 'value'                 => $item->indent_no,
                 'label'                 => $item->indent_no
             ]);
+
+        $poIndentIds = PurchaseOrder::pluck('indent_id')
+            ->unique()
+            ->values()
+            ->toArray();
+
+        foreach ($poIndentIds as $poIndentId) {
+            $purchaseOrders = PurchaseOrder::where('indent_id', $poIndentId)->get();
+            $materialIds=[];
+            $poQuantity = 0;
+            $prsQuantity = 0;
+            $scmPurchaseRequisitionIds = IndentLine::where('indent_id', $poIndentId)->pluck('scm_purchase_requisition_id');
+
+            foreach ($purchaseOrders as $po) {
+                $poQuantity += PurchaseOrderLine::where('purchase_order_id', $po->id)
+                    ->sum('quantity');
+
+                $materialIds = PurchaseOrderLine::where('purchase_order_id', $po->id)
+                    ->pluck('material_id')
+                    ->unique()
+                    ->values()
+                    ->toArray();
+            }
+
+            foreach ($scmPurchaseRequisitionIds as $scmPurchaseRequisitionId) {
+                $prsQuantity += ScmPurchaseRequisitionDetails::where('scm_purchase_requisition_id', $scmPurchaseRequisitionId)
+                    ->whereIn('material_id', $materialIds)
+                    ->sum('quantity');
+            }
+
+            if ($poQuantity == $prsQuantity) {
+                $indent_no = Indent::where('id', $poIndentId)->value('indent_no');
+                $indent_items = $items->reject(function ($item) use ($indent_no) {
+                    return $item['value'] === $indent_no;
+                })->values();
+                $items = $indent_items;
+            }
+        }
         return response()->json($items);
     }
+
+//    public function getIndentNo()
+//    {
+//        $items = Indent::query()
+//            ->where('indent_no', 'like', '%' . request()->search . '%')
+//            ->get()
+//            ->map(fn ($item) => [
+//                'value'                 => $item->indent_no,
+//                'label'                 => $item->indent_no
+//            ]);
+//        return response()->json($items);
+//    }
+
     public function searchMaterialByIndent(Request $request)
     {
         $indent_id = Indent::where('indent_no', $request->indent_no)->value('id');
