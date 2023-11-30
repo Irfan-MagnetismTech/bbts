@@ -433,15 +433,14 @@
         //     showOtherMonths: true
         // }).datepicker("setDate", new Date());
 
-        if ($('#date').val() != null)
-        {
+        if ($('#date').val() != null) {
             $('#date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
             });
-        }else {
+        } else {
             $('#date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
@@ -740,13 +739,12 @@
                 type: 'get',
                 data: {
                     scm_requisition_id: $('#scm_requisition_id').val(),
-                    branch: $('#branch_id').val(),
+                    branch_id: $('#branch_id').val(),
                     material_id: material_name.val(),
                     brand_id: brand.val(),
                     model: model.val(),
                     stockable_id: receiveable_id,
                     received_type: received_type,
-                    branch_id: branch_id,
                 },
                 success: function(data) {
                     var html = '<option value="" readonly selected>Select</option>';

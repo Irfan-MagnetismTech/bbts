@@ -104,6 +104,7 @@ class CommonApiController extends Controller
         return response()->json($results);
     }
 
+
     public function getClientsPreviousTickets($frNo, $limit)
     {
         $limit = (abs($limit) > 5) ? 5 : abs($limit);
@@ -485,16 +486,16 @@ class CommonApiController extends Controller
         ]);
     }
 
-//    public function getMaterialWiseBrands()
-//    {
-//        $material = MaterialBrand::where('material_id', request('material_id'))->first();
-//        if ($material) {
-//            $brands = Brand::select('id', 'name')->whereIn('id', explode(',', $material->brand))->get();
-//            return response()->json($brands);
-//        } else {
-//            return response()->json([]);
-//        }
-//    }
+    //    public function getMaterialWiseBrands()
+    //    {
+    //        $material = MaterialBrand::where('material_id', request('material_id'))->first();
+    //        if ($material) {
+    //            $brands = Brand::select('id', 'name')->whereIn('id', explode(',', $material->brand))->get();
+    //            return response()->json($brands);
+    //        } else {
+    //            return response()->json([]);
+    //        }
+    //    }
 
     public function getMaterialWiseBrands()
     {
@@ -522,5 +523,4 @@ class CommonApiController extends Controller
 
         return response()->json($models);
     }
-
 }
