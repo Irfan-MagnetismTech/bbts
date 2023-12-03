@@ -12,7 +12,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Services\BbtsGlobalService;
 use Illuminate\Database\QueryException;
-use Modules\Sales\Entities\ClientDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Notification;
 use Modules\Ticketing\Entities\SupportTicket;
@@ -100,9 +99,6 @@ class SupportTicketController extends Controller
             'mailNotification', 'smsNotification'
         ]);
 
-
-
-
         $ticketInfo['ticket_no'] = $ticketIno;
         $ticketInfo['created_by'] = auth()->user()->id;
         $ticketInfo['opening_date'] = Carbon::parse(decrypt($request->opening_date) ?? null)->format('Y-m-d H:i:s');
@@ -142,15 +138,15 @@ class SupportTicketController extends Controller
             $subject = "[$supportTicket->ticket_no] " . $request->subject;
             $message = $request->description;
             $model = 'Modules\Ticketing\Entities\SupportTicket';
-            $receiver = $supportTicket?->clientDetail?->client?->name;
+            $receiver = $supportTicket?->client?->name;
 
 
             if ($request->mailNotification == 1) {
-                $to = $supportTicket?->clientDetail?->email;
+                $to = $supportTicket?->client?->email;
                 $notificationError = (new EmailService())->sendEmail($to, $cc, $receiver, $subject, $message);
             }
             if ($request->smsNotification == 1) {
-                $to = $supportTicket?->clientDetail?->mobile;
+                $to = $supportTicket?->client?->mobile;
                 $notificationError = (new SmsService())->sendSms($to, $message);
             }
 
@@ -497,15 +493,15 @@ class SupportTicketController extends Controller
                 'text' => 'Provide Feedback',
             ];
 
-            $receiver = $supportTicket?->clientDetail?->client?->name;
+            $receiver = $supportTicket?->client?->name;
 
 
             if ($request->mailNotification == 1) {
-                $to = $supportTicket?->clientDetail?->client?->email;
+                $to = $supportTicket?->client?->email;
                 $notificationError = (new EmailService())->sendEmail($to, $cc = null, $receiver, $subject, $message, $button);
             }
             if ($request->smsNotification == 1) {
-                $to = $supportTicket?->clientDetail?->client?->mobile;
+                $to = $supportTicket?->client?->mobile;
                 $notificationError = (new SmsService())->sendSms($to, $message);
             }
 
@@ -595,5 +591,32 @@ class SupportTicketController extends Controller
                 'message' => 'Something went wrong. Please try again.'
             ]);
         }
+    }
+    public function getClientsByLinkId()
+    {
+        $results = Client::query()
+            ->with('feasibility_requirement_details')
+            ->where(function ($query) {
+                $search = request('search');
+                $query->where('client_no', 'LIKE', '%' . $search . '%')
+                    ->orWhere('client_name', 'LIKE', '%' . $search . '%');
+            })
+            ->limit(15)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'id' => $item->client_no,
+                    'text' => $item->client_no . ' - ' . $item->client_name,
+                    'client_name' => $item->client_name,
+                    'contact_person' => $item->contact_person,
+                    'contact_no' => $item->contact_no,
+                    'email' => $item->email,
+                    'client_type' => $item->client_type,
+                    'address' => $item->location,
+                    'fr_list' => $item->feasibility_requirement_details->pluck('fr_no', 'connectivity_point'),
+                ];
+            });
+
+        return response()->json($results);
     }
 }

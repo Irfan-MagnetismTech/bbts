@@ -45,4 +45,5 @@ class Connectivity extends Model
             'name' => 'No data found'
         ]);
     }
+
 }

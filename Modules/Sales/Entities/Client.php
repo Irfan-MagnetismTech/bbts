@@ -6,6 +6,7 @@ use Modules\Admin\Entities\User;
 use App\Models\Dataencoding\Thana;
 use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Division;
+use Modules\Networking\Entities\Connectivity;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\ClientDetail;
@@ -81,6 +82,11 @@ class Client extends Model
     public function feasibility_requirement_details()
     {
         return $this->hasMany(FeasibilityRequirementDetail::class, 'client_no', 'client_no');
+    }
+
+    public function connectivities()
+    {
+        return $this->hasMany(Connectivity::class, 'client_no', 'client_no');
     }
 
     public function feasibility_requirement()
