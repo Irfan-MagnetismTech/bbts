@@ -90,6 +90,8 @@ class ScmChallanController extends Controller
                 $challan_details[] = $this->GetMrrDetails($request, $kk);
             };
 
+            // dd($stock_ledgers);
+
             $challan = ScmChallan::create($challan_data);
             $challan->scmChallanLines()->createMany($challan_details);
             $challan->stockable()->createMany($stock_ledgers);
@@ -226,10 +228,19 @@ class ScmChallanController extends Controller
 
     public function GetStockLedgerData($req, $key1, $key2 = NULL)
     {
+        $ClassAarray = [
+            'MRR' => ScmMrr::class,
+            'WCR' => ScmWcr::class,
+            'ERR' => ScmErr::class,
+            'MIR' => ScmMir::class,
+            'OS' => OpeningStock::class,
+        ];
+        // dump($ClassAarray[$req->received_type[$key1]]);
         return [
             'branch_id' => $req->branch_id,
             'material_id' => $req->material_name[$key1],
-            'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : (($req->received_type[$key1] == 'WOR') ? ScmWor::class : Null))),
+            'receiveable_type' => $ClassAarray[$req->received_type[$key1]],
+            // 'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : (($req->received_type[$key1] == 'WOR') ? ScmWor::class : Null))),
             'received_type' => $req->received_type[$key1],
             'receiveable_id' => $req->type_id[$key1],
             'item_code' => $req->item_code[$key1],
