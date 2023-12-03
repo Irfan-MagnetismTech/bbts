@@ -503,9 +503,6 @@ class ScmMirController extends Controller
             ->when(request()->material_id, function ($query) {
                 return $query->where('material_id', request()->material_id);
             })
-            ->when($brand_id, function ($query) use ($brand_id) {
-                return $query->where('brand_id', $brand_id);
-            })
             ->first();
         $data['current_stock'] = $total_in + $total_out;
         $data['mrs_quantity'] = $scmDetail->quantity ?? 0;

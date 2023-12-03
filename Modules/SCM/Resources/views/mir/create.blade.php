@@ -207,7 +207,8 @@
                 @foreach ($receiveable_type as $key => $value)
                     <tr>
                         <td>
-                            <select class="form-control material_name select2" name="material_name[]" autocomplete="off" required>
+                            <select class="form-control material_name select2" name="material_name[]" autocomplete="off"
+                                required>
                                 @foreach ($materials[$key] as $key1 => $value)
                                     <option value="{{ $value->material->id }}"
                                         {{ $material_id[$key] == $value->material->id ? 'selected' : '' }}
@@ -244,7 +245,8 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control received_type" name="received_type[]" autocomplete="off" required>
+                            <select class="form-control received_type" name="received_type[]" autocomplete="off"
+                                required>
                                 <option value="">Select</option>
                                 @foreach (config('businessinfo.receivedTypes') as $typeKey => $typeValue)
                                     <option value="{{ $typeValue }}"
@@ -326,15 +328,14 @@
         //     showOtherMonths: true
         // }).datepicker("setDate", new Date());
 
-        if ($('#applied_date').val() != null)
-        {
+        if ($('#applied_date').val() != null) {
             $('#applied_date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
             });
-        }else {
+        } else {
             $('#applied_date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
@@ -619,7 +620,7 @@
                 },
                 success: function(data) {
                     console.log(data);
-                    (event_this).closest('tr').find('.from-current_quantity').val(data.current_stock);
+                    // (event_this).closest('tr').find('.from-current_quantity').val(data.current_stock); 
                     (event_this).closest('tr').find('.mrs_quantity').val(data.mrs_quantity);
                 }
             });
