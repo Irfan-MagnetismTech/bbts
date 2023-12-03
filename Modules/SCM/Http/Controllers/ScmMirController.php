@@ -91,7 +91,6 @@ class ScmMirController extends Controller
                 }
                 $mir_details[] = $this->getMirDetails($request, $key);
             };
-            // dd($stock_ledgers);
 
             $mir_data['mir_no'] = $this->mirNo;
             $mir_data['created_by'] = auth()->user()->id;
@@ -256,9 +255,9 @@ class ScmMirController extends Controller
         // dump($receive_type);
 
         return [
-            'receiveable_id' => (!$qty ? $request->type_id[$key1] : null),
+            'receiveable_id' => (!empty($qty) ? $request->type_id[$key1] : null),
             // 'receiveable_type' => (!$qty ? ($request->received_type[$key1] == 'MRR') ? ScmMrr::class : (($request->received_type[$key1] == 'WCR') ? ScmWcr::class : (($request->received_type[$key1] == 'ERR') ? ScmErr::class : (($request->received_type[$key1] == 'OS') ? OpeningStock::class : NULL))) : null),
-            'receiveable_type' => (!$qty ? $ClassAarray[$request->received_type[$key1]] : null),
+            'receiveable_type' => (!empty($qty) ? $ClassAarray[$request->received_type[$key1]] : null),
             'received_type' => $receive_type,
             'branch_id' => $branch_id,
             'material_id' => $request->material_name[$key1],
@@ -592,6 +591,8 @@ class ScmMirController extends Controller
             ->toArray();
         $exit_serial_codes = array_filter($exit_serial_codes);
 
+
+
         $serial_codes = StockLedger::query()
             ->where([
                 'material_id' => request()->material_id,
@@ -613,6 +614,7 @@ class ScmMirController extends Controller
                         'serial_code' => $item->serial_code
                     ])
                     ->sum('quantity');
+
                 if ($item->material->type == 'Item' && $quantity > 0 && !in_array($item->serial_code, $exit_serial_codes)) {
                     $data[] = [
                         'label' => $item->serial_code,
