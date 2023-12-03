@@ -207,7 +207,7 @@
                 @foreach ($receiveable_type as $key => $value)
                     <tr>
                         <td>
-                            <select class="form-control material_name select2" name="material_name[]">
+                            <select class="form-control material_name select2" name="material_name[]" autocomplete="off" required>
                                 @foreach ($materials[$key] as $key1 => $value)
                                     <option value="{{ $value->material->id }}"
                                         {{ $material_id[$key] == $value->material->id ? 'selected' : '' }}
@@ -224,7 +224,7 @@
                                 autocomplete="off" value="{{ $material_data[$key]->type }}">
                         </td>
                         <td>
-                            <select class="form-control brand select2" name="brand[]">
+                            <select class="form-control brand select2" name="brand[]" autocomplete="off" required>
                                 @foreach ($brands[$key] as $key1 => $value)
                                     <option value="{{ $value->brand->id }}"
                                         {{ $brand_id[$key] == $value->brand->id ? 'selected' : '' }}>
@@ -244,7 +244,7 @@
                             </select>
                         </td>
                         <td>
-                            <select class="form-control received_type" name="received_type[]">
+                            <select class="form-control received_type" name="received_type[]" autocomplete="off" required>
                                 <option value="">Select</option>
                                 @foreach (config('businessinfo.receivedTypes') as $typeKey => $typeValue)
                                     <option value="{{ $typeValue }}"
@@ -256,8 +256,8 @@
                         </td>
                         <td>
                             <select name="type_id[{{ $key }}]" class="form-control type_id select2"
-                                autocomplete="off">
-                                <option value="">Select Type</option>
+                                autocomplete="off" required>
+                                <option value="">Select Type No</option>
                                 @foreach ($type_no[$key] as $typeKey => $typevalue)
                                     <option value="{{ $typevalue['id'] }}" @selected($mrr_id[$key] == $typevalue['id'])>
                                         {{ $typevalue['type_no'] }}</option>
@@ -710,14 +710,14 @@
         function appendCalculationRow() {
             let row = `<tr>
                             <td class="form-group">
-                                <select class="form-control material_name select2" name="material_name[${indx}]">
+                                <select class="form-control material_name select2" name="material_name[${indx}]" autocomplete="off" required>
                                     <option value="">Select Material</option>
                                 </select>
                                 <input type="hidden" name="code[${indx}]" class="form-control code" autocomplete="off">
                                 <input type="hidden" name="type[${indx}]" class="form-control type" autocomplete="off">
                             </td>
                             <td>
-                                <select class="form-control brand select2" name="brand[${indx}]">
+                                <select class="form-control brand select2" name="brand[${indx}]" autocomplete="off" required>
                                 </select>
                             </td>
                             <td>
@@ -725,7 +725,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off">
+                                <select name="received_type[${indx}]" class="form-control received_type" autocomplete="off" required>
                                     <option value="">Select Out From</option>
                                     @foreach (config('businessinfo.receivedTypes') as $value)
                                         <option value="{{ $value }}">{{ strToUpper($value) }}</option>
@@ -733,7 +733,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control type_no select2" name="type_id[${indx}]">
+                                <select class="form-control type_no select2" name="type_id[${indx}]" autocomplete="off" required>
                                     <option value="">Select</option>
                                 </select>
                             </td>

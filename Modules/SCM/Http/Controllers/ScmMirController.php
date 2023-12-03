@@ -125,6 +125,7 @@ class ScmMirController extends Controller
      */
     public function edit(ScmMir $material_issue)
     {
+        // dd($material_issue->lines);
         $materials = [];
         $brands = [];
         $models = [];
@@ -137,8 +138,8 @@ class ScmMirController extends Controller
             $materials[] = StockLedger::query()
                 ->with('material')
                 ->where([
-                    'receiveable_id' => $item->receiveable_id,
-                    'receiveable_type' => $item->receiveable_type,
+                    // 'receiveable_id' => $item->receiveable_id,
+                    // 'receiveable_type' => $item->receiveable_type,
                     'branch_id' => $material_issue->to_branch_id,
                 ])
                 ->get()
@@ -156,6 +157,8 @@ class ScmMirController extends Controller
 
             $type_no[$key] = $this->receiveTypeWiseList($item->received_type, $item->material_id, $item->brand_id, $material_issue->branch_id);
         });
+
+        // dd($materials, $brands, $models, $serial_codes, $from_branch_stock, $to_branch_stock, $type_no);
 
         return view('scm::mir.create', compact('material_issue', 'materials', 'brands', 'models', 'serial_codes', 'from_branch_stock', 'to_branch_stock', 'type_no'));
     }
