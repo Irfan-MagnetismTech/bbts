@@ -112,10 +112,10 @@ class ScmChallanController extends Controller
     public function show(ScmChallan $challan)
     {
         $challanLines = $challan->scmChallanLines()->get()
-            ->map(function ($item){
-                $murLines = ScmMurLine::where('material_id',$item->material_id)
+            ->map(function ($item) {
+                $murLines = ScmMurLine::where('material_id', $item->material_id)
                     ->where('brand_id', $item->brand_id)
-                    ->when($item->model, function($q) use($item){
+                    ->when($item->model, function ($q) use ($item) {
                         $q->where('model', $item->model);
                     })->get();
                 $SL_item =  $murLines->pluck('serial_code');
@@ -134,7 +134,7 @@ class ScmChallanController extends Controller
                 return $data;
             });
 
-        return view('scm::challans.show', compact('challan','challanLines'));
+        return view('scm::challans.show', compact('challan', 'challanLines'));
     }
 
     /**
@@ -408,10 +408,10 @@ class ScmChallanController extends Controller
     {
         $challan = ScmChallan::where('id', $id)->first();
         $challanLines = $challan->scmChallanLines()->get()
-            ->map(function ($item){
-                $murLines = ScmMurLine::where('material_id',$item->material_id)
+            ->map(function ($item) {
+                $murLines = ScmMurLine::where('material_id', $item->material_id)
                     ->where('brand_id', $item->brand_id)
-                    ->when($item->model, function($q) use($item){
+                    ->when($item->model, function ($q) use ($item) {
                         $q->where('model', $item->model);
                     })->get();
                 $SL_item =  $murLines->pluck('serial_code');
@@ -444,7 +444,7 @@ class ScmChallanController extends Controller
         ])->stream('challan.pdf');
 
 
-        return view('scm::challans.challan_pdf', compact('challan','challanLines'));
+        return view('scm::challans.challan_pdf', compact('challan', 'challanLines'));
     }
 
     public function receiveTypeWiseList($received_type, $material_id, $brand_id, $branch_id)
@@ -478,7 +478,6 @@ class ScmChallanController extends Controller
                     ->where('branch_id', $branch_id)
                     ->where('material_id', $item->material_id)
                     ->where('brand_id', $item->brand_id)
-                    ->where('model', $item->model)
                     ->where('quantity', '<', 0)
                     ->sum('quantity');
                 if (($total_stock - $out_stock) >= 0) {

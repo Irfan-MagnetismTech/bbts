@@ -95,13 +95,9 @@ class StockLedger extends Model
 
     public function scopeDropdownDataListForChallan($query, $uniqueKey, $material, $brand, $model, $item): Collection
     {
-        return $query->where([
-            'receiveable_id' => $item->receiveable_id,
-            'receiveable_type' => $item->receiveable_type
-        ])
-            ->when($material, function ($query4) use ($item) {
-                return $query4->where('material_id', $item->material_id);
-            })
+        return $query->when($material, function ($query4) use ($item) {
+            return $query4->where('material_id', $item->material_id);
+        })
             ->when($brand, function ($query3) use ($item) {
                 return $query3->where('brand_id', $item->brand_id);
             })
