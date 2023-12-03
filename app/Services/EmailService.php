@@ -19,7 +19,5 @@ class EmailService extends Controller
         } catch (\Throwable $th) {
             return true;
         }
-        
-
     }
 }

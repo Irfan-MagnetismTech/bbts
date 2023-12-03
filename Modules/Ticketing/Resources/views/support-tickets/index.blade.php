@@ -90,18 +90,18 @@
                 @foreach ($supportTickets as $ticket)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
-                        <td>{{ $ticket->ticket_no }}</td>
+                        <td>{{ $ticket->ticket_no ?? '' }}</td>
                         <td>{{ $ticket->client->client_name ?? '' }} <br>
                             {{ $ticket->feasibilityRequirementDetails->connectivity_point ?? '' }}</td>
-                        <td>{{ $ticket->priority }}</td>
-                        <td style="width: 100px; white-space: normal">{{ $ticket->supportComplainType->name }}</td>
-                        <td>{{ $ticket->ticketSource->name }}</td>
-                        <td>{{ $ticket->description }}</td>
-                        <td>{{ $ticket->createdBy->name }}</td>
+                        <td>{{ $ticket->priority ?? '' }}</td>
+                        <td style="width: 100px; white-space: normal">{{ $ticket->supportComplainType->name ?? '' }}</td>
+                        <td>{{ $ticket->ticketSource->name ?? '' }}</td>
+                        <td>{{ $ticket->description ?? '' }}</td>
+                        <td>{{ $ticket->createdBy->name ?? ''}}</td>
                         <td>
-                            {{ $ticket->status }} <br />
+                            {{ $ticket->status ?? '' }} <br />
                             <small>Last Activity:
-                                {{ $ticket->supportTicketLifeCycles()->latest()->first()->user->name }}</small>
+                                {{ $ticket->supportTicketLifeCycles()->latest()->first()->user->name ?? ''}}</small>
                         </td>
 
                         <td class="d-flex align-items-center justify-content-center">

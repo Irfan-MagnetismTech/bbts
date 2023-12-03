@@ -42,15 +42,15 @@ class ClientFeedbackController extends Controller
                 $supportTicket->clientFeedbacks()->create([
                     'feedback' => $request->comment,
                     'rating' => $request->feedback,
-                    'fr_composite_key' => $supportTicket->fr_composite_key,
-                    'client_id' => $supportTicket->client_id
+                    'fr_no' => $supportTicket->fr_no,
+                    'client_no' => $supportTicket->client_no
                 ]);
             });
 
-            return redirect('https://bbts.net')->with('success', 'Feedback submitted successfully');
+            return redirect('http://119.18.145.15/')->with('success', 'Feedback submitted successfully');
         } catch (Exception $th) {
             return $th->getMessage();
-            return redirect('https://bbts.net')->with('error', 'Something went wrong');
+            return redirect('http://119.18.145.15/')->with('error', 'Something went wrong');
         }
     }
 

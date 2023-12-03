@@ -38,7 +38,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::get('forwarded-tickets', [SupportTicketController::class, 'forwardedTickets'])->name('forwarded-tickets');
     Route::post('accept-forwarded-tickets', [TicketMovementController::class, 'acceptForwardedTickets'])->name('accept-forwarded-tickets');
-    
+
     Route::get('backwarded-tickets', [SupportTicketController::class, 'backwardedTickets'])->name('backwarded-tickets');
 
     Route::get('handovered-tickets', [SupportTicketController::class, 'handoveredTickets'])->name('handovered-tickets');
@@ -59,12 +59,12 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::get('close-ticket/{supportTicketId}', [SupportTicketController::class, 'closeTicket'])->name('close-ticket');
     Route::post('process-close-ticket/{supportTicketId}', [SupportTicketController::class, 'processCloseTicket'])->name('process-close-ticket');
-    
+
     Route::get('reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'reopenTicket'])->name('reopen-ticket');
     Route::post('process-reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'processReopenTicket'])->name('process-reopen-ticket');
 
     Route::get('feedback-list', [ClientFeedbackController::class, 'feedbackList'])->name('feedback-list');
-
+    Route::get('get-clients-st', [SupportTicketController::class, 'getClientsByLinkId'])->name('get-clients-st');
     // Ticketing Reports
     Route::prefix('reports')->group(function() {
         Route::get('/', [ReportController::class, 'index'])->name('report-index');

@@ -41,7 +41,6 @@
                     <div class="row">
                         <div class="col-5">
                             <div class="row">
-
                                 <div class="col-6">
                                     <label for="client_no" class="font-weight-bold">Client ID: <span
                                             class="text-danger font-bold">*</span></label>
@@ -174,8 +173,6 @@
                                     value="{{ old('body') ?? (!empty($supportTicket) ? $supportTicket?->body : '') }}"
                                     placeholder="Mail Description">
                             </div>
-
-
                         </div>
 
                         <div class="col-7">
@@ -461,7 +458,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="row" id="formSubmit">
                         <div class="col-3 mx-auto">
@@ -472,8 +468,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </form>
             </div>
         </div>
@@ -483,14 +477,11 @@
 @section('script')
     <script>
         $(document).ready(function() {
-            select2Ajax("{{ route('get-clients-by-links') }}", '#client_no');
+            select2Ajax("{{ url('ticketing/get-clients-st') }}", '#client_no');
             $('#support_complain_type_id').select2({
                 placeholder: "Select Complain Type",
             })
         });
-
-
-
 
         $('#client_no').on('select2:select', function(e) {
             let clientId = e.params.data.fullObject?.client?.id
@@ -598,7 +589,7 @@
                 //     $("#formSubmit").find("button").removeAttr("style");
                 // }
 
-                // run foreach data 
+                // run foreach data
                 var tableData = '';
                 $.each(tickets, function(key, value) {
                     // console.console.log();
