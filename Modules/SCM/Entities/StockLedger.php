@@ -80,7 +80,7 @@ class StockLedger extends Model
             'material_id' => $item->material_id,
             // 'receiveable_id' => $item->receiveable_id,
             // 'receiveable_type' => $item->receiveable_type,
-            'branch_id' => $material_issue->to_branch_id,
+            'branch_id' => $material_issue->from_branch_id,
         ])
             ->when($brand, function ($query3) use ($item) {
                 return $query3->where('brand_id', $item->brand_id);
