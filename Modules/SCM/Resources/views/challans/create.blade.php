@@ -292,7 +292,7 @@
             </thead>
             <tbody id="challanDataBody">
                 @php
-
+                    // @dump($challan->scmChallanLines->pluck('received_type'));
                     $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                     $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
                     $received_no = old('type_no', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
