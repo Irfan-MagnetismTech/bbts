@@ -595,7 +595,12 @@ class SupportTicketController extends Controller
     public function getClientsByLinkId()
     {
         $results = Client::query()
-            ->with('feasibility_requirement_details')
+            ->with([
+                'feasibility_requirement_details',
+                'connectivities' => function ($query) {
+                    $query->where('is_modify', 0);
+                }
+            ])
             ->where(function ($query) {
                 $search = request('search');
                 $query->where('client_no', 'LIKE', '%' . $search . '%')
@@ -604,6 +609,16 @@ class SupportTicketController extends Controller
             ->limit(15)
             ->get()
             ->map(function ($item) {
+                $frList = $item->connectivities->flatMap(function ($connectivity) use ($item) {
+                    $detail = $item->feasibility_requirement_details
+                        ->where('fr_no', $connectivity->fr_no)
+                        ->first();
+                    if ($detail) {
+                        return [$detail->connectivity_point => $detail->fr_no];
+                    }
+                    return [];
+                });
+
                 return [
                     'id' => $item->client_no,
                     'text' => $item->client_no . ' - ' . $item->client_name,
@@ -613,7 +628,7 @@ class SupportTicketController extends Controller
                     'email' => $item->email,
                     'client_type' => $item->client_type,
                     'address' => $item->location,
-                    'fr_list' => $item->feasibility_requirement_details->pluck('fr_no', 'connectivity_point'),
+                    'fr_list' =>$frList,
                 ];
             });
 

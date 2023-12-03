@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Models\Dataencoding\Employee;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class Connectivity extends Model
 {
@@ -45,5 +47,4 @@ class Connectivity extends Model
             'name' => 'No data found'
         ]);
     }
-
 }
