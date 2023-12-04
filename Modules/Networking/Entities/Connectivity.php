@@ -52,7 +52,7 @@ class Connectivity extends Model
 
     public function activations(): BelongsTo
     {
-        return $this->belongsTo(Activation::class, 'id', 'connectivity_id');
+        return $this->belongsTo(Activation::class, 'fr_no', 'fr_no');
     }
 
     public function saleProductDetails(): HasMany

@@ -16,7 +16,6 @@ return new class extends Migration
     {
         Schema::create('activations', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Connectivity::class);
             $table->string('client_no')->nullable();
             $table->string('fr_no')->nullable();
             $table->string('is_active')->default('Active');
