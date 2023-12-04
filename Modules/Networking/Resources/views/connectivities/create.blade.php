@@ -56,14 +56,14 @@
     $form_heading = !empty($connectivity) ? 'Update' : 'Add';
     $form_url = !empty($connectivity) ? '' : route('connectivities.store');
     $form_method = !empty($connectivity) ? 'PUT' : 'POST';
-    $is_active = old('is_active', !empty($connectivity) ? $connectivity->activations->is_active : null);
+    $is_active = old('is_active', !empty($connectivity) ? $connectivity->activations?->is_active : null);
     $sale_id = old('sale_id', !empty($connectivity) ? $connectivity->sale_id : $salesDetail->sale_id);
     $commissioning_date = old('commissioning_date', !empty($connectivity) ? $connectivity->commissioning_date : today()->format('d-m-Y'));
 
 @endphp
 
 @section('breadcrumb-button')
-    <a href="{{ route('physical-connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 

@@ -6,8 +6,10 @@ use Carbon\Carbon;
 use App\Models\Dataencoding\Employee;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Modules\Sales\Entities\SaleProductDetail;
 
 class Connectivity extends Model
 {
@@ -51,5 +53,10 @@ class Connectivity extends Model
     public function activations(): BelongsTo
     {
         return $this->belongsTo(Activation::class, 'id', 'connectivity_id');
+    }
+
+    public function saleProductDetails(): HasMany
+    {
+        return $this->hasMany(SaleProductDetail::class, 'sale_id', 'sale_id');
     }
 }

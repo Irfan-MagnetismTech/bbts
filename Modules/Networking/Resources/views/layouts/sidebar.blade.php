@@ -34,7 +34,8 @@
                 <ul class="pcoded-submenu">
                     <li class="{{ request()->routeIs('connectivity.create') ? 'active' : null }}">
                         <a href="{{ route('connectivity.create') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Add New Link</span><span
+                                    class="ti-angle-right"></i></span><span
+                                class="pcoded-mtext">Add New Link</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>
@@ -246,6 +247,28 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
+            </ul>
+        </li>
+    @endcan
+    @can('networking-report-view')
+        <li class="pcoded-hasmenu {{ request()->routeIs(['networking-reports.*']) ? 'active pcoded-trigger' : null }}">
+            <a href="javascript:void(0)">
+                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-mtext">Report</span>
+                <span class="pcoded-mcaret"></span>
+            </a>
+            <ul class="pcoded-submenu">
+                <li class="{{ request()->routeIs('active-clients-report') ? 'active' : null }}">
+                    <a href="{{ route('active-clients-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span
+                            class="pcoded-mtext">Active Clients</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+                {{--                <li class="{{ request()->routeIs('work-order-receives.index') ? 'active' : null }}">--}}
+                {{--                    <a href="{{ route('work-order-receives.index') }}"> <span class="pcoded-micon"><i--}}
+                {{--                                class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span--}}
+                {{--                            class="pcoded-mcaret"></span></a>--}}
+                {{--                </li>--}}
             </ul>
         </li>
     @endcan

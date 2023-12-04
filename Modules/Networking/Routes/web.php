@@ -32,6 +32,7 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
 
 
     // Route::get('ip-import', [ImportController::class, 'ip_import'])->name('ip-import');
+    Route::get('active-clients-report', [ConnectivityController::class, 'activeClientsReport'])->name('active-clients-report');
 
     Route::resource('connectivities', ConnectivityController::class);
     Route::resource('connectivities-modification', ConnectivityModificationController::class);

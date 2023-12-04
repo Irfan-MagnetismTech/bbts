@@ -138,4 +138,10 @@ class ConnectivityController extends Controller
     {
         //
     }
+
+    public function activeClientsReport()
+    {
+        $activations = Activation::where('is_active', 'Active')->get();
+        return view('networking::reports.active_clients', compact('activations'));
+    }
 }
