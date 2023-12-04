@@ -45,12 +45,12 @@
 
                 @foreach ($salesDetails as $key => $details)
                     @php
-                        $product_category = [];
-                        $product_category[] = $details->saleProductDetails
+                        $product_category = $details->saleProductDetails
                             ->map(function ($item, $key) {
-                                return $category = $item->product->category->name;
+                                return $item->product->category->name;
                             })
-                            ->unique();
+                            ->unique()
+                            ->toArray();
                     @endphp
 
 
@@ -109,10 +109,10 @@
                             @endif
 
                             @if ($details->sale->is_modified == 1)
-                                <span class="badge badge-info">
+                                {{-- <span class="badge badge-info">
                                     <a href="{{ route('modify-logical-data-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                         class="text-white" target="_blank">Data</a>
-                                </span>
+                                </span> --}}
                             @else
                                 @if (in_array('Data', $product_category) && empty($details->logicalConnectivityData))
                                     <span class="badge badge-info">

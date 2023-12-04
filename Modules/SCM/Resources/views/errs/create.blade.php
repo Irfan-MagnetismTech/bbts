@@ -157,9 +157,8 @@
         </div>
         <div class="form-group col-3 client_name">
             <label for="client_name">Client Name:</label>
-            <input type="text" class="form-control" id="client_name"
-                aria-describedby="client_name" name="client_name"
-                value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
+            <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                name="client_name" value="{{ old('client_name') ?? (@$client_name ?? '') }}" placeholder="Search...">
         </div>
 
         <div class="form-group col-3 fr_no">
@@ -486,29 +485,29 @@
                                 <input name="description[]" class="form-control description" autocomplete="off" type="text" value="">
                             </td>
                             <td>
-                                <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" type="text" value="${value.utilized_quantity}" readonl>
+                                <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" type="text" value="${value?.utilized_quantity}" readonl>
                             </td>
                             <td>
-                                <input name="item_code[]" class="form-control item_code" autocomplete="off" type="text" value="${value.item_code}" readonly>
+                                <input name="item_code[]" class="form-control item_code" autocomplete="off" type="text" value="${value?.item_code}" readonly>
                             </td>
                             <td>
-                                <input name="unit[]" class="form-control unit" autocomplete="off" type="text" value="${value.unit}" readonly>
+                                <input name="unit[]" class="form-control unit" autocomplete="off" type="text" value="${value?.unit}" readonly>
                             </td>
                             <td>
-                                <input name="brand_name[]" class="form-control brand_name" autocomplete="off" type="text" value="${value.brand_name}" readonly>
-                                <input name="brand_id[]" class="form-control brand_id" autocomplete="off" type="hidden" value="${value.brand_id}">
+                                <input name="brand_name[]" class="form-control brand_name" autocomplete="off" type="text" value="${value?.brand_name}" readonly>
+                                <input name="brand_id[]" class="form-control brand_id" autocomplete="off" type="hidden" value="${value.brand_id != null ? value.brand_id : ''}">
                             </td>
                             <td>
-                                <input name="model[]" class="form-control model" autocomplete="off" type="text" value="${value.model}" readonly>
+                                <input name="model[]" class="form-control model" autocomplete="off" type="text" value="${value.model != null ? value.model : ''}" readonly>
                             </td>
                             <td>
-                                <input name="serial_code[]" class="form-control serial_code" autocomplete="off" type="text" value="${value.serial_code}" readonly>
+                                <input name="serial_code[]" class="form-control serial_code" autocomplete="off" type="text" value="${value.serial_code != null ? value.serial_code : ''}" readonly>
                             </td>
                             <td>
-                                <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" type="text" value="${value.bbts_ownership}" readonly>
+                                <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off" type="text" value="${value?.bbts_ownership}" readonly>
                             </td>
                             <td>
-                                <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off" type="text" value="${value.client_ownership}" readonly>
+                                <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off" type="text" value="${value?.client_ownership}" readonly>
                             </td>
                             <td>
                                 <input name="bbts_damaged[]" class="form-control bbts_damaged" autocomplete="off" type="number" value="0">

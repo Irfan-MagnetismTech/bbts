@@ -54,7 +54,7 @@ class CommonApiController extends Controller
                 'email' => $item->email,
                 'client_type' => $item->client_type,
                 'saleDetails' => $item->saleDetails,
-                'frDetails' => $item->feasibility_requirement_details->pluck('fr_no', 'fr_no'),
+                'frDetails' => $item->feasibility_requirement_details,
             ]);
 
         return response()->json($results);

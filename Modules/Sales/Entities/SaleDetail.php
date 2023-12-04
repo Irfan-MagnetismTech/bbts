@@ -128,16 +128,16 @@ class SaleDetail extends Model
 
     public function logicalConnectivityInternet()
     {
-        return $this->hasOne(LogicalConnectivity::class, 'sale_id', 'sale_id')->where('product_category', 'Internet');
+        return $this->hasOne(LogicalConnectivity::class, 'fr_no', 'fr_no')->where('is_modified', 0)->where('product_category', 'Internet');
     }
 
     public function logicalConnectivityData()
     {
-        return $this->hasOne(LogicalConnectivity::class, 'sale_id', 'sale_id')->where('product_category', 'Data');
+        return $this->hasOne(LogicalConnectivity::class, 'fr_no', 'fr_no')->where('is_modified', 0)->where('product_category', 'Data');
     }
 
     public function logicalConnectivityVAS()
     {
-        return $this->hasOne(LogicalConnectivity::class, 'sale_id', 'sale_id')->where('product_category', 'VAS');
+        return $this->hasOne(LogicalConnectivity::class, 'fr_no', 'fr_no')->where('is_modified', 0)->where('product_category', 'VAS');
     }
 }
