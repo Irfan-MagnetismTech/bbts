@@ -27,7 +27,7 @@ class ConnectivityController extends Controller
     public function index()
     {
         $salesDetails = SaleDetail::query()
-            ->with('sale', 'client', 'frDetails')
+            ->with('sale', 'client', 'frDetails', 'saleProductDetails')
             ->latest()
             ->get();
 

@@ -42,7 +42,18 @@
                 </tr>
             </thead>
             <tbody>
+
                 @foreach ($salesDetails as $key => $details)
+                    @php
+                        $product_category = [];
+                        $product_category[] = $details->saleProductDetails
+                            ->map(function ($item, $key) {
+                                return $category = $item->product->category->name;
+                            })
+                            ->unique();
+                    @endphp
+
+
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $details->client->client_name }}</td>
@@ -52,43 +63,64 @@
                         <td>{{ $details->delivery_date ? $details->delivery_date : '' }}</td>
                         <td>{{ $details->connectivities ? $details->connectivities->commissioning_date : '' }}</td>
                         <td>
-                            <span class="badge badge-primary">
-                                @if ($details->sale->is_modified == 1)
+
+                            @if ($details->sale->is_modified == 1)
+                                <span class="badge badge-primary">
                                     <a href="{{ route('modify-physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                         class="text-white" target="_blank">Physical Connectivity</a>
-                                @else
-                                    <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
-                                        class="text-white" target="_blank">Physical Connectivity</a>
+                                </span>
+                            @else
+                                @if (empty($details->physicalConnectivity))
+                                    <span class="badge badge-primary">
+                                        <a href="{{ route('physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                            class="text-white" target="_blank">Physical Connectivity</a>
+                                    </span>
                                 @endif
-                                {{-- <a href="{{ route('physical-connectivities.edit', $physicalConnectivity->id) }}" data-toggle="tooltip" 
+                            @endif
+                            {{-- <a href="{{ route('physical-connectivities.edit', $physicalConnectivity->id) }}" data-toggle="tooltip" 
                                     title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a> --}}
-                            </span>
-                            <span class="badge badge-info">
-                                @if ($details->sale->is_modified == 1)
+
+
+                            @if ($details->sale->is_modified == 1)
+                                <span class="badge badge-info">
                                     <a href="{{ route('modify-logical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                         class="text-white" target="_blank">Internet</a>
-                                @else
-                                    <a href="{{ route('logical-internet-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
-                                        class="text-white" target="_blank">Internet</a>
+                                </span>
+                            @else
+                                @if (in_array('Internet', $product_category) && empty($details->logicalConnectivityInternet))
+                                    <span class="badge badge-info">
+                                        <a href="{{ route('logical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                            class="text-white" target="_blank">Internet</a>
+                                    </span>
                                 @endif
-                            </span>
-                            <span class="badge badge-info">
-                                @if ($details->sale->is_modified == 1)
+                            @endif
+                            @if ($details->sale->is_modified == 1)
+                                <span class="badge badge-info">
                                     <a href="{{ route('modify-logical-vas-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                         class="text-white" target="_blank">VAS</a>
-                                @else
-                                    <a href="{{ route('logical-vas-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
-                                        class="text-white" target="_blank">VAS</a>
+                                </span>
+                            @else
+                                @if (in_array('VAS', $product_category) && empty($details->logicalConnectivityVAS))
+                                    <span class="badge badge-info">
+                                        <a href="{{ route('logical-vas-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                            class="text-white" target="_blank">VAS</a>
+                                    </span>
                                 @endif
-                            </span>
-                            <span class="badge badge-info">
-                                @if ($details->sale->is_modified == 1)
+                            @endif
+
+                            @if ($details->sale->is_modified == 1)
+                                <span class="badge badge-info">
                                     <a href="{{ route('modify-logical-data-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                         class="text-white" target="_blank">Data</a>
-                                @else
-                                    <a href="{{ route('logical-data-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
-                                        class="text-white" target="_blank">Data</a>
+                                </span>
+                            @else
+                                @if (in_array('Data', $product_category) && empty($details->logicalConnectivityData))
+                                    <span class="badge badge-info">
+                                        <a href="{{ route('logical-data-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                            class="text-white" target="_blank">Data</a>
+                                    </span>
                                 @endif
+                            @endif
                             </span>
                             <span class="badge badge-warning">
                                 @if ($details->sale->is_modified == 1)

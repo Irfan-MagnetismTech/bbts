@@ -15,6 +15,8 @@ use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\Networking\Entities\Connectivity;
+use Modules\Networking\Entities\LogicalConnectivity;
+use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class SaleDetail extends Model
@@ -112,5 +114,30 @@ class SaleDetail extends Model
     public function costingByConnectivity()
     {
         return $this->hasOne(Costing::class, 'connectivity_requirement_id', 'id');
+    }
+
+    public function physicalConnectivity()
+    {
+        return $this->hasOne(PhysicalConnectivity::class, 'sale_id', 'sale_id');
+    }
+
+    public function logicalConnectivity()
+    {
+        return $this->hasOne(LogicalConnectivity::class, 'sale_id', 'sale_id');
+    }
+
+    public function logicalConnectivityInternet()
+    {
+        return $this->hasOne(LogicalConnectivity::class, 'sale_id', 'sale_id')->where('product_category', 'Internet');
+    }
+
+    public function logicalConnectivityData()
+    {
+        return $this->hasOne(LogicalConnectivity::class, 'sale_id', 'sale_id')->where('product_category', 'Data');
+    }
+
+    public function logicalConnectivityVAS()
+    {
+        return $this->hasOne(LogicalConnectivity::class, 'sale_id', 'sale_id')->where('product_category', 'VAS');
     }
 }
