@@ -13,7 +13,6 @@ use Modules\Sales\Entities\FeasibilityRequirementDetail;
 class Activation extends Model
 {
     protected $fillable = [
-        'connectivity_id',
         'client_no',
         'fr_no',
         'is_active'
@@ -21,7 +20,7 @@ class Activation extends Model
 
     public function connectivities(): BelongsTo
     {
-        return $this->belongsTo(Connectivity::class, 'connectivity_id', 'id');
+        return $this->belongsTo(Connectivity::class, 'fr_no', 'fr_no');
     }
 
     public function client(): BelongsTo
