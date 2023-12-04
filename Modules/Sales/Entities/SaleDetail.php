@@ -14,6 +14,7 @@ use Modules\Networking\Entities\CCSchedule;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Modules\Networking\Entities\Activation;
 use Modules\Networking\Entities\Connectivity;
 use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
@@ -49,6 +50,11 @@ class SaleDetail extends Model
     public function connectivities()
     {
         return $this->hasOne(Connectivity::class, 'fr_no', 'fr_no')->where('is_modify', '0');
+    }
+
+    public function activation()
+    {
+        return $this->hasOne(Activation::class, 'fr_no', 'fr_no');
     }
 
     public function saleProductDetails()

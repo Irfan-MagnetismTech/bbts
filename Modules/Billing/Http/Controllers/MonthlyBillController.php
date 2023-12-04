@@ -51,7 +51,14 @@ class MonthlyBillController extends Controller
     public function store(Request $request)
     {
         try {
-            $datas = SaleDetail::with(['sale.saleProductDetails', 'sale.saleLinkDetails'])->where('checked', 1)->get()->groupBy('billing_address_id');
+            $datas = SaleDetail::with(['sale.saleProductDetails', 'sale.saleLinkDetails'])
+            ->where('checked', 1)
+            ->distinct('fr_no')
+            ->whereHas('activation', function ($query) use ($request) {
+                $query->where('is_active', '=', 'Active');
+            })->latest()
+            ->get()->groupBy('billing_address_id');
+            // dd($datas);
             foreach ($datas as $key => $val) {
                 $child = [];
                 $parent = [
