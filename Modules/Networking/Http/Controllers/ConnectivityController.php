@@ -24,9 +24,9 @@ class ConnectivityController extends Controller
      * @return Renderable
      */
     public function index()
-    { 
+    {
         $salesDetails = SaleDetail::query()
-            ->with('sale', 'client', 'frDetails')
+            ->with('sale', 'client', 'frDetails', 'saleProductDetails')
             ->latest()
             ->get();
 
