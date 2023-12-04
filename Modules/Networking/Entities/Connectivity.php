@@ -47,4 +47,9 @@ class Connectivity extends Model
             'name' => 'No data found'
         ]);
     }
+
+    public function activations(): BelongsTo
+    {
+        return $this->belongsTo(Activation::class, 'id', 'connectivity_id');
+    }
 }

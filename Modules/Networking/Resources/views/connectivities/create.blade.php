@@ -25,7 +25,7 @@
          padding-right: 0.75em!important;
          border: #1a1111 2px silid;
          border: 2px black (internal value)!important;
-        } 
+        }
 
         legend {
         color: white!important;
@@ -37,8 +37,8 @@
         font-weight: 100!important;
         color: inherit!important;
         white-space: normal!important;
-        margin-bottom:0%!important; 
-        padding-bottom:0%!important; 
+        margin-bottom:0%!important;
+        padding-bottom:0%!important;
         }
         .section-label {
             background: #ffffff;
@@ -48,7 +48,7 @@
             padding: 0, 10px, 0, 10px;
             transition: 0.3s;
         }
-    </style> 
+    </style>
 @endsection
 
 @php
@@ -56,10 +56,10 @@
     $form_heading = !empty($connectivity) ? 'Update' : 'Add';
     $form_url = !empty($connectivity) ? '' : route('connectivities.store');
     $form_method = !empty($connectivity) ? 'PUT' : 'POST';
-    
+    $is_active = old('is_active', !empty($connectivity) ? $connectivity->activations->is_active : null);
     $sale_id = old('sale_id', !empty($connectivity) ? $connectivity->sale_id : $salesDetail->sale_id);
     $commissioning_date = old('commissioning_date', !empty($connectivity) ? $connectivity->commissioning_date : today()->format('d-m-Y'));
-    
+
 @endphp
 
 @section('breadcrumb-button')
@@ -115,6 +115,22 @@
                 </div>
                 <x-input-box colGrid="4" name="commissioning_date" class="date" value="{{ $commissioning_date }}"
                     label="Commissioning Date" attr="{{ !empty($connectivity) ? 'disabled' : '' }}" />
+                <div class="col-2">
+                    <div class="form-check-inline pt-0 mt-0">
+                        <label class="form-check-label" for="Active">
+                            <input type="radio" class="form-check-input is_active" id="is_active" name="is_active" checked
+                                   value="Active" @checked(@$is_active == 'Active' || ($form_method == 'POST' && !old()))>
+                            Active
+                        </label>
+                    </div>
+                    <div class="form-check-inline mt-0 pt-0">
+                        <label class="form-check-label" for="Inactive">
+                            <input type="radio" class="form-check-input is_active" id="is_active" name="is_active"
+                                   value="Inactive" @checked(@$is_active == 'Inactive')>
+                            Inactive
+                        </label>
+                    </div>
+                </div>
             </div>
 
             @if (!empty($physicalConnectivity))
@@ -183,7 +199,7 @@
                         @endforeach
                     </tbody>
                 </table>
-            @endif 
+            @endif
 
             @if (!empty($logicalConnectivities->get('VAS')))
                 <table class="table table-bordered" id="vas_service">

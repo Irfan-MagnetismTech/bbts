@@ -7,6 +7,7 @@ use Modules\Admin\Entities\Ip;
 use Illuminate\Routing\Controller;
 use App\Models\Dataencoding\Employee;
 use Carbon\Carbon;
+use Modules\Networking\Entities\Activation;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\DB;
@@ -83,10 +84,14 @@ class ConnectivityController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store()
+    public function store(Request $request)
     {
         try {
-            Connectivity::create(request()->all());
+            $connectivity = Connectivity::create(request()->all());
+            $data = $request->only('connectivity_id', 'client_no', 'fr_no', 'is_active');
+            $data['connectivity_id'] = $connectivity->id;
+            $activation = Activation::create($data);
+
             return redirect()->route('connectivities.index')->with('message', 'Data has been inserted successfully');
         } catch (\Exception $e) {
             return redirect()->route('connectivities.create')->withInput()->withErrors($e->getMessage());
