@@ -24,6 +24,8 @@ use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\ScmMurLine;
 use Modules\SCM\Entities\ScmRequisition;
 use Modules\SCM\Entities\ScmWor;
+use Modules\SCM\Entities\OpeningStock;
+use Modules\SCM\Entities\ScmMir;
 use Modules\SCM\Http\Requests\ScmChallanRequest;
 
 class ScmChallanController extends Controller
@@ -90,8 +92,6 @@ class ScmChallanController extends Controller
                 $challan_details[] = $this->GetMrrDetails($request, $kk);
             };
 
-            // dd($challan_details);
-
             $challan = ScmChallan::create($challan_data);
             $challan->scmChallanLines()->createMany($challan_details);
             $challan->stockable()->createMany($stock_ledgers);
@@ -154,6 +154,7 @@ class ScmChallanController extends Controller
         $serial_codes = [];
         $branch_stock = [];
         $type_no = [];
+
         $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, $challan, &$branch_stock, &$type_no) {
             $materials[$key] = Stockledger::with('material')->dropdownDataListForChallan('material_id', $material = false, $brand = false, $modal = false, $item);
 
@@ -164,6 +165,7 @@ class ScmChallanController extends Controller
             $serial_codes[$key] = Stockledger::dropdownDataListForChallan('serial_code', $material = true, $brand = true, $modal = true, $item);
 
             $branch_stock[$key] = StockLedger::StockIn($challan->branch_id, $item->received_type, $item) + $item->quantity + StockLedger::StockOut($challan->branch_id, $item->received_type, $item);
+
 
             $type_no[$key] = $this->receiveTypeWiseList($item->received_type, $item->material_id, $item->brand_id, $challan->branch_id);
         });
@@ -235,12 +237,10 @@ class ScmChallanController extends Controller
             'MIR' => ScmMir::class,
             'OS' => OpeningStock::class,
         ];
-        // dump($ClassAarray[$req->received_type[$key1]]);
         return [
             'branch_id' => $req->branch_id,
             'material_id' => $req->material_name[$key1],
             'receiveable_type' => $ClassAarray[$req->received_type[$key1]],
-            // 'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : (($req->received_type[$key1] == 'WOR') ? ScmWor::class : Null))),
             'received_type' => $req->received_type[$key1],
             'receiveable_id' => $req->type_id[$key1],
             'item_code' => $req->item_code[$key1],
@@ -263,7 +263,6 @@ class ScmChallanController extends Controller
         ];
         return  [
             'receiveable_type' => $ClassAarray[$req->received_type[$key1]],
-            // 'receiveable_type' => ($req->received_type[$key1] == 'MRR') ? ScmMrr::class : (($req->received_type[$key1] == 'WCR') ? ScmWcr::class : (($req->received_type[$key1] == 'ERR') ? ScmErr::class : (($req->received_type[$key1] == 'WOR') ? ScmWor::class : NULL))),
             'receiveable_id' => $req->type_id[$key1],
             'item_code' => $req->item_code[$key1],
             'material_id'   => $req->material_name[$key1],

@@ -5,6 +5,7 @@ namespace Modules\SCM\Entities;
 use Modules\SCM\Entities\ScmErr;
 use Modules\SCM\Entities\ScmMrr;
 use Modules\SCM\Entities\ScmWcr;
+use Modules\SCM\Entities\OpeningStock;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Admin\Entities\Brand;
 
@@ -14,6 +15,11 @@ class ScmChallanLine extends Model
 
     protected $casts = [
         'receiveable_type' => 'string',
+    ];
+
+    protected $appends = [
+        'received_type',
+        'received_no',
     ];
 
     public function getReceivedTypeAttribute()
@@ -40,11 +46,11 @@ class ScmChallanLine extends Model
             case ScmMrr::class:
                 return $this->receiveable->mrr_no;
             case ScmErr::class:
-                return 'ERR';
+                return $this->receiveable->err_no;
             case ScmWcr::class:
-                return 'WCR';
-            case ScmWor::class:
-                return 'WOR';
+                return $this->receiveable->wcr_no;
+            case OpeningStock::class:
+                return $this->receiveable?->id;
             default:
                 return '';
         }

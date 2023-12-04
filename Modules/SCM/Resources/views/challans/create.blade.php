@@ -292,10 +292,8 @@
             </thead>
             <tbody id="challanDataBody">
                 @php
-                    // @dump($challan->scmChallanLines->pluck('material_id'));
                     $Challan_Lines = old('material_id', !empty($challan) ? $challan->scmChallanLines->pluck('material_id') : []);
                     $received_type = old('received_type', !empty($challan) ? $challan->scmChallanLines->pluck('received_type') : []);
-                    dd($received_type);
                     $received_no = old('type_no', !empty($challan) ? $challan->scmChallanLines->pluck('received_no') : []);
                     $receiveable_id = old('type_id', !empty($challan) ? $challan->scmChallanLines->pluck('receiveable_id') : []);
                     $item_code = old('item_code', !empty($challan) ? $challan->scmChallanLines->pluck('material.code') : []);
