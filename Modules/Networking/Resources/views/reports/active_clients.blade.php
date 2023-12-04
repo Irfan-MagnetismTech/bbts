@@ -57,14 +57,19 @@
                                 <td>{{ $activation->connectivities->commissioning_date ?? '' }}</td>
 
                                 <td>
-                                    @if (!empty($activation->connectivities))
-                                        @foreach ($activation->connectivities->saleProductDetails as $product)
-                                            {{ $product->product_name ?? '' }}
-                                            @unless($loop->last)
-                                                ,
-                                            @endunless
-                                        @endforeach
-                                    @endif
+{{--                                        @foreach ($activation->connectivities->saleProductDetails as $product)--}}
+{{--                                            {{ $product->product_name ?? '' }}--}}
+{{--                                            @unless($loop->last)--}}
+{{--                                                ,--}}
+{{--                                            @endunless--}}
+{{--                                        @endforeach--}}
+
+                                    @foreach ($products as $product)
+                                        {{ $product ?? '' }}
+                                        @unless($loop->last)
+                                            ,
+                                        @endunless
+                                    @endforeach
                                 </td>
                             </tr>
                 @endforeach

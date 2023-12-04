@@ -84,14 +84,11 @@ class ConnectivityController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store()
     {
         try {
-            $connectivity = Connectivity::create(request()->all());
-            $data = $request->only('connectivity_id', 'client_no', 'fr_no', 'is_active');
-            $data['connectivity_id'] = $connectivity->id;
-            $activation = Activation::create($data);
-
+            Connectivity::create(request()->all());
+            Activation::create(request()->only('client_no', 'fr_no', 'is_active'));
             return redirect()->route('connectivities.index')->with('message', 'Data has been inserted successfully');
         } catch (\Exception $e) {
             return redirect()->route('connectivities.create')->withInput()->withErrors($e->getMessage());
@@ -142,6 +139,10 @@ class ConnectivityController extends Controller
     public function activeClientsReport()
     {
         $activations = Activation::where('is_active', 'Active')->get();
-        return view('networking::reports.active_clients', compact('activations'));
+        $fr_nos = $activations->pluck('fr_no')->toArray();
+        $sale_ids = Connectivity::whereIn('fr_no', $fr_nos)->pluck('sale_id');
+        $sale_detail_ids = SaleDetail::whereIn('sale_id', $sale_ids)->pluck('id');
+        $products = SaleProductDetail::whereIn('sale_detail_id', $sale_detail_ids)->pluck('product_name');
+        return view('networking::reports.active_clients', compact('activations','products'));
     }
 }

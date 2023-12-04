@@ -523,8 +523,8 @@ class SaleController extends Controller
                     'total_amount' => $TotalAmount,
                 ];
 
-                // $otc_data = BillingOtcBill::create($otc);
-                // $otc_data->lines()->createMany($otc_lines_data);
+                $otc_data = BillingOtcBill::create($otc);
+                $otc_data->lines()->createMany($otc_lines_data);
 
                 // if (count($values->equipmentPlans)) {
                 //     $material_array[$key]['parent']['main'] = [
