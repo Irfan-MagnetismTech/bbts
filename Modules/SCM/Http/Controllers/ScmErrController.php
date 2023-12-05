@@ -242,8 +242,8 @@ class ScmErrController extends Controller
     {
         return [
             'received_type'     => 'ERR',
-            'receiveable_id'    => $err->id,
-            'receiveable_type'  => ScmErr::class,
+            'receiveable_id'    => null,
+            'receiveable_type'  => null,
             'material_id'       => $request->material_id[$key],
             'stockable_type'    => ScmErr::class,
             'stockable_id'      => $err->id,

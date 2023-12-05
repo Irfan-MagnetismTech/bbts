@@ -172,8 +172,8 @@ class ScmWcrrController extends Controller
     {
         return [
             'received_type'     => 'WCRR',
-            'receiveable_id'    => $id,
-            'receiveable_type'  => ScmWcrr::class,
+            'receiveable_id'    => null,
+            'receiveable_type'  => null,
             'material_id'       => $req->material_id[$ke] ?? null,
             'stockable_type'    => ScmWcrr::class,
             'stockable_id'      => $id ?? null,

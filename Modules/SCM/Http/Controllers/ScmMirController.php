@@ -335,7 +335,7 @@ class ScmMirController extends Controller
             })
             ->when(request()->customQueryFields['type'] == 'WCR', function ($query) {
                 $query->whereHasMorph('stockable', ScmWcrr::class, function ($query) {
-                    $query->where('wcr_no', 'like', '%' . request()->search . '%');
+                    $query->where('wcrr_no', 'like', '%' . request()->search . '%');
                 });
             })
             // ->when(request()->customQueryFields['type'] == 'WOR', function ($query) {
@@ -370,8 +370,6 @@ class ScmMirController extends Controller
         $material_id = $material_id ?? request()->material_id;
         $brand_id = $brand_id ?? request()->brand_id;
         $branch_id = $branch_id ?? request()->branch_id;
-
-        // dd('gg');
         $data = StockLedger::query()
             ->where('received_type', $received_type)
             ->when($material_id, function ($query) use ($material_id) {
@@ -403,6 +401,7 @@ class ScmMirController extends Controller
                     ->where('brand_id', $item->brand_id)
                     ->where('quantity', '<', 0)
                     ->sum('quantity');
+
                 if (($total_stock - $out_stock) >= 0) {
                     if ($received_type == 'MRR') {
                         return [
@@ -414,10 +413,10 @@ class ScmMirController extends Controller
                             'id' => $item->stockable_id,
                             'type_no' => $item->stockable->err_no,
                         ];
-                    } else if ($received_type == 'WCR') {
+                    } else if ($received_type == 'WCRR') {
                         return [
                             'id' => $item->stockable_id,
-                            'type_no' => $item->stockable->wcr_no,
+                            'type_no' => $item->stockable->wcrr_no,
                         ];
                     } else if ($received_type == 'MIR') {
                         return [
