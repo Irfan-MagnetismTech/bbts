@@ -85,7 +85,7 @@ class ScmErrController extends Controller
             $err->stockable()->createMany($stock);
 
             DB::commit();
-            return redirect()->route('errs.index')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('errs.index')->with('message', 'Data inserted successfully');
         } catch (QueryException $e) {
             DB::rollBack();
             return redirect()->route('errs.create')->withInput()->withErrors($e->getMessage());

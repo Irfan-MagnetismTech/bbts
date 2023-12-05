@@ -79,9 +79,9 @@ $(document).on("keyup focus", "#client_name", function () {
 
             $("#fr_no").html("");
             var link_options = '<option value="">Select Option</option>';
-            console.log(ui.item.frDetails);
-            ui.item.frDetails.forEach(function (element) {
-                link_options += `<option value="${element.fr_no}">${element.fr_no} (${element.connectivity_point})</option>`;
+            console.log(ui.item.saleDetails);
+            ui.item.saleDetails.forEach(function (element) {
+                link_options += `<option value="${element.fr_no}">${element.fr_no} (${element.feasibility_requirement_details.connectivity_point})</option>`;
             });
             client_details = ui.item.details;
             $("#fr_no").html(link_options);

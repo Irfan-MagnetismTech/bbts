@@ -53,8 +53,7 @@ class CommonApiController extends Controller
                 'contact_no' => $item->contact_no,
                 'email' => $item->email,
                 'client_type' => $item->client_type,
-                'saleDetails' => $item->saleDetails,
-                'frDetails' => $item->feasibility_requirement_details,
+                'saleDetails' => $item->saleDetails->load('feasibilityRequirementDetails')
             ]);
 
         return response()->json($results);

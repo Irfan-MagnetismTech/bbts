@@ -209,129 +209,131 @@
         </div>
     </div>
 
-    <table class="table table-bordered" id="errTable">
-        <thead>
-            <tr>
-                <th rowspan="2">Material Name</th>
-                <th rowspan="2">Description</th>
-                <th rowspan="2">Provided Qty</th>
-                <th rowspan="2">Item Code</th>
-                <th rowspan="2">Unit</th>
-                <th rowspan="2">Brand</th>
-                <th rowspan="2">Model</th>
-                <th rowspan="2">Serial/Drum Code <br /> No</th>
-                <th colspan="2">Ownership</th>
-                <th colspan="2">Damaged</th>
-                <th colspan="2">Useable</th>
-                <th rowspan="2">Quantity</th>
-                <th rowspan="2">Remarks</th>
-            </tr>
-            <tr>
-                <th>BBTS</th>
-                <th>CLIENT</th>
-                <th>BBTS</th>
-                <th>CLIENT</th>
-                <th>BBTS</th>
-                <th>CLIENT</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                // dd($err->scmErrLines);
-                $material_names = old('material_name', !empty($err) ? $err->scmErrLines->pluck('material.name') : []);
-                $material_ids = old('material_id', !empty($err) ? $err->scmErrLines->pluck('material_id') : []);
-                $descriptions = old('description', !empty($err) ? $err->scmErrLines->pluck('description') : []);
-                $utilized_quantitys = old('utilized_quantity', !empty($err) ? $err->scmErrLines->pluck('utilized_quantity') : []);
-                $item_codes = old('item_code', !empty($err) ? $err->scmErrLines->pluck('item_code') : []);
-                $units = old('unit', !empty($err) ? $err->scmErrLines->pluck('material.unit') : []);
-                $brand_names = old('brand_name', !empty($err) ? $err->scmErrLines->pluck('brand.name') : []);
-                $brand_ids = old('brand_id', !empty($err) ? $err->scmErrLines->pluck('brand_id') : []);
-                $models = old('model', !empty($err) ? $err->scmErrLines->pluck('model') : []);
-                $serial_codes = old('material_id', !empty($err) ? json_decode($err->scmErrLines->pluck('serial_code')) : []);
-                $bbts_ownerships = old('bbts_ownership', !empty($err) ? $err->scmErrLines->pluck('bbts_ownership') : []);
-                $client_ownerships = old('client_ownership', !empty($err) ? $err->scmErrLines->pluck('client_ownership') : []);
-                $bbts_damageds = old('bbts_damaged', !empty($err) ? $err->scmErrLines->pluck('bbts_damaged') : []);
-                $client_damageds = old('client_damaged', !empty($err) ? $err->scmErrLines->pluck('client_damaged') : []);
-                $bbts_useables = old('bbts_useable', !empty($err) ? $err->scmErrLines->pluck('bbts_useable') : []);
-                $client_useables = old('client_useable', !empty($err) ? $err->scmErrLines->pluck('client_useable') : []);
-                $quantitys = old('quantity', !empty($err) ? $err->scmErrLines->pluck('quantity') : []);
-                $remarks = old('warranty_period', !empty($err) ? $err->scmErrLines->pluck('remarks') : []);
-            @endphp
-
-            @foreach ($material_names as $key => $material_name)
+    <div class="table-responsive">
+        <table class="table table-bordered" id="errTable">
+            <thead>
                 <tr>
-                    <td>
-                        <input name="material_name[]" class="form-control material_name" readonly autocomplete="off"
-                            type="text" value="{{ $material_name }}" readonly>
-                        <input name="material_id[]" class="form-control material_id" readonly autocomplete="off"
-                            type="hidden" value="{{ $material_ids[$key] }}">
-                    </td>
-                    <td>
-                        <input name="description[]" class="form-control description" autocomplete="off" type="text"
-                            value="{{ $descriptions[$key] }}">
-                    </td>
-                    <td>
-                        <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off"
-                            type="text" value="{{ $utilized_quantitys[$key] }}" readonl>
-                    </td>
-                    <td>
-                        <input name="item_code[]" class="form-control item_code" autocomplete="off" type="text"
-                            value="{{ $item_codes[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input name="unit[]" class="form-control unit" autocomplete="off" type="text"
-                            value="{{ $units[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input name="brand_name[]" class="form-control brand_name" autocomplete="off" type="text"
-                            value="{{ $brand_names[$key] }}" readonly>
-                        <input name="brand_id[]" class="form-control brand_id" autocomplete="off" type="hidden"
-                            value="{{ $brand_ids[$key] }}">
-                    </td>
-                    <td>
-                        <input name="model[]" class="form-control model" autocomplete="off" type="text"
-                            value="{{ $models[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input name="serial_code[]" class="form-control serial_code" autocomplete="off" type="text"
-                            value="{{ $serial_codes[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off"
-                            type="text" value="{{ $bbts_ownerships[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off"
-                            type="text" value="{{ $client_ownerships[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input name="bbts_damaged[]" class="form-control bbts_damaged" autocomplete="off" type="number"
-                            value="{{ $bbts_damageds[$key] }}">
-                    </td>
-                    <td>
-                        <input name="client_damaged[]" class="form-control client_damaged" autocomplete="off"
-                            type="number" value="{{ $client_damageds[$key] }}">
-                    </td>
-                    <td>
-                        <input name="bbts_useable[]" class="form-control bbts_useable" autocomplete="off" type="number"
-                            value="{{ $bbts_useables[$key] }}">
-                    </td>
-                    <td>
-                        <input name="client_useable[]" class="form-control client_useable" autocomplete="off"
-                            type="number" value="{{ $client_useables[$key] }}">
-                    </td>
-                    <td>
-                        <input name="quantity[]" class="form-control quantity" autocomplete="off" type="number"
-                            value="{{ $quantitys[$key] }}" readonly>
-                    </td>
-                    <td>
-                        <input name="remarks[]" class="form-control remarks" autocomplete="off"
-                            value="{{ $remarks[$key] }}">
-                    </td>
+                    <th rowspan="2">Material Name</th>
+                    <th rowspan="2">Description</th>
+                    <th rowspan="2">Provided Qty</th>
+                    <th rowspan="2">Item Code</th>
+                    <th rowspan="2">Unit</th>
+                    <th rowspan="2">Brand</th>
+                    <th rowspan="2">Model</th>
+                    <th rowspan="2">Serial/Drum Code <br /> No</th>
+                    <th colspan="2">Ownership</th>
+                    <th colspan="2">Damaged</th>
+                    <th colspan="2">Useable</th>
+                    <th rowspan="2">Quantity</th>
+                    <th rowspan="2">Remarks</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+                <tr>
+                    <th>BBTS</th>
+                    <th>CLIENT</th>
+                    <th>BBTS</th>
+                    <th>CLIENT</th>
+                    <th>BBTS</th>
+                    <th>CLIENT</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    // dd($err->scmErrLines);
+                    $material_names = old('material_name', !empty($err) ? $err->scmErrLines->pluck('material.name') : []);
+                    $material_ids = old('material_id', !empty($err) ? $err->scmErrLines->pluck('material_id') : []);
+                    $descriptions = old('description', !empty($err) ? $err->scmErrLines->pluck('description') : []);
+                    $utilized_quantitys = old('utilized_quantity', !empty($err) ? $err->scmErrLines->pluck('utilized_quantity') : []);
+                    $item_codes = old('item_code', !empty($err) ? $err->scmErrLines->pluck('item_code') : []);
+                    $units = old('unit', !empty($err) ? $err->scmErrLines->pluck('material.unit') : []);
+                    $brand_names = old('brand_name', !empty($err) ? $err->scmErrLines->pluck('brand.name') : []);
+                    $brand_ids = old('brand_id', !empty($err) ? $err->scmErrLines->pluck('brand_id') : []);
+                    $models = old('model', !empty($err) ? $err->scmErrLines->pluck('model') : []);
+                    $serial_codes = old('material_id', !empty($err) ? json_decode($err->scmErrLines->pluck('serial_code')) : []);
+                    $bbts_ownerships = old('bbts_ownership', !empty($err) ? $err->scmErrLines->pluck('bbts_ownership') : []);
+                    $client_ownerships = old('client_ownership', !empty($err) ? $err->scmErrLines->pluck('client_ownership') : []);
+                    $bbts_damageds = old('bbts_damaged', !empty($err) ? $err->scmErrLines->pluck('bbts_damaged') : []);
+                    $client_damageds = old('client_damaged', !empty($err) ? $err->scmErrLines->pluck('client_damaged') : []);
+                    $bbts_useables = old('bbts_useable', !empty($err) ? $err->scmErrLines->pluck('bbts_useable') : []);
+                    $client_useables = old('client_useable', !empty($err) ? $err->scmErrLines->pluck('client_useable') : []);
+                    $quantitys = old('quantity', !empty($err) ? $err->scmErrLines->pluck('quantity') : []);
+                    $remarks = old('warranty_period', !empty($err) ? $err->scmErrLines->pluck('remarks') : []);
+                @endphp
+
+                @foreach ($material_names as $key => $material_name)
+                    <tr>
+                        <td>
+                            <input name="material_name[]" class="form-control material_name" readonly autocomplete="off"
+                                type="text" value="{{ $material_name }}" readonly>
+                            <input name="material_id[]" class="form-control material_id" readonly autocomplete="off"
+                                type="hidden" value="{{ $material_ids[$key] }}">
+                        </td>
+                        <td>
+                            <input name="description[]" class="form-control description" autocomplete="off"
+                                type="text" value="{{ $descriptions[$key] }}">
+                        </td>
+                        <td>
+                            <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off"
+                                type="text" value="{{ $utilized_quantitys[$key] }}" readonl>
+                        </td>
+                        <td>
+                            <input name="item_code[]" class="form-control item_code" autocomplete="off" type="text"
+                                value="{{ $item_codes[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input name="unit[]" class="form-control unit" autocomplete="off" type="text"
+                                value="{{ $units[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input name="brand_name[]" class="form-control brand_name" autocomplete="off" type="text"
+                                value="{{ $brand_names[$key] }}" readonly>
+                            <input name="brand_id[]" class="form-control brand_id" autocomplete="off" type="hidden"
+                                value="{{ $brand_ids[$key] }}">
+                        </td>
+                        <td>
+                            <input name="model[]" class="form-control model" autocomplete="off" type="text"
+                                value="{{ $models[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input name="serial_code[]" class="form-control serial_code" autocomplete="off"
+                                type="text" value="{{ $serial_codes[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input name="bbts_ownership[]" class="form-control bbts_ownership" autocomplete="off"
+                                type="text" value="{{ $bbts_ownerships[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input name="client_ownership[]" class="form-control client_ownership" autocomplete="off"
+                                type="text" value="{{ $client_ownerships[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input name="bbts_damaged[]" class="form-control bbts_damaged" autocomplete="off"
+                                type="number" value="{{ $bbts_damageds[$key] }}">
+                        </td>
+                        <td>
+                            <input name="client_damaged[]" class="form-control client_damaged" autocomplete="off"
+                                type="number" value="{{ $client_damageds[$key] }}">
+                        </td>
+                        <td>
+                            <input name="bbts_useable[]" class="form-control bbts_useable" autocomplete="off"
+                                type="number" value="{{ $bbts_useables[$key] }}">
+                        </td>
+                        <td>
+                            <input name="client_useable[]" class="form-control client_useable" autocomplete="off"
+                                type="number" value="{{ $client_useables[$key] }}">
+                        </td>
+                        <td>
+                            <input name="quantity[]" class="form-control quantity" autocomplete="off" type="number"
+                                value="{{ $quantitys[$key] }}" readonly>
+                        </td>
+                        <td>
+                            <input name="remarks[]" class="form-control remarks" autocomplete="off"
+                                value="{{ $remarks[$key] }}">
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
     <div class="row">
         <div class="offset-md-4 col-md-4 mt-2">
