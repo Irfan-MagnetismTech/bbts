@@ -10,6 +10,7 @@ use Modules\Networking\Http\Controllers\LogicalConnectivityVasController;
 use Modules\Networking\Http\Controllers\LogicalConnectivityDataController;
 use Modules\Networking\Http\Controllers\LogicalConnectivityInternetController;
 use Modules\Networking\Http\Controllers\PhysicalConnectivityModificationController;
+use Modules\Networking\Http\Controllers\LogicalConnectivityModifyInternetController;
 
 Route::resources([
     'physical-connectivities' => PhysicalConnectivityController::class,
@@ -19,7 +20,7 @@ Route::resources([
     'logical-vas-connectivities' => LogicalConnectivityVasController::class,
     'modify-logical-vas-connectivities' => LogicalConnectivityVasController::class,
     'logical-internet-connectivities' => LogicalConnectivityInternetController::class,
-    'modify-logical-connectivities' => LogicalConnectivityInternetController::class,
+    'modify-internet-connectivities' => LogicalConnectivityModifyInternetController::class,
     'vas-services' => VasServiceController::class,
     'data-types' => DataTypeController::class,
     'cc-schedules' => CCScheduleController::class,

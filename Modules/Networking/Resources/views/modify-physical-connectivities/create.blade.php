@@ -61,7 +61,7 @@
 @section('content')
     <div class="">
         <form
-            action="{{ !empty($physicalConnectivity) ? route('physical-connectivities.update', @$physicalConnectivity->id) : route('physical-connectivities.store') }}"
+            action="{{ !empty($physicalConnectivity) ? route('modify-physical-connectivities.update', @$physicalConnectivity->id) : route('modify-physical-connectivities.store') }}"
             method="post" class="custom-form">
             @if (!empty($physicalConnectivity))
                 @method('PUT')
@@ -69,6 +69,8 @@
             @csrf
             <div class="row">
                 <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
+                <input type="hidden" name="connectivity_requirement_id" id="connectivity_requirement_id"
+                    value="{{ $connectivity_requirement_id }}">
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
                     <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
@@ -82,11 +84,11 @@
                         aria-describedby="client_type" readonly value="{{ $client_type }}">
                 </div>
 
-{{--                <div class="form-group col-3 client_type">--}}
-{{--                    <label for="client_type">Client Type:</label>--}}
-{{--                    <input type="text" class="form-control" id="client_type" name="client_type" aria-describedby="client_type" readonly--}}
-{{--                           value="<?php echo ($client_type == 1) ? 'Corporate' : 'Individual'; ?>">--}}
-{{--                </div>--}}
+                {{--                <div class="form-group col-3 client_type"> --}}
+                {{--                    <label for="client_type">Client Type:</label> --}}
+                {{--                    <input type="text" class="form-control" id="client_type" name="client_type" aria-describedby="client_type" readonly --}}
+                {{--                           value="<?php echo $client_type == 1 ? 'Corporate' : 'Individual'; ?>"> --}}
+                {{--                </div> --}}
 
 
                 <div class="form-group col-3 connectivity_point1">

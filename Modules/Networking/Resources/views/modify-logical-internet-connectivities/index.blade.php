@@ -11,7 +11,8 @@
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-success"><i class="fa fa-plus"></i></a>
+    <a href="{{ route('physical-connectivities.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
+            class="fa fa-plus"></i></a>
 @endsection
 
 @section('sub-title')
@@ -34,7 +35,7 @@
                     <th>Device IP</th>
                     <th>PORT</th>
                     <th>Vlan</th>
-                    {{-- <th></th> --}}
+                    <th></th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -49,60 +50,60 @@
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                {{ $line->link_type }} <br>
+                                <span class="badge badge-info">{{ $line->link_type }}</span> <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                {{ $line->pop }} <br>
+                                <span class="badge badge-info">{{ $line->pop }}</span> <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                {{ $line->ldp }} <br>
+                                <span class="badge badge-info">{{ $line->ldp }}</span> <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                {{ $line->device_ip }} <br>
+                                <span class="badge badge-info">{{ $line->device_ip }}</span> <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                {{ $line->port }} <br>
+                                <span class="badge badge-info">{{ $line->port }}</span> <br>
                             @endforeach
                         </td>
                         <td>
                             @foreach ($physicalConnectivity->lines as $key => $line)
-                                {{ $line->vlan }} <br>
+                                <span class="badge badge-info">{{ $line->vlan }}</span> <br>
                             @endforeach
                         </td>
-                        {{-- <td>
+                        <td>
                             <span class="badge badge-info">
-                                <a href="{{ route('logical-internet-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}"
-                                    class="text-white" target="_blank">Internet</a>
+                                <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id, 'type' => 'internet']) }}"
+                                    class="text-white">Internet</a>
                             </span>
                             <span class="badge badge-info">
                                 <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}"
-                                    class="text-white" target="_blank">Data</a>
+                                    class="text-white">Data</a>
                             </span>
                             <span class="badge badge-info">
-                                <a href="{{ route('logical-vas-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}" target="_blank"
+                                <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id, 'type' => 'vas']) }}"
                                     class="text-white">VAS</a>
                             </span>
-                        </td> --}}
+                        </td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    {{-- <a href="{{ route('physical-connectivities.show', $physicalConnectivity->id) }}"
+                                    <a href="{{ route('physical-connectivities.show', $physicalConnectivity->id) }}"
                                         data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i
-                                            class="fas fa-eye"></i></a> --}}
+                                            class="fas fa-eye"></i></a>
 
-                                    <a href="{{ route('modify-physical-connectivities.edit', $physicalConnectivity->id) }}"
+                                    <a href="{{ route('physical-connectivities.edit', $physicalConnectivity->id) }}"
                                         data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
                                             class="fas fa-pen"></i></a>
                                     {!! Form::open([
-                                        'url' => route('modify-physical-connectivities.destroy', $physicalConnectivity->id),
+                                        'url' => route('physical-connectivities.destroy', $physicalConnectivity->id),
                                         'method' => 'delete',
                                         'class' => 'd-inline',
                                         'data-toggle' => 'tooltip',
