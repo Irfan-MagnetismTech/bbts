@@ -165,12 +165,22 @@
                                         autocomplete="off" value="{{ $line->quantity }}">
                                 </td>
                                 <td>
-                                    <input type="text" name="ip_ipv4[]" class="form-control ip_ipv4"
-                                        autocomplete="off" value="{{ $line->ip_ipv4 }}">
+                                    <select name="ip_ipv4[]" class="form-control select2 ip_ipv4" readonly>
+                                        <option value="">Select IP Address</option>
+                                        @foreach ($ipv4Ips as $ip)
+                                            <option value="{{ $ip->address }}" @selected($line->ip_ipv4 == $ip->address)>
+                                                {{ $ip->address }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
-                                    <input type="text" name="ip_ipv6[]" class="form-control ip_ipv6"
-                                        autocomplete="off" value="{{ $line->ip_ipv6 }}">
+                                    <select name="ip_ipv6[]" class="form-control select2 ip_ipv6" readonly>
+                                        <option value="">Select IP Address</option>
+                                        @foreach ($ipv6Ips as $ip)
+                                            <option value="{{ $ip->address }}" @selected($line->ip_ipv6 == $ip->address)>
+                                                {{ $ip->address }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" name="subnetmask[]" class="form-control subnetmask"

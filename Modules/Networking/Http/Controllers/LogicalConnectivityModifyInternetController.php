@@ -55,21 +55,6 @@ class LogicalConnectivityModifyInternetController extends Controller
             ->get()
             ->unique('product_id');
 
-        $dedicated_ipv4Ips = LogicalConnectivityLine::distinct('ip_ipv4')
-            ->whereNotNull('ip_ipv4')
-            ->where('ip_ipv4', '!=', '')
-            ->pluck('ip_ipv4')
-            ->toArray();
-
-        $dedicated_ipv6Ips = LogicalConnectivityLine::distinct('ip_ipv6')
-            ->whereNotNull('ip_ipv6')
-            ->where('ip_ipv6', '!=', '')
-            ->pluck('ip_ipv6')
-            ->toArray();
-        $ips = Ip::latest()->get();
-        $ipv4Ips = Ip::where('ip_type', 'IPv4')->whereNotIn('address', $dedicated_ipv4Ips)->latest()->get();
-        $ipv6Ips = Ip::where('ip_type', 'IPv6')->whereNotIn('address', $dedicated_ipv6Ips)->latest()->get();
-
         $logicalConnectivityInternet = LogicalConnectivity::query()
             ->where([
                 'fr_no' => @$physicalConnectivityData->fr_no,
@@ -79,6 +64,20 @@ class LogicalConnectivityModifyInternetController extends Controller
             ->with('lines.product')
             ->latest()
             ->first();
+
+        $dedicated_ipv4Ips = LogicalConnectivityLine::distinct('ip_ipv4')
+            ->where('logical_connectivity_id', '!=', @$logicalConnectivityInternet->id)
+            ->pluck('ip_ipv4')
+            ->toArray();
+        $dedicated_ipv6Ips = LogicalConnectivityLine::distinct('ip_ipv6')
+            ->where('logical_connectivity_id', '!=', @$logicalConnectivityInternet->id)
+            ->pluck('ip_ipv6')
+            ->toArray();
+        $ips = Ip::latest()->get();
+        $ipv4Ips = Ip::where('ip_type', 'IPv4')->whereNotIn('address', $dedicated_ipv4Ips)->latest()->get();
+        $ipv6Ips = Ip::where('ip_type', 'IPv6')->whereNotIn('address', $dedicated_ipv6Ips)->latest()->get();
+
+
 
         if ($logicalConnectivityInternet) {
             $logicalConnectivityBandwidths = BandwidthDestribution::query()
