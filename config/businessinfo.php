@@ -35,7 +35,7 @@ return [
     'receivedTypes' => [
         'MRR' => 'MRR',
         'ERR' => 'ERR',
-        'WCR' => 'WCR',
+        'WCRR' => 'WCRR',
         'MIR' => 'MIR',
         'OS' => 'OS'
     ],

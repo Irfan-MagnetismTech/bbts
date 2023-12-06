@@ -90,14 +90,14 @@
 
 
     $('#client_no').on('input', function() {
-        var client_id = $(this).val();
+        var search = $(this).val();
         var html = '<option value="">Select Fr No</option>';
         $(this).autocomplete({
             source: function(request, response) {
                 $.ajax({
                     url: "{{ url('changes/search-client') }}",
                     data: {
-                        client_id: client_id,
+                        search: search,
                     },
                     success: function(data) {
                         response(data);
@@ -107,8 +107,9 @@
             select: function(event, ui) {
                 $('#client_no').val(ui.item.value).attr('value', ui.item.value);
                 $('#client_name').val(ui.item.label).attr('value', ui.item.label);
-                ui.item.frDetails.forEach(function (element) {
-                    html += `<option value="${element.fr_no}">${element.connectivity_point} ( ${element.fr_no} )</option>`;
+                ui.item.frDetails.forEach(function(element) {
+                    html +=
+                        `<option value="${element.fr_no}">${element.connectivity_point} ( ${element.fr_no} )</option>`;
                 });
                 $('#fr_no').html(html);
                 return false;

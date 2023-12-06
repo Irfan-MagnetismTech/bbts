@@ -19,6 +19,7 @@
         .input-group-info .input-group-addon {
             /*background-color: #04748a!important;*/
         }
+
         .custom-spinner-container {
             display: flex;
             flex-direction: column;
@@ -67,7 +68,7 @@
                     <div class="form-check-inline">
                         <label class="form-check-label" for="client">
                             <input type="radio" class="form-check-input radioButton" id="client" name="type"
-                                value="client" @checked(@$requisition->type == 'client' || old('type') == 'client')> Client
+                                value="client" @checked(@$requisition->type == 'client' || old('type') == 'client') checked> Client
                         </label>
                     </div>
 
@@ -98,8 +99,8 @@
         </div>
         <div class="row">
             <div class="form-group col-3">
-                <label for="select2">Branch Name</label>
-                <select class="form-control select2" id="branch_id" name="branch_id">
+                <label for="select2">Branch Name</label> <span class="text-danger">*</span>
+                <select class="form-control select2" id="branch_id" name="branch_id" required>
                     <option value="20" selected>Select Branch</option>
                     @foreach ($branchs as $option)
                         <option value="{{ $option->id }}"
@@ -124,15 +125,15 @@
             </div>
 
             <div class="form-group col-3 client_name">
-                <label for="client_name">Client Name:</label>
+                <label for="client_name">Client Name:</label> <span class="text-danger">*</span>
                 <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
                     name="client_name" value="{{ old('client_name') ?? ($requisition->client->client_name ?? '') }}"
-                    placeholder="Search...">
+                    placeholder="Search..." required>
             </div>
 
             <div class="form-group col-3 fr_no">
-                <label for="select2">FR No</label>
-                <select class="form-control select2" id="fr_no" name="fr_no">
+                <label for="select2">FR No</label> <span class="text-danger">*</span>
+                <select class="form-control select2" id="fr_no" name="fr_no" required>
                     <option value="" readonly selected>Select FR No</option>
                     @if ($formType == 'create')
                         <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
@@ -148,8 +149,8 @@
             </div>
 
             <div class="form-group col-3 link_no">
-                <label for="link_no">Link No:</label>
-                <select class="form-control select2" id="link_no" name="link_no">
+                <label for="link_no">Link No:</label> <span class="text-danger">*</span>
+                <select class="form-control select2" id="link_no" name="link_no" readonly>
                     <option value="" readonly selected>Select Link No</option>
                     @if ($formType == 'create')
                         <option value="{{ old('link_no') }}" selected>{{ old('link_no') }}</option>
@@ -164,9 +165,10 @@
                 </select>
             </div>
             <div class="form-group col-3 client_no">
-                <label for="client_no">Client No:</label>
+                <label for="client_no">Client No:</label> <span class="text-danger">*</span>
                 <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
-                    readonly value="{{ old('client_no') ?? (@$requisition->client_no ?? '') }}">
+                    readonly value="{{ old('client_no') ?? (@$requisition->client_no ?? '') }}" placeholder="Search..."
+                    required>
             </div>
 
             <div class="form-group col-3 client_address">
@@ -177,9 +179,10 @@
             </div>
 
             <div class="form-group col-3">
-                <label for="date">Applied Date:</label>
+                <label for="date">Applied Date:</label> <span class="text-danger">*</span>
                 <input class="form-control" id="date" name="date" aria-describedby="date"
-                    value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date">
+                    value="{{ old('date') ?? (@$requisition->date ?? '') }}" readonly placeholder="Select a Date"
+                    required>
             </div>
             <div class="form-group col-3 pop_id" style="display: none">
                 <label for="select2">Pop Name</label>
@@ -207,18 +210,18 @@
                     value="{{ old('remarks') ?? (@$requisition->remarks ?? '') }}">
             </div>
         </div>
-            <div class="row loading" style="display: none;">
-                <div class="col-md-12">
-                    <div class="custom-spinner-container">
-                        <div class="custom-spinner text-primary" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
-
-                        <!-- Optional text -->
-                        <div class="mt-2">Loading...</div>
+        <div class="row loading" style="display: none;">
+            <div class="col-md-12">
+                <div class="custom-spinner-container">
+                    <div class="custom-spinner text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
                     </div>
+
+                    <!-- Optional text -->
+                    <div class="mt-2">Loading...</div>
                 </div>
             </div>
+        </div>
         <table class="table table-bordered" id="material_requisition">
             <thead>
                 <tr>
@@ -257,8 +260,8 @@
                                 value="{{ $material_id[$key] }}">
                         </td>
                         <td>
-                            <input type="text" name="item_code[]" class="form-control item_code" autocomplete="off" readonly
-                                   value="{{ $item_code[$key] }}">
+                            <input type="text" name="item_code[]" class="form-control item_code" autocomplete="off"
+                                readonly value="{{ $item_code[$key] }}">
                         </td>
                         <td>
                             <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly
@@ -274,24 +277,26 @@
                             </select>
                         </td>
                         <td>
-                            @if(isset($model[$key]))
-                                <input list="models" name="model[]" id="model[]" class="form-control model" value="{{ $model[$key] }}">
-                                @else
-                                <input list="models" name="model[]" id="model[]" class="form-control model" value="">
+                            @if (isset($model[$key]))
+                                <input list="models" name="model[]" id="model[]" class="form-control model"
+                                    value="{{ $model[$key] }}">
+                            @else
+                                <input list="models" name="model[]" id="model[]" class="form-control model"
+                                    value="">
                             @endif
-                                <datalist id="models">
-                                    @foreach ($models as $model)
-                                        <option value="{{ $model }}">
-                                    @endforeach
-                                </datalist>
+                            <datalist id="models">
+                                @foreach ($models as $model)
+                                    <option value="{{ $model }}">
+                                @endforeach
+                            </datalist>
                         </td>
                         <td>
                             <input type="text" name="description[]" class="form-control description"
                                 autocomplete="off" value="{{ $description[$key] }}">
                         </td>
                         <td class="current_stock" style="display: none">
-                            <input type="text" name="current_stock[]" class="form-control current_stock" autocomplete="off" readonly
-                                value="{{ $current_stock[$key] }}">
+                            <input type="text" name="current_stock[]" class="form-control current_stock"
+                                autocomplete="off" readonly value="{{ $current_stock[$key] }}">
                         </td>
 
                         <td>

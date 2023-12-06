@@ -50,7 +50,7 @@ class ScmRequisitionController extends Controller
         $models = MaterialModel::pluck('model');
         $branchs = Branch::get();
 
-        return view('scm::requisitions.create', compact('requisitions', 'formType', 'brands', 'branchs','models'));
+        return view('scm::requisitions.create', compact('requisitions', 'formType', 'brands', 'branchs', 'models'));
     }
 
     /**
@@ -66,29 +66,23 @@ class ScmRequisitionController extends Controller
             if (request()->type == 'client') {
                 $requestData = $request->only('type', 'client_no', 'fr_no', 'link_no', 'date', 'branch_id', 'remarks');
             } elseif (request()->type == 'warehouse') {
-                $requestData = $request->only('type', 'date', 'branch_id', 'to_branch','remarks');
+                $requestData = $request->only('type', 'date', 'branch_id', 'to_branch', 'remarks');
             } elseif (request()->type == 'general') {
                 $requestData = $request->only('type', 'date', 'branch_id', 'employee_id', 'pop_id', 'remarks');
                 // dd($request->employee_id);
                 // dd($requestData);
             } else {
                 $requestData = $request->only('type', 'date', 'branch_id', 'pop_id', 'remarks');
-                // dd($request->empolyee_id);
-
             }
 
             $lastMRSId = ScmRequisition::latest()->first();
             if ($lastMRSId) {
-                if (now()->format('Y') != date('Y', strtotime($lastMRSId->created_at))) {
-                    $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . 1;
-                } else {
-                    $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . ($lastMRSId->id + 1);
-                }
+                $composite_mrs = explode('-', $lastMRSId->mrs_no);
+                $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . ($composite_mrs[2] + 1);
             } else {
                 $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . 1;
             }
             $requestData['requisition_by'] = auth()->id();
-            // dd($requestData);
 
             $requisition = ScmRequisition::create($requestData);
             $requisitionDetails = [];
@@ -174,7 +168,7 @@ class ScmRequisitionController extends Controller
         // $branchwisePops = ScmRequisition::with('pop')->where('id', $requisition->id)->get();
         $branchwisePops = Pop::where('branch_id', $requisition->branch_id)->get();
         // $fr_composite_key = $requisition->fr_composite_key;
-        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs', 'branchwisePops','models'));
+        return view('scm::requisitions.create', compact('requisition', 'formType', 'brands', 'pops', 'clients', 'fr_nos', 'client_links', 'branchs', 'branchwisePops', 'models'));
     }
 
     /**

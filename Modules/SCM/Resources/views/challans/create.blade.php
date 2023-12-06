@@ -749,7 +749,9 @@
                 success: function(data) {
                     var html = '<option value="" readonly selected>Select</option>';
                     $.each(data, function(key, item) {
-                        html += `<option value="${item.id}">${item.type_no}</option>`;
+                        if (item.type_no != null) {
+                            html += `<option value="${item.id}">${item.type_no}</option>`;
+                        }
                     });
                     event_this.closest('tr').find('.type_id').html(html);
                 }
@@ -781,8 +783,9 @@
                 success: function(data) {
                     let html = '';
                     $.each(data, function(key, item) {
-
-                        html += `<option value="${item.value}">${item.label}</option>`;
+                        if(item.value != null){
+                            html += `<option value="${item.value}">${item.label}</option>`;
+                        }
                     });
                     event_this.find('.serial_code').html(html);
                 }
