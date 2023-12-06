@@ -1,5 +1,19 @@
 <div class="pcoded-navigation-label text-uppercase bg-primary">Billing</div>
 <ul class="pcoded-item pcoded-left-item">
+    <li class="pcoded-hasmenu {{ request()->routeIs(['banks.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-mtext">Configurations</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('banks.index') ? 'active' : null }}">
+                <a href="{{ route('banks.index') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Bank List</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
     <li class="pcoded-hasmenu {{ request()->routeIs(['otc-bills.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
