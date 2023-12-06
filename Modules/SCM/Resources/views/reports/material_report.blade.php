@@ -19,9 +19,15 @@
         action="{{ url("scm/scm-material-stock-report") }}"
         method="get" class="custom-form">
         @csrf
-        <div class="form-group col-3" style="display: flex">
-            <div>
-                <label for="branch">Warehouse:</label>
+        <div style="display: flex">
+            <div style="width: 100px">
+                <select name="type" class="form-control type select2" autocomplete="off">
+                    <option value="list">List</option>
+                    <option value="pdf">PDF</option>
+                </select>
+            </div>
+            <div style="width: 200px; margin-left: 20px">
+{{--                <label for="branch">Warehouse:</label>--}}
                 <select name="branch_id" class="form-control branch select2" autocomplete="off">
                     <option value="">Select Branch</option>
                     @foreach ($branches as $branch)
@@ -31,13 +37,13 @@
                     @endforeach
                 </select>
             </div>
-            <div class="icon-btn" style="margin: 30px">
+            <div class="icon-btn" style="margin-left: 30px; margin-top: 5px">
                 <button data-toggle="tooltip" title="Search" class="btn btn-outline-primary"><i
                         class="fas fa-search"></i></button>
             </div>
         </div>
 
-        <div class="dt-responsive table-responsive">
+        <div class="dt-responsive table-responsive" style="margin-top: 10px">
             <table id="dataTable" class="table table-striped table-bordered">
                 <thead>
                 <tr>
