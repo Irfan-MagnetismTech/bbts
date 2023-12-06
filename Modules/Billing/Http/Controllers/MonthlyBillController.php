@@ -51,7 +51,7 @@ class MonthlyBillController extends Controller
     public function store(Request $request)
     {
         try {
-            $datas = SaleDetail::with(['sale.saleProductDetails', 'sale.saleLinkDetails'])
+            $datas = SaleDetail::with(['saleProductDetails', 'saleLinkDetails'])
             ->where('checked', 1)
             ->distinct('fr_no')
             ->whereHas('activation', function ($query) use ($request) {
@@ -60,7 +60,7 @@ class MonthlyBillController extends Controller
             ->get()->groupBy('billing_address_id');
             // dd($datas);
             foreach ($datas as $key => $val) {
-                $child = [];
+                
                 $parent = [
                     'client_no'             => $val->first()->sale->client_no,
                     'billing_address_id'    => $key,
@@ -72,7 +72,8 @@ class MonthlyBillController extends Controller
                 ];
                 $net_amount = 0;
                 foreach ($val as $key1 => $val2) {
-                    foreach ($val2->sale->saleProductDetails as $kk => $vv) {
+                    $child = [];
+                    foreach ($val2->saleProductDetails as $kk => $vv) {
                         $child[] = [
                             "fr_no"                    => $vv->fr_no,
                             "product_id"               => $vv->product_id,
@@ -88,8 +89,10 @@ class MonthlyBillController extends Controller
                         ];
                         $net_amount += ($vv->quantity * $vv->price);
                     }
+                    // dump($val2->saleProductDetails);
                 }
                 $parent['amount'] = $net_amount;
+                // dump($child);
                 $data = BillGenerate::create($parent);
                 $data->lines()->createMany($child);
             }
