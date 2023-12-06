@@ -17,7 +17,7 @@
 @endsection
 @section('sub-title')
     Total: {{ count($ScmDatas) }}
-    <x-warning-paragraph name="WCRR" />
+    {{-- <x-warning-paragraph name="WCRR" /> --}}
 @endsection
 
 @section('content')
@@ -54,7 +54,7 @@
                                     <a href="{{ route('warranty-claims-receives.show', $ScmData->id) }}"
                                         data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i
                                             class="fas fa-eye"></i></a>
-                                    @if (!$ScmData->isDeleteable())
+                                    @if ($ScmData->receiveable()->doesntExist())
                                         <a href="{{ route('warranty-claims-receives.edit', $ScmData->id) }}"
                                             data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
                                                 class="fas fa-pen"></i></a>
