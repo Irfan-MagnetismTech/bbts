@@ -65,7 +65,14 @@ class LeadGenerationController extends Controller
             $file_name = CommonService::fileUpload($request->file('upload_file'), 'uploads/lead_generation');
             $data['document'] = $file_name;
         }
-        $data['client_no'] = date('Y') . '-' . LeadGeneration::count() + 1;
+
+        $latest_lead = LeadGeneration::latest()->first();
+        if ($latest_lead) {
+            $client_no = explode('-', $latest_lead->client_no);
+            $data['client_no'] = date('Y') . '-' . ($client_no[1] + 1);
+        } else {
+            $data['client_no'] = date('Y') . '-' . 1;
+        }
         $data['created_by'] = auth()->user()->id;
         LeadGeneration::create($data);
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Created Successfully');

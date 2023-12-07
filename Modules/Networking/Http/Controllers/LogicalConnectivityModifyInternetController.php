@@ -24,7 +24,8 @@ class LogicalConnectivityModifyInternetController extends Controller
      */
     public function index()
     {
-        return view('networking::index');
+        $logicalConnectivities = LogicalConnectivity::where('is_modified', 1)->latest()->get();
+        return view('networking::modify-logical-internet-connectivities.index', compact('logicalConnectivities'));
     }
 
     /**
@@ -148,22 +149,25 @@ class LogicalConnectivityModifyInternetController extends Controller
                 'product_category' => 'Internet',
             ]);
 
-            $logicalConnectivity = LogicalConnectivity::updateOrCreate(
+            $logicalConnectivity = LogicalConnectivity::Create(
                 [
                     'fr_no' => $request->fr_no,
                     'client_no' => $request->client_no,
-                    'product_category' => 'Internet'
+                    'product_category' => 'Internet',
+                    'connectivity_requirement_id' => $request->connectivity_requirement_id,
+                    'is_modified' => 1,
+                    'sale_id' => $request->sale_id,
                 ],
                 $request->all()
             );
 
-            $logicalConnectivity->lines()->delete();
+            // $logicalConnectivity->lines()->delete();
             $logicalConnectivity->lines()->createMany($dataList);
 
-            $logicalConnectivity->bandwidths()->delete();
+            // $logicalConnectivity->bandwidths()->delete();
             $logicalConnectivity->bandwidths()->createMany($bandwidthDataList);
 
-            $logicalConnectivity->clientFacility()->delete();
+            // $logicalConnectivity->clientFacility()->delete();
             $logicalConnectivity->clientFacility()->create($request->all());
 
             DB::commit();
@@ -192,7 +196,53 @@ class LogicalConnectivityModifyInternetController extends Controller
      */
     public function edit($id)
     {
-        return view('networking::edit');
+
+        $logicalConnectivityInternet = LogicalConnectivity::query()
+            ->where('id', $id)
+            ->with('lines.product')
+            ->latest()
+            ->first();
+        $saleDetalis = SaleDetail::query()
+            ->whereSaleIdAndFrNo($logicalConnectivityInternet->sale_id, $logicalConnectivityInternet->fr_no)
+            ->with('client', 'frDetails')
+            ->first();
+
+        $connectivity_requirement_id = Sale::query()->where('id', $logicalConnectivityInternet->sale_id)->first()->connectivity_requirement_id;
+
+        $dedicated_ipv4Ips = LogicalConnectivityLine::distinct('ip_ipv4')
+            ->where('logical_connectivity_id', '!=', $logicalConnectivityInternet->id)
+            ->pluck('ip_ipv4')
+            ->toArray();
+        dd($dedicated_ipv4Ips, $logicalConnectivityInternet->lines);
+        $dedicated_ipv6Ips = LogicalConnectivityLine::distinct('ip_ipv6')
+            ->where('logical_connectivity_id', '!=', $logicalConnectivityInternet->id)
+            ->pluck('ip_ipv6')
+            ->toArray();
+        $ips = Ip::latest()->get();
+        $ipv4Ips = Ip::where('ip_type', 'IPv4')->whereNotIn('address', $dedicated_ipv4Ips)->latest()->get();
+        $ipv6Ips = Ip::where('ip_type', 'IPv6')->whereNotIn('address', $dedicated_ipv6Ips)->latest()->get();
+
+        $logicalConnectivityBandwidths = BandwidthDestribution::query()
+            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+            ->with('ip')
+            ->get();
+
+        //explode facility type
+        $facilityTypes = explode(',', @$logicalConnectivityInternet->facility_type);
+
+        $clientFacility = ClientFacility::query()
+            ->where('logical_connectivity_id', @$logicalConnectivityInternet->id)
+            ->first();
+
+        $products = SaleProductDetail::query()
+            ->whereHas('product.category', function ($query) use ($logicalConnectivityInternet) {
+                $query->where('fr_no', @$logicalConnectivityInternet->fr_no);
+            })
+            ->with('product')
+            ->get()
+            ->unique('product_id');
+
+        return view('networking::modify-logical-internet-connectivities.create', compact('logicalConnectivityInternet', 'ips', 'ipv4Ips', 'ipv6Ips', 'logicalConnectivityBandwidths', 'facilityTypes', 'clientFacility', 'connectivity_requirement_id', 'saleDetalis', 'products'));
     }
 
     /**

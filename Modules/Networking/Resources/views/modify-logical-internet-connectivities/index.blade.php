@@ -1,22 +1,22 @@
 @extends('layouts.backend-layout')
-@section('title', 'Pyhsical Connectivity')
+@section('title', 'Logical Connectivity')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    List of Pyhsical Connectivity
+    List of Logical Connectivity
 @endsection
 
 
 @section('breadcrumb-button')
-    <a href="{{ route('physical-connectivities.create') }}" class="btn btn-out-dashed btn-sm btn-success"><i
+    <a href="{{ route('logical-connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-success"><i
             class="fa fa-plus"></i></a>
 @endsection
 
 @section('sub-title')
-    Total: {{ count($physicalConnectivities) }}
+    Total: {{ count($logicalConnectivities) }}
 @endsection
 
 @section('content')
@@ -26,84 +26,46 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>FR No</th>
-                    <th>Client Name</th>
                     <th>Connectivity Point</th>
-                    <th>Link Type</th>
-                    <th>POP</th>
-                    <th>LDP</th>
-                    <th>Device IP</th>
-                    <th>PORT</th>
-                    <th>Vlan</th>
-                    <th></th>
+                    <th>Client Name</th>
+                    <th>Product Category</th>
+                    <th>Facility Type</th>
+                    <th>Comment</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($physicalConnectivities as $key => $physicalConnectivity)
+                @foreach ($logicalConnectivities as $key => $logicalConnectivity)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $physicalConnectivity->fr_no }}</td>
-                        <td>{{ $physicalConnectivity->client->client_name }}</td>
+                        <td>{{ $logicalConnectivity->feasibilityRequirementDetails->connectivity_point ?? '' }}</td>
+                        <td>{{ $logicalConnectivity->client->client_name ?? '' }}</td>
                         <td>
-                            {{ $physicalConnectivity->connectivity_point }}
+                            {{ $logicalConnectivity->product_category ?? '' }}
+                        </td>
+                        {{--                        <td> --}}
+                        {{--                            @foreach ($logicalConnectivity->lines as $key => $line) --}}
+                        {{--                            {{ $line->link_type }} <br> --}}
+                        {{--                            @endforeach --}}
+                        {{--                        </td> --}}
+                        <td>
+                            {{ $logicalConnectivity->facility_type ?? '' }}
                         </td>
                         <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->link_type }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->pop }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->ldp }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->device_ip }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->port }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            @foreach ($physicalConnectivity->lines as $key => $line)
-                                <span class="badge badge-info">{{ $line->vlan }}</span> <br>
-                            @endforeach
-                        </td>
-                        <td>
-                            <span class="badge badge-info">
-                                <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id, 'type' => 'internet']) }}"
-                                    class="text-white">Internet</a>
-                            </span>
-                            <span class="badge badge-info">
-                                <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id]) }}"
-                                    class="text-white">Data</a>
-                            </span>
-                            <span class="badge badge-info">
-                                <a href="{{ route('logical-data-connectivities.create', ['physical_connectivity_id' => $physicalConnectivity->id, 'type' => 'vas']) }}"
-                                    class="text-white">VAS</a>
-                            </span>
+                            {{ $logicalConnectivity->comment ?? '' }}
                         </td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ route('physical-connectivities.show', $physicalConnectivity->id) }}"
+                                    {{-- <a href="{{ route('logical-connectivities.show', $logicalConnectivity->id) }}"
                                         data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i
-                                            class="fas fa-eye"></i></a>
+                                            class="fas fa-eye"></i></a> --}}
 
-                                    <a href="{{ route('physical-connectivities.edit', $physicalConnectivity->id) }}"
+                                    <a href="{{ route('modify-internet-connectivities.edit', $logicalConnectivity->id) }}"
                                         data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
                                             class="fas fa-pen"></i></a>
                                     {!! Form::open([
-                                        'url' => route('physical-connectivities.destroy', $physicalConnectivity->id),
+                                        'url' => route('modify-internet-connectivities.destroy', $logicalConnectivity->id),
                                         'method' => 'delete',
                                         'class' => 'd-inline',
                                         'data-toggle' => 'tooltip',

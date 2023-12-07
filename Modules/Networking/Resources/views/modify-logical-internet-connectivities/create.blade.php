@@ -655,5 +655,5 @@
 
 @endsection
 @section('script')
-    @include('networking::logical-internet-connectivities.js')
+    @include('networking::modify-logical-internet-connectivities.js')
 @endsection

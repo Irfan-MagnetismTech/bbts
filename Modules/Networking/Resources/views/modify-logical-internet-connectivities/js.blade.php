@@ -59,6 +59,7 @@
         $("#data_service tbody").append(html);
     }
 
+
     function appendBandwidthDistributionRow() {
         let row_index = $("#bandwidth_distribution tr:last").prop('rowIndex');
 
@@ -128,15 +129,22 @@
         @endif
         initializeSelect2();
     });
+    $(document).ready(function() {
+        $('.remove-internet-service-row').on('click', function() {
+            console.log('remove');
+            $(this).closest('tr').remove();
+        })
+    });
 
     /* Adds and removes quantity row on click */
-    $("#data_service")
-        .on('click', '.remove-data-service-row', function() {
-            $(this).closest('tr').remove();
-        }).on('click', '.add-data-service-row', function() {
-            appendDataServiceRow();
-            initializeSelect2();
-        });
+    $(document).on('click', '.remove-internet-service-row', function() {
+        console.log('remove');
+        $(this).closest('tr').remove();
+    })
+    $(document).on('click', '.add-internet-service-row', function() {
+        appendDataServiceRow();
+        initializeSelect2();
+    });
 
     /* Adds and removes bandwidth row on click */
     $("#bandwidth_distribution")
@@ -163,6 +171,7 @@
             $('.input-field').addClass('d-none');
         }
     }
+
     function checkboxChange1(e, inputFields) {
         if (e.checked) {
             // $(inputFields).prop('disabled', false);
@@ -173,6 +182,7 @@
             $('.input-field-1').addClass('d-none input-transition');
         }
     }
+
     function checkboxChange2(e, inputFields) {
         if (e.checked) {
             // $(inputFields).prop('disabled', false);
@@ -182,6 +192,7 @@
             $('.input-field-2').addClass('d-none');
         }
     }
+
     function checkboxChange3(e, inputFields) {
         if (e.checked) {
             // $(inputFields).prop('disabled', false);
@@ -191,6 +202,7 @@
             $('.input-field-3').addClass('d-none');
         }
     }
+
     function checkboxChange4(e, inputFields) {
         if (e.checked) {
             // $(inputFields).prop('disabled', false);
@@ -200,7 +212,7 @@
             $('.input-field-4').addClass('d-none');
         }
     }
-    
+
     function checkboxChange5(e, inputFields) {
         if (e.checked) {
             // $(inputFields).prop('disabled', false);

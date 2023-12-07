@@ -15,6 +15,8 @@ class LogicalConnectivity extends Model
         'sale_id',
         'client_no',
         'fr_no',
+        'connectivity_requirement_id',
+        'is_modified',
         'product_category',
         'shared_type',
         'facility_type',
