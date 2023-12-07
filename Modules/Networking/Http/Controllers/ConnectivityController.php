@@ -145,4 +145,45 @@ class ConnectivityController extends Controller
         $products = SaleProductDetail::whereIn('sale_detail_id', $sale_detail_ids)->pluck('product_name');
         return view('networking::reports.active_clients', compact('activations','products'));
     }
+
+    public function activeClientsReportDetails($fr_no)
+    {
+        $salesDetail = SaleDetail::query()
+            ->with('sale', 'client', 'frDetails')
+            ->where('fr_no', $fr_no)
+            ->first();
+
+        $employees = Employee::latest()->get();
+
+        $physicalConnectivity = PhysicalConnectivity::query()
+            ->whereSaleIdAndFrNo($salesDetail->sale_id, $salesDetail->fr_no)
+            ->with('lines')
+            ->latest()
+            ->first();
+
+        $logicalConnectivities = LogicalConnectivity::with(['lines.product'])
+            ->forProductCategories(['VAS', 'Data', 'Internet'])
+            ->whereClientNoAndFrNo(@$physicalConnectivity->client_no, @$physicalConnectivity->fr_no)
+            ->latest()
+            ->get()
+            ->keyBy('product_category');
+
+        $facilityTypes = explode(',', $logicalConnectivities->get('Internet')?->facility_type);
+
+        $logicalConnectivityBandwidths = BandwidthDestribution::query()
+            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')?->id)
+            ->with('ip')
+            ->get();
+
+        $clientFacility = ClientFacility::query()
+            ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')?->id)
+            ->first();
+
+        $connectivity = Connectivity::query()
+            ->with('employee')
+            ->whereSaleId($salesDetail->sale_id)
+            ->first();
+
+        return view('networking::reports.active_client_details', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityBandwidths', 'logicalConnectivities', 'facilityTypes', 'clientFacility', 'connectivity'));
+    }
 }

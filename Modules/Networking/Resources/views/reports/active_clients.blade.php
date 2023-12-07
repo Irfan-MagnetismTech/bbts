@@ -19,59 +19,60 @@
         action="{{ url("scm/scm-material-stock-report") }}"
         method="get" class="custom-form">
         @csrf
-{{--        <div class="form-group col-3" style="display: flex">--}}
-{{--            <div>--}}
-{{--                <label for="branch">Warehouse:</label>--}}
-{{--                <select name="branch_id" class="form-control branch select2" autocomplete="off">--}}
-{{--                    <option value="">Select Branch</option>--}}
-{{--                    @foreach ($branches as $branch)--}}
-{{--                        <option value="{{ $branch->id }}" @selected($branch->id == $branch_id)>--}}
-{{--                            {{ $branch->name }}--}}
-{{--                        </option>--}}
-{{--                    @endforeach--}}
-{{--                </select>--}}
-{{--            </div>--}}
-{{--            <div class="icon-btn" style="margin: 30px">--}}
-{{--                <button data-toggle="tooltip" title="Search" class="btn btn-outline-primary"><i--}}
-{{--                        class="fas fa-search"></i></button>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-
         <div class="dt-responsive table-responsive">
             <table id="dataTable" class="table table-striped table-bordered">
                 <thead>
                 <tr>
                     <th>Client</th>
                     <th>Connectivity Point</th>
-                    <th>Commission Date</th>
                     <th>Products</th>
+                    <th>Thana</th>
+                    <th>Branch</th>
+                    <th>Contact Person</th>
+                    <th>Contact Number</th>
+                    <th>Commission Date</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($activations as $activationKey => $activation)
-                            <tr>
-                                <td>{{ $activation->client->client_name ?? ''}}</td>
+                    <tr>
+                        <td>{{ $activation->client->client_name ?? ''}}</td>
 
-                                <td>{{ $activation->frDetails->connectivity_point ?? ''}} ({{$activation->frDetails->fr_no ?? ''}})</td>
+                        <td>{{ $activation->frDetails->connectivity_point ?? ''}}
+                            ({{$activation->frDetails->fr_no ?? ''}})
+                        </td>
+                        <td>
+                            {{--                                        @foreach ($activation->connectivities->saleProductDetails as $product)--}}
+                            {{--                                            {{ $product->product_name ?? '' }}--}}
+                            {{--                                            @unless($loop->last)--}}
+                            {{--                                                ,--}}
+                            {{--                                            @endunless--}}
+                            {{--                                        @endforeach--}}
 
-                                <td>{{ $activation->connectivities->commissioning_date ?? '' }}</td>
+                            @foreach ($products as $product)
+                                {{ $product ?? '' }}
+                                @unless($loop->last)
+                                    ,
+                                @endunless
+                            @endforeach
+                        </td>
+                        <td>{{ $activation->client->thana->name ?? ''}}</td>
+                        <td>{{ $activation->client->branch->name ?? ''}}</td>
+                        <td>{{ $activation->client->contact_person ?? ''}}</td>
+                        <td>{{ $activation->client->contact_no ?? ''}}</td>
+                        <td>{{ $activation->connectivities->commissioning_date ?? '' }}</td>
 
-                                <td>
-{{--                                        @foreach ($activation->connectivities->saleProductDetails as $product)--}}
-{{--                                            {{ $product->product_name ?? '' }}--}}
-{{--                                            @unless($loop->last)--}}
-{{--                                                ,--}}
-{{--                                            @endunless--}}
-{{--                                        @endforeach--}}
-
-                                    @foreach ($products as $product)
-                                        {{ $product ?? '' }}
-                                        @unless($loop->last)
-                                            ,
-                                        @endunless
-                                    @endforeach
-                                </td>
-                            </tr>
+                        <td>
+                            <div class="icon-btn">
+                                <nobr>
+                                    <a href="{{ route('active-clients-report-details', $activation->fr_no) }}"
+                                       data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i
+                                            class="fas fa-eye"></i></a>
+                                </nobr>
+                            </div>
+                        </td>
+                    </tr>
                 @endforeach
                 </tbody>
             </table>
