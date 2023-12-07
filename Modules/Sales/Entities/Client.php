@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Entities;
 
+use Modules\Admin\Entities\Branch;
 use Modules\Admin\Entities\User;
 use App\Models\Dataencoding\Thana;
 use App\Models\Dataencoding\District;
@@ -72,6 +73,11 @@ class Client extends Model
     public function thana()
     {
         return $this->belongsTo(Thana::class, 'thana_id', 'id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }
 
     public function createdBy()
