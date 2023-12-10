@@ -44,6 +44,7 @@
             <tbody>
 
                 @foreach ($salesDetails as $key => $details)
+                    {{-- @dd($details->logicalConnectivityInternetModify) --}}
                     @php
                         $product_category = $details->saleProductDetails
                             ->map(function ($item, $key) {
@@ -82,10 +83,12 @@
 
 
                             @if ($details->sale->is_modified == 1)
-                                <span class="badge badge-info">
-                                    <a href="{{ route('modify-internet-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
-                                        class="text-white" target="_blank">Internet</a>
-                                </span>
+                                @if (in_array('Internet', $product_category) && empty($details->logicalConnectivityInternetModify))
+                                    <span class="badge badge-info">
+                                        <a href="{{ route('modify-internet-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                            class="text-white" target="_blank">Internet</a>
+                                    </span>
+                                @endif
                             @else
                                 @if (in_array('Internet', $product_category) && empty($details->logicalConnectivityInternet))
                                     <span class="badge badge-info">
@@ -95,10 +98,12 @@
                                 @endif
                             @endif
                             @if ($details->sale->is_modified == 1)
-                                <span class="badge badge-info">
-                                    <a href="{{ route('modify-logical-vas-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
-                                        class="text-white" target="_blank">VAS</a>
-                                </span>
+                                @if (in_array('VAS', $product_category) && empty($details->logicalConnectivityVASModify))
+                                    <span class="badge badge-info">
+                                        <a href="{{ route('modify-logical-vas-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                            class="text-white" target="_blank">VAS</a>
+                                    </span>
+                                @endif
                             @else
                                 @if (in_array('VAS', $product_category) && empty($details->logicalConnectivityVAS))
                                     <span class="badge badge-info">
@@ -109,10 +114,12 @@
                             @endif
 
                             @if ($details->sale->is_modified == 1)
-                                {{-- <span class="badge badge-info">
-                                    <a href="{{ route('modify-logical-data-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
-                                        class="text-white" target="_blank">Data</a>
-                                </span> --}}
+                                @if (in_array('Data', $product_category) && empty($details->logicalConnectivityDataModify))
+                                    <span class="badge badge-info">
+                                        <a href="{{ route('modify-logical-data-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                            class="text-white" target="_blank">Data</a>
+                                    </span>
+                                @endif
                             @else
                                 @if (in_array('Data', $product_category) && empty($details->logicalConnectivityData))
                                     <span class="badge badge-info">
