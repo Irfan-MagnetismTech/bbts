@@ -61,7 +61,7 @@
 @endphp
 
 @section('breadcrumb-button')
-    <a href="{{ route('connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('active-clients-report') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 

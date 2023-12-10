@@ -5,6 +5,7 @@ namespace Modules\Billing\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Admin\Entities\Bank;
 use Modules\Sales\Entities\Client;
 use App\Services\BbtsGlobalService;
 use Illuminate\Database\QueryException;
@@ -35,7 +36,8 @@ class CollectionController extends Controller
      */
     public function create()
     {
-        return view('billing::collection.create');
+        $banks = Bank::get();
+        return view('billing::collection.create',compact('banks'));
     }
 
     /**
@@ -48,7 +50,7 @@ class CollectionController extends Controller
         // dd($request->all());
         if($request->total_amount!=$request->grand_total)
         {
-            return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
+            return redirect()->back()->withInput()->with('message', 'Total amount not equeal');
         }
         try {
             DB::beginTransaction();
@@ -84,8 +86,8 @@ class CollectionController extends Controller
      */
     public function edit(Collection $collection)
     {
-        
-        return view('billing::collection.create', compact('collection'));
+        $banks = Bank::get();
+        return view('billing::collection.create', compact('collection','banks'));
     }
 
     /**
@@ -98,7 +100,7 @@ class CollectionController extends Controller
     {
         if($request->total_amount!=$request->grand_total)
         {
-            return redirect()->back()->withInput()->with('message', 'Total amount not equeal'); 
+            return redirect()->back()->withInput()->with('message', 'Total amount not equeal');
         }
         try {
             DB::beginTransaction();
@@ -173,12 +175,12 @@ class CollectionController extends Controller
         // }
         foreach ($req->bill_no as $key => $value) {
             if ($req->receive_amount[$key] > 0) {
-                // dd($req->previous_due[$key] - ($req->discount[$key] + $req->penalty[$key] 
+                // dd($req->previous_due[$key] - ($req->discount[$key] + $req->penalty[$key]
                 // + $req->total[$key]));
                 $row[] = [
                     'bill_no'           => $req->bill_no[$key],
                     'amount'            => $req->bill_amount[$key],
-                    'previous_due'      => $req->previous_due[$key] - ($req->discount[$key] + $req->penalty[$key] 
+                    'previous_due'      => $req->previous_due[$key] - ($req->discount[$key] + $req->penalty[$key]
                     + $req->total[$key]),
                     'discount'          => $req->discount[$key],
                     'penalty'           => $req->penalty[$key],
@@ -191,7 +193,7 @@ class CollectionController extends Controller
                 ];
             }
         }
-        
+
         return $row;
     }
 

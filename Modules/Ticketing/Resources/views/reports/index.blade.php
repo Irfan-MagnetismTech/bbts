@@ -144,7 +144,7 @@
                             <i class="far fa-file-pdf"></i>
                         </button>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <button type="button" id="excelDownload" onclick="reportDownload('excel')" class="btn btn-outline-success btn-sm col-12">
                             Excel Download
@@ -153,7 +153,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </form>
     <div class="dt-responsive table-responsive">
@@ -170,19 +170,18 @@
                 <th>Remarks</th>
             </tr>
             </thead>
-            
+
             <tbody>
                 @foreach ($supportTickets as $supportTicket)
                     <tr>
                         <td></td>
                         <td class="d-none">{{ $supportTicket->id }}</td>
-                        <td>{{ $supportTicket->ticket_no }}</td>
-                        <td>{{ $supportTicket->createdBy->name }}</td>
-                        <td>{{ $supportTicket->priority }}</td>
-                        <td>{{ $supportTicket->supportComplainType->name}}</td>
-                        <td>{{ $supportTicket->ticketSource->name}}</td>
-                        <td>{{ $supportTicket->remarks }}</td>
-                        
+                        <td>{{ $supportTicket->ticket_no ?? ''}}</td>
+                        <td>{{ $supportTicket->createdBy->name ?? ''}}</td>
+                        <td>{{ $supportTicket->priority ?? ''}}</td>
+                        <td>{{ $supportTicket->supportComplainType->name ?? ''}}</td>
+                        <td>{{ $supportTicket->ticketSource->name ?? ''}}</td>
+                        <td>{{ $supportTicket->remarks ?? ''}}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -228,7 +227,7 @@
         $("#support_complain_type_id").select2({
             placeholder: "Select Complain Type"
         })
-        
+
     })
 
     function resetForm() {
@@ -263,7 +262,7 @@
     });
 
     function dttablereport(reportType) {
-        
+
         $("#datatableFilteredReportDownload").append($('<input>', {
             type: 'hidden',
             name: 'reportType',
@@ -273,7 +272,7 @@
         var selectedRows = table.rows({ selected: true }).data().pluck(1).toArray();
 
         if(selectedRows.length != 0) {
-                
+
             $("#datatableFilteredReportDownload").append($('<input>', {
                 type: 'hidden',
                 name: 'supportTickets',

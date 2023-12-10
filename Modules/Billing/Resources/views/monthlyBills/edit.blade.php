@@ -198,10 +198,21 @@
                         <td>Client :</td>
                         <td>{{$monthlyBill->client->client_name ?? ''}}</td>
                     </tr>
+{{--                    <tr>--}}
+{{--                        <td>Address :</td>--}}
+{{--                        <td>{{$monthlyBill->billingAddress->address  ?? ''}}</td>--}}
+{{--                    </tr>--}}
                     <tr>
                         <td>Address :</td>
-                        <td>{{$monthlyBill->billingAddress->address  ?? ''}}</td>
+                        <td>
+                            @php
+                                $address = $monthlyBill->billingAddress->address ?? '';
+                                $address = wordwrap($address, 70, "<br>\n", true);
+                                echo $address;
+                            @endphp
+                        </td>
                     </tr>
+
                     <tr>
                         <td>Attention :</td>
                         <td>{{$monthlyBill->billingAddress->contact_person  ?? ''}}</td>
@@ -223,25 +234,25 @@
                     <thead>
                     <tr>
                         <td>Invoice No :</td>
-                        <td>{{$monthlyBill->client->client_name ?? ''}}</td>
+                        <td>{{$monthlyBill->bill_no ?? ''}}</td>
                     </tr>
                     <tr>
                         <td>Invoice Date :</td>
-                        <td>{{$monthlyBill->billingAddress->address ?? ''}}</td>
+                        <td>{{$monthlyBill->date ?? ''}}</td>
                     </tr>
                     <tr>
                         <td>Invoice Period :</td>
-                        <td>{{$monthlyBill->billingAddress->contact_person ?? ''}}</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>BBTSL BIN No :</td>
-                        <td>{{$monthlyBill?->client?->bin_no ?? ''}}</td>
+                        <td></td>
                     </tr>
                     </thead>
                 </table>
             </div>
         </div>
-        <div class="row" style="margin-right: 20px">
+        <div class="row" style="margin-right: 20px;">
             <table class="table table-bordered" id="table">
                 <thead>
                 <tr>

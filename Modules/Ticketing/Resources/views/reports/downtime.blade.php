@@ -120,12 +120,12 @@
                     <tr>
                         <td></td>
                         <td class="d-none">{{ $supportTicket->id }}</td>
-                        <td>{{ $supportTicket->ticket_no }}</td>
-                        <td>{{ $supportTicket->createdBy->name }}</td>
-                        <td>{{ $supportTicket->priority }}</td>
-                        <td>{{ $supportTicket->supportComplainType->name }}</td>
-                        <td>{{ $supportTicket->ticketSource->name }}</td>
-                        <td>{{ $supportTicket->remarks }}</td>
+                        <td>{{ $supportTicket->ticket_no ?? ''}}</td>
+                        <td>{{ $supportTicket->createdBy->name ?? ''}}</td>
+                        <td>{{ $supportTicket->priority ?? ''}}</td>
+                        <td>{{ $supportTicket->supportComplainType->name ?? ''}}</td>
+                        <td>{{ $supportTicket->ticketSource->name ?? ''}}</td>
+                        <td>{{ $supportTicket->remarks ?? ''}}</td>
 
                     </tr>
                 @endforeach
