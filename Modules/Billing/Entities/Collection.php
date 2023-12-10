@@ -2,6 +2,7 @@
 
 namespace Modules\Billing\Entities;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Sales\Entities\Client;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Billing\Entities\CollectionBill;
@@ -30,5 +31,10 @@ class Collection extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
+
+    public function collectionLines(): HasMany
+    {
+        return $this->hasMany(CollectionLine::class, 'collection_id');
     }
 }
