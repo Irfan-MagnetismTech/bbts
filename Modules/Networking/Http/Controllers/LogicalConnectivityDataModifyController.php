@@ -12,7 +12,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
 
-class LogicalConnectivityDataController extends Controller
+class LogicalConnectivityDataModifyController extends Controller
 {
     /**
      * Display a listing of the resource.

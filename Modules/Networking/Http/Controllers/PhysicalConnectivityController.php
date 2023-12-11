@@ -127,7 +127,7 @@ class PhysicalConnectivityController extends Controller
 
             DB::commit();
 
-            return redirect()->route('physical-connectivities.edit', $physicalConnectivity->id);
+            return redirect()->route('physical-connectivities')->with('message', 'Physical Connectivity Created Successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($e->getMessage());
