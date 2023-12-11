@@ -5,6 +5,7 @@
     $is_old = old('comment') ? true : false;
     $form_heading = !empty($logicalConnectivityInternet) ? 'Update' : 'Add';
     $form_method = !empty($logicalConnectivityInternet) ? 'PUT' : 'POST';
+    $url = !empty($logicalConnectivityInternet) ? route('modify-internet-connectivities.update', $logicalConnectivityInternet->id) : route('modify-internet-connectivities.store');
     
     $comment = $is_old ? old('comment') : @$logicalConnectivityInternet->comment;
     $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->lines->pluck('quantity') : null);
@@ -36,7 +37,7 @@
 @endsection
 
 @section('breadcrumb-button')
-    <a href="{{ route('logical-internet-connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
+    <a href="{{ route('modify-internet-connectivities.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i
             class="fas fa-database"></i></a>
 @endsection
 
@@ -48,7 +49,8 @@
 
 @section('content')
     <div class="">
-        <form action="{{ route('modify-internet-connectivities.store') }}" method="post" class="custom-form">
+        <form action="{{ $url }}" method="post" class="custom-form">
+            @method($form_method)
             @csrf
 
             <div class="row">

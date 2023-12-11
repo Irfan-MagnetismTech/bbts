@@ -146,4 +146,19 @@ class SaleDetail extends Model
     {
         return $this->hasOne(LogicalConnectivity::class, 'fr_no', 'fr_no')->where('is_modified', 0)->where('product_category', 'VAS');
     }
+
+    public function logicalConnectivityInternetModify()
+    {
+        return $this->hasOne(LogicalConnectivity::class, 'connectivity_requirement_id', 'connectivity_requirement_id')->where('product_category', 'Internet');
+    }
+
+    public function logicalConnectivityDataModify()
+    {
+        return $this->hasOne(LogicalConnectivity::class, 'connectivity_requirement_id', 'connectivity_requirement_id')->where('product_category', 'Data');
+    }
+
+    public function logicalConnectivityVASModify()
+    {
+        return $this->hasOne(LogicalConnectivity::class, 'connectivity_requirement_id', 'connectivity_requirement_id')->where('product_category', 'VAS');
+    }
 }
