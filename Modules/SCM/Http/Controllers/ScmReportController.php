@@ -2,6 +2,9 @@
 
 namespace Modules\SCM\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Modules\SCM\Entities\ScmMur;
 use PDF;
 use Illuminate\Validation\ValidationException;
 use Modules\Admin\Entities\Branch;
@@ -32,7 +35,7 @@ class ScmReportController extends Controller
     public function materialStockReport(Request $request)
     {
         $branch_id = $request->branch_id;
-        if ($request->type === 'pdf'){
+        if ($request->type === 'pdf') {
             $stockTypes = [
                 ScmMrr::class, ScmErr::class, ScmChallan::class, ScmMir::class, OpeningStock::class
             ];
@@ -71,19 +74,19 @@ class ScmReportController extends Controller
             });
 
             return PDF::loadView('scm::reports.material_stock_pdf', ['groupedStocks' => $groupedStocks, 'branch_id' => $branch_id], [], [
-                'format'                     => 'A4',
-                'orientation'                => 'L',
-                'title'                      => 'Material Stock PDF',
-                'watermark'                  => 'BBTS',
-                'show_watermark'             => true,
-                'watermark_text_alpha'       => 0.1,
-                'watermark_image_path'       => '',
-                'watermark_image_alpha'      => 0.2,
-                'watermark_image_size'       => 'D',
-                'watermark_image_position'   => 'P',
+                'format' => 'A4',
+                'orientation' => 'L',
+                'title' => 'Material Stock PDF',
+                'watermark' => 'BBTS',
+                'show_watermark' => true,
+                'watermark_text_alpha' => 0.1,
+                'watermark_image_path' => '',
+                'watermark_image_alpha' => 0.2,
+                'watermark_image_size' => 'D',
+                'watermark_image_position' => 'P',
             ])->stream('material_stock.pdf');
             return view('scm::reports.material_stock_pdf', compact('groupedStocks', 'branch_id'));
-        }else{
+        } else {
             $branches = Branch::get();
             $stockTypes = [
                 ScmMrr::class, ScmErr::class, ScmChallan::class, ScmMir::class, OpeningStock::class
@@ -122,10 +125,117 @@ class ScmReportController extends Controller
                     });
                 });
             });
-            return view('scm::reports.material_report', compact('groupedStocks', 'branches', 'branch_id'));
+            return view('scm::reports.material_stock_report', compact('groupedStocks', 'branches', 'branch_id'));
+        }
+    }
+
+    public function scmReport(Request $request)
+    {
+        $branch_id = $request->branch_id;
+        if ($request->type === 'pdf') {
+            $stockTypes = [
+                ScmMrr::class, ScmErr::class, ScmMir::class, OpeningStock::class, ScmMur::class
+            ];
+            if ($branch_id == null) {
+                $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->get();
+            }else{
+                $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->where('branch_id', $branch_id)
+                    ->get();
+            }
+            $groupedStocks = $stocks->groupBy('material_id')->map(function ($items) use ($stockTypes) {
+                $totalQuantity = $items->sum('quantity');
+                $result = [
+                    'material_id' => $items[0]->material->name,
+                    'unit' => $items[0]->material->unit,
+                    'total' => $totalQuantity,
+                ];
+
+                foreach ($stockTypes as $stockType) {
+                    if ($stockType === ScmMir::class) {
+                        $mirQuantity = $items->where('stockable_type', $stockType)
+                            ->where('quantity', '<', 0)
+                            ->sum('quantity');
+
+                        $transferQuantity = $items->where('stockable_type', $stockType)
+                            ->where('quantity', '>', 0)
+                            ->sum('quantity');
+
+                        $result['scm_mir_qty'] = $mirQuantity;
+                        $result['transfer_qty'] = $transferQuantity;
+                    } else {
+                        $typeItems = $items->where('stockable_type', $stockType)->sum('quantity');
+                        $result[Str::snake(class_basename($stockType)) . '_qty'] = $typeItems;
+                    }
+                }
+                return $result;
+            });
+
+            return PDF::loadView('scm::reports.scm_pdf', ['groupedStocks' => $groupedStocks, 'branch_id' => $branch_id], [], [
+                'format' => 'A4',
+                'orientation' => 'L',
+                'title' => 'SCM PDF',
+                'watermark' => 'BBTS',
+                'show_watermark' => true,
+                'watermark_text_alpha' => 0.1,
+                'watermark_image_path' => '',
+                'watermark_image_alpha' => 0.2,
+                'watermark_image_size' => 'D',
+                'watermark_image_position' => 'P',
+            ])->stream('scm.pdf');
+            return view('scm::reports.scm_pdf', compact('groupedStocks', 'branch_id'));
+        } else {
+            $branch_id = $request->branch_id;
+            $branches = Branch::get();
+
+            $stockTypes = [
+                ScmMrr::class, ScmErr::class, ScmMir::class, OpeningStock::class, ScmMur::class
+            ];
+            if ($branch_id == null) {
+                $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->get();
+            }else{
+                $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->where('branch_id', $branch_id)
+                    ->get();
+            }
+            $groupedStocks = $stocks->groupBy('material_id')->map(function ($items) use ($stockTypes) {
+                $totalQuantity = $items->sum('quantity');
+                $result = [
+                    'material_id' => $items[0]->material->name,
+                    'unit' => $items[0]->material->unit,
+                    'total' => $totalQuantity,
+                ];
+
+                foreach ($stockTypes as $stockType) {
+                    if ($stockType === ScmMir::class) {
+                        $mirQuantity = $items->where('stockable_type', $stockType)
+                            ->where('quantity', '<', 0)
+                            ->sum('quantity');
+
+                        $transferQuantity = $items->where('stockable_type', $stockType)
+                            ->where('quantity', '>', 0)
+                            ->sum('quantity');
+
+                        $result['scm_mir_qty'] = $mirQuantity;
+                        $result['transfer_qty'] = $transferQuantity;
+                    } else {
+                        $typeItems = $items->where('stockable_type', $stockType)->sum('quantity');
+                        $result[Str::snake(class_basename($stockType)) . '_qty'] = $typeItems;
+                    }
+                }
+                return $result;
+            });
+            return view('scm::reports.scm_report', compact('groupedStocks', 'branches', 'branch_id'));
         }
     }
 }
-
-
-

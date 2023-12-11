@@ -53,7 +53,7 @@
                 @foreach ($feasibility_requirements as $key => $feasibility_requirement)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $feasibility_requirement->lead_generation->client_name }}</td>
+                        <td>{{ $feasibility_requirement->lead_generation->client_name ?? '' }}</td>
                         <td>{{ $feasibility_requirement->client_no }}</td>
                         <td>{{ $feasibility_requirement->mq_no }}</td>
                         <td>{{ $feasibility_requirement->feasibilityRequirementDetails->count() }}</td>

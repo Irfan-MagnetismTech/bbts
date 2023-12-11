@@ -47,7 +47,7 @@
             <table id="dataTable" class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>Material Name</th>
+                    <th>Material</th>
                     <th>Unit</th>
                     <th>Brand</th>
                     <th>Model</th>
