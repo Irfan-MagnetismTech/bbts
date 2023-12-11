@@ -59,10 +59,24 @@
                         <td>{{ $feasibility_requirement->feasibilityRequirementDetails->count() }}</td>
                         <td>
                             @if ($feasibility_requirement->feasibilityRequirementDetails->count() > 0)
-                                {{ $feasibility_requirement->feasibilityRequirementDetails[0]->surveySum->count() ?? '' }}/
-                                {{ $feasibility_requirement->feasibilityRequirementDetails[0]->planningSum->count() ?? '' }}
-                                /
-                                {{ $feasibility_requirement->feasibilityRequirementDetails[0]->costingSum->count() ?? '' }}
+                                @php
+                                    $survey = 0;
+                                    $planning = 0;
+                                    $costing = 0;
+                                @endphp
+                                @foreach ($feasibility_requirement->feasibilityRequirementDetails as $key => $fr)
+                                    @if ($fr->survey)
+                                        @php $survey = $survey + 1; @endphp
+                                    @endif
+                                    @if ($fr->planning)
+                                        @php $planning = $planning + 1; @endphp
+                                    @endif
+                                    @if ($fr->costing)
+                                        @php $costing = $costing + 1; @endphp
+                                    @endif
+                                @endforeach
+
+                                {{ $survey }}/{{ $planning }}/{{ $costing }}
                             @endif
                         </td>
                         </td>

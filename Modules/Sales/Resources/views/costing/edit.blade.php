@@ -863,7 +863,7 @@
                                     <span style="font-size:14px;">Total Investment</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_investment" id="total_investment"
+                                    <input type="number" name="total_investment" id="total_investment" step="0.01"
                                         class="form-control form-control-sm text-center plan_fr_total_investment input"
                                         placeholder="Total Investment" value="{{ $costing->total_investment }}"
                                         readonly>
@@ -874,7 +874,7 @@
                                     <span style="font-size:14px;">Total OTC</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_otc" id="total_otc"
+                                    <input type="number" name="total_otc" id="total_otc" step="0.01"
                                         class="form-control form-control-sm text-center total_otc input"
                                         placeholder="Total OTC" value="{{ $costing->total_otc }}" readonly>
                                 </td>
@@ -885,6 +885,7 @@
                                 </td>
                                 <td colspan="2">
                                     <input type="number" name="total_product_cost" id="total_product_cost"
+                                        step="0.01"
                                         class="form-control form-control-sm text-center total_product_cost input"
                                         placeholder="Total Product Cost" value="{{ $costing->total_product_cost }}"
                                         </td>
@@ -895,6 +896,7 @@
                                 </td>
                                 <td colspan="2">
                                     <input type="number" name="total_service_cost" id="total_service_cost"
+                                        step="0.01"
                                         class="form-control form-control-sm text-center total_service_cost input"
                                         placeholder="Total Service Cost" value="{{ $costing->total_service_cost }}"
                                         </td>
@@ -904,7 +906,7 @@
                                     <span style="font-size:14px;">Total MRC</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_mrc" id="total_mrc"
+                                    <input type="number" name="total_mrc" id="total_mrc" step="0.01"
                                         class="form-control form-control-sm text-center total_mrc input"
                                         placeholder="Total MRC" value="{{ $costing->total_mrc }}" readonly>
                                 </td>
@@ -914,21 +916,23 @@
                                     <span style="font-size:14px;">Margin</span>
                                 </td>
                                 <td>
-                                    <input type="number" step=".1" name="management_perchantage"
+                                    <input type="number" step=".1" name="management_perchantage" step="0.01"
                                         id="management_perchantage"
                                         class="form-control form-control-sm text-center margin input" placeholder="Margin"
                                         value="{{ $costing->management_perchantage }}">
                                 </td>
                                 <td>
-                                    <input type="number" step=".1" name="management_cost_amount"
+                                    <input type="number" step=".1" name="management_cost_amount" step="0.01"
                                         id="management_cost_amount"
                                         class="form-control form-control-sm text-center management_cost_amount input"
-                                        placeholder="Margin Amount" value="{{ $costing->management_cost_amount }}" </td>
+                                        placeholder="Margin Amount" value="{{ $costing->management_cost_amount }}">
+                                </td>
                                 <td>
                                     <input type="number" step=".1" name="management_cost_total"
                                         id="management_cost_total"
                                         class="form-control form-control-sm text-center management_cost_total input"
-                                        placeholder="Margin Amount" value="{{ $costing->management_cost_total }}" </td>
+                                        placeholder="Margin Amount" value="{{ $costing->management_cost_total }}">
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2">
@@ -936,10 +940,11 @@
                                 </td>
                                 <td colspan="2">
                                     <input type="number" step=".1" name="equipment_price_for_client"
-                                        id="equipment_price_for_client"
+                                        step="0.01" id="equipment_price_for_client"
                                         class="form-control form-control-sm text-center equipment_price_for_client input"
                                         placeholder="Equipment Price for Client"
-                                        value="{{ $costing->equipment_price_for_client }}" </td>
+                                        value="{{ $costing->equipment_price_for_client }}">
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2">
@@ -947,10 +952,10 @@
                                 </td>
                                 <td colspan="2">
                                     <input type="number" step=".1" name="total_otc_with_client_equipment"
-                                        id="total_otc_with_client_equipment"
+                                        step="0.01" id="total_otc_with_client_equipment"
                                         class="form-control form-control-sm text-center total_otc_with_client_equipment input"
-                                        placeholder="Total OTC" value="{{ $costing->total_otc_with_client_equipment }}"
-                                        </td>
+                                        placeholder="Total OTC" value="{{ $costing->total_otc_with_client_equipment }}">
+                                </td>
                             </tr>
                         </tbody>
                     </table>

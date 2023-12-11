@@ -370,11 +370,11 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">Material Stock Report</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-{{--                <li class="{{ request()->routeIs('work-order-receives.index') ? 'active' : null }}">--}}
-{{--                    <a href="{{ route('work-order-receives.index') }}"> <span class="pcoded-micon"><i--}}
-{{--                                class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span--}}
-{{--                            class="pcoded-mcaret"></span></a>--}}
-{{--                </li>--}}
+                <li class="{{ request()->routeIs('scm-report') ? 'active' : null }}">
+                    <a href="{{ route('scm-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">SCM Report</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
             </ul>
         </li>
     @endcan
