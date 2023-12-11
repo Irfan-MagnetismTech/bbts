@@ -842,8 +842,8 @@
                                 <td colspan="2">
                                     <span style="font-size:14px;">Total Investment</span>
                                 </td>
-                                <td colspan="2">
-                                    <input type="number" name="total_investment" id="total_investment"
+                                <td colspan="2"> 
+                                    <input type="number" name="total_investment" id="total_investment" step="0.01"
                                         class="form-control form-control-sm text-center plan_fr_total_investment input"
                                         placeholder="Total Investment" value="">
                                 </td>
@@ -853,7 +853,7 @@
                                     <span style="font-size:14px;">Total OTC</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_otc" id="total_otc"
+                                    <input type="number" name="total_otc" id="total_otc" step="0.01"
                                         class="form-control form-control-sm text-center total_otc input"
                                         placeholder="Total OTC" value="">
                                 </td>
@@ -863,7 +863,7 @@
                                     <span style="font-size:14px;">Total Product Cost</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_product_cost" id="total_product_cost"
+                                    <input type="number" name="total_product_cost" id="total_product_cost" step="0.01"
                                         class="form-control form-control-sm text-center total_product_cost input"
                                         placeholder="Total Product Cost" value="">
                                 </td>
@@ -874,6 +874,7 @@
                                 </td>
                                 <td colspan="2">
                                     <input type="number" name="total_service_cost" id="total_service_cost"
+                                        step="0.01"
                                         class="form-control form-control-sm text-center total_service_cost input"
                                         placeholder="Total Service Cost" value="">
                                 </td>
@@ -883,7 +884,7 @@
                                     <span style="font-size:14px;">Total MRC</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="total_mrc" id="total_mrc"
+                                    <input type="number" name="total_mrc" id="total_mrc" step="0.01"
                                         class="form-control form-control-sm text-center total_mrc input"
                                         placeholder="Total MRC" value="" readonly>
                                 </td>
@@ -894,16 +895,18 @@
                                 </td>
                                 <td>
                                     <input type="number" name="management_perchantage" id="management_perchantage"
-                                        class="form-control form-control-sm text-center margin input" placeholder="Margin"
-                                        value="">
+                                        step="0.01" class="form-control form-control-sm text-center margin input"
+                                        placeholder="Margin" value="">
                                 </td>
                                 <td>
                                     <input type="number" name="management_cost_amount" id="management_cost_amount"
+                                        step="0.01"
                                         class="form-control form-control-sm text-center management_cost_amount input"
                                         placeholder="Margin Amount" value="" readonly>
                                 </td>
                                 <td>
                                     <input type="number" name="management_cost_total" id="management_cost_total"
+                                        step="0.01"
                                         class="form-control form-control-sm text-center management_cost_total input"
                                         placeholder="Margin Amount" value="" readonly>
                                 </td>
@@ -913,7 +916,7 @@
                                     <span style="font-size:14px;">Equipment Price for Client</span>
                                 </td>
                                 <td colspan="2">
-                                    <input type="number" name="equipment_price_for_client"
+                                    <input type="number" name="equipment_price_for_client" step="0.01"
                                         id="equipment_price_for_client"
                                         class="form-control form-control-sm text-center equipment_price_for_client input"
                                         placeholder="Equipment Price for Client" value="" readonly>

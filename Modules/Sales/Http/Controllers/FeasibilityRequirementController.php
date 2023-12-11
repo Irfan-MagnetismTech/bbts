@@ -35,7 +35,7 @@ class FeasibilityRequirementController extends Controller
 
     public function index()
     {
-        $feasibility_requirements = FeasibilityRequirement::with('lead_generation', 'feasibilityRequirementDetails.surveySum')->latest()->get();
+        $feasibility_requirements = FeasibilityRequirement::with('lead_generation', 'feasibilityRequirementDetails')->latest()->get();
         return view('sales::feasibility_requirement.index', compact('feasibility_requirements'));
     }
 
