@@ -255,6 +255,7 @@ class ScmErrController extends Controller
             'item_code'         => $request->item_code[$key],
             'serial_code'       => $request->serial_code[$key],
             'unit'              => $request->unit[$key],
+            'date'              => $request->date,
         ];
     }
 

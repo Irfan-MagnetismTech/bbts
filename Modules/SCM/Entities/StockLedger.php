@@ -2,6 +2,7 @@
 
 namespace Modules\SCM\Entities;
 
+use Carbon\Carbon;
 use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\Material;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,19 @@ class StockLedger extends Model
 {
     protected $guarded = [];
 
+    public function getDateAttribute($input)
+    {
+        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+    }
+
+    /**
+     * @param $input
+     */
+    public function setDateAttribute($input)
+    {
+        !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
+    }
+    
     public function stockable()
     {
         return $this->morphTo();
@@ -40,7 +54,7 @@ class StockLedger extends Model
 
     /**
      * Query the stock quantity of a specific item at a specific branch
-     * 
+     *
      * @param Builder $query Query builder instance
      * @param int $branch_id ID of the branch to query
      * @param stdClass $item Received item information to query for

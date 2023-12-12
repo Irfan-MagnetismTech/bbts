@@ -125,6 +125,7 @@ class OpeningStockController extends Controller
                         'unit_price'        => $value->unit_price,
                         'serial_code'       => $serial_code,
                         'unit'              => $request->unit[$key],
+                        'date'              => $request->date,
                     ];
                     return [
                         'serial_or_drum_key'    =>  $serial,
@@ -256,6 +257,7 @@ class OpeningStockController extends Controller
                         'unit_price'        => $value->unit_price,
                         'serial_code'       => $serial_code,
                         'unit'              => $request->unit[$key],
+                        'date'              => $request->date,
                     ];
                     return [
                         'serial_or_drum_key'    =>  $serial,

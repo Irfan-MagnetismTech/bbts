@@ -184,6 +184,7 @@ class ScmWcrrController extends Controller
             'item_code'         => $req->item_code[$ke] ?? null,
             'serial_code'       => $req->serial_code[$ke] ?? null,
             'unit'              => $req->unit[$ke] ?? null,
+            'date'              => $req->date,
         ];
     }
 

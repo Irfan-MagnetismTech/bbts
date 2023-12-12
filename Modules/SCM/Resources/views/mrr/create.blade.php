@@ -188,7 +188,7 @@
         <table class="table table-bordered" id="material_requisition">
             <thead>
                 <tr>
-                    <th>Material Name</th>
+                    <th>Material</th>
                     <th>Brand</th>
                     <th>Model</th>
                     <th>Description</th>

@@ -35,6 +35,7 @@ return new class extends Migration
             $table->integer('warranty_period')->nullable();
             $table->bigInteger('left_initial_mark')->nullable();
             $table->bigInteger('left_final_mark')->nullable();
+            $table->date('date')->nullable();
             $table->timestamps();
         });
     }
