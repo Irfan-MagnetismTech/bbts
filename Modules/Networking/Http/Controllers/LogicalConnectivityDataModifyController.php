@@ -9,7 +9,9 @@ use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\SaleDetail;
 use Modules\Networking\Entities\DataType;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Admin\Entities\Ip;
 use Modules\Networking\Entities\LogicalConnectivity;
+use Modules\Networking\Entities\LogicalConnectivityLine;
 use Modules\Networking\Entities\PhysicalConnectivity;
 
 class LogicalConnectivityDataModifyController extends Controller
@@ -20,7 +22,13 @@ class LogicalConnectivityDataModifyController extends Controller
      */
     public function index()
     {
-        return view('networking::index');
+        $logicalConnectivityDatas = LogicalConnectivity::query()
+            ->whereProductCategory('Data')
+            ->where('is_modified', 1)
+            ->with('lines')
+            ->latest()
+            ->get();
+        return view('networking::modify-logical-data-connectivities.index', compact('logicalConnectivityDatas'));
     }
 
     /**
@@ -52,6 +60,20 @@ class LogicalConnectivityDataModifyController extends Controller
             $query->where('name', 'Data');
         })->get();
 
+        $dedicated_ipv4Ips = LogicalConnectivityLine::distinct('ip_ipv4')
+            ->whereNotNull('ip_ipv4')
+            ->where('ip_ipv4', '!=', '')
+            ->pluck('ip_ipv4')
+            ->toArray();
+
+        $dedicated_ipv6Ips = LogicalConnectivityLine::distinct('ip_ipv6')
+            ->whereNotNull('ip_ipv6')
+            ->where('ip_ipv6', '!=', '')
+            ->pluck('ip_ipv6')
+            ->toArray();
+        $ipv4Ips = Ip::where('ip_type', 'IPv4')->whereNotIn('address', $dedicated_ipv4Ips)->latest()->get();
+        $ipv6Ips = Ip::where('ip_type', 'IPv6')->whereNotIn('address', $dedicated_ipv6Ips)->latest()->get();
+
 
 
         $logicalConnectivityData = LogicalConnectivity::query()
@@ -64,7 +86,9 @@ class LogicalConnectivityDataModifyController extends Controller
             ->latest()
             ->first();
 
-        return view('networking::logical-data-connectivities.create', compact('saleDetalis', 'physicalConnectivityData', 'dataTypes', 'logicalConnectivityData', 'products'));
+        $connectivity_requirement_id = $saleDetalis->connectivity_requirement_id;
+
+        return view('networking::modify-logical-data-connectivities.create', compact('saleDetalis', 'physicalConnectivityData', 'dataTypes', 'logicalConnectivityData', 'products', 'ipv4Ips', 'ipv6Ips', 'connectivity_requirement_id'));
     }
 
     /**
@@ -98,21 +122,23 @@ class LogicalConnectivityDataModifyController extends Controller
                 'product_category' => 'Data',
             ]);
 
-            $logicalConnectivity = LogicalConnectivity::updateOrCreate(
+            $logicalConnectivity = LogicalConnectivity::create(
                 [
                     'fr_no' => $request->fr_no,
                     'client_no' => $request->client_no,
-                    'product_category' => 'Data'
+                    'product_category' => 'Data',
+                    'connectivity_requirement_id' => $request->connectivity_requirement_id,
+                    'is_modified' => 1,
                 ],
                 $request->all()
             );
 
-            $logicalConnectivity->lines()->delete();
+            // $logicalConnectivity->lines()->delete();
             $logicalConnectivity->lines()->createMany($dataList);
 
             DB::commit();
 
-            return redirect()->back()->with('message', 'Logical Connectivity Data created successfully!');
+            return redirect('logical-data-connectivities')->with('message', 'Logical Connectivity Data created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($e->getMessage());
@@ -136,7 +162,48 @@ class LogicalConnectivityDataModifyController extends Controller
      */
     public function edit($id)
     {
-        return view('networking::edit');
+        $logicalConnectivityData = LogicalConnectivity::query()
+            ->whereId($id)
+            ->with('lines.product')
+            ->first();
+
+        $physicalConnectivityData = PhysicalConnectivity::query()
+            ->whereSaleIdAndFrNo($logicalConnectivityData->sale_id, $logicalConnectivityData->fr_no)
+            ->with('lines')
+            ->latest()
+            ->first();
+
+        $saleDetalis = SaleDetail::query()
+            ->whereSaleIdAndFrNo($logicalConnectivityData->sale_id, $logicalConnectivityData->fr_no)
+            ->with('client', 'frDetails')
+            ->latest()
+            ->first();
+
+        $dataTypes = DataType::query()
+            ->latest()
+            ->get();
+
+        $products = Product::whereHas('category', function ($query) {
+            $query->where('name', 'Data');
+        })->get();
+
+        $dedicated_ipv4Ips = LogicalConnectivityLine::distinct('ip_ipv4')
+            ->whereNotNull('ip_ipv4')
+            ->where('logical_connectivity_id', '!=', $id)
+            ->where('ip_ipv4', '!=', '')
+            ->pluck('ip_ipv4')
+            ->toArray();
+
+        $dedicated_ipv6Ips = LogicalConnectivityLine::distinct('ip_ipv6')
+            ->whereNotNull('ip_ipv6')
+            ->where('logical_connectivity_id', '!=', $id)
+            ->where('ip_ipv6', '!=', '')
+            ->pluck('ip_ipv6')
+            ->toArray();
+        $ipv4Ips = Ip::where('ip_type', 'IPv4')->whereNotIn('address', $dedicated_ipv4Ips)->latest()->get();
+        $ipv6Ips = Ip::where('ip_type', 'IPv6')->whereNotIn('address', $dedicated_ipv6Ips)->latest()->get();
+        $connectivity_requirement_id = $saleDetalis->connectivity_requirement_id;
+        return view('networking::logical-data-connectivities.create', compact('logicalConnectivityData', 'physicalConnectivityData', 'saleDetalis', 'dataTypes', 'products', 'ipv4Ips', 'ipv6Ips', 'connectivity_requirement_id'));
     }
 
     /**
@@ -147,7 +214,51 @@ class LogicalConnectivityDataModifyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        try {
+            DB::beginTransaction();
+            $logicalConnectivity = LogicalConnectivity::find($id);
+            $dataList = [];
+            foreach ($request->product_id as $key => $value) {
+                $dataList[] = [
+                    'product_id' => $value,
+                    'product_category' => 'Data',
+                    'data_type' => $request->data_type[$key],
+                    'quantity' => $request->quantity[$key],
+                    'ip_ipv4' => $request->ip_ipv4[$key],
+                    'ip_ipv6' => $request->ip_ipv6[$key],
+                    'subnetmask' => $request->subnetmask[$key],
+                    'gateway' => $request->gateway[$key],
+                    'vlan' => $request->vlan[$key],
+                    'mrtg_user' => $request->mrtg_user[$key],
+                    'mrtg_pass' => $request->mrtg_pass[$key]
+                ];
+            }
+
+            $request->merge([
+                'product_category' => 'Data',
+            ]);
+
+            $logicalConnectivity->update(
+                [
+                    'fr_no' => $request->fr_no,
+                    'client_no' => $request->client_no,
+                    'product_category' => 'Data',
+                    'connectivity_requirement_id' => $request->connectivity_requirement_id,
+                    'is_modified' => 1,
+                ]
+            );
+
+            $logicalConnectivity->lines()->delete();
+            $logicalConnectivity->lines()->createMany($dataList);
+
+            DB::commit();
+
+            return redirect('networking/logical-data-connectivities')->with('message', 'Logical Connectivity Data updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -157,6 +268,22 @@ class LogicalConnectivityDataModifyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $logicalConnectivity = LogicalConnectivity::query()
+                ->whereId($id)
+                ->first();
+
+            $logicalConnectivity->lines()->delete();
+            $logicalConnectivity->delete();
+
+            DB::commit();
+
+            return redirect()->back()->with('message', 'Logical Connectivity Data deleted successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 }

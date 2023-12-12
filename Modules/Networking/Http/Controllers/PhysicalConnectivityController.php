@@ -92,10 +92,7 @@ class PhysicalConnectivityController extends Controller
     public function store(Request $request)
     {
         try {
-
-            // dd('gg');
             DB::beginTransaction();
-
             $dataList = [];
             foreach ($request->link_type as $key => $value) {
                 $dataList[] = [
@@ -127,7 +124,7 @@ class PhysicalConnectivityController extends Controller
 
             DB::commit();
 
-            return redirect()->route('physical-connectivities')->with('message', 'Physical Connectivity Created Successfully');
+            return redirect()->route('physical-connectivities.index')->with('message', 'Physical Connectivity Created Successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($e->getMessage());

@@ -38,21 +38,21 @@
                 @foreach ($logicalConnectivities as $key => $logicalConnectivity)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $logicalConnectivity->feasibilityRequirementDetails->connectivity_point ?? ''}}</td>
-                        <td>{{ $logicalConnectivity->client->client_name ?? ''}}</td>
+                        <td>{{ $logicalConnectivity->feasibilityRequirementDetails->connectivity_point ?? '' }}</td>
+                        <td>{{ $logicalConnectivity->client->client_name ?? '' }}</td>
                         <td>
-                            {{ $logicalConnectivity->product_category ?? ''}}
+                            {{ $logicalConnectivity->product_category ?? '' }}
                         </td>
-{{--                        <td>--}}
-{{--                            @foreach ($logicalConnectivity->lines as $key => $line)--}}
-{{--                            {{ $line->link_type }} <br>--}}
-{{--                            @endforeach--}}
-{{--                        </td>--}}
+                        {{--                        <td> --}}
+                        {{--                            @foreach ($logicalConnectivity->lines as $key => $line) --}}
+                        {{--                            {{ $line->link_type }} <br> --}}
+                        {{--                            @endforeach --}}
+                        {{--                        </td> --}}
                         <td>
-                            {{ $logicalConnectivity->facility_type ?? ''}}
+                            {{ $logicalConnectivity->facility_type ?? '' }}
                         </td>
                         <td>
-                            {{ $logicalConnectivity->comment ?? ''}}
+                            {{ $logicalConnectivity->comment ?? '' }}
                         </td>
                         <td>
                             <div class="icon-btn">
@@ -61,9 +61,9 @@
                                         data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i
                                             class="fas fa-eye"></i></a> --}}
 
-{{--                                    <a href="{{ route('logical-connectivities.edit', $logicalConnectivity->id) }}"--}}
-{{--                                        data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i--}}
-{{--                                            class="fas fa-pen"></i></a>--}}
+                                    <a href="{{ route('logical-connectivities.edit', $logicalConnectivity->id) }}"
+                                        data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
+                                            class="fas fa-pen"></i></a>
                                     {!! Form::open([
                                         'url' => route('logical-connectivities.destroy', $logicalConnectivity->id),
                                         'method' => 'delete',

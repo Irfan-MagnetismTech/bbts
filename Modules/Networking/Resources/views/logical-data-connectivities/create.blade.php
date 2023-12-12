@@ -4,9 +4,9 @@
 @php
     $is_old = old('comment') ? true : false;
     $form_heading = !empty($logicalConnectivityData) ? 'Update' : 'Add';
-    $form_url = !empty($logicalConnectivityData) ? route('errs.update', $logicalConnectivityData->id) : route('errs.store');
+    $form_url = !empty($logicalConnectivityData) ? route('logical-data-connectivities.update', $logicalConnectivityData->id) : route('logical-data-connectivities.store');
     $form_method = !empty($logicalConnectivityData) ? 'PUT' : 'POST';
-    
+
     $comment = $is_old ? old('comment') : @$logicalConnectivityData->comment;
     $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('quantity') : null);
     $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('remarks') : null);
@@ -48,9 +48,9 @@
 
 @section('content')
     <div class="">
-        <form action="{{ route('logical-data-connectivities.store') }}" method="post" class="custom-form">
+        <form action="{{ $form_url }}" method="post" class="custom-form">
             @csrf
-
+            @method($form_method)
             <div class="row">
                 <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
 
@@ -98,8 +98,7 @@
                 <div class="form-group col-3 contact_address">
                     <label for="contact_address">Contact Address:</label>
                     <input type="text" class="form-control" id="contact_address" name="contact_address"
-                        aria-describedby="contact_address" readonly
-                        value="{{ $saleDetalis->frDetails->location }}">
+                        aria-describedby="contact_address" readonly value="{{ $saleDetalis->frDetails->location }}">
                 </div>
 
                 <div class="form-group col-3 comment">
@@ -108,7 +107,6 @@
                         value="{{ $comment }}">
                 </div>
             </div>
-
             <h5 class="text-center p-2">DATA SERVICE</h5>
             <table class="table table-bordered" id="data_service">
                 <thead>
@@ -153,12 +151,22 @@
                                         value="{{ $line->quantity }}">
                                 </td>
                                 <td>
-                                    <input type="text" name="ip_ipv4[]" class="form-control ip_ipv4" autocomplete="off"
-                                        value="{{ $line->ip_ipv4 }}">
+                                    <select name="ip_ipv4[]" class="form-control select2 ip_ipv4" readonly>
+                                        <option value="">Select IP Address</option>
+                                        @foreach ($ipv4Ips as $ip)
+                                            <option value="{{ $ip->address }}" @selected($line->ip_ipv4 == $ip->address)>
+                                                {{ $ip->address }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
-                                    <input type="text" name="ip_ipv6[]" class="form-control ip_ipv6"
-                                        autocomplete="off" value="{{ $line->ip_ipv6 }}">
+                                    <select name="ip_ipv6[]" class="form-control select2 ip_ipv6" readonly>
+                                        <option value="">Select IP Address</option>
+                                        @foreach ($ipv6Ips as $ip)
+                                            <option value="{{ $ip->address }}" @selected($line->ip_ipv6 == $ip->address)>
+                                                {{ $ip->address }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="text" name="subnetmask[]" class="form-control subnetmask"
@@ -234,8 +242,8 @@
                                     value="{{ $line->ldp }}" readonly>
                             </td>
                             <td>
-                                <input type="text" name="bbts_link_id[]" class="form-control bbts_link_id" autocomplete="off"
-                                    value="{{ $line->bbts_link_id }}" readonly>
+                                <input type="text" name="bbts_link_id[]" class="form-control bbts_link_id"
+                                    autocomplete="off" value="{{ $line->bbts_link_id }}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="device_ip[]" class="form-control device_ip"
