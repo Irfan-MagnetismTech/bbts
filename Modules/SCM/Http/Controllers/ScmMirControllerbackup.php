@@ -238,7 +238,8 @@ class ScmMirController extends Controller
             'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : NULL,
             'model' => isset($request->model[$key1]) ? $request->model[$key1] : NULL,
             'serial_code' => (isset($request->serial_code[$key1]) && isset($request->serial_code[$key1][$key2])) ? $request->serial_code[$key1][$key2] : NULL,
-            'quantity' => ($qty ? -1 : 1) * (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1])
+            'quantity' => ($qty ? -1 : 1) * (isset($key2) ? (($request->type[$key1] == 'Drum') ? $request->issued_qty[$key1] : 1) : $request->issued_qty[$key1]),
+            'date' => $request->date
         ];
     }
 

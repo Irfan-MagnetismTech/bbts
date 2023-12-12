@@ -59,7 +59,6 @@ class ScmMurController extends Controller
         if ($challanData) {
             $challanData->load('scmRequisition', 'client', 'scmChallanLines');
         }
-
         $formType = "create";
         $brands = Brand::latest()->get();
         $branchs = Branch::latest()->get();
@@ -265,6 +264,7 @@ class ScmMurController extends Controller
             'item_code'         => $req->item_code[$ke] ?? null,
             'serial_code'       => $req->serial_code[$ke] ?? null,
             'unit'              => $req->unit[$ke] ?? null,
+            'date'              => $req->date,
         ];
     }
 
@@ -272,8 +272,8 @@ class ScmMurController extends Controller
         try {
             DB::beginTransaction();
             $scmMur->is_approved = 'Approved';
-            $scmMur->approved_by = auth()->user()->id; 
-            $scmMur->update(); 
+            $scmMur->approved_by = auth()->user()->id;
+            $scmMur->update();
             DB::commit();
 
             return redirect()->route('material-utilizations.index')->with('message', 'MUR has been approved successfully');
@@ -281,7 +281,7 @@ class ScmMurController extends Controller
         catch (QueryException $err) {
             DB::rollBack();
             return redirect()->route('material-utilizations.index')->withInput()->withErrors($err->getMessage());
-        } 
+        }
     }
 }
 

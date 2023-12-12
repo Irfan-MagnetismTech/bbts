@@ -249,6 +249,7 @@ class ScmChallanController extends Controller
             'model' => isset($req->model[$key1]) ? $req->model[$key1] : NULL,
             'serial_code' => (isset($req->serial_code[$key1]) && isset($req->serial_code[$key1][$key2])) ? $req->serial_code[$key1][$key2] : '',
             'quantity' =>  -1 * (isset($key2) ? (($req->material_type[$key1] == "Drum") ? $req->quantity[$key1] : 1) : $req->quantity[$key1]),
+            'date' => $req->date,
         ];
     }
 
