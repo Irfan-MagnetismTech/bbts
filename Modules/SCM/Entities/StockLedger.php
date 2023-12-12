@@ -26,7 +26,7 @@ class StockLedger extends Model
     {
         !empty($input) ? $this->attributes['date'] = Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
     }
-    
+
     public function stockable()
     {
         return $this->morphTo();
