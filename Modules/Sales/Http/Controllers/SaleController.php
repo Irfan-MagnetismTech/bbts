@@ -248,12 +248,15 @@ class SaleController extends Controller
 
     public function getClientInfoForSales()
     {
+        $existing_sales_mq = Sale::pluck('mq_no')->toArray();
+        $existing_sales_mq = array_filter($existing_sales_mq);
         $items = Offer::query()
             ->with(['client', 'offerDetails.costing.costingProducts.product', 'offerDetails.frDetails', 'offerDetails.offerLinks'])
             ->whereHas('client', function ($qr) {
                 return $qr->where('client_name', 'like', '%' . request()->search . '%');
             })
             ->where('is_modified', 0)
+            ->whereNotIn('mq_no', $existing_sales_mq)
             ->get()
             ->map(fn ($item) => [
                 'value'                 => $item->client->client_name,

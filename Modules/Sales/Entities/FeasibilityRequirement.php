@@ -19,4 +19,9 @@ class FeasibilityRequirement extends Model
     {
         return $this->hasOne(LeadGeneration::class, 'client_no', 'client_no');
     }
+
+    public function offer()
+    {
+        return $this->hasOne(Offer::class, 'mq_no', 'mq_no');
+    }
 }

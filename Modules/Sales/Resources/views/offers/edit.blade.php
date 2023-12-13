@@ -44,7 +44,7 @@
                             $client_no = $is_old ? old('client_name') : $offer->lead_generation->client_no ?? null;
                             $mq_no = $is_old ? old('mq_no') : $offer->mq_no ?? null;
                             $row_no = 0;
-                            
+
                         @endphp
                         <div class="col-md-3 col-3">
                             <input type="text" name="client_no" id="client_no" class="form-control"
@@ -57,7 +57,7 @@
                         <x-input-box colGrid="3" name="client_name" value="{{ $client_name }}" label="Client Name" />
                         <div class="col-md-3 col-3">
                             <input type="text" name="offer_validity" id="offer_validity" class="form-control date"
-                                value="{{ $is_old ? old('offer_validity') : $offer->offer_validity }}"
+                                value="{{ $is_old ? old('offer_validity') : date('d/m/Y', strtotime($offer->offer_validity)) }}"
                                 placeholder="Offer Validity" required>
 
                         </div>
@@ -99,7 +99,8 @@
                                                                 <label>
                                                                     <input type="checkbox"
                                                                         name="link_status_{{ $row_no }}[]"
-                                                                        value="{{ $link->link_status }}" @if ($link->link_status == '1') checked @endif
+                                                                        value="{{ $link->link_status }}"
+                                                                        @if ($link->link_status == '1') checked @endif
                                                                         class="form-control">
 
                                                                     <span class="cr">
@@ -153,13 +154,14 @@
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="bbts_pop_ldp_{{ $row_no }}[]"
-                                                                    value="{{ $link->bbts_pop_ldp }}" class="form-control"
-                                                                    id="bbtsOrPopOrLdp" readonly>
+                                                                    value="{{ $link->bbts_pop_ldp }}"
+                                                                    class="form-control" id="bbtsOrPopOrLdp" readonly>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
-                                                                <input type="text" name="distance_{{ $row_no }}[]"
+                                                                <input type="text"
+                                                                    name="distance_{{ $row_no }}[]"
                                                                     class="form-control" value="{{ $link->distance }}"
                                                                     id="distance" readonly>
                                                             </div>
@@ -176,16 +178,18 @@
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text" name="otc_{{ $row_no }}[]"
-                                                                    value="{{ $link->otc }}" class="form-control text-right"
-                                                                    id="otc" readonly>
+                                                                    value="{{ $link->otc }}"
+                                                                    class="form-control text-right" id="otc"
+                                                                    readonly>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
                                                                 <input type="text"
                                                                     name="mo_cost_{{ $row_no }}[]"
-                                                                    value="{{ $link->mo_cost }}" class="form-control text-right"
-                                                                    id="mo_cost" readonly>
+                                                                    value="{{ $link->mo_cost }}"
+                                                                    class="form-control text-right" id="mo_cost"
+                                                                    readonly>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -210,10 +214,11 @@
                                                                 <input type="text"
                                                                     name="offer_mrc_{{ $row_no }}[]"
                                                                     value="{{ $link->offer_mrc }}"
-                                                                    class="form-control text-right offer_mrc " id="offer_mrc">
+                                                                    class="form-control text-right offer_mrc "
+                                                                    id="offer_mrc">
                                                             </div>
                                                         </td>
-                                                    </tr> 
+                                                    </tr>
                                                 @endforeach
                                                 <tr class="text-right">
                                                     <td colspan="6" rowspan="5"></td>
@@ -224,22 +229,19 @@
                                                                 name="client_equipment_total_{{ $row_no }}"
                                                                 class="form-control text-right client_equipment_total"
                                                                 id="client_equipment_total"
-                                                                value="{{ $details->client_equipment_total }}"
-                                                                readonly>
+                                                                value="{{ $details->client_equipment_total }}" readonly>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text"
-                                                                name="total_otc_{{ $row_no }}"
+                                                            <input type="text" name="total_otc_{{ $row_no }}"
                                                                 class="form-control text-right total_otc" id="total_otc[]"
                                                                 value="{{ $details->total_otc }}" readonly>
                                                         </div>
                                                     </td>
                                                     <td>
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text"
-                                                                name="total_roi_{{ $row_no }}"
+                                                            <input type="text" name="total_roi_{{ $row_no }}"
                                                                 value="{{ $details->total_roi }}"
                                                                 class="form-control text-right total_roi" id="total_roi"
                                                                 readonly>
@@ -283,8 +285,7 @@
                                                                 name="product_equipment_price_{{ $row_no }}"
                                                                 class="form-control text-right product_equipment_price"
                                                                 id="product_equipment_price"
-                                                                value="{{ $details->product_equipment_price }}"
-                                                                readonly>
+                                                                value="{{ $details->product_equipment_price }}" readonly>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -292,8 +293,8 @@
                                                             <input type="text"
                                                                 name="equipment_otc_{{ $row_no }}"
                                                                 class="form-control text-right"
-                                                                value="{{ $details->equipment_otc }}"
-                                                                id="equipment_otc" readonly>
+                                                                value="{{ $details->equipment_otc }}" id="equipment_otc"
+                                                                readonly>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -301,7 +302,8 @@
                                                             <input type="text"
                                                                 name="equipment_roi_{{ $row_no }}"
                                                                 value="{{ $details->equipment_roi }}"
-                                                                class="form-control text-right" id="equipment_roi" readonly>
+                                                                class="form-control text-right" id="equipment_roi"
+                                                                readonly>
                                                         </div>
                                                     </td>
                                                     <td>
@@ -343,8 +345,8 @@
                                                             <input type="text"
                                                                 name="product_amount_{{ $row_no }}"
                                                                 class="form-control product_price text-right"
-                                                                value="{{ $details->product_amount }}"
-                                                                id="product_price" readonly>
+                                                                value="{{ $details->product_amount }}" id="product_price"
+                                                                readonly>
                                                         </div>
                                                     </td>
                                                     <td></td>
@@ -396,11 +398,10 @@
                                                     <td></td>
                                                     <td class="text-right">
                                                         <div class="input-group input-group-sm input-group-primary">
-                                                            <input type="text"
-                                                                name="grand_total_{{ $row_no }}"
+                                                            <input type="text" name="grand_total_{{ $row_no }}"
                                                                 value="{{ $details->grand_total }}"
-                                                                class="form-control grand_total text-right" id="grand_total"
-                                                                readonly>
+                                                                class="form-control grand_total text-right"
+                                                                id="grand_total" readonly>
                                                         </div>
                                                     </td>
                                                 </tr>

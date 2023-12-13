@@ -54,7 +54,7 @@
             <div class="row">
                 <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
                 <input type="hidden" name="connectivity_requirement_id" id="connectivity_requirement_id"
-                    value="{{ $connectivity_requirement_id }}">
+                    value="{{ $connectivity_requirement_id }}">  
 
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>

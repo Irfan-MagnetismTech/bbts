@@ -38,7 +38,7 @@ class ConnectivityController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create($fr_no)
+    public function create($fr_no = null)
     {
         $salesDetail = SaleDetail::query()
             ->with('sale', 'client', 'frDetails')
@@ -143,7 +143,7 @@ class ConnectivityController extends Controller
         $sale_ids = Connectivity::whereIn('fr_no', $fr_nos)->pluck('sale_id');
         $sale_detail_ids = SaleDetail::whereIn('sale_id', $sale_ids)->pluck('id');
         $products = SaleProductDetail::whereIn('sale_detail_id', $sale_detail_ids)->pluck('product_name');
-        return view('networking::reports.active_clients', compact('activations','products'));
+        return view('networking::reports.active_clients', compact('activations', 'products'));
     }
 
     public function activeClientsReportDetails($fr_no)
