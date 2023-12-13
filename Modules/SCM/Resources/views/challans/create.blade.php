@@ -460,6 +460,9 @@
         @if ($form_method == 'PUT')
             indx = {{ count($Challan_Lines) }}
         @endif
+
+        let global_challan_row;
+
         function appendCalculationRow() {
             let row = `<tr>
                             <td class="form-group">
@@ -532,9 +535,19 @@
         /* Adds and removes quantity row on click */
         $("#challan")
             .on('click', '.add-challan-row', () => {
-                appendCalculationRow();
+                if (global_challan_row) {
+                    global_challan_row.find('input').val('');
+                    global_challan_row.find('select').val('');
+                    global_challan_row.find('span').remove();
+                    $('#challan tbody').append(global_challan_row);
+                    $('.select2').select2({});
+                    global_challan_row = null;
+                } else {
+                    appendCalculationRow();
+                }
             })
             .on('click', '.remove-challan-row', function() {
+                global_challan_row = $(this).closest('tr').clone();
                 $(this).closest('tr').remove();
             });
 
@@ -641,9 +654,7 @@
                             $('.loading').hide();
                         }
                     });
-
                     return false;
-
                 }
             })
             $("#pop_name").autocomplete({
@@ -750,7 +761,8 @@
                     var html = '<option value="" readonly selected>Select</option>';
                     $.each(data, function(key, item) {
                         if (item.type_no != null) {
-                            html += `<option value="${item.id}">${item.type_no}</option>`;
+                            html +=
+                                `<option value="${item.id}" data-quantity="${item.quantity}" data-type_no="${item.type_no}">${item.type_no}</option>`;
                         }
                     });
                     event_this.closest('tr').find('.type_id').html(html);
@@ -769,6 +781,10 @@
             let serial_code = $(this).closest('tr').find('.serial_code');
             let material_type = $(this).closest('tr').find('.material_name').find(':selected').data(
                 'type');
+            let available_quantity = $(this).closest('tr').find('.type_id').find(':selected').data(
+                'quantity');
+            console.log('avaiable_quantity', available_quantity);
+            $(this).closest('tr').find('.available_quantity').val(available_quantity);
             $.ajax({
                 url: "{{ route('modelWiseSerialCodes') }}",
                 type: 'get',
@@ -783,7 +799,7 @@
                 success: function(data) {
                     let html = '';
                     $.each(data, function(key, item) {
-                        if(item.value != null){
+                        if (item.value != null) {
                             html += `<option value="${item.value}">${item.label}</option>`;
                         }
                     });

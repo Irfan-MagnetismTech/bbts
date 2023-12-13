@@ -2,7 +2,7 @@
     $('.date').datepicker({
         autoclose: true,
         todayHighlight: true,
-        showOtherMonths: true
+        format: 'dd/mm/yyyy'
     });
 
     $('.bankList').select2({

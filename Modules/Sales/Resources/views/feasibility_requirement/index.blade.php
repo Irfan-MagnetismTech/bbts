@@ -106,9 +106,11 @@
                                     @endcan
                                     @can('offer-create')
                                         {{-- add offer  --}}
-                                        <a href="{{ route('add-offer', $feasibility_requirement->mq_no) }}"
-                                            data-toggle="tooltip" title="Add Offer" class="btn btn-outline-success"><i
-                                                class="fas fa-plus"></i></a>
+                                        @if (empty($feasibility_requirement->offer))
+                                            <a href="{{ route('add-offer', $feasibility_requirement->mq_no) }}"
+                                                data-toggle="tooltip" title="Add Offer" class="btn btn-outline-success"><i
+                                                    class="fas fa-plus"></i></a>
+                                        @endif
                                     @endcan
                                 </nobr>
                             </div>
