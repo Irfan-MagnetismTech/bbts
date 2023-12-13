@@ -129,29 +129,51 @@
             </tr>
             </thead>
             <tbody>
-            @foreach($groupedStocks as $key => $stocks)
-                <tr>
-                    <td>{{ $stocks['material_id'] }}</td>
-                    <td>{{ $stocks['unit'] }}</td>
-                    <td>{{ $stocks['opening_stock_qty'] }}</td>
-                    <td>{{ $stocks['scm_mrr_qty'] }}</td>
-                    <td>{{ $stocks['scm_mir_qty'] }}</td>
-                    <td>{{ $stocks['scm_mur_qty'] }}</td>
-                    <td>{{ $stocks['scm_err_qty'] }}</td>
-                    <td>{{ $stocks['transfer_qty'] }}</td>
-                    <td></td>
-                    <td></td>
-                    <td><b>{{ $stocks['total'] }}</b></td>
-                </tr>
-            @endforeach
+            @if($from_date == null && $to_date == null)
+                @foreach($groupedStocks as $key => $stock)
+                    <tr>
+                        <td>{{ $stock['material_id'] }}</td>
+                        <td>{{ $stock['unit'] }}</td>
+                        <td>{{ $stock['opening_stock_qty'] }}</td>
+                        <td>{{ $stock['scm_mrr_qty'] }}</td>
+                        <td>{{ $stock['scm_mir_qty'] }}</td>
+                        <td>{{ $stock['scm_mur_qty'] }}</td>
+                        <td>{{ $stock['scm_err_qty'] }}</td>
+                        <td>{{ $stock['transfer_qty'] }}</td>
+                        <td></td>
+                        <td></td>
+                        <td><b>{{ $stock['total'] }}</b></td>
+                    </tr>
+                @endforeach
+            @else
+                @foreach($groupedStocks as $key => $stock)
+                    @foreach($openingStocks as $openingKey => $openingStock)
+                        @if($stock['material_id'] === $openingStock['material_id'])
+                            <tr>
+                                <td>{{ $stock['material_id'] }}</td>
+                                <td>{{ $stock['unit'] }}</td>
+                                <td>{{ $openingStock['opening_stock_qty'] }}</td>
+                                <td>{{ $stock['scm_mrr_qty'] }}</td>
+                                <td>{{ $stock['scm_mir_qty'] }}</td>
+                                <td>{{ $stock['scm_mur_qty'] }}</td>
+                                <td>{{ $stock['scm_err_qty'] }}</td>
+                                <td>{{ $stock['transfer_qty'] }}</td>
+                                <td></td>
+                                <td></td>
+                                <td><b>{{ $stock['total'] }}</b></td>
+                            </tr>
+                        @endif
+                    @endforeach
+                @endforeach
+            @endif
             </tbody>
         </table>
     </div>
 
-{{--    <div class="signature-container">--}}
-{{--        <div class="signature-line" style="border: 1px solid black;"></div>--}}
-{{--        <span style="color: black;">Authorised Signature</span>--}}
-{{--    </div>--}}
+    {{--    <div class="signature-container">--}}
+    {{--        <div class="signature-line" style="border: 1px solid black;"></div>--}}
+    {{--        <span style="color: black;">Authorised Signature</span>--}}
+    {{--    </div>--}}
 </div>
 </body>
 </html>
