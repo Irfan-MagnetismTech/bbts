@@ -72,7 +72,7 @@ class ScmChallanController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(ScmChallanRequest $request)
     {
         try {
             DB::beginTransaction();

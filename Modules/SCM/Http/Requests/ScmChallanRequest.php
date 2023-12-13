@@ -18,6 +18,7 @@ class ScmChallanRequest extends FormRequest
             'scm_requisition_id' => 'required',
             'purpose'            => 'required',
             'branch_id'          => 'required',
+            'mrs_no'          => 'required',
             'type'               => 'required',
             'equipment_type'     => 'required',
             'pop_id'             => 'required_if:type,pop',
@@ -29,7 +30,7 @@ class ScmChallanRequest extends FormRequest
 
     /**
      * Get the error messages for the defined validation rules.
-     * 
+     *
      * @return array
      */
     public function messages()
