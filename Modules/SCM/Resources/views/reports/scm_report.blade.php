@@ -71,21 +71,43 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($groupedStocks as $key => $stocks)
-                    <tr>
-                        <td>{{ $stocks['material_id'] }}</td>
-                        <td>{{ $stocks['unit'] }}</td>
-                        <td>{{ $stocks['opening_stock_qty'] }}</td>
-                        <td>{{ $stocks['scm_mrr_qty'] }}</td>
-                        <td>{{ $stocks['scm_mir_qty'] }}</td>
-                        <td>{{ $stocks['scm_mur_qty'] }}</td>
-                        <td>{{ $stocks['scm_err_qty'] }}</td>
-                        <td>{{ $stocks['transfer_qty'] }}</td>
-                        <td></td>
-                        <td></td>
-                        <td><b>{{ $stocks['total'] }}</b></td>
-                    </tr>
-                @endforeach
+                @if($from_date == null && $to_date == null)
+                    @foreach($groupedStocks as $key => $stock)
+                        <tr>
+                            <td>{{ $stock['material_id'] }}</td>
+                            <td>{{ $stock['unit'] }}</td>
+                            <td>{{ $stock['opening_stock_qty'] }}</td>
+                            <td>{{ $stock['scm_mrr_qty'] }}</td>
+                            <td>{{ $stock['scm_mir_qty'] }}</td>
+                            <td>{{ $stock['scm_mur_qty'] }}</td>
+                            <td>{{ $stock['scm_err_qty'] }}</td>
+                            <td>{{ $stock['transfer_qty'] }}</td>
+                            <td></td>
+                            <td></td>
+                            <td><b>{{ $stock['total'] }}</b></td>
+                        </tr>
+                    @endforeach
+                @else
+                    @foreach($groupedStocks as $key => $stock)
+                        @foreach($openingStocks as $openingKey => $openingStock)
+                            @if($stock['material_id'] === $openingStock['material_id'])
+                            <tr>
+                                <td>{{ $stock['material_id'] }}</td>
+                                <td>{{ $stock['unit'] }}</td>
+                                <td>{{ $openingStock['opening_stock_qty'] }}</td>
+                                <td>{{ $stock['scm_mrr_qty'] }}</td>
+                                <td>{{ $stock['scm_mir_qty'] }}</td>
+                                <td>{{ $stock['scm_mur_qty'] }}</td>
+                                <td>{{ $stock['scm_err_qty'] }}</td>
+                                <td>{{ $stock['transfer_qty'] }}</td>
+                                <td></td>
+                                <td></td>
+                                <td><b>{{ $stock['total'] }}</b></td>
+                            </tr>
+                            @endif
+                        @endforeach
+                    @endforeach
+                @endif
                 </tbody>
             </table>
         </div>
@@ -94,15 +116,14 @@
 
 @section('script')
     <script>
-        if ($('#from_date').val() != null)
-        {
+        if ($('#from_date').val() != null) {
             $('#from_date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
             });
-        }else {
+        } else {
             $('#from_date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
@@ -111,15 +132,14 @@
             }).datepicker("setDate", new Date());
         }
 
-        if ($('#to_date').val() != null)
-        {
+        if ($('#to_date').val() != null) {
             $('#to_date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
                 todayHighlight: true,
                 showOtherMonths: true
             });
-        }else {
+        } else {
             $('#to_date').datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
