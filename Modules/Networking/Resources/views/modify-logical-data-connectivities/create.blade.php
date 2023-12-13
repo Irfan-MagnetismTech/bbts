@@ -6,7 +6,7 @@
     $form_heading = !empty($logicalConnectivityData) ? 'Update' : 'Add';
     $form_url = !empty($logicalConnectivityData) ? route('errs.update', $logicalConnectivityData->id) : route('errs.store');
     $form_method = !empty($logicalConnectivityData) ? 'PUT' : 'POST';
-    
+
     $comment = $is_old ? old('comment') : @$logicalConnectivityData->comment;
     $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('quantity') : null);
     $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityData) ? $logicalConnectivityData->lines->pluck('remarks') : null);
@@ -53,6 +53,8 @@
 
             <div class="row">
                 <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
+                <input type="hidden" name="connectivity_requirement_id" id="connectivity_requirement_id"
+                    value="{{ $connectivity_requirement_id }}">
 
                 <div class="form-group col-3 client_name">
                     <label for="client_name">Client Name:</label>
@@ -98,8 +100,7 @@
                 <div class="form-group col-3 contact_address">
                     <label for="contact_address">Contact Address:</label>
                     <input type="text" class="form-control" id="contact_address" name="contact_address"
-                        aria-describedby="contact_address" readonly
-                        value="{{ $saleDetalis->frDetails->location }}">
+                        aria-describedby="contact_address" readonly value="{{ $saleDetalis->frDetails->location }}">
                 </div>
 
                 <div class="form-group col-3 comment">
@@ -149,12 +150,12 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="text" name="quantity[]" class="form-control quantity" autocomplete="off"
-                                        value="{{ $line->quantity }}">
+                                    <input type="text" name="quantity[]" class="form-control quantity"
+                                        autocomplete="off" value="{{ $line->quantity }}">
                                 </td>
                                 <td>
-                                    <input type="text" name="ip_ipv4[]" class="form-control ip_ipv4" autocomplete="off"
-                                        value="{{ $line->ip_ipv4 }}">
+                                    <input type="text" name="ip_ipv4[]" class="form-control ip_ipv4"
+                                        autocomplete="off" value="{{ $line->ip_ipv4 }}">
                                 </td>
                                 <td>
                                     <input type="text" name="ip_ipv6[]" class="form-control ip_ipv6"
@@ -234,8 +235,8 @@
                                     value="{{ $line->ldp }}" readonly>
                             </td>
                             <td>
-                                <input type="text" name="bbts_link_id[]" class="form-control bbts_link_id" autocomplete="off"
-                                    value="{{ $line->bbts_link_id }}" readonly>
+                                <input type="text" name="bbts_link_id[]" class="form-control bbts_link_id"
+                                    autocomplete="off" value="{{ $line->bbts_link_id }}" readonly>
                             </td>
                             <td>
                                 <input type="text" name="device_ip[]" class="form-control device_ip"
