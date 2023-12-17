@@ -92,7 +92,7 @@
                             @else
                                 @if (in_array('Internet', $product_category) && empty($details->logicalConnectivityInternet))
                                     <span class="badge badge-info">
-                                        <a href="{{ route('logical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                        <a href="{{ route('logical-internet-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
                                             class="text-white" target="_blank">Internet</a>
                                     </span>
                                 @endif

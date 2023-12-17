@@ -124,12 +124,12 @@ class SaleDetail extends Model
 
     public function physicalConnectivity()
     {
-        return $this->hasOne(PhysicalConnectivity::class, 'sale_id', 'sale_id');
+        return $this->hasOne(PhysicalConnectivity::class, 'fr_no', 'fr_no')->where('is_modified', 0);
     }
 
     public function logicalConnectivity()
     {
-        return $this->hasOne(LogicalConnectivity::class, 'sale_id', 'sale_id');
+        return $this->hasOne(LogicalConnectivity::class, 'fr_no', 'fr_no')->where('is_modified', 0);
     }
 
     public function logicalConnectivityInternet()
