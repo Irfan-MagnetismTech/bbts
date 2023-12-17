@@ -59,7 +59,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $details->client->client_name }}</td>
                         <td>{{ $details->fr_no }}</td>
-                        <td class="noWrapStyle">{{ $details->frDetails->connectivity_point }} </td>
+                        <td class="noWrapStyle">{{ $details->frDetails->connectivity_point ?? '' }} </td>
                         <td> {{ $details->sale->is_modified == 1 ? 'Existing' : 'New' }} </td>
                         <td>{{ $details->delivery_date ? $details->delivery_date : '' }}</td>
                         <td>{{ $details->connectivities ? $details->connectivities->commissioning_date : '' }}</td>

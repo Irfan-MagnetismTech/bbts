@@ -87,7 +87,7 @@
                 <div class="form-group col-3 date">
                     <label for="date">Applied Date:</label>
                     <input class="form-control" id="date" name="date" aria-describedby="date"
-                        value="{{ old('date') ?? ($date ?? '') }}" readonly placeholder="Select a Date" readonly>
+                        value="{{ old('date') ?? ($date ?? '') }}" placeholder="Select a Date" readonly>
                 </div>
 
                 <div class="form-group col-3">

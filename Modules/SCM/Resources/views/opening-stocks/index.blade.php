@@ -69,16 +69,16 @@
                             <td rowspan="">{{ $i++ }}</td>
                         {{-- @endif --}}
                         <td class="text-center">{{ $openingStock->id }}</td>
-                        <td class="text-center">{{ $openingStock->date }}</td>
+                        <td class="text-center">{{ $openingStock->date ?? ''}}</td>
                         <td class="text-center">{{ $openingStock->branch->name ?? ''}}</td>
-                        <td class="text-center">{{ $data->material->name }}</td>
-                        <td class="text-center">{{ $data->material->unit }}</td>
-                        <td class="text-center">{{ $data->brand->name }}</td>
-                        <td class="text-center">{{ $data->model }}</td>
+                        <td class="text-center">{{ $data->material->name ?? ''}}</td>
+                        <td class="text-center">{{ $data->material->unit ?? ''}}</td>
+                        <td class="text-center">{{ $data->brand->name ?? ''}}</td>
+                        <td class="text-center">{{ $data->model ?? ''}}</td>
                         <td>{{ $data->serialCodeLines->first()->serial_or_drum_code ?? '' }}</td>
-                        <td class="text-center">{{ $data->unit_price }}</td>
-                        <td class="text-center">{{ $data->quantity }}</td>
-                        <td class="text-center">{{ $data->total_amount }}</td>
+                        <td class="text-center">{{ $data->unit_price ?? ''}}</td>
+                        <td class="text-center">{{ $data->quantity ?? ''}}</td>
+                        <td class="text-center">{{ $data->total_amount ?? ''}}</td>
                         {{-- @if ($loop->first) --}}
                             {{-- <td rowspan="{{ count($openingStock->lines) }}"> --}}
                             <td rowspan="">

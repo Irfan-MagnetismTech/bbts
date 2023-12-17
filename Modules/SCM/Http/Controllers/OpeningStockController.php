@@ -52,7 +52,7 @@ class OpeningStockController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OpeningStockRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -178,7 +178,7 @@ class OpeningStockController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function update(Request $request, OpeningStock $openingStock)
+    public function update(OpeningStockRequest $request, OpeningStock $openingStock)
     {
         try {
             DB::beginTransaction();
