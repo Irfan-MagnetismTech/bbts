@@ -23,7 +23,8 @@ class LogicalConnectivityInternetController extends Controller
      */
     public function index()
     {
-        return view('networking::index');
+        $logicalConnectivities = LogicalConnectivity::latest()->get();
+        return view('networking::logical-connectivities.index', compact('logicalConnectivities'));
     }
 
     /**
@@ -191,7 +192,51 @@ class LogicalConnectivityInternetController extends Controller
      */
     public function edit($id)
     {
-        return view('networking::edit');
+        $logicalConnectivityInternet = LogicalConnectivity::query()
+            ->where('id', $id)
+            ->with('lines.product')
+            ->latest()
+            ->first();
+        $saleDetalis = SaleDetail::query()
+            ->whereSaleIdAndFrNo($logicalConnectivityInternet->sale_id, $logicalConnectivityInternet->fr_no)
+            ->with('client', 'frDetails')
+            ->first();
+        $connectivity_requirement_id = $logicalConnectivityInternet->connectivity_requirement_id;
+
+        $dedicated_ipv4Ips = LogicalConnectivityLine::distinct('ip_ipv4')
+            ->where('logical_connectivity_id', '!=', $logicalConnectivityInternet->id)
+            ->where('ip_ipv4', '!=', null)
+            ->pluck('ip_ipv4')
+            ->toArray();
+        $dedicated_ipv6Ips = LogicalConnectivityLine::distinct('ip_ipv6')
+            ->where('logical_connectivity_id', '!=', $logicalConnectivityInternet->id)
+            ->where('ip_ipv6', '!=', null)
+            ->pluck('ip_ipv6')
+            ->toArray();
+        $ips = Ip::latest()->get();
+        $ipv4Ips = Ip::where('ip_type', 'IPv4')->whereNotIn('address', $dedicated_ipv4Ips)->latest()->get();
+        $ipv6Ips = Ip::where('ip_type', 'IPv6')->whereNotIn('address', $dedicated_ipv6Ips)->latest()->get();
+
+        $logicalConnectivityBandwidths = BandwidthDestribution::query()
+            ->where('logical_connectivity_id', $logicalConnectivityInternet->id)
+            ->with('ip')
+            ->get();
+
+        //explode facility type
+        $facilityTypes = explode(',', @$logicalConnectivityInternet->facility_type);
+
+        $clientFacility = ClientFacility::query()
+            ->where('logical_connectivity_id', @$logicalConnectivityInternet->id)
+            ->first();
+
+        $products = SaleProductDetail::query()
+            ->whereHas('product.category', function ($query) use ($logicalConnectivityInternet) {
+                $query->where('fr_no', @$logicalConnectivityInternet->fr_no);
+            })
+            ->with('product')
+            ->get()
+            ->unique('product_id');
+        return view('networking::logical-internet-connectivities.create', compact('logicalConnectivityInternet', 'ips', 'ipv4Ips', 'ipv6Ips', 'logicalConnectivityBandwidths', 'facilityTypes', 'clientFacility', 'connectivity_requirement_id', 'saleDetalis', 'products'));
     }
 
     /**
@@ -202,7 +247,68 @@ class LogicalConnectivityInternetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $dataList = [];
+            foreach ($request->product_id as $key => $value) {
+                $dataList[] = [
+                    'product_id' => $value,
+                    'product_category' => 'Internet',
+                    'quantity' => $request->quantity[$key],
+                    'ip_ipv4' => $request->ip_ipv4[$key],
+                    'ip_ipv6' => $request->ip_ipv6[$key],
+                    'subnetmask' => $request->subnetmask[$key],
+                    'gateway' => $request->gateway[$key],
+                    'vlan' => $request->vlan[$key],
+                    'mrtg_user' => $request->mrtg_user[$key],
+                    'mrtg_pass' => $request->mrtg_pass[$key]
+                ];
+            }
+
+            $bandwidthDataList = [];
+            foreach ($request->bandwidth as $key => $value) {
+                $bandwidthDataList[] = [
+                    'bandwidth' => $value,
+                    'ip_id' => $request->ip_address[$key],
+                    'remarks' => $request->remarks[$key],
+                ];
+            }
+
+            //check if facility type is checked and merge it to request data as comma separated string
+            $checkboxes = ['dns_checkbox', 'vpn_checkbox', 'smtp_checkbox', 'vc_checkbox', 'bgp_checkbox'];
+
+            $facilityTypes = collect($checkboxes)
+                ->map(function ($checkbox) use ($request) {
+                    return $request->has($checkbox) ? substr($checkbox, 0, -9) : null;
+                })
+                ->filter()
+                ->implode(',');
+
+            $request->merge([
+                'facility_type' => $facilityTypes,
+                'product_category' => 'Internet',
+            ]);
+
+            $logicalConnectivity = LogicalConnectivity::query()->findOrFail($id);
+            $logicalConnectivity->update($request->all());
+
+            $logicalConnectivity->lines()->delete();
+            $logicalConnectivity->lines()->createMany($dataList);
+
+            $logicalConnectivity->bandwidths()->delete();
+            $logicalConnectivity->bandwidths()->createMany($bandwidthDataList);
+
+            $logicalConnectivity->clientFacility()->delete();
+            $logicalConnectivity->clientFacility()->create($request->all());
+
+            DB::commit();
+
+            return redirect()->back()->with('message', 'Logical Connectivity for Internet updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -212,6 +318,21 @@ class LogicalConnectivityInternetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $logicalConnectivity = LogicalConnectivity::query()->findOrFail($id);
+            $logicalConnectivity->lines()->delete();
+            $logicalConnectivity->bandwidths()->delete();
+            $logicalConnectivity->clientFacility()->delete();
+            $logicalConnectivity->delete();
+
+            DB::commit();
+
+            return redirect()->back()->with('message', 'Logical Connectivity for Internet deleted successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
     }
 }
