@@ -384,27 +384,39 @@ class ScmReportController extends Controller
     {
         $branch_id = $request->branch_id;
         $material_id = $request->material_id;
-
+        $from_date = $request->from_date;
+        $to_date = $request->to_date;
+        if ($from_date != null && $to_date != null)
+        {
+            $from_date = Carbon::createFromFormat('d-m-Y', $request->from_date)->format('Y-m-d');
+            $to_date = Carbon::createFromFormat('d-m-Y', $request->to_date)->format('Y-m-d');
+        }
+        $stockItems=[];
         if ($request->type === 'pdf') {
-            if ($branch_id == null && $material_id == null) {
-                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')->get();
+            if ($branch_id == null && $material_id == null && $from_date == null && $to_date == null) {
+                $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')->get();
 
-            }elseif ($branch_id == null && $material_id != null){
-                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+            }elseif ($branch_id == null && $material_id != null && $from_date == null && $to_date == null){
+                $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
                     ->where('material_id', $material_id)
                     ->get();
-            }elseif ($branch_id != null && $material_id == null){
-                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+            }elseif ($branch_id != null && $material_id == null && $from_date == null && $to_date == null){
+                $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
                     ->where('branch_id', $branch_id)
                     ->get();
-            } else {
-                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+            }elseif ($branch_id != null && $material_id != null && $from_date != null && $to_date != null){
+                $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
                     ->where('branch_id', $branch_id)
                     ->where('material_id', $material_id)
+                    ->whereBetween('date', [$from_date, $to_date])
                     ->get();
 
+            }elseif ($branch_id == null && $material_id == null && $from_date != null && $to_date != null){
+                $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+                    ->whereBetween('date', [$from_date, $to_date])
+                    ->get();
             }
-            $stocks = $stocks->map(function ($stock) {
+            $stocks = $stockItems->map(function ($stock) {
                 return [
                     'name' => $stock->material->name ?? '',
                     'unit' => $stock->material->unit ?? '',
@@ -418,7 +430,7 @@ class ScmReportController extends Controller
             })->toArray();
 
 
-            return PDF::loadView('scm::reports.item_report_pdf', ['stocks' => $stocks, 'branch_id' => $branch_id, 'material_id' => $material_id], [], [
+            return PDF::loadView('scm::reports.item_report_pdf', ['stocks' => $stocks, 'branch_id' => $branch_id, 'material_id' => $material_id, 'from_date' => $from_date, 'to_date' => $to_date], [], [
                 'format' => 'A4',
                 'orientation' => 'L',
                 'title' => 'Item Report PDF',
@@ -430,31 +442,36 @@ class ScmReportController extends Controller
                 'watermark_image_size' => 'D',
                 'watermark_image_position' => 'P',
             ])->stream('item_report.pdf');
-            return view('scm::reports.item_report_pdf', compact('stocks', 'branch_id','material_id'));
+            return view('scm::reports.item_report_pdf', compact('stocks', 'branch_id','material_id','from_date','to_date'));
         } else {
             $branches = Branch::get();
             $materials = Material::get();
 
-            if ($branch_id == null && $material_id == null) {
-                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+            if ($branch_id == null && $material_id == null && $from_date == null && $to_date == null) {
+                $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
                     ->get();
 
-            }elseif ($branch_id == null && $material_id != null){
-                    $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+            }elseif ($branch_id == null && $material_id != null && $from_date == null && $to_date == null){
+                    $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
                         ->where('material_id', $material_id)
                         ->get();
-            }elseif ($branch_id != null && $material_id == null){
-                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+            }elseif ($branch_id != null && $material_id == null && $from_date == null && $to_date == null){
+                $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
                     ->where('branch_id', $branch_id)
                     ->get();
-            } else {
-                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+            }elseif ($branch_id != null && $material_id != null && $from_date != null && $to_date != null){
+                $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
                     ->where('branch_id', $branch_id)
                     ->where('material_id', $material_id)
+                    ->whereBetween('date', [$from_date, $to_date])
                     ->get();
 
+            }elseif ($branch_id == null && $material_id == null && $from_date != null && $to_date != null){
+                $stockItems = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+                    ->whereBetween('date', [$from_date, $to_date])
+                    ->get();
             }
-            $stocks = $stocks->map(function ($stock) {
+            $stocks = $stockItems->map(function ($stock) {
                 return [
                     'name' => $stock->material->name ?? '',
                     'unit' => $stock->material->unit ?? '',
@@ -467,7 +484,9 @@ class ScmReportController extends Controller
                 ];
             })->toArray();
 
-            return view('scm::reports.item_report', compact('stocks', 'materials','branches', 'branch_id', 'material_id'));
+            $from_date = $request->from_date;
+            $to_date = $request->to_date;
+            return view('scm::reports.item_report', compact('stocks', 'materials','branches', 'branch_id', 'material_id','from_date','to_date'));
         }
     }
 }

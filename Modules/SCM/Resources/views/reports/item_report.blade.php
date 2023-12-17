@@ -46,6 +46,16 @@
                     @endforeach
                 </select>
             </div>
+            <div style="width: 150px; margin-left: 20px">
+                <input class="form-control" id="from_date" name="from_date" aria-describedby="from_date"
+                       value="{{ $from_date }}" readonly
+                       placeholder="From Date">
+            </div>
+            <div style="width: 150px; margin-left: 20px">
+                <input class="form-control" id="to_date" name="to_date" aria-describedby="to_date"
+                       value="{{ $to_date }}" readonly
+                       placeholder="To Date">
+            </div>
             <div class="icon-btn" style="margin-left: 30px; margin-top: 5px">
                 <button data-toggle="tooltip" title="Search" class="btn btn-outline-primary"><i
                         class="fas fa-search"></i></button>
@@ -113,3 +123,38 @@
     </form>
 @endsection
 
+@section('script')
+    <script>
+        if ($('#from_date').val() != null) {
+            $('#from_date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            });
+        } else {
+            $('#from_date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
+        }
+
+        if ($('#to_date').val() != null) {
+            $('#to_date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            });
+        } else {
+            $('#to_date').datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                todayHighlight: true,
+                showOtherMonths: true
+            }).datepicker("setDate", new Date());
+        }
+    </script>
+@endsection
