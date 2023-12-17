@@ -481,13 +481,12 @@
                 type: 'get',
                 data: {
                     scm_requisition_id: $('#scm_requisition_id').val(),
-                    branch: $('#branch_id').val(),
+                    branch_id: $('#branch_id').val(),
                     material_id: material_name.val(),
                     brand_id: brand.val(),
                     model: model.val(),
                     stockable_id: receiveable_id,
                     received_type: received_type,
-                    branch_id: branch_id,
                 },
                 success: function(data) {
                     var html = '<option value="" readonly selected>Select</option>';
