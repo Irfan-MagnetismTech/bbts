@@ -64,10 +64,10 @@ class ScmReportController extends Controller
                         })->sum('quantity');
 
                         return [
-                            'name' => $modelItems[0]->material->name,
-                            'unit' => $modelItems[0]->material->unit,
-                            'brand' => $modelItems[0]->brand->name,
-                            'model' => $modelItems[0]->model,
+                            'name' => $modelItems[0]->material->name ?? '',
+                            'unit' => $modelItems[0]->material->unit ?? '',
+                            'brand' => $modelItems[0]->brand->name ?? '',
+                            'model' => $modelItems[0]->model ?? '',
                             'quantity' => $quantityStock
                         ];
                     });
@@ -117,10 +117,10 @@ class ScmReportController extends Controller
                         })->sum('quantity');
 
                         return [
-                            'name' => $modelItems[0]->material->name,
-                            'unit' => $modelItems[0]->material->unit,
-                            'brand' => $modelItems[0]->brand->name,
-                            'model' => $modelItems[0]->model,
+                            'name' => $modelItems[0]->material->name ?? '',
+                            'unit' => $modelItems[0]->material->unit ?? '',
+                            'brand' => $modelItems[0]->brand->name ?? '',
+                            'model' => $modelItems[0]->model ?? '',
                             'quantity' => $quantityStock
                         ];
                     });
@@ -377,6 +377,97 @@ class ScmReportController extends Controller
             $from_date = $request->from_date;
             $to_date = $request->to_date;
             return view('scm::reports.scm_report', compact('groupedStocks', 'openingStocks','branches', 'branch_id','from_date','to_date'));
+        }
+    }
+
+    public function scmItemReport(Request $request)
+    {
+        $branch_id = $request->branch_id;
+        $material_id = $request->material_id;
+
+        if ($request->type === 'pdf') {
+            if ($branch_id == null && $material_id == null) {
+                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')->get();
+
+            }elseif ($branch_id == null && $material_id != null){
+                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+                    ->where('material_id', $material_id)
+                    ->get();
+            }elseif ($branch_id != null && $material_id == null){
+                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+                    ->where('branch_id', $branch_id)
+                    ->get();
+            } else {
+                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+                    ->where('branch_id', $branch_id)
+                    ->where('material_id', $material_id)
+                    ->get();
+
+            }
+            $stocks = $stocks->map(function ($stock) {
+                return [
+                    'name' => $stock->material->name ?? '',
+                    'unit' => $stock->material->unit ?? '',
+                    'brand' => $stock->brand->name ?? '',
+                    'model' => $stock->model ?? '',
+                    'type' => $stock->stockable_type ?? '',
+                    'quantity' => $stock->quantity ?? '',
+                    'rate' => $stock->unit_price ?? '',
+                    'serial' => $stock->serial_code ?? '',
+                ];
+            })->toArray();
+
+
+            return PDF::loadView('scm::reports.item_report_pdf', ['stocks' => $stocks, 'branch_id' => $branch_id, 'material_id' => $material_id], [], [
+                'format' => 'A4',
+                'orientation' => 'L',
+                'title' => 'Item Report PDF',
+                'watermark' => 'BBTS',
+                'show_watermark' => true,
+                'watermark_text_alpha' => 0.1,
+                'watermark_image_path' => '',
+                'watermark_image_alpha' => 0.2,
+                'watermark_image_size' => 'D',
+                'watermark_image_position' => 'P',
+            ])->stream('item_report.pdf');
+            return view('scm::reports.item_report_pdf', compact('stocks', 'branch_id','material_id'));
+        } else {
+            $branches = Branch::get();
+            $materials = Material::get();
+
+            if ($branch_id == null && $material_id == null) {
+                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+                    ->get();
+
+            }elseif ($branch_id == null && $material_id != null){
+                    $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+                        ->where('material_id', $material_id)
+                        ->get();
+            }elseif ($branch_id != null && $material_id == null){
+                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+                    ->where('branch_id', $branch_id)
+                    ->get();
+            } else {
+                $stocks = StockLedger::orderBy('stock_ledgers.created_at', 'desc')
+                    ->where('branch_id', $branch_id)
+                    ->where('material_id', $material_id)
+                    ->get();
+
+            }
+            $stocks = $stocks->map(function ($stock) {
+                return [
+                    'name' => $stock->material->name ?? '',
+                    'unit' => $stock->material->unit ?? '',
+                    'brand' => $stock->brand->name ?? '',
+                    'model' => $stock->model ?? '',
+                    'type' => $stock->stockable_type ?? '',
+                    'quantity' => $stock->quantity ?? '',
+                    'rate' => $stock->unit_price ?? '',
+                    'serial' => $stock->serial_code ?? '',
+                ];
+            })->toArray();
+
+            return view('scm::reports.item_report', compact('stocks', 'materials','branches', 'branch_id', 'material_id'));
         }
     }
 }

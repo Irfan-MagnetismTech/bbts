@@ -375,6 +375,11 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">SCM Report</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
+                <li class="{{ request()->routeIs('scm-item-report') ? 'active' : null }}">
+                    <a href="{{ route('scm-item-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Item Report</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
             </ul>
         </li>
     @endcan
