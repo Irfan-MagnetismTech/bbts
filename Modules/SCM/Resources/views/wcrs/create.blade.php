@@ -519,9 +519,10 @@
                     received_type: received_type,
                     receiveable_id: receiveable_id,
                     branch_id: $('#branch_id').val(),
+                    entry_type: 'warranty_claim',
                 },
                 success: function(data) {
-                    let html = '';
+                    let html = '<option value="" readonly selected>Select</option>';
                     $.each(data, function(key, item) {
 
                         html += `<option value="${item.value}">${item.label}</option>`;
@@ -596,6 +597,7 @@
 
             $.get("{{ route('get-warrenty-info-by-serial-code') }}", {
                 serial_code: serial_code,
+                entry_type: 'warranty_claim',
             }, function(data) {
                 event.find('.receiving_date').val(data.receiving_date);
                 event.find('.warranty_period').val(data.warranty_period);

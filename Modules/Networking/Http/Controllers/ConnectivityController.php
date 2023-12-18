@@ -40,6 +40,7 @@ class ConnectivityController extends Controller
      */
     public function create($fr_no = null)
     {
+        // dd(request()->all());
         $salesDetail = SaleDetail::query()
             ->with('sale', 'client', 'frDetails')
             ->where('fr_no', $fr_no)
@@ -75,7 +76,7 @@ class ConnectivityController extends Controller
         $connectivity = Connectivity::query()
             ->with('employee')
             ->where('fr_no', $fr_no)
-            ->where('is_modify', '0' )
+            ->where('is_modify', '0')
             ->first();
         return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityBandwidths', 'logicalConnectivities', 'facilityTypes', 'clientFacility', 'connectivity'));
     }
@@ -88,8 +89,10 @@ class ConnectivityController extends Controller
     public function store()
     {
         try {
-            Connectivity::create(request()->all());
-            Activation::create(request()->only('client_no', 'fr_no', 'is_active'));
+            $connectivity = Connectivity::create(request()->all());
+            $data = request()->only('client_no', 'fr_no', 'is_active');
+            $data['connectivity_id'] = $connectivity->id;
+            Activation::create($data);
             return redirect()->route('connectivities.index')->with('message', 'Data has been inserted successfully');
         } catch (\Exception $e) {
             return redirect()->route('connectivities.create')->withInput()->withErrors($e->getMessage());

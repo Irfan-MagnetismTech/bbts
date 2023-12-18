@@ -402,6 +402,27 @@ class ScmMirController extends Controller
                     ->where('quantity', '<', 0)
                     ->sum('quantity');
 
+                if (request()->entry_type == 'warranty_claim') {
+                    $total_stock = StockLedger::query()
+                        ->where('stockable_id', $item->stockable_id)
+                        ->where('stockable_type', $item->stockable_type)
+                        ->where('received_type', $received_type)
+                        ->where('branch_id', $branch_id)
+                        ->where('material_id', $item->material_id)
+                        ->where('brand_id', $item->brand_id)
+                        ->sum('damaged_quantity');
+
+                    $out_stock = StockLedger::query()
+                        ->where('receiveable_id', $item->stockable_id)
+                        ->where('stockable_type', $item->stockable_type)
+                        ->where('received_type', $received_type)
+                        ->where('branch_id', $branch_id)
+                        ->where('material_id', $item->material_id)
+                        ->where('brand_id', $item->brand_id)
+                        ->where('damage_quantity', '<', 0)
+                        ->sum('damaged_quantity');
+                }
+
                 if (($total_stock - $out_stock) > 0) {
                     if ($received_type == 'MRR') {
                         return [
@@ -608,17 +629,29 @@ class ScmMirController extends Controller
             ->get()
             ->values()
             ->map(function ($item, $key) use ($exit_serial_codes) {
-                $quantity = StockLedger::query()
-                    ->where([
-                        'material_id' => request()->material_id,
-                        'brand_id' => request()->brand_id,
-                        'stockable_id' => request()->receiveable_id,
-                        'received_type' => request()->received_type,
-                        'branch_id' => request()->branch_id,
-                        'serial_code' => $item->serial_code
-                    ])
-                    ->sum('quantity');
-
+                if (request()->entry_type == 'warranty_claim') {
+                    $quantity = StockLedger::query()
+                        ->where([
+                            'material_id' => request()->material_id,
+                            'brand_id' => request()->brand_id,
+                            'stockable_id' => request()->receiveable_id,
+                            'received_type' => request()->received_type,
+                            'branch_id' => request()->branch_id,
+                            'serial_code' => $item->serial_code
+                        ])
+                        ->sum('damaged_quantity');
+                } else {
+                    $quantity = StockLedger::query()
+                        ->where([
+                            'material_id' => request()->material_id,
+                            'brand_id' => request()->brand_id,
+                            'stockable_id' => request()->receiveable_id,
+                            'received_type' => request()->received_type,
+                            'branch_id' => request()->branch_id,
+                            'serial_code' => $item->serial_code
+                        ])
+                        ->sum('quantity');
+                }
                 if ($item->material->type == 'Item' && $quantity > 0 && !in_array($item->serial_code, $exit_serial_codes)) {
                     $data[] = [
                         'label' => $item->serial_code,
