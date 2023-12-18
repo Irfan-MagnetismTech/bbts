@@ -44,6 +44,7 @@ class ConnectivityController extends Controller
             ->with('sale', 'client', 'frDetails')
             ->where('fr_no', $fr_no)
             ->first();
+        // dd($salesDetail);
 
         $employees = Employee::latest()->get();
 
@@ -73,9 +74,9 @@ class ConnectivityController extends Controller
 
         $connectivity = Connectivity::query()
             ->with('employee')
-            ->whereSaleId($salesDetail->sale_id)
+            ->where('fr_no', $fr_no)
+            ->where('is_modify', '0' )
             ->first();
-
         return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityBandwidths', 'logicalConnectivities', 'facilityTypes', 'clientFacility', 'connectivity'));
     }
 

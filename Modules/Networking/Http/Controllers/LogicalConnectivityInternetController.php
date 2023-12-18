@@ -168,7 +168,7 @@ class LogicalConnectivityInternetController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('message', 'Logical Connectivity for Internet created successfully!');
+            return redirect('networking/logical-internet-connectivities')->with('message', 'Logical Connectivity for Internet created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($e->getMessage());
@@ -304,7 +304,7 @@ class LogicalConnectivityInternetController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('message', 'Logical Connectivity for Internet updated successfully!');
+            return redirect('networking/logical-internet-connectivities')->with('message', 'Logical Connectivity for Internet updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($e->getMessage());
