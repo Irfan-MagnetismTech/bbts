@@ -27,12 +27,21 @@
                 </select>
             </div>
             <div style="width: 200px; margin-left: 20px">
-                {{--                <label for="branch">Warehouse:</label>--}}
                 <select name="branch_id" class="form-control branch select2" autocomplete="off">
                     <option value="">Select Branch</option>
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}" @selected($branch->id == $branch_id)>
                             {{ $branch->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div style="width: 200px; margin-left: 20px">
+                <select name="material_id" class="form-control material select2" autocomplete="off">
+                    <option value="">Select Material</option>
+                    @foreach ($materials as $material)
+                        <option value="{{ $material->id }}" @selected($material->id == $material_id)>
+                            {{ $material->name }}
                         </option>
                     @endforeach
                 </select>

@@ -110,7 +110,7 @@
 <html-separator/>
 
 <div style="width: 100%; flex: max-content">
-    <h3 style="text-align: center"><u>Material Stock Report</u></h3>
+    <h3 style="text-align: center"><u>Item Report</u></h3>
     <div>
         <table class="table table-striped table-bordered" style="width: 100%">
             <thead>

@@ -69,6 +69,7 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('scm-material-stock-report', [ScmReportController::class, 'materialStockReport'])->name('scm-material-stock-report');
     Route::get('view-scm-item-report', [ScmReportController::class, 'viewScmItemReport'])->name('view-scm-item-report');
     Route::get('scm-item-report', [ScmReportController::class, 'scmItemReport'])->name('scm-item-report');
+    Route::get('view-scm-report', [ScmReportController::class, 'viewScmReport'])->name('view-scm-report');
     Route::get('scm-report', [ScmReportController::class, 'scmReport'])->name('scm-report');
     Route::get('search-indent-prs-no', [IndentController::class, 'searchIndentPrsNo'])->name('searchIndentPrsNo');
     require __DIR__ . '/jaber.php';
