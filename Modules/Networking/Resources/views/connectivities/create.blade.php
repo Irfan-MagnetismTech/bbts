@@ -17,29 +17,30 @@
         }
 
         fieldset {
-         display: block!important;
-         margin-left: 2px!important;
-         margin-right: 2px!important;
-         padding-left: 0.75em!important;
-         padding-bottom: 0%!important;
-         padding-right: 0.75em!important;
-         border: #1a1111 2px silid;
-         border: 2px black (internal value)!important;
+            display: block !important;
+            margin-left: 2px !important;
+            margin-right: 2px !important;
+            padding-left: 0.75em !important;
+            padding-bottom: 0% !important;
+            padding-right: 0.75em !important;
+            border: #1a1111 2px silid;
+            border: 2px black (internal value) !important;
         }
 
         legend {
-        color: white!important;
-        display: block!important;
-        width: 90%!important;
-        max-width: 100%!important;
-        font-size: 0.7rem!important;
-        line-height: inherit!important;
-        font-weight: 100!important;
-        color: inherit!important;
-        white-space: normal!important;
-        margin-bottom:0%!important;
-        padding-bottom:0%!important;
+            color: white !important;
+            display: block !important;
+            width: 90% !important;
+            max-width: 100% !important;
+            font-size: 0.7rem !important;
+            line-height: inherit !important;
+            font-weight: 100 !important;
+            color: inherit !important;
+            white-space: normal !important;
+            margin-bottom: 0% !important;
+            padding-bottom: 0% !important;
         }
+
         .section-label {
             background: #ffffff;
             margin-left: 25px;
@@ -59,7 +60,6 @@
     $is_active = old('is_active', !empty($connectivity) ? $connectivity->activations?->is_active : null);
     $sale_id = old('sale_id', !empty($connectivity) ? $connectivity->sale_id : $salesDetail->sale_id);
     $commissioning_date = old('commissioning_date', !empty($connectivity) ? $connectivity->commissioning_date : today()->format('d-m-Y'));
-
 @endphp
 
 @section('breadcrumb-button')
@@ -119,14 +119,14 @@
                     <div class="form-check-inline pt-0 mt-0">
                         <label class="form-check-label" for="Active">
                             <input type="radio" class="form-check-input is_active" id="is_active" name="is_active" checked
-                                   value="Active" @checked(@$is_active == 'Active' || ($form_method == 'POST' && !old()))>
+                                value="Active" @checked(@$is_active == 'Active' || ($form_method == 'POST' && !old()))>
                             Active
                         </label>
                     </div>
                     <div class="form-check-inline mt-0 pt-0">
                         <label class="form-check-label" for="Inactive">
                             <input type="radio" class="form-check-input is_active" id="is_active" name="is_active"
-                                   value="Inactive" @checked(@$is_active == 'Inactive')>
+                                value="Inactive" @checked(@$is_active == 'Inactive')>
                             Inactive
                         </label>
                     </div>
@@ -137,7 +137,8 @@
                 <table class="table table-bordered" id="physical_connectivity">
                     <thead>
                         <tr>
-                            <th colspan="10" style="background-color: #8ecae6!important;  color:black">Network Information</th>
+                            <th colspan="10" style="background-color: #8ecae6!important;  color:black">Network Information
+                            </th>
                         </tr>
                         <tr>
                             <th style="background-color:#057097!important"> Link Type</th>
@@ -164,12 +165,12 @@
                                         value="{{ $physicalConnectivityLine->method }}" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" value="{{ $physicalConnectivityLine->pop }}"
-                                        readonly>
+                                    <input type="text" class="form-control"
+                                        value="{{ $physicalConnectivityLine->pop }}" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" value="{{ $physicalConnectivityLine->ldp }}"
-                                        readonly>
+                                    <input type="text" class="form-control"
+                                        value="{{ $physicalConnectivityLine->ldp }}" readonly>
                                 </td>
                                 <td>
                                     <input type="text" class="form-control"
@@ -205,7 +206,8 @@
                 <table class="table table-bordered" id="vas_service">
                     <thead>
                         <tr>
-                            <th colspan="3" style="background-color: #ded6d1!important; color:black">Network Information</th>
+                            <th colspan="3" style="background-color: #ded6d1!important; color:black">Network
+                                Information</th>
                         </tr>
                         <tr>
                             <th style="background-color:#057097!important"> Product Name</th>
@@ -298,7 +300,8 @@
                 <table class="table table-bordered" id="data_service">
                     <thead>
                         <tr>
-                            <th colspan="9" style="background-color: #a8dadc!important; color:black">Internet Service </th>
+                            <th colspan="9" style="background-color: #a8dadc!important; color:black">Internet Service
+                            </th>
                         </tr>
                         <tr>
                             <th style="background-color:#057097!important"> Product Name</th>
@@ -354,7 +357,8 @@
                 <table class="table table-bordered" id="bandwidth_distribution">
                     <thead>
                         <tr>
-                            <th colspan="9" style="background-color: #d8f3dc!important; color:black">Bandwidth Distribution </th>
+                            <th colspan="9" style="background-color: #d8f3dc!important; color:black">Bandwidth
+                                Distribution </th>
                         </tr>
                         <tr>
                             <th style="background-color:#057097!important"> IP Address</th>
@@ -365,15 +369,15 @@
                     <tbody>
                         @forelse ($logicalConnectivityBandwidths as $key => $bandwidth)
                             <tr>
-                                <td >
+                                <td>
                                     <input type="text" class="form-control" value="{{ $bandwidth->ip->address }}"
                                         readonly>
                                 </td>
-                                <td >
+                                <td>
                                     <input type="text" class="form-control" value="{{ $bandwidth->bandwidth }}"
                                         readonly>
                                 </td>
-                                <td >
+                                <td>
                                     <input type="text" class="form-control" value="{{ $bandwidth->remarks }}"
                                         readonly>
                                 </td>

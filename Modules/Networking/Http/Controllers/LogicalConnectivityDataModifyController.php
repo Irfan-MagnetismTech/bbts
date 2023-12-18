@@ -138,7 +138,7 @@ class LogicalConnectivityDataModifyController extends Controller
 
             DB::commit();
 
-            return redirect('logical-data-connectivities')->with('message', 'Logical Connectivity Data created successfully!');
+            return redirect('networking/logical-data-connectivities')->with('message', 'Logical Connectivity Data created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($e->getMessage());
