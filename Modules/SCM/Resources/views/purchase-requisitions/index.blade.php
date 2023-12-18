@@ -28,7 +28,7 @@
             <thead>
             <tr>
                 <th>#SL</th>
-                <th>MRS No</th>
+                <th>PRS No</th>
                 <th>Material - Brand - Model</th>
                 <th>Quantity</th>
                 <th>Type</th>
@@ -40,7 +40,7 @@
             <tfoot>
             <tr>
                 <th>#SL</th>
-                <th>MRS No</th>
+                <th>PRS No</th>
                 <th>Material - Brand - Model</th>
                 <th>Quantity</th>
                 <th>Type</th>

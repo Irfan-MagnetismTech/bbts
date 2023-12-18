@@ -90,6 +90,11 @@ class Client extends Model
         return $this->hasMany(FeasibilityRequirementDetail::class, 'client_no', 'client_no');
     }
 
+    public function feasibilityRequirementDetail()
+    {
+        return $this->belongsTo(FeasibilityRequirementDetail::class, 'client_no', 'client_no');
+    }
+
     public function connectivities()
     {
         return $this->hasMany(Connectivity::class, 'client_no', 'client_no');
