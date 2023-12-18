@@ -52,7 +52,7 @@
             padding: 5px;
             border-collapse: collapse;
             border: 1px solid #000;
-
+            text-align: center;
         }
 
         #orderinfo-table tr td {
@@ -115,18 +115,36 @@
         <table class="table table-striped table-bordered" style="width: 100%">
             <thead>
             <tr>
-                <th>Material Name</th>
+                <th>Date</th>
+                <th>Branch</th>
+                <th>Material</th>
                 <th>Unit</th>
                 <th>Brand</th>
                 <th>Model</th>
+                <th>Type</th>
                 <th>Quantity</th>
                 <th>Rate</th>
                 <th>Serial Code</th>
+                <th>Supplier</th>
+                <th>Client</th>
+                <th>Client Code</th>
+                <th>Indent No</th>
+                <th>PRS No</th>
+                <th>PO No</th>
+                <th>Challan No</th>
+                <th>Invoice No</th>
+                <th>Issued to Branch</th>
+                <th>Location</th>
+                <th>Issue Purpose</th>
             </tr>
             </thead>
             <tbody>
             @foreach($stocks as $key => $material)
                 <tr>
+                    <td>{{ $material['date'] }}</td>
+
+                    <td>{{ $material['branch'] }}</td>
+
                     <td>{{ $material['name'] }}</td>
 
                     <td>{{ $material['unit'] }}</td>
@@ -163,6 +181,17 @@
                     <td>{{ $material['quantity'] }}</td>
                     <td>{{ $material['rate'] }}</td>
                     <td>{{ $material['serial'] }}</td>
+                    <td>{{ $material['supplier'] }}</td>
+                    <td>{{ $material['client'] }}</td>
+                    <td>{{ $material['client_no'] }}</td>
+                    <td>{{ $material['indent_no'] }}</td>
+                    <td>{{ $material['prs_no'] }}</td>
+                    <td>{{ $material['po_no'] }}</td>
+                    <td>{{ $material['challan_no'] }}</td>
+                    <td>{{ $material['invoice_no'] }}</td>
+                    <td>{{ $material['to_branch'] }}</td>
+                    <td>{{ $material['location'] }}</td>
+                    <td>{{ $material['issue_purpose'] }}</td>
                 </tr>
             @endforeach
             </tbody>

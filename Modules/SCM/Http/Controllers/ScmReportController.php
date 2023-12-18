@@ -418,6 +418,8 @@ class ScmReportController extends Controller
             }
             $stocks = $stockItems->map(function ($stock) {
                 return [
+                    'date' => $stock->date ?? '',
+                    'branch' => $stock->branch->name ?? '',
                     'name' => $stock->material->name ?? '',
                     'unit' => $stock->material->unit ?? '',
                     'brand' => $stock->brand->name ?? '',
@@ -426,6 +428,17 @@ class ScmReportController extends Controller
                     'quantity' => $stock->quantity ?? '',
                     'rate' => $stock->unit_price ?? '',
                     'serial' => $stock->serial_code ?? '',
+                    'client' => $stock->stockable->client->client_name ?? '',
+                    'client_no' => $stock->stockable->client->client_no ?? '',
+                    'location' => $stock->stockable->client->feasibilityRequirementDetail->connectivity_point ?? '',
+                    'challan_no' => $stock->stockable->challan_no ?? '',
+                    'issue_purpose' => $stock->stockable->purpose ?? '',
+                    'to_branch' => $stock->stockable->toBranch->name ?? '',
+                    'invoice_no' => $stock->stockable->bill_reg_no ?? '',
+                    'indent_no' => $stock->stockable->purchaseOrder->indent->indent_no ?? '',
+                    'po_no' => $stock->stockable->purchaseOrder->po_no ?? '',
+                    'supplier' => $stock->stockable->purchaseOrder->supplier->name ?? '',
+                    'prs_no' => $stock->stockable->purchaseOrder->scmPurchaseRequisition->prs_no ?? '',
                 ];
             })->toArray();
 
@@ -473,6 +486,8 @@ class ScmReportController extends Controller
             }
             $stocks = $stockItems->map(function ($stock) {
                 return [
+                    'date' => $stock->date ?? '',
+                    'branch' => $stock->branch->name ?? '',
                     'name' => $stock->material->name ?? '',
                     'unit' => $stock->material->unit ?? '',
                     'brand' => $stock->brand->name ?? '',
@@ -481,6 +496,17 @@ class ScmReportController extends Controller
                     'quantity' => $stock->quantity ?? '',
                     'rate' => $stock->unit_price ?? '',
                     'serial' => $stock->serial_code ?? '',
+                    'client' => $stock->stockable->client->client_name ?? '',
+                    'client_no' => $stock->stockable->client->client_no ?? '',
+                    'location' => $stock->stockable->client->feasibilityRequirementDetail->connectivity_point ?? '',
+                    'challan_no' => $stock->stockable->challan_no ?? '',
+                    'issue_purpose' => $stock->stockable->purpose ?? '',
+                    'to_branch' => $stock->stockable->toBranch->name ?? '',
+                    'invoice_no' => $stock->stockable->bill_reg_no ?? '',
+                    'indent_no' => $stock->stockable->purchaseOrder->indent->indent_no ?? '',
+                    'po_no' => $stock->stockable->purchaseOrder->po_no ?? '',
+                    'supplier' => $stock->stockable->purchaseOrder->supplier->name ?? '',
+                    'prs_no' => $stock->stockable->purchaseOrder->scmPurchaseRequisition->prs_no ?? '',
                 ];
             })->toArray();
 

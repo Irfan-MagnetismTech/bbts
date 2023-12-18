@@ -51,7 +51,6 @@ class PurchaseOrderController extends Controller
      */
     public function index()
     {
-
         $all_pos = PurchaseOrder::query()
             ->with('purchaseOrderLines', 'supplier', 'indent', 'purchaseOrderLines.cs', 'createdBy')
             ->latest()->get();

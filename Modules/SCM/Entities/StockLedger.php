@@ -3,6 +3,7 @@
 namespace Modules\SCM\Entities;
 
 use Carbon\Carbon;
+use Modules\Admin\Entities\Branch;
 use Modules\Admin\Entities\Brand;
 use Modules\SCM\Entities\Material;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,9 @@ class StockLedger extends Model
 
     public function getDateAttribute($input)
     {
-        return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+        if ($input != null){
+            return Carbon::createFromFormat('Y-m-d', $input)->format('d-m-Y');
+        }
     }
 
     /**
@@ -50,6 +53,11 @@ class StockLedger extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     /**
