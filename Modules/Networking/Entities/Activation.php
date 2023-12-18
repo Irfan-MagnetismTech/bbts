@@ -15,7 +15,8 @@ class Activation extends Model
     protected $fillable = [
         'client_no',
         'fr_no',
-        'is_active'
+        'is_active',
+        'connectivity_id',
     ];
 
     public function connectivities(): BelongsTo

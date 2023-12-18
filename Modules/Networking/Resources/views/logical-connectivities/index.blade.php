@@ -61,9 +61,19 @@
                                         data-toggle="tooltip" title="Show" class="btn btn-outline-primary"><i
                                             class="fas fa-eye"></i></a> --}}
 
-                                    <a href="{{ route('logical-internet-connectivities.edit', $logicalConnectivity->id) }}"
-                                        data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
-                                            class="fas fa-pen"></i></a>
+                                    @if ($logicalConnectivity->product_category == 'Internet')
+                                        <a href="{{ route('logical-internet-connectivities.edit', $logicalConnectivity->id) }}"
+                                            data-toggle="tooltip" title="Edit" class="btn btn-outline-success"><i
+                                                class="fas fa-edit"></i></a>
+                                    @elseif($logicalConnectivity->product_category == 'Data')
+                                        <a href="{{ route('logical-data-connectivities.edit', $logicalConnectivity->id) }}"
+                                            data-toggle="tooltip" title="Edit" class="btn btn-outline-success"><i
+                                                class="fas fa-edit"></i></a>
+                                    @elseif($logicalConnectivity->product_category == 'VAS')
+                                        <a href="{{ route('logical-vas-connectivities.edit', $logicalConnectivity->id) }}"
+                                            data-toggle="tooltip" title="Edit" class="btn btn-outline-success"><i
+                                                class="fas fa-edit"></i></a>
+                                    @endif
                                     {!! Form::open([
                                         'url' => route('logical-internet-connectivities.destroy', $logicalConnectivity->id),
                                         'method' => 'delete',
