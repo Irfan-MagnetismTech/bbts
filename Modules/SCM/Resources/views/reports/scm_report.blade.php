@@ -27,7 +27,7 @@
                 </select>
             </div>
             <div style="width: 200px; margin-left: 20px">
-                <select name="branch_id" class="form-control branch select2" autocomplete="off">
+                <select name="branch_id" class="form-control branch select2" autocomplete="off" required>
                     <option value="">Select Branch</option>
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}" @selected($branch->id == $branch_id)>

@@ -39,7 +39,7 @@ class ScmReportController extends Controller
         $branch_id = $request->branch_id;
         if ($request->type === 'pdf') {
             $stockTypes = [
-                ScmMrr::class, ScmErr::class, ScmChallan::class, ScmMir::class, OpeningStock::class
+                ScmMrr::class, ScmErr::class, ScmChallan::class, ScmMir::class, OpeningStock::class, ScmMur::class
             ];
 
             if ($branch_id == null) {
@@ -91,7 +91,7 @@ class ScmReportController extends Controller
         } else {
             $branches = Branch::get();
             $stockTypes = [
-                ScmMrr::class, ScmErr::class, ScmChallan::class, ScmMir::class, OpeningStock::class
+                ScmMrr::class, ScmErr::class, ScmChallan::class, ScmMir::class, OpeningStock::class, ScmMur::class
             ];
             $branch_id = $request->branch_id;
 
@@ -143,7 +143,7 @@ class ScmReportController extends Controller
         return view('scm::reports.scm_report', compact('groupedStocks', 'openingStocks','branches','materials', 'branch_id','material_id','from_date','to_date'));
     }
 
-    public function scmReport(ScmReportRequest $request)
+    public function scmReport(Request $request)
     {
         $openingStocks=[];
         $from_date = $request->from_date;
@@ -160,7 +160,7 @@ class ScmReportController extends Controller
             $stockTypes = [
                 ScmMrr::class, ScmErr::class, ScmMir::class, OpeningStock::class, ScmMur::class
             ];
-            if ($from_date != null && $to_date != null) {
+            if ($from_date != null && $to_date != null && $material_id != null) {
                 $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
                     ->where('branch_id', $branch_id)
                     ->whereBetween('date', [$from_date, $to_date])
@@ -196,12 +196,53 @@ class ScmReportController extends Controller
                     return $result;
                 });
             }
-            else{
+            elseif ($from_date != null && $to_date != null && $material_id == null) {
+                $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->where('branch_id', $branch_id)
+                    ->whereBetween('date', [$from_date, $to_date])
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->get();
+
+                $previousStocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->where('branch_id', $branch_id)
+                    ->where('date', '<', $from_date)
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->get();
+
+                $combinedStocks = $stocks->concat($previousStocks);
+
+                $openingStocks = $combinedStocks->groupBy('material_id')->map(function ($items) use ($stockTypes) {
+                    $totalQuantity = $items->sum('quantity');
+                    $result = [
+                        'material_id' => $items[0]->material->name,
+                        'unit' => $items[0]->material->unit,
+                        'total' => $totalQuantity,
+                    ];
+
+                    foreach ($stockTypes as $stockType) {
+                        if ($stockType === OpeningStock::class) {
+                            $typeItems = $items->where('stockable_type', $stockType)->sum('quantity');
+                            $result[Str::snake(class_basename($stockType)) . '_qty'] = $typeItems;
+                        }
+                    }
+                    return $result;
+                });
+            }
+            elseif($from_date == null && $to_date == null && $material_id != null)
+            {
                 $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
                     ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
                     ->orderBy('stock_ledgers.created_at', 'desc')
                     ->where('branch_id', $branch_id)
                     ->where('stock_ledgers.material_id', $material_id)
+                    ->get();
+            }
+            else{$stocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->where('branch_id', $branch_id)
                     ->get();
             }
             $groupedStocks = $stocks->groupBy('material_id')->map(function ($items) use ($stockTypes) {
@@ -253,7 +294,7 @@ class ScmReportController extends Controller
             $stockTypes = [
                 ScmMrr::class, ScmErr::class, ScmMir::class, OpeningStock::class, ScmMur::class
             ];
-            if ($from_date != null && $to_date != null) {
+            if ($from_date != null && $to_date != null && $material_id != null) {
                 $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
                     ->where('branch_id', $branch_id)
                     ->whereBetween('date', [$from_date, $to_date])
@@ -289,12 +330,52 @@ class ScmReportController extends Controller
                     return $result;
                 });
             }
-            else{
+            elseif ($from_date != null && $to_date != null && $material_id == null) {
+                $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->where('branch_id', $branch_id)
+                    ->whereBetween('date', [$from_date, $to_date])
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->get();
+
+                $previousStocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->where('branch_id', $branch_id)
+                    ->where('date', '<', $from_date)
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->get();
+
+                $combinedStocks = $stocks->concat($previousStocks);
+
+                $openingStocks = $combinedStocks->groupBy('material_id')->map(function ($items) use ($stockTypes) {
+                    $totalQuantity = $items->sum('quantity');
+                    $result = [
+                        'material_id' => $items[0]->material->name,
+                        'unit' => $items[0]->material->unit,
+                        'total' => $totalQuantity,
+                    ];
+
+                    foreach ($stockTypes as $stockType) {
+                        if ($stockType === OpeningStock::class) {
+                            $typeItems = $items->where('stockable_type', $stockType)->sum('quantity');
+                            $result[Str::snake(class_basename($stockType)) . '_qty'] = $typeItems;
+                        }
+                    }
+                    return $result;
+                });
+            }
+            elseif($from_date == null && $to_date == null && $material_id != null){
                 $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
                     ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
                     ->orderBy('stock_ledgers.created_at', 'desc')
                     ->where('branch_id', $branch_id)
                     ->where('stock_ledgers.material_id', $material_id)
+                    ->get();
+            }else{
+                $stocks = StockLedger::whereIn('stockable_type', $stockTypes)
+                    ->select('stock_ledgers.material_id', 'stock_ledgers.quantity', 'stock_ledgers.stockable_type')
+                    ->orderBy('stock_ledgers.created_at', 'desc')
+                    ->where('branch_id', $branch_id)
                     ->get();
             }
             $groupedStocks = $stocks->groupBy('material_id')->map(function ($items) use ($stockTypes) {
