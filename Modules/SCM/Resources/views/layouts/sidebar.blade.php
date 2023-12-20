@@ -380,6 +380,11 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">Item Report</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
+                <li class="{{ request()->routeIs('view-product-cost-report') ? 'active' : null }}">
+                    <a href="{{ route('view-product-cost-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Product Cost Report</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
             </ul>
         </li>
     @endcan

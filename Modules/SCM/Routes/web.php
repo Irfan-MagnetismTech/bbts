@@ -71,6 +71,8 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('scm-item-report', [ScmReportController::class, 'scmItemReport'])->name('scm-item-report');
     Route::get('view-scm-report', [ScmReportController::class, 'viewScmReport'])->name('view-scm-report');
     Route::get('scm-report', [ScmReportController::class, 'scmReport'])->name('scm-report');
+    Route::get('view-product-cost-report', [ScmReportController::class, 'viewProductCostReport'])->name('view-product-cost-report');
+    Route::get('product-cost-report', [ScmReportController::class, 'productCostReport'])->name('product-cost-report');
     Route::get('search-indent-prs-no', [IndentController::class, 'searchIndentPrsNo'])->name('searchIndentPrsNo');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
