@@ -27,26 +27,24 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>#MIR No.</th>
-                    <th>#MRS No.</th>
-                    <th>Courier Code</th>
+                    <th>Date</th>
+                    <th>MIR No</th>
+                    <th>MRS No</th>
+                    <th>MRS Date</th>
                     <th>From Branch</th>
                     <th>To Branch</th>
-                    <th>Appiled Date</th>
-                    <th>Submitted By</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
                     <th>SL</th>
-                    <th>#MIR No.</th>
-                    <th>#MRS No.</th>
-                    <th>Courier Code</th>
+                    <th>Date</th>
+                    <th>MIR No</th>
+                    <th>MRS No</th>
+                    <th>MRS Date</th>
                     <th>From Branch</th>
                     <th>To Branch</th>
-                    <th>Appiled Date</th>
-                    <th>Submitted By</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -54,13 +52,12 @@
                 @foreach ($mirs as $key => $mir)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $mir->mir_no }}</td>
-                        <td>{{ $mir->scmRequisition->mrs_no }}</td>
-                        <td>{{ $mir?->courier?->name }}</td>
-                        <td>{{ $mir->fromBranch->name }}</td>
-                        <td>{{ $mir->toBranch->name }}</td>
-                        <td>{{ $mir->date }}</td>
-                        <td>{{ $mir->createdBy->name }}</td>
+                        <td>{{ $mir->date ?? ''}}</td>
+                        <td>{{ $mir->mir_no ?? ''}}</td>
+                        <td>{{ $mir->scmRequisition->mrs_no ?? ''}}</td>
+                        <td>{{ $mir->scmRequisition->date ?? ''}}</td>
+                        <td>{{ $mir->fromBranch->name ?? ''}}</td>
+                        <td>{{ $mir->toBranch->name ?? ''}}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

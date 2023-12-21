@@ -67,8 +67,12 @@ Route::prefix('scm')->middleware(['auth'])->group(function () {
     Route::get('search_bill_reg_no', [ScmMrrController::class, 'searchBillRegisterNoWithDate'])->name('searchBillRegisterNoWithDate');
     Route::get('search_mrs_for_challan', [ScmChallanController::class, 'searchMrs'])->name('search_mrs_for_challan');
     Route::get('scm-material-stock-report', [ScmReportController::class, 'materialStockReport'])->name('scm-material-stock-report');
+    Route::get('view-scm-item-report', [ScmReportController::class, 'viewScmItemReport'])->name('view-scm-item-report');
     Route::get('scm-item-report', [ScmReportController::class, 'scmItemReport'])->name('scm-item-report');
+    Route::get('view-scm-report', [ScmReportController::class, 'viewScmReport'])->name('view-scm-report');
     Route::get('scm-report', [ScmReportController::class, 'scmReport'])->name('scm-report');
+    Route::get('view-product-cost-report', [ScmReportController::class, 'viewProductCostReport'])->name('view-product-cost-report');
+    Route::get('product-cost-report', [ScmReportController::class, 'productCostReport'])->name('product-cost-report');
     Route::get('search-indent-prs-no', [IndentController::class, 'searchIndentPrsNo'])->name('searchIndentPrsNo');
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';

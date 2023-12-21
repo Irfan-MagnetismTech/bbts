@@ -28,22 +28,28 @@
             <thead>
                 <tr>
                     <th>#SL</th>
-                    <th>Type</th>
-                    <th>Name</th>
-                    <th>Purpose</th>
                     <th>Date</th>
-                    <th>Mur No</th>
+                    <th>Challan No</th>
+                    <th>MUR No</th>
+                    <th>Station Name</th>
+                    <th>Client ID</th>
+                    <th>Client Name</th>
+                    <th>Client Address</th>
+                    <th>Purpose</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
                     <th>#SL</th>
-                    <th>Type</th>
-                    <th>Name</th>
-                    <th>Purpose</th>
                     <th>Date</th>
-                    <th>Mur No</th>
+                    <th>Challan No</th>
+                    <th>MUR No</th>
+                    <th>Station Name</th>
+                    <th>Client ID</th>
+                    <th>Client Name</th>
+                    <th>Client Address</th>
+                    <th>Purpose</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -51,18 +57,21 @@
                 @foreach ($scmMurs as $key => $scmMur)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $scmMur->type }}</td>
-                        <td class="text-center">{{ $scmMur->client->client_name ?? '' }} - {{ $scmMur->pop->name ?? '' }} - {{ $scmMur->feasibilityRequirementDetail->connectivity_point ?? '' }}</td>
+                        <td class="text-center">{{ $scmMur->date ?? ''}}</td>
+                        <td class="text-center">{{ $scmMur->challan->challan_no ?? '' }}</td>
+                        <td class="text-center">{{ $scmMur->mur_no ?? ''}}</td>
+                        <td class="text-center">{{ $scmMur->branch->name ??''}}</td>
+                        <td class="text-center">{{ $scmMur->client->client_no ?? '' }}</td>
+                        <td class="text-center">{{ $scmMur->client->client_name ?? '' }}</td>
+                        <td class="text-center">{{ $scmMur->feasibilityRequirementDetail->connectivity_point ?? '' }}</td>
                         <td class="text-center">{{ $scmMur->purpose }}</td>
-                        <td class="text-center">{{ $scmMur->date }}</td>
-                        <td class="text-center">{{ $scmMur->mur_no }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
                                     <a href="{{ route('material-utilizations.show', $scmMur->id) }}" data-toggle="tooltip"
                                                 title="Details" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                                     {{-- @if (!$scmMur->isDeleteable()) --}}
-                                    
+
                                         <a href="{{ route('material-utilizations.edit', $scmMur->id) }}"
                                             data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
                                                 class="fas fa-pen"></i></a>

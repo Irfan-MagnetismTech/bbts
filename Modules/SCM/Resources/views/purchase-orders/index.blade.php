@@ -28,10 +28,8 @@
                 <th>SL</th>
                 <th>Date</th>
                 <th>Po No.</th>
-                <th>Material</th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Qty</th>
+                <th>Material - Brand - Model</th>
+                <th>Quantity</th>
                 <th>Unit</th>
                 <th>Rate</th>
                 <th>Total Price</th>
@@ -45,10 +43,8 @@
                 <th>SL</th>
                 <th>Date</th>
                 <th>Po No.</th>
-                <th>Material</th>
-                <th>Brand</th>
-                <th>Model</th>
-                <th>Qty</th>
+                <th>Material - Brand - Model</th>
+                <th>Quantity</th>
                 <th>Unit</th>
                 <th>Rate</th>
                 <th>Total Price</th>
@@ -58,21 +54,42 @@
             </tr>
             </tfoot>
             <tbody>
-            @php($i=1)
             @foreach ($all_pos as $key => $po)
-                @foreach ($po->purchaseOrderLines as $key => $data)
                     <tr>
-                        <td rowspan="">{{ $i++ }}</td>
+                        <td rowspan="">{{ $key + 1 }}</td>
                         <td class="text-center">{{ $po->date ?? ''}}</td>
                         <td class="text-center">{{ $po->po_no ?? ''}}</td>
-                        <td class="text-center">{{ $data->material->name ?? ''}}</td>
-                        <td class="text-center">{{ $data->brand->name ?? ''}}</td>
-                        <td class="text-center">{{ $data->model ?? ''}}</td>
-                        <td class="text-center">{{ $data->quantity ?? ''}}</td>
-                        <td class="text-center">{{ $data->material->unit ?? ''}}</td>
-                        <td class="text-center">{{ $data->unit_price ?? ''}}</td>
-                        <td class="text-center">{{ $data->total_amount ?? ''}}</td>
-                        <td class="text-center">{{ $data->warranty_period ?? ''}}</td>
+                        <td class="text-left">
+                            @foreach ($po->purchaseOrderLines as $subKey => $data)
+                            {{ $data->material->name ?? ''}} - {{ $data->brand->name ?? ''}}
+                            - {{ $data->model ?? ''}} <br>
+                        @endforeach
+                        </td>
+                        <td class="text-center">
+                            @foreach ($po->purchaseOrderLines as $subKey => $data)
+                                {{ $data->quantity ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td class="text-center">
+                            @foreach ($po->purchaseOrderLines as $subKey => $data)
+                                {{ $data->material->unit ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td class="text-right">
+                            @foreach ($po->purchaseOrderLines as $subKey => $data)
+                                {{ $data->unit_price ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td class="text-right">
+                            @foreach ($po->purchaseOrderLines as $subKey => $data)
+                                {{ $data->total_amount ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td class="text-center">
+                            @foreach ($po->purchaseOrderLines as $subKey => $data)
+                                {{ $data->warranty_period ?? ''}} <br>
+                            @endforeach
+                        </td>
                         <td class="text-center">{{ $po->remarks ?? ''}}</td>
                         <td rowspan="">
                             <div class="icon-btn">
@@ -103,7 +120,6 @@
                         </td>
                     </tr>
                 @endforeach
-            @endforeach
             </tbody>
         </table>
     </div>

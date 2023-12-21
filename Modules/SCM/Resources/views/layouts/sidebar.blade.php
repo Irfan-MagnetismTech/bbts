@@ -370,14 +370,19 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">Material Stock Report</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('scm-report') ? 'active' : null }}">
-                    <a href="{{ route('scm-report') }}"> <span class="pcoded-micon"><i
+                <li class="{{ request()->routeIs('view-scm-report') ? 'active' : null }}">
+                    <a href="{{ route('view-scm-report') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">SCM Report</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('scm-item-report') ? 'active' : null }}">
-                    <a href="{{ route('scm-item-report') }}"> <span class="pcoded-micon"><i
+                <li class="{{ request()->routeIs('view-scm-item-report') ? 'active' : null }}">
+                    <a href="{{ route('view-scm-item-report') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">Item Report</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+                <li class="{{ request()->routeIs('view-product-cost-report') ? 'active' : null }}">
+                    <a href="{{ route('view-product-cost-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Product Cost Report</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
             </ul>
