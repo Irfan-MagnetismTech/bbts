@@ -25,6 +25,7 @@ use Modules\SCM\Entities\ScmMur;
 use Modules\SCM\Http\Requests\ScmMirRequest;
 use Modules\SCM\Entities\ScmRequisitionDetail;
 use Modules\SCM\Entities\ScmPurchaseRequisition;
+use Modules\SCM\Entities\ScmWcr;
 use Modules\SCM\Entities\ScmWcrr;
 use Modules\SCM\Entities\ScmWor;
 use Spatie\Permission\Traits\HasRoles;
@@ -293,6 +294,8 @@ class ScmMirController extends Controller
         return  [
             'material_id'   => $request->material_name[$key1],
             'serial_code' => isset($request->serial_code[$key1]) ? json_encode($request->serial_code[$key1]) : '[]',
+            'initial_mark' => $request->initial_mark[$key1],
+            'final_mark' => $request->final_mark[$key1],
             'receiveable_id' => $request->type_id[$key1],
             'receiveable_type' => ($request->received_type[$key1] ?  $ClassAarray[$request->received_type[$key1]] : null),
             'brand_id' => isset($request->brand[$key1]) ? $request->brand[$key1] : null,

@@ -24,6 +24,7 @@ Route::get('clientMurWiseMaterials', [ScmErrController::class, 'clientMurWiseMat
 Route::get('search-serial-for-wor', [ScmWorController::class, 'searchSerialForWor'])->name('searchSerialForWor');
 route::get('receeive-type-wise-list', [ScmMirController::class, 'receiveTypeWiseList'])->name('receeive-type-wise-list');
 
+
 Route::resources([
     'material-issues' => ScmMirController::class,
     'gate-passes' => ScmGatePassController::class,
