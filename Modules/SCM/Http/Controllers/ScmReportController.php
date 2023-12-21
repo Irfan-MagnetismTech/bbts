@@ -571,25 +571,38 @@ class ScmReportController extends Controller
                     ->get();
             }
 
-            $stocks = $stockItems->map(function ($stock) {
-                return [
-                    'client' => $stock->stockable->client->client_name ?? '',
-                    'item_code' => $stock->item_code ?? '',
-                    'name' => $stock->material->name ?? '',
-                    'quantity' => $stock->quantity ?? '',
-                    'unit' => $stock->material->unit ?? '',
-                    'rate' => $stock->unit_price ?? '',
-                    'total_price' => $stock->unit_price * $stock->quantity ?? '',
-                    'serial' => $stock->serial_code ?? '',
-                    'challan_no' => $stock->stockable->challan->challan_no ?? '',
-                    'challan_date' => $stock->stockable->challan->date ?? '',
-                ];
-            })->toArray();
+            $groupedStocks = $stockItems->groupBy(function ($stock) {
+                return $stock->stockable->client->feasibilityRequirementDetail->connectivity_point ?? '';
+            });
 
-            return PDF::loadView('scm::reports.item_report_pdf', ['stocks' => $stocks, 'client_no' => $client_no, 'material_id' => $material_id], [], [
+            $stocks = $groupedStocks->map(function ($items, $connectivityPoint) {
+                $totalQuantity = $items->sum('quantity');
+                $totalUnitPrice = $items->sum('unit_price');
+                $rowSpan = count($items);
+
+                return $items->map(function ($stock) use ($totalQuantity, $totalUnitPrice, $connectivityPoint, $rowSpan) {
+                    return [
+                        'client' => ($stock->stockable->client->client_name ?? '') . ' - ' . ($connectivityPoint !== '' ? $connectivityPoint : ''),
+                        'connectivity_point' => $connectivityPoint,
+                        'item_code' => $stock->item_code ?? '',
+                        'name' => $stock->material->name ?? '',
+                        'quantity' => $stock->quantity * -1 ?? '',
+                        'unit' => $stock->material->unit ?? '',
+                        'rate' => $stock->unit_price ?? '0',
+                        'total_price' => $stock->unit_price * $stock->quantity * -1?? '',
+                        'serial' => $stock->serial_code ?? '',
+                        'challan_no' => $stock->stockable->challan->challan_no ?? '',
+                        'challan_date' => $stock->stockable->challan->date ?? '',
+                        'total_product_cost' => $totalQuantity * $totalUnitPrice * -1,
+                        'row_span' => $rowSpan,
+                    ];
+                });
+            })->collapse()->toArray();
+
+            return PDF::loadView('scm::reports.product_cost_pdf', ['stocks' => $stocks, 'client_no' => $client_no, 'material_id' => $material_id], [], [
                 'format' => 'A4',
                 'orientation' => 'L',
-                'title' => 'Product Cost Report PDF',
+                'title' => 'Product Cost Report',
                 'watermark' => 'BBTS',
                 'show_watermark' => true,
                 'watermark_text_alpha' => 0.1,
@@ -625,20 +638,34 @@ class ScmReportController extends Controller
                     ->get();
             }
 
-            $stocks = $stockItems->map(function ($stock) {
-                return [
-                    'client' => $stock->stockable->client->client_name ?? '',
-                    'item_code' => $stock->item_code ?? '',
-                    'name' => $stock->material->name ?? '',
-                    'quantity' => $stock->quantity ?? '',
-                    'unit' => $stock->material->unit ?? '',
-                    'rate' => $stock->unit_price ?? '',
-                    'total_price' => $stock->unit_price * $stock->quantity ?? '',
-                    'serial' => $stock->serial_code ?? '',
-                    'challan_no' => $stock->stockable->challan->challan_no ?? '',
-                    'challan_date' => $stock->stockable->challan->date ?? '',
-                ];
-            })->toArray();
+            $groupedStocks = $stockItems->groupBy(function ($stock) {
+                return $stock->stockable->client->feasibilityRequirementDetail->connectivity_point ?? '';
+            });
+
+            $stocks = $groupedStocks->map(function ($items, $connectivityPoint) {
+                $totalQuantity = $items->sum('quantity');
+                $totalUnitPrice = $items->sum('unit_price');
+                $rowSpan = count($items);
+
+                return $items->map(function ($stock) use ($totalQuantity, $totalUnitPrice, $connectivityPoint, $rowSpan) {
+                    return [
+                        'client' => ($stock->stockable->client->client_name ?? '') . ' - ' . ($connectivityPoint !== '' ? $connectivityPoint : ''),
+                        'connectivity_point' => $connectivityPoint,
+                        'item_code' => $stock->item_code ?? '',
+                        'name' => $stock->material->name ?? '',
+                        'quantity' => $stock->quantity * -1 ?? '',
+                        'unit' => $stock->material->unit ?? '',
+                        'rate' => $stock->unit_price ?? '0',
+                        'total_price' => $stock->unit_price * $stock->quantity * -1?? '',
+                        'serial' => $stock->serial_code ?? '',
+                        'challan_no' => $stock->stockable->challan->challan_no ?? '',
+                        'challan_date' => $stock->stockable->challan->date ?? '',
+                        'total_product_cost' => $totalQuantity * $totalUnitPrice * -1,
+                        'row_span' => $rowSpan,
+                    ];
+                });
+            })->collapse()->toArray();
+
             return view('scm::reports.product_cost_report', compact('stocks', 'materials', 'clients', 'client_no', 'material_id'));
         }
     }
