@@ -73,6 +73,8 @@
                     <th>SL.No</th>
                     <th>Material</th>
                     <th>Serial Code</th>
+                    <th>Initial Mark</th>
+                    <th>Final Mark</th>
                     <th>Brand</th>
                     <th>Model</th>
                     <th>Description</th>
@@ -87,6 +89,8 @@
                         <td> {{ $loop->iteration }}</td>
                         <td>{{ $line->material->name ?? '---' }}</td>
                         <td>{{ $line->serial_code ?? '---' }}</td>
+                        <td>{{ $line->initial_mark ?? '---' }}</td>
+                        <td>{{ $line->final_mark ?? '---' }}</td>
                         <td>{{ $line->brand->name ?? '---' }}</td>
                         <td>{{ $line->model ?? '---' }}</td>
                         <td>{{ $line->description ?? null }}</td>

@@ -36,3 +36,4 @@ Route::get('search-wcr-for-wcrr', [ScmWcrrController::class, 'searchWcrForWcrr']
 Route::get('search-material-for-wcrr', [ScmWcrrController::class, 'searchMaterialForWcrr'])->name('searchMaterialForWcrr');
 Route::get('get-requisition-data-by-mrs-no', [ScmChallanController::class, 'getRequisitionDataByMrsNo'])->name('get-requisition-data-by-mrs-no');
 Route::get('get-warrenty-info-by-serial-code', [ScmWcrController::class, 'getWarrentyInfoBySerialCode'])->name('get-warrenty-info-by-serial-code');
+Route::get('get-branch-wise-damaged-materials', [ScmWcrController::class, 'getBranchWiseDamagedMaterials'])->name('get-branch-wise-damaged-materials');

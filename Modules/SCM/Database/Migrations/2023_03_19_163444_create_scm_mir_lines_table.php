@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignId('scm_mir_id')->constrained('scm_mirs', 'id')->cascadeOnDelete();
             $table->integer('material_id')->nullable();
             $table->string('serial_code')->nullable();
+            $table->string('initial_mark')->nullable();
+            $table->string('final_mark')->nullable();
             $table->string('description')->nullable();
             $table->integer('receiveable_id')->nullable();
             $table->string('receiveable_type')->nullable();

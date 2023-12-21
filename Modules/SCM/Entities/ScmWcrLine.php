@@ -19,4 +19,14 @@ class ScmWcrLine extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+
+    public function wcr()
+    {
+        return $this->belongsTo(ScmWcr::class);
+    }
+
+    public function receivable()
+    {
+        return $this->belongsTo(ScmErr::class, 'receiveable_id');
+    }
 }

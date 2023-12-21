@@ -215,7 +215,7 @@ class ScmWcrController extends Controller
             'brand_id'          => $req->brand_id[$ke] ?? null,
             'branch_id'         => $req->branch_id ?? null,
             'model'             => $req->model[$ke] ?? null,
-            'quantity'          => -1,
+            'damaged_quantity'          => -1,
             'item_code'         => $req->item_code[$ke] ?? null,
             'serial_code'       => $req->serial_code[$ke] ?? null,
             'unit'              => $req->unit[$ke] ?? null,
@@ -313,5 +313,50 @@ class ScmWcrController extends Controller
             'challan_no' => $mrr_line->scmMrrLines->scmMrr->challan_no,
         ];
         return $data;
+    }
+
+    public function getBranchWiseDamagedMaterials()
+    {
+        $data = StockLedger::where('branch_id', request()->branch_id)
+            ->where('stockable_type', ScmErr::class)
+            ->where('damaged_quantity', '>=', 1)
+            ->get()
+            ->groupBy('serial_code')
+            ->map(function ($group) {
+                return $group->last();
+            })
+            ->flatten()
+            ->map(function ($item) {
+                $serialCodeLine = ScmMrrSerialCodeLine::where('serial_or_drum_code', $item->serial_code)->first();
+                $mrrLines = $serialCodeLine->scmMrrLines;
+                $mrr = $mrrLines->scmMrr;
+                $receivingDate = $mrr->date;
+                $warrantyPeriod = $mrrLines->warranty_period;
+                $remainingDays = max(0, $warrantyPeriod - Carbon::parse($receivingDate)->diffInDays(Carbon::now()));
+                $sum_damage_quantity = StockLedger::where('serial_code', $item->serial_code)->sum('damaged_quantity');
+                if ($sum_damage_quantity > 0) {
+                    return [
+                        'value' => $item->material->id,
+                        'label' => $item->material->name . ' - ' . $item->serial_code,
+                        'material_id' => $item->material_id,
+                        'serial_code' => $item->serial_code,
+                        'brand_id' => $item->brand_id,
+                        'brand_name' => $item->brand->name,
+                        'model' => $item->model,
+                        'unit' => $item->material->unit,
+                        'item_code' => $item->material->code,
+                        'item_type' => $item->material->type,
+                        'receiving_date' => $receivingDate,
+                        'warranty_period' => $warrantyPeriod,
+                        'remaining_days' => $remainingDays,
+                        'challan_no' => $mrr->challan_no,
+                        'stockable_id' => $item->stockable_id,
+                        'stockable_type' => $item->received_type ?? null,
+                        'type_no' => $item->stockable->err_no ?? null,
+                    ];
+                }
+            });
+
+        return response()->json($data);
     }
 }

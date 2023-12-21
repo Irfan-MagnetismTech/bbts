@@ -180,6 +180,8 @@
                     <th>Received Type</th>
                     <th>Type No</th>
                     <th>Serial Code</th>
+                    <th>Initial Mark</th>
+                    <th>Final Mark</th>
                     <th>Unit</th>
                     <th>Current Stock(Form)</th>
                     <th>Current Stock(To)</th>
@@ -203,6 +205,8 @@
                     $unit_name = old('unit_name', !empty($material_issue) ? $material_issue?->lines?->pluck('material.unit') : []);
                     $issued_qty = old('issued_qty', !empty($material_issue) ? $material_issue?->lines?->pluck('quantity') : []);
                     $mrs_quantity = old('mrs_quantity', !empty($material_issue) ? $material_issue?->lines?->pluck('mrs_quantity') : []);
+                    $initial_mark = old('initial_mark', !empty($material_issue) ? $material_issue?->lines?->pluck('initial_mark') : []);
+                    $final_mark = old('final_mark', !empty($material_issue) ? $material_issue?->lines?->pluck('final_mark') : []);
                 @endphp
                 @foreach ($receiveable_type as $key => $value)
                     <tr>
@@ -275,6 +279,14 @@
                                     </option>
                                 @endforeach
                             </select>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="initial_mark[]"
+                                value="{{ $initial_mark[$key] }}">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="final_mark[]"
+                                value="{{ $final_mark[$key] }}">
                         </td>
                         <td>
                             <input type="text" class="form-control unit" name="unit[]"
@@ -742,6 +754,12 @@
                                 <select class="form-control serial_code select2" name="serial_code[${indx}][]" multiple="multiple">
 
                                 </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control inital_mark" name="initial_mark[${indx}]">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control final_mark" name="final_mark[${indx}]">
                             </td>
                             <td>
                                 <input name="unit[${indx}]" class="form-control unit" autocomplete="off" readonly>
