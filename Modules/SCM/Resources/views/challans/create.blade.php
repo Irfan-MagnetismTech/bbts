@@ -309,11 +309,13 @@
 
                 @endphp
                 @foreach ($Challan_Lines as $key => $Challan_Line)
+                    {{-- @dd($materials[$key]) --}}
                     <tr>
                         <td class="form-group">
                             <select class="form-control material_name select2" name="material_name[{{ $key }}]"
                                 required>
                                 <option value="" readonly selected>Select Material</option>
+
                                 @foreach ($materials[$key] as $key1 => $value)
                                     <option value="{{ $value->material->id }}" data-type="{{ $value->material->type }}"
                                         data-unit="{{ $value->material->unit }}"

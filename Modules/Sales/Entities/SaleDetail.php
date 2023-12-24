@@ -52,6 +52,11 @@ class SaleDetail extends Model
         return $this->hasOne(Connectivity::class, 'fr_no', 'fr_no')->where('is_modify', '0');
     }
 
+    public function connectivitiesModify()
+    {
+        return $this->hasOne(Connectivity::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
+    }
+
     public function activation()
     {
         return $this->hasOne(Activation::class, 'fr_no', 'fr_no');
@@ -145,6 +150,11 @@ class SaleDetail extends Model
     public function logicalConnectivityVAS()
     {
         return $this->hasOne(LogicalConnectivity::class, 'fr_no', 'fr_no')->where('is_modified', 0)->where('product_category', 'VAS');
+    }
+
+    public function physicalConnectivityModify()
+    {
+        return $this->hasOne(PhysicalConnectivity::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
     }
 
     public function logicalConnectivityInternetModify()

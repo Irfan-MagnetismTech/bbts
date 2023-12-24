@@ -66,10 +66,12 @@
                         <td>
 
                             @if ($details->sale->is_modified == 1)
-                                <span class="badge badge-primary">
-                                    <a href="{{ route('modify-physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
-                                        class="text-white" target="_blank">Physical Connectivity</a>
-                                </span>
+                                @if (empty($details->physicalConnectivityModify))
+                                    <span class="badge badge-primary">
+                                        <a href="{{ route('modify-physical-connectivities.create', ['sale_id' => $details->sale_id, 'fr_no' => $details->fr_no]) }}"
+                                            class="text-white" target="_blank">Physical Connectivity</a>
+                                    </span>
+                                @endif
                             @else
                                 @if (empty($details->physicalConnectivity))
                                     <span class="badge badge-primary">

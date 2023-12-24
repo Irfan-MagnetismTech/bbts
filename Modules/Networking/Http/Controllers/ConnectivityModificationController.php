@@ -78,7 +78,7 @@ class ConnectivityModificationController extends Controller
             ->whereSaleId($salesDetail->sale_id)
             ->first();
 
-        return view('networking::connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityBandwidths', 'logicalConnectivities', 'facilityTypes', 'clientFacility', 'connectivity'));
+        return view('networking::modify_connectivities.create', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityBandwidths', 'logicalConnectivities', 'facilityTypes', 'clientFacility', 'connectivity'));
     }
 
     /**

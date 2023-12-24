@@ -36,8 +36,8 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('active-clients-report-details/{fr_id?}', [ConnectivityController::class, 'activeClientsReportDetails'])->name('active-clients-report-details');
 
     Route::resource('connectivities', ConnectivityController::class);
-    Route::resource('connectivities-modification', ConnectivityModificationController::class);
     Route::resource('logical-connectivities', LogicalConnectivityController::class);
+    Route::get('modify-connectivities/create/{fr_id?}', [ConnectivityModificationController::class, 'create'])->name('connectivities.create');
     Route::resource('modify-connectivities', ConnectivityModificationController::class);
     require __DIR__ . '/irfan.php';
     require __DIR__ . '/jaber.php';
