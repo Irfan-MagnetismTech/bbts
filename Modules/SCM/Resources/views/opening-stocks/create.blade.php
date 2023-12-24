@@ -92,14 +92,16 @@
 
             <div class="row">
                 <div class="form-group col-3">
-                    <label for="date">Date:</label>
-                    <input class="form-control" id="date" name="date" aria-describedby="date"
+                    <label for="date">Date: <span
+                            class="text-danger">*</span></label>
+                    <input class="form-control" id="date" name="date" aria-describedby="date" required
                            value="{{ old('date') ?? (@$openingStock->date ?? '') }}" readonly
                            placeholder="Select a Date">
                 </div>
                 <div class="form-group col-3">
-                <label for="branch">Warehouse:</label>
-                <select name="branch_id" class="form-control branch select2" autocomplete="off">
+                <label for="branch">Warehouse: <span
+                        class="text-danger">*</span></label>
+                <select name="branch_id" class="form-control branch select2" required autocomplete="off">
                     <option value="">Select Branch</option>
                     @foreach ($branches as $branch)
                         <option value="{{ $branch->id }}" @selected($branch->id == $branch_id)>
@@ -124,9 +126,11 @@
             <table class="table table-bordered" id="opening_stock">
                 <thead>
                 <tr>
-                    <th> Material Name</th>
+                    <th> Material Name <span
+                            class="text-danger">*</span></th>
                     <th> Unit</th>
-                    <th> Brand</th>
+                    <th> Brand <span
+                            class="text-danger">*</span></th>
                     <th> Model</th>
                     <th>Serial/Drum Code <br /> No</th>
                     <th> Unit Price</th>
@@ -179,7 +183,7 @@
                                    readonly value="{{ $unit[$key] }}" id="unit">
                         </td>
                         <td>
-                            <select name="brand_id[]" class="form-control brand_id select2" autocomplete="off">
+                            <select name="brand_id[]" class="form-control brand_id select2" autocomplete="off" required>
                                 <option value="">Select Brand</option>
                                 @foreach ($brands as $brand)
                                     <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>
@@ -202,7 +206,7 @@
                         </td>
                         <td>
                             <div class="tags_add_multiple select2container">
-                                <input class="" type="text" name="serial_code[]" value="{{ $serial_code[$key] }}"
+                                <input class="serial_code" type="text" name="serial_code[]" value="{{ $serial_code[$key] }}"
                                        data-role="tagsinput" data-max-tags="{{ $max_tag }}">
                             </div>
                         </td>
@@ -211,8 +215,8 @@
                                    step="0.01" autocomplete="off" value="{{ $unit_price[$key] }}">
                         </td>
                         <td>
-                            <input type="number" name="quantity[]" class="form-control quantity"
-                                   step="0.01" autocomplete="off" value="{{ $quantity[$key] }}">
+                            <input type="number" name="quantity[]" class="form-control quantity" step="0.01" autocomplete="off"
+                                   @if ($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
                         </td>
                         <td>
                             <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
@@ -278,8 +282,6 @@
         @endif
 
         function appendCalculationRow() {
-            var type = $("input[name=type]:checked").val()
-
             let row = `<tr>
                             <td>
                                 <input type="text" name="material_name[]" class="form-control material_name" required autocomplete="off">
@@ -290,7 +292,7 @@
                                 <input type="text" name="unit[]" class="form-control unit" autocomplete="off" readonly>
                             </td>
                              <td>
-                             <select name="brand_id[]" class="form-control brand_id select2" autocomplete="off">
+                             <select name="brand_id[]" class="form-control brand_id select2" required autocomplete="off">
                              <option value="">Select Brand</option>
                              @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}">{{ $brand->name }}</option>
@@ -307,7 +309,7 @@
                             </td>
                             <td>
                                 <div class="tags_add_multiple select2container">
-                                    <input class="" type="text" name="serial_code[]" value="" data-role="tagsinput" readonly>
+                                    <input class="serial_code" type="text" name="serial_code[]" data-role="tagsinput" readonly>
                                 </div>
                             </td>
                             <td>
@@ -359,6 +361,7 @@
                     $('.loading').show();
                     $(this).closest('tr').find('.material_name').val(ui.item.label);
                     $(this).closest('tr').find('.material_id').val(ui.item.value);
+                    $(this).closest('tr').find('.material_type').val(ui.item.type);
                     $(this).closest('tr').find('.unit').val(ui.item.unit);
 
                     //Search Brand
@@ -385,6 +388,17 @@
             var material_id = $(this).closest('tr').find('.material_id').val();
             var brand_id = $(this).val();
             getModel(material_id, brand_id);
+        });
+
+        $(document).on('change', '.serial_code', function() {
+            $('tr').each(function() {
+                let material_type = $(this).find('.material_type').val();
+                if (material_type === 'Item') {
+                    let quantityField = $(this).find('.quantity');
+                    let infoElementsCount = $(this).find('.tag.label.label-info').length;
+                    quantityField.val(infoElementsCount);
+                }
+            });
         });
 
         function getModel(material_id,brand_id) {

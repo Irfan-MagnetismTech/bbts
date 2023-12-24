@@ -74,24 +74,45 @@
                 </tr>
                 </thead>
                 <tbody>
+                @php $prevConnectivityPoint = null; @endphp
                 @foreach($stocks as $key => $material)
-                    <tr>
-                        <td>{{ $material['client'] }}</td>
-                        <td>{{ $material['item_code'] }}</td>
-                        <td>{{ $material['name'] }}</td>
-                        <td>{{ $material['quantity'] }}</td>
-                        <td>{{ $material['unit'] }}</td>
-                        <td>{{ $material['rate'] }}</td>
-                        <td>{{ $material['total_price'] }}</td>
-                        <td>{{ $material['serial'] }}</td>
-                        <td>{{ $material['challan_no'] }}</td>
-                        <td>{{ $material['challan_date'] }}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                    @if($prevConnectivityPoint !== $material['connectivity_point'])
+                        <tr>
+                            <td>{{ $material['client'] }}</td>
+                            <td>{{ $material['item_code'] }}</td>
+                            <td>{{ $material['name'] }}</td>
+                            <td>{{ $material['quantity'] }}</td>
+                            <td>{{ $material['unit'] }}</td>
+                            <td>{{ $material['rate'] }}</td>
+                            <td>{{ $material['total_price'] }}</td>
+                            <td>{{ $material['serial'] }}</td>
+                            <td>{{ $material['challan_no'] }}</td>
+                            <td>{{ $material['challan_date'] }}</td>
+                            <td></td>
+                            <td rowspan="{{ $material['row_span'] }}">{{ $material['total_product_cost'] }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        @php $prevConnectivityPoint = $material['connectivity_point']; @endphp
+                    @else
+                        <tr>
+                            <td>{{ $material['client'] }}</td>
+                            <td>{{ $material['item_code'] }}</td>
+                            <td>{{ $material['name'] }}</td>
+                            <td>{{ $material['quantity'] }}</td>
+                            <td>{{ $material['unit'] }}</td>
+                            <td>{{ $material['rate'] }}</td>
+                            <td>{{ $material['total_price'] }}</td>
+                            <td>{{ $material['serial'] }}</td>
+                            <td>{{ $material['challan_no'] }}</td>
+                            <td>{{ $material['challan_date'] }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endif
                 @endforeach
                 </tbody>
             </table>

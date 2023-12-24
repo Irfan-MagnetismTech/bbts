@@ -136,6 +136,7 @@ class CommonApiController extends Controller
                     'material_id' => $item->id,
                     'label' => $item->name . ' - ' . $item->code,
                     'unit' => $item->unit,
+                    'type' => $item->type,
                     'item_code' => $item->code,
                     'stock_data' => $stockData ?? 0
                 ];
