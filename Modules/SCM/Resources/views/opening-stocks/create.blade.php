@@ -206,7 +206,7 @@
                         </td>
                         <td>
                             <div class="tags_add_multiple select2container">
-                                <input class="" type="text" name="serial_code[]" value="{{ $serial_code[$key] }}"
+                                <input class="serial_code" type="text" name="serial_code[]" value="{{ $serial_code[$key] }}"
                                        data-role="tagsinput" data-max-tags="{{ $max_tag }}">
                             </div>
                         </td>
@@ -215,8 +215,8 @@
                                    step="0.01" autocomplete="off" value="{{ $unit_price[$key] }}">
                         </td>
                         <td>
-                            <input type="number" name="quantity[]" class="form-control quantity"
-                                   step="0.01" autocomplete="off" value="{{ $quantity[$key] }}">
+                            <input type="number" name="quantity[]" class="form-control quantity" step="0.01" autocomplete="off"
+                                   @if ($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
                         </td>
                         <td>
                             <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
@@ -309,7 +309,7 @@
                             </td>
                             <td>
                                 <div class="tags_add_multiple select2container">
-                                    <input class="" type="text" name="serial_code[]" value="" data-role="tagsinput" readonly>
+                                    <input class="serial_code" type="text" name="serial_code[]" data-role="tagsinput" readonly>
                                 </div>
                             </td>
                             <td>
@@ -361,6 +361,7 @@
                     $('.loading').show();
                     $(this).closest('tr').find('.material_name').val(ui.item.label);
                     $(this).closest('tr').find('.material_id').val(ui.item.value);
+                    $(this).closest('tr').find('.material_type').val(ui.item.type);
                     $(this).closest('tr').find('.unit').val(ui.item.unit);
 
                     //Search Brand
@@ -387,6 +388,17 @@
             var material_id = $(this).closest('tr').find('.material_id').val();
             var brand_id = $(this).val();
             getModel(material_id, brand_id);
+        });
+
+        $(document).on('change', '.serial_code', function() {
+            $('tr').each(function() {
+                let material_type = $(this).find('.material_type').val();
+                if (material_type === 'Item') {
+                    let quantityField = $(this).find('.quantity');
+                    let infoElementsCount = $(this).find('.tag.label.label-info').length;
+                    quantityField.val(infoElementsCount);
+                }
+            });
         });
 
         function getModel(material_id,brand_id) {
