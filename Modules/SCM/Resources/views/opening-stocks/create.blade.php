@@ -92,13 +92,15 @@
 
             <div class="row">
                 <div class="form-group col-3">
-                    <label for="date">Date:</label>
+                    <label for="date">Date: <span
+                            class="text-danger">*</span></label>
                     <input class="form-control" id="date" name="date" aria-describedby="date" required
                            value="{{ old('date') ?? (@$openingStock->date ?? '') }}" readonly
                            placeholder="Select a Date">
                 </div>
                 <div class="form-group col-3">
-                <label for="branch">Warehouse:</label>
+                <label for="branch">Warehouse: <span
+                        class="text-danger">*</span></label>
                 <select name="branch_id" class="form-control branch select2" required autocomplete="off">
                     <option value="">Select Branch</option>
                     @foreach ($branches as $branch)
@@ -124,9 +126,11 @@
             <table class="table table-bordered" id="opening_stock">
                 <thead>
                 <tr>
-                    <th> Material Name</th>
+                    <th> Material Name <span
+                            class="text-danger">*</span></th>
                     <th> Unit</th>
-                    <th> Brand</th>
+                    <th> Brand <span
+                            class="text-danger">*</span></th>
                     <th> Model</th>
                     <th>Serial/Drum Code <br /> No</th>
                     <th> Unit Price</th>
