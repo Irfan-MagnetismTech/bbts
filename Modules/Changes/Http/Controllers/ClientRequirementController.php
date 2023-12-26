@@ -240,9 +240,12 @@ class ClientRequirementController extends Controller
 
     public function searchClient()
     {
-        $results = Client::query()->with('feasibility_requirement_details')
+        $results = Client::query()
+            ->whereHas('activation', function ($query) {
+                $query->where('is_active', 'Active');
+            })
             ->where('client_name', 'LIKE', '%' . request('search') . '%')
-            ->limit(15)
+            ->limit(30)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->client_no,

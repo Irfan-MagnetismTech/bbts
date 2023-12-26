@@ -67,7 +67,7 @@
                         <div class="col-md-3 col-3">
                             <input type="text" name="offer_validity" id="offer_validity"
                                 class="form-control form-control-sm date"
-                                value="{{ $is_old ? old('offer_validity') : date('d/m/Y', strtotime($costing->offer_validity)) ?? null }}"
+                                value="{{ $is_old ? old('offer_validity') : date('d-m-Y', old('offer_validity')) ?? date('d-m-Y') }}"
                                 placeholder="Offer Validity" required>
 
                         </div>
