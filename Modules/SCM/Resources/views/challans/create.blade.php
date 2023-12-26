@@ -528,7 +528,6 @@
             @if ($form_method == 'PUT')
                 indx = {{ count($Challan_Lines) }}
                 let materials = @json($materials[0]);
-                console.log('materials', materials);
                 let material_options = '<option value="" readonly selected>Select Material</option>';
                 materials.forEach((material, index) => {
                     material_options += '<option value="' + material.material.id + '"data-unit="' + material
@@ -536,12 +535,25 @@
                         .material.type + '">' + material.material.name + '</option>';
                 });
                 row = row.replace('Select Material', material_options);
+                $('#challan tbody').append(row);
+                $('.select2').select2({});
+            @else
+              if($('#challan tbody tr').length > 0){
+                row = $('#challan tbody tr').last().clone();
+                row.find('input').val('');
+                row.find('select').val('');
+                row.find('span').remove();
+                $('#challan tbody').append(row);
+                $('.select2').select2({});
+              }else{
+                $('#challan tbody').append(row);
+                $('.select2').select2({});
+                $('.select2.serial_code').select2({
+                    multiple: true,
+                });
+              }
             @endif
-            $('#challan tbody').append(row);
-            $('.select2').select2({});
-            $('.select2.serial_code').select2({
-                multiple: true,
-            });
+
         }
 
         /* Adds and removes quantity row on click */
@@ -553,8 +565,8 @@
                     global_challan_row.find('span').remove();
                     $('#challan tbody').append(global_challan_row);
                     $('.select2').select2({});
-                    global_challan_row = null;
                 } else {
+                    console.log('append');
                     appendCalculationRow();
                 }
             })
