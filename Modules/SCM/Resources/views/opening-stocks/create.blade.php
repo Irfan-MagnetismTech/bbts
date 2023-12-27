@@ -215,8 +215,7 @@
                                    step="0.01" autocomplete="off" value="{{ $unit_price[$key] }}">
                         </td>
                         <td>
-                            <input type="number" name="quantity[]" class="form-control quantity" step="0.01" autocomplete="off"
-                                   @if ($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
+                            <input type="number" name="quantity[]" class="form-control quantity" step="0.01" autocomplete="off" value="{{ $quantity[$key] }}">
                         </td>
                         <td>
                             <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
@@ -391,14 +390,12 @@
         });
 
         $(document).on('change', '.serial_code', function() {
-            $('tr').each(function() {
-                let material_type = $(this).find('.material_type').val();
-                if (material_type === 'Item') {
-                    let quantityField = $(this).find('.quantity');
-                    let infoElementsCount = $(this).find('.tag.label.label-info').length;
-                    quantityField.val(infoElementsCount);
-                }
-            });
+            let material_type = $(this).closest('tr').find('.material_type').val();
+            if (material_type == 'Item') {
+                let quantityField = $(this).closest('tr').find('.quantity');
+                let infoElementsCount = $(this).closest('tr').find('.tag.label.label-info').length;
+                quantityField.val(infoElementsCount);
+            }
         });
 
         function getModel(material_id,brand_id) {
