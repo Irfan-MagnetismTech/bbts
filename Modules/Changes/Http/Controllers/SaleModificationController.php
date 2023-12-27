@@ -379,7 +379,7 @@ class SaleModificationController extends Controller
 
         $offerLinks = array_merge($old_plan_links, $current_plan_links);
         $offerLinks = array_unique($offerLinks, SORT_REGULAR);
-`        $offer->offerDetails->map(function ($item) use ($offerLinks) {
+        $offer->offerDetails->map(function ($item) use ($offerLinks) {
             $item->mergedLinks = collect($offerLinks)->where('fr_no', $item->fr_no)->toArray();
         });
 

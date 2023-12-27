@@ -93,9 +93,9 @@ class ConnectivityController extends Controller
             $data = request()->only('client_no', 'fr_no', 'is_active');
             $data['connectivity_id'] = $connectivity->id;
             Activation::create($data);
-            return redirect()->route('connectivities.index')->with('message', 'Data has been inserted successfully');
+            return redirect()->route('networking/connectivities.index')->with('message', 'Data has been inserted successfully');
         } catch (\Exception $e) {
-            return redirect()->route('connectivities.create')->withInput()->withErrors($e->getMessage());
+            return redirect()->route('networking/connectivities.create')->withInput()->withErrors($e->getMessage());
         }
     }
 
