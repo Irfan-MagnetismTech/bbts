@@ -31,14 +31,11 @@
                 <th>ID</th>
                 <th>Date</th>
                 <th>Branch</th>
-                <th> Material Name</th>
-                <th> Unit</th>
-                <th> Brand</th>
-                <th> Model</th>
-                <th>    Serial Code</th>
-                <th> Unit Price</th>
-                <th> Quantity</th>
-                <th> Amount</th>
+                <th>Material - Unit - Brand - Model</th>
+                <th>Serial Code</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Amount</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -48,21 +45,17 @@
                 <th>ID</th>
                 <th>Date</th>
                 <th>Branch</th>
-                <th> Material Name</th>
-                <th> Unit</th>
-                <th> Brand</th>
-                <th> Model</th>
+                <th>Material - Unit - Brand - Model</th>
                 <th>Serial Code</th>
-                <th> Unit Price</th>
-                <th> Quantity</th>
-                <th> Amount</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Amount</th>
                 <th>Action</th>
             </tr>
             </tfoot>
             <tbody>
                 @php($i=1)
             @foreach ($openingStocks as $key => $openingStock)
-                @foreach ($openingStock->lines as $key => $data)
                     <tr>
                         {{-- @if ($loop->first) --}}
                             {{-- <td rowspan="{{ count($openingStock->lines) }}">{{ $loop->parent->iteration }}</td> --}}
@@ -71,14 +64,32 @@
                         <td class="text-center">{{ $openingStock->id }}</td>
                         <td class="text-center">{{ $openingStock->date ?? ''}}</td>
                         <td class="text-center">{{ $openingStock->branch->name ?? ''}}</td>
-                        <td class="text-center">{{ $data->material->name ?? ''}}</td>
-                        <td class="text-center">{{ $data->material->unit ?? ''}}</td>
-                        <td class="text-center">{{ $data->brand->name ?? ''}}</td>
-                        <td class="text-center">{{ $data->model ?? ''}}</td>
-                        <td>{{ $data->serialCodeLines->first()->serial_or_drum_code ?? '' }}</td>
-                        <td class="text-center">{{ $data->unit_price ?? ''}}</td>
-                        <td class="text-center">{{ $data->quantity ?? ''}}</td>
-                        <td class="text-center">{{ $data->total_amount ?? ''}}</td>
+                        <td class="text-left">
+                            @foreach ($openingStock->lines as $subKey => $data)
+                                {{ $data->material->name ?? ''}} - {{ $data->material->unit ?? ''}} - {{ $data->brand->name ?? ''}}
+                                - {{ $data->model ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td>
+                            @foreach ($openingStock->lines as $subKey => $data)
+                            {{ $data->serialCodeLines->first()->serial_or_drum_code ?? '' }} <br>
+                            @endforeach
+                        </td>
+                        <td class="text-center">
+                            @foreach ($openingStock->lines as $subKey => $data)
+                                {{ $data->unit_price ?? ''}} <br>
+                            @endforeach
+                            </td>
+                        <td class="text-center">
+                            @foreach ($openingStock->lines as $subKey => $data)
+                                {{ $data->quantity ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td class="text-right">
+                            @foreach ($openingStock->lines as $subKey => $data)
+                                {{ $data->total_amount ?? ''}} <br>
+                            @endforeach
+                        </td>
                         {{-- @if ($loop->first) --}}
                             {{-- <td rowspan="{{ count($openingStock->lines) }}"> --}}
                             <td rowspan="">
@@ -106,7 +117,6 @@
                         {{-- @endif --}}
                     </tr>
                 @endforeach
-            @endforeach
             </tbody>
         </table>
     </div>

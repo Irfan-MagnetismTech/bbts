@@ -193,17 +193,18 @@
                             </select>
                         </td>
                         <td>
-                            @if(isset($model[$key]))
+                            @if(isset($model))
                                 <input list="models" name="model[]" id="model[]" class="form-control model" value="{{ $model[$key] }}">
                             @else
                                 <input list="models" name="model[]" id="model[]" class="form-control model" value="">
                             @endif
                             <datalist id="models">
-                                @foreach ($models as $model)
-                                    <option value="{{ $model }}">
+                                @foreach ($models as $modelItem)
+                                    <option value="{{ $modelItem }}">
                                 @endforeach
                             </datalist>
                         </td>
+
                         <td>
                             <div class="tags_add_multiple select2container">
                                 <input class="serial_code" type="text" name="serial_code[]" value="{{ $serial_code[$key] }}"
