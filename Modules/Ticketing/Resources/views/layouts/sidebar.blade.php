@@ -37,6 +37,14 @@
         </a>
     </li>
     @endcan
+    @can('internal-feedback')
+        <li class="{{ request()->routeIs('internal-feedback') ? 'active' : null }}">
+            <a href="{{ route('internal-feedback') }}">
+                <span class="pr-2 pt-1 w-25px d-inline-block"><i class="far fa-comments"></i></span>
+                <span class="pcoded-mtext">Internal Feedbacks</span>
+            </a>
+        </li>
+    @endcan
     @can('forwarded-ticket-index')
     <li class="{{ request()->routeIs('forwarded-tickets') ? 'active' : null }}">
         <a href="{{ route('forwarded-tickets') }}">

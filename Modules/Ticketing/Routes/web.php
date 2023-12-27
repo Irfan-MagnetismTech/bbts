@@ -64,6 +64,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::post('process-reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'processReopenTicket'])->name('process-reopen-ticket');
 
     Route::get('feedback-list', [ClientFeedbackController::class, 'feedbackList'])->name('feedback-list');
+    Route::get('internal-feedback', [ClientFeedbackController::class, 'internalFeedback'])->name('internal-feedback');
     Route::get('get-clients-st', [SupportTicketController::class, 'getClientsByLinkId'])->name('get-clients-st');
     // Ticketing Reports
     Route::prefix('reports')->group(function() {
@@ -78,6 +79,5 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         Route::post('/download-datatable-filtered-downtime-report', [ReportController::class, 'downtimeDataTableExcelDownload'])->name('filtered-downtime-report-download'); // Datatable Filtered Data
         Route::get('/repeated-ticket-client-list', [ReportController::class, 'repeatedTicketClientList'])->name('repeated-ticket-client-list');
         Route::get('/get-repeated-ticket-client-list', [ReportController::class, 'getRepeatedTicketClientList'])->name('get-repeated-ticket-client-list');
-
     });
 });

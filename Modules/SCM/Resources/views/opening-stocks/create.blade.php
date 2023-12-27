@@ -193,17 +193,18 @@
                             </select>
                         </td>
                         <td>
-                            @if(isset($model[$key]))
+                            @if(isset($model))
                                 <input list="models" name="model[]" id="model[]" class="form-control model" value="{{ $model[$key] }}">
                             @else
                                 <input list="models" name="model[]" id="model[]" class="form-control model" value="">
                             @endif
                             <datalist id="models">
-                                @foreach ($models as $model)
-                                    <option value="{{ $model }}">
+                                @foreach ($models as $modelItem)
+                                    <option value="{{ $modelItem }}">
                                 @endforeach
                             </datalist>
                         </td>
+
                         <td>
                             <div class="tags_add_multiple select2container">
                                 <input class="serial_code" type="text" name="serial_code[]" value="{{ $serial_code[$key] }}"
@@ -215,8 +216,7 @@
                                    step="0.01" autocomplete="off" value="{{ $unit_price[$key] }}">
                         </td>
                         <td>
-                            <input type="number" name="quantity[]" class="form-control quantity" step="0.01" autocomplete="off"
-                                   @if ($material_type[$key] == 'Item' && !empty(json_decode($serial_code[$key]))) readonly @endif value="{{ $quantity[$key] }}">
+                            <input type="number" name="quantity[]" class="form-control quantity" step="0.01" autocomplete="off" value="{{ $quantity[$key] }}">
                         </td>
                         <td>
                             <input name="total_amount[]" class="form-control total_amount" autocomplete="off"
@@ -391,14 +391,12 @@
         });
 
         $(document).on('change', '.serial_code', function() {
-            $('tr').each(function() {
-                let material_type = $(this).find('.material_type').val();
-                if (material_type === 'Item') {
-                    let quantityField = $(this).find('.quantity');
-                    let infoElementsCount = $(this).find('.tag.label.label-info').length;
-                    quantityField.val(infoElementsCount);
-                }
-            });
+            let material_type = $(this).closest('tr').find('.material_type').val();
+            if (material_type == 'Item') {
+                let quantityField = $(this).closest('tr').find('.quantity');
+                let infoElementsCount = $(this).closest('tr').find('.tag.label.label-info').length;
+                quantityField.val(infoElementsCount);
+            }
         });
 
         function getModel(material_id,brand_id) {

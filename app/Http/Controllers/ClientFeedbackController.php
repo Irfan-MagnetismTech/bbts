@@ -83,4 +83,10 @@ class ClientFeedbackController extends Controller
 
         return view('ticketing::client-feedbacks', compact('feedbacks', 'ticketNo'));
     }
+
+    public function internalFeedback(Request $request)
+    {
+        return view('ticketing::internal-feedbacks');
+    }
+
 }
