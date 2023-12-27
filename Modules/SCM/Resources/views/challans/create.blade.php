@@ -118,12 +118,12 @@
     </div>
     <div class="row">
         <div class="form-group col-3 date">
-            <label for="date">Applied Date:</label>
+            <label for="date">Applied Date <span class="text-danger">*</span>:</label>
             <input class="form-control" id="date" name="date" aria-describedby="date"
                 value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
         </div>
         <div class="form-group col-3 mrs_no">
-            <label for="select2">MRS No</label>
+            <label for="select2">MRS No <span class="text-danger">*</span></label>
             <input class="form-control" id="mrs_no" name="mrs_no" aria-describedby="mrs_no"
                 value="{{ old('mrs_no') ?? (@$scm_requisition_no ?? '') }}" placeholder="Search a MRS No">
             <input class="form-control" id="scm_requisition_id" name="scm_requisition_id"
@@ -131,7 +131,7 @@
                 value="{{ old('scm_requisition_id') ?? (@$scm_requisition_id ?? '') }}" type="hidden">
         </div>
         <div class="form-group col-3">
-            <label for="select2">Purpose</label>
+            <label for="select2">Purpose <span class="text-danger">*</span></label>
             <select class="form-control select2" id="purpose" name="purpose">
                 <option value="" selected>Select Purpose</option>
                 @foreach (config('businessinfo.challanPurpose') as $key => $value)
@@ -142,7 +142,7 @@
             </select>
         </div>
         <div class="form-group col-3 branch_name">
-            <label for="select2">Branch Name</label>
+            <label for="select2">Branch Name <span class="text-danger">*</span></label>
             <input class="form-control" type="text" id="branch_name" name="branch_name" readonly
                 value="{{ old('branch_name') ?? (@$branch_name ?? '') }}">
             <input type="hidden" name="branch_id" value="{{ old('branch_id') ?? (@$branch_id ?? '') }}" id="branch_id">
@@ -189,8 +189,8 @@
 
         <div class="form-group col-3 client_no">
             <label for="client_no">Client Name:</label>
-            <input type="text" class="form-control" id="client_name" aria-describedby="client_name" name="client_name"
-                readonly value="{{ old('client_name') ?? (@$client_name ?? '') }}">
+            <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
+                name="client_name" readonly value="{{ old('client_name') ?? (@$client_name ?? '') }}">
         </div>
         {{-- <div class="form-group col-3 fr_no">
             <label for="select2">FR No</label>
@@ -309,11 +309,13 @@
 
                 @endphp
                 @foreach ($Challan_Lines as $key => $Challan_Line)
+                    {{-- @dd($materials[$key]) --}}
                     <tr>
                         <td class="form-group">
                             <select class="form-control material_name select2" name="material_name[{{ $key }}]"
                                 required>
                                 <option value="" readonly selected>Select Material</option>
+
                                 @foreach ($materials[$key] as $key1 => $value)
                                     <option value="{{ $value->material->id }}" data-type="{{ $value->material->type }}"
                                         data-unit="{{ $value->material->unit }}"
@@ -522,14 +524,36 @@
                             </td>
                         </tr>
                     `;
-            let material_values = $('#challanDataBody').first().find('.material_name').html();
-            row = row.replace('Select Material', material_values);
             indx++;
-            $('#challan tbody').append(row);
-            $('.select2').select2({});
-            $('.select2.serial_code').select2({
-                multiple: true,
-            });
+            @if ($form_method == 'PUT')
+                indx = {{ count($Challan_Lines) }}
+                let materials = @json($materials[0]);
+                let material_options = '<option value="" readonly selected>Select Material</option>';
+                materials.forEach((material, index) => {
+                    material_options += '<option value="' + material.material.id + '"data-unit="' + material
+                        .material.unit + '"data-code="' + material.material.code + '"data-type="' + material
+                        .material.type + '">' + material.material.name + '</option>';
+                });
+                row = row.replace('Select Material', material_options);
+                $('#challan tbody').append(row);
+                $('.select2').select2({});
+            @else
+              if($('#challan tbody tr').length > 0){
+                row = $('#challan tbody tr').last().clone();
+                row.find('input').val('');
+                row.find('select').val('');
+                row.find('span').remove();
+                $('#challan tbody').append(row);
+                $('.select2').select2({});
+              }else{
+                $('#challan tbody').append(row);
+                $('.select2').select2({});
+                $('.select2.serial_code').select2({
+                    multiple: true,
+                });
+              }
+            @endif
+
         }
 
         /* Adds and removes quantity row on click */
@@ -541,8 +565,8 @@
                     global_challan_row.find('span').remove();
                     $('#challan tbody').append(global_challan_row);
                     $('.select2').select2({});
-                    global_challan_row = null;
                 } else {
+                    console.log('append');
                     appendCalculationRow();
                 }
             })

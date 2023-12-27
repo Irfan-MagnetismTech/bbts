@@ -31,13 +31,13 @@ class LogicalConnectivityVasController extends Controller
     {
         $saleDetails = SaleDetail::query()
             ->whereSaleIdAndFrNo(request()->get('sale_id'), request()->get('fr_no'))
-            ->with(['client', 'frDetails','saleProductDetails' => function ($q) {
-                $q->whereHas('product',function($query){
+            ->with(['client', 'frDetails', 'saleProductDetails' => function ($q) {
+                $q->whereHas('product', function ($query) {
                     $query->where('category_id', '7');
                 });
-            }]) 
+            }])
             ->latest()
-            ->first();  
+            ->first();
 
         $physicalConnectivityVas = PhysicalConnectivity::query()
             ->whereSaleIdAndFrNo($saleDetails->sale_id, $saleDetails->fr_no)
@@ -126,7 +126,26 @@ class LogicalConnectivityVasController extends Controller
      */
     public function edit($id)
     {
-        return abort(404);
+        $vasServices = VasService::query()
+            ->with('lines.product')
+            ->where('fr_no', $id)
+            ->latest()
+            ->first();
+        $saleDetails = SaleDetail::query()
+            ->whereSaleIdAndFrNo($vas->sale_id, $vas->fr_no)
+            ->with(['client', 'frDetails', 'saleProductDetails' => function ($q) {
+                $q->whereHas('product', function ($query) {
+                    $query->where('category_id', '7');
+                });
+            }])
+            ->latest()
+            ->first();
+
+        $physicalConnectivityVas = PhysicalConnectivity::query()
+            ->whereSaleIdAndFrNo($saleDetails->sale_id, $saleDetails->fr_no)
+            ->with('lines')
+            ->latest()
+            ->first();
     }
 
     /**

@@ -240,9 +240,15 @@ class ClientRequirementController extends Controller
 
     public function searchClient()
     {
-        $results = Client::query()->with('feasibility_requirement_details')
-            ->where('client_name', 'LIKE', '%' . request('search') . '%')
-            ->limit(15)
+        $results = Client::query()
+            ->where(function ($query) {
+                $query->where('client_no', 'like', '%' . request('query') . '%')
+                    ->orWhere('client_name', 'like', '%' . request('query') . '%');
+            })
+            ->whereHas('activation', function ($query) {
+                $query->where('is_active', 'Active');
+            })
+            ->limit(30)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->client_no,
@@ -256,8 +262,9 @@ class ClientRequirementController extends Controller
                 'email' => $item->email,
                 'client_type' => $item->client_type,
                 'saleDetails' => $item->saleDetails,
-                'frDetails' => $item->feasibility_requirement_details
+                'frDetails' => $item->feasibility_requirement_details->whereIn('fr_no', $item->saleDetails->pluck('fr_no'))->values(),
             ]);
+
 
         return response()->json($results);
     }

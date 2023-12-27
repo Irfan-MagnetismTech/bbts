@@ -156,13 +156,21 @@ class ScmChallanController extends Controller
         $type_no = [];
 
         $challan->scmChallanLines->each(function ($item, $key) use (&$materials, &$brands, &$models, &$serial_codes, $challan, &$branch_stock, &$type_no) {
-            $materials[$key] = Stockledger::with('material')->dropdownDataListForChallan('material_id', $material = false, $brand = false, $modal = false, $item);
+            $materials[$key] = Stockledger::with('material')->whereIn('material_id', function ($q) use ($challan) {
+                return $q->select('material_id')
+                    ->from('scm_requisition_details')
+                    ->where('scm_requisition_id', $challan->scm_requisition_id);
+            })
+                // ->where(['receiveable_id' => request()->receiveable_id, 'received_type' => request()->received_type, 'branch_id' => request()->from_branch])
+                ->get()
+                ->unique('material_id')
+                ->values();
 
-            $brands[$key] = Stockledger::with('brand')->dropdownDataListForChallan('brand_id', $material = true, $brand = false, $modal = false, $item);
+            $brands[$key] = Stockledger::with('brand')->dropdownDataListForChallan('brand_id', $material = true, $brand = false, $modal = false, $item, $challan->scm_requisition_id);
 
-            $models[$key] = Stockledger::dropdownDataListForChallan('model', $material = true, $brand = true, $modal = false, $item);
+            $models[$key] = Stockledger::dropdownDataListForChallan('model', $material = true, $brand = true, $modal = false, $item, $challan->scm_requisition_id);
 
-            $serial_codes[$key] = Stockledger::dropdownDataListForChallan('serial_code', $material = true, $brand = true, $modal = true, $item);
+            $serial_codes[$key] = Stockledger::dropdownDataListForChallan('serial_code', $material = true, $brand = true, $modal = true, $item, $challan->scm_requisition_id);
 
             $branch_stock[$key] = StockLedger::StockIn($challan->branch_id, $item->received_type, $item) + $item->quantity + StockLedger::StockOut($challan->branch_id, $item->received_type, $item);
 

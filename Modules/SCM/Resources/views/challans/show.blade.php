@@ -86,36 +86,36 @@
                     <th>Remarks</th>
                 </tr>
             </thead>
-            <tbody> 
-                @if(!empty($challan->mur))
+            <tbody>
+                @if (!empty($challan->mur))
                     @foreach ($challanLines as $key => $scmChallanLine)
                         <tr>
                             <td> {{ $scmChallanLine['material_name'] }} </td>
                             <td> {{ $scmChallanLine['code'] }} </td>
                             <td> {{ $scmChallanLine['unit'] }} </td>
+                            <td> {{ $scmChallanLine['quantity'] }} </td>
                             <td> {{ $scmChallanLine['brand_name'] }} </td>
                             <td> {{ $scmChallanLine['model'] }} </td>
                             <td> {{ $scmChallanLine['serial_code'] }} </td>
-                            <td> {{ $scmChallanLine['quantity'] }} </td>
                             <td> {{ $scmChallanLine['purpose'] }} </td>
-                            <td> {{ $scmChallanLine['remarks'] }} </td> 
+                            <td> {{ $scmChallanLine['remarks'] }} </td>
                         </tr>
-                    @endforeach 
+                    @endforeach
                 @else
                     @foreach ($challan->scmChallanLines as $key => $scmChallanLine)
                         <tr>
                             <td> {{ $scmChallanLine->material->name }} </td>
                             <td> {{ $scmChallanLine->item_code }} </td>
                             <td> {{ $scmChallanLine->material->unit }} </td>
+                            <td> {{ $scmChallanLine->quantity }}</td>
                             <td> {{ $scmChallanLine->brand->name }} </td>
                             <td> {{ $scmChallanLine->model }} </td>
                             <td> {{ $scmChallanLine->serial_code }} </td>
-                            <td> {{ $scmChallanLine->quantity }} </td>
                             <td> {{ $scmChallanLine->purpose }} </td>
                             <td> {{ $scmChallanLine->remarks }} </td>
                         </tr>
                     @endforeach
-                    
+
                 @endif
             </tbody>
         </table>

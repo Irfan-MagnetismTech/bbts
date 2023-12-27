@@ -10,6 +10,8 @@ use App\Models\Dataencoding\Division;
 use Modules\Networking\Entities\Connectivity;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Action;
+use Modules\Networking\Entities\Activation;
 use Modules\Sales\Entities\ClientDetail;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
@@ -47,7 +49,7 @@ class Client extends Model
 
     public function billingAddres()
     {
-        return $this->hasOne(BillingAddress::class, 'client_id', 'id')->orderBy('id','asc');
+        return $this->hasOne(BillingAddress::class, 'client_id', 'id')->orderBy('id', 'asc');
     }
 
     public function collectionAddress()
@@ -57,7 +59,7 @@ class Client extends Model
 
     public function collectionAddres()
     {
-        return $this->hasOne(CollectionAddress::class, 'client_id', 'id')->orderBy('id','asc');
+        return $this->hasOne(CollectionAddress::class, 'client_id', 'id')->orderBy('id', 'asc');
     }
 
     public function division()
@@ -103,5 +105,10 @@ class Client extends Model
     public function feasibility_requirement()
     {
         return $this->hasMany(FeasibilityRequirement::class, 'client_no', 'client_no');
+    }
+
+    public function activation()
+    {
+        return $this->hasOne(Activation::class, 'client_no', 'client_no');
     }
 }
