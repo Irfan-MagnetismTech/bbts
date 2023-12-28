@@ -165,14 +165,14 @@
                         <div class="md-col-3 col-3">
                             <div class="form-item">
                                 <input type="text" name="division" id="division" class="form-control division"
-                                    value="{{ $connectivity_requirement->FeasibilityRequirementDetail->division->name }}">
+                                    value="{{ $connectivity_requirement->FeasibilityRequirementDetail?->division?->name }}">
                                 <label for="division">Division<span class="text-danger">*</span></label>
                             </div>
                         </div>
                         <div class="md-col-3 col-3">
                             <div class="form-item">
                                 <input type="text" name="district" id="district" class="form-control district"
-                                    value="{{ $connectivity_requirement->FeasibilityRequirementDetail->district->name }}"
+                                    value="{{ $connectivity_requirement->FeasibilityRequirementDetail?->district?->name }}"
                                     readonly>
                                 <label for="district">District<span class="text-danger">*</span></label>
                             </div>
@@ -180,7 +180,7 @@
                         <div class="md-col-3 col-3">
                             <div class="form-item">
                                 <input type="text" name="thana" id="thana" class="form-control thana"
-                                    value="{{ $connectivity_requirement->FeasibilityRequirementDetail->thana->name }}">
+                                    value="{{ $connectivity_requirement->FeasibilityRequirementDetail?->thana?->name }}">
                                 <label for="thana">Thana<span class="text-danger">*</span></label>
                             </div>
                         </div>

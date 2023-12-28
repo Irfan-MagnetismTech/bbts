@@ -64,7 +64,7 @@ class ClientPlanningModificationController extends Controller
                 ->firstOrFail();
 
             $data = PlanningDataSet::setData($old = null, $connectivity_requirement, $plan = null);
-            $previous_products = ScmMur::with('lines')->where('client_no', $connectivity_requirement->client_no)->where('fr_no', $connectivity_requirement->fr_no)->where('link_no', '=', null)->first();
+            $previous_products = ScmMur::with('lines')->where('client_no', $connectivity_requirement->client_no)->where('fr_no', $connectivity_requirement->fr_no)->first();
             $existingConnections = PhysicalConnectivityLines::query()
                 ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
                     return $qr->where('fr_no', $connectivity_requirement->fr_no)->where('is_modified', 0);
@@ -149,7 +149,7 @@ class ClientPlanningModificationController extends Controller
     {
         $plan = Planning::with('lead_generation', 'planLinks.PlanLinkEquipments', 'planLinks.finalSurveyDetails', 'equipmentPlans', 'servicePlans.connectivityProductRequirementDetails.product', 'servicePlans.product', 'ConnectivityRequirement')->where('id', $id)->first();
         $data = PlanningDataSet::setData($old = null, $connectivity_requirement = null, $plan);
-        $previous_products = ScmMur::with('lines')->where('client_no', $plan->client_no)->where('fr_no', $plan->fr_no)->where('link_no', '=', null)->first();
+        $previous_products = ScmMur::with('lines')->where('client_no', $plan->client_no)->where('fr_no', $plan->fr_no)->first();
         $existingConnections = PhysicalConnectivityLines::query()
             ->whereHas('physicalConnectivity', function ($qr) use ($plan) {
                 return $qr->where('fr_no', $plan->fr_no)->where('is_modified', 0);
