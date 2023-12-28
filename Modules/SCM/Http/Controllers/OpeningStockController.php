@@ -237,7 +237,7 @@ class OpeningStockController extends Controller
                 $value->serialCodeLines()->createMany(array_map(function ($serial) use ($request, $key, $value, $openingStock, &$stock) {
                     if ($request->material_type[$key] == 'Drum') {
                         $serial_code = 'F-' . $serial;
-                        $quantity = 1;
+                        $quantity = $value->quantity;
                     } else {
                         if ($serial == '') {
                             $serial_code = Null;

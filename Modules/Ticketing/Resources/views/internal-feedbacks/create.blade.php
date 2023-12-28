@@ -2,13 +2,13 @@
 @section('title', 'Internal Feedbacks')
 
 @php
-    $form_heading = !empty($billRegister->id) ? 'Update' : 'Register';
-    $form_url = !empty($billRegister->id) ? route('bill-register.update', $billRegister->id) : route('bill-register.store');
-    $form_method = !empty($billRegister->id) ? 'PUT' : 'POST';
+    $form_heading = !empty($feedback->id) ? 'Update' : 'Create';
+    $form_url = !empty($feedback->id) ? route('internal-feedbacks.update', $feedback->id) : route('internal-feedbacks.store');
+    $form_method = !empty($feedback->id) ? 'PUT' : 'POST';
 @endphp
 
 @section('breadcrumb-title')
-    Internal Feedbacks
+    Internal Feedbacks {{$form_heading}}
 @endsection
 
 {{--@section('breadcrumb-button')--}}
@@ -24,8 +24,8 @@
 @section('content')
 
     {!! Form::open([
-        'url' => route('internal-feedback'),
-        'method' => 'POST',
+        'url' => $form_url,
+        'method' => $form_method,
         'encType' => 'multipart/form-data',
         'class' => 'custom-form',
     ]) !!}
@@ -37,11 +37,9 @@
                     <div class="row">
                         @php
                             $is_old = old('supplier_name') ? true : false;
-                            $supplier_name = $is_old ? old('supplier_name') : $billRegister->supplier->name ?? null;
-                            $supplier_id = $is_old ? old('supplier_id') : $billRegister->supplier_id ?? null;
-                            $bill_no = $is_old ? old('bill_no') : $billRegister->bill_no ?? null;
-                            $amount = $is_old ? old('amount') : $billRegister->amount ?? null;
-                            $date = $is_old ? old('date') : $billRegister->date ?? null;
+                            $client_no = $is_old ? old('client_no') : $feedback->client_no ?? null;
+                            $remarks = $is_old ? old('remarks') : $feedback->remarks ?? null;
+                            $date = $is_old ? old('date') : $feedback->date ?? null;
                         @endphp
                         <div class="col-xl-4 col-md-4">
                             <div style="width: 200px; margin-left: 20px">
