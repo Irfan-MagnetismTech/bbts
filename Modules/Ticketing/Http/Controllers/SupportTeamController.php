@@ -54,9 +54,9 @@ class SupportTeamController extends Controller
      */
     public function store(Request $request)
     {
-       
+
         try {
-            
+
             $leader = User::where('id', $request->user_id)->first();
 
             $teamMembers = [];
@@ -65,7 +65,7 @@ class SupportTeamController extends Controller
                 $teamMembers[] = [
                     'user_id'    => $request->users_id[$key],
                     'type'        => $request->type[$key],
-                    'branch_id' => $leader->employee->branch_id
+                    'branch_id' => $leader?->employee?->branch_id
                 ];
             }
 
@@ -75,11 +75,10 @@ class SupportTeamController extends Controller
                     $team   = SupportTeam::create([
                         'department_id' => $request->department_id,
                         'user_id'       => $request->user_id,
-                        'branch_id'    => $leader->employee->branch_id
+                        'branch_id'    => $leader?->employee?->branch_id
                     ]);
+                    $team->supportTeamMembers()->createMany($teamMembers);
                 }
-                
-                $team->supportTeamMembers()->createMany($teamMembers);
             });
 
             return redirect()->route('support-teams.index')->with('message', 'Support Team Created Successfully');
@@ -125,7 +124,7 @@ class SupportTeamController extends Controller
     {
 
         try {
-            
+
             $leader = User::where('id', $request->user_id)->first();
 
             $teamMembers = [];
@@ -148,7 +147,7 @@ class SupportTeamController extends Controller
                         'branch_id'    => $leader->employee->branch_id
                     ]);
                 }
-                
+
                 $supportTeam->supportTeamMembers()->delete();
                 $supportTeam->supportTeamMembers()->createMany($teamMembers);
             });
