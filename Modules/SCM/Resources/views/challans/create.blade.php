@@ -571,6 +571,17 @@
                     // Initialize Select2
                     $('.select2').select2({});
                 } else {
+                    row.find('[name]').each(function() {
+                        let nameAttr = $(this).attr('name');
+                        if (nameAttr) {
+                            let newName = nameAttr.replace(/\[(\d+)\]/, '[' + indx + ']');
+                            $(this).attr('name', newName);
+                        }
+                    });
+                    row.find('input').val('');
+                    row.find('select').val('');
+                    row.find('span').remove();
+
                     $('#challan tbody').append(row);
                     $('.select2').select2({});
                     $('.select2.serial_code').select2({
