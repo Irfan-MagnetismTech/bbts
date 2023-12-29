@@ -75,7 +75,8 @@ class ScmRequisitionController extends Controller
                 $requestData = $request->only('type', 'date', 'branch_id', 'pop_id', 'remarks');
             }
 
-            $lastMRSId = ScmRequisition::latest()->first();
+            $lastMRSId = ScmRequisition::latest('id')->first();
+            // dd($lastMRSId);
             if ($lastMRSId) {
                 $composite_mrs = explode('-', $lastMRSId->mrs_no);
                 $requestData['mrs_no'] = 'MRS-' . now()->format('Y') . '-' . ($composite_mrs[2] + 1);

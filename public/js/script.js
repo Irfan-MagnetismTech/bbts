@@ -99,10 +99,10 @@ $(document).ready(function() {
         setTop: "1px",
         height:"calc(100vh - 495px)",
     });
-    $(".main-menu").mCustomScrollbar({
-        setTop: "1px",
-        setHeight: "calc(100% - 56px)",
-    });
+    // $(".main-menu").mCustomScrollbar({
+    //     setTop: "1px",
+    //     setHeight: "calc(100% - 56px)",
+    // });
     /*chatbar js start*/
     /*chat box scroll*/
     var a = $(window).height() - 80;

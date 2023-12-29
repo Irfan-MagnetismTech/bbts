@@ -315,6 +315,36 @@ a {
     width: 25px;
 }
 
+
+
+/* Make sidebar scrollbar thin in crome   */
+/* For Chrome browsers */
+::-webkit-scrollbar {
+    width: 4px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* For Firefox browsers */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+*::-moz-scrollbar-thumb {
+    background-color: #888;
+}
+
+*::-moz-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
 span.select2-selection.select2-selection--single {
     display: flex !important;
     align-items: center !important;

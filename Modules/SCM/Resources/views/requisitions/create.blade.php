@@ -100,7 +100,7 @@
         <div class="row">
             <div class="form-group col-3">
                 <label for="select2">Branch Name</label> <span class="text-danger">*</span>
-                <select class="form-control select2" id="branch_id" name="branch_id" required>
+                <select class="form-control select2 " id="branch_id" name="branch_id" >
                     <option value="20" selected>Select Branch</option>
                     @foreach ($branchs as $option)
                         <option value="{{ $option->id }}"
@@ -128,12 +128,12 @@
                 <label for="client_name">Client Name:</label> <span class="text-danger">*</span>
                 <input type="text" class="form-control" id="client_name" aria-describedby="client_name"
                     name="client_name" value="{{ old('client_name') ?? ($requisition->client->client_name ?? '') }}"
-                    placeholder="Search..." required>
+                    placeholder="Search..." >
             </div>
 
             <div class="form-group col-3 fr_no">
                 <label for="select2">FR No</label> <span class="text-danger">*</span>
-                <select class="form-control select2" id="fr_no" name="fr_no" required>
+                <select class="form-control select2" id="fr_no" name="fr_no" >
                     <option value="" readonly selected>Select FR No</option>
                     @if ($formType == 'create')
                         <option value="{{ old('fr_no') }}" selected>{{ old('fr_no') }}</option>
@@ -168,7 +168,7 @@
                 <label for="client_no">Client No:</label> <span class="text-danger">*</span>
                 <input type="text" class="form-control" id="client_no" aria-describedby="client_no" name="client_no"
                     readonly value="{{ old('client_no') ?? (@$requisition->client_no ?? '') }}" placeholder="Search..."
-                    required>
+                    >
             </div>
 
             <div class="form-group col-3 client_address">
