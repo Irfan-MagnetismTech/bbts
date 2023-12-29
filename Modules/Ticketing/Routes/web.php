@@ -12,6 +12,7 @@ use Modules\Ticketing\Http\Controllers\SupportComplainTypeController;
 use Modules\Ticketing\Http\Controllers\SupportQuickSolutionController;
 use Modules\Ticketing\Http\Controllers\TicketDashboardController;
 use Modules\Ticketing\Http\Controllers\TicketMovementController;
+use Modules\Ticketing\Http\Controllers\InternalFeedbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         'support-solutions' => SupportQuickSolutionController::class,
         'complain-sources' => TicketSourceController::class,
         'ticket-movements' => TicketMovementController::class,
+        'internal-feedbacks' => InternalFeedbackController::class,
     ]);
 
     Route::get('/', [TicketDashboardController::class, 'index'])->name('ticketing-dashboard');
@@ -64,7 +66,6 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
     Route::post('process-reopen-ticket/{supportTicketId}', [SupportTicketController::class, 'processReopenTicket'])->name('process-reopen-ticket');
 
     Route::get('feedback-list', [ClientFeedbackController::class, 'feedbackList'])->name('feedback-list');
-    Route::get('internal-feedback', [ClientFeedbackController::class, 'internalFeedback'])->name('internal-feedback');
     Route::get('get-clients-st', [SupportTicketController::class, 'getClientsByLinkId'])->name('get-clients-st');
     // Ticketing Reports
     Route::prefix('reports')->group(function() {

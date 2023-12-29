@@ -19,7 +19,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -52,7 +52,7 @@ class User extends Authenticatable
     ];
 
     public function employee() {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class,'employee_id', 'id');
     }
 
 }

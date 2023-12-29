@@ -37,9 +37,9 @@
         </a>
     </li>
     @endcan
-    @can('internal-feedback')
-        <li class="{{ request()->routeIs('internal-feedback') ? 'active' : null }}">
-            <a href="{{ route('internal-feedback') }}">
+    @can('internal-feedbacks-index')
+        <li class="{{ request()->routeIs('internal-feedbacks.index') ? 'active' : null }}">
+            <a href="{{ route('internal-feedbacks.index') }}">
                 <span class="pr-2 pt-1 w-25px d-inline-block"><i class="far fa-comments"></i></span>
                 <span class="pcoded-mtext">Internal Feedbacks</span>
             </a>
