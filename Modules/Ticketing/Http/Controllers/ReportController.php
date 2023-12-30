@@ -121,6 +121,10 @@ class ReportController extends Controller
         $clientId = $request->client_id;
         $duration = null;
 
+        if($clientId) {
+            $clientId = Client::where('id', $clientId)->first()->client_no;
+        }
+
         if (!empty($request->duration)) {
             $duration = (new BbtsGlobalService())->convertToMinutes($request->duration);
         }
