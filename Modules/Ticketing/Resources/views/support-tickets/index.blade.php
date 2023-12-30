@@ -120,14 +120,6 @@
                             <x:action-button :show="route('support-tickets.show', ['support_ticket' => $ticket->id])"
                                 :edit="route('support-tickets.edit', ['support_ticket' => $ticket->id])"
                                 :delete="false" />
-
-                            <div class="icon-btn ml-1">
-                                {{-- <form action="{{ route('accept-ticket') }}" method="POST" data-toggle="tooltip" title="Accept" class="d-inline">
-                                        @csrf --}}
-                                {{-- <input type="hidden" name="ticket_id" value="{{ $ticket->id }}"> --}}
-                                <button type="submit" class="btn btn-outline-success btn-sm">4</button>
-                                {{-- </form> --}}
-                            </div>
                         </td>
                     </tr>
                 @endforeach
