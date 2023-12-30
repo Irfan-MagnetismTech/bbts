@@ -53,7 +53,7 @@
                                     <input type="hidden" name="client_link_id" id="client_link_id">
                                 </div>
                                 <div class="col-6">
-                                    <label for="fr_no" class="font-weight-bold">Connectivity Point<span
+                                    <label for="fr_no" class="font-weight-bold">Connectivity Point <span
                                             class="text-danger font-bold">*</span></label>
                                     <select name="fr_no" id="fr_no" class="form-control">
                                         @if (!empty($supportTicket))
