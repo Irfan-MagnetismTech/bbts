@@ -411,10 +411,10 @@ class TicketMovementController extends Controller
                 DB::transaction(function() use($supportTicket, $remarks, $movementModel, $movementType, $request, $authorizedMember) {
                     $supportTicket->supportTicketLifeCycles()->create([
                         'status' => 'Processing',
-                        'user_id' => auth()->user()->id,
+                        'user_id' => $authorizedMember->id, // auth()->user()->id,
                         'support_ticket_id' => $supportTicket->id,
                         'remarks' => $remarks,
-                        'description' => $request->remarks
+                        'description' => 'Ticket Handovered to '.$authorizedMember->name
                     ]);
 
                     $supportTicket->update([
