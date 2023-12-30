@@ -134,11 +134,11 @@ class SupportTicketController extends Controller
 
             // Email and SMS Thing
 
-            $cc = explode(";", str_replace(" ", "", $request->cc));
+            $cc = ($request->cc) ? explode(";", str_replace(" ", "", $request->cc)) : null;
             $subject = "[$supportTicket->ticket_no] " . $request->subject;
             $message = $request->description;
             $model = 'Modules\Ticketing\Entities\SupportTicket';
-            $receiver = $supportTicket?->client?->name;
+            $receiver = $supportTicket?->client?->client_name;
 
 
             if ($request->mailNotification == 1) {

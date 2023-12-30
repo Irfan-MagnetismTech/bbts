@@ -87,9 +87,10 @@
 
 
                                 <div class="form-group col-6">
-                                    <label for="support_complain_type_id">Complain Type:</label>
+                                    <label for="support_complain_type_id">Complain Type: <span
+                                        class="text-danger font-bold">*</span></label>
                                     <select class="form-control select2" id="support_complain_type_id"
-                                        name="support_complain_type_id">
+                                        name="support_complain_type_id" required>
                                         <option value="" selected>Select Complain Type</option>
                                         @foreach ($complainTypes as $complainType)
                                             <option value="{{ $complainType->id }}"
@@ -100,16 +101,17 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-6">
-                                    <label for="description">Description:</label>
+                                    <label for="description">Description: <span
+                                        class="text-danger font-bold">*</span></label>
                                     <input type="text" class="form-control" id="description" name="description"
                                         aria-describedby="description"
                                         value="{{ old('description') ?? (!empty($supportTicket) ? $supportTicket?->description : '') }}"
-                                        placeholder="Description">
+                                        placeholder="Description" required>
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="ticket_source_id">Source: <span
                                             class="text-danger font-bold">*</span></label>
-                                    <select class="form-control select2" id="ticket_source_id" name="ticket_source_id">
+                                    <select class="form-control select2" id="ticket_source_id" name="ticket_source_id" required>
                                         <option value="20" selected>Select Source</option>
                                         @foreach ($ticketSources as $complainSource)
                                             <option value="{{ $complainSource->id }}"
@@ -120,8 +122,9 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-6">
-                                    <label for="priority">Priority:</label>
-                                    <select class="form-control select2" id="priority" name="priority">
+                                    <label for="priority">Priority: <span
+                                        class="text-danger font-bold">*</span></label>
+                                    <select class="form-control select2" id="priority" name="priority" required>
                                         <option value="20" selected>Select Priority</option>
                                         @foreach ($priorities as $priority)
                                             <option value="{{ $priority }}"
