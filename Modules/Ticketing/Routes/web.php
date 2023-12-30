@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClientFeedbackController;
 use Illuminate\Support\Facades\Route;
+use Modules\Ticketing\Http\Controllers\ClientTicketOpenController;
 use Modules\Ticketing\Http\Controllers\NotifyClientController;
 use Modules\Ticketing\Http\Controllers\PopWiseIssueController;
 use Modules\Ticketing\Http\Controllers\ReportController;
@@ -24,6 +25,7 @@ use Modules\Ticketing\Http\Controllers\InternalFeedbackController;
 | contains the "web" middleware group. Now create something great!
 |e
 */
+
 Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::resources([
@@ -82,3 +84,5 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
         Route::get('/get-repeated-ticket-client-list', [ReportController::class, 'getRepeatedTicketClientList'])->name('get-repeated-ticket-client-list');
     });
 });
+
+Route::resources(['client-ticket-opens' => ClientTicketOpenController::class]);
