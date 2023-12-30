@@ -577,7 +577,7 @@ class SupportTicketController extends Controller
                 $notificationMessage = "Ticket " . $supportTicket->ticket_no . " is reopened by " . auth()->user()->name;
                 $authorizedMember = User::findOrFail($supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id);
 
-                Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
+                // Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
             });
 
 
