@@ -14,6 +14,7 @@ use App\Models\Dataencoding\Department;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 use App\Models\Dataencoding\Designation;
+use Modules\Admin\Entities\Branch;
 use Modules\Admin\Http\Requests\EmployeeRequest;
 
 class EmployeeController extends Controller
@@ -65,6 +66,7 @@ class EmployeeController extends Controller
 
         $designations = Designation::orderBy('name')->pluck('name', 'id');
         $divisions = Division::orderBy('name')->pluck('name', 'id');
+        $branches = Branch::orderBy('name')->pluck('name', 'id');
         $predistrict = [];
         $perdistrict = [];
         $prethanas = [];
@@ -72,7 +74,7 @@ class EmployeeController extends Controller
 
         $bloodgroups = self::BLOODGROUPS;
 
-        return view('employees.create', compact('prethanas', 'perthanas', 'formType', 'designations', 'departments', 'predistrict', 'perdistrict', 'divisions', 'bloodgroups'));
+        return view('employees.create', compact('prethanas', 'perthanas', 'formType', 'designations', 'departments', 'predistrict', 'perdistrict', 'divisions', 'bloodgroups', 'branches'));
     }
 
     /**
@@ -141,13 +143,14 @@ class EmployeeController extends Controller
         $divisions = Division::orderBy('name')->pluck('name', 'id');
         $districts = District::orderBy('name')->pluck('name', 'id');
         $thanas = Thana::orderBy('name')->pluck('name', 'id');
+        $branches = Branch::orderBy('name')->pluck('name', 'id');
         $predistrict = District::where('division_id', $employee->preThana->district->division_id ?? '')->orderBy('name')->pluck('name', 'id');
         $perdistrict = District::where('division_id', $employee->perThana->district->division_id ?? '')->orderBy('name')->pluck('name', 'id');
         $prethanas = Thana::where('district_id', $employee->preThana->district_id ?? '')->orderBy('name')->pluck('name', 'id');
         $perthanas = Thana::where('district_id', $employee->perThana->district_id ?? '')->orderBy('name')->pluck('name', 'id');
         $bloodgroups = self::BLOODGROUPS;
 
-        return view('employees.create', compact('employee','formType', 'designations', 'departments', 'divisions', 'districts', 'thanas', 'bloodgroups'));
+        return view('employees.create', compact('employee','formType', 'designations', 'departments', 'divisions', 'districts', 'thanas', 'bloodgroups', 'branches', 'predistrict', 'perdistrict', 'prethanas', 'perthanas'));
     }
 
     /**
