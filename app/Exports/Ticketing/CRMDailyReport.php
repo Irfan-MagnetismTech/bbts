@@ -65,12 +65,10 @@ class CRMDailyReport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
 
             return [
                 $ticketInfo->ticket_no,
-                $ticketInfo?->clientDetail?->client?->name,
+                $ticketInfo?->client?->client_name,
                 $ticketInfo?->pop?->name,
-                // $ticketInfo->contact_name,
-                // $ticketInfo->contact_no,
-                '',
-                '',
+                $ticketInfo->client?->contact_person,
+                $ticketInfo->client?->contact_no,
                 $ticketInfo->createdBy->name,
                 Carbon::parse($ticketInfo->complain_time)->format('d/m/Y h:i A'),
                 Carbon::parse($ticketInfo->closing_date)->format('d/m/Y h:i A'),

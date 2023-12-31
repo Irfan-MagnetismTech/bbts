@@ -557,8 +557,8 @@ class ScmMirController extends Controller
             ->get()
             ->unique('brand_id')
             ->map(fn ($item) => [
-                'value' => $item->brand->id,
-                'label' => $item->brand->name,
+                'value' => $item?->brand?->id,
+                'label' => $item?->brand?->name,
             ])
             ->values()
             ->all();

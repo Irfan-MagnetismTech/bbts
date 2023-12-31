@@ -228,7 +228,7 @@ class TicketMovementController extends Controller
                 $notificationReceivers = $notificationReceivers->reject(function ($user) {
                     return $user->id === auth()->user()->id;
                 });
-                Notification::send($notificationReceivers, new TicketMovementNotification($supportTicket, 'forward', $message));
+                // Notification::send($notificationReceivers, new TicketMovementNotification($supportTicket, 'forward', $message));
 
 
                 return redirect()->back()->with('message', $remarks);
@@ -311,7 +311,7 @@ class TicketMovementController extends Controller
                 $authorizedMember = User::findOrFail($authorizedMember->user_id);
                 if ($authorizedMember->hasPermissionTo('receive-in-app-notification-when-ticket-backwarded')) {
                     $notificationMessage = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' from '.auth()->user()->name.'.';
-                    Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'backward', $notificationMessage));
+                    // Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'backward', $notificationMessage));
                 }
     
                 return redirect()->back()->with('message', $remarks);
@@ -366,7 +366,7 @@ class TicketMovementController extends Controller
 
             if ($authorizedMember->hasPermissionTo('receive-in-app-notification-when-ticket-forwarded-ticket-accepted')) {
                 $notificationMessage = 'Ticket: '.$movement->supportTicket->ticket_no.' accepted by '.auth()->user()->name.'.';
-                Notification::send($authorizedMember, new TicketMovementNotification($movement->supportTicket, 'backward', $notificationMessage));
+                // Notification::send($authorizedMember, new TicketMovementNotification($movement->supportTicket, 'backward', $notificationMessage));
             }
         
             return redirect()->back()->with('message', 'Support Ticket Accepted Successfully.');
@@ -411,10 +411,10 @@ class TicketMovementController extends Controller
                 DB::transaction(function() use($supportTicket, $remarks, $movementModel, $movementType, $request, $authorizedMember) {
                     $supportTicket->supportTicketLifeCycles()->create([
                         'status' => 'Processing',
-                        'user_id' => auth()->user()->id,
+                        'user_id' => $authorizedMember->id, // auth()->user()->id,
                         'support_ticket_id' => $supportTicket->id,
                         'remarks' => $remarks,
-                        'description' => $request->remarks
+                        'description' => 'Ticket Handovered to '.$authorizedMember->name
                     ]);
 
                     $supportTicket->update([
@@ -442,7 +442,7 @@ class TicketMovementController extends Controller
 
                 if ($authorizedMember->hasPermissionTo('receive-in-app-notification-when-ticket-handovered')) {
                     $notificationMessage = 'Ticket: '.$supportTicket->ticket_no.' '.$pastForms[$movementType].' to '.$authorizedMember->name.'.';
-                    Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'handover', $notificationMessage));
+                    // Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'handover', $notificationMessage));
                 }
     
                 return redirect()->back()->with('message', $remarks);

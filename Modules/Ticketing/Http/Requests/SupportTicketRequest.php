@@ -22,7 +22,6 @@ class SupportTicketRequest extends FormRequest
                 'string',
                 Rule::in(config('businessinfo.ticketPriorities')),
             ],
-            'remarks' => 'string',
             'sources_id' => 'integer|exists:ticket_sources,id',
             'complain_types_id' => 'integer|exists:support_complain_types,id',
             'status' => [

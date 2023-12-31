@@ -1,14 +1,19 @@
 <?php
 return [
 
-    'name' => 'Broad Band Telecom Services Limited',
-    'shortname' => 'BBTS',
-    'slogan'    =>  '',
-    'logo' => '/images/bbts_logo.png',
-    'favicon' => '/favicon.png',
-    'url'   => 'https://bbts.net',
-    'footer' => 'All Rights Reserved',
-    'developer' => 'Developed by <a href="https://magnetismtech.com" target="_blank">Magnetism Tech Limited</a>',
+    'name'              => 'Broad Band Telecom Services Limited',
+    'shortname'         => 'BBTS',
+    'slogan'            =>  '',
+    'logo'              => '/images/bbts_logo.png',
+    'favicon'           => '/favicon.png',
+    'url'               => 'https://bbts.net',
+    'footer'            => 'All Rights Reserved',
+    'developer'         => 'Developed by <a href="https://magnetismtech.com" target="_blank">Magnetism Tech Limited</a>',
+    'companyAddress'    => 'Ispahani Building, Agrabad C/A, Chittagong-4100.',
+    'companyMobile'     => '+88031714126, 2520550, 2520556',
+    'hotLine'           => '+880 31 2529461',
+    'email'             => 'info@bbts.net',
+    'fax'               => '+880 31 710434',
 
     'ticketStatuses' => ['Pending', 'Approved', 'Accepted', 'Processing', 'Closed', 'Reopen'],
     'ticketPriorities' => ['Low', 'Medium', 'High', 'Urgent'],

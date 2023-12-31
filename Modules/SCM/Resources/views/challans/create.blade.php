@@ -524,7 +524,7 @@
                             </td>
                         </tr>
                     `;
-            indx++;
+
             @if ($form_method == 'PUT')
                 indx = {{ count($Challan_Lines) }}
                 let materials = @json($materials[0]);
@@ -538,21 +538,58 @@
                 $('#challan tbody').append(row);
                 $('.select2').select2({});
             @else
-              if($('#challan tbody tr').length > 0){
-                row = $('#challan tbody tr').last().clone();
-                row.find('input').val('');
-                row.find('select').val('');
-                row.find('span').remove();
-                $('#challan tbody').append(row);
-                $('.select2').select2({});
-              }else{
-                $('#challan tbody').append(row);
-                $('.select2').select2({});
-                $('.select2.serial_code').select2({
-                    multiple: true,
-                });
-              }
+                if ($('#challan tbody tr').length > 0) {
+                    // row = $('#challan tbody tr').last().clone();
+                    // row.find('input').val('');
+                    // //change index name from name attribute of input like material_name[0] to material_name[1]
+
+                    // row.find('select').val('');
+                    // row.find('span').remove();
+                    // $('#challan tbody').append(row);
+                    // $('.select2').select2({});
+                    let row = $('#challan tbody tr').last().clone();
+
+                    // Increment the index in the name attributes
+                    row.find('[name]').each(function() {
+                        let nameAttr = $(this).attr('name');
+                        if (nameAttr) {
+                            let newName = nameAttr.replace(/\[(\d+)\]/, '[' + indx + ']');
+                            $(this).attr('name', newName);
+                        }
+                    });
+
+                    // Clear input values
+                    row.find('input').val('');
+
+                    // Clear select values
+                    row.find('select').val('');
+                    row.find('span').remove();
+
+                    // Append the modified row to the tbody
+                    $('#challan tbody').append(row);
+
+                    // Initialize Select2
+                    $('.select2').select2({});
+                } else {
+                    // row.find('[name]').each(function() {
+                    //     let nameAttr = $(this).attr('name');
+                    //     if (nameAttr) {
+                    //         let newName = nameAttr.replace(/\[(\d+)\]/, '[' + indx + ']');
+                    //         $(this).attr('name', newName);
+                    //     }
+                    // });
+                    // row.find('input').val('');
+                    // row.find('select').val('');
+                    // row.find('span').remove();
+
+                    $('#challan tbody').append(row);
+                    $('.select2').select2({});
+                    $('.select2.serial_code').select2({
+                        multiple: true,
+                    });
+                }
             @endif
+            indx++;
 
         }
 
