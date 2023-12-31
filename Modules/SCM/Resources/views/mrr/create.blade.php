@@ -256,7 +256,7 @@
                     @endphp
                     <tr>
                         <td class="form-group">
-                            <select class="form-control material_name" name="material_id[]">
+                            <select class="form-control material_name" name="material_id[]" required>
                                 <option value="" readonly selected>Select Material</option>
                                 @foreach ($material_list as $key1 => $value)
                                     <option value="{{ $value->material->id }}" data-unit="{{ $value->material->unit }}"
@@ -275,7 +275,7 @@
                         </td>
 
                         <td>
-                            <select name="brand_id[]" class="form-control brand" autocomplete="off">
+                            <select name="brand_id[]" class="form-control brand" autocomplete="off" required>
                                 <option value="">Select Brand</option>
                                 @foreach ($brands as $brand)
                                     <option value="{{ $brand->id }}" @selected($brand->id == $brand_id[$key])>

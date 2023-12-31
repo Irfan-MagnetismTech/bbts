@@ -72,7 +72,7 @@
                         </td>
                         <td>
                             @foreach ($openingStock->lines as $subKey => $data)
-                            {{ $data->serialCodeLines->first()->serial_or_drum_code ?? '' }} <br>
+                            {{ $data->serialCodeLines->pluck('serial_or_drum_code') ?? '' }} <br>
                             @endforeach
                         </td>
                         <td class="text-center">

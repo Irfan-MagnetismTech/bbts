@@ -42,7 +42,7 @@
             <div class="col-12">
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="name"> Name<span class="text-danger">*</span></label>
-                    {{ Form::text('name', old('name') ? old('name') : (!empty($employee->name) ? $employee->name : null), ['class' => 'form-control', 'id' => 'name', 'autocomplete' => 'off','required', 'list' => 'dataList']) }}
+                    {{ Form::text('name', old('name') ? old('name') : (!empty($employee->name) ? $employee->name : null), ['class' => 'form-control', 'id' => 'name', 'autocomplete' => 'off', 'required', 'list' => 'dataList']) }}
                 </div>
             </div>
 
@@ -52,14 +52,14 @@
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="designation_id">Department<span
                             class="text-danger">*</span></label>
-                    {{ Form::select('department_id', $departments, old('department_id') ? old('department_id') : (!empty($employee->department_id) ? $employee->department_id : null), ['class' => 'form-control', 'id' => 'department_id', 'placeholder' => 'Select Department', 'autocomplete' => 'off','required']) }}
+                    {{ Form::select('department_id', $departments, old('department_id') ? old('department_id') : (!empty($employee->department_id) ? $employee->department_id : null), ['class' => 'form-control select2', 'id' => 'department_id', 'placeholder' => 'Select Department', 'autocomplete' => 'off', 'required']) }}
                 </div>
             </div>
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="designation_id">Designation<span
                             class="text-danger">*</span></label>
-                    {{ Form::select('designation_id', $designations, old('designation_id') ? old('designation_id') : (!empty($employee->designation_id) ? $employee->designation_id : null), ['class' => 'form-control', 'id' => 'designation_id', 'placeholder' => 'Select Designation', 'autocomplete' => 'off', 'required']) }}
+                    {{ Form::select('designation_id', $designations, old('designation_id') ? old('designation_id') : (!empty($employee->designation_id) ? $employee->designation_id : null), ['class' => 'form-control select2', 'id' => 'designation_id', 'placeholder' => 'Select Designation', 'autocomplete' => 'off', 'required']) }}
                 </div>
             </div>
         </div>
@@ -81,7 +81,7 @@
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="contact">Contact<span class="text-danger">*</span></label>
-                    {{ Form::text('contact', old('contact') ? old('contact') : (!empty($employee->contact) ? $employee->contact : null), ['class' => 'form-control', 'id' => 'contact', 'autocomplete' => 'off','required']) }}
+                    {{ Form::text('contact', old('contact') ? old('contact') : (!empty($employee->contact) ? $employee->contact : null), ['class' => 'form-control', 'id' => 'contact', 'autocomplete' => 'off', 'required']) }}
                 </div>
             </div>
             <div class="col-6">
@@ -94,8 +94,8 @@
         <div class=" row col-md-12">
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="blood">Blood Group<span class="text-danger">*</span></label>
-                    {{ Form::select('blood_group', $bloodgroups, old('blood_group') ? old('blood_group') : (!empty($employee->blood_group) ? $employee->blood_group : null), ['class' => 'form-control', 'id' => 'blood', 'placeholder' => 'Select Blood Group', 'autocomplete' => 'off', 'required']) }}
+                    <label class="input-group-addon" for="blood">Blood Group</label>
+                    {{ Form::select('blood_group', $bloodgroups, old('blood_group') ? old('blood_group') : (!empty($employee->blood_group) ? $employee->blood_group : null), ['class' => 'form-control select2', 'id' => 'blood', 'placeholder' => 'Select Blood Group', 'autocomplete' => 'off']) }}
                 </div>
             </div>
             <div class="col-6">
@@ -109,14 +109,14 @@
         <div class=" row col-md-12">
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="father">Father Name<span class="text-danger">*</span></label>
-                    {{ Form::text('father', old('father') ? old('father') : (!empty($employee->father) ? $employee->father : null), ['class' => 'form-control', 'id' => 'father', 'placeholder' => "Father's Name", 'autocomplete' => 'off','required']) }}
+                    <label class="input-group-addon" for="father">Father Name</label>
+                    {{ Form::text('father', old('father') ? old('father') : (!empty($employee->father) ? $employee->father : null), ['class' => 'form-control', 'id' => 'father', 'placeholder' => "Father's Name", 'autocomplete' => 'off']) }}
                 </div>
             </div>
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="mother">Mother Name<span class="text-danger">*</span></label>
-                    {{ Form::text('mother', old('mother') ? old('mother') : (!empty($employee->mother) ? $employee->mother : null), ['class' => 'form-control', 'id' => 'mother', 'placeholder' => "Mother's Name", 'autocomplete' => 'off','required']) }}
+                    <label class="input-group-addon" for="mother">Mother Name</label>
+                    {{ Form::text('mother', old('mother') ? old('mother') : (!empty($employee->mother) ? $employee->mother : null), ['class' => 'form-control', 'id' => 'mother', 'placeholder' => "Mother's Name", 'autocomplete' => 'off']) }}
                 </div>
             </div>
         </div>
@@ -124,12 +124,12 @@
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="blood">Joining Date<span class="text-danger">*</span></label>
-                    {{ Form::date('joining_date', old('joining_date') ? old('blood_group') : (!empty($employee->joining_date) ? $employee->joining_date : null), ['class' => 'form-control', 'id' => 'joining_date', 'placeholder' => 'Joining Date', 'autocomplete' => 'off','required']) }}
+                    {{ Form::date('joining_date', old('joining_date') ? old('blood_group') : (!empty($employee->joining_date) ? $employee->joining_date : null), ['class' => 'form-control', 'id' => 'joining_date', 'placeholder' => 'Joining Date', 'autocomplete' => 'off', 'required']) }}
                 </div>
             </div>
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="blood">Reference<span class="text-danger">*</span></label>
+                    <label class="input-group-addon" for="blood">Reference</label>
                     {{ Form::text('reference', old('reference') ? old('blood_group') : (!empty($employee->reference) ? $employee->reference : null), ['class' => 'form-control', 'id' => 'reference', 'placeholder' => 'Reference', 'autocomplete' => 'off']) }}
                 </div>
             </div>
@@ -138,7 +138,13 @@
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="blood">Job Experience<span class="text-danger">*</span></label>
-                    {{ Form::textarea('job_experience', old('job_experience') ? old('blood_group') : (!empty($employee->job_experience) ? $employee->job_experience : null), ['class' => 'form-control', 'id' => 'job_experience', 'placeholder' => 'Job Experience', 'autocomplete' => 'off','required', 'rows' => '3']) }}
+                    {{ Form::textarea('job_experience', old('job_experience') ? old('blood_group') : (!empty($employee->job_experience) ? $employee->job_experience : null), ['class' => 'form-control', 'id' => 'job_experience', 'placeholder' => 'Job Experience', 'autocomplete' => 'off', 'required', 'rows' => '3']) }}
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="input-group input-group-sm input-group-primary">
+                    <label class="input-group-addon" for="blood">Branch<span class="text-danger">*</span></label>
+                    {{ Form::select('branch_id', $branches, old('branch_id') ? old('branch_id') : (!empty($employee->branch_id) ? $employee->branch_id : null), ['class' => 'form-control select2', 'id' => 'blood', 'placeholder' => 'Select Branch', 'autocomplete' => 'off', 'required']) }}
                 </div>
             </div>
         </div>
@@ -153,30 +159,31 @@
                 <br>
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="permanent_address">Address</label>
-                    {{ Form::textarea('pre_street_address', old('pre_street_address') ? old('pre_street_address') : (!empty($employee->pre_street_address) ? $employee->pre_street_address : null), ['class' => 'form-control', 'id' => 'permanent_address', 'autocomplete' => 'off','required', 'rows' => 2]) }}
+                    {{ Form::textarea('pre_street_address', old('pre_street_address') ? old('pre_street_address') : (!empty($employee->pre_street_address) ? $employee->pre_street_address : null), ['class' => 'form-control', 'id' => 'permanent_address', 'autocomplete' => 'off', 'required', 'rows' => 2]) }}
                 </div>
                 @if ($formType == 'create')
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="permanent_address">Division</label>
-                        {{ Form::select('pre_division_id', $divisions, old('division_id') ? old('division_id') : (!empty($employee->preThana->district->division_id) ? $employee->preThana->district->division_id : null), ['class' => 'form-control', 'id' => 'division_id', 'placeholder' => 'Select Division', 'autocomplete' => 'off','required', 'onChange' => 'loadDistrict(this)']) }}
+                        {{ Form::select('pre_division_id', $divisions, old('division_id') ? old('division_id') : (!empty($employee->preThana->district->division_id) ? $employee->preThana->district->division_id : null), ['class' => 'form-control select2', 'id' => 'division_id', 'placeholder' => 'Select Division', 'autocomplete' => 'off', 'required', 'onChange' => 'loadDistrict(this)']) }}
                     </div>
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="designation_id">District<span
                                 class="text-danger">*</span></label>
-                        {{ Form::select('pre_district_id', $predistrict, old('district_id') ? old('district_id') : (!empty($employee->preThana->district_id) ? $employee->preThana->district_id : null), ['class' => 'form-control', 'id' => 'district_id', 'placeholder' => 'Select District', 'autocomplete' => 'off','required', 'onChange' => 'loadThana(this)']) }}
+                        {{ Form::select('pre_district_id', $predistrict, old('district_id') ? old('district_id') : (!empty($employee->preThana->district_id) ? $employee->preThana->district_id : null), ['class' => 'form-control select2', 'id' => 'district_id', 'placeholder' => 'Select District', 'autocomplete' => 'off', 'required', 'onChange' => 'loadThana(this)']) }}
                     </div>
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="permanent_address">Thana</label>
-                        {{ Form::select('pre_thana_id', $prethanas, old('pre_thana_id') ? old('pre_thana_id') : (!empty($employee->pre_thana_id) ? $employee->pre_thana_id : null), ['class' => 'form-control', 'id' => 'thana_id', 'placeholder' => 'Select Thana', 'autocomplete' => 'off','required']) }}
+                        {{ Form::select('pre_thana_id', $prethanas, old('pre_thana_id') ? old('pre_thana_id') : (!empty($employee->pre_thana_id) ? $employee->pre_thana_id : null), ['class' => 'form-control select2', 'id' => 'thana_id', 'placeholder' => 'Select Thana', 'autocomplete' => 'off', 'required']) }}
                     </div>
                 @else
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="permanent_address">Division</label>
                         {{ Form::select('pre_division_id', $divisions, $employee->pre_division_id ?? null, [
-                            'class' => 'form-control',
+                            'class' => 'form-control select2',
                             'id' => 'division_id',
                             'placeholder' => 'Select Division',
-                            'autocomplete' => 'off','required',
+                            'autocomplete' => 'off',
+                            'required',
                             'onChange' => 'loadDistrict(this)',
                         ]) }}
                     </div>
@@ -184,20 +191,22 @@
                         <label class="input-group-addon" for="designation_id">District<span
                                 class="text-danger">*</span></label>
                         {{ Form::select('pre_district_id', $districts, $employee->pre_district_id ?? null, [
-                            'class' => 'form-control',
+                            'class' => 'form-control select2',
                             'id' => 'district_id',
                             'placeholder' => 'Select District',
-                            'autocomplete' => 'off','required',
+                            'autocomplete' => 'off',
+                            'required',
                             'onChange' => 'loadThana(this)',
                         ]) }}
                     </div>
                     <div class="input-group input-group-sm input-group-primary">
                         <label class="input-group-addon" for="permanent_address">Thana</label>
                         {{ Form::select('pre_thana_id', $thanas, $employee->pre_thana_id ?? null, [
-                            'class' => 'form-control',
+                            'class' => 'form-control select2',
                             'id' => 'thana_id',
                             'placeholder' => 'Select Thana',
-                            'autocomplete' => 'off','required',
+                            'autocomplete' => 'off',
+                            'required',
                         ]) }}
 
                     </div>
@@ -288,7 +297,7 @@
         <div class="row col-md-12">
             <div class="col-md-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="picture"> Photo <span class="text-danger">*</span></label>
+                    <label class="input-group-addon" for="picture"> Photo</label>
                     {{ Form::file('picture', ['class' => 'form-control', 'id' => '', 'onchange' => "document.getElementById('photo').src = window.URL.createObjectURL(this.files[0])"]) }}
                 </div>
             </div>

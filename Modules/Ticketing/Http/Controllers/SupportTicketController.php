@@ -134,11 +134,11 @@ class SupportTicketController extends Controller
 
             // Email and SMS Thing
 
-            $cc = ($request->cc) ? explode(";", str_replace(" ", "", $request->cc)) : null;
+            $cc = explode(";", str_replace(" ", "", $request->cc));
             $subject = "[$supportTicket->ticket_no] " . $request->subject;
             $message = $request->description;
             $model = 'Modules\Ticketing\Entities\SupportTicket';
-            $receiver = $supportTicket?->client?->client_name;
+            $receiver = $supportTicket?->client?->name;
 
 
             if ($request->mailNotification == 1) {
@@ -577,7 +577,7 @@ class SupportTicketController extends Controller
                 $notificationMessage = "Ticket " . $supportTicket->ticket_no . " is reopened by " . auth()->user()->name;
                 $authorizedMember = User::findOrFail($supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id);
 
-                // Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
+                Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
             });
 
 

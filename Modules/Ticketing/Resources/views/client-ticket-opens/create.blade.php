@@ -17,8 +17,8 @@
     <style>
         
         body{
-            /* background: #ffffff!important; */
-            background-image: url("{{ asset('/images/back_image.png') }}");
+            background: #afe2e1!important;
+            /* background-image: url("{{ asset('/images/back_image.png') }}"); */
             background-size: 100% 100%;
             background-repeat: no-repeat;
             height: 100vh;
@@ -115,62 +115,70 @@
 <section class="p-fixed d-flex text-center" >
     
     <!-- Container-fluid starts -->
-    <div class="container d-flex align-items-center justify-content-center" style="height: 100vh">
-        <div class="row col-sm-10 col-md-6 col-lg-4">
+    <div class="container d-flex align-items-center justify-content-center" style="height: 80vh">
+        <div class="row col-sm-10 col-md-8 col-lg-6">
+            <div class="col-md-12">
+                <img src="{{ asset('images/bbts_logo.png') }}" alt="BBTS" class="loginLogo">
+            </div>
+            
             <div class="col-sm-12">
+                @if ($message = Session::get('message'))
+                    <div class="alert alert-success icons-alert mb-2 p-2">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <i class="">X</i>
+                        </button>
+                        <p> {{ $message }} </p>
+                    </div>
+                @endif
+
+
+                @if ($message = Session::get('error'))
+                    <div class="alert alert-danger icons-alert mb-2 p-2">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <i class="">X</i>
+                        </button>
+                        <p> {{ $message }} </p>
+                    </div>
+                @endif
                 <!-- Authentication card start -->
                 <div class="card-block mr-auto ml-auto" >
-                    <form class="md-float-material" method="POST" action="{{ route('login') }}">
+                    <form class="md-float-material" method="POST" action="{{ route('client-ticket-opens.store') }}">
                         @csrf
                         <div style="background-color: #026aadc2; border-radius: 20px; margin: 30px 0 0 0; padding: 10px; box-shadow: 0 2px 15px -2px #000;">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <!-- <h3 class="text-left txt-primary">Login</h3> -->
-                                    <img src="{{ asset('images/bbts_logo.png') }}" alt="BBTS" class="loginLogo">
+                                     <h3 class="text-center" style="color: white">Complain</h3>
+                                    {{-- <img src="{{ asset('images/bbts_logo.png') }}" alt="RanksFC" class="loginLogo"> --}}
 
                                 </div>
                             </div>
                             <!-- <hr/> -->
-                            @error('email')
+                            @error('client_no')
     <span class="text-danger text-left" role="alert"> <strong>{{ $message }}</strong></span>
 @enderror
-                            <div class="input-group mb-1">
-                                <input type="email" name="email" class="form-control round @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="Enter your email here.." required autocomplete="email" autofocus style="border-radius: 15px; padding: 6px 12px;">
+                            <div class="input-group mb-2">
+                                <input type="client_no" name="client_no" class="form-control round @error('client_no') is-invalid @enderror" value="{{ old('client_no') }}" placeholder="Enter your ID " required autocomplete="client_no" autofocus style="border-radius: 15px; padding: 6px 12px;">
                             </div>
                             <div class="input-group mt-2">
-                                <input name="password" type="password" class="form-control round @error('password') is-invalid @enderror" placeholder="Password" required style="border-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; padding: 6px 12px;">
-                                @error('password')
-    <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-@enderror
-                                <span class="md-line"> </span>
+                                <input name="fr_no" type="fr_no" class="form-control round @error('fr_no') is-invalid @enderror" placeholder=" Enter Your Connectivity Point ID" required style="border-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; padding: 6px 12px;">
+                            
+                            </div>
+                            <div class="input-group mt-2">
+                                <select class="form-control round select2" id="support_complain_type_id" name="support_complain_type_id" required style="border-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; padding: 6px 12px;">
+                                    <option value="" selected>Select Complain Type</option>
+                                    @foreach ($complainTypes as $complainType)
+<option value="{{ $complainType->id }}"
+                                            {{ old('support_complain_type_id', !empty($supportTicket) ? $supportTicket->support_complain_type_id : null) == $complainType->id ? 'selected' : '' }}>
+                                            {{ $complainType->name }}
+                                        </option>
+@endforeach
+                                </select>
+                            </div>
+                            
+                            <div class="input-group mt-2">
+                                <input name="description" type="description" class="form-control round @error('description') is-invalid @enderror" placeholder=" Description" required style="border-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; padding: 6px 12px;">
                             </div>
 
-                            {{-- <div class="input-group"> --}}
-                                {{-- <input type="email" name="email" class="form-control round @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="abc@gmail.com" required autocomplete="email" autofocus > --}}
-                                {{-- @error('email') <span class="invalid-feedback" role="alert"> <strong>{{ $message }}</strong></span>@enderror --}}
-                                {{-- <span class="md-line"></span> --}}
-                            {{-- </div> --}}
-                            {{-- <div class="input-group"> --}}
-                                {{-- <input name="password" type="password" class="form-control round @error('password') is-invalid @enderror" placeholder="Password" required> --}}
-                                {{-- @error('password')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror --}}
-                                {{-- <span class="md-line"> </span> --}}
-                            {{-- </div> --}}
-
-                            <!-- <hr/> -->
-                            {{-- <div class="row m-t-25 text-left">
-                                <div class="col-12">
-                                    <div class="checkbox-fade fade-in-primary d-">
-                                        <label>
-                                            <input type="checkbox" value="">
-                                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                                            <span class="text-inverse">Remember me</span>
-                                        </label>
-                                    </div>
-                                    <div class="forgot-phone text-right f-right">
-                                        <a href="auth-reset-password.html" class="text-right f-w-600 text-inverse"> Forgot Password?</a>
-                                    </div>
-                                </div>
-                            </div> --}}
                             <div class="">
                                 <div class="col-md-12">
                                     <button type="submit" class="btn btn-color btn-md btn-block waves-effect text-center" style="
@@ -180,15 +188,15 @@
                                         line-height: 15px;
                                         width: 101px;
                                         margin: 0 auto;
-                                    ">Login</button>
+                                    ">Submit</button>
                                 </div>
                             </div>
 
                         </div>
                         <div class="text-center" >
 {{--                            <h2 style="color: white">Magnetism Tech Ltd.</h2> --}}
-                            <p style="margin-top:165%; color: white" id="fixed_position">
-                                {{config('businessinfo.companyAddress')}} <br/>
+                            <p style="margin-top:165%; " id="fixed_position">
+                                {{ config('businessinfo.companyAddress') }} <br/>
                                 {{-- {{config('businessinfo.developer')}}  --}}
                             </p>
                         </div>
