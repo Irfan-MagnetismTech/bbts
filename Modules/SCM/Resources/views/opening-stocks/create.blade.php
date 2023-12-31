@@ -139,27 +139,26 @@
                     <th><i class="btn btn-primary btn-sm fa fa-plus add-stock-row"></i></th>
                 </tr>
                 </thead>
-                <tbody></tbody>
-                <tfoot>
+                <tbody>
                 @php
-                        $lines = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material_id') : []);
-                        $material_name_with_code = old('material_name', !empty($openingStock) ? $openingStock->lines->pluck('material.materialNameWithCode') : []);
-                        $material_id = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material_id') : []);
-                        $unit = old('unit', !empty($openingStock) ? $openingStock->lines->pluck('material.unit') : []);
-                        $brand_id = old('brand_id', !empty($openingStock) ? $openingStock->lines->pluck('brand_id') : []);
-                        $quantity = old('quantity', !empty($openingStock) ? $openingStock->lines->pluck('quantity') : []);
-                        $unit_price = old('unit_price', !empty($openingStock) ? $openingStock->lines->pluck('unit_price') : []);
-                        $material_type = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material.type') : []);
-                        $total_amount = old('total_amount', !empty($openingStock) ? $openingStock->lines->pluck('total_amount') : []);
-                        $model = old('model', !empty($openingStock) ? $openingStock->lines->pluck('model') : []);
-                        $serial_code = old(
-                        'serial_code',
-                        !empty($openingStock)
-                            ? $openingStock->lines->map(function ($item) {
-                                return implode(',', $item->serialCodeLines->pluck('serial_or_drum_key')->toArray());
-                            })
-                            : '',
-                    );
+                    $lines = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material_id') : []);
+                    $material_name_with_code = old('material_name', !empty($openingStock) ? $openingStock->lines->pluck('material.materialNameWithCode') : []);
+                    $material_id = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material_id') : []);
+                    $unit = old('unit', !empty($openingStock) ? $openingStock->lines->pluck('material.unit') : []);
+                    $brand_id = old('brand_id', !empty($openingStock) ? $openingStock->lines->pluck('brand_id') : []);
+                    $quantity = old('quantity', !empty($openingStock) ? $openingStock->lines->pluck('quantity') : []);
+                    $unit_price = old('unit_price', !empty($openingStock) ? $openingStock->lines->pluck('unit_price') : []);
+                    $material_type = old('material_id', !empty($openingStock) ? $openingStock->lines->pluck('material.type') : []);
+                    $total_amount = old('total_amount', !empty($openingStock) ? $openingStock->lines->pluck('total_amount') : []);
+                    $model = old('model', !empty($openingStock) ? $openingStock->lines->pluck('model') : []);
+                    $serial_code = old(
+                    'serial_code',
+                    !empty($openingStock)
+                        ? $openingStock->lines->map(function ($item) {
+                            return implode(',', $item->serialCodeLines->pluck('serial_or_drum_key')->toArray());
+                        })
+                        : '',
+                );
                 @endphp
                 @foreach ($material_name_with_code as $key => $detail)
                     @php
@@ -227,7 +226,7 @@
                         </td>
                     </tr>
                 @endforeach
-                </tfoot>
+                </tbody>
             </table>
 
             <div class="row">
