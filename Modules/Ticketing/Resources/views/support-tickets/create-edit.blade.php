@@ -88,7 +88,7 @@
 
                                 <div class="form-group col-6">
                                     <label for="support_complain_type_id">Complain Type: <span
-                                        class="text-danger font-bold">*</span></label>
+                                            class="text-danger font-bold">*</span></label>
                                     <select class="form-control select2" id="support_complain_type_id"
                                         name="support_complain_type_id" required>
                                         <option value="" selected>Select Complain Type</option>
@@ -102,7 +102,7 @@
                                 </div>
                                 <div class="form-group col-6">
                                     <label for="description">Description: <span
-                                        class="text-danger font-bold">*</span></label>
+                                            class="text-danger font-bold">*</span></label>
                                     <input type="text" class="form-control" id="description" name="description"
                                         aria-describedby="description"
                                         value="{{ old('description') ?? (!empty($supportTicket) ? $supportTicket?->description : '') }}"
@@ -111,7 +111,8 @@
                                 <div class="form-group col-6">
                                     <label for="ticket_source_id">Source: <span
                                             class="text-danger font-bold">*</span></label>
-                                    <select class="form-control select2" id="ticket_source_id" name="ticket_source_id" required>
+                                    <select class="form-control select2" id="ticket_source_id" name="ticket_source_id"
+                                        required>
                                         <option value="20" selected>Select Source</option>
                                         @foreach ($ticketSources as $complainSource)
                                             <option value="{{ $complainSource->id }}"
@@ -122,8 +123,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-6">
-                                    <label for="priority">Priority: <span
-                                        class="text-danger font-bold">*</span></label>
+                                    <label for="priority">Priority: <span class="text-danger font-bold">*</span></label>
                                     <select class="form-control select2" id="priority" name="priority" required>
                                         <option value="20" selected>Select Priority</option>
                                         @foreach ($priorities as $priority)
@@ -218,6 +218,13 @@
                                         <input type="text" class="form-control col-8" id="contact_no"
                                             value="{{ old('contact_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->contact_no : '') }}"
                                             name="contact_no" placeholder="Contact Number" disabled>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
+                                        <label class="d-flex align-items-center m-0 pr-1 col-4"
+                                            for="contact_no">Lat-Long</label>
+                                        <input type="text" class="form-control col-8" id="contact_no"
+                                            value="{{ old('contact_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->lat . '-' . $supportTicket?->client?->long : '') }}"
+                                            name="contact_no" placeholder="Latitude - Longitude" disabled>
                                     </div>
                                 </div>
 

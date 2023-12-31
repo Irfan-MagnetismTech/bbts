@@ -173,39 +173,39 @@ class ScmMirController extends Controller
      */
     public function update(ScmMirRequest $request, ScmMir $material_issue)
     {
-        try {
-            $mir_data = $request->all();
+        // dd($request->all());
+        // try {
+        $mir_data = $request->all();
 
-            $mir_details = [];
-            foreach ($request->material_name as $key => $val) {
-                $material = Material::where('id', $request->material_name)->first();
-                if (isset($request->serial_code[$key]) && $material->type == 'Item') {
-                    foreach ($request->serial_code[$key] as $keyValue => $value) {
-                        $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $request->received_type, $key, $keyValue, $request->branch_id, true);
-                        $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, 'MIR', $key, $keyValue, $request->to_branch_id, false);
-                    };
-                } elseif ((isset($request->serial_code[$key]) && $material->type == 'Drum')) {
-                    $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $request->received_type, $key, $key2 = null, $request->branch_id, true);
-                    $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, 'MIR', $key, $key2 = null, $request->to_branch_id, false);
-                } elseif (isset($request->material_name[$key])) {
-                    $stock_ledgers[] = $this->getStockLedgerData('', $request, $request->received_type, $key, $key2 = null, $request->branch_id, true);
-                    $stock_ledgers[] = $this->getStockLedgerData('', $request, 'MIR', $key, $key2 = null, $request->to_branch_id, false);
-                }
-                $mir_details[] = $this->getMirDetails($request, $key);
-            };
-            DB::beginTransaction();
-            $material_issue->update($mir_data);
-            $material_issue->lines()->delete();
-            $material_issue->lines()->createMany($mir_details);
-            $material_issue->stockable()->delete();
-            $material_issue->stockable()->createMany($stock_ledgers);
-            DB::commit();
-
-            return redirect()->route('material-issues.index')->with('success', 'MIR Updated Successfully');
-        } catch (Exception $err) {
-            DB::rollBack();
-            return redirect()->route('material-issues.create')->with('error', $err->getMessage());
-        }
+        $mir_details = [];
+        foreach ($request->material_name as $key => $val) {
+            $material = Material::where('id', $request->material_name)->first();
+            if (isset($request->serial_code[$key]) && $material->type == 'Item') {
+                foreach ($request->serial_code[$key] as $keyValue => $value) {
+                    $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $request->received_type[$key], $key, $keyValue, $request->branch_id, true);
+                    $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, 'MIR', $key, $keyValue, $request->to_branch_id, false);
+                };
+            } elseif ((isset($request->serial_code[$key]) && $material->type == 'Drum')) {
+                $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, $request->received_type[$key], $key, $key2 = null, $request->branch_id, true);
+                $stock_ledgers[] = $this->getStockLedgerData($material->type, $request, 'MIR', $key, $key2 = null, $request->to_branch_id, false);
+            } elseif (isset($request->material_name[$key])) {
+                $stock_ledgers[] = $this->getStockLedgerData('', $request, $request->received_type[$key], $key, $key2 = null, $request->branch_id, true);
+                $stock_ledgers[] = $this->getStockLedgerData('', $request, 'MIR', $key, $key2 = null, $request->to_branch_id, false);
+            }
+            $mir_details[] = $this->getMirDetails($request, $key);
+        };
+        DB::beginTransaction();
+        $material_issue->update($mir_data);
+        $material_issue->lines()->delete();
+        $material_issue->lines()->createMany($mir_details);
+        $material_issue->stockable()->delete();
+        $material_issue->stockable()->createMany($stock_ledgers);
+        DB::commit();
+        return redirect()->route('material-issues.index')->with('success', 'MIR Updated Successfully');
+        // } catch (Exception $err) {
+        //     DB::rollBack();
+        //     return redirect()->route('material-issues.create')->with('error', $err->getMessage());
+        // }
     }
 
     /**
@@ -242,6 +242,7 @@ class ScmMirController extends Controller
      */
     public function getStockLedgerData($type, $request, $receive_type, $key1, $key2 = null, $branch_id, $qty): array
     {
+        // dd($request->all());
 
         $ClassAarray = [
             'MRR' => ScmMrr::class,
@@ -256,7 +257,6 @@ class ScmMirController extends Controller
         } elseif (isset($request->serial_code[$key1]) && $type == 'Drum') {
             $sl =  implode(', ', $request->serial_code[$key1]);
         }
-        // dump($receive_type);
 
         return [
             'receiveable_id' => (!empty($qty) ? $request->type_id[$key1] : null),

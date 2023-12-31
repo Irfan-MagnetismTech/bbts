@@ -89,6 +89,7 @@
         'method' => $form_method,
         'encType' => 'multipart/form-data',
         'class' => 'custom-form',
+        'id' => 'material_issue_form',
     ]) !!}
     <div class="row">
         @if (!empty($material_issue->id))
@@ -110,7 +111,7 @@
         <div class="form-group col-3">
             <label for="applied_date">Applied Date:</label>
             <input class="form-control applied_date" name="date" aria-describedby="applied_date"
-                value="{{ $date }}" readonly placeholder="Select a Date" id="applied_date">
+                value="{{ $date }}" readonly placeholder="Select a Date" id="applied_date" required />
         </div>
 
         <div class="form-group col-3">
@@ -799,10 +800,8 @@
         }
 
         $(document).on('change', '.serial_code ', function() {
-            let count_sl = $('.serial_code').length;
-            let count_sl_selected = $('.serial_code').find(':selected').length;
-            console.log(count_sl_selected);
-            console.log(count_sl)
+            let count_sl = $(this).length;
+            let count_sl_selected = $(this).find(':selected').length;
             $(this).closest('tr').find('.issued_qty').val(count_sl_selected);
         })
 
@@ -827,5 +826,17 @@
                 return false;
             }
         })
+
+        $('#material_issue_form').submit(function() {
+
+            let applied_date = $('#applied_date').val();
+            if (applied_date == '') {
+                swal.fire({
+                    title: "Please Select Applied Date",
+                    type: "warning",
+                });
+                return false;
+            }
+        });
     </script>
 @endsection
