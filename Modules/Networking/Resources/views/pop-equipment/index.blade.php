@@ -15,7 +15,7 @@
 @endsection
 
 @section('sub-title')
-    Total: {{ count($errs) }} 
+    Total: {{ count($popEquipments) }}
     <x-warning-paragraph name="ERR" />
 @endsection
 
@@ -26,23 +26,23 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>#ERR No.</th>
-                    <th>Type</th>
-                    <th>Applied Date</th>
-                    <th>Purpose</th>
-                    <th>Inactive Date</th>
+                    <th>POP Name</th>
+                    <th>Material</th>
+                    <th>IP</th>
+                    <th>Subnet Mask</th>
+                    <th> Date</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($errs as $key => $err)
+                @foreach ($popEquipments as $key => $popEquipment)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td><strong>{{ $err->err_no }}</strong></td>
-                        <td>{{ $err->type }}</td>
-                        <td>{{ $err->date }}</td>
-                        <td>{{ $err->purpose }}</td>
-                        <td>{{ $err->inactive_date }}</td>
+                        <td><strong>{{ $popEquipment->err_no }}</strong></td>
+                        <td>{{ $popEquipment->type }}</td>
+                        <td>{{ $popEquipment->date }}</td>
+                        <td>{{ $popEquipment->purpose }}</td>
+                        <td>{{ $popEquipment->inactive_date }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

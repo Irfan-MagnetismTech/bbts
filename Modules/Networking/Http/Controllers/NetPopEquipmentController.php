@@ -19,7 +19,9 @@ class NetPopEquipmentController extends Controller
      */
     public function index()
     {
-        return view('networking::pop-equipment.index');
+        // dd('hh');
+        $popEquipments = NetPopEquipment::latest()->get();
+        return view('networking::pop-equipment.index', compact('popEquipments'));
     }
 
     /**

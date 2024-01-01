@@ -5,7 +5,7 @@
     $form_heading = !empty($err) ? 'Update' : 'Add';
     $form_url = !empty($err) ? route('pop-equipments.update', $err->id) : route('pop-equipments.store');
     $form_method = !empty($err) ? 'PUT' : 'POST';
-    
+
     $date = old('date', !empty($err) ? $err->date : null);
     $type = old('type', !empty($err) ? $err->type : null);
     $purpose = old('purpose', !empty($err) ? $err->purpose : null);
@@ -121,7 +121,7 @@
     <div class="row">
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
-                <select class="form-control" id="tower_type" name="tower_type" required>
+                <select class="form-control" id="tower_type" name="tower_type">
                     <option value="">Tower Type</option>
                     <option value="leg_4">4 Leg</option>
                     <option value="leg_3">3 Leg </option>
@@ -155,7 +155,11 @@
 
 @section('script')
     <script>
-        $('.date').datepicker()
+        $('.date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        })
         $('.select2').select2();
 
         //using form custom function js file

@@ -187,7 +187,7 @@ class CommonApiController extends Controller
     {
         $results = Pop::query()
             ->where('name', 'LIKE', '%' . request('search') . '%')
-            ->limit(15)
+            // ->limit()
             ->get()
             ->map(fn ($item) => [
                 'id' => $item->id,
