@@ -39,6 +39,7 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::resource('logical-connectivities', LogicalConnectivityController::class);
     Route::get('modify-connectivities/create/{fr_id?}', [ConnectivityModificationController::class, 'create'])->name('connectivities.create');
     Route::resource('modify-connectivities', ConnectivityModificationController::class);
+    Route::get('pop-wise-client-report', [ConnectivityController::class, 'popWiseClientReport'])->name('pop-wise-client-report');
     require __DIR__ . '/irfan.php';
     require __DIR__ . '/jaber.php';
 });

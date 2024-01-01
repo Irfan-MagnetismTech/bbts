@@ -52,8 +52,7 @@
                 @can('lead-generation')
                     <li class="{{ request()->routeIs('lead-generation.index') ? 'active' : null }}">
                         <a href="{{ route('lead-generation.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span
-                                class="pcoded-mtext">My Leads</span><span
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">My Leads</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan
@@ -156,8 +155,7 @@
             @can('connectivity-requirement-create')
                 <ul class="pcoded-submenu">
                     <li class="{{ request()->routeIs('client-requirement-modification.create') ? 'active' : null }}">
-                        <a href="{{ url('changes/client-requirement-modification/create') }}"> <span
-                                class="pcoded-micon"><i
+                        <a href="{{ url('changes/client-requirement-modification/create') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification
                                 Requirement</span><span class="pcoded-mcaret"></span></a>
                     </li>
@@ -166,8 +164,7 @@
             <ul class="pcoded-submenu">
                 <li class="{{ request()->routeIs('client-requirement-modification.index') ? 'active' : null }}">
                     <a href="{{ route('client-requirement-modification.index') }}"> <span class="pcoded-micon"><i
-                                class="ti-angle-right"></i></span><span
-                            class="pcoded-mtext">Modification List</span><span
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification List</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
             </ul>
@@ -214,8 +211,7 @@
                     </li>
                     <li class="{{ request()->routeIs('client-plan-modification.index') ? 'active' : null }}">
                         <a href="{{ route('client-plan-modification.index') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span
-                                class="pcoded-mtext">Modification List</span><span
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan
@@ -238,8 +234,7 @@
                     </li>
                     <li class="{{ request()->routeIs('modified-costing-list') ? 'active' : null }}">
                         <a href="{{ route('modified-costing-list') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span
-                                class="pcoded-mtext">Modification List</span><span
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan
@@ -262,8 +257,7 @@
                     </li>
                     <li class="{{ request()->routeIs('modified-offer-list') ? 'active' : null }}">
                         <a href="{{ route('modified-offer-list') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span
-                                class="pcoded-mtext">Modification List</span><span
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan
@@ -328,5 +322,24 @@
             </ul>
         </li>
     @endcan
+    <li class="pcoded-hasmenu">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-mtext">Report</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('plan-report') ? 'active' : null }}">
+                <a href="{{ route('plan-report') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Plan Report</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+            <li class="{{ request()->routeIs('plan-modification-report') ? 'active' : null }}">
+                <a href="{{ route('plan-modification-report') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Plan Modification
+                        Report</span><span class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
     {{-- @endhasanyrole --}}
 </ul>

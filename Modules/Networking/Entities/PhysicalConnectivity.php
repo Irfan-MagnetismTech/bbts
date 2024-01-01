@@ -29,4 +29,9 @@ class PhysicalConnectivity extends Model
     {
         return $this->belongsTo(Planning::class, 'fr_no', 'fr_no');
     }
+
+    public function logicalConnectivity()
+    {
+        return $this->hasOne(LogicalConnectivity::class, 'fr_no', 'fr_no')->where('is_modified', '0');
+    }
 }
