@@ -72,7 +72,12 @@
                         </td>
                         <td>
                             @foreach ($openingStock->lines as $subKey => $data)
-                            {{ $data->serialCodeLines->pluck('serial_or_drum_code') ?? '' }} <br>
+                                @if($data->serialCodeLines->isNotEmpty())
+                                    {{ $data->serialCodeLines->pluck('serial_or_drum_code')->reject(function ($item) {
+                                        return $item === null;
+                                    })->implode(', ') }}
+                                @endif
+                                <br>
                             @endforeach
                         </td>
                         <td class="text-center">
