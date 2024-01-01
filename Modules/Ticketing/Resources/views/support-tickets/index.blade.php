@@ -56,6 +56,26 @@
                 </div>
             </div>
             <div class="col-md-3">
+                <label for="search_by_days" class="font-weight-bold">Search By Days:</label>
+                <select name="search_by_days" id="search_by_days" class="form-control">
+                    <option value="">Select Days</option>
+                    <option value="7" {{ request()->search_by_days == 7 ? 'selected' : '' }}>7 Days</option>
+                    <option value="15" {{ request()->search_by_days == 15 ? 'selected' : '' }}>15 Days</option>
+                    <option value="30" {{ request()->search_by_days == 30 ? 'selected' : '' }}>30 Days</option>
+                    <option value="60" {{ request()->search_by_days == 60? 'selected' : '' }}>60 Days</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="search_by_status" class="font-weight-bold">Search By Status:</label>
+                <select name="search_by_status" id="search_by_status" class="form-control">
+                    <option value="">Select Status</option>
+                    <option value="Pending" {{ request()->search_by_days == 'Pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="Accepted" {{ request()->search_by_days == 'Accepted' ? 'selected' : '' }}>Accepted</option>
+                    <option value="Processing" {{ request()->search_by_days == 'Processing' ? 'selected' : '' }}>Processing</option>
+                    <option value="Closed" {{ request()->search_by_days == 'Closed' ? 'selected' : '' }}>Closed</option>
+                </select>
+            </div>
+            <div class="col-md-3">
                 <div class="form-group my-4 row">
                     <div class="col-md-6">
                         <input type="button" onclick="resetForm()" value="Reset"
@@ -74,6 +94,7 @@
             <thead>
                 <tr>
                     <th>#SL</th>
+                    <th>Date</th>
                     <th>Ticket No</th>
                     <th>Client</th>
                     <th>Priority</th>
@@ -90,6 +111,7 @@
                 @foreach ($supportTickets as $ticket)
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
+                        <td>{{ $ticket->created_at->format('d-m-Y') ?? '' }}</td>
                         <td>{{ $ticket->ticket_no ?? '' }}</td>
                         <td>{{ $ticket->client->client_name ?? '' }} <br>
                             {{ $ticket->feasibilityRequirementDetails->connectivity_point ?? '' }}</td>
@@ -99,9 +121,18 @@
                         <td>{{ $ticket->description ?? '' }}</td>
                         <td>{{ $ticket->createdBy->name ?? ''}}</td>
                         <td>
-                            {{ $ticket->status ?? '' }} <br />
-                            <small>Last Activity:
-                                {{ $ticket->supportTicketLifeCycles()->latest()->first()->user->name ?? ''}}</small>
+                            @if($ticket->status == 'Pending')
+                                <span class="badge badge-pill badge-warning" style="font-size: 10px;">{{ $ticket->status ?? '' }}</span>
+                            @elseif($ticket->status == 'Accepted')
+                                <span class="badge badge-pill badge-primary" style="font-size: 10px;">{{ $ticket->status ?? '' }}</span>
+                            @elseif($ticket->status == 'Processing')
+                                <span class="badge badge-pill badge-info" style="font-size: 10px;">{{ $ticket->status ?? '' }}</span>
+                            @elseif($ticket->status == 'Closed')
+                                <span class="badge badge-pill badge-success" style="font-size: 10px;">{{ $ticket->status ?? '' }}</span>
+                            @endif 
+                            <br />
+                            <small style="font-size: 10px;">Last Activity:
+                                {{ $ticket->supportTicketLifeCycles()->latest()->first()->remarks ?? ''}}</small>
                         </td>
 
                         <td class="d-flex align-items-center justify-content-center">

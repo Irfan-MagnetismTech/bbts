@@ -85,7 +85,7 @@
                 
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="noMailNotification">
-                                                <input type="radio" class="form-check-input radioButton" id="noMailNotification" name="mailNotification" value="0">
+                                                <input type="radio" class="form-check-input radioButton" id="noMailNotification" name="mailNotification" value="0" checked>
                                                 <span style="position: relative; top: 3px">
                                                     No
                                                 </span>
@@ -108,7 +108,7 @@
                 
                                         <div class="form-check-inline">
                                             <label class="form-check-label" for="noSmsNotification">
-                                                <input type="radio" class="form-check-input radioButton" id="noSmsNotification" name="smsNotification" value="0">
+                                                <input type="radio" class="form-check-input radioButton" id="noSmsNotification" name="smsNotification" value="0" checked>
                                                 <span style="position: relative; top: 3px">
                                                     No
                                                 </span>

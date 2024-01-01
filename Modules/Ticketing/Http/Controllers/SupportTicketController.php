@@ -50,6 +50,12 @@ class SupportTicketController extends Controller
             ->when(!empty($supportTicketId), function ($ticketNoQuery) use ($supportTicketId) {
                 $ticketNoQuery->where('id', $supportTicketId);
             })
+            ->when(!empty($request->search_by_days), function ($query) use ($request) {
+                $query->whereDate('created_at', '>=', Carbon::now()->subDays($request->search_by_days)->startOfDay());
+            })
+            ->when(!empty($request->search_by_status), function ($query) use ($request) {
+                $query->where('status', $request->search_by_status);
+            })
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -628,7 +634,9 @@ class SupportTicketController extends Controller
                     'email' => $item->email,
                     'client_type' => $item->client_type,
                     'address' => $item->location,
-                    'fr_list' =>$frList,
+                    'lat' => $item->lat ?? '',
+                    'long' => $item->long ?? '',
+                    'fr_list' => $frList,
                 ];
             });
 
