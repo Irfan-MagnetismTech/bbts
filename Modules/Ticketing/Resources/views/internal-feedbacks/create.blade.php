@@ -124,7 +124,7 @@
                         <th> Connectivity Point <span class="text-danger">*</span></th>
                         <th> Contact Person</th>
                         <th> Contact Number</th>
-                        <th> Remarks</th>
+                        <th> Feedback</th>
                         <th><i class="btn btn-primary btn-sm fa fa-plus add-stock-row"></i></th>
                     </tr>
                     </thead>
@@ -133,7 +133,7 @@
                         $fr_no = old('fr_no', !empty($feedback) ? $feedback->lines->pluck('fr_no') : []);
                         $contact_person = old('contact_person', !empty($feedback) ? $feedback->lines->pluck('contact_person') : []);
                         $contact_number = old('contact_number', !empty($feedback) ? $feedback->lines->pluck('contact_number') : []);
-                        $remarks = old('remarks', !empty($feedback) ? $feedback->lines->pluck('remarks') : []);
+                        $client_feedback = old('client_feedback', !empty($feedback) ? $feedback->lines->pluck('client_feedback') : []);
                     @endphp
                     @foreach ($fr_no as $key => $detail)
                         <tr>
@@ -157,8 +157,8 @@
                                        autocomplete="off" value="{{ $contact_number[$key] }}">
                             </td>
                             <td>
-                                <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off"
-                                       value="{{ $remarks[$key] }}">
+                                <input type="text" name="client_feedback[]" class="form-control client_feedback" autocomplete="off"
+                                       value="{{ $client_feedback[$key] }}">
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
@@ -192,13 +192,13 @@
                                                 </select>
                                             </td>
                                             <td>
-                                           <input type="text" name="contact_person[]" class="form-control contact_person" autocomplete="off">
+                                           <input type="text" name="contact_person[]" class="form-control contact_person" id="contact_person" autocomplete="off">
                                            </td>
                                            <td>
-                                               <input type="number" name="contact_number[]" class="form-control contact_number" autocomplete="off">
+                                               <input type="number" name="contact_number[]" class="form-control contact_number" id="contact_number" autocomplete="off">
                                            </td>
                                            <td>
-                                               <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
+                                               <input type="text" name="client_feedback[]" class="form-control client_feedback" autocomplete="off">
                                            </td>
                                            <td>
                                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
@@ -240,7 +240,7 @@
                                 },
                                 error: function (error) {
                                     console.error("Error fetching data:", error);
-                                }
+                                },
                             });
                         }
                     </script>
