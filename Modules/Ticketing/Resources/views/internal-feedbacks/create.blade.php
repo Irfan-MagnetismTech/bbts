@@ -7,6 +7,50 @@
     $form_method = !empty($feedback->id) ? 'PUT' : 'POST';
 @endphp
 
+@section('style')
+    <style>
+        .input-group-addon {
+            min-width: 120px;
+        }
+
+        .input-group-info .input-group-addon {
+            /*background-color: #04748a!important;*/
+        }
+
+        .select2-container--default .select2-selection--multiple .select2-selection__choice span {
+            color: #b10000;
+        }
+
+        .select2_container {
+            max-width: 200px;
+            white-space: inherit;
+        }
+
+        .custom-spinner-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh;
+        }
+
+        .custom-spinner {
+            width: 4rem;
+            height: 4rem;
+            border: .5em solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spinner-animation 1s linear infinite;
+        }
+
+        @keyframes spinner-animation {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+@endsection
+
 @section('breadcrumb-title')
     Internal Feedbacks {{$form_heading}}
 @endsection
@@ -94,7 +138,8 @@
                     @foreach ($fr_no as $key => $detail)
                         <tr>
                             <td>
-                                <select name="fr_no[]" class="form-control fr_no select2" autocomplete="off" required>
+                                <select name="fr_no[]" class="form-control fr_no select2" id="fr_no" autocomplete="off"
+                                        required>
                                     <option value="">Select Fr No</option>
                                     @foreach ($fr_nos as $fr_no)
                                         <option value="{{ $fr_no }}" @selected($fr_no== $fr_no[$key])>
@@ -135,79 +180,68 @@
 
                 @section('script')
                     <script>
-                        /* Append row */
-                        {{--                        @if (empty($feedback) && empty(old('fr_no')))--}}
-                        {{--                        appendCalculationRow();--}}
-                        {{--                        @endif--}}
+                        let indx = 0;
+                        @if($form_method == 'PUT')
+                            indx = {{ count($fr_no) }};
+                        @endif
                         function appendCalculationRow() {
                             let row = `<tr>
-                        <td>
-                             <select name="fr_no[]" class="form-control fr_no select2" autocomplete="off" required>
-                                    <option value="">Select Fr No</option>
-                                    @foreach ($fr_nos as $fr_no)
-                            <option value="{{ $fr_no }}">
-                                            {{ $fr_no }}
-                            </option>
-                                    @endforeach
-                            </select>
-                        </td>
-                   <td>
-                       <input type="text" name="contact_person[]" class="form-control contact_person" autocomplete="off">
-                       </td>
-                       <td>
-                           <input type="number" name="contact_number[]" class="form-control contact_number" autocomplete="off">
-                       </td>
-                       <td>
-                           <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
-                       </td>
-
-                   <td>
-                       <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
-                   </td>
-               </tr>`;
+                                            <td>
+                                                 <select name="fr_no[${indx}]" class="form-control fr_no select2" id="fr_no" autocomplete="off" required>
+                                                        <option value="fr_no[${indx}]" readonly selected>Select Fr No</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                           <input type="text" name="contact_person[]" class="form-control contact_person" autocomplete="off">
+                                           </td>
+                                           <td>
+                                               <input type="number" name="contact_number[]" class="form-control contact_number" autocomplete="off">
+                                           </td>
+                                           <td>
+                                               <input type="text" name="remarks[]" class="form-control remarks" autocomplete="off">
+                                           </td>
+                                           <td>
+                                               <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
+                                           </td>
+                                      </tr>`;
+                            let fr_values = $('#internal_feedbacks').first().find('.fr_no:last').html();
+                            row = row.replace('Select Fr No', fr_values);
+                            indx++;
                             $('#internal_feedbacks tbody').append(row);
                             $('.select2').select2({});
                         }
 
-
                         $("#internal_feedbacks")
                             .on('click', '.add-stock-row', () => {
                                 appendCalculationRow();
-                                $('#fr_no:last').html('');
-                                // getMaterial();
+                                getFrNo();
                             })
                             .on('click', '.remove-calculation-row', function () {
                                 $(this).closest('tr').remove();
                             });
 
-                        $("#client_no").autocomplete({
-                            source: function (request, response) {
-                                var client_no = $('#client_no').val();
-                                $.ajax({
-                                    url: window.location.origin + "/ticketing/get-client-info",
-                                    type: "get",
-                                    dataType: "json",
-                                    data: {
-                                        search: client_no,
-                                    },
-                                    success: function (data) {
-                                        response(data);
-                                    },
-                                });
-                            },
-                            select: function (event, ui) {
-                                $('#internal_feedbacks tbody').empty();
-                                $("#fr_no").html("");
-                                var link_options = '<option value="">Select Connectivity Point</option>';
-
-                                ui.item.saleDetails.forEach(function (element) {
-                                    link_options += `<option value="${element.fr_no}">${element.feasibility_requirement_details.connectivity_point} ( ${element.fr_no} )</option>`;
-                                });
-                                client_details = ui.item.details;
-                                $("#fr_no").html(link_options);
-
-                                return false;
-                            },
-                        });
+                        function getFrNo() {
+                            var client_no = $('#client_no').val();
+                            $.ajax({
+                                url: window.location.origin + "/ticketing/get-client-info",
+                                type: "GET",
+                                dataType: "json",
+                                data: {
+                                    search: client_no,
+                                },
+                                success: function (data) {
+                                    var fr_values = '<option value="">Select Fr No</option>';
+                                    $.each(data, function (index, item) {
+                                        $.each(item.saleDetails, function (key, value) {
+                                            fr_values += `<option value="${value.feasibility_requirement_details.fr_no}">${value.feasibility_requirement_details.connectivity_point} ( ${value.feasibility_requirement_details.fr_no} )</option>`;
+                                        });
+                                    });
+                                    $(".fr_no:last").html(fr_values);
+                                },
+                                error: function (error) {
+                                    console.error("Error fetching data:", error);
+                                }
+                            });
+                        }
                     </script>
 @endsection

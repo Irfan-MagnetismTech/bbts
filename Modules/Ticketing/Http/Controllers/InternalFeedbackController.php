@@ -46,8 +46,8 @@ class InternalFeedbackController extends Controller
     public function create()
     {
         $clients = Client::get();
-        $brands = Brand::get();
-        return view('ticketing::internal-feedbacks.create', compact('clients','brands'));
+        $fr_nos = FeasibilityRequirementDetail::pluck('fr_no')->toArray();
+        return view('ticketing::internal-feedbacks.create', compact('clients','fr_nos'));
     }
 
     /**
@@ -98,7 +98,7 @@ class InternalFeedbackController extends Controller
     public function update(InternalFeedback $feedback, Request $request)
     {
         $clients = Client::get();
-        $brands = FeasibilityRequirementDetail::where()->get();
+        $fr_nos = FeasibilityRequirementDetail::pluck('fr_no')->toArray();
         try {
             DB::beginTransaction();
             $data = $request->only('date', 'client_no', 'remarks');
@@ -109,7 +109,7 @@ class InternalFeedbackController extends Controller
             return redirect()->route('internal-feedbacks.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->route('internal-feedbacks.create',compact('clients','brands'))->withInput()->withErrors($e->getMessage());
+            return redirect()->route('internal-feedbacks.create',compact('clients','fr_nos'))->withInput()->withErrors($e->getMessage());
         }
     }
 
