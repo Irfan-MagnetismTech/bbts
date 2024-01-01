@@ -110,7 +110,7 @@
             </div>
             <div class="col-5">
                 <div class="col-12">
-                    <h4 class="text-center mt-5">Physibility Information</h4>
+                    <h4 class="text-center mt-5">Feasibility Information</h4>
                 </div>
                 @if(!empty($supportTicket->physicalConnectivity))
                 @foreach ($supportTicket->physicalConnectivity->lines as $line)

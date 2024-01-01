@@ -27,7 +27,7 @@ use Modules\SCM\Entities\ScmWcrr;
 use Modules\SCM\Entities\ScmWor;
 use Spatie\Permission\Traits\HasRoles;
 
-class ScmMirController extends Controller
+class ScmMirControllerbackup extends Controller
 {
     private $mirNo;
 

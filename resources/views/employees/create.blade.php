@@ -94,8 +94,8 @@
         <div class=" row col-md-12">
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="blood">Blood Group<span class="text-danger">*</span></label>
-                    {{ Form::select('blood_group', $bloodgroups, old('blood_group') ? old('blood_group') : (!empty($employee->blood_group) ? $employee->blood_group : null), ['class' => 'form-control select2', 'id' => 'blood', 'placeholder' => 'Select Blood Group', 'autocomplete' => 'off', 'required']) }}
+                    <label class="input-group-addon" for="blood">Blood Group</label>
+                    {{ Form::select('blood_group', $bloodgroups, old('blood_group') ? old('blood_group') : (!empty($employee->blood_group) ? $employee->blood_group : null), ['class' => 'form-control select2', 'id' => 'blood', 'placeholder' => 'Select Blood Group', 'autocomplete' => 'off']) }}
                 </div>
             </div>
             <div class="col-6">
@@ -109,14 +109,14 @@
         <div class=" row col-md-12">
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="father">Father Name<span class="text-danger">*</span></label>
-                    {{ Form::text('father', old('father') ? old('father') : (!empty($employee->father) ? $employee->father : null), ['class' => 'form-control', 'id' => 'father', 'placeholder' => "Father's Name", 'autocomplete' => 'off', 'required']) }}
+                    <label class="input-group-addon" for="father">Father Name</label>
+                    {{ Form::text('father', old('father') ? old('father') : (!empty($employee->father) ? $employee->father : null), ['class' => 'form-control', 'id' => 'father', 'placeholder' => "Father's Name", 'autocomplete' => 'off']) }}
                 </div>
             </div>
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="mother">Mother Name<span class="text-danger">*</span></label>
-                    {{ Form::text('mother', old('mother') ? old('mother') : (!empty($employee->mother) ? $employee->mother : null), ['class' => 'form-control', 'id' => 'mother', 'placeholder' => "Mother's Name", 'autocomplete' => 'off', 'required']) }}
+                    <label class="input-group-addon" for="mother">Mother Name</label>
+                    {{ Form::text('mother', old('mother') ? old('mother') : (!empty($employee->mother) ? $employee->mother : null), ['class' => 'form-control', 'id' => 'mother', 'placeholder' => "Mother's Name", 'autocomplete' => 'off']) }}
                 </div>
             </div>
         </div>
@@ -129,7 +129,7 @@
             </div>
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="blood">Reference<span class="text-danger">*</span></label>
+                    <label class="input-group-addon" for="blood">Reference</label>
                     {{ Form::text('reference', old('reference') ? old('blood_group') : (!empty($employee->reference) ? $employee->reference : null), ['class' => 'form-control', 'id' => 'reference', 'placeholder' => 'Reference', 'autocomplete' => 'off']) }}
                 </div>
             </div>
@@ -144,7 +144,7 @@
             <div class="col-6">
                 <div class="input-group input-group-sm input-group-primary">
                     <label class="input-group-addon" for="blood">Branch<span class="text-danger">*</span></label>
-                    {{ Form::select('branch_id', $branches, old('branch_id') ? old('branch_id') : (!empty($employee->branch) ? $employee->branch : null), ['class' => 'form-control select2', 'id' => 'blood', 'placeholder' => 'Select Branch', 'autocomplete' => 'off', 'required']) }}
+                    {{ Form::select('branch_id', $branches, old('branch_id') ? old('branch_id') : (!empty($employee->branch_id) ? $employee->branch_id : null), ['class' => 'form-control select2', 'id' => 'blood', 'placeholder' => 'Select Branch', 'autocomplete' => 'off', 'required']) }}
                 </div>
             </div>
         </div>
@@ -297,7 +297,7 @@
         <div class="row col-md-12">
             <div class="col-md-6">
                 <div class="input-group input-group-sm input-group-primary">
-                    <label class="input-group-addon" for="picture"> Photo <span class="text-danger">*</span></label>
+                    <label class="input-group-addon" for="picture"> Photo</label>
                     {{ Form::file('picture', ['class' => 'form-control', 'id' => '', 'onchange' => "document.getElementById('photo').src = window.URL.createObjectURL(this.files[0])"]) }}
                 </div>
             </div>
