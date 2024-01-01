@@ -7,6 +7,7 @@ use App\Services\SmsService;
 use Illuminate\Http\Request;
 use App\Services\EmailService;
 use Illuminate\Support\Carbon;
+use Modules\Admin\Entities\Brand;
 use Modules\Admin\Entities\User;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +46,8 @@ class InternalFeedbackController extends Controller
     public function create()
     {
         $clients = Client::get();
-        return view('ticketing::internal-feedbacks.create', compact('clients'));
+        $fr_nos = FeasibilityRequirementDetail::pluck('fr_no')->toArray();
+        return view('ticketing::internal-feedbacks.create', compact('clients', 'fr_nos'));
     }
 
     /**
@@ -57,10 +59,19 @@ class InternalFeedbackController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('date', 'client_no', 'remarks');
-            $internal_feedback = InternalFeedback::create($data);
+            $feedback = $request->only('date', 'client_no', 'remarks');
+            $internal_feedback = InternalFeedback::create($feedback);
+            foreach ($request->fr_no as $key => $data) {
+                $lines[] = [
+                    'fr_no' => $request->fr_no[$key],
+                    'contact_person' => $request->contact_person[$key],
+                    'contact_number' => $request->contact_number[$key],
+                    'client_feedback' => $request->client_feedback[$key],
+                ];
+            }
+            $detail = $internal_feedback->lines()->createMany($lines);
             DB::commit();
-            return redirect()->route('internal-feedbacks.create')->with('message', 'Data has been created successfully');
+            return redirect()->route('internal-feedbacks.index')->with('message', 'Data has been created successfully');
         } catch (Exception $error) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors($error->getMessage());
@@ -96,16 +107,18 @@ class InternalFeedbackController extends Controller
     public function update(InternalFeedback $feedback, Request $request)
     {
         $clients = Client::get();
+        $fr_nos = FeasibilityRequirementDetail::pluck('fr_no')->toArray();
         try {
             DB::beginTransaction();
             $data = $request->only('date', 'client_no', 'remarks');
+            $feedback->delete();
             $feedback->update($data);
 
             DB::commit();
             return redirect()->route('internal-feedbacks.index')->with('message', 'Data has been updated successfully');
         } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->route('internal-feedbacks.create',compact('clients'))->withInput()->withErrors($e->getMessage());
+            return redirect()->route('internal-feedbacks.create', compact('clients', 'fr_nos'))->withInput()->withErrors($e->getMessage());
         }
     }
 
@@ -122,5 +135,21 @@ class InternalFeedbackController extends Controller
         } catch (QueryException $err) {
             return redirect()->route('internal-feedbacks.index')->withInput()->withErrors($err->getMessage());
         }
+    }
+
+    public function getClientInfo()
+    {
+        $items = Client::query()
+            ->with('saleDetails.feasibilityRequirementDetails', 'billingAddress')
+            ->where('client_no', 'like', '%' . request()->search . '%')
+            ->get()
+            ->map(fn($item) => [
+                'value' => $item->client_no,
+                'label' => $item->client_name,
+                'contact_person' => $item->contact_person,
+                'contact_no' => $item->contact_no,
+                'saleDetails' => $item->saleDetails
+            ]);
+        return response()->json($items);
     }
 }

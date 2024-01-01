@@ -53,15 +53,15 @@
                         <td class="text-center">{{ $ip->address }}</td>
                         <td class="text-center">{{ $ip->type }}</td>
                         <td class="text-center">{{ $ip->purpose }}</td>
-                        <td class="text-center">{{ $ip->vlan_id }}</td> 
-                        <td class="text-center">{{ $ip->zone->name }}</td> 
+                        <td class="text-center">{{ $ip->vlan_id }}</td>
+                        <td class="text-center">{{ $ip?->zone?->name }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
                                     <a href="{{ route('ips.edit', $ip->id) }}" data-toggle="tooltip" title="Edit"
                                         class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    <form action="{{ url("admin/ips/$ip->id") }}" method="POST"
-                                        data-toggle="tooltip" title="Delete" class="d-inline">
+                                    <form action="{{ url("admin/ips/$ip->id") }}" method="POST" data-toggle="tooltip"
+                                        title="Delete" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm delete"><i

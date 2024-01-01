@@ -55,9 +55,7 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-{{--                                    <a href="{{ route('gate-pass-pdf', $gate_pass->id) }}" data-toggle="tooltip" title="PDF" class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>--}}
-{{--                                    <a href="{{ route('gate-passes.show', $gate_pass->id) }}" data-toggle="tooltip"--}}
-{{--                                       title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>--}}
+{{--                                title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>--}}
                                     <a href="{{ route('internal-feedbacks.edit', $value->id) }}" data-toggle="tooltip" title="Edit"
                                        class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     <form action="{{ route('internal-feedbacks.destroy',$value->id) }}" method="POST" data-toggle="tooltip"

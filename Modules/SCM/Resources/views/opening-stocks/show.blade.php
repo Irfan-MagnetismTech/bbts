@@ -53,7 +53,14 @@
                         <td> {{ $detail->quantity ?? ''}} </td>
                         <td> {{ $detail->brand->name ?? ''}} </td>
                         <td> {{ $detail->model ?? ''}} </td>
-                        <td> {{ $detail->serialCodeLines->first()->serial_or_drum_code ?? '' }}</td>
+{{--                        <td> {{ $detail->serialCodeLines->pluck('serial_or_drum_code') ?? '' }}</td>--}}
+                        <td>
+                            @if($detail->serialCodeLines->isNotEmpty())
+                                {{ $detail->serialCodeLines->pluck('serial_or_drum_code')->reject(function ($item) {
+                                    return $item === null;
+                                })->implode(', ') }}
+                            @endif
+                        </td>
                         <td> {{ $detail->total_amount ?? ''}} </td>
                     </tr>
                 @endforeach

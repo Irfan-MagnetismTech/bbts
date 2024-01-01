@@ -35,7 +35,7 @@ class ReportController extends Controller
         $clientId = $request->client_id;
         $duration = null;
 
-        if($clientId) {
+        if ($clientId) {
             $clientId = Client::where('id', $clientId)->first()->client_no;
         }
 
@@ -69,6 +69,9 @@ class ReportController extends Controller
             })
             ->when(!empty($duration), function ($durationQuery) use ($duration) {
                 $durationQuery->where('duration', '<=', $duration);
+            })
+            ->when(!empty($request->search_by_days), function ($searchByDaysQuery) use ($request) {
+                $searchByDaysQuery->where('created_at', '>=', now()->subDays($request->search_by_days));
             })
             ->orderBy('created_at', 'desc')
             ->get();
@@ -121,7 +124,7 @@ class ReportController extends Controller
         $clientId = $request->client_id;
         $duration = null;
 
-        if($clientId) {
+        if ($clientId) {
             $clientId = Client::where('id', $clientId)->first()->client_no;
         }
 
@@ -170,23 +173,22 @@ class ReportController extends Controller
         }
     }
 
-public function repeatedTicketClientList()
-{
+    public function repeatedTicketClientList()
+    {
 
-    return view('ticketing::reports.repeated-ticket-client-list');
-}
-public function getRepeatedTicketClientList(Request $request)
-{
-    $clients = SupportTicket::with('client')->whereIn('client_no', function ($query) {
-        $query->select('client_no')
-            ->from('support_tickets');
-           
+        return view('ticketing::reports.repeated-ticket-client-list');
+    }
+    public function getRepeatedTicketClientList(Request $request)
+    {
+        $clients = SupportTicket::with('client')->whereIn('client_no', function ($query) {
+            $query->select('client_no')
+                ->from('support_tickets');
+
             // ->havingRaw('COUNT(client_no) > 1');
-    })
-    ->where('created_at', '>=', now()->subDays($request->selected_day))
-    ->get()
-    ->groupBy('client_no');
-    return $clients;
-}
-    
+        })
+            ->where('created_at', '>=', now()->subDays($request->selected_day))
+            ->get()
+            ->groupBy('client_no');
+        return $clients;
+    }
 }

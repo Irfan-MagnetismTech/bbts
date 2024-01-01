@@ -32,6 +32,7 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     require __DIR__ . '/jaber.php';
     require __DIR__ . '/irfan.php';
     require __DIR__ . '/saiful.php';
+    require __DIR__ . '/report.php';
 
     Route::resources([
         'lead-generation' => LeadGenerationController::class,
