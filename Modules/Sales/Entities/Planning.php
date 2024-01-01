@@ -13,6 +13,11 @@ class Planning extends Model
         return $this->hasOne(LeadGeneration::class, 'client_no', 'client_no');
     }
 
+    public function client()
+    {
+        return $this->hasOne(Client::class, 'client_no', 'client_no');
+    }
+
     public function feasibilityRequirementDetail()
     {
         return $this->hasOne(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
@@ -51,5 +56,10 @@ class Planning extends Model
     public function ConnectivityRequirement()
     {
         return $this->hasOne(ConnectivityRequirement::class, 'id', 'connectivity_requirement_id');
+    }
+
+    public function survey()
+    {
+        return $this->hasOne(Survey::class, 'fr_no', 'fr_no');
     }
 }
