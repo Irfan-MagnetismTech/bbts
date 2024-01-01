@@ -112,48 +112,48 @@
                 <div class="col-12">
                     <h4 class="text-center mt-5">Feasibility Information</h4>
                 </div>
-                @if(!empty($supportTicket->physicalConnectivity))
-                @foreach ($supportTicket->physicalConnectivity->lines as $line)
-                    <hr />
-                    <div class="row align-items-center mt-2">
-                        <div class="col-2 text-right">
-                            Swtich Port
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group mb-0">
-                                <input type="text" class="form-control" value="{{ $line->port }}" disabled>
+                @if (!empty($supportTicket->physicalConnectivity))
+                    @foreach ($supportTicket->physicalConnectivity->lines as $line)
+                        <hr />
+                        <div class="row align-items-center mt-2">
+                            <div class="col-2 text-right">
+                                Swtich Port
                             </div>
-                        </div>
-                        <div class="col-2 text-right">
-                            VLAN
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group mb-0">
-                                <input type="text" class="form-control" value="{{ $line->vlan }}" disabled>
+                            <div class="col-4">
+                                <div class="form-group mb-0">
+                                    <input type="text" class="form-control" value="{{ $line->port }}" disabled>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="row align-items-center mt-2">
-                        <div class="col-2 text-right">
-                            Switch IP
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group mb-0">
-                                <input type="text" class="form-control" value="{{ $line->device_ip }}" disabled>
+                            <div class="col-2 text-right">
+                                VLAN
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group mb-0">
+                                    <input type="text" class="form-control" value="{{ $line->vlan }}" disabled>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-2 text-right">
-                            LDP
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group mb-0">
-                                <input type="text" class="form-control" value="{{ $line?->ldb }}" disabled>
+                        <div class="row align-items-center mt-2">
+                            <div class="col-2 text-right">
+                                Switch IP
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group mb-0">
+                                    <input type="text" class="form-control" value="{{ $line->device_ip }}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-2 text-right">
+                                LDP
+                            </div>
+                            <div class="col-4">
+                                <div class="form-group mb-0">
+                                    <input type="text" class="form-control" value="{{ $line?->ldb }}" disabled>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
                 @endif
                 <div class="row align-items-center mt-2">
                     <div class="col-2 text-right">
@@ -223,7 +223,7 @@
                     <div class="col-8">
                         <div class="form-group mb-0">
                             <input type="text" class="form-control"
-                            value="{{ $supportTicket?->clientDetail?->client?->email }}"disabled>
+                                value="{{ $supportTicket?->clientDetail?->client?->email }}"disabled>
                         </div>
                     </div>
                 </div>
@@ -233,8 +233,7 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                            <input type="text" class="form-control" value="" disabled>
                         </div>
                     </div>
                 </div>
@@ -244,8 +243,7 @@
                     </div>
                     <div class="col-8">
                         <div class="form-group mb-0">
-                            <input type="text" class="form-control"
-                                value="" disabled>
+                            <input type="text" class="form-control" value="" disabled>
                         </div>
                     </div>
                 </div>
@@ -307,15 +305,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($supportTicket->supportTicketLifeCycles as $activity)
-                            <tr>
-                                <td>{{ $loop->index + 1 }}</td>
-                                <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('H:i a \o\n d/m/Y') }}</td>
-                                <td>{{ $activity->remarks }}</td>
-                                <td>{{ $activity->description }}</td>
-                                <td>{{ $activity?->user?->employee?->department?->name }}</td>
-                                <td>{{ $activity?->user?->name }}</td>
-                            </tr>
+                            @foreach ($supportTicket->supportTicketLifeCycles as $activity)
+                                <tr>
+                                    <td>{{ $loop->index + 1 }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($activity->created_at)->format('h:i A \o\n d/m/Y') }}</td>
+                                    <td>{{ $activity->remarks }}</td>
+                                    <td>{{ $activity->description }}</td>
+                                    <td>{{ $activity?->user?->employee?->department?->name }}</td>
+                                    <td>{{ $activity?->user?->name }}</td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -384,39 +382,39 @@
                         </a>
                     @endcan
 
-                    @can('support-ticket-forward')
+                    {{-- @can('support-ticket-forward')
                         <a href="{{ route('ticket-movements', ['type' => 'Forward', 'id' => $supportTicket->id]) }}"
                             class="btn btn-success btn-round btn-inline-block py-2">
                             Forward
                             <i class="fas fa-chevron-circle-right"></i>
                         </a>
-                    @endcan
+                    @endcan --}}
 
-                    @can('support-ticket-handover')
+                    {{-- @can('support-ticket-handover')
                         <a href="{{ route('ticket-movements', ['type' => 'Handover', 'id' => $supportTicket->id]) }}"
                             class="btn btn-success btn-round btn-inline-block py-2">
                             Handover
                             <i class="fas fa-handshake"></i>
                         </a>
-                    @endcan
+                    @endcan --}}
 
-                    @can('support-client-send-email')
+                    {{-- @can('support-client-send-email')
                         <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'email']) }}"
                             class="btn btn-success btn-round btn-inline-block py-2">
                             Send Mail
                             <i class="fas fa-envelope"></i>
                         </a>
-                    @endcan
+                    @endcan --}}
 
-                    @can('support-client-send-sms')
+                    {{-- @can('support-client-send-sms')
                         <a href="{{ route('notify-client', ['ticketId' => $supportTicket?->id, 'type' => 'sms']) }}"
                             class="btn btn-success btn-round btn-inline-block py-2">
                             Send SMS
                             <i class="fas fa-inbox"></i>
                         </a>
-                    @endcan
+                    @endcan --}}
 
-                    @can('support-ticket-close')
+                    {{-- @can('support-ticket-close')
                         @if ($supportTicket->status != 'Closed')
                             <a href="{{ route('close-ticket', ['supportTicketId' => $supportTicket?->id]) }}"
                                 class="btn btn-danger btn-round btn-inline-block py-2">
@@ -424,7 +422,7 @@
                                 <i class="far fa-check-circle"></i>
                             </a>
                         @endif
-                    @endcan
+                    @endcan --}}
                 </div>
             @else
                 <hr>
@@ -435,13 +433,13 @@
                 @endphp
                 @if ($minutesDiff <= 60 * 24)
                     <div class="col-12 d-flex justify-content-center mt-3">
-                        @can('support-ticket-reopen')
+                        {{-- @can('support-ticket-reopen')
                             <a href="{{ route('reopen-ticket', ['supportTicketId' => $supportTicket->id]) }}"
                                 class="btn btn-success btn-round btn-inline-block py-2">
                                 <i class="fas fa-folder-open"></i>
                                 Reopen
                             </a>
-                        @endcan
+                        @endcan --}}
                     </div>
                 @endif
             @endif

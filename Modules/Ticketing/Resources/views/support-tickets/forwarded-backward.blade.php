@@ -82,7 +82,7 @@
                     <tr>
                         <td>{{ $loop->index + 1 }}</td>
                         <td>{{ $movement->supportTicket->ticket_no }}</td>
-                        <td>{{ $movement->user->name }}</td>
+                        <td>{{ $movement?->user?->name }}</td>
                         <td>{{ $movement->supportTicket->priority }}</td>
                         <td>{{ $movement->supportTicket->supportComplainType->name}}</td>
                         <td>{{ $movement->supportTicket->ticketSource->name}}</td>

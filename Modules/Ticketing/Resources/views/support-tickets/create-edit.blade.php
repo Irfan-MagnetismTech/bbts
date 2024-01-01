@@ -39,7 +39,7 @@
                     @csrf
 
                     <div class="row">
-                        <div class="col-5">
+                        <div class="col-6">
                             <div class="row">
                                 <div class="col-6">
                                     <label for="client_no" class="font-weight-bold">Client ID: <span
@@ -67,26 +67,20 @@
                                         @endif`
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mt-2">
                                 <div class="col-6">
                                     <label for="opening_time">Opening Time: <span
                                             class="text-danger font-bold">*</span></label>
                                     <input type="text" class="form-control" id="opening_time" name="opening_time"
-                                        value="{{ old('opening_time') ?? (!empty($supportTicket) ? $supportTicket?->opening_date : \Carbon\Carbon::now()->format('d/m/Y H:i A')) }}"
+                                        value="{{ old('opening_time') ?? (!empty($supportTicket) ? $supportTicket?->opening_date : \Carbon\Carbon::now()->format('d/m/Y h:i A')) }}"
                                         disabled>
                                 </div>
                                 <div class="col-6">
                                     <label for="complain_time">Complain Time:</label>
                                     <input type="datetime-local" class="form-control" id="complain_time"
                                         name="complain_time"
-                                        value="{{ old('complain_time') ?? (!empty($supportTicket) ? $supportTicket?->complain_time : \Carbon\Carbon::now()->format('Y-m-d\TH:i:s')) }}">
+                                        value="{{ old('complain_time') ?? (!empty($supportTicket) ? $supportTicket?->complain_time : \Carbon\Carbon::now()->format('d/m/Y h:i A')) }}">
                                 </div>
-                            </div>
-                            <div class="row">
-
-
-                                <div class="form-group col-6">
+                                <div class="col-6">
                                     <label for="support_complain_type_id">Complain Type: <span
                                             class="text-danger font-bold">*</span></label>
                                     <select class="form-control select2" id="support_complain_type_id"
@@ -100,7 +94,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="col-6">
                                     <label for="description">Description: <span
                                             class="text-danger font-bold">*</span></label>
                                     <input type="text" class="form-control" id="description" name="description"
@@ -108,7 +102,7 @@
                                         value="{{ old('description') ?? (!empty($supportTicket) ? $supportTicket?->description : '') }}"
                                         placeholder="Description" required>
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="col-6">
                                     <label for="ticket_source_id">Source: <span
                                             class="text-danger font-bold">*</span></label>
                                     <select class="form-control select2" id="ticket_source_id" name="ticket_source_id"
@@ -122,7 +116,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="col-6">
                                     <label for="priority">Priority: <span class="text-danger font-bold">*</span></label>
                                     <select class="form-control select2" id="priority" name="priority" required>
                                         <option value="20" selected>Select Priority</option>
@@ -134,341 +128,143 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="col-6">
                                     <label for="remarks">Remarks:</label>
                                     <input type="text" class="form-control" id="remarks" name="remarks"
                                         aria-describedby="remarks"
                                         value="{{ old('remarks') ?? (!empty($supportTicket) ? $supportTicket?->remarks : '') }}"
                                         placeholder="Remarks">
                                 </div>
-
-
-                            </div>
-
-
-
-                            <p class="py-1 font-weight-bold">Mail</p>
-                            <div class="form-group">
-                                <label for="receiver_address">To:</label>
-                                <input type="text" class="form-control" id="receiver_address" name="receiver_address"
-                                    aria-describedby="receiver_address"
-                                    value="{{ old('receiver_address') ?? (!empty($supportTicket) ? $supportTicket?->mail_to : '') }}"
-                                    placeholder="To">
-                            </div>
-                            <div class="form-group">
-                                <label for="cc">CC:</label>
-                                <input type="text" class="form-control" id="cc" name="cc"
-                                    aria-describedby="cc"
-                                    value="{{ old('cc') ?? (!empty($supportTicket) ? $supportTicket?->cc : '') }}"
-                                    placeholder="CC">
-                            </div>
-                            <div class="form-group">
-                                <label for="subject">Subject:</label>
-                                <input type="text" class="form-control" id="subject" name="subject"
-                                    aria-describedby="subject"
-                                    value="{{ old('subject') ?? (!empty($supportTicket) ? $supportTicket?->subject : '') }}"
-                                    placeholder="Subject">
-                            </div>
-                            <div class="form-group">
-                                <label for="body">Mail Description:</label>
-                                <input type="text" class="form-control" id="body" name="body"
-                                    aria-describedby="body"
-                                    value="{{ old('body') ?? (!empty($supportTicket) ? $supportTicket?->body : '') }}"
-                                    placeholder="Mail Description">
                             </div>
                         </div>
-
-                        <div class="col-7">
+                        <div class="col-6">
                             <div class="row">
-                                <div class="col-6 pt-4 px-0">
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4" for="name">Client Name
-                                            <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control col-8" id="name" name="name"
-                                            value="{{ old('name') ?? (!empty($supportTicket) ? $supportTicket?->client?->client_name : '') }}"
-                                            placeholder="Client Name" disabled>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4" for="contact_person">
-                                            Contact Person</label>
-                                        <input type="text" disabled class="form-control col-8" id="contact_person"
-                                            value="{{ old('contact_person') ?? (!empty($supportTicket) ? $supportTicket?->client?->contact_person : '') }}"
-                                            name="contact_person" placeholder="Contact Person">
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4" for="email_address">
-                                            E-mail Address</label>
-                                        <input type="text" disabled class="form-control col-8" id="email_address"
-                                            value="{{ old('email_address') ?? (!empty($supportTicket) ? $supportTicket?->client?->email : '') }}"
-                                            name="email_address" placeholder="E-mail Address">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="receiver_address">Mail To:</label>
+                                        <input type="text" class="form-control" id="receiver_address"
+                                            name="receiver_address" aria-describedby="receiver_address"
+                                            value="{{ old('receiver_address') ?? (!empty($supportTicket) ? $supportTicket?->mail_to : '') }}"
+                                            placeholder="To">
                                     </div>
                                 </div>
-
-                                <div class="col-6 pt-4 px-0">
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4" for="address">
-                                            Address</label>
-                                        <input type="text" class="form-control col-8" id="address" name="address"
-                                            value="{{ old('address') ?? (!empty($supportTicket) ? $supportTicket?->client?->location : '') }}"
-                                            placeholder="Address" disabled>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4" for="contact_no"> Contact
-                                            Number</label>
-                                        <input type="text" class="form-control col-8" id="contact_no"
-                                            value="{{ old('contact_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->contact_no : '') }}"
-                                            name="contact_no" placeholder="Contact Number" disabled>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-space-between mb-2">
-                                        <label class="d-flex align-items-center m-0 pr-1 col-4"
-                                            for="contact_no">Lat-Long</label>
-                                        <input type="text" class="form-control col-8" id="contact_no"
-                                            value="{{ old('contact_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->lat . '-' . $supportTicket?->client?->long : '') }}"
-                                            name="contact_no" placeholder="Latitude - Longitude" disabled>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="cc">CC:</label>
+                                        <input type="text" class="form-control" id="cc" name="cc"
+                                            aria-describedby="cc"
+                                            value="{{ old('cc') ?? (!empty($supportTicket) ? $supportTicket?->cc : '') }}"
+                                            placeholder="CC">
                                     </div>
                                 </div>
-
-                                <div class="row pt-4 m-0 px-0" id="physical_connectivity">
-                                    <div class="col-12">
-                                        <h5 class="text-center">Physical Connectivity Information</h5>
-                                        <hr />
-                                    </div>
-                                    @if (!empty($supportTicket->physicalConnectivity?->lines))
-                                        @forelse ($supportTicket?->physicalConnectivity?->lines as $item)
-                                            <div class="col-4">
-                                                <div class="form-item">
-                                                    <input type="text" id="link_type" name="link_type"
-                                                        class="form-control" autocomplete="off"
-                                                        value="{{ $item->link_type }}" readonly>
-                                                    <label for="link_type">Link Type</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="form-item">
-                                                    <input type="text" id="method" name="method"
-                                                        class="form-control" autocomplete="off"
-                                                        value="{{ $item->method }}" readonly>
-                                                    <label for="method">Method</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="form-item">
-                                                    <input type="text" id="ldp" name="ldp"
-                                                        class="form-control" autocomplete="off"
-                                                        value="{{ $item->ldp }}" readonly>
-                                                    <label for="ldp">LDP</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-item">
-                                                    <input type="text" id="switch_port" name="switch_port"
-                                                        class="form-control" autocomplete="off"
-                                                        value="{{ $item->port }}" readonly>
-                                                    <label for="switch_port">Switch Port</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-item">
-                                                    <input type="text" id="vlan" name="vlan"
-                                                        class="form-control" autocomplete="off"
-                                                        value="{{ $item->vlan }}" readonly>
-                                                    <label for="vlan">VLAN</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-item">
-                                                    <input type="text" id="switch_ip" name="switch_ip"
-                                                        class="form-control" autocomplete="off"
-                                                        value="{{ $item->device_ip }}" readonly>
-                                                    <label for="switch_ip">Switch IP</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-item">
-                                                    <input type="text" id="pop" name="pop"
-                                                        class="form-control" autocomplete="off"
-                                                        value="{{ $item->pop }}" readonly>
-                                                    <label for="pop">POP</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <hr />
-                                            </div>
-                                        @empty
-
-                                            <div class="col-4">
-                                                <div class="form-item">
-                                                    <input type="text" id="link_type" name="link_type"
-                                                        class="form-control" autocomplete="off" value="" required>
-                                                    <label for="link_type">Link Type</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="form-item">
-                                                    <input type="text" id="method" name="method"
-                                                        class="form-control" autocomplete="off" value="" required>
-                                                    <label for="method">Method</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-4">
-                                                <div class="form-item">
-                                                    <input type="text" id="ldp" name="ldp"
-                                                        class="form-control" autocomplete="off" value="" required>
-                                                    <label for="ldp">LDP</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-item">
-                                                    <input type="text" id="switch_port" name="switch_port"
-                                                        class="form-control" autocomplete="off" value="" required>
-                                                    <label for="switch_port">Switch Port</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-item">
-                                                    <input type="text" id="vlan" name="vlan"
-                                                        class="form-control" autocomplete="off" value="" required>
-                                                    <label for="vlan">VLAN</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-item">
-                                                    <input type="text" id="switch_ip" name="switch_ip"
-                                                        class="form-control" autocomplete="off" value="" required>
-                                                    <label for="switch_ip">Switch IP</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-3">
-                                                <div class="form-item">
-                                                    <input type="text" id="pop" name="pop"
-                                                        class="form-control" autocomplete="off" value="" required>
-                                                    <label for="pop">POP</label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <hr />
-                                            </div>
-                                        @endforelse
-                                    @endif
-                                </div>
-
                                 <div class="col-12">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-bordered" id="previousTickets">
-                                            <thead>
-                                                <tr>
-                                                    <th>Ticket No.</th>
-                                                    <th>Status</th>
-                                                    <th>Date &amp; Time</th>
-                                                    <th>Problem</th>
-                                                    <th>Reason</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="form-group">
+                                        <label for="subject">Subject:</label>
+                                        <input type="text" class="form-control" id="subject" name="subject"
+                                            aria-describedby="subject"
+                                            value="{{ old('subject') ?? (!empty($supportTicket) ? $supportTicket?->subject : '') }}"
+                                            placeholder="Subject">
                                     </div>
-
-
-
                                 </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="body">Mail Description:</label>
+                                        <input type="text" class="form-control" id="body" name="body"
+                                            aria-describedby="body"
+                                            value="{{ old('body') ?? (!empty($supportTicket) ? $supportTicket?->body : '') }}"
+                                            placeholder="Mail Description">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="" class="d-block">Ticket Close:</label>
 
-                                <input type="hidden" name="opening_date"
-                                    value="{{ encrypt(\Carbon\Carbon::now()->format('Y-m-d H:i:s')) }}" />
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label" for="closed">
+                                                        <input type="radio" class="form-check-input radioButton"
+                                                            id="closed" name="status" value="Closed"
+                                                            @checked(@$supportTicket->status == 'Closed' || old('status') == 'Closed')>
+                                                        <span style="position: relative; top: 3px">
+                                                            Yes
+                                                        </span>
+                                                    </label>
+                                                </div>
 
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label" for="opened">
+                                                        <input type="radio" class="form-check-input radioButton"
+                                                            id="opened" name="status" @checked(@$supportTicket->status != 'Closed' || (!empty(old('status')) ? old('status') != 'Closed' : ''))
+                                                            value="Pending">
+                                                        <span style="position: relative; top: 3px">
+                                                            No
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="" class="d-block">Mail Notification:</label>
+
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label" for="sendMail">
+                                                        <input type="radio" class="form-check-input radioButton"
+                                                            id="sendMail" name="mailNotification" value="1"
+                                                            @checked(@$supportTicket->mailNotification == '1' || old('mailNotification') == '1')>
+                                                        <span style="position: relative; top: 3px">
+                                                            Yes
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label" for="noMailNotification">
+                                                        <input type="radio" checked class="form-check-input radioButton"
+                                                            id="noMailNotification" name="mailNotification"
+                                                            @checked(@$supportTicket->mailNotification == '0' || old('mailNotification') == '0') value="0">
+                                                        <span style="position: relative; top: 3px">
+                                                            No
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-group">
+                                                <label for="" class="d-block">SMS Notification:</label>
+
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label" for="smsNotification">
+                                                        <input type="radio" class="form-check-input radioButton"
+                                                            id="smsNotification" name="smsNotification" value="1"
+                                                            @checked(@$supportTicket->smsNotification == '1' || old('smsNotification') == '1')>
+                                                        <span style="position: relative; top: 3px">
+                                                            Yes
+                                                        </span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-check-inline">
+                                                    <label class="form-check-label" for="noSmsNotification">
+                                                        <input type="radio" checked class="form-check-input radioButton"
+                                                            id="noSmsNotification" name="smsNotification"
+                                                            @checked(@$supportTicket->smsNotification == '0' || old('smsNotification') == '0') value="0">
+                                                        <span style="position: relative; top: 3px">
+                                                            No
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
                     </div>
-
                     <div class="clear-both"></div>
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="form-group">
-                                <label for="" class="d-block">Ticket Close:</label>
 
-                                <div class="form-check-inline">
-                                    <label class="form-check-label" for="closed">
-                                        <input type="radio" class="form-check-input radioButton" id="closed"
-                                            name="status" value="Closed" @checked(@$supportTicket->status == 'Closed' || old('status') == 'Closed')>
-                                        <span style="position: relative; top: 3px">
-                                            Yes
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <div class="form-check-inline">
-                                    <label class="form-check-label" for="opened">
-                                        <input type="radio" class="form-check-input radioButton" id="opened"
-                                            name="status" @checked(@$supportTicket->status != 'Closed' || (!empty(old('status')) ? old('status') != 'Closed' : '')) value="Pending">
-                                        <span style="position: relative; top: 3px">
-                                            No
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="form-group">
-                                <label for="" class="d-block">Mail Notification:</label>
-
-                                <div class="form-check-inline">
-                                    <label class="form-check-label" for="sendMail">
-                                        <input type="radio" class="form-check-input radioButton" id="sendMail"
-                                            name="mailNotification" value="1" @checked(@$supportTicket->mailNotification == '1' || old('mailNotification') == '1')>
-                                        <span style="position: relative; top: 3px">
-                                            Yes
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <div class="form-check-inline">
-                                    <label class="form-check-label" for="noMailNotification">
-                                        <input type="radio" checked class="form-check-input radioButton"
-                                            id="noMailNotification" name="mailNotification" @checked(@$supportTicket->mailNotification == '0' || old('mailNotification') == '0')
-                                            value="0">
-                                        <span style="position: relative; top: 3px">
-                                            No
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="form-group">
-                                <label for="" class="d-block">SMS Notification:</label>
-
-                                <div class="form-check-inline">
-                                    <label class="form-check-label" for="smsNotification">
-                                        <input type="radio" class="form-check-input radioButton" id="smsNotification"
-                                            name="smsNotification" value="1" @checked(@$supportTicket->smsNotification == '1' || old('smsNotification') == '1')>
-                                        <span style="position: relative; top: 3px">
-                                            Yes
-                                        </span>
-                                    </label>
-                                </div>
-
-                                <div class="form-check-inline">
-                                    <label class="form-check-label" for="noSmsNotification">
-                                        <input type="radio" checked class="form-check-input radioButton"
-                                            id="noSmsNotification" name="smsNotification" @checked(@$supportTicket->smsNotification == '0' || old('smsNotification') == '0')
-                                            value="0">
-                                        <span style="position: relative; top: 3px">
-                                            No
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="row" id="formSubmit">
                         <div class="col-3 mx-auto">
                             <div class="mx-auto mt-2">
@@ -476,6 +272,175 @@
                                     <button class="btn btn-success btn-round btn-block py-2">Submit</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered d-none" id="ClientInfo">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="6"
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Client Information</th>
+                                        </tr>
+                                        <tr>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Client Name
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Contact Person
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                E-mail Address
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Address
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Contact Number
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Lat-Long</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td id="name">
+                                                {{ old('name') ?? (!empty($supportTicket) ? $supportTicket?->client?->client_name : '') }}
+                                            </td>
+                                            <td id="contact_person">
+                                                {{ old('contact_person') ?? (!empty($supportTicket) ? $supportTicket?->client?->contact_person : '') }}
+                                            </td>
+                                            <td id="email_address">
+                                                {{ old('email_address') ?? (!empty($supportTicket) ? $supportTicket?->client?->email : '') }}
+                                            </td>
+                                            <td id="address">
+                                                {{ old('address') ?? (!empty($supportTicket) ? $supportTicket?->client?->location : '') }}
+                                            </td>
+                                            <td id="contact_no">
+                                                {{ old('contact_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->contact_no : '') }}
+                                            </td>
+                                            <td id="lat_long">
+                                                {{ old('contact_no') ?? (!empty($supportTicket) ? $supportTicket?->client?->lat . '-' . $supportTicket?->client?->long : '') }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <hr style="padding: 2px; margin: 2px;" />
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered d-none" id="previousTickets">
+                                    <thead>
+                                        <tr>
+                                            <th>Ticket No.</th>
+                                            <th>Status</th>
+                                            <th>Date &amp; Time</th>
+                                            <th>Problem</th>
+                                            <th>Reason</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered d-none" id="physical_connectivity">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="7"
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Physical Connectivity Information</th>
+                                        </tr>
+                                        <tr>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Link Type
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Method
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                LDP
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Switch Port
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                VLAN
+                                            </th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                Switch IP</th>
+                                            <th
+                                                style="background: #acc0ae !important;
+                                                                color: #3d3c3c;">
+                                                POP</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="physical_connectivity_body">
+                                        @if (!empty($supportTicket->physicalConnectivity?->lines))
+                                            @forelse ($supportTicket?->physicalConnectivity?->lines as $item)
+                                                <tr>
+                                                    <td>{{ $item->link_type }}</td>
+                                                    <td>{{ $item->method }}</td>
+                                                    <td>{{ $item->ldp }}</td>
+                                                    <td>{{ $item->port }}</td>
+                                                    <td>{{ $item->vlan }}</td>
+                                                    <td>{{ $item->device_ip }}</td>
+                                                    <td>{{ $item->pop }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="7" class="text-center">No Data Found</td>
+                                                </tr>
+                                            @endforelse
+                                        @else
+                                            <tr>
+                                                <td colspan="7" class="text-center">No Data Found</td>
+                                            </tr>
+                                        @endif
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input type="hidden" name="opening_date"
+                                value="{{ encrypt(\Carbon\Carbon::now()->format('Y-m-d H:i:s')) }}" />
+
                         </div>
                     </div>
                 </form>
@@ -501,19 +466,18 @@
             });
             $("#fr_no").html(fr_no)
             $("#fr_no").select2();
-            $('#name').val(e.params.data.fullObject?.client_name)
-            $('#address').val(e.params.data.fullObject?.address)
-            $('#contact_person').val(e.params.data.fullObject?.contact_person)
-            $('#contact_no').val(e.params.data.fullObject?.contact_no)
-            $('#email_address').val(e.params.data.fullObject?.email)
+            $('#name').text(e.params.data.fullObject?.client_name)
+            $('#address').text(e.params.data.fullObject?.address)
+            $('#contact_person').text(e.params.data.fullObject?.contact_person)
+            $('#contact_no').text(e.params.data.fullObject?.contact_no)
+            $('#email_address').text(e.params.data.fullObject?.email)
             $("#client_link_id").val(e.params.data.fullObject?.text)
+            $('#lat_long').text(e.params.data.fullObject?.lat + '-' + e.params.data.fullObject?.long)
+            $('#ClientInfo').removeClass('d-none')
         });
 
         $('#fr_no').on('select2:select', function(e) {
-            var html = `<div class="col-12">
-                            <h5 class="text-center">Physical Connectivity Information</h5>
-                            <hr />
-                        </div>`;
+            let html = '';
             let fr_no = e.params.data.id;
             let clientId = $("#client_no").val();
             getClientsPreviousTickets(fr_no, 5)
@@ -524,57 +488,20 @@
                 dataType: "json"
             }).done(function(data) {
                 $.each(data.lines, function(index, item) {
-                    html += `
-                        <div class="col-4">
-                            <div class="form-item">
-                                <input type="text" id="link_type" name="link_type" class="form-control" autocomplete="off" value="${item.link_type}" readonly>
-                                <label for="link_type">Link Type</label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-item">
-                                <input type="text" id="method" name="method" class="form-control" autocomplete="off" value="${item.method}" readonly>
-                                <label for="method">Method</label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-item">
-                                <input type="text" id="ldp" name="ldp" class="form-control" autocomplete="off" value="${item.ldp}" readonly>
-                                <label for="ldp">LDP</label>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-item">
-                                <input type="text" id="switch_port" name="switch_port" class="form-control" autocomplete="off" value="${item.port}" readonly>
-                                <label for="switch_port">Switch Port</label>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-item">
-                                <input type="text" id="vlan" name="vlan" class="form-control" autocomplete="off" value="${item.vlan}" readonly>
-                                <label for="vlan">VLAN</label>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-item">
-                                <input type="text" id="switch_ip" name="switch_ip" class="form-control" autocomplete="off" value="${item.device_ip}" readonly>
-                                <label for="switch_ip">Switch IP</label>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-item">
-                                <input type="text" id="pop" name="pop" class="form-control" autocomplete="off" value="${item.pop}" readonly>
-                                <label for="pop">POP</label>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <hr />
-                        </div>
-                        `;
+                    html += `<tr>
+                                <td>${item.link_type}</td>
+                                <td>${item.method}</td>
+                                <td>${item.ldp}</td>
+                                <td>${item.port}</td>
+                                <td>${item.vlan}</td>
+                                <td>${item.device_ip}</td>
+                                <td>${item.pop}</td>
+                            </tr>`;
                 });
 
-                $("#physical_connectivity").empty();
-                $("#physical_connectivity").html(html);
+                $("#physical_connectivity_body").empty();
+                $("#physical_connectivity_body").html(html);
+                $("#physical_connectivity").removeClass('d-none');
             });
         });
 
@@ -627,6 +554,7 @@
 
                 $("#previousTickets").find("tbody").html("");
                 $("#previousTickets").find("tbody").html(tableData);
+                $("#previousTickets").removeClass('d-none');
 
             })
         }
