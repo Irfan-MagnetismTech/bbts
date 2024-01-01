@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('brand')->nullable();
             $table->string('model')->nullable();
             $table->string('equipment_type')->nullable();
-            $table->interger('ip_id')->nullable();
+            $table->integer('ip_id')->nullable();
             $table->string('subnet_mask')->nullable();
             $table->string('tower_type')->nullable();
             $table->string('tower_height')->nullable();

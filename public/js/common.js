@@ -55,13 +55,27 @@ Echo.private(`Modules.Admin.Entities.User.${userId}`)
     .error((error) => {
         console.error(error);
     });
-window.onload = function () {
-    const activeMenuItem = document.querySelector(".active");
-    if (activeMenuItem) {
-        activeMenuItem.scrollIntoView({
-            behavior: "smooth",
-        });
-    }
+
+// window.onload = function () {
+//     setTimeout(function() {
+//         const activeMenuItem = document.querySelector(".active");
+//         if (activeMenuItem) {
+//             activeMenuItem.scrollIntoView({
+//                 behavior: "smooth",
+//             });
+//         }
+//     });
+// };
+
+window.onload = function() {
+    setTimeout(function() {
+        const activeMenuItem = document.querySelector(".active");
+        if (activeMenuItem) {
+            activeMenuItem.scrollIntoView({
+                behavior: "smooth",
+            });
+        }
+    }, 500);
 };
 
 $(".form-item input").on("keyup change", function () {
