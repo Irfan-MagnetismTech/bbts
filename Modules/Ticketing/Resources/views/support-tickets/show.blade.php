@@ -414,7 +414,7 @@
                         </a>
                     @endcan --}}
 
-                    {{-- @can('support-ticket-close')
+                    @can('support-ticket-close')
                         @if ($supportTicket->status != 'Closed')
                             <a href="{{ route('close-ticket', ['supportTicketId' => $supportTicket?->id]) }}"
                                 class="btn btn-danger btn-round btn-inline-block py-2">
@@ -422,7 +422,7 @@
                                 <i class="far fa-check-circle"></i>
                             </a>
                         @endif
-                    @endcan --}}
+                    @endcan
                 </div>
             @else
                 <hr>
