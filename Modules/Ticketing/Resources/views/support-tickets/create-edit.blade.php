@@ -30,7 +30,7 @@
             <div class="col-md-12">
                 <form
                     action="{{ !empty($supportTicket) ? route('support-tickets.update', ['support_ticket' => $supportTicket->id]) : route('support-tickets.store') }}"
-                    method="post" class="custom-form">
+                    method="post" class="custom-form" id="supportTicketForm" enctype="multipart/form-data">
                     @if (!empty($supportTicket))
                         @method('PUT')
                     @else
@@ -458,6 +458,24 @@
             })
         });
 
+        $('#supportTicketForm').on('submit', function(e) {
+            e.preventDefault();
+            let client_no = $('#client_no').val();
+            let fr_no = $('#fr_no').val();
+            if (client_no == '' || fr_no == '') {
+                //sweet alert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please select client and connectivity point!',
+                })
+                return false;
+            } else {
+                $(this).unbind('submit').submit();
+            }
+        });
+
+
         $('#client_no').on('select2:select', function(e) {
             let clientId = e.params.data.fullObject?.client?.id
             let fr_no = '<option value="">Select FR</option>';
@@ -546,7 +564,8 @@
                     tableData += '<td>' + value.support_complain_type.name + '</td>';
                     tableData += '<td>' + value.remarks + '</td>';
                     tableData +=
-                        '<td><div class="icon-btn"><a href="{{ route('support-tickets.index') }}/' + value
+                        '<td><div class="icon-btn"><a href="{{ route('support-tickets.index') }}/' +
+                        value
                         .id +
                         '" data-toggle="tooltip" title="Details" class="btn btn-outline-primary" data-original-title="Details"><i class="fas fa-eye"></i></a></div></td>';
                     tableData += '</tr>';
