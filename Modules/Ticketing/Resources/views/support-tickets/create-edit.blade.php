@@ -470,6 +470,8 @@
                     text: 'Please select client and connectivity point!',
                 })
                 return false;
+            } else {
+                $(this).unbind('submit').submit();
             }
         });
 
