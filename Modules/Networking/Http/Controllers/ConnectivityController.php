@@ -216,7 +216,7 @@ class ConnectivityController extends Controller
                         $query->where('id', $branch_id);
                     })->get();
         }elseif ($branch_id != null && $ip_address != null) {
-            $logical_connectivities = LogicalConnectivity::with('feasibilityRequirementDetails', 'lines')
+            $logical_connectivities = LogicalConnectivity::with(['feasibilityRequirementDetails', 'lines'])
                 ->whereHas('feasibilityRequirementDetails.branch', function ($query) use ($branch_id) {
                     $query->where('id', $branch_id);
                 })
@@ -261,7 +261,7 @@ class ConnectivityController extends Controller
                     $query->where('id', $branch_id);
                 })->get();
         } elseif ($branch_id != null && $vlan_address != null) {
-            $logical_connectivities = LogicalConnectivity::with('feasibilityRequirementDetails', 'lines')
+            $logical_connectivities = LogicalConnectivity::with(['feasibilityRequirementDetails', 'lines'])
                 ->whereHas('feasibilityRequirementDetails.branch', function ($query) use ($branch_id) {
                     $query->where('id', $branch_id);
                 })
