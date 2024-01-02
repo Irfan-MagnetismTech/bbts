@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    Pop Wise Equipment Report
+    Pop Wise Client Report
 @endsection
 
 @section('style')
@@ -48,25 +48,54 @@
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th colspan="3">Device Details</th>
-                    <th colspan="3">IP Address</th>
-                    <th colspan="2">POP Details</th>
-                    <th rowspan="2">Remarks</th>
+                    <th rowspan="2">Client ID</th>
+                    <th rowspan="2">Client Name</th>
+                    <th rowspan="2">Connectivity Point</th>
+                    <th>Service Type</th>
+                    <th colspan="5">IP Details</th>
+                    <th colspan="3">Switch Information</th>
                 </tr>
                 <tr>
-                    <th>Description</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>IP Address</th>
+                    <th>Internet</th>
+                    <th>Brandwidth</th>
+                    <th>IPV4</th>
+                    <th>IPV6</th>
                     <th>Subnet</th>
                     <th>Gateway</th>
-                    <th>POP Name</th>
-                    <th>Location</th>
+                    <th>Switch IP</th>
+                    <th>Switch Port</th>
+                    <th>Vlan</th>
                 </tr>
             </thead>
             <tbody>
-                {{-- @foreach ($pop_wise_equipments as $key => $pop_wise_equipment)
-                @endforeach --}}
+                @foreach ($pop_wise_clients as $key => $pop_wise_client)
+                    @foreach ($pop_wise_client['logical'] as $logical)
+                        <tr>
+                            {{-- Client ID, Client Name, and Connectivity Point --}}
+                            @if ($loop->first)
+                                {{-- Only for the first logical element --}}
+                                <td rowspan="{{ count($pop_wise_client['logical']) }}">{{ $key }}</td>
+                                <td rowspan="{{ count($pop_wise_client['logical']) }}">{{ $pop_wise_client['client_name'] }}
+                                </td>
+                                <td rowspan="{{ count($pop_wise_client['logical']) }}"></td>
+                            @endif
+                            {{-- Service Type and IP Details --}}
+                            <td>{{ $logical['product_category'] }}</td>
+                            <td>{{ $logical['quantity'] }}</td>
+                            <td>{{ $logical['ipv4'] }}</td>
+                            <td>{{ $logical['ipv6'] }}</td>
+                            <td>{{ $logical['subnetmask'] }}</td>
+                            <td>{{ $logical['gateway'] }}</td>
+                            @if ($loop->first)
+                                @foreach ($pop_wise_client['physical'] as $physical)
+                                    <td>{{ $physical->device_ip }}</td>
+                                    <td>{{ $physical->switch_port }}</td>
+                                    <td>{{ $physical->vlan }}</td>
+                                @endforeach
+                            @endif
+                        </tr>
+                    @endforeach
+                @endforeach
             </tbody>
         </table>
 

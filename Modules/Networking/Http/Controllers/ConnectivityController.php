@@ -19,6 +19,7 @@ use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Networking\Entities\BandwidthDestribution;
 use Modules\Networking\Entities\Connectivity;
 use Modules\Networking\Entities\PhysicalConnectivityLines;
+use Modules\SCM\Entities\ScmMur;
 
 class ConnectivityController extends Controller
 {
@@ -210,9 +211,10 @@ class ConnectivityController extends Controller
                     'client_name' => $client->first()->client->client_name,
                     'client_no' => $client->first()->client_no,
                     'physical' => $client->first()->lines,
-                    'logical' => $client->first()->logicalConnectivity->lines
+                    'logical' => $client->first()->logicalConnectivity->lines,
                 ];
             }
+
             $pops = Pop::latest()->get();
             return view('networking::reports.pop-wise-client-report', compact('pop_wise_clients', 'pops'));
         } else {
@@ -220,5 +222,34 @@ class ConnectivityController extends Controller
             $pop_wise_clients = '';
             return view('networking::reports.pop-wise-client-report', compact('pops', 'pop_wise_clients'));
         }
+    }
+
+    public function popWiseEquipmentReport()
+    {
+        $data = [];
+        ScmMur::query()
+            ->where('pop_id', request()->pop_id)
+            ->with(['lines.material', 'lines.brand'])
+            ->get()->map(function ($item) use (&$data) {
+                $item->lines->map(function ($line) use (&$data) {
+                    $data[] = [
+                        'label' => $line->material->name . ' - ' . $line->brand->name . ' - ' . $line->model . ' - ' . $line->serial_code,
+                        'value' => $line->material_id,
+                        'material_id' => $line->material_id,
+                        'brand_id' => $line->brand_id,
+                        'model' => $line->model,
+                        'serial_code' => $line->serial_code,
+                        'quantity' => $line->quantity,
+                        'unit_price' => $line->unit_price,
+                        'total_price' => $line->total_price,
+                        'remarks' => $line->remarks,
+                        'created_at' => $line->created_at,
+                        'updated_at' => $line->updated_at,
+                        'material' => $line->material->name,
+                        'brand' => $line->brand->name,
+                    ];
+                    return $data;
+                });
+            });
     }
 }
