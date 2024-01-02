@@ -92,16 +92,16 @@ return [
 
     //services status
     'serviceStatus' => [
-        'Active' => 'Active',
-        'Inactive' => 'Inactive',
-        'Increase' => 'Increase',
-        'Decrease' => 'Decrease',
+        'Active'    => 'Active',
+        'Inactive'  => 'Inactive',
+        'Increase'  => 'Increase',
+        'Decrease'  => 'Decrease',
     ],
 
     //ip address type
     'ipAddressType' => [
-        'Link' => 'Link',
-        'Internet' => 'Internet',
+        'Link' => 'Public',
+        'Internet' => 'Private',
         'Data' => 'Data',
         'Management' => 'Management',
     ],

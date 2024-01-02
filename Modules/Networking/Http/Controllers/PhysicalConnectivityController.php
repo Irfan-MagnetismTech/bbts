@@ -192,6 +192,7 @@ class PhysicalConnectivityController extends Controller
                     'ldp' => $request->ldp[$key],
                     'bbts_link_id' => $request->bbts_link_id[$key],
                     'device_ip' => $request->device_ip[$key],
+                    'pop_id' => $request->pop_id[$key],
                     'port' => $request->port[$key],
                     'vlan' => $request->vlan[$key],
                     'connectivity_details' => $request->connectivity_details[$key],
