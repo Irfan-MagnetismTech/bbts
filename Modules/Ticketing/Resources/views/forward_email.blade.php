@@ -37,7 +37,7 @@
         </tr>
         <tr>
             <td class="table_header_td"><b>Client Name</b></td>
-            <td colspan="3" style="text-align: start">{{ $receiver ?? '' }}</td>
+            <td colspan="3" style="text-align: start"></td>
         </tr>
         <tr>
             <td class="table_header_td"><b>Problem Type</b></td>
@@ -53,7 +53,7 @@
         </tr>
         <tr>
             <td class="table_header_td"><b>Reason</b></td>
-            <td colspan="3" style="text-align: start">{{ $message ?? '' }}</td>
+            <td colspan="3" style="text-align: start"></td>
         </tr>
         <tr>
             <td class="table_header_td"><b>TT Closed By</b></td>
