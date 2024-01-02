@@ -19,7 +19,7 @@ class NetPopEquipmentController extends Controller
      */
     public function index()
     {
-        $popEquipments = NetPopEquipment::latest()->get();
+        $popEquipments = NetPopEquipment::get();
         return view('networking::pop-equipment.index', compact('popEquipments'));
     }
 
@@ -29,7 +29,7 @@ class NetPopEquipmentController extends Controller
      */
     public function create()
     {
-        $pops = Pop::latest()->get();
+        $pops = Pop::get();
         return view('networking::pop-equipment.create', compact('pops'));
     }
 
@@ -55,8 +55,7 @@ class NetPopEquipmentController extends Controller
      */
     public function show(NetPopEquipment $pop_equipment)
     {
-        abort(404);
-        return view('networking::show');
+        return view('networking::pop-equipment.show', compact('pop_equipment'));
     }
 
     /**
@@ -66,7 +65,7 @@ class NetPopEquipmentController extends Controller
      */
     public function edit(NetPopEquipment $pop_equipment)
     {
-        return view('networking::pop-equipment.create');
+        return view('networking::pop-equipment.create', compact('pop_equipment'));
     }
 
     /**
