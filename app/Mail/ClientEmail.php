@@ -14,7 +14,7 @@ class ClientEmail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $subject;
-    public $message;
+    public $customEmailBody;
     public $receiver;
     public $button;
 
@@ -23,10 +23,10 @@ class ClientEmail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($subject, $message, $receiver, $button)
+    public function __construct($subject, $customEmailBody, $receiver, $button)
     {
         $this->subject = $subject;
-        $this->message = $message;
+        $this->customEmailBody = $customEmailBody;
         $this->receiver = $receiver;
         $this->button = $button;
     }

@@ -144,8 +144,7 @@ class SupportTicketController extends Controller
             $subject = "[$supportTicket->ticket_no] " . $request->subject;
             $message = $request->description;
             $model = 'Modules\Ticketing\Entities\SupportTicket';
-            $receiver = $supportTicket?->client?->name;
-
+            $receiver = $supportTicket?->client?->client_name;
 
             if ($request->mailNotification == 1) {
                 $to = $supportTicket?->client?->email;
