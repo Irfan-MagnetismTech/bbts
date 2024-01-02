@@ -243,5 +243,30 @@
                                 },
                             });
                         }
+
+                        // $(document).on('change', '.fr_no', function () {
+                        //     $(this).autocomplete({
+                        //         source: function (request, response) {
+                        //             var fr_no = $('#fr_no').val();
+                        //             $.ajax({
+                        //                 url: window.location.origin + "/ticketing/get-fr-info",
+                        //                 type: "GET",
+                        //                 dataType: "json",
+                        //                 data: {
+                        //                     search: fr_no
+                        //                 },
+                        //                 success: function (data) {
+                        //                     response(data);
+                        //                 }
+                        //             });
+                        //         },
+                        //         select: function (event, ui) {
+                        //             $(this).closest('tr').find('.contact_person').val(ui.item.contact_name);
+                        //             $(this).closest('tr').find('.contact_number').val(ui.item.contact_number);
+                        //
+                        //         }
+                        //     })
+                        // });
+
                     </script>
 @endsection
