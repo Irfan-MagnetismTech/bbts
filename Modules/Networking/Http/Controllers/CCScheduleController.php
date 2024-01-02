@@ -22,24 +22,30 @@ class CCScheduleController extends Controller
      * @return Renderable
      */
     public function index()
-    {
+    { 
         $salesDetails = SaleDetail::query()
-            ->with('sale', 'client', 'frDetails', 'ccSchedule')
+            ->with('sale', 'client', 'frDetails', 'ccSchedule','connectivities')
             ->whereHas('sale', function ($query) {
                 $query->where('management_approved_by', '!=', null);
             })
+            // ->with(['connectivities' => function ($query) {
+            //     $query->whereNull('billing_date');
+            // }])
+            // ->whereFrNo('fr-2023-6-2')
             ->latest()
             ->get()
-            ->map(function ($saleDetail) {
+            ->filter(function ($saleDetail) { 
                 $saleDetail['physical_connectivity'] = PhysicalConnectivity::query()
                     ->where('fr_no', $saleDetail->fr_no)->where('is_modified', '0')
                     ->first() ? true : false;
                 $saleDetail['logical_connectivity'] = LogicalConnectivity::query()
                     ->where('fr_no', $saleDetail->fr_no)->where('is_modified', '0')
                     ->first() ? true : false;
-                $saleDetail['commissioning_date'] = $saleDetail->connectivities->commissioning_date ?? null;
-                $saleDetail['billing_date'] = $saleDetail->connectivities->billing_date ?? null;
-                return $saleDetail;
+                $saleDetail['commissioning_date'] = $saleDetail->connectivities?->commissioning_date;
+                $saleDetail['billing_date'] = $saleDetail->connectivities?->billing_date;
+                if($saleDetail->connectivities?->billing_date == null){
+                    return $saleDetail;
+                }
             });
 
         // dd($salesDetails->toArray());
