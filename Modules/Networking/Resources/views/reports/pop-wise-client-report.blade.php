@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    Pop Wise Equipment Report
+    Pop Wise Client Report
 @endsection
 
 @section('style')
@@ -48,27 +48,78 @@
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
                 <tr>
-                    <th colspan="3">Device Details</th>
-                    <th colspan="3">IP Address</th>
-                    <th colspan="2">POP Details</th>
-                    <th rowspan="2">Remarks</th>
+                    <th rowspan="2">Client ID</th>
+                    <th rowspan="2">Client Name</th>
+                    <th rowspan="2">Connectivity Point</th>
+                    <th>Service Type</th>
+                    <th colspan="5">IP Details</th>
+                    <th colspan="3">Switch Information</th>
                 </tr>
                 <tr>
-                    <th>Description</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>IP Address</th>
+                    <th>Internet</th>
+                    <th>Brandwidth</th>
+                    <th>IPV4</th>
+                    <th>IPV6</th>
                     <th>Subnet</th>
                     <th>Gateway</th>
-                    <th>POP Name</th>
-                    <th>Location</th>
+                    <th>Switch IP</th>
+                    <th>Switch Port</th>
+                    <th>Vlan</th>
                 </tr>
             </thead>
             <tbody>
-                {{-- @foreach ($pop_wise_equipments as $key => $pop_wise_equipment)
-                @endforeach --}}
+                @foreach ($pop_wise_clients as $key => $pop_wise_client)
+                    @php
+                        $logicalCount = count($pop_wise_client['logical']);
+                        $physicalCount = count($pop_wise_client['physical']);
+                        $rowspan = max($logicalCount, $physicalCount);
+                    @endphp
+
+                    @for ($i = 0; $i < $rowspan; $i++)
+                        <tr>
+                            {{-- Client ID, Client Name, and Connectivity Point --}}
+                            @if ($i === 0)
+                                {{-- Only for the first row --}}
+                                <td rowspan="{{ $rowspan }}">{{ $key }}</td>
+                                <td rowspan="{{ $rowspan }}">{{ $pop_wise_client['client_name'] }}</td>
+                                <td rowspan="{{ $rowspan }}"></td>
+                            @endif
+
+                            {{-- Logical information --}}
+                            @if ($i < $logicalCount)
+                                <td>{{ $pop_wise_client['logical'][$i]['product_category'] }}</td>
+                                <td>{{ $pop_wise_client['logical'][$i]['quantity'] }}</td>
+                                <td>{{ $pop_wise_client['logical'][$i]['ipv4'] }}</td>
+                                <td>{{ $pop_wise_client['logical'][$i]['ipv6'] }}</td>
+                                <td>{{ $pop_wise_client['logical'][$i]['subnetmask'] }}</td>
+                                <td>{{ $pop_wise_client['logical'][$i]['gateway'] }}</td>
+                            @else
+                                {{-- Empty cells for the logical information --}}
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            @endif
+
+                            {{-- Physical information --}}
+                            @if ($i < $physicalCount)
+                                <td>{{ $pop_wise_client['physical'][$i]->device_ip }}</td>
+                                <td>{{ $pop_wise_client['physical'][$i]->switch_port }}</td>
+                                <td>{{ $pop_wise_client['physical'][$i]->vlan }}</td>
+                            @else
+                                {{-- Empty cells for the physical information --}}
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            @endif
+                        </tr>
+                    @endfor
+                @endforeach
             </tbody>
         </table>
+
 
     </div>
 @endsection

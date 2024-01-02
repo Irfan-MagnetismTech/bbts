@@ -34,8 +34,7 @@
                 <ul class="pcoded-submenu">
                     <li class="{{ request()->routeIs('connectivity.create') ? 'active' : null }}">
                         <a href="{{ route('connectivity.create') }}"> <span class="pcoded-micon"><i
-                                    class="ti-angle-right"></i></span><span
-                                class="pcoded-mtext">Add New Link</span><span
+                                    class="ti-angle-right"></i></span><span class="pcoded-mtext">Add New Link</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 </ul>
@@ -260,15 +259,24 @@
             <ul class="pcoded-submenu">
                 <li class="{{ request()->routeIs('active-clients-report') ? 'active' : null }}">
                     <a href="{{ route('active-clients-report') }}"> <span class="pcoded-micon"><i
-                                class="ti-angle-right"></i></span><span
-                            class="pcoded-mtext">Active Clients</span><span
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Active Clients</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                {{--                <li class="{{ request()->routeIs('work-order-receives.index') ? 'active' : null }}">--}}
-                {{--                    <a href="{{ route('work-order-receives.index') }}"> <span class="pcoded-micon"><i--}}
-                {{--                                class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span--}}
-                {{--                            class="pcoded-mcaret"></span></a>--}}
-                {{--                </li>--}}
+                <li class="{{ request()->routeIs('pop-wise-equipment-report') ? 'active' : null }}">
+                    <a href="{{ route('pop-wise-equipment-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Pop wise equipment
+                            report</span><span class="pcoded-mcaret"></span></a>
+                </li>
+                <li class="{{ request()->routeIs('pop-wise-client-report') ? 'active' : null }}">
+                    <a href="{{ route('pop-wise-client-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Pop wise client
+                            report</span><span class="pcoded-mcaret"></span></a>
+                </li>
+                {{--                <li class="{{ request()->routeIs('work-order-receives.index') ? 'active' : null }}"> --}}
+                {{--                    <a href="{{ route('work-order-receives.index') }}"> <span class="pcoded-micon"><i --}}
+                {{--                                class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span --}}
+                {{--                            class="pcoded-mcaret"></span></a> --}}
+                {{--                </li> --}}
             </ul>
         </li>
     @endcan
