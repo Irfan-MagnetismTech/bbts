@@ -27,7 +27,7 @@ class ClientEmail extends Mailable implements ShouldQueue
     {
         $this->subject = $subject;
         $this->message = $message;
-        $this->receiver = $receiver;    
+        $this->receiver = $receiver;
         $this->button = $button;
     }
 
@@ -48,15 +48,22 @@ class ClientEmail extends Mailable implements ShouldQueue
      *
      * @return \Illuminate\Mail\Mailables\Content
      */
+//    public function content()
+//    {
+//        return new Content(
+//            markdown: 'mail.client-email',
+//            with: [
+//                'message' => $this->message,
+//                'receiver' => $this->receiver,
+//                'button' => $this->button
+//            ],
+//        );
+//    }
+
     public function content()
     {
         return new Content(
-            markdown: 'mail.client-email',
-            with: [
-                'message' => $this->message,
-                'receiver' => $this->receiver,
-                'button' => $this->button
-            ],
+            view: 'ticketing::forward_email',
         );
     }
 
