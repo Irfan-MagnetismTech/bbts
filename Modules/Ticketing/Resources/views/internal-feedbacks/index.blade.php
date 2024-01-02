@@ -31,7 +31,7 @@
                     <th>Client Name</th>
                     <th>Date</th>
                     <th>Remarks</th>
-                    <th>Action</th>
+{{--                    <th>Action</th>--}}
                 </tr>
             </thead>
             <tfoot>
@@ -41,7 +41,7 @@
                     <th>Client Name</th>
                     <th>Date</th>
                     <th>Remarks</th>
-                    <th>Action</th>
+{{--                    <th>Action</th>--}}
                 </tr>
             </tfoot>
             <tbody>
@@ -52,22 +52,22 @@
                         <td class="text-center">{{ $value->client->client_name }}</td>
                         <td class="text-center">{{ $value->date }}</td>
                         <td class="text-center">{{ $value->remarks }}</td>
-                        <td>
-                            <div class="icon-btn">
-                                <nobr>
+{{--                        <td>--}}
+{{--                            <div class="icon-btn">--}}
+{{--                                <nobr>--}}
 {{--                                title="Show" class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>--}}
-                                    <a href="{{ route('internal-feedbacks.edit', $value->id) }}" data-toggle="tooltip" title="Edit"
-                                       class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
-                                    <form action="{{ route('internal-feedbacks.destroy',$value->id) }}" method="POST" data-toggle="tooltip"
-                                          title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
-                                </nobr>
-                            </div>
-                        </td>
+{{--                                    <a href="{{ route('internal-feedbacks.edit', $value->id) }}" data-toggle="tooltip" title="Edit"--}}
+{{--                                       class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>--}}
+{{--                                    <form action="{{ route('internal-feedbacks.destroy',$value->id) }}" method="POST" data-toggle="tooltip"--}}
+{{--                                          title="Delete" class="d-inline">--}}
+{{--                                        @csrf--}}
+{{--                                        @method('DELETE')--}}
+{{--                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i--}}
+{{--                                                class="fas fa-trash"></i></button>--}}
+{{--                                    </form>--}}
+{{--                                </nobr>--}}
+{{--                            </div>--}}
+{{--                        </td>--}}
                     </tr>
                 @endforeach
             </tbody>
