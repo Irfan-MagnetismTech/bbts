@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailService extends Controller
 {
-    public function sendEmail($to, $cc = ['saleha@magnetismtech.com', 'yeasir@bbts.net', 'sikder@bbts.net'], $receiver = null, $subject, $customEmailBody, $button = null) {
+//$cc = ['saleha@magnetismtech.com', 'yeasir@bbts.net', 'sikder@bbts.net']
+    public function sendEmail($to, $cc, $receiver = null, $subject, $customEmailBody, $button = null) {
         try {
             return Mail::to($to)
             ->cc($cc)
