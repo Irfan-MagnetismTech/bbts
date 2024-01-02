@@ -100,6 +100,7 @@ class PhysicalConnectivityController extends Controller
                     'method' => $request->method[$key],
                     'link_no' => $request->link_no[$key],
                     'pop' => $request->pop[$key],
+                    'pop_id' => $request->pop_id[$key],
                     'ldp' => $request->ldp[$key],
                     'bbts_link_id' => $request->bbts_link_id[$key],
                     'device_ip' => $request->device_ip[$key],

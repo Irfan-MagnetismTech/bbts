@@ -188,6 +188,8 @@
                                     <input type="text" name="pop[]" class="form-control pop" autocomplete="off"
                                         value="{{ $physicalConnectivityLine->finalSurveyDetails->pop->name ?? '' }}"
                                         readonly>
+                                    <input type="hidden" name="pop_id[]"
+                                        value="{{ $physicalConnectivityLine->finalSurveyDetails?->pop_id }}">
                                 </td>
                                 <td>
                                     <input type="text" name="ldp[]" class="form-control ldp" autocomplete="off"

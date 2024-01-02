@@ -15,12 +15,15 @@ use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\DB;
+use Modules\Admin\Entities\Pop;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Networking\Entities\ClientFacility;
 use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Networking\Entities\BandwidthDestribution;
 use Modules\Networking\Entities\Connectivity;
+use Modules\Networking\Entities\PhysicalConnectivityLines;
+use Modules\SCM\Entities\ScmMur;
 
 class ConnectivityController extends Controller
 {
@@ -252,12 +255,12 @@ class ConnectivityController extends Controller
                 ->whereHas('lines', function ($query) use ($vlan_address) {
                     $query->where('vlan', $vlan_address);
                 })->get();
-        }elseif ($branch_id != null && $vlan_address == null) {
+        } elseif ($branch_id != null && $vlan_address == null) {
             $logical_connectivities = LogicalConnectivity::with('feasibilityRequirementDetails')
                 ->whereHas('feasibilityRequirementDetails.branch', function ($query) use ($branch_id) {
                     $query->where('id', $branch_id);
                 })->get();
-        }elseif ($branch_id != null && $vlan_address != null) {
+        } elseif ($branch_id != null && $vlan_address != null) {
             $logical_connectivities = LogicalConnectivity::with('feasibilityRequirementDetails', 'lines')
                 ->whereHas('feasibilityRequirementDetails.branch', function ($query) use ($branch_id) {
                     $query->where('id', $branch_id);
@@ -265,10 +268,12 @@ class ConnectivityController extends Controller
                 ->whereHas('lines', function ($query) use ($vlan_address) {
                     $query->where('vlan', $vlan_address);
                 })->get();
-        }else{$logical_connectivities = LogicalConnectivity::get();}
+        } else {
+            $logical_connectivities = LogicalConnectivity::get();
+        }
 
         if ($request->type === 'pdf') {
-            return PDF::loadView('networking::reports.vlan_report_pdf', ['logical_connectivities' => $logical_connectivities, 'branches' => $branches,'branch_id' => $branch_id, 'vlan_address' => $vlan_address], [], [
+            return PDF::loadView('networking::reports.vlan_report_pdf', ['logical_connectivities' => $logical_connectivities, 'branches' => $branches, 'branch_id' => $branch_id, 'vlan_address' => $vlan_address], [], [
                 'format' => 'A4',
                 'orientation' => 'L',
                 'title' => 'VLAN Report PDF',
@@ -282,7 +287,66 @@ class ConnectivityController extends Controller
             ])->stream('vlan_report.pdf');
             return view('networking::reports.vlan_report_pdf', compact('logical_connectivities', 'branches', 'branch_id', 'vlan_address'));
         } else {
-            return view('networking::reports.vlan_report', compact('logical_connectivities', 'branches', 'branch_id','vlan_address'));
+            return view('networking::reports.vlan_report', compact('logical_connectivities', 'branches', 'branch_id', 'vlan_address'));
         }
+    }
+
+    public function popWiseClientReport()
+    {
+        if (request()->has('pop_id')) {
+            $pop_id = request()->pop_id;
+            $datas = PhysicalConnectivity::query()
+                ->whereHas('lines', function ($query) use ($pop_id) {
+                    $query->where('pop_id', $pop_id);
+                })
+                ->with('lines', 'client', 'logicalConnectivity')
+                ->get()
+                ->groupBy('client_no');
+            $pop_wise_clients = [];
+            foreach ($datas as $client) {
+                $pop_wise_clients[$client->first()->client_no] = [
+                    'client_name' => $client->first()->client->client_name,
+                    'client_no' => $client->first()->client_no,
+                    'physical' => $client->first()->lines,
+                    'logical' => $client->first()->logicalConnectivity->lines,
+                ];
+            }
+
+            $pops = Pop::latest()->get();
+            return view('networking::reports.pop-wise-client-report', compact('pop_wise_clients', 'pops'));
+        } else {
+            $pops = Pop::latest()->get();
+            $pop_wise_clients = '';
+            return view('networking::reports.pop-wise-client-report', compact('pops', 'pop_wise_clients'));
+        }
+    }
+
+    public function popWiseEquipmentReport()
+    {
+        $data = [];
+        ScmMur::query()
+            ->where('pop_id', request()->pop_id)
+            ->with(['lines.material', 'lines.brand'])
+            ->get()->map(function ($item) use (&$data) {
+                $item->lines->map(function ($line) use (&$data) {
+                    $data[] = [
+                        'label' => $line->material->name . ' - ' . $line->brand->name . ' - ' . $line->model . ' - ' . $line->serial_code,
+                        'value' => $line->material_id,
+                        'material_id' => $line->material_id,
+                        'brand_id' => $line->brand_id,
+                        'model' => $line->model,
+                        'serial_code' => $line->serial_code,
+                        'quantity' => $line->quantity,
+                        'unit_price' => $line->unit_price,
+                        'total_price' => $line->total_price,
+                        'remarks' => $line->remarks,
+                        'created_at' => $line->created_at,
+                        'updated_at' => $line->updated_at,
+                        'material' => $line->material->name,
+                        'brand' => $line->brand->name,
+                    ];
+                    return $data;
+                });
+            });
     }
 }
