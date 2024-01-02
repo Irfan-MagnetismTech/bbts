@@ -69,6 +69,7 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 
     Route::get('feedback-list', [ClientFeedbackController::class, 'feedbackList'])->name('feedback-list');
     Route::get('get-client-info', [InternalFeedbackController::class, 'getClientInfo'])->name('get-client-info');
+    Route::get('get-fr-info', [InternalFeedbackController::class, 'getFrInfo'])->name('get-fr-info');
     Route::get('get-clients-st', [SupportTicketController::class, 'getClientsByLinkId'])->name('get-clients-st');
     // Ticketing Reports
     Route::prefix('reports')->group(function() {

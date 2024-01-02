@@ -264,11 +264,16 @@
                             class="pcoded-mtext">Active Clients</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                {{--                <li class="{{ request()->routeIs('work-order-receives.index') ? 'active' : null }}">--}}
-                {{--                    <a href="{{ route('work-order-receives.index') }}"> <span class="pcoded-micon"><i--}}
-                {{--                                class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span--}}
-                {{--                            class="pcoded-mcaret"></span></a>--}}
-                {{--                </li>--}}
+                <li class="{{ request()->routeIs('ip-report') ? 'active' : null }}">
+                    <a href="{{ route('ip-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">IP Report</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+                <li class="{{ request()->routeIs('vlan-report') ? 'active' : null }}">
+                    <a href="{{ route('vlan-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">VLAN Report</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
             </ul>
         </li>
     @endcan
