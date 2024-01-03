@@ -111,18 +111,19 @@ class ReportController extends Controller
                         'client_no' => $sale->client->client_no,
                         'client_name' => $sale->client->client_name,
                         'connectivity_point' => $saleDetail->feasibilityRequirementDetails->connectivity_point,
-                        'product' => $saleDetail->saleProductDetails,
+                        'products' => $saleDetail->saleProductDetails,
                         'otc' => $saleDetail->otc,
                         'mrc' => $saleDetail->mrc,
                         'activation_date' => $saleDetail->activation_date,
                         'billing_date' => $saleDetail->billing_date,
                         'billing_address' => $saleDetail->billingAddress->address,
-                        'ac_holder' => $sale->account_holder,
+                        'account_holder' => $sale->account_holder,
                         'remarks' => $sale->remarks,
                     ];
                     // dd($sales_data);
                 });
             });
-        return view('sales::reports.monthly-sales-summary-report', compact('monthly_sales_summary'));
+        $clients = Client::latest()->get();
+        return view('sales::reports.monthly-sales-summary-report', compact('sales_data', 'clients'));
     }
 }

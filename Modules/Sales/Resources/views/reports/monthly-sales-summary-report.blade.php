@@ -15,8 +15,6 @@
 @endsection
 
 @section('sub-title')
-    Total Tickets: {{ $plan_reports->count() }} <br>
-    <small>(Last 30 Days)</small>
 
 @endsection
 
@@ -84,21 +82,38 @@
             </thead>
 
             <tbody>
-                @foreach ($monthly_sales_summary as $key => $monthly_sales_summary)
-                    <tr>
-                        <td>{{ $key + 1 }}</td>
-                        <td>{{ $monthly_sales_summary->client_no }}</td>
-                        <td>{{ $monthly_sales_summary->client_name }}</td>
-                        <td>{{ $monthly_sales_summary->connectivity_point }}</td>
-                        <td>{{ $monthly_sales_summary->product }}</td>
-                        <td>{{ $monthly_sales_summary->otc }}</td>
-                        <td>{{ $monthly_sales_summary->mrc }}</td>
-                        <td>{{ $monthly_sales_summary->activation_date }}</td>
-                        <td>{{ $monthly_sales_summary->billing_start_date }}</td>
-                        <td>{{ $monthly_sales_summary->billing_address }}</td>
-                        <td>{{ $monthly_sales_summary->ac_holder }}</td>
-                        <td>{{ $monthly_sales_summary->remarks }}</td>
-                    </tr>
+                @foreach ($sales_data as $key => $monthly_sales_summary)
+                    {{-- @dd($monthly_sales_summary['products']) --}}
+                    @php
+                        $max_rowspan = $monthly_sales_summary['products']->count();
+                    @endphp
+                    @for ($i = 0; $i < $max_rowspan; $i++)
+                        <tr>
+                            @if ($i == 0)
+                                <td rowspan="{{ $max_rowspan }}">{{ $key + 1 }}</td>
+                                <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['client_no'] }}</td>
+                                <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['client_name'] }}</td>
+                                <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['connectivity_point'] }}</td>
+                            @endif
+                            <td>{{ $monthly_sales_summary['products'][$i]->product_id }}</td>
+                            @if ($i == 0)
+                                <td rowspan="{{ $max_rowspan }}">
+                                    {{ $monthly_sales_summary['otc'] }}</td>
+                                <td rowspan="{{ $max_rowspan }}">
+                                    {{ $monthly_sales_summary['mrc'] }}</td>
+                                <td rowspan="{{ $max_rowspan }}">
+                                    {{ $monthly_sales_summary['activation_date'] }}</td>
+                                <td rowspan="{{ $max_rowspan }}">
+                                    {{ $monthly_sales_summary['billing_date'] }}</td>
+                                <td rowspan="{{ $max_rowspan }}">
+                                    {{ $monthly_sales_summary['billing_address'] }}</td>
+                                <td rowspan="{{ $max_rowspan }}">
+                                    {{ $monthly_sales_summary['account_holder'] }}</td>
+                                <td rowspan="{{ $max_rowspan }}">
+                                    {{ $monthly_sales_summary['remarks'] }}</td>
+                            @endif
+                        </tr>
+                    @endfor
                 @endforeach
             </tbody>
         </table>
