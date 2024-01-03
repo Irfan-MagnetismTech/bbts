@@ -80,7 +80,7 @@ class ClientTicketOpenController extends Controller
                 SupportTicket::create($ticketInfo);
             });
 
-            return back()->with('message', 'Ticket Create Successfully');
+            return back()->with('message', '<span style="font-weight: bold">' .  $ticketInfo['ticket_no'] . '</span>' . ' Ticket Created Successfully');
         } catch (QueryException $e) {
             return back()->withInput()->withErrors($e->getMessage());
         }

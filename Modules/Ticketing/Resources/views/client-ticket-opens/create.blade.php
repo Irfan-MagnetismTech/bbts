@@ -123,13 +123,13 @@
             
             <div class="col-sm-12">
                 @if ($message = Session::get('message'))
-                    <div class="alert alert-success icons-alert mb-2 p-2">
+<div class="alert alert-success mb-2 p-2">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <i class="">X</i>
                         </button>
-                        <p> {{ $message }} </p>
+                        <p> <?php echo $message; ?>  </p>
                     </div>
-                @endif
+@endif
 
 
                 @if ($message = Session::get('error'))
