@@ -123,7 +123,7 @@
                 @foreach($connectivity->lines as $subKey => $value)
                     <tr>
                         <td>{{$i++}}</td>
-                        <td>{{ $value->data_type ?? ''}}</td>
+                        <td>{{ $value->product_category ?? ''}}</td>
                         <td>{{ $value->vlan ?? ''}}</td>
                         <td>{{$connectivity->feasibilityRequirementDetails->branch->name ?? ''}}</td>
                         <td>{{ $value->remarks ?? ''}}</td>
