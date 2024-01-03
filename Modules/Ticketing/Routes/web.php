@@ -88,3 +88,4 @@ Route::prefix('ticketing')->middleware(['auth'])->group(function() {
 });
 
 Route::resources(['client-ticket-opens' => ClientTicketOpenController::class]);
+Route::get('client-ticket-opens-client-info', [ClientTicketOpenController::class, 'getClientInfo'])->name('client-ticket-opens-client-info');

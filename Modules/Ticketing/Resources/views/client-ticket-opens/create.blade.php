@@ -133,13 +133,13 @@
 
 
                 @if ($message = Session::get('error'))
-                    <div class="alert alert-danger icons-alert mb-2 p-2">
+<div class="alert alert-danger icons-alert mb-2 p-2">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <i class="">X</i>
                         </button>
                         <p> {{ $message }} </p>
                     </div>
-                @endif
+@endif
                 <!-- Authentication card start -->
                 <div class="card-block mr-auto ml-auto" >
                     <form class="md-float-material" method="POST" action="{{ route('client-ticket-opens.store') }}">
@@ -157,13 +157,17 @@
     <span class="text-danger text-left" role="alert"> <strong>{{ $message }}</strong></span>
 @enderror
                             <div class="input-group mb-2">
-                                <input type="client_no" name="client_no" class="form-control round @error('client_no') is-invalid @enderror" value="{{ old('client_no') }}" placeholder="Enter your ID " required autocomplete="client_no" autofocus style="border-radius: 15px; padding: 6px 12px;">
+                                <input type="text" name="client_no" id="client_no" class="form-control round @error('client_no') is-invalid @enderror" value="{{ old('client_no') }}" placeholder="Enter your ID " required autocomplete="client_no" autofocus style="border-radius: 15px; padding: 6px 12px;">
                             </div>
+                            <p class="d-none text-danger" id="clientNoError"></p>
+                            <button type="button" class="btn btn-primary btn-sm" id="searchClient" style="border-radius: 20px; margin: 0 auto; display: block;">Find your connectivities</button>
                             <div class="input-group mt-2">
-                                <input name="fr_no" type="fr_no" class="form-control round @error('fr_no') is-invalid @enderror" placeholder=" Enter Your Connectivity Point ID" required style="border-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; padding: 6px 12px;">
+                                <select class="form-control d-none round select2" id="fr_no" name="fr_no" required style="border-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; padding: 6px 12px;">
+                                    <option value="" selected>Select Connectivity Point</option>
+                                </select>
                             
                             </div>
-                            <div class="input-group mt-2">
+                            {{-- <div class="input-group mt-2">
                                 <select class="form-control round select2" id="support_complain_type_id" name="support_complain_type_id" required style="border-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; padding: 6px 12px;">
                                     <option value="" selected>Select Complain Type</option>
                                     @foreach ($complainTypes as $complainType)
@@ -173,13 +177,13 @@
                                         </option>
 @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
                             
                             <div class="input-group mt-2">
-                                <input name="description" type="description" class="form-control round @error('description') is-invalid @enderror" placeholder=" Description" required style="border-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; padding: 6px 12px;">
+                                <input name="description" type="text" id="description" class="form-control d-none round @error('description') is-invalid @enderror" placeholder="Write your complain here...." required style="border-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; padding: 6px 12px;">
                             </div>
 
-                            <div class="">
+                            <div id="submitButton" class="d-none">
                                 <div class="col-md-12">
                                     <button type="submit" class="btn btn-color btn-md btn-block waves-effect text-center" style="
                                         background: #181c1a;
@@ -217,6 +221,53 @@
 <script src="{!! asset(url('js/popper.min.js')) !!}"></script>
 <script src="{!! asset(url('js/bootstrap.min.js')) !!}"></script>
 <script src="{!! asset(url('js/common-pages.js')) !!}"></script>
+<script>
+    $('#searchClient').on('click', function() {
+        var value = $('#client_no').val();
+        $('#searchClient').html('Searching...');
+        console.log(value);
+        let html = '<option value="" selected>Select Connectivity Point</option>'
+        if ((value !== '')) {
+            console.log(value);
+            $.ajax({
+                url: "{{ route('client-ticket-opens-client-info') }}",
+                type: "GET",
+                data: {
+                    "client_no": value
+                },
+                success: function(response) {
+                    console.log(response);
+                    console.log(response.status);
+                    if (response) {
+                        $('#clientNoError').toggleClass('d-none');
+                        $('#searchClient').html('Find your connectivities');
+                        $.each(response, function(key, value) {
+                            console.log(value);
+                            html += '<option value="' + value.fr_no + '">' + value
+                                .connectivity_point + '</option>'
+                        });
+                        $("#fr_no").removeClass('d-none');
+                        $('#description').removeClass('d-none');
+                        $('#submitButton').removeClass('d-none');
+                        $('#fr_no').html(html);
+                    } else {
+                        $('#clientNoError').toggleClass('d-none');
+                        $('#clientNoError').text('Client No. not found');
+                        $('#searchClient').html('Find your connectivities');
+                    }
+                },
+                error: function(response) {
+                    $('#clientNoError').toggleClass('d-none');
+                    $('#clientNoError').text('Client No. not found');
+                    $('#searchClient').html('Find your connectivities');
+                }
+            });
+
+        } else {
+            $('#clientNoError').toggleClass('d-none');
+        }
+    });
+</script>
 </body>
 
 </html>
