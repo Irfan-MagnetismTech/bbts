@@ -322,6 +322,7 @@
             </ul>
         </li>
     @endcan
+    @can('sales-report')
     <li class="pcoded-hasmenu">
         <a href="javascript:void(0)">
             <span class="pcoded-micon"><i class="fas fa-file-pdf"></i><b>D</b></span>
@@ -341,5 +342,6 @@
             </li>
         </ul>
     </li>
+    @endcan
     {{-- @endhasanyrole --}}
 </ul>

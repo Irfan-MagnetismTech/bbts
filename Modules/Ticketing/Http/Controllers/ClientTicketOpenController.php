@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Doctrine\DBAL\Query\QueryException;
 use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Ticketing\Entities\clientTicketOpen;
 use Modules\Ticketing\Entities\SupportTicket;
@@ -33,7 +34,7 @@ class ClientTicketOpenController extends Controller
     {
         // dd('ff');
         $complainTypes = (new BbtsGlobalService())->getComplainTypes();
-        return view('ticketing::client-ticket-opens.create',compact('complainTypes'));
+        return view('ticketing::client-ticket-opens.create', compact('complainTypes'));
     }
 
     /**
@@ -58,28 +59,28 @@ class ClientTicketOpenController extends Controller
             }
 
             $frInfo = FeasibilityRequirementDetail::where('fr_no', $request->fr_no)->first();
+            // dd($frInfo);
 
-            $ticketInfo = $request->only([ 'fr_no', 'client_no','support_complain_type_id', 'description' ]);
+            $ticketInfo = $request->only(['fr_no', 'client_no', 'support_complain_type_id', 'description']);
             $ticketInfo['ticket_no'] = $ticketIno;
             $ticketInfo['opening_date'] = now()->format('Y-m-d H:i:s');
             $ticketInfo['complain_time'] = now()->format('Y-m-d H:i:s');
             $ticketInfo['pop_id'] = 2;
-            if(!empty($frInfo)){
-                $ticketInfo['branch_id'] = $frInfo->branch_id;
-                $ticketInfo['division_id'] = $frInfo->division_id;
-                $ticketInfo['district_id'] = $frInfo->district_id;
-                $ticketInfo['thana_id'] = $frInfo->thana_id;
-            } 
+            if (!empty($frInfo)) {
+                $ticketInfo['branch_id'] = $frInfo->branch_id ?? null;
+                $ticketInfo['division_id'] = $frInfo->division_id ?? null;
+                $ticketInfo['district_id'] = $frInfo->district_id ?? null;
+                $ticketInfo['thana_id'] = $frInfo->thana_id ?? null;
+            }
 
             $ticketInfo['ticket_source_id'] = 4;
-            
+
             // dd($ticketInfo);
             DB::transaction(function () use ($ticketInfo) {
                 SupportTicket::create($ticketInfo);
-
             });
 
-            return back()->with('message', 'Ticket Create Successfully');
+            return back()->with('message', '<span style="font-weight: bold">' .  $ticketInfo['ticket_no'] . '</span>' . ' Ticket Created Successfully');
         } catch (QueryException $e) {
             return back()->withInput()->withErrors($e->getMessage());
         }
@@ -124,5 +125,12 @@ class ClientTicketOpenController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getClientInfo(Request $request)
+    {
+        $frInfo = FeasibilityRequirement::with('feasibilityRequirementDetails')->where('client_no', $request->client_no)->first();
+        $data = $frInfo->feasibilityRequirementDetails;
+        return response()->json($data);
     }
 }

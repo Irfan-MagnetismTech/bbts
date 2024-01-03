@@ -34,7 +34,7 @@ class Sale extends Model
         !empty($input) ? $this->attributes['effective_date'] = Carbon::createFromFormat('d-m-Y', $input)->format('Y-m-d') : null;
     }
 
-    public function saleDetails()
+    public function monthlySalesSummaryReport()
     {
         return $this->hasMany(SaleDetail::class, 'sale_id', 'id');
     }
@@ -48,6 +48,11 @@ class Sale extends Model
     // {
     //     return $query->where('is_modified', 1);
     // }
+
+    public function saleDetails()
+    {
+        return $this->hasMany(SaleDetail::class, 'sale_id', 'id');
+    }
 
     public function client()
     {
