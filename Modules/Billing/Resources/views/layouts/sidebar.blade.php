@@ -127,4 +127,25 @@
             </li>
         </ul>
     </li>
+    <li class="pcoded-hasmenu {{ request()->routeIs(['billing-reports.*']) ? 'active pcoded-trigger' : null }}">
+        <a href="javascript:void(0)">
+            <span class="pcoded-micon"><i class="fas fa-file-pdf"></i><b>D</b></span>
+            <span class="pcoded-mtext">Report</span>
+            <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('dues-report') ? 'active' : null }}">
+                <a href="{{ route('dues-report') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Dues Report</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+        <ul class="pcoded-submenu">
+            <li class="{{ request()->routeIs('collection-report') ? 'active' : null }}">
+                <a href="{{ route('collection-report') }}"> <span class="pcoded-micon"><i
+                            class="ti-angle-right"></i></span><span class="pcoded-mtext">Collection Report</span><span
+                        class="pcoded-mcaret"></span></a>
+            </li>
+        </ul>
+    </li>
 </ul>

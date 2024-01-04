@@ -360,7 +360,7 @@
     @can('scm-report-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['scm-reports.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-file-pdf"></i><b>D</b></span>
                 <span class="pcoded-mtext">Report</span>
                 <span class="pcoded-mcaret"></span>
             </a>

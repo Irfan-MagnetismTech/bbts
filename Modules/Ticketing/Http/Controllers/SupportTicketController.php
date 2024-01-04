@@ -500,7 +500,6 @@ class SupportTicketController extends Controller
 
             $receiver = $supportTicket?->client?->name;
 
-
             if ($request->mailNotification == 1) {
                 $to = $supportTicket?->client?->email;
                 $notificationError = (new EmailService())->sendEmail($to, $cc = null, $receiver, $subject, $message, $button);

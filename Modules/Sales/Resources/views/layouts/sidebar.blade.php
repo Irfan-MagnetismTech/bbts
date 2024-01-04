@@ -325,7 +325,7 @@
     @can('sales-report')
     <li class="pcoded-hasmenu">
         <a href="javascript:void(0)">
-            <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
+            <span class="pcoded-micon"><i class="fas fa-file-pdf"></i><b>D</b></span>
             <span class="pcoded-mtext">Report</span>
             <span class="pcoded-mcaret"></span>
         </a>
