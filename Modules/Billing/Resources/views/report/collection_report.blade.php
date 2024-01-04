@@ -26,24 +26,33 @@
                     <option value="pdf">PDF</option>
                 </select>
             </div>
-{{--            <div style="width: 200px; margin-left: 20px">--}}
-{{--                <select name="branch_id" class="form-control branch select2" autocomplete="off" required>--}}
-{{--                    <option value="">Select Branch</option>--}}
-{{--                    @foreach ($branches as $branch)--}}
-{{--                        <option value="{{ $branch->id }}" @selected($branch->id == $branch_id)>--}}
-{{--                            {{ $branch->name }}--}}
-{{--                        </option>--}}
-{{--                    @endforeach--}}
-{{--                </select>--}}
-{{--            </div>--}}
+            {{--            <div style="width: 200px; margin-left: 20px">--}}
+            {{--                <select name="branch_id" class="form-control branch select2" autocomplete="off" required>--}}
+            {{--                    <option value="">Select Branch</option>--}}
+            {{--                    @foreach ($branches as $branch)--}}
+            {{--                        <option value="{{ $branch->id }}" @selected($branch->id == $branch_id)>--}}
+            {{--                            {{ $branch->name }}--}}
+            {{--                        </option>--}}
+            {{--                    @endforeach--}}
+            {{--                </select>--}}
+            {{--            </div>--}}
             <div style="width: 200px; margin-left: 20px">
                 <select name="client_no" class="form-control client select2" autocomplete="off">
                     <option value="">Select Client</option>
-                    @foreach ($clients as $client)
-                        <option value="{{ $client->client_no }}" @selected($client->client_no == $client_no)>
-                            {{ $client->client_name }}
-                        </option>
-                    @endforeach
+                    @if($client_no != null)
+                        @foreach ($clients as $client)
+                            <option value="{{ $client->client_no }}" @selected($client->client_no == $client_no)>
+                                {{ $client->client_name }}
+                            </option>
+                        @endforeach
+                    @else
+                        @foreach ($clients as $client)
+                            <option value="{{ $client->client_no }}">
+                                {{ $client->client_name }}
+                            </option>
+                        @endforeach
+                    @endif
+
                 </select>
             </div>
             <div style="width: 150px; margin-left: 20px">
@@ -93,44 +102,44 @@
                 </tr>
                 </tfoot>
                 <tbody>
-                    @foreach($collection as $key => $value)
-                        <tr>
-                            <td>{{$key + 1}}</td>
-                            <td style="text-align: start">{{ $value->client_no ?? ''}}</td>
-                            <td style="text-align: start">{{ $value->client->client_name ?? ''}}</td>
-                            <td style="text-align: start">
+                @foreach($collection as $key => $value)
+                    <tr>
+                        <td>{{$key + 1}}</td>
+                        <td style="text-align: start">{{ $value->client_no ?? ''}}</td>
+                        <td style="text-align: start">{{ $value->client->client_name ?? ''}}</td>
+                        <td style="text-align: start">
                             @foreach ($value->collectionBills as $subKey => $data)
                                 {{ $data->bill_no ?? ''}} <br>
                             @endforeach
-                            </td>
-                            <td style="text-align: start">
-                                @foreach ($value->collectionBills as $subKey => $data)
-                                    {{ $data->billGenerate->bill_type ?? ''}} <br>
-                                @endforeach
-                            </td>
-                            <td style="text-align: start">
-                                @foreach ($value->lines as $subKey => $data)
-                                    {{ $data->payment_method ?? ''}} <br>
-                                @endforeach
-                            </td>
-                            <td style="text-align: start">
-                                @foreach ($value->lines as $subKey => $data)
-                                    {{ $data->bank_name ?? ''}} <br>
-                                @endforeach
-                            </td>
-                            <td style="text-align: right">
-                                @foreach ($value->lines as $subKey => $data)
-                                    {{ $data->amount ?? ''}} <br>
-                                @endforeach
-                            </td>
-                            <td style="text-align: right">
-                                @foreach ($value->collectionBills as $subKey => $data)
-                                    {{ $data->receive_amount ?? ''}} <br>
-                                @endforeach
-                            </td>
-                            <td style="text-align: center">{{ $value->date ?? ''}}</td>
-                        </tr>
-                    @endforeach
+                        </td>
+                        <td style="text-align: start">
+                            @foreach ($value->collectionBills as $subKey => $data)
+                                {{ $data->billGenerate->bill_type ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td style="text-align: start">
+                            @foreach ($value->lines as $subKey => $data)
+                                {{ $data->payment_method ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td style="text-align: start">
+                            @foreach ($value->lines as $subKey => $data)
+                                {{ $data->bank_name ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td style="text-align: right">
+                            @foreach ($value->lines as $subKey => $data)
+                                {{ $data->amount ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td style="text-align: right">
+                            @foreach ($value->collectionBills as $subKey => $data)
+                                {{ $data->receive_amount ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td style="text-align: center">{{ $value->date ?? ''}}</td>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>
