@@ -115,7 +115,7 @@ class FeasibilityRequirementController extends Controller
                 
                 $client = $feasibilityRequirement->client->client_name;
                 // $to = 'sumon@magnetismtech.com';
-                $to = 'sikder@bbts.net';
+                $to = 'salesadmin@bbts.net';
                 $cc = 'saleha@magnetismtech.com';
                 $receiver = '';
                 $subject = "New Feasibility Requirement Created";
