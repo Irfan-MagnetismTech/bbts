@@ -24,4 +24,8 @@ class FeasibilityRequirement extends Model
     {
         return $this->hasOne(Offer::class, 'mq_no', 'mq_no');
     }
+
+    public function client(){
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
 }
