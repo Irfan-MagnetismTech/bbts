@@ -9,6 +9,7 @@ use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Planning;
 use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\Sale;
+use PDF;
 
 class ReportController extends Controller
 {
@@ -75,7 +76,11 @@ class ReportController extends Controller
             })
             ->where('is_modified', 1)
             ->get();
-        return view('sales::reports.plan-modification-report', compact('plan_reports', 'clients'));
+        if (request('type') == 'Report') {
+            return view('sales::reports.plan-modification-report', compact('plan_reports', 'clients'));
+        } else {
+            return view('sales::pdf.plan-modification-report-print', compact('plan_reports', 'clients'));
+        }
     }
 
     public function monthlySalesSummaryReport()
@@ -114,8 +119,8 @@ class ReportController extends Controller
                         'products' => $saleDetail->saleProductDetails,
                         'otc' => $saleDetail->otc,
                         'mrc' => $saleDetail->mrc,
-                        'activation_date' => $saleDetail->activation_date,
-                        'billing_date' => $saleDetail->billing_date,
+                        'activation_date' => $saleDetail?->connectivity?->commissioning_date,
+                        'billing_date' => $saleDetail?->connectivity?->billing_date,
                         'billing_address' => $saleDetail->billingAddress->address,
                         'account_holder' => $sale->account_holder,
                         'remarks' => $sale->remarks,
@@ -124,6 +129,14 @@ class ReportController extends Controller
                 });
             });
         $clients = Client::latest()->get();
-        return view('sales::reports.monthly-sales-summary-report', compact('sales_data', 'clients'));
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('sales::pdf.monthly-sales-summary-report', ['sales_data' => $sales_data, 'clients' => $clients], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('monthly-sales-summary-report.pdf');
+        } else {
+            return view('sales::reports.monthly-sales-summary-report', compact('sales_data', 'clients'));
+        }
     }
 }
