@@ -45,7 +45,15 @@ class ReportController extends Controller
             })
             ->where('is_modified', 0)
             ->get();
-        return view('sales::reports.plan-report', compact('plan_reports', 'clients'));
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('sales::pdf.plan-report', ['plan_reports' => $plan_reports, 'clients' => $clients], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('plan-report.pdf');
+        } else {
+            return view('sales::reports.plan-report', compact('plan_reports', 'clients'));
+        }
     }
 
     public function planModificationReport()
@@ -76,10 +84,14 @@ class ReportController extends Controller
             })
             ->where('is_modified', 1)
             ->get();
-        if (request('type') == 'Report') {
-            return view('sales::reports.plan-modification-report', compact('plan_reports', 'clients'));
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('sales::pdf.plan-modification-report', ['plan_reports' => $plan_reports, 'clients' => $clients], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('plan-modification-report.pdf');
         } else {
-            return view('sales::pdf.plan-modification-report-print', compact('plan_reports', 'clients'));
+            return view('sales::reports.plan-modification-report', compact('plan_reports', 'clients'));
         }
     }
 

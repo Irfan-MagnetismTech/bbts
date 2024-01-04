@@ -82,4 +82,5 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('modified-costing-list', [CostingController::class, 'modifiedList'])->name('modified-costing-list');
     Route::get('modified-offer-list', [OfferController::class, 'modifiedList'])->name('modified-offer-list');
     Route::get('modified-sale-list', [SaleController::class, 'modifiedList'])->name('modified-sale-list');
+    Route::get('costing-pdf/{id}', [CostingController::class, 'costingPdf'])->name('costing-pdf');
 });
