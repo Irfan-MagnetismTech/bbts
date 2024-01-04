@@ -72,6 +72,8 @@
                                         <a href="{{ route('costing.edit', $costing->id) }}" data-toggle="tooltip"
                                             title="Edit" class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
                                     @endcan
+                                    <a href="{{ route('costing-pdf', $costing->id) }}" data-toggle="tooltip" title="Edit"
+                                        target="_blank" class="btn btn-outline-warning"><i class="fas fa-file-pdf"></i></a>
                                     @can('cost-delete')
                                         <form action="{{ route('costing.destroy', $costing->id) }}" method="POST"
                                             class="d-inline" id="deleteClientProfile">
