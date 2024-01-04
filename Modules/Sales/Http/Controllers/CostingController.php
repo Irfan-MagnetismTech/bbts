@@ -14,6 +14,7 @@ use Modules\Sales\Entities\CostingProductEquipment;
 use Modules\Sales\Entities\Planning;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\LeadGeneration;
+use PDF;
 
 
 class CostingController extends Controller
@@ -282,9 +283,18 @@ class CostingController extends Controller
     public function modifiedList()
     {
         $costings = Costing::with('costingProducts', 'costingLinks', 'costingLinks.costingLinkEquipments')
-            ->where('is_modified',1)
+            ->where('is_modified', 1)
             ->latest()
             ->get();
         return view('sales::costing.modification_list', compact('costings'));
+    }
+
+    public function CostingPdf($id)
+    {
+        $costing = Costing::with('costingProducts', 'costingProductEquipments', 'costingLinks.costingLinkEquipments', 'lead_generation', 'feasibilityRequirementDetail')->find($id);
+        $pdf = PDF::loadView('sales::costing.pdf', ['costing' => $costing], [], [
+            'format' => 'A4'
+        ]);
+        return $pdf->stream('costing.pdf');
     }
 }

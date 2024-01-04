@@ -51,6 +51,16 @@
                 </div>
             </div>
             <div class="col-md-3">
+                <div class="form-group">
+                    <label for="date_to" class="font-weight-bold">Select Type:</label>
+                    <select name="type" id="type" class="form-control">
+                        <option value="">Select Type</option>
+                        <option value="Report">Report</option>
+                        <option value="PDF">PDF</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <div class="form-group my-4 row">
                     <div class="col-md-6">
                         <input type="button" onclick="resetForm()" value="Reset"
