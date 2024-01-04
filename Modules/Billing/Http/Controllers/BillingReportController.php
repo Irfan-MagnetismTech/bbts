@@ -21,7 +21,31 @@ class BillingReportController extends Controller
 {
     public function duesReport(Request $request)
     {
+        $clients = Client::get();
+        $client_no = $request->client_no;
 
+        if ($client_no != null) {
+            $collection = Collection::where('client_no', $client_no)->get();
+        }else {
+            $collection = Collection::get();
+        }
+        if ($request->type === 'pdf') {
+            return PDF::loadView('billing::report.due_report_pdf', ['collection' => $collection, 'client_no' => $client_no, 'clients' => $clients], [], [
+                'format' => 'A4',
+                'orientation' => 'L',
+                'title' => 'Dues Report PDF',
+                'watermark' => 'BBTS',
+                'show_watermark' => true,
+                'watermark_text_alpha' => 0.1,
+                'watermark_image_path' => '',
+                'watermark_image_alpha' => 0.2,
+                'watermark_image_size' => 'D',
+                'watermark_image_position' => 'P',
+            ])->stream('dues_report.pdf');
+            return view('billing::report.due_report_pdf', compact('collection', 'client_no','clients'));
+        } else {
+            return view('billing::report.due_report', compact('collection', 'client_no','clients'));
+        }
     }
 
     public function collectionReport(Request $request)

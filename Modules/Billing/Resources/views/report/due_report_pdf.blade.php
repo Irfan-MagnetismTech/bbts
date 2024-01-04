@@ -110,9 +110,9 @@
 <html-separator/>
 
 <div style="width: 100%; flex: max-content">
-    <h3 style="text-align: center"><u>Collection Report</u></h3>
+    <h3 style="text-align: center"><u>Dues Report</u></h3>
     <div>
-        <table id="dataTable" class="table table-striped table-bordered" style="width: 100%;">
+        <table id="dataTable" class="table table-striped table-bordered" style="width: 100%">
             <thead>
             <tr>
                 <th>Sl</th>
@@ -120,10 +120,14 @@
                 <th>Client Name</th>
                 <th>Bill No</th>
                 <th>Bill Type</th>
-                <th>Payment Method</th>
-                <th>Bank Name</th>
-                <th>Payment Amount</th>
+                <th>Amount</th>
+                <th>Penalty</th>
+                <th>Discount</th>
+                <th>Vat</th>
+                <th>Tax</th>
+                <th>Net Amount</th>
                 <th>Received Amount</th>
+                <th>Due Amount</th>
                 <th>Date</th>
             </tr>
             </thead>
@@ -134,17 +138,21 @@
                 <th>Client Name</th>
                 <th>Bill No</th>
                 <th>Bill Type</th>
-                <th>Payment Method</th>
-                <th>Bank Name</th>
-                <th>Payment Amount</th>
+                <th>Amount</th>
+                <th>Penalty</th>
+                <th>Discount</th>
+                <th>Vat</th>
+                <th>Tax</th>
+                <th>Net Amount</th>
                 <th>Received Amount</th>
+                <th>Due Amount</th>
                 <th>Date</th>
             </tr>
             </tfoot>
             <tbody>
             @foreach($collection as $key => $value)
                 <tr>
-                    <td>{{$key + 1}}</td>
+                    <td style="text-align: center">{{$key + 1}}</td>
                     <td style="text-align: start">{{ $value->client_no ?? ''}}</td>
                     <td style="text-align: start">{{ $value->client->client_name ?? ''}}</td>
                     <td style="text-align: start">
@@ -157,24 +165,44 @@
                             {{ $data->billGenerate->bill_type ?? ''}} <br>
                         @endforeach
                     </td>
-                    <td style="text-align: start">
-                        @foreach ($value->lines as $subKey => $data)
-                            {{ $data->payment_method ?? ''}} <br>
-                        @endforeach
-                    </td>
-                    <td style="text-align: start">
-                        @foreach ($value->lines as $subKey => $data)
-                            {{ $data->bank_name ?? ''}} <br>
-                        @endforeach
-                    </td>
                     <td style="text-align: right">
-                        @foreach ($value->lines as $subKey => $data)
+                        @foreach ($value->collectionBills as $subKey => $data)
                             {{ $data->amount ?? ''}} <br>
                         @endforeach
                     </td>
                     <td style="text-align: right">
                         @foreach ($value->collectionBills as $subKey => $data)
+                            {{ $data->penalty ?? ''}} <br>
+                        @endforeach
+                    </td>
+                    <td style="text-align: right">
+                        @foreach ($value->collectionBills as $subKey => $data)
+                            {{ $data->discount ?? ''}} <br>
+                        @endforeach
+                    </td>
+                    <td style="text-align: right">
+                        @foreach ($value->collectionBills as $subKey => $data)
+                            {{ $data->vat ?? ''}} <br>
+                        @endforeach
+                    </td>
+                    <td style="text-align: right">
+                        @foreach ($value->collectionBills as $subKey => $data)
+                            {{ $data->tax ?? ''}} <br>
+                        @endforeach
+                    </td>
+                    <td style="text-align: right">
+                        @foreach ($value->collectionBills as $subKey => $data)
+                            {{ $data->net_amount ?? ''}} <br>
+                        @endforeach
+                    </td>
+                    <td style="text-align: right">
+                        @foreach ($value->collectionBills as $subKey => $data)
                             {{ $data->receive_amount ?? ''}} <br>
+                        @endforeach
+                    </td>
+                    <td style="text-align: right">
+                        @foreach ($value->collectionBills as $subKey => $data)
+                            {{ $data->due ?? ''}} <br>
                         @endforeach
                     </td>
                     <td style="text-align: center">{{ $value->date ?? ''}}</td>
