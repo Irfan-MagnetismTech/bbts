@@ -1,68 +1,94 @@
-@extends('layouts.backend-layout')
-@section('title', 'Plan Reports')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('style')
-
-@endsection
-
-@section('breadcrumb-title')
-    Plan Reports
-@endsection
-
-@section('style')
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Monthly Sales Report</title>
     <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        .dt-responsive {
+            overflow: auto;
+            padding: 0 5%;
+        }
+
+        thead tr th {
+            background-color: #f2f2f2;
+            font-size: 12px;
+        }
+
+        tbody tr td {
+            font-size: 12px;
+        }
+
+        @page {
+            header: page-header;
+            footer: page-footer;
+        }
+
+        #logo {
+            clear: both;
+            width: 100%;
+            display: block;
+            text-align: center;
+            position: relative;
+        }
+
+        .pdflogo a {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        @page {
+            margin: 150px 0px 40px 0px;
+        }
     </style>
-@endsection
 
-@section('sub-title')
-    Total Tickets: {{ $plan_reports->count() }} <br>
-    <small>(Last 30 Days)</small>
+</head>
 
-@endsection
-
-
-@section('content')
-    <form action="" method="get" class="my-4">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="ticket_no" class="font-weight-bold">Client Name:</label>
-                    <select name="client_no" id="client_no" class="form-control select2">
-                        <option value="">Select Client</option>
-                        @foreach ($clients as $client)
-                            <option value="{{ $client->client_no }}">{{ $client->client_name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="date_from" class="font-weight-bold">From Date:</label>
-                    <input type="text" class="form-control date" id="date_from" name="date_from"
-                        aria-describedby="date_from" value="{{ old('date_from') ?? (request()?->date_from ?? null) }}"
-                        readonly>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="date_to" class="font-weight-bold">To Date:</label>
-                    <input type="text" class="form-control date" id="date_to" name="date_to" aria-describedby="date_to"
-                        value="{{ old('date_to') ?? (request()?->date_to ?? null) }}" readonly>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group my-4 row">
-                    <div class="col-md-6">
-                        <input type="button" onclick="resetForm()" value="Reset"
-                            class="btn btn-outline-warning btn-sm col-12">
-                    </div>
-                    <div class="col-md-6">
-                        <input type="submit" value="Search" class="btn btn-outline-primary btn-sm col-12">
-                    </div>
-                </div>
+<body>
+    <htmlpageheader name="page-header">
+        <div>
+            &nbsp;
+        </div>
+        <div>
+            <div id="logo" class="pdflogo">
+                <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
+                <div class="clearfix"></div>
+                <h5 style="margin: 2px; padding: 2px;">Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+                <h4 style="margin: 2px; padding: 2px;">Plan Report</h4>
+                <hr />
             </div>
         </div>
-    </form>
+
+    </htmlpageheader>
 
     <div class="dt-responsive table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
@@ -98,25 +124,6 @@
             </tbody>
         </table>
     </div>
-@endsection
+</body>
 
-@section('script')
-    <script>
-        $(document).ready(function() {
-            $('.date').datepicker({
-                format: 'dd-mm-yyyy',
-                autoclose: true,
-                todayHighlight: true,
-            });
-
-            select2Ajax("{{ route('search-support-ticket') }}", '#ticket_no')
-        })
-
-        function resetForm() {
-            $('#date_from').val('');
-            $('#date_to').val('');
-            $('#ticket_no').val('').trigger("change");
-            // $('#ticket_no').prop('selectedIndex',0);
-        }
-    </script>
-@endsection
+</html>

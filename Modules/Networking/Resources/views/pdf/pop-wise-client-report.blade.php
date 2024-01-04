@@ -67,9 +67,10 @@
         }
 
         @page {
-            margin: 40px 0 0 0;
+            margin: 150px 0px 40px 0px;
         }
     </style>
+
 </head>
 
 <body>
@@ -81,13 +82,12 @@
             <div id="logo" class="pdflogo">
                 <img src="{{ asset('images/bbts_logo.png') }}" alt="Logo" class="pdfimg">
                 <div class="clearfix"></div>
-                <h5>Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+                <h5 style="margin: 2px; padding: 2px;">Ispahani Building (2nd Floor), Agrabad C/A, Chittagong-4100.</h5>
+                <h4 style="margin: 2px; padding: 2px;">POP Wise Client Report</h4>
+                <hr />
             </div>
         </div>
     </htmlpageheader>
-    <html-separator />
-    <h5 style="text-align: center; padding:70px 0px 0px 0px; margin: 0px;">POP Wise Client Report</h5>
-    <hr />
     <div class="dt-responsive table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>

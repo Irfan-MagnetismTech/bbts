@@ -70,42 +70,42 @@
                 @foreach ($challans as $key => $challan)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td class="text-center">{{ $challan->date ?? '' }}</td>
-                        <td class="text-center">{{ $challan->challan_no ?? '' }}</td>
-                        <td class="text-center">{{ $challan->scmRequisition->mrs_no ?? '' }}</td>
-                        <td class="text-center">{{ $challan->scmRequisition->date ?? '' }}</td>
-                        <td class="text-center">{{ $challan->branch->name ?? '' }}</td>
+                        <td class="text-left">{{ $challan?->date ?? '' }}</td>
+                        <td class="text-left">{{ $challan?->challan_no ?? '' }}</td>
+                        <td class="text-left">{{ $challan?->scmRequisition?->mrs_no ?? '' }}</td>
+                        <td class="text-left">{{ $challan?->scmRequisition?->date ?? '' }}</td>
+                        <td class="text-left">{{ $challan?->branch?->name ?? '' }}</td>
                         <td class="text-left">
-                            @foreach ($challan->scmChallanLines as $subKey => $data)
-                                {{ $data->material->name ?? ''}} - {{ $data->brand->name ?? ''}}
-                                - {{ $data->model ?? ''}} <br>
+                            @foreach ($challan?->scmChallanLines as $subKey => $data)
+                                {{ $data?->material?->name ?? ''}} - {{ $data?->brand?->name ?? ''}}
+                                - {{ $data?->model ?? ''}} <br>
                             @endforeach
                         </td>
-                        <td class="text-center">
-                            @foreach ($challan->scmChallanLines as $subKey => $data)
-                                {{ $data->unit ?? ''}} <br>
-                            @endforeach
-                        </td>
-                        <td class="text-right">
-                            @foreach ($challan->scmChallanLines as $subKey => $data)
-                                {{ $data->quantity ?? ''}} <br>
+                        <td class="text-left">
+                            @foreach ($challan?->scmChallanLines as $subKey => $data)
+                                {{ $data?->unit ?? ''}} <br>
                             @endforeach
                         </td>
                         <td class="text-right">
-                            @foreach ($challan->scmChallanLines as $subKey => $data)
-                                {{ $data->mrs_quantity ?? ''}} <br>
+                            @foreach ($challan?->scmChallanLines as $subKey => $data)
+                                {{ $data?->quantity ?? ''}} <br>
                             @endforeach
                         </td>
-                        <td class="text-center">
-                            @foreach ($challan->scmChallanLines as $subKey => $data)
-                                {{ $data->serial_code ?? ''}} <br>
+                        <td class="text-right">
+                            @foreach ($challan?->scmChallanLines as $subKey => $data)
+                                {{ $data?->mrs_quantity ?? ''}} <br>
                             @endforeach
                         </td>
-                        <td class="text-center">{{ $challan->client_no ?? '' }}</td>
-                        <td class="text-center">{{ $challan->client->client_name ?? '' }}</td>
-                        <td class="text-center">{{ $challan->feasibilityRequirementDetail->connectivity_point ?? '' }}</td>
-                        <td class="text-center">{{ $challan->purpose ?? '' }}</td>
-                        <td class="text-center">{{ $challan->mur->mur_no ?? '' }}</td>
+                        <td class="text-left">
+                            @foreach ($challan?->scmChallanLines as $subKey => $data)
+                                {{ $data?->serial_code ?? ''}} <br>
+                            @endforeach
+                        </td>
+                        <td class="text-left">{{ $challan?->client_no ?? '' }}</td>
+                        <td class="text-left">{{ $challan?->client?->client_name ?? '' }}</td>
+                        <td class="text-left">{{ $challan?->feasibilityRequirementDetail?->connectivity_point ?? '' }}</td>
+                        <td class="text-left">{{ $challan?->purpose ?? '' }}</td>
+                        <td class="text-left">{{ $challan?->mur?->mur_no ?? '' }}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>

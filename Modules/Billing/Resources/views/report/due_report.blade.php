@@ -29,11 +29,19 @@
             <div style="width: 200px; margin-left: 20px">
                 <select name="client_no" class="form-control client select2" autocomplete="off">
                     <option value="">Select Client</option>
-                    @foreach ($clients as $client)
-                        <option value="{{ $client->client_no }}" @selected($client->client_no == $client_no)>
-                            {{ $client->client_name }}
-                        </option>
-                    @endforeach
+                    @if($client_no != null)
+                        @foreach ($clients as $client)
+                            <option value="{{ $client->client_no }}" @selected($client->client_no == $client_no)>
+                                {{ $client->client_name }}
+                            </option>
+                        @endforeach
+                    @else
+                        @foreach ($clients as $client)
+                            <option value="{{ $client->client_no }}">
+                                {{ $client->client_name }}
+                            </option>
+                        @endforeach
+                    @endif
                 </select>
             </div>
             <div class="icon-btn" style="margin-left: 30px; margin-top: 5px">
