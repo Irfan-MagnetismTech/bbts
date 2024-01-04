@@ -8,7 +8,13 @@
 @section('breadcrumb-button')
     <a href="{{ route('challans.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
-
+@section('style')
+    <style>
+        table, td{
+            text-align: left;
+        }
+    </style>
+@endsection
 @section('content-grid', null)
 
 @section('content')
@@ -19,23 +25,23 @@
                     <tbody class="text-left">
                         <tr style="background-color: #0C4A77;color: white">
                             <td> <strong>Challan No.</strong> </td>
-                            <td> <strong>{{ $challan->challan_no }}</strong></td>
+                            <td> <strong>{{ $challan?->challan_no ?? ''}}</strong></td>
                         </tr>
                         <tr>
                             <td> <strong>Type</strong> </td>
-                            <td> {{ ucfirst($challan->type) }}</td>
+                            <td> {{ ucfirst($challan?->type ?? '') }}</td>
                         </tr>
                         <tr>
                             <td> <strong>Date</strong> </td>
-                            <td> {{ $challan->date }}</td>
+                            <td> {{ $challan?->date ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Requisition No</strong> </td>
-                            <td> {{ $challan->scmRequisition->mrs_no }}</td>
+                            <td> {{ $challan?->scmRequisition?->mrs_no ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Purpose</strong> </td>
-                            <td> {{ $challan->purpose }}</td>
+                            <td> {{ $challan?->purpose ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Client</strong> </td>
@@ -43,11 +49,11 @@
                         </tr>
                         <tr>
                             <td> <strong>FR No</strong> </td>
-                            <td> {{ $challan->fr_no }}</td>
+                            <td> {{ $challan?->fr_no ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Link No</strong> </td>
-                            <td> {{ $challan->link_no }}</td>
+                            <td> {{ $challan?->link_no ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Branch No</strong> </td>
@@ -55,7 +61,7 @@
                         </tr>
                         <tr>
                             <td> <strong>Equipment Type</strong> </td>
-                            <td> {{ $challan->equipment_type }}</td>
+                            <td> {{ $challan?->equipment_type ?? ''}}</td>
                         </tr>
                         <tr>
                             <td> <strong>Pop No</strong> </td>
@@ -63,7 +69,7 @@
                         </tr>
                         <tr>
                             <td> <strong>Challan By</strong> </td>
-                            <td> {{ ucfirst($challan->challanBy->name) }}</td>
+                            <td> {{ ucfirst($challan?->challanBy?->name ?? '') }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -72,7 +78,7 @@
     </div>
 
     <div class="table-responsive">
-        <table id="example" class="table table-striped table-bordered">
+        <table id="challan" class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th>Material Name</th>
@@ -104,15 +110,15 @@
                 @else
                     @foreach ($challan->scmChallanLines as $key => $scmChallanLine)
                         <tr>
-                            <td> {{ $scmChallanLine->material->name }} </td>
-                            <td> {{ $scmChallanLine->item_code }} </td>
-                            <td> {{ $scmChallanLine->material->unit }} </td>
-                            <td> {{ $scmChallanLine->quantity }}</td>
-                            <td> {{ $scmChallanLine->brand->name }} </td>
-                            <td> {{ $scmChallanLine->model }} </td>
-                            <td> {{ $scmChallanLine->serial_code }} </td>
-                            <td> {{ $scmChallanLine->purpose }} </td>
-                            <td> {{ $scmChallanLine->remarks }} </td>
+                            <td> {{ $scmChallanLine?->material?->name ?? ''}} </td>
+                            <td> {{ $scmChallanLine?->item_code ?? ''}} </td>
+                            <td> {{ $scmChallanLine?->material?->unit ?? ''}} </td>
+                            <td> {{ $scmChallanLine?->quantity ?? ''}}</td>
+                            <td> {{ $scmChallanLine?->brand?->name ?? ''}} </td>
+                            <td> {{ $scmChallanLine?->model ?? ''}} </td>
+                            <td> {{ $scmChallanLine?->serial_code ?? ''}} </td>
+                            <td> {{ $scmChallanLine?->purpose ?? ''}} </td>
+                            <td> {{ $scmChallanLine?->remarks ?? ''}} </td>
                         </tr>
                     @endforeach
 

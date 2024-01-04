@@ -174,36 +174,36 @@
                     <thead>
                         <tr>
                             <td>Gate Pass No :</td>
-                            <td>{{ $challan->challan_no ?? '' }}</td>
+                            <td>{{ $challan?->challan_no ?? '' }}</td>
                         </tr>
                         <tr>
                             <td>Client :</td>
-                            <td>{{ $challan->client->client_name ?? '' }}</td>
+                            <td>{{ $challan?->client?->client_name ?? '' }}</td>
                         </tr>
                         <tr>
                             <td>Purpose :</td>
-                            <td>{{ $challan->purpose ?? '' }}</td>
+                            <td>{{ $challan?->purpose ?? '' }}</td>
                         </tr>
                         <tr>
                             <td>FR no - Connectivity Point :</td>
-                            <td> {{ $challan->fr_no . ' (' . $challan->feasibilityRequirementDetail->connectivity_point . ')' }}
+                            <td> {{ $challan?->fr_no ?? '' . ' (' . $challan?->feasibilityRequirementDetail?->connectivity_point ?? '' . ')' }}
                             </td>
                         </tr>
                         <tr>
                             <td>Address :</td>
-                            <td>{{ $challan->billingAddress->address ?? '' }}</td>
+                            <td>{{ $challan?->billingAddress?->address ?? '' }}</td>
                         </tr>
                         <tr>
                             <td>Contact Person :</td>
-                            <td>{{ $challan->billingAddress->contact_person ?? '' }}</td>
+                            <td>{{ $challan?->billingAddress?->contact_person ?? '' }}</td>
                         </tr>
                         <tr>
                             <td>Contact Number :</td>
-                            <td>{{ $challan->billingAddress->phone ?? '' }}</td>
+                            <td>{{ $challan?->billingAddress?->phone ?? '' }}</td>
                         </tr>
                         <tr>
                             <td>Date :</td>
-                            <td>{{ $challan->date ?? '' }}</td>
+                            <td>{{ $challan?->date ?? '' }}</td>
                         </tr>
                     </thead>
                 </table>
@@ -232,14 +232,14 @@
                     <tbody>
                         @foreach ($challan->scmChallanLines as $key => $scmChallanLine)
                             <tr>
-                                <td> {{ $challan->challan_no }} </td>
-                                <td> {{ $scmChallanLine->material->name }} </td>
-                                <td> {{ $scmChallanLine->item_code }} </td>
-                                <td> {{ $scmChallanLine->material->unit }} </td>
-                                <td> {{ $scmChallanLine->quantity }} </td>
-                                <td> {{ $scmChallanLine->brand->name }} </td>
-                                <td> {{ $scmChallanLine->model }} </td>
-                                <td> {{ $scmChallanLine->purpose }} </td>
+                                <td> {{ $challan?->challan_no ?? '' }} </td>
+                                <td> {{ $scmChallanLine?->material?->name ?? '' }} </td>
+                                <td> {{ $scmChallanLine?->item_code ?? '' }} </td>
+                                <td> {{ $scmChallanLine?->material?->unit ?? '' }} </td>
+                                <td> {{ $scmChallanLine?->quantity ?? '' }} </td>
+                                <td> {{ $scmChallanLine?->brand?->name ?? '' }} </td>
+                                <td> {{ $scmChallanLine?->model ?? '' }} </td>
+                                <td> {{ $scmChallanLine?->purpose ?? '' }} </td>
                             </tr>
                         @endforeach
                     </tbody>
