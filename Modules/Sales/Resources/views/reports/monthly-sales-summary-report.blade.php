@@ -49,6 +49,16 @@
                 </div>
             </div>
             <div class="col-md-3">
+                <div class="form-group">
+                    <label for="date_to" class="font-weight-bold">Select Type:</label>
+                    <select name="type" id="type" class="form-control">
+                        <option value="">Select Type</option>
+                        <option value="Report">Report</option>
+                        <option value="PDF">PDF</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <div class="form-group my-4 row">
                     <div class="col-md-6">
                         <input type="button" onclick="resetForm()" value="Reset"
@@ -71,6 +81,9 @@
                     <th>Client Name</th>
                     <th>Connectivity Point</th>
                     <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
                     <th>OTC</th>
                     <th>MRC</th>
                     <th>Activation Date</th>
@@ -95,7 +108,11 @@
                                 <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['client_name'] }}</td>
                                 <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['connectivity_point'] }}</td>
                             @endif
-                            <td>{{ $monthly_sales_summary['products'][$i]->product_id }}</td>
+                            <td>{{ $monthly_sales_summary['products'][$i]->product->name }}</td>
+                            <td>{{ $monthly_sales_summary['products'][$i]->quantity }}</td>
+                            <td>{{ $monthly_sales_summary['products'][$i]->price }}</td>
+                            <td>{{ $monthly_sales_summary['products'][$i]->quantity * $monthly_sales_summary['products'][$i]->price }}
+                            </td>
                             @if ($i == 0)
                                 <td rowspan="{{ $max_rowspan }}">
                                     {{ $monthly_sales_summary['otc'] }}</td>

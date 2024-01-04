@@ -211,12 +211,12 @@ class ConnectivityController extends Controller
                     $query->where('ip_ipv4', $ip_address)
                         ->orWhere('ip_ipv6', $ip_address);
                 })->get();
-        }elseif ($branch_id != null && $ip_address == null) {
-                $logical_connectivities = LogicalConnectivity::with('feasibilityRequirementDetails')
-                    ->whereHas('feasibilityRequirementDetails.branch', function ($query) use ($branch_id) {
-                        $query->where('id', $branch_id);
-                    })->get();
-        }elseif ($branch_id != null && $ip_address != null) {
+        } elseif ($branch_id != null && $ip_address == null) {
+            $logical_connectivities = LogicalConnectivity::with('feasibilityRequirementDetails')
+                ->whereHas('feasibilityRequirementDetails.branch', function ($query) use ($branch_id) {
+                    $query->where('id', $branch_id);
+                })->get();
+        } elseif ($branch_id != null && $ip_address != null) {
             $logical_connectivities = LogicalConnectivity::with(['feasibilityRequirementDetails', 'lines'])
                 ->whereHas('feasibilityRequirementDetails.branch', function ($query) use ($branch_id) {
                     $query->where('id', $branch_id);
@@ -225,9 +225,11 @@ class ConnectivityController extends Controller
                     $query->where('ip_ipv4', $ip_address)
                         ->orWhere('ip_ipv6', $ip_address);
                 })->get();
-        }else{$logical_connectivities = LogicalConnectivity::get();}
+        } else {
+            $logical_connectivities = LogicalConnectivity::get();
+        }
         if ($request->type === 'pdf') {
-            return PDF::loadView('networking::reports.ip_report_pdf', ['logical_connectivities' => $logical_connectivities, 'branches' => $branches,'branch_id' => $branch_id, 'ip_address' => $ip_address], [], [
+            return PDF::loadView('networking::reports.ip_report_pdf', ['logical_connectivities' => $logical_connectivities, 'branches' => $branches, 'branch_id' => $branch_id, 'ip_address' => $ip_address], [], [
                 'format' => 'A4',
                 'orientation' => 'L',
                 'title' => 'IP Report PDF',
@@ -239,9 +241,9 @@ class ConnectivityController extends Controller
                 'watermark_image_size' => 'D',
                 'watermark_image_position' => 'P',
             ])->stream('ip_report.pdf');
-            return view('networking::reports.ip_report_pdf', compact('logical_connectivities', 'branches', 'branch_id','ip_address'));
+            return view('networking::reports.ip_report_pdf', compact('logical_connectivities', 'branches', 'branch_id', 'ip_address'));
         } else {
-            return view('networking::reports.ip_report', compact('logical_connectivities', 'branches', 'branch_id','ip_address'));
+            return view('networking::reports.ip_report', compact('logical_connectivities', 'branches', 'branch_id', 'ip_address'));
         }
     }
 
@@ -313,7 +315,15 @@ class ConnectivityController extends Controller
                 ];
             }
             $pops = Pop::latest()->get();
-            return view('networking::reports.pop-wise-client-report', compact('pop_wise_clients', 'pops'));
+            if (request('type') == 'PDF') {
+                $pdf = PDF::loadView('networking::pdf.pop-wise-client-report', ['pop_wise_clients' => $pop_wise_clients], [], [
+                    'format' => 'A4',
+                    'orientation' => 'L'
+                ]);
+                return $pdf->stream('pop-wise-client-report.pdf');
+            } else {
+                return view('networking::reports.pop-wise-client-report', compact('pop_wise_clients', 'pops'));
+            }
         } else {
             $pops = Pop::latest()->get();
             $pop_wise_clients = '';
@@ -379,6 +389,14 @@ class ConnectivityController extends Controller
             $pops = Pop::latest()->get();
         }
 
-        return view('networking::reports.pop-wise-equipment-report', compact('pop_wise_equipments', 'pops'));
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('networking::pdf.pop-wise-equipment-report', ['pop_wise_equipments' => $pop_wise_equipments], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('pop-wise-equipment-report.pdf');
+        } else {
+            return view('networking::reports.pop-wise-equipment-report', compact('pop_wise_equipments', 'pops'));
+        }
     }
 }

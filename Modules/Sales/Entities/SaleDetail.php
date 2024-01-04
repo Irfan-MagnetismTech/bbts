@@ -173,4 +173,9 @@ class SaleDetail extends Model
     {
         return $this->hasOne(LogicalConnectivity::class, 'connectivity_requirement_id', 'connectivity_requirement_id')->where('product_category', 'VAS');
     }
+
+    public function connectivity()
+    {
+        return $this->hasOne(Connectivity::class, 'fr_no', 'fr_no')->where('is_modify', 0);
+    }
 }
