@@ -52,7 +52,6 @@
                             </option>
                         @endforeach
                     @endif
-
                 </select>
             </div>
             <div style="width: 150px; margin-left: 20px">
