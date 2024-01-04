@@ -77,7 +77,13 @@ class ClientTicketOpenController extends Controller
 
             // dd($ticketInfo);
             DB::transaction(function () use ($ticketInfo) {
-                SupportTicket::create($ticketInfo);
+                $ticket = SupportTicket::create($ticketInfo);
+                $ticket->supportTicketLifeCycles()->create([
+                    'status' => 'Pending', // We are not taking $ticketInfo['status'] real input as it might be selected as closed.
+                    'user_id' => auth()->user()->id,
+                    'support_ticket_id' => $ticket->id,
+                    'remarks' => 'Ticket Created by Client' ,
+                ]);
             });
 
             return back()->with('message', '<span style="font-weight: bold">' .  $ticketInfo['ticket_no'] . '</span>' . ' Ticket Created Successfully');
