@@ -4,9 +4,9 @@
         <ul class="pcoded-item pcoded-left-item">
             @hasanyrole('Super-Admin|Admin')
                 <li
-                    class="pcoded-hasmenu {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*', 'brands.*', 'branchs.*', 'pops.*']) ? 'active pcoded-trigger' : null }}">
+                    class="pcoded-hasmenu {{ request()->routeIs(['users.*', 'roles.*', 'permissions.*']) ? 'active pcoded-trigger' : null }}">
                     <a href="javascript:void(0)">
-                        <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                        <span class="pcoded-micon"><i class="fas fa-users"></i><b>D</b></span>
                         <span class="pcoded-mtext">Control Users</span>
                         <span class="pcoded-mcaret"></span>
                     </a>
@@ -33,9 +33,9 @@
             @endhasanyrole
                 @can('admin-configuration')
                     <li
-                        class="pcoded-hasmenu {{ request()->routeIs(['branches.*', 'teams.*', 'departments.*', 'designations.*', 'employees.*', 'services.*']) ? 'active pcoded-trigger' : null }}">
+                        class="pcoded-hasmenu {{ request()->routeIs(['branchs.*', 'particulars.*', 'services.*', 'thanas.*', 'dataencoding.departments.*', 'dataencoding.designations.*', 'dataencoding.employees.*']) ? 'active pcoded-trigger' : null }}">
                         <a href="javascript:void(0)">
-                            <span class="pcoded-micon"><i class="ti-settings"></i><b>P</b></span>
+                            <span class="pcoded-micon"><i class="fas fa-cogs"></i><b>P</b></span>
                             <span class="pcoded-mtext">Configurations</span>
                             <span class="pcoded-mcaret"></span>
                         </a>

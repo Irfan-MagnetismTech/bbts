@@ -25,7 +25,7 @@
     @endcan
     <li class="{{ request()->routeIs('repeated-ticket-client-list') ? 'active' : null }}">
         <a href="{{ route('repeated-ticket-client-list') }}">
-            <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-clipboard-list"></i></span>
+            <span class="pr-2 pt-1 w-25px d-inline-block"><i class="fas fa-users"></i></span>
             <span class="pcoded-mtext">Repeated Ticket Client List</span>
         </a>
     </li>

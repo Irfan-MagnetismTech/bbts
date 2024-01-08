@@ -515,7 +515,7 @@
                             </div>
                         </div>
                         <input type="hidden" name="link_no_{{ $row_no }}"
-                            value="{{ $costing_link->finalSurveyDetails->link_no }}">
+                            value="{{ $costing_link?->finalSurveyDetails?->link_no ?? ''}}">
                         <div style="width: 14%; margin: 0px 7px;">
                             <div class="form-item">
                                 <input type="text" name="link_type_{{ $row_no }}"

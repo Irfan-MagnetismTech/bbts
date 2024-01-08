@@ -2,9 +2,9 @@
 <ul class="pcoded-item pcoded-left-item">
     {{-- @hasanyrole('super-admin|admin') --}}
     <li
-        class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'materials.*', 'suppliers.*', 'couriers.*', 'sc-categories.*' ]) ? 'active pcoded-trigger' : null }}">
+        class="pcoded-hasmenu {{ request()->routeIs(['units.*', 'sc-categories.*', 'brands.*', 'materials.*', 'suppliers.*', 'couriers.*' ]) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
-            <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+            <span class="pcoded-micon"><i class="fas fa-tools"></i><b>D</b></span>
             <span class="pcoded-mtext">Configurations</span>
             <span class="pcoded-mcaret"></span>
         </a>
@@ -48,17 +48,17 @@
     @can('opening-stocks-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['opening-stocks.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-chart-line"></i><b>D</b></span>
                 <span class="pcoded-mtext">Opening Stock</span>
                 <span class="pcoded-mcaret"></span>
             </a>
             <ul class="pcoded-submenu">
-                <li class="{{ request()->routeIs('purchase-requisitions.create') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('opening-stocks.create') ? 'active' : null }}">
                     <a href="{{ route('opening-stocks.create') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('purchase-requisitions.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('opening-stocks.index','opening-stocks.show','opening-stocks.edit') ? 'active' : null }}">
                     <a href="{{ route('opening-stocks.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -69,7 +69,7 @@
     @can('scm-requisition-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['requisitions.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
-            <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+            <span class="pcoded-micon"><i class="fas fa-file-signature"></i><b>D</b></span>
             <span class="pcoded-mtext">Requisition</span>
             <span class="pcoded-mcaret"></span>
         </a>
@@ -79,7 +79,7 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
-            <li class="{{ request()->routeIs('requisitions.index') ? 'active' : null }}">
+            <li class="{{ request()->routeIs('requisitions.index','requisitions.show','requisitions.edit') ? 'active' : null }}">
                 <a href="{{ route('requisitions.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                         class="pcoded-mcaret"></span></a>
@@ -90,7 +90,7 @@
     @can('scm-prs-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['purchase-requisitions.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
-            <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+            <span class="pcoded-micon"><i class="fas fa-cart-plus"></i><b>D</b></span>
             <span class="pcoded-mtext">Purchase Requisition</span>
             <span class="pcoded-mcaret"></span>
         </a>
@@ -100,7 +100,7 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
-            <li class="{{ request()->routeIs('purchase-requisitions.index') ? 'active' : null }}">
+            <li class="{{ request()->routeIs('purchase-requisitions.index','purchase-requisitions.show','purchase-requisitions.edit') ? 'active' : null }}">
                 <a href="{{ route('purchase-requisitions.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                         class="pcoded-mcaret"></span></a>
@@ -121,7 +121,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('indents.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('indents.index','indents.show','indents.edit') ? 'active' : null }}">
                     <a href="{{ route('indents.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -132,7 +132,7 @@
     @can('scm-comparative-statement-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['cs.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i></span>
+                <span class="pcoded-micon"><i class="fas fa-chart-bar"></i></span>
                 <span class="pcoded-mtext">CS</span>
                 <span class="pcoded-mcaret"></span>
             </a>
@@ -142,7 +142,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('cs.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('cs.index','cs.show','cs.edit') ? 'active' : null }}">
                     <a href="{{ route('cs.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -153,7 +153,7 @@
     @can('scm-purchase-order-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['purchase-orders.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-file-invoice"></i><b>D</b></span>
                 <span class="pcoded-mtext">Purchase Orders</span>
                 <span class="pcoded-mcaret"></span>
             </a>
@@ -163,7 +163,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('purchase-orders.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('purchase-orders.index','purchase-orders.show','purchase-orders.edit',) ? 'active' : null }}">
                     <a href="{{ route('purchase-orders.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -174,7 +174,7 @@
     @can('scm-mrr-view')
     <li class="pcoded-hasmenu {{ request()->routeIs(['material-receives.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
-            <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+            <span class="pcoded-micon"><i class="fas fa-shopping-bag"></i><b>D</b></span>
             <span class="pcoded-mtext">Material Receive</span>
             <span class="pcoded-mcaret"></span>
         </a>
@@ -184,7 +184,7 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
-            <li class="{{ request()->routeIs('material-receives.index') ? 'active' : null }}">
+            <li class="{{ request()->routeIs('material-receives.index','material-receives.show','material-receives.edit') ? 'active' : null }}">
                 <a href="{{ route('material-receives.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                         class="pcoded-mcaret"></span></a>
@@ -195,7 +195,7 @@
     @can('scm-mir-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['material-issues.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-box-open"></i><b>D</b></span>
                 <span class="pcoded-mtext">Material Issue</span>
                 <span class="pcoded-mcaret"></span>
             </a>
@@ -205,7 +205,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('material-issues.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('material-issues.index','material-issues.show','material-issues.edit') ? 'active' : null }}">
                     <a href="{{ route('material-issues.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -216,7 +216,7 @@
     @can('scm-challan-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['challans.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-boxes"></i><b>D</b></span>
                 <span class="pcoded-mtext">Challan</span>
                 <span class="pcoded-mcaret"></span>
             </a>
@@ -226,7 +226,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('challans.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('challans.index','challans.show') ? 'active' : null }}">
                     <a href="{{ route('challans.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -237,7 +237,7 @@
     @can('scm-gate-pass-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['gate-passes.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-file-contract"></i><b>D</b></span>
                 <span class="pcoded-mtext">Gate Passes</span>
                 <span class="pcoded-mcaret"></span>
             </a>
@@ -247,7 +247,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('gate-passes.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('gate-passes.index','gate-passes.show','gate-passes.edit') ? 'active' : null }}">
                     <a href="{{ route('gate-passes.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -258,13 +258,13 @@
     @can('scm-mur-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['material-utilizations.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-box"></i><b>D</b></span>
                 <span class="pcoded-mtext">Material Utilization</span>
                 <span class="pcoded-mcaret"></span>
             </a>
             <ul class="pcoded-submenu">
 
-                <li class="{{ request()->routeIs('material-utilizations.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('material-utilizations.index','material-utilizations.show','material-utilizations.edit',) ? 'active' : null }}">
                     <a href="{{ route('material-utilizations.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -275,7 +275,7 @@
     @can('scm-err-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['errs.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-luggage-cart"></i><b>D</b></span>
                 <span class="pcoded-mtext">Equipment Restore</span>
                 <span class="pcoded-mcaret"></span>
             </a>
@@ -285,7 +285,7 @@
                                 lass="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('errs.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('errs.index','errs.show','errs.edit') ? 'active' : null }}">
                     <a href="{{ route('errs.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -296,7 +296,7 @@
     @can('scm-wcr-view')
         <li class="pcoded-hasmenu {{ request()->routeIs(['warranty-claims.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-hand-holding-usd"></i><b>D</b></span>
                 <span class="pcoded-mtext">Warranty Claim</span>
                 <span class="pcoded-mcaret"></span>
             </a>
@@ -306,7 +306,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('warranty-claims.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('warranty-claims.index','warranty-claims.show','warranty-claims.edit') ? 'active' : null }}">
                     <a href="{{ route('warranty-claims.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -318,7 +318,7 @@
         <li
             class="pcoded-hasmenu {{ request()->routeIs(['warranty-claims-receives.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
-                <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+                <span class="pcoded-micon"><i class="fas fa-file-import"></i><b>D</b></span>
                 <span class="pcoded-mtext">Warranty Claim Receive</span>
                 <span class="pcoded-mcaret"></span>
             </a>
@@ -328,7 +328,7 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('warranty-claims-receives.index') ? 'active' : null }}">
+                <li class="{{ request()->routeIs('warranty-claims-receives.index','warranty-claims-receives.show') ? 'active' : null }}">
                     <a href="{{ route('warranty-claims-receives.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -337,9 +337,9 @@
         </li>
     @endcan
     @can('scm-wor-view')
-    <li class="pcoded-hasmenu {{ request()->routeIs(['work-orders.*']) ? 'active pcoded-trigger' : null }}">
+    <li class="pcoded-hasmenu {{ request()->routeIs(['work-order-receives.*']) ? 'active pcoded-trigger' : null }}">
         <a href="javascript:void(0)">
-            <span class="pcoded-micon"><i class="ti-panel"></i><b>D</b></span>
+            <span class="pcoded-micon"><i class="fas fa-file-contract"></i><b>D</b></span>
             <span class="pcoded-mtext">Work Order Receive</span>
             <span class="pcoded-mcaret"></span>
         </a>
@@ -349,7 +349,7 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                         class="pcoded-mcaret"></span></a>
             </li>
-            <li class="{{ request()->routeIs('work-order-receives.index') ? 'active' : null }}">
+            <li class="{{ request()->routeIs('work-order-receives.index','work-order-receives.show','work-order-receives.edit') ? 'active' : null }}">
                 <a href="{{ route('work-order-receives.index') }}"> <span class="pcoded-micon"><i
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                         class="pcoded-mcaret"></span></a>
@@ -358,7 +358,7 @@
     </li>
     @endcan
     @can('scm-report-view')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['scm-reports.*']) ? 'active pcoded-trigger' : null }}">
+        <li class="pcoded-hasmenu {{ request()->routeIs(['scm-material-stock-report', 'view-scm-report', 'view-scm-item-report', 'view-product-cost-report']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-file-pdf"></i><b>D</b></span>
                 <span class="pcoded-mtext">Report</span>

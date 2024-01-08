@@ -15,6 +15,8 @@ use Modules\Sales\Http\Requests\FeasibilityRequirementRequest;
 use App\Exports\FeasibilityRequirementExport;
 use App\Imports\FeasibilityRequirementImport;
 use App\Imports\FeasibilityRequirementImportUpdate;
+use App\Services\EmailService;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Admin\Entities\Branch;
 
@@ -110,6 +112,24 @@ class FeasibilityRequirementController extends Controller
                 }
 
                 $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
+                
+                $client = $feasibilityRequirement->client->client_name;
+                // $to = 'sumon@magnetismtech.com';
+                $to = 'salesadmin@bbts.net';
+                $cc = 'saleha@magnetismtech.com';
+                $receiver = '';
+                $subject = "New Feasibility Requirement Created";
+                $messageBody = "A new $feasibilityRequirement->mq_no has been created for the $client. Please find the detailed Feasibility Requirement List.";
+                // $fromAddress = 'csd@bbts.net';
+                $fromAddress = auth()->user()->email;
+                $fromName = auth()->user()->name;
+                // Mail::send('sales::email.feasibility_requirement', ['feasibilityRequirement' => $feasibilityRequirement], function ($message) use ($to, $cc, $subject) {
+                //     $message->to($to)->cc($cc)->subject($subject);
+                // });
+                Mail::raw($messageBody, function($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                    $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+                }); 
+
                 DB::commit();
                 return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
             } catch (\Exception $e) {

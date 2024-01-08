@@ -91,12 +91,19 @@
                                         autocomplete="off"
                                         required>
                                     <option value="">Select Client</option>
-                                    @foreach ($clients as $client)
-                                        <option value="{{ $client->client_no }}" @selected($client->client_no ==
-                                            $client_no)>
-                                            {{ $client->client_name }}
-                                        </option>
-                                    @endforeach
+                                    @if($client_no != null)
+                                        @foreach ($clients as $client)
+                                            <option value="{{ $client->client_no }}" @selected($client->client_no == $client_no)>
+                                                {{ $client->client_name }}
+                                            </option>
+                                        @endforeach
+                                    @else
+                                        @foreach ($clients as $client)
+                                            <option value="{{ $client->client_no }}">
+                                                {{ $client->client_name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
