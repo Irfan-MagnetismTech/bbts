@@ -91,12 +91,12 @@
         <div class="form-group col-3">
             <label for="date">Applied Date:</label>
             <input class="form-control date" id="date" name="date" aria-describedby="date"
-                value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date">
+                value="{{ old('date') ?? (@$date ?? '') }}" readonly placeholder="Select a Date" required>
         </div>
 
         <div class="form-group col-3">
             <label for="select2">Purpose</label>
-            <select class="form-control select2" id="purpose" name="purpose">
+            <select class="form-control select2" id="purpose" name="purpose" required>
                 <option value="" selected>Select Purpose</option>
                 @foreach (config('businessinfo.errReturnFor') as $key => $value)
                     <option value="{{ $value }}" {{ old('purpose', @$purpose) == $value ? 'selected' : '' }}>
@@ -108,7 +108,7 @@
 
         <div class="form-group col-3">
             <label for="select2">From Branch</label>
-            <select class="form-control select2" id="branch_id" name="branch_id">
+            <select class="form-control select2" id="branch_id" name="branch_id" required>
                 <option value="" selected>Select Branch</option>
             </select>
         </div>
@@ -116,20 +116,20 @@
         <div class="form-group col-3 assigned_person">
             <label for="assigned_person">Assigned Person:</label>
             <input type="text" class="form-control" id="assigned_person" aria-describedby="assigned_person"
-                name="assigned_person" value="{{ old('assigned_person') ?? (@$assigned_person ?? '') }}">
+                name="assigned_person" value="{{ old('assigned_person') ?? (@$assigned_person ?? '') }}" required>
         </div>
 
         <div class="form-group col-3 reason_of_inactive">
             <label for="reason_of_inactive">Reason of Inactive:</label>
             <input type="text" class="form-control" id="reason_of_inactive" aria-describedby="reason_of_inactive"
-                name="reason_of_inactive" value="{{ old('reason_of_inactive') ?? (@$reason_of_inactive ?? '') }}">
+                name="reason_of_inactive" value="{{ old('reason_of_inactive') ?? (@$reason_of_inactive ?? '') }}" required>
         </div>
 
         {{-- @dd($inactive_date) --}}
         <div class="form-group col-3 inactive_date">
             <label for="inactive_date">Permanently Inactive Date:</label>
             <input class="form-control date" id="inactive_date" name="inactive_date" aria-describedby="inactive_date"
-                value="{{ old('inactive_date') ?? (@$inactive_date ?? '') }}" readonly placeholder="Select a Date">
+                value="{{ old('inactive_date') ?? (@$inactive_date ?? '') }}" readonly placeholder="Select a Date" required>
         </div>
     </div>
 
@@ -487,16 +487,16 @@
                                 <input name="description[]" class="form-control description" autocomplete="off" type="text" value="">
                             </td>
                             <td>
-                                <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" type="text" value="${value?.utilized_quantity}" readonl>
+                                <input name="utilized_quantity[]" class="form-control utilized_quantity" autocomplete="off" type="text" value="${value?.utilized_quantity ?? ''}" readonl>
                             </td>
                             <td>
-                                <input name="item_code[]" class="form-control item_code" autocomplete="off" type="text" value="${value?.item_code}" readonly>
+                                <input name="item_code[]" class="form-control item_code" autocomplete="off" type="text" value="${value?.item_code ?? ''}" readonly>
                             </td>
                             <td>
-                                <input name="unit[]" class="form-control unit" autocomplete="off" type="text" value="${value?.unit}" readonly>
+                                <input name="unit[]" class="form-control unit" autocomplete="off" type="text" value="${value?.unit ?? '' }" readonly>
                             </td>
                             <td>
-                                <input name="brand_name[]" class="form-control brand_name" autocomplete="off" type="text" value="${value?.brand_name}" readonly>
+                                <input name="brand_name[]" class="form-control brand_name" autocomplete="off" type="text" value="${value?.brand_name ?? ''}" readonly>
                                 <input name="brand_id[]" class="form-control brand_id" autocomplete="off" type="hidden" value="${value.brand_id != null ? value.brand_id : ''}">
                             </td>
                             <td>
