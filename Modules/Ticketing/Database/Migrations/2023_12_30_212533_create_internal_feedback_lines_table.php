@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('contact_person')->nullable();
             $table->string('contact_number')->nullable();
             $table->string('client_feedback')->nullable();
+            $table->string('time_duration')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
