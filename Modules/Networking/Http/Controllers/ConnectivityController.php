@@ -24,7 +24,10 @@ use Modules\Networking\Entities\BandwidthDestribution;
 use Modules\Networking\Entities\Connectivity;
 use Modules\Networking\Entities\NetPopEquipment;
 use Modules\Networking\Entities\PhysicalConnectivityLines;
+use Modules\Sales\Entities\Client;
+use Modules\SCM\Entities\ScmErr;
 use Modules\SCM\Entities\ScmMur;
+use Modules\SCM\Entities\StockLedger;
 
 class ConnectivityController extends Controller
 {
@@ -334,60 +337,36 @@ class ConnectivityController extends Controller
     public function popWiseEquipmentReport()
     {
         $pop_wise_equipments = [];
-        if (empty(request()->pop_id)) {
-            $data = NetPopEquipment::query()
-                ->with('pop', 'material', 'ip') // Assuming 'ip' is the relationship for the 'ip' table
-                ->get()
-                ->groupBy(function ($item) {
-                    return $item->pop->name;
-                })
-                ->map(function ($group, $popName) use (&$pop_wise_equipments) {
-                    $pop_wise_equipments[] = [
-                        'pop_name' => $popName,
-                        'location' => $group->first()->pop->address,
-                        'equipments' => $group->map(function ($item) {
-                            return [
-                                'pop_id' => $item->pop_id,
-                                'material' => $item->material,
-                                'brand' => $item->brand,
-                                'model' => $item->model,
-                                'ip_address' => $item->ip->address,
-                                'subnet_mask' => $item->subnet_mask,
-                                'gateway' => $item->gateway,
-                                'remarks' => $item->remarks ?? '',
-                            ];
-                        })->toArray(),
-                    ];
-                });
-            $pops = Pop::latest()->get();
-        } else {
-            $data = NetPopEquipment::query()
-                ->where('pop_id', request()->pop_id)
-                ->with('pop', 'material', 'ip') // Assuming 'ip' is the relationship for the 'ip' table
-                ->get()
-                ->groupBy(function ($item) {
-                    return $item->pop->name;
-                })
-                ->map(function ($group, $popName) use (&$pop_wise_equipments) {
-                    $pop_wise_equipments[] = [
-                        'pop_name' => $popName,
-                        'location' => $group->first()->pop->address,
-                        'equipments' => $group->map(function ($item) {
-                            return [
-                                'pop_id' => $item->pop_id,
-                                'material' => $item->material,
-                                'brand' => $item->brand,
-                                'model' => $item->model,
-                                'ip_address' => $item->ip->address,
-                                'subnet_mask' => $item->subnet_mask,
-                                'gateway' => $item->gateway,
-                                'remarks' => $item->remarks ?? '',
-                            ];
-                        })->toArray(),
-                    ];
-                });
-            $pops = Pop::latest()->get();
-        }
+
+        $data = NetPopEquipment::query()
+            ->when(!empty(request()->pop_id), function ($query) {
+                $query->where('pop_id', request()->pop_id);
+            })
+            ->with('pop', 'material', 'ip') // Assuming 'ip' is the relationship for the 'ip' table
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->pop->name;
+            })
+            ->map(function ($group, $popName) use (&$pop_wise_equipments) {
+                $pop_wise_equipments[] = [
+                    'pop_name' => $popName,
+                    'location' => $group->first()->pop->address,
+                    'equipments' => $group->map(function ($item) {
+                        return [
+                            'pop_id' => $item->pop_id,
+                            'material' => $item->material,
+                            'brand' => $item->brand,
+                            'model' => $item->model,
+                            'ip_address' => $item->ip->address,
+                            'subnet_mask' => $item->subnet_mask,
+                            'gateway' => $item->gateway,
+                            'remarks' => $item->remarks ?? '',
+                        ];
+                    })->toArray(),
+                ];
+            });
+        $pops = Pop::latest()->get();
+
 
         if (request('type') == 'PDF') {
             $pdf = PDF::loadView('networking::pdf.pop-wise-equipment-report', ['pop_wise_equipments' => $pop_wise_equipments], [], [
@@ -398,5 +377,71 @@ class ConnectivityController extends Controller
         } else {
             return view('networking::reports.pop-wise-equipment-report', compact('pop_wise_equipments', 'pops'));
         }
+    }
+
+
+
+    public function clientWiseEquipmentReport()
+    {
+        $data = ScmMur::query()
+            ->when(!empty(request()->client_no), function ($query) {
+                $query->where('client_no', request()->client_no);
+            })
+            ->with('client', 'feasibilityRequirementDetail', 'lines')
+            ->get()
+            ->groupBy(['client_no', 'fr_no']);
+        $data = $data->filter(function ($item, $key) {
+            return $key != null;
+        });
+
+        $client_wise_unique_materials = [];
+
+        foreach ($data as $client_no => $client_no_group) {
+            foreach ($client_no_group as $fr_no => $fr_group) {
+                foreach ($fr_group as $mur) {
+                    foreach ($mur->lines as $key => $line) {
+                        $compositeKey = $line->material_id . '-' . $line->brand_id;
+
+                        if (!isset($client_wise_unique_materials[$client_no][$fr_no][$compositeKey])) {
+                            $client_wise_unique_materials[$client_no][$fr_no][$compositeKey] = [
+                                'material_id' => $line->material_id,
+                                'material_name' => optional($line->material)->name,
+                                'brand_id' => $line->brand_id,
+                                'brand_name' => optional($line->brand)->name,
+                                'model' => $line->model ?? '',
+                                'quantity' => $line->quantity ?? '',
+                                'serial_code' => $line->serial_code ?? '',
+                            ];
+                        } else {
+                            $client_wise_unique_materials[$client_no][$fr_no][$compositeKey]['quantity'] += $line->quantity;
+                        }
+                    }
+                }
+            }
+        }
+
+        // $client_wise_unique_materials = array_values($client_wise_unique_materials);
+        //check ScmErr is exit by client_no and fr_no and if exit minus the quantity from client_wise_unique_materials and if it's zero then unset the array
+        foreach ($client_wise_unique_materials as $client_no => $client_no_group) {
+            foreach ($client_no_group as $fr_no => $fr_group) {
+                foreach ($fr_group as $key => $material) {
+                    $scm_err = ScmErr::with('scmErrLines')->where('client_no', $client_no)->where('fr_no', $fr_no)->first();
+                    if ($scm_err) {
+                        foreach ($scm_err->scmErrLines as $scm_err_line) {
+                            if ($scm_err_line->material_id == $material['material_id'] && $scm_err_line->brand_id == $material['brand_id']) {
+                                $quantity = $client_wise_unique_materials[$client_no][$fr_no][$key]['quantity'];
+                                $client_wise_unique_materials[$client_no][$fr_no][$key]['quantity'] = $quantity != '' ? $quantity - $scm_err_line->quantity : 0;
+                                if ($client_wise_unique_materials[$client_no][$fr_no][$key]['quantity'] == 0) {
+                                    unset($client_wise_unique_materials[$client_no][$fr_no][$key]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $clients = Client::latest()->get();
+        return view('networking::reports.client-wise-equipment-report', compact('client_wise_unique_materials', 'clients'));
     }
 }
