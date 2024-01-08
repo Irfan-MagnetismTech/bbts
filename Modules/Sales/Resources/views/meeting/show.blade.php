@@ -14,7 +14,7 @@
     <a href="{{ route('meeting.index') }}" class="btn btn-out-dashed btn-sm btn-warning"><i class="fas fa-database"></i></a>
 @endsection
 @section('sub-title')
-    Meeting Client: {{ $meeting->client->client_name }}
+    Meeting Client: {{ $meeting?->client?->client_name ?? ''}}
 @endsection
 
 
@@ -32,41 +32,41 @@
                             <table class="table custom_table table-bordered" id="client_table" style="font-size: 12px;">
                                 <tr>
                                     <th>Client Name</th>
-                                    <td>{{ $meeting->client->client_name }}</td>
+                                    <td>{{ $meeting?->client?->client_name ?? ''}}</td>
                                     <th>Address</th>
-                                    <td>{{ $meeting->client->address }}</td>
+                                    <td>{{ $meeting?->client?->address ?? ''}}</td>
                                 </tr>
                                 <tr>
                                     <th>Division</th>
-                                    <td>{{ $meeting->client->division->name ?? '' }}</td>
+                                    <td>{{ $meeting?->client?->division?->name ?? '' }}</td>
                                     <th>District</th>
-                                    <td>{{ $meeting->client->district->name ?? '' }}</td>
+                                    <td>{{ $meeting?->client?->district?->name ?? '' }}</td>
                                 </tr>
                                 <tr>
                                     <th>Thana</th>
-                                    <td>{{ $meeting->client->thana->name ?? '' }}</td>
+                                    <td>{{ $meeting?->client?->thana?->name ?? '' }}</td>
                                     <th>Landmark</th>
-                                    <td>{{ $meeting->client->landmark }}</td>
+                                    <td>{{ $meeting?->client?->landmark ?? ''}}</td>
                                 </tr>
                                 <tr>
                                     <th>Lat-Long</th>
-                                    <td>{{ $meeting->client->lat_long }}</td>
+                                    <td>{{ $meeting?->client?->lat_long ?? ''}}</td>
                                     <th>Contact Person</th>
-                                    <td>{{ $meeting->client->contact_person }}</td>
+                                    <td>{{ $meeting?->client?->contact_person ?? ''}}</td>
                                 </tr>
                                 <tr>
                                     <th>Contact No</th>
-                                    <td>{{ $meeting->client->contact_no }}</td>
+                                    <td>{{ $meeting?->client?->contact_no ?? ''}}</td>
                                     <th>Email</th>
-                                    <td>{{ $meeting->client->email }}</td>
+                                    <td>{{ $meeting?->client?->email ?? ''}}</td>
                                 </tr>
                                 <tr>
                                     <th>Website</th>
-                                    <td>{{ $meeting->client->website }}</td>
+                                    <td>{{ $meeting?->client?->website ?? ''}}</td>
                                     <th>Document</th>
                                     <td>
-                                        @if ($meeting->client->document)
-                                            <a href="{{ asset('uploads/lead_generation/' . $meeting->client->document) }}"
+                                        @if ($meeting?->client?->document)
+                                            <a href="{{ asset('uploads/lead_generation/' . $meeting?->client?->document ?? '') }}"
                                                 target="_blank" class="btn btn-sm btn-warning" style="font-size:14px;"><i
                                                     class="fas fa-eye"></i></a>
                                         @endif
@@ -89,44 +89,44 @@
                             <table class="table custom_table table-bordered" id="meeting_info" style="font-size: 12px;">
                                 <tr>
                                     <th>Client Name</th>
-                                    <td>{{ $meeting->client->client_name }}</td>
+                                    <td>{{ $meeting?->client?->client_name ?? ''}}</td>
                                     <th>Visit Date</th>
-                                    <td>{{ $meeting->visit_date }}</td>
+                                    <td>{{ $meeting?->visit_date ?? ''}}</td>
                                 </tr>
                                 <tr>
                                     <th>Sale Representative</th>
-                                    <td>{{ $meeting->sales_representative }}</td>
+                                    <td>{{ $meeting?->sales_representative ?? ''}}</td>
                                     <th>Place of Visit</th>
-                                    <td>{{ $meeting->meeting_place }}</td>
+                                    <td>{{ $meeting?->meeting_place ?? ''}}</td>
                                 </tr>
                                 <tr>
                                     <th>Time of Work Ended</th>
-                                    <td>{{ $meeting->meeting_end_time }}</td>
+                                    <td>{{ $meeting?->meeting_end_time ?? ''}}</td>
                                     <th>Time of Work Started</th>
-                                    <td>{{ $meeting->meeting_start_time }}</td>
+                                    <td>{{ $meeting?->meeting_start_time ?? ''}}</td>
                                 </tr>
                                 <tr>
                                     <th>Contact Person</th>
-                                    <td>{{ $meeting->client->contact_person }}</td>
+                                    <td>{{ $meeting?->client?->contact_person ?? ''}}</td>
                                     <th>Designation</th>
-                                    <td>{{ $meeting->client->designation }}</td>
+                                    <td>{{ $meeting?->client?->designation ?? ''}}</td>
                                 </tr>
                                 <tr>
                                     <th>Contact No</th>
-                                    <td>{{ $meeting->client->contact_no }}</td>
+                                    <td>{{ $meeting?->client?->contact_no ?? ''}}</td>
                                     <th>Email</th>
-                                    <td>{{ $meeting->client->email }}</td>
+                                    <td>{{ $meeting?->client?->email ?? ''}}</td>
                                 </tr>
                                 <tr>
                                     <th>Purpose</th>
-                                    <td colspan="3" class="text-left">{{ $meeting->purpose }}</td>
+                                    <td colspan="3" class="text-left">{{ $meeting?->purpose ?? ''}}</td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            @if ($previous_meetings->count() > 0)
+            @if ($previous_meetings?->count() > 0)
                 <div class="card-header">
                     <h5>Previous Meetings</h5>
                 </div>
@@ -148,10 +148,10 @@
                                     @foreach ($previous_meetings as $key => $previous_meeting)
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $previous_meeting->visit_date }}</td>
-                                            <td>{{ $previous_meeting->meeting_start_time }} To
-                                                {{ $previous_meeting->meeting_end_time }}</td>
-                                            <td>{{ $previous_meeting->sales_representative }}</td>
+                                            <td>{{ $previous_meeting?->visit_date ?? ''}}</td>
+                                            <td>{{ $previous_meeting?->meeting_start_time ?? ''}} To
+                                                {{ $previous_meeting?->meeting_end_time ?? ''}}</td>
+                                            <td>{{ $previous_meeting?->sales_representative ?? ''}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

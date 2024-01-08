@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Plan Reports')
+@section('title', 'Plan Modification Reports')
 
 @section('style')
 
