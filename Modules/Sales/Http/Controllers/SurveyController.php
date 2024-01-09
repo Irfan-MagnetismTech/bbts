@@ -18,6 +18,7 @@ use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\FinalSurveyDetail;
 use Modules\Sales\Entities\Vendor;
 use Modules\Sales\Services\CommonService;
+use PDF;
 
 
 class SurveyController extends Controller
@@ -198,5 +199,13 @@ class SurveyController extends Controller
             return response()->json($surveyDetails);
         }
         return response()->json(['message' => 'No Survey Found']);
+    }
+
+    public function surveyPdf($id)
+    {
+        $survey = Survey::with('surveyDetails', 'lead_generation')->find($id);
+        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $survey->fr_no)->first();
+        $pdf = PDF::loadView('sales::survey.pdf', compact('survey', 'connectivity_requirement'));
+        return $pdf->stream($survey->lead_generation->client_name . '-survey.pdf');
     }
 }

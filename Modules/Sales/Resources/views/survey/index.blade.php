@@ -61,6 +61,8 @@
                                         <a href="{{ route('survey.show', $survey->id) }}" data-toggle="tooltip" title="Details"
                                             class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                                     @endcan
+                                    <a href="{{ route('survey-pdf', $survey->id) }}" data-toggle="tooltip" title="PDF"
+                                        class="btn btn-outline-primary"><i class="fas fa-file-pdf"></i></a>
                                     @can('survey-edit')
                                         <a href="{{ route('survey.edit', $survey->id) }}" data-toggle="tooltip" title="Edit"
                                             class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>

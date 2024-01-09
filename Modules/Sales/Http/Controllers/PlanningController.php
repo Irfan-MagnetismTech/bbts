@@ -26,6 +26,7 @@ use Modules\Sales\Entities\Vendor;
 use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\MaterialBrand;
 use Modules\SCM\Entities\MaterialModel;
+use PDF;
 
 class PlanningController extends Controller
 {
@@ -65,7 +66,7 @@ class PlanningController extends Controller
         $vendors = Vendor::get();
         $pops = Pop::get();
         $methods = ['Fiber' => 'Fiber', 'Radio' => 'Radio', 'GSM' => 'GSM'];
-        return view('sales::planning.create', compact('methods', 'feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors', 'pops','models'));
+        return view('sales::planning.create', compact('methods', 'feasibilityRequirementDetail', 'lead_generation', 'connectivityProductRequirementDetails', 'particulars', 'materials', 'brands', 'vendors', 'pops', 'models'));
     }
 
     /**
@@ -126,7 +127,7 @@ class PlanningController extends Controller
         $models = MaterialModel::pluck('model');
         $pops = Pop::get();
         $vendors = Vendor::get();
-        return view('sales::planning.edit', compact('plan', 'particulars', 'materials', 'brands', 'pops', 'vendors', 'connectivityProductRequirementDetails','models'));
+        return view('sales::planning.edit', compact('plan', 'particulars', 'materials', 'brands', 'pops', 'vendors', 'connectivityProductRequirementDetails', 'models'));
     }
 
     /**
@@ -381,5 +382,12 @@ class PlanningController extends Controller
             ->latest()
             ->get();
         return view('sales::planning.modification_list', compact('plans'));
+    }
+
+    public function planningPdf($id)
+    {
+        $plan = Planning::with('planLinks', 'equipmentPlans', 'servicePlans',)->where('id', $id)->first();
+        $pdf = PDF::loadView('sales::planning.pdf', compact('plan'));
+        return $pdf->stream($plan->lead_generation->client_name . '-planning.pdf');
     }
 }

@@ -16,7 +16,7 @@
                     </li>
                 </ul>
                 <ul class="pcoded-submenu">
-                    <li class="{{ request()->routeIs('pops.index','pops.show','pops.edit') ? 'active' : null }}">
+                    <li class="{{ request()->routeIs('pops.index', 'pops.show', 'pops.edit') ? 'active' : null }}">
                         <a href="{{ route('pops.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Pops List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -25,7 +25,8 @@
             </li>
         @endcan
         @can('transmission-link')
-            <li class="pcoded-hasmenu {{ request()->routeIs(['connectivity.*','get_connectivity_link_log']) ? 'active pcoded-trigger' : null }}">
+            <li
+                class="pcoded-hasmenu {{ request()->routeIs(['connectivity.*', 'get_connectivity_link_log']) ? 'active pcoded-trigger' : null }}">
                 <a href="javascript:void(0)">
                     <span class="pcoded-micon"><i class="fas fa-signal"></i><b>D</b></span>
                     <span class="pcoded-mtext">Transmission Link</span>
@@ -39,7 +40,8 @@
                     </li>
                 </ul>
                 <ul class="pcoded-submenu">
-                    <li class="{{ request()->routeIs('connectivity.index','connectivity.edit','get_connectivity_link_log') ? 'active' : null }}">
+                    <li
+                        class="{{ request()->routeIs('connectivity.index', 'connectivity.edit', 'get_connectivity_link_log') ? 'active' : null }}">
                         <a href="{{ route('connectivity.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext"> Link List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -62,7 +64,7 @@
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
-                    <li class="{{ request()->routeIs('vas-services.index','vas-services.edit') ? 'active' : null }}">
+                    <li class="{{ request()->routeIs('vas-services.index', 'vas-services.edit') ? 'active' : null }}">
                         <a href="{{ route('vas-services.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -83,8 +85,7 @@
 <div class="pcoded-navigation-label text-uppercase bg-primary">Networking</div>
 <ul class="pcoded-item pcoded-left-item">
     @can('network-configuration')
-        <li
-            class="pcoded-hasmenu {{ request()->routeIs(['ips.*']) ? 'active pcoded-trigger' : null }}">
+        <li class="pcoded-hasmenu {{ request()->routeIs(['ips.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-cog"></i><b>D</b></span>
                 <span class="pcoded-mtext">Configurations</span>
@@ -97,13 +98,13 @@
                             class="pcoded-mcaret"></span></a>
                 </li>
             </ul>
-{{--            <ul class="pcoded-submenu">--}}
-{{--                <li class="{{ request()->routeIs('vas-services.*') ? 'active' : null }}">--}}
-{{--                    <a href="{{ route('vas-services.index') }}"> <span class="pcoded-micon"><i--}}
-{{--                                class="ti-angle-right"></i></span><span class="pcoded-mtext">VAS Services</span><span--}}
-{{--                            class="pcoded-mcaret"></span></a>--}}
-{{--                </li>--}}
-{{--            </ul>--}}
+            {{--            <ul class="pcoded-submenu"> --}}
+            {{--                <li class="{{ request()->routeIs('vas-services.*') ? 'active' : null }}"> --}}
+            {{--                    <a href="{{ route('vas-services.index') }}"> <span class="pcoded-micon"><i --}}
+            {{--                                class="ti-angle-right"></i></span><span class="pcoded-mtext">VAS Services</span><span --}}
+            {{--                            class="pcoded-mcaret"></span></a> --}}
+            {{--                </li> --}}
+            {{--            </ul> --}}
         </li>
     @endcan
     {{-- @hasanyrole('super-admin|admin') --}}
@@ -120,7 +121,8 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('pop-equipments.index','pop-equipments.show','pop-equipments.edit') ? 'active' : null }}">
+                <li
+                    class="{{ request()->routeIs('pop-equipments.index', 'pop-equipments.show', 'pop-equipments.edit') ? 'active' : null }}">
                     <a href="{{ route('pop-equipments.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -141,7 +143,8 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('service-requisitions.index','service-requisitions.edit') ? 'active' : null }}">
+                <li
+                    class="{{ request()->routeIs('service-requisitions.index', 'service-requisitions.edit') ? 'active' : null }}">
                     <a href="{{ route('service-requisitions.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -173,7 +176,8 @@
                             class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                         class="pcoded-mcaret"></span></a>
             </li> --}}
-                <li class="{{ request()->routeIs('physical-connectivities.index','physical-connectivities.edit') ? 'active' : null }}">
+                <li
+                    class="{{ request()->routeIs('physical-connectivities.index', 'physical-connectivities.edit') ? 'active' : null }}">
                     <a href="{{ route('physical-connectivities.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -184,14 +188,15 @@
 
     @can('logical-connectivity-view')
         <li
-            class="pcoded-hasmenu {{ request()->routeIs(['logical-connectivities.*','logical-internet-connectivities.edit']) ? 'active pcoded-trigger' : null }}">
+            class="pcoded-hasmenu {{ request()->routeIs(['logical-connectivities.*', 'logical-internet-connectivities.edit']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-laptop-code"></i><b>D</b></span>
                 <span class="pcoded-mtext">Logical Connectivity</span>
                 <span class="pcoded-mcaret"></span>
             </a>
             <ul class="pcoded-submenu">
-                <li class="{{ request()->routeIs('logical-connectivities.index','logical-internet-connectivities.edit') ? 'active' : null }}">
+                <li
+                    class="{{ request()->routeIs('logical-connectivities.index', 'logical-internet-connectivities.edit') ? 'active' : null }}">
                     <a href="{{ route('logical-connectivities.index') }}">
                         <span class="pcoded-micon">
                             <i class="ti-angle-right"></i>
@@ -241,7 +246,8 @@
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">New</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
-                <li class="{{ request()->routeIs('fiber-managements.index','fiber-managements.edit') ? 'active' : null }}">
+                <li
+                    class="{{ request()->routeIs('fiber-managements.index', 'fiber-managements.edit') ? 'active' : null }}">
                     <a href="{{ route('fiber-managements.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -250,7 +256,8 @@
         </li>
     @endcan
     @can('networking-report-view')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['active-clients-report','pop-wise-equipment-report','pop-wise-client-report','ip-report','vlan-report']) ? 'active pcoded-trigger' : null }}">
+        <li
+            class="pcoded-hasmenu {{ request()->routeIs(['active-clients-report', 'pop-wise-equipment-report', 'pop-wise-client-report', 'ip-report', 'vlan-report', 'client-wise-equipment-report', 'client-wise-net-ip-report']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-file-pdf"></i><b>D</b></span>
                 <span class="pcoded-mtext">Report</span>
@@ -271,6 +278,17 @@
                     <a href="{{ route('pop-wise-client-report') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">Pop wise client
                             report</span><span class="pcoded-mcaret"></span></a>
+                <li class="{{ request()->routeIs('client-wise-equipment-report') ? 'active' : null }}">
+                    <a href="{{ route('client-wise-equipment-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Client wise equipment
+                            report</span><span class="pcoded-mcaret"></span></a>
+
+                </li>
+                <li class="{{ request()->routeIs('client-wise-net-ip-report') ? 'active' : null }}">
+                    <a href="{{ route('client-wise-net-ip-report') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Client wise Net-IP
+                            report</span><span class="pcoded-mcaret"></span></a>
+
                 </li>
                 {{--                <li class="{{ request()->routeIs('work-order-receives.index') ? 'active' : null }}"> --}}
                 {{--                    <a href="{{ route('work-order-receives.index') }}"> <span class="pcoded-micon"><i --}}
