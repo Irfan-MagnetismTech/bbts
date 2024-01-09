@@ -73,7 +73,7 @@ class PhysicalConnectivityController extends Controller
             $connectivity_points = FeasibilityRequirementDetail::query()
                 ->where('client_no', $saleDetails->client_no)
                 ->get();
-            
+
             // dd($connectivity_points);
 
             // $clientInfo = FeasibilityRequirementDetail::query()

@@ -73,30 +73,14 @@
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="pop_id" name="pop_id" required>
-                    <option value="">Select pop</option>
+                    <option value="">Select POP</option>
                 </select>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="form-group col-3">
-            <div class="input-group input-group-sm input-group-primary">
-                <select class="form-control" id="material_id" name="material_id" required>
-                    <option value="">Select Equipment</option>
-                </select>
-            </div>
-        </div>
-        <x-input-box colGrid="3" name="serial_code" value="{{ $wo_no }}" label="Serial Code" />
-        <x-input-box colGrid="3" name="brand" value="{{ $wo_no }}" label="Brand" />
-        <x-input-box colGrid="3" name="model" value="{{ $wo_no }}" label="Model" />
-    </div>
-
-    <div class="row">
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="equipment_type" name="equipment_type" required>
-                    <option value="">Equipment Type</option>
+                    <option value="">Select Equipment</option>
                     @foreach (config('businessinfo.equipmentType') as $key => $value)
                         <option value="{{ $key }}" {{ $equipment_type == $key ? 'selected' : '' }}>
                             {{ $value }}
@@ -105,41 +89,75 @@
                 </select>
             </div>
         </div>
-
-        <div class="form-group col-3">
-            <div class="input-group input-group-sm input-group-primary">
-                <select class="form-control" id="ip_id" name="ip_id" required>
-                    <option value="" selected disabled>Select Ip Address</option>
-                </select>
-            </div>
-        </div>
-
-        <x-input-box colGrid="3" name="subnet_mask" value="{{ $wo_no }}" label="Subnet Mask" />
-        <x-input-box colGrid="3" name="gateway" value="{{ $wo_no }}" label="Gate Way" />
     </div>
 
     <div class="row">
-        <div class="form-group col-3">
+        <div class="form-group col-3" id="material_div">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="material_id" name="material_id" required>
+                    <option value="">Select Material</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-3" id="serial_code_div">
+            <x-input-box colGrid="15" name="serial_code" value="{{ $wo_no }}" label="Serial Code"/>
+        </div>
+        <div class="form-group col-3" id="brand_div">
+            <x-input-box colGrid="15" name="brand" value="{{ $wo_no }}" label="Brand"/>
+        </div>
+        <div class="form-group col-3" id="model_div">
+            <x-input-box colGrid="15" name="model" value="{{ $wo_no }}" label="Model"/>
+        </div>
+{{--        <div class="form-group col-3" id="supplier_div">--}}
+{{--        <x-input-box colGrid="3" name="supplier_id" value="{{ $wo_no }}" label="Purchased From"/>--}}
+{{--        </div>--}}
+{{--        <div class="form-group col-3" id="purchase_date_div">--}}
+{{--        <x-input-box colGrid="3" name="date" value="{{ $wo_no }}" label="Purchase Date"/>--}}
+{{--        </div>--}}
+        <div class="form-group col-3" id="tower_type_div">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="tower_type" name="tower_type">
                     <option value="">Tower Type</option>
                     <option value="leg_4">4 Leg</option>
-                    <option value="leg_3">3 Leg </option>
+                    <option value="leg_3">3 Leg</option>
                 </select>
             </div>
         </div>
-        <x-input-box colGrid="3" name="tower_height" value="{{ $wo_no }}" label="Tower Height" />
-        <x-input-box colGrid="3" name="made_by" value="{{ $wo_no }}" label="Made By" />
-        <x-input-box colGrid="3" name="maintenance_date" value="{{ $wo_no }}" label="Maintenance Date"
-            class="date" />
-    </div>
-
-    <div class="row">
-        <x-input-box colGrid="3" name="capacity" value="{{ $wo_no }}" label="Capacity" />
-        <x-input-box colGrid="3" name="port_no" value="{{ $wo_no }}" label="Port No" />
-        <x-input-box colGrid="3" name="installation_date" value="{{ $wo_no }}" label="Installation Date"
-            class="date" />
-        <x-input-box colGrid="3" name="remarks" value="{{ $wo_no }}" label="Remarks" />
+        <div class="form-group col-3" id="tower_height_div">
+            <x-input-box colGrid="15" name="tower_height" value="{{ $wo_no }}" label="Tower Height (Ft)"/>
+        </div>
+        <div class="form-group col-3" id="quantity_div">
+        <x-input-box colGrid="15" name="quantity" value="{{ $wo_no }}" label="Quantity"/>
+        </div>
+        <div class="form-group col-3" id="made_by_div">
+        <x-input-box colGrid="15" name="made_by" value="{{ $wo_no }}" label="Made By"/>
+        </div>
+        <div class="form-group col-3" id="capacity_div">
+        <x-input-box colGrid="15" name="capacity" value="{{ $wo_no }}" label="Capacity"/>
+        </div>
+        <div class="form-group col-3" id="port_no_div">
+        <x-input-box colGrid="15" name="port_no" value="{{ $wo_no }}" label="Port No"/>
+        </div>
+        <div class="form-group col-3" id="installation_date_div">
+        <x-input-box colGrid="15" name="installation_date" value="{{ $wo_no }}" label="Installation Date"
+                     class="date"/>
+        </div>
+        <div class="form-group col-3" id="maintenance_date_div">
+        <x-input-box colGrid="15" name="maintenance_date" value="{{ $wo_no }}" label="Maintenance Date"
+                     class="date"/>
+        </div>
+        <div class="form-group col-3" id="status_div">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="status" name="status">
+                    <option value="">Status</option>
+                    <option value="Online">Online</option>
+                    <option value="Offline">Offline</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-3" id="remarks_div">
+        <x-input-box colGrid="15" name="remarks" value="{{ $wo_no }}" label="Remarks"/>
+        </div>
     </div>
 
     <div class="row">
@@ -166,7 +184,7 @@
         fillSelect2Options("{{ route('searchPop') }}", '#pop_id');
         fillSelect2Options("{{ route('searchIp') }}", '#ip_id');
 
-        $('#pop_id').on('change', function() {
+        $('#pop_id').on('change', function () {
             getEquipment()
         })
 
@@ -180,14 +198,14 @@
                 data: {
                     pop_id: pop_id
                 },
-                success: function(data) {
+                success: function (data) {
                     let dropdown;
 
                     dropdown = $('#material_id');
                     dropdown.empty();
                     dropdown.append('<option selected disabled>Select Material</option>');
                     dropdown.prop('selectedIndex', 0);
-                    data.map(function(item) {
+                    data.map(function (item) {
                         dropdown.append($('<option></option>')
                             .attr('value', item.material_id)
                             .attr('data-material_name', item.material)
@@ -202,7 +220,7 @@
             })
         }
 
-        $('#material_id').on('change', function() {
+        $('#material_id').on('change', function () {
             let brand = $(this).find(':selected').data('brand');
             let model = $(this).find(':selected').data('model');
             let serial_code = $(this).find(':selected').data('serial_code');
@@ -211,6 +229,79 @@
             $('#model').val(model).attr('value', model);
             $('#serial_code').val(serial_code).attr('value', serial_code);
         })
+
+        $('#equipment_type').on('change', function () {
+            onChangeEquipmentType();
+        })
+
+        function onChangeEquipmentType() {
+            let type = $("#equipment_type").val();
+            if (type == 'Network') {
+                $('#tower_type_div').hide('slow');
+                $('#tower_height_div').hide('slow');
+                $('#made_by_div').hide('slow');
+                $('#maintenance_date_div').hide('slow');
+                $('#status_div').hide('slow');
+
+                $('#material_div').show('slow');
+                $('#serial_code_div').show('slow');
+                $('#brand_div').show('slow');
+                $('#model_div').show('slow');
+                $('#port_no_div').show('slow');
+                $('#capacity_div').show('slow');
+                $('#installation_date_div').show('slow');
+                $('#quantity_div').show('slow');
+                $('#remarks_div').show('slow');
+            } else if (type == 'Power') {
+                $('#tower_type_div').hide('slow');
+                $('#tower_height_div').hide('slow');
+                $('#made_by_div').hide('slow');
+                $('#maintenance_date_div').hide('slow');
+                $('#port_no_div').hide('slow');
+
+                $('#material_div').show('slow');
+                $('#serial_code_div').show('slow');
+                $('#brand_div').show('slow');
+                $('#model_div').show('slow');
+                $('#capacity_div').show('slow');
+                $('#installation_date_div').show('slow');
+                $('#quantity_div').show('slow');
+                $('#remarks_div').show('slow');
+                $('#status_div').show('slow');
+            } else if (type == 'Tower') {
+                $('#material_div').hide('slow');
+                $('#serial_code_div').hide('slow');
+                $('#brand_div').hide('slow');
+                $('#model_div').hide('slow');
+                $('#port_no_div').hide('slow');
+                $('#capacity_div').hide('slow');
+                $('#status_div').hide('slow');
+
+                $('#tower_type_div').show('slow');
+                $('#tower_height_div').show('slow');
+                $('#made_by_div').show('slow');
+                $('#maintenance_date_div').show('slow');
+                $('#installation_date_div').show('slow');
+                $('#quantity_div').show('slow');
+                $('#remarks_div').show('slow');
+            } else if (type == 'WireLess') {
+                $('#tower_type_div').hide('slow');
+                $('#tower_height_div').hide('slow');
+                $('#made_by_div').hide('slow');
+                $('#maintenance_date_div').hide('slow');
+                $('#installation_date_div').hide('slow');
+                $('#port_no_div').hide('slow');
+                $('#status_div').hide('slow');
+
+                $('#material_div').show('slow');
+                $('#serial_code_div').show('slow');
+                $('#brand_div').show('slow');
+                $('#model_div').show('slow');
+                $('#capacity_div').show('slow');
+                $('#quantity_div').show('slow');
+                $('#remarks_div').show('slow');
+            }
+        }
     </script>
 
 @endsection

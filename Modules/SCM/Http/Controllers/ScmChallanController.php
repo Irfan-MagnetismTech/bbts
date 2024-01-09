@@ -531,7 +531,7 @@ class ScmChallanController extends Controller
         $items = ScmRequisition::query()
             ->where("mrs_no", "like", "%" . request()->search . "%")
             ->whereNotIn('id', $scm_requisition_ids)
-            ->take(10)
+            ->take(15)
             ->get()
             ->map(fn ($item) => [
                 'value' => $item->mrs_no,
