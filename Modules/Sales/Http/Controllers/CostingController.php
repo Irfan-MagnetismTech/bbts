@@ -295,6 +295,6 @@ class CostingController extends Controller
         $pdf = PDF::loadView('sales::costing.pdf', ['costing' => $costing], [], [
             'format' => 'A4'
         ]);
-        return $pdf->stream('costing.pdf');
+        return $pdf->stream($costing->lead_generation->client_name . '-costing.pdf');
     }
 }

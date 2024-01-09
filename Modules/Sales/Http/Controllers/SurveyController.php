@@ -206,6 +206,6 @@ class SurveyController extends Controller
         $survey = Survey::with('surveyDetails', 'lead_generation')->find($id);
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $survey->fr_no)->first();
         $pdf = PDF::loadView('sales::survey.pdf', compact('survey', 'connectivity_requirement'));
-        return $pdf->stream('survey.pdf');
+        return $pdf->stream($survey->lead_generation->client_name . '-survey.pdf');
     }
 }

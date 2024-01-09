@@ -388,6 +388,6 @@ class PlanningController extends Controller
     {
         $plan = Planning::with('planLinks', 'equipmentPlans', 'servicePlans',)->where('id', $id)->first();
         $pdf = PDF::loadView('sales::planning.pdf', compact('plan'));
-        return $pdf->stream('planning.pdf');
+        return $pdf->stream($plan->lead_generation->client_name . '-planning.pdf');
     }
 }
