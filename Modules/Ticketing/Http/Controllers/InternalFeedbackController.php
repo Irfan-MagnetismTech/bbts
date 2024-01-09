@@ -67,6 +67,8 @@ class InternalFeedbackController extends Controller
                     'contact_person' => $request->contact_person[$key],
                     'contact_number' => $request->contact_number[$key],
                     'client_feedback' => $request->client_feedback[$key],
+                    'time_duration' => $request->time_duration[$key],
+                    'status' => $request->status[$key],
                 ];
             }
             $detail = $internal_feedback->lines()->createMany($lines);

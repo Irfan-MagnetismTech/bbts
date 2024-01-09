@@ -93,7 +93,8 @@
                                     <option value="">Select Client</option>
                                     @if($client_no != null)
                                         @foreach ($clients as $client)
-                                            <option value="{{ $client->client_no }}" @selected($client->client_no == $client_no)>
+                                            <option value="{{ $client->client_no }}" @selected($client->client_no ==
+                                                $client_no)>
                                                 {{ $client->client_name }}
                                             </option>
                                         @endforeach
@@ -132,6 +133,8 @@
                         <th> Contact Person</th>
                         <th> Contact Number</th>
                         <th> Feedback</th>
+                        <th> Time</th>
+                        <th> Status</th>
                         <th><i class="btn btn-primary btn-sm fa fa-plus add-stock-row"></i></th>
                     </tr>
                     </thead>
@@ -141,6 +144,8 @@
                         $contact_person = old('contact_person', !empty($feedback) ? $feedback->lines->pluck('contact_person') : []);
                         $contact_number = old('contact_number', !empty($feedback) ? $feedback->lines->pluck('contact_number') : []);
                         $client_feedback = old('client_feedback', !empty($feedback) ? $feedback->lines->pluck('client_feedback') : []);
+                        $time_duration = old('time_duration', !empty($feedback) ? $feedback->lines->pluck('time_duration') : []);
+                        $status = old('status', !empty($feedback) ? $feedback->lines->pluck('status') : []);
                     @endphp
                     @foreach ($fr_no as $key => $detail)
                         <tr>
@@ -164,8 +169,19 @@
                                        autocomplete="off" value="{{ $contact_number[$key] }}">
                             </td>
                             <td>
-                                <input type="text" name="client_feedback[]" class="form-control client_feedback" autocomplete="off"
-                                       value="{{ $client_feedback[$key] }}">
+                                <input type="text" name="client_feedback[]" class="form-control client_feedback"
+                                       autocomplete="off" value="{{ $client_feedback[$key] }}">
+                            </td>
+                            <td>
+                                <input type="text" name="time_duration[]" id="time_duration" placeholder="HH:MM format" pattern="[0-9]{2}:[0-9]{2}" required class="form-control time_duration" autocomplete="off" value="{{ $time_duration[$key] }}">
+                            </td>
+                            <td>
+                                <select class="form-control status select2" id="status" name="status[]">
+                                    <option value="Pending">Pending</option>
+                                    <option value="Accepted">Accepted</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
                             </td>
                             <td>
                                 <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>
@@ -206,6 +222,17 @@
                                            </td>
                                            <td>
                                                <input type="text" name="client_feedback[]" class="form-control client_feedback" autocomplete="off">
+                                           </td>
+                                           <td>
+                                                <input type="text" name="time_duration[]" id="time_duration" placeholder="HH:MM format" pattern="[0-9]{2}:[0-9]{2}" required class="form-control time_duration" autocomplete="off">
+                                           </td>
+                                           <td>
+                                              <select class="form-control status select2" id="status" name="status[]">
+                                                <option value="Pending">Pending</option>
+                                                <option value="Accepted">Accepted</option>
+                                                <option value="Processing">Processing</option>
+                                                <option value="Closed">Closed</option>
+                                              </select>
                                            </td>
                                            <td>
                                                <i class="btn btn-danger btn-sm fa fa-minus remove-calculation-row"></i>

@@ -1,5 +1,5 @@
 @extends('layouts.backend-layout')
-@section('title', 'Pyhsical Connectivity')
+@section('title', 'Physical Connectivity')
 
 @php
     $is_old = old('type') ? true : false;
