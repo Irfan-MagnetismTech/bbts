@@ -44,6 +44,7 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('pop-wise-client-report', [ConnectivityController::class, 'popWiseClientReport'])->name('pop-wise-client-report');
     Route::get('pop-wise-equipment-report', [ConnectivityController::class, 'popWiseEquipmentReport'])->name('pop-wise-equipment-report');
     Route::get('client-wise-equipment-report', [ConnectivityController::class, 'clientWiseEquipmentReport'])->name('client-wise-equipment-report');
+    Route::get('client-wise-net-ip-report', [ConnectivityController::class, 'clientWiseNetIpReport'])->name('client-wise-net-ip-report');
     require __DIR__ . '/irfan.php';
     require __DIR__ . '/jaber.php';
 });

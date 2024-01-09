@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Sales\Entities\SurveyDetail;
 use Modules\Sales\Entities\FinalSurveyDetail;
 use Modules\Networking\Entities\PhysicalConnectivityLines;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class PhysicalConnectivity extends Model
 {
@@ -33,5 +34,15 @@ class PhysicalConnectivity extends Model
     public function logicalConnectivity()
     {
         return $this->hasOne(LogicalConnectivity::class, 'fr_no', 'fr_no')->where('is_modified', '0');
+    }
+
+    public function connectivity()
+    {
+        return $this->hasOne(Connectivity::class, 'fr_no', 'fr_no')->where('is_modify', '0');
+    }
+
+    public function feasibilityRequirementDetail()
+    {
+        return $this->hasOne(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
     }
 }

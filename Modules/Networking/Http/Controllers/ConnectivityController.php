@@ -442,6 +442,59 @@ class ConnectivityController extends Controller
         }
 
         $clients = Client::latest()->get();
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('networking::pdf.client-wise-equipment-report', ['client_wise_unique_materials' => $client_wise_unique_materials], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('client-wise-equipment-report.pdf');
+        }
         return view('networking::reports.client-wise-equipment-report', compact('client_wise_unique_materials', 'clients'));
+    }
+
+    public function clientWiseNetIpReport()
+    {
+        $client_no = request()->client_no;
+        $from_date = Carbon::parse(request()->date_from)->format('Y-m-d');
+        $to_date = Carbon::parse(request()->date_to)->format('Y-m-d');
+
+        $datas = PhysicalConnectivity::query()
+            ->with('lines', 'client', 'logicalConnectivity', 'connectivity', 'feasibilityRequirementDetail') // Assuming 'ip' is the relationship for the 'ip' table
+            ->when(!empty($client_no), function ($query) use ($client_no) {
+                $query->where('client_no', $client_no);
+            })
+            ->when(!empty($from_date), function ($query) use ($from_date) {
+                $query->whereHas('connectivity', function ($query) use ($from_date) {
+                    $query->where('created_at', '>=', $from_date);
+                });
+            })
+            ->when(!empty($to_date), function ($query) use ($to_date) {
+                $query->whereHas('connectivity', function ($query) use ($to_date) {
+                    $query->where('created_at', '<=', $to_date);
+                });
+            })
+            ->get()
+            ->groupBy('client_no');
+        $client_ip_infos = [];
+        foreach ($datas as $data) {
+            $client_ip_infos[$data?->first()->client_no] = [
+                'client_name' => $data->first()->client->client_name,
+                'client_no' => $data?->first()->client_no,
+                'activation_date' => $data?->first()?->connectivity?->commissioning_date,
+                'connectivity_point' => $data?->first()?->feasibilityRequirementDetail?->connectivity_point,
+                'physical' => $data?->first()->lines,
+                'logical' => $data->first()->logicalConnectivity->lines ?? [],
+            ];
+        }
+        $clients = Client::latest()->get();
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('networking::pdf.pop-wise-client-report', ['client_ip_infos' => $client_ip_infos], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('pop-wise-client-report.pdf');
+        } else {
+            return view('networking::reports.client-wise-net-ip-report', compact('client_ip_infos', 'clients'));
+        }
     }
 }

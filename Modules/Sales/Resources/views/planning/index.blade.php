@@ -80,6 +80,8 @@
                                         <a href="{{ route('planning.show', $plan->id) }}" data-toggle="tooltip" title="Details"
                                             class="btn btn-outline-primary"><i class="fas fa-eye"></i></a>
                                     @endcan
+                                    <a href="{{ route('planning-pdf', $plan->id) }}" data-toggle="tooltip" title="Details"
+                                        class="btn btn-outline-success"><i class="fas fa-file-pdf"></i></a>
                                     @can('plan-edit')
                                         <a href="{{ route('planning.edit', $plan->id) }}" data-toggle="tooltip" title="Edit"
                                             class="btn btn-outline-warning"><i class="fas fa-pen"></i></a>
