@@ -29,7 +29,17 @@ class LeadGenerationController extends Controller
 
     public function index()
     {
-        $lead_generations = LeadGeneration::with('division', 'district', 'thana')->latest()->get();
+        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
+        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $lead_generations = LeadGeneration::with('division', 'district', 'thana')
+            ->when($from_date, function ($query, $from_date) {
+                return $query->whereDate('created_at', '>=', $from_date);
+            })
+            ->when($to_date, function ($query, $to_date) {
+                return $query->whereDate('created_at', '<=', $to_date);
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
         return view('sales::lead_generation.index', compact('lead_generations'));
     }
 

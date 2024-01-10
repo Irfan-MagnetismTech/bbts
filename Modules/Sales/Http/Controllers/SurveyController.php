@@ -37,15 +37,18 @@ class SurveyController extends Controller
     }
     public function index()
     {
-        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
-        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
-        $surveys = Survey::with('surveyDetails', 'lead_generation')->where('is_modified', '=', 0)
+        // dd('ok');
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
+        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
+        $surveys = Survey::with('surveyDetails', 'lead_generation')
             ->when($from_date, function ($query, $from_date) {
-                return $query->whereDate('date', '>=', $from_date);
+                return $query->where('created_at', '>=', $from_date);
             })
             ->when($to_date, function ($query, $to_date) {
-                return $query->whereDate('date', '<=', $to_date);
+                return $query->where('created_at', '<=', $to_date);
             })
+            ->where('is_modified', 0)
+            ->latest()
             ->get();
         return view('sales::survey.index', compact('surveys'));
     }
@@ -215,6 +218,6 @@ class SurveyController extends Controller
         $survey = Survey::with('surveyDetails', 'lead_generation')->find($id);
         $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'lead_generation')->where('fr_no', $survey->fr_no)->first();
         $pdf = PDF::loadView('sales::survey.pdf', compact('survey', 'connectivity_requirement'));
-        return $pdf->stream($survey->lead_generation->client_name . '-survey.pdf');
+        return $pdf->stream($survey->lead_generation->client_name . '-' . $survey->connectivity_point . 'survey.pdf');
     }
 }

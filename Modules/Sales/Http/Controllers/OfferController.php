@@ -30,8 +30,8 @@ class OfferController extends Controller
 
     public function index()
     {
-        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
-        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
+        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
         $offers = Offer::with('offerDetails.offerLinks')->where('is_modified', 0)
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('created_at', '>=', $from_date);

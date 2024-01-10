@@ -45,8 +45,8 @@ class PlanningController extends Controller
 
     public function index()
     {
-        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
-        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
+        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
         $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('date', '>=', $from_date);
@@ -398,6 +398,6 @@ class PlanningController extends Controller
     {
         $plan = Planning::with('planLinks', 'equipmentPlans', 'servicePlans',)->where('id', $id)->first();
         $pdf = PDF::loadView('sales::planning.pdf', compact('plan'));
-        return $pdf->stream($plan->lead_generation->client_name . '-planning.pdf');
+        return $pdf->stream($plan->lead_generation->client_name . '-' . $plan->connectivity_point . '-planning.pdf');
     }
 }

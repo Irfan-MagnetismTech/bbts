@@ -19,6 +19,36 @@
 
 
 @section('content')
+    <form action="" method="get" class="my-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="date_from" class="font-weight-bold">From Date:</label>
+                    <input type="text" class="form-control date" id="from_date" name="from_date"
+                        aria-describedby="from_date" value="{{ old('from_date') ?? (request()?->from_date ?? null) }}"
+                        readonly>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="date_to" class="font-weight-bold">To Date:</label>
+                    <input type="text" class="form-control date" id="to_date" name="to_date" aria-describedby="date_to"
+                        value="{{ old('to_date') ?? (request()?->to_date ?? null) }}" readonly>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group my-4 row">
+                    <div class="col-md-6">
+                        <input type="button" onclick="resetForm()" value="Reset"
+                            class="btn btn-outline-warning btn-sm col-12">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="submit" value="Search" class="btn btn-outline-primary btn-sm col-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
     <div class="dt-responsive table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
@@ -57,8 +87,8 @@
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $lead_generation->created_at->format('d-m-Y') }}</td>
                         <td>{{ $lead_generation->client_no }}</td>
-                        <td> 
-                            {{-- @if(!empty($lead_generation->client))
+                        <td>
+                            {{-- @if (!empty($lead_generation->client))
                             <a href="{{ route('client-profile.show', $lead_generation->client->id) }}"> 
                             {{ $lead_generation->client_name }}</a>
                             @else
@@ -94,19 +124,19 @@
                                         </a>
                                     @endcan
                                     @can('lead-generation-edit')
-                                    <a href="{{ route('lead-generation.edit', $lead_generation->id) }}"
-                                        data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
-                                            class="fas fa-pen"></i>
+                                        <a href="{{ route('lead-generation.edit', $lead_generation->id) }}"
+                                            data-toggle="tooltip" title="Edit" class="btn btn-outline-warning"><i
+                                                class="fas fa-pen"></i>
                                         </a>
                                     @endcan
                                     @can('lead-generation-delete')
-                                    <form action="{{ route('lead-generation.destroy', $lead_generation->id) }}"
-                                        method="POST" data-toggle="tooltip" title="Delete" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
-                                                class="fas fa-trash"></i></button>
-                                    </form>
+                                        <form action="{{ route('lead-generation.destroy', $lead_generation->id) }}"
+                                            method="POST" data-toggle="tooltip" title="Delete" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm delete"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
                                     @endcan
                                 </nobr>
                             </div>
@@ -130,5 +160,19 @@
             $(window).scrollTop(sessionStorage.scrollPos || 0)
         };
         window.onload = init;
+        $(document).ready(function() {
+            $('.date').datepicker({
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                todayHighlight: true,
+            });
+
+            select2Ajax("{{ route('search-support-ticket') }}", '#ticket_no')
+        })
+
+        function resetForm() {
+            $('#from_date').val('');
+            $('#to_date').val('');
+        }
     </script>
 @endsection
