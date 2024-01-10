@@ -159,11 +159,7 @@ class InternalFeedbackController extends Controller
     {
         $items = FeasibilityRequirementDetail::query()
             ->where('fr_no', 'like', '%' . request()->search . '%')
-            ->get()
-            ->map(fn($item) => [
-                'contact_name' => $item->contact_name,
-                'contact_number' => $item->contact_number,
-            ]);
+            ->first();
         return response()->json($items);
     }
 }
