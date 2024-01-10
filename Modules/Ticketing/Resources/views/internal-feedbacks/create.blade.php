@@ -118,7 +118,7 @@
                         </div>
                         <div class="col-xl-4 col-md-4">
                             <div class="form-item">
-                                <input type="text" class="form-control" name="remarks" id="remarks" autocomplete="off"
+                                <input type="text" class="form-control" name="remarks" autocomplete="off"
                                        value="{{$remarks}}">
                                 <label for="remarks">Remarks</label>
                             </div>
@@ -150,7 +150,7 @@
                     @foreach ($fr_no as $key => $detail)
                         <tr>
                             <td>
-                                <select name="fr_no[]" class="form-control fr_no select2" id="fr_no" autocomplete="off"
+                                <select name="fr_no[]" class="form-control fr_no select2" autocomplete="off"
                                         required>
                                     <option value="">Select Fr No</option>
                                     @foreach ($fr_nos as $fr_no)
@@ -173,10 +173,10 @@
                                        autocomplete="off" value="{{ $client_feedback[$key] }}">
                             </td>
                             <td>
-                                <input type="text" name="time_duration[]" id="time_duration" placeholder="HH:MM format" pattern="[0-9]{2}:[0-9]{2}" required class="form-control time_duration" autocomplete="off" value="{{ $time_duration[$key] }}">
+                                <input type="text" name="time_duration[]" placeholder="HH:MM" pattern="[0-9]{2}:[0-9]{2}" required class="form-control time_duration" autocomplete="off" value="{{ $time_duration[$key] }}">
                             </td>
                             <td>
-                                <select class="form-control status select2" id="status" name="status[]">
+                                <select class="form-control status select2" name="status[]">
                                     <option value="Pending">Pending</option>
                                     <option value="Accepted">Accepted</option>
                                     <option value="Processing">Processing</option>
@@ -224,10 +224,10 @@
                                                <input type="text" name="client_feedback[]" class="form-control client_feedback" autocomplete="off">
                                            </td>
                                            <td>
-                                                <input type="text" name="time_duration[]" id="time_duration" placeholder="HH:MM format" pattern="[0-9]{2}:[0-9]{2}" required class="form-control time_duration" autocomplete="off">
+                                                <input type="text" name="time_duration[]" placeholder="HH:MM" pattern="[0-9]{2}:[0-9]{2}" required class="form-control time_duration" autocomplete="off">
                                            </td>
                                            <td>
-                                              <select class="form-control status select2" id="status" name="status[]">
+                                              <select class="form-control status select2" name="status[]">
                                                 <option value="Pending">Pending</option>
                                                 <option value="Accepted">Accepted</option>
                                                 <option value="Processing">Processing</option>

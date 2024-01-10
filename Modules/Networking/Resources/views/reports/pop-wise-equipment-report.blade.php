@@ -85,13 +85,13 @@
                                 <td rowspan="{{ count($pop_wise_equipment) }}">{{ $pop_wise_equipment['pop_name'] }}</td>
                                 <td rowspan="{{ count($pop_wise_equipment) }}">{{ $pop_wise_equipment['location'] }}</td>
                             @endif
-                            <td>{{ $equipment['material']->name }}</td>
-                            <td>{{ $equipment['brand'] }}</td>
-                            <td>{{ $equipment['model'] }}</td>
-                            <td>{{ $equipment['ip_address'] }}</td>
-                            <td>{{ $equipment['subnet_mask'] }}</td>
-                            <td>{{ $equipment['gateway'] }}</td>
-                            <td>{{ $equipment['remarks'] }}</td>
+                            <td>{{ $equipment['material']?->name ?? ''}}</td>
+                            <td>{{ $equipment['brand'] ?? ''}}</td>
+                            <td>{{ $equipment['model'] ?? ''}}</td>
+                            <td>{{ $equipment['ip_address'] ?? ''}}</td>
+                            <td>{{ $equipment['subnet_mask'] ?? ''}}</td>
+                            <td>{{ $equipment['gateway'] ?? ''}}</td>
+                            <td>{{ $equipment['remarks'] ?? ''}}</td>
                         </tr>
                     @endforeach
                 @endforeach

@@ -353,13 +353,13 @@ class ConnectivityController extends Controller
                     'location' => $group->first()->pop->address,
                     'equipments' => $group->map(function ($item) {
                         return [
-                            'pop_id' => $item->pop_id,
-                            'material' => $item->material,
-                            'brand' => $item->brand,
-                            'model' => $item->model,
-                            'ip_address' => $item->ip->address,
-                            'subnet_mask' => $item->subnet_mask,
-                            'gateway' => $item->gateway,
+                            'pop_id' => $item->pop_id ?? '',
+                            'material' => $item->material ?? '',
+                            'brand' => $item->brand ?? '',
+                            'model' => $item->model ?? '',
+                            'ip_address' => $item->ip->address ?? '',
+                            'subnet_mask' => $item->subnet_mask ?? '',
+                            'gateway' => $item->gateway ?? '',
                             'remarks' => $item->remarks ?? '',
                         ];
                     })->toArray(),
