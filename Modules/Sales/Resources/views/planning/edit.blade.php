@@ -959,8 +959,21 @@
                 let deletedPlanLinkIdJson = JSON.stringify(deletedPlanLinkId);
                 $('#delete_plan_link_id').val(deletedPlanLinkIdJson);
                 let count = $('.main_link').length;
-                if (count > 1) {
-                    $(event).closest('.main_link').remove();
+                // console.log('count', count);
+                if (count > 0) {
+                    console.log('fine')
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to delete this link!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33'
+                    }).then((result) => {
+                        if (result.value) {
+                            $(event).closest('.main_link').remove();
+                        }
+                    })
                 }
             }
 

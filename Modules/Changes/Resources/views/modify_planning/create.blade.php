@@ -1200,8 +1200,20 @@
                 let deletedPlanLinkIdJson = JSON.stringify(deletedPlanLinkId);
                 $('#delete_plan_link_id').val(deletedPlanLinkIdJson);
                 let count = $('.main_link').length;
-                if (count > 1) {
-                    $(event).closest('.main_link').remove();
+                if (count > 0) {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to delete this link!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33'
+                    }).then((result) => {
+                        if (result.value) {
+                            linkMainDiv = $(event).closest('.main_link').html();
+                            $(event).closest('.main_link').remove();
+                        }
+                    })
                 }
             }
 
@@ -1319,6 +1331,6 @@
                 this_event.closest('.main_link').find('.existing_transmission_capacity').val(latestLink.capacity).attr(
                     'value', latestLink.capacity);
             });
-            </script>
+        </script>
         @include('changes::modify_planning.js')
     @endsection

@@ -37,7 +37,16 @@ class FeasibilityRequirementController extends Controller
 
     public function index()
     {
-        $feasibility_requirements = FeasibilityRequirement::with('lead_generation', 'feasibilityRequirementDetails')->latest()->get();
+        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
+        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $feasibility_requirements = FeasibilityRequirement::with('lead_generation', 'feasibilityRequirementDetails')
+            ->when($from_date, function ($query, $from_date) {
+                return $query->whereDate('date', '>=', $from_date);
+            })
+            ->when($to_date, function ($query, $to_date) {
+                return $query->whereDate('date', '<=', $to_date);
+            })
+            ->orderBy('id', 'desc')->get();
         return view('sales::feasibility_requirement.index', compact('feasibility_requirements'));
     }
 
@@ -112,7 +121,7 @@ class FeasibilityRequirementController extends Controller
                 }
 
                 $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
-                
+
                 $client = $feasibilityRequirement->client->client_name;
                 // $to = 'sumon@magnetismtech.com';
                 $to = 'salesadmin@bbts.net';
@@ -126,9 +135,9 @@ class FeasibilityRequirementController extends Controller
                 // Mail::send('sales::email.feasibility_requirement', ['feasibilityRequirement' => $feasibilityRequirement], function ($message) use ($to, $cc, $subject) {
                 //     $message->to($to)->cc($cc)->subject($subject);
                 // });
-                Mail::raw($messageBody, function($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
                     $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-                }); 
+                });
 
                 DB::commit();
                 return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');

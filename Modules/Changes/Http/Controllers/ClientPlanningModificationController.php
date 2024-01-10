@@ -38,7 +38,18 @@ class ClientPlanningModificationController extends Controller
      */
     public function index()
     {
-        $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')->where('is_modified', 1)->latest()->get();
+        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
+        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')
+            ->where('is_modified', 1)
+            ->when($from_date, function ($query, $from_date) {
+                return $query->whereDate('date', '>=', $from_date);
+            })
+            ->when($to_date, function ($query, $to_date) {
+                return $query->whereDate('date', '<=', $to_date);
+            })
+            ->latest()
+            ->get();
         return view('changes::modify_planning.index', compact('plans'));
     }
 

@@ -33,7 +33,16 @@ class ConnectivityRequirementController extends Controller
 
     public function index()
     {
-        $connectivity_requirements = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails', 'lead_generation')->unmodified()->latest()->get();
+        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
+        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $connectivity_requirements = ConnectivityRequirement::with('connectivityRequirementDetails', 'connectivityProductRequirementDetails', 'lead_generation')->unmodified()
+            ->when($from_date, function ($query, $from_date) {
+                return $query->whereDate('date', '>=', $from_date);
+            })
+            ->when($to_date, function ($query, $to_date) {
+                return $query->whereDate('date', '<=', $to_date);
+            })
+            ->get();
         return view('sales::connectivity_requirement.index', compact('connectivity_requirements'));
     }
 

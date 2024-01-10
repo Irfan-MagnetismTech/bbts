@@ -29,7 +29,18 @@ class ModifiedSurveyController extends Controller
      */
     public function index()
     {
-        $surveys = Survey::with('surveyDetails', 'lead_generation')->where('is_modified', '=', 1)->latest()->get();
+        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
+        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $surveys = Survey::with('surveyDetails', 'lead_generation')
+            ->when($from_date, function ($query, $from_date) {
+                return $query->whereDate('date', '>=', $from_date);
+            })
+            ->when($to_date, function ($query, $to_date) {
+                return $query->whereDate('date', '<=', $to_date);
+            })
+            ->where('is_modified', 1)
+            ->latest()
+            ->get();
         return view('changes::modified_servey.index', compact('surveys'));
     }
 
@@ -43,9 +54,13 @@ class ModifiedSurveyController extends Controller
         // dd($survey);
         $pops = Pop::get();
         $vendors = Vendor::get();
-        $connectivity_requirement = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 
-        'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')
-        ->where('id', $id)->first();
+        $connectivity_requirement = ConnectivityRequirement::with(
+            'connectivityRequirementDetails.vendor',
+            'connectivityProductRequirementDetails',
+            'client',
+            'FeasibilityRequirementDetail.feasibilityRequirement'
+        )
+            ->where('id', $id)->first();
         // dd($connectivity_requirement);
         // $current_qty = $connectivity_requirement->connectivityProductRequirementDetails;
         // $previous_qty = ConnectivityRequirement::with('connectivityRequirementDetails.vendor', 'connectivityProductRequirementDetails', 'client', 'FeasibilityRequirementDetail.feasibilityRequirement')->where('fr_no', $connectivity_requirement->fr_no)->latest()->first()->connectivityProductRequirementDetails;
@@ -69,9 +84,12 @@ class ModifiedSurveyController extends Controller
             ->whereHas('physicalConnectivity', function ($qr) use ($connectivity_requirement) {
                 return $qr->where('fr_no', $connectivity_requirement->fr_no);
             })->get();
-        return view('changes::modified_servey.create', compact('pops', 'vendors', 
-                'connectivity_requirement',  
-              'existingConnections'));
+        return view('changes::modified_servey.create', compact(
+            'pops',
+            'vendors',
+            'connectivity_requirement',
+            'existingConnections'
+        ));
     }
 
     /**

@@ -44,7 +44,17 @@ class SaleModificationController extends Controller
 
     public function index()
     {
-        $sales = Sale::where('is_modified', 1)->get();
+        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
+        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $sales = Sale::where('is_modified', 1)
+            ->when($from_date, function ($query, $from_date) {
+                return $query->whereDate('created_at', '>=', $from_date);
+            })
+            ->when($to_date, function ($query, $to_date) {
+                return $query->whereDate('created_at', '<=', $to_date);
+            })
+            ->latest()
+            ->get();
         return view('changes::modify_sales.index', compact('sales'));
     }
 
