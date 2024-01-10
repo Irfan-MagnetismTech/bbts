@@ -51,10 +51,10 @@
         }
 
         /* .table_heading {
-                background-color: #007af5 !important;
-                color: white !important;
-                font-size: 14px !important;
-            } */
+                                    background-color: #007af5 !important;
+                                    color: white !important;
+                                    font-size: 14px !important;
+                                } */
     </style>
 @endsection
 
@@ -859,6 +859,7 @@
                     $(event).closest('tr').remove();
                 }
             }
+            let linkMainDiv = '';
             $(document).on('click', '.addLinkRow', function() {
                 addLinkRow();
             });
@@ -900,8 +901,20 @@
 
             function removeLinkRow(event) {
                 var count = $('.main_link').length;
-                if (count > 1) {
-                    $(event).closest('.main_link').remove();
+                if (count > 0) {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You want to delete this link!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33'
+                    }).then((result) => {
+                        if (result.value) {
+                            linkMainDiv = $(event).closest('.main_link').html();
+                            $(event).closest('.main_link').remove();
+                        }
+                    })
                 }
             }
 
