@@ -155,5 +155,19 @@
                 }
             })
         });
+        $(document).ready(function() {
+            $('.date').datepicker({
+                format: 'dd-mm-yyyy',
+                autoclose: true,
+                todayHighlight: true,
+            });
+
+            select2Ajax("{{ route('search-support-ticket') }}", '#ticket_no')
+        })
+
+        function resetForm() {
+            $('#from_date').val('');
+            $('#to_date').val('');
+        }
     </script>
 @endsection
