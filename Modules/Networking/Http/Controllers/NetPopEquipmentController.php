@@ -92,30 +92,33 @@ class NetPopEquipmentController extends Controller
     public function getPopEquipments()
     {
         $data = [];
-        ScmMur::query()
-            ->where('pop_id', request()->pop_id)
-            ->with(['lines.material', 'lines.brand'])
-            ->get()->map(function ($item) use (&$data) {
-                $item->lines->map(function ($line) use (&$data) {
-                    $data[] = [
-                        'label' => $line->material->name . ' - ' . $line->brand->name . ' - ' . $line->model . ' - ' . $line->serial_code,
-                        'value' => $line->material_id,
-                        'material_id' => $line->material_id,
-                        'brand_id' => $line->brand_id,
-                        'model' => $line->model,
-                        'serial_code' => $line->serial_code,
-                        'quantity' => $line->quantity,
-                        'unit_price' => $line->unit_price,
-                        'total_price' => $line->total_price,
-                        'remarks' => $line->remarks,
-                        'created_at' => $line->created_at,
-                        'updated_at' => $line->updated_at,
-                        'material' => $line->material->name,
-                        'brand' => $line->brand->name,
-                    ];
-                    return $data;
+        if (request()->pop_id != null)
+        {
+            ScmMur::query()
+                ->where('pop_id', request()->pop_id)
+                ->with(['lines.material', 'lines.brand'])
+                ->get()->map(function ($item) use (&$data) {
+                    $item->lines->map(function ($line) use (&$data) {
+                        $data[] = [
+                            'label' => $line->material->name,
+                            'value' => $line->material_id,
+                            'material_id' => $line->material_id,
+                            'brand_id' => $line->brand_id,
+                            'model' => $line->model,
+                            'serial_code' => $line->serial_code,
+                            'quantity' => $line->quantity,
+                            'unit_price' => $line->unit_price,
+                            'total_price' => $line->total_price,
+                            'remarks' => $line->remarks,
+                            'created_at' => $line->created_at,
+                            'updated_at' => $line->updated_at,
+                            'material' => $line->material->name,
+                            'brand' => $line->brand->name,
+                        ];
+                        return $data;
+                    });
                 });
-            });
+        }
 
         return response()->json($data);
     }

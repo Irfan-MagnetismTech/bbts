@@ -210,15 +210,15 @@
                         function appendCalculationRow() {
                             let row = `<tr>
                                             <td>
-                                                 <select name="fr_no[${indx}]" class="form-control fr_no select2" id="fr_no" autocomplete="off" required>
+                                                 <select name="fr_no[${indx}]" class="form-control fr_no select2"  autocomplete="off" required>
                                                         <option value="fr_no[${indx}]" readonly selected>Select Fr No</option>
                                                 </select>
                                             </td>
                                             <td>
-                                           <input type="text" name="contact_person[]" class="form-control contact_person" id="contact_person" autocomplete="off">
+                                           <input type="text" name="contact_person[]" class="form-control contact_person" autocomplete="off">
                                            </td>
                                            <td>
-                                               <input type="number" name="contact_number[]" class="form-control contact_number" id="contact_number" autocomplete="off">
+                                               <input type="number" name="contact_number[]" class="form-control contact_number" autocomplete="off">
                                            </td>
                                            <td>
                                                <input type="text" name="client_feedback[]" class="form-control client_feedback" autocomplete="off">
@@ -255,7 +255,7 @@
                             });
 
                         function getFrNo() {
-                            var client_no = $('#client_no').val();
+                            let client_no = $('#client_no').val();
                             $.ajax({
                                 url: window.location.origin + "/ticketing/get-client-info",
                                 type: "GET",
@@ -264,7 +264,7 @@
                                     search: client_no,
                                 },
                                 success: function (data) {
-                                    var fr_values = '<option value="">Select Fr No</option>';
+                                    let fr_values = '<option value="">Select Fr No</option>';
                                     $.each(data, function (index, item) {
                                         $.each(item.saleDetails, function (key, value) {
                                             fr_values += `<option value="${value.feasibility_requirement_details.fr_no}">${value.feasibility_requirement_details.connectivity_point} ( ${value.feasibility_requirement_details.fr_no} )</option>`;
@@ -278,29 +278,21 @@
                             });
                         }
 
-                        // $(document).on('change', '.fr_no', function () {
-                        //     $(this).autocomplete({
-                        //         source: function (request, response) {
-                        //             var fr_no = $('#fr_no').val();
-                        //             $.ajax({
-                        //                 url: window.location.origin + "/ticketing/get-fr-info",
-                        //                 type: "GET",
-                        //                 dataType: "json",
-                        //                 data: {
-                        //                     search: fr_no
-                        //                 },
-                        //                 success: function (data) {
-                        //                     response(data);
-                        //                 }
-                        //             });
-                        //         },
-                        //         select: function (event, ui) {
-                        //             $(this).closest('tr').find('.contact_person').val(ui.item.contact_name);
-                        //             $(this).closest('tr').find('.contact_number').val(ui.item.contact_number);
-                        //
-                        //         }
-                        //     })
-                        // });
-
+                        $(document).on('change', '.fr_no', function () {
+                            let event_this = $(this)
+                            let fr_no = $(this).val();
+                            $.ajax({
+                                url: window.location.origin + "/ticketing/get-fr-info",
+                                type: "GET",
+                                dataType: "json",
+                                data: {
+                                    search: fr_no
+                                },
+                                success: function (data) {
+                                    event_this.closest('tr').find('.contact_person').val(data.contact_name);
+                                    event_this.closest('tr').find('.contact_number').val(data.contact_number);
+                                }
+                            });
+                        });
                     </script>
 @endsection

@@ -2,29 +2,26 @@
 @section('title', 'Pop Wise Equipment')
 @php
     $is_old = old('type') ? true : false;
-    $form_heading = !empty($err) ? 'Update' : 'Add';
-    $form_url = !empty($err) ? route('pop-equipments.update', $err->id) : route('pop-equipments.store');
-    $form_method = !empty($err) ? 'PUT' : 'POST';
+    $form_heading = !empty($pop_equipment) ? 'Update' : 'Add';
+    $form_url = !empty($pop_equipment) ? route('pop-equipments.update', $pop_equipment->id) : route('pop-equipments.store');
+    $form_method = !empty($pop_equipment) ? 'PUT' : 'POST';
 
-    $date = old('date', !empty($err) ? $err->date : null);
-    $type = old('type', !empty($err) ? $err->type : null);
-    $purpose = old('purpose', !empty($err) ? $err->purpose : null);
-    $assigned_person = old('assigned_person', !empty($err) ? $err->assigned_person : null);
-    $reason_of_inactive = old('reason_of_inactive', !empty($err) ? $err->reason_of_inactive : null);
-    $equipment_type = old('equipment_type', !empty($err) ? $err?->equipment_type : null);
-    $client_id = old('client_id', !empty($err) ? $err->client_id : null);
-    $fr_no = old('fr_no', !empty($err) ? $err->fr_no : null);
-    $client_name = old('client_name', !empty($err) ? $err?->client?->client_name : null);
-    $client_no = old('client_no', !empty($err) ? $err?->client_no : null);
-    $client_link_no = old('client_link_no', !empty($err) ? $err?->link_no : null);
-    $client_address = old('client_address', !empty($err) ? $err?->client?->location : null);
-    $branch_id = old('branch_id', !empty($err) ? $err->branch_id : null);
-    $branch_name = old('branch_id', !empty($err) ? $err?->branch?->name : null);
-    $pop_id = old('pop_id', !empty($err) ? $err->pop_id : null);
-    $pop_name = old('pop_name', !empty($err) ? $err?->pop?->name : null);
-    $wo_no = old('wo_no', !empty($err) ? $err?->wo_no : null);
-    $pop_address = old('pop_address', !empty($err) ? $err?->pop?->address : null);
-    $inactive_date = old('inactive_date', !empty($err) ? $err->inactive_date : null);
+    $pop_id = old('pop_id', !empty($pop_equipment) ? $pop_equipment->pop_id : null);
+    $material_id = old('material_id', !empty($pop_equipment) ? $pop_equipment->material_id : null);
+    $serial_code = old('serial_code', !empty($pop_equipment) ? $pop_equipment->serial_code : null);
+    $brand = old('brand', !empty($pop_equipment) ? $pop_equipment->brand : null);
+    $model = old('model', !empty($pop_equipment) ? $pop_equipment->model : null);
+    $equipment_type = old('equipment_type', !empty($pop_equipment) ? $pop_equipment?->equipment_type : null);
+    $quantity = old('quantity', !empty($pop_equipment) ? $pop_equipment->quantity : null);
+    $status = old('status', !empty($pop_equipment) ? $pop_equipment->status : null);
+    $tower_type = old('tower_type', !empty($pop_equipment) ? $pop_equipment?->tower_type : null);
+    $tower_height = old('tower_height', !empty($pop_equipment) ? $pop_equipment?->tower_height : null);
+    $made_by = old('made_by', !empty($pop_equipment) ? $pop_equipment?->made_by : null);
+    $maintenance_date = old('maintenance_date', !empty($pop_equipment) ? $pop_equipment?->maintenance_date : null);
+    $capacity = old('capacity', !empty($pop_equipment) ? $pop_equipment->capacity : null);
+    $port_no = old('port_no', !empty($pop_equipment) ? $pop_equipment?->port_no : null);
+    $installation_date = old('installation_date', !empty($pop_equipment) ? $pop_equipment->installation_date : null);
+    $remarks = old('remarks', !empty($pop_equipment) ? $pop_equipment?->remarks : null);
 @endphp
 
 @section('breadcrumb-title')
@@ -73,30 +70,14 @@
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="pop_id" name="pop_id" required>
-                    <option value="">Select pop</option>
+                    <option value="">Select POP</option>
                 </select>
             </div>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="form-group col-3">
-            <div class="input-group input-group-sm input-group-primary">
-                <select class="form-control" id="material_id" name="material_id" required>
-                    <option value="">Select Equipment</option>
-                </select>
-            </div>
-        </div>
-        <x-input-box colGrid="3" name="serial_code" value="{{ $wo_no }}" label="Serial Code" />
-        <x-input-box colGrid="3" name="brand" value="{{ $wo_no }}" label="Brand" />
-        <x-input-box colGrid="3" name="model" value="{{ $wo_no }}" label="Model" />
-    </div>
-
-    <div class="row">
         <div class="form-group col-3">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="equipment_type" name="equipment_type" required>
-                    <option value="">Equipment Type</option>
+                    <option value="">Select Equipment</option>
                     @foreach (config('businessinfo.equipmentType') as $key => $value)
                         <option value="{{ $key }}" {{ $equipment_type == $key ? 'selected' : '' }}>
                             {{ $value }}
@@ -105,41 +86,75 @@
                 </select>
             </div>
         </div>
-
-        <div class="form-group col-3">
-            <div class="input-group input-group-sm input-group-primary">
-                <select class="form-control" id="ip_id" name="ip_id" required>
-                    <option value="" selected disabled>Select Ip Address</option>
-                </select>
-            </div>
-        </div>
-
-        <x-input-box colGrid="3" name="subnet_mask" value="{{ $wo_no }}" label="Subnet Mask" />
-        <x-input-box colGrid="3" name="gateway" value="{{ $wo_no }}" label="Gate Way" />
     </div>
 
     <div class="row">
-        <div class="form-group col-3">
+        <div class="form-group col-3" id="material_div">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="material_id" name="material_id" required>
+                    <option value="">Select Material</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-3" id="serial_code_div">
+            <x-input-box colGrid="15" name="serial_code" value="{{ $serial_code }}" label="Serial Code"/>
+        </div>
+        <div class="form-group col-3" id="brand_div">
+            <x-input-box colGrid="15" name="brand" value="{{ $brand }}" label="Brand"/>
+        </div>
+        <div class="form-group col-3" id="model_div">
+            <x-input-box colGrid="15" name="model" value="{{ $model }}" label="Model"/>
+        </div>
+{{--        <div class="form-group col-3" id="supplier_div">--}}
+{{--        <x-input-box colGrid="3" name="supplier_id" value="{{ $wo_no }}" label="Purchased From"/>--}}
+{{--        </div>--}}
+{{--        <div class="form-group col-3" id="purchase_date_div">--}}
+{{--        <x-input-box colGrid="3" name="date" value="{{ $wo_no }}" label="Purchase Date"/>--}}
+{{--        </div>--}}
+        <div class="form-group col-3" id="tower_type_div">
             <div class="input-group input-group-sm input-group-primary">
                 <select class="form-control" id="tower_type" name="tower_type">
                     <option value="">Tower Type</option>
                     <option value="leg_4">4 Leg</option>
-                    <option value="leg_3">3 Leg </option>
+                    <option value="leg_3">3 Leg</option>
                 </select>
             </div>
         </div>
-        <x-input-box colGrid="3" name="tower_height" value="{{ $wo_no }}" label="Tower Height" />
-        <x-input-box colGrid="3" name="made_by" value="{{ $wo_no }}" label="Made By" />
-        <x-input-box colGrid="3" name="maintenance_date" value="{{ $wo_no }}" label="Maintenance Date"
-            class="date" />
-    </div>
-
-    <div class="row">
-        <x-input-box colGrid="3" name="capacity" value="{{ $wo_no }}" label="Capacity" />
-        <x-input-box colGrid="3" name="port_no" value="{{ $wo_no }}" label="Port No" />
-        <x-input-box colGrid="3" name="installation_date" value="{{ $wo_no }}" label="Installation Date"
-            class="date" />
-        <x-input-box colGrid="3" name="remarks" value="{{ $wo_no }}" label="Remarks" />
+        <div class="form-group col-3" id="tower_height_div">
+            <x-input-box colGrid="15" name="tower_height" value="{{ $tower_height }}" label="Tower Height (Ft)"/>
+        </div>
+        <div class="form-group col-3" id="quantity_div">
+        <x-input-box colGrid="15" name="quantity" value="{{ $quantity }}" label="Quantity"/>
+        </div>
+        <div class="form-group col-3" id="made_by_div">
+        <x-input-box colGrid="15" name="made_by" value="{{ $made_by }}" label="Made By"/>
+        </div>
+        <div class="form-group col-3" id="capacity_div">
+        <x-input-box colGrid="15" name="capacity" value="{{ $capacity }}" label="Capacity"/>
+        </div>
+        <div class="form-group col-3" id="port_no_div">
+        <x-input-box colGrid="15" name="port_no" value="{{ $port_no }}" label="Port No"/>
+        </div>
+        <div class="form-group col-3" id="installation_date_div">
+        <x-input-box colGrid="15" name="installation_date" value="{{ $installation_date }}" label="Installation Date"
+                     class="date"/>
+        </div>
+        <div class="form-group col-3" id="maintenance_date_div">
+        <x-input-box colGrid="15" name="maintenance_date" value="{{ $maintenance_date }}" label="Maintenance Date"
+                     class="date"/>
+        </div>
+        <div class="form-group col-3" id="status_div">
+            <div class="input-group input-group-sm input-group-primary">
+                <select class="form-control" id="status" name="status">
+                    <option value="">Status</option>
+                    <option value="Online">Online</option>
+                    <option value="Offline">Offline</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group col-3" id="remarks_div">
+        <x-input-box colGrid="15" name="remarks" value="{{ $remarks }}" label="Remarks"/>
+        </div>
     </div>
 
     <div class="row">
@@ -166,7 +181,7 @@
         fillSelect2Options("{{ route('searchPop') }}", '#pop_id');
         fillSelect2Options("{{ route('searchIp') }}", '#ip_id');
 
-        $('#pop_id').on('change', function() {
+        $('#pop_id').on('change', function () {
             getEquipment()
         })
 
@@ -180,14 +195,14 @@
                 data: {
                     pop_id: pop_id
                 },
-                success: function(data) {
+                success: function (data) {
                     let dropdown;
 
                     dropdown = $('#material_id');
                     dropdown.empty();
                     dropdown.append('<option selected disabled>Select Material</option>');
                     dropdown.prop('selectedIndex', 0);
-                    data.map(function(item) {
+                    data.map(function (item) {
                         dropdown.append($('<option></option>')
                             .attr('value', item.material_id)
                             .attr('data-material_name', item.material)
@@ -202,7 +217,7 @@
             })
         }
 
-        $('#material_id').on('change', function() {
+        $('#material_id').on('change', function () {
             let brand = $(this).find(':selected').data('brand');
             let model = $(this).find(':selected').data('model');
             let serial_code = $(this).find(':selected').data('serial_code');
@@ -211,6 +226,79 @@
             $('#model').val(model).attr('value', model);
             $('#serial_code').val(serial_code).attr('value', serial_code);
         })
+
+        $('#equipment_type').on('change', function () {
+            onChangeEquipmentType();
+        })
+
+        function onChangeEquipmentType() {
+            let type = $("#equipment_type").val();
+            if (type == 'Network') {
+                $('#tower_type_div').hide('slow');
+                $('#tower_height_div').hide('slow');
+                $('#made_by_div').hide('slow');
+                $('#maintenance_date_div').hide('slow');
+                $('#status_div').hide('slow');
+
+                $('#material_div').show('slow');
+                $('#serial_code_div').show('slow');
+                $('#brand_div').show('slow');
+                $('#model_div').show('slow');
+                $('#port_no_div').show('slow');
+                $('#capacity_div').show('slow');
+                $('#installation_date_div').show('slow');
+                $('#quantity_div').show('slow');
+                $('#remarks_div').show('slow');
+            } else if (type == 'Power') {
+                $('#tower_type_div').hide('slow');
+                $('#tower_height_div').hide('slow');
+                $('#made_by_div').hide('slow');
+                $('#maintenance_date_div').hide('slow');
+                $('#port_no_div').hide('slow');
+
+                $('#material_div').show('slow');
+                $('#serial_code_div').show('slow');
+                $('#brand_div').show('slow');
+                $('#model_div').show('slow');
+                $('#capacity_div').show('slow');
+                $('#installation_date_div').show('slow');
+                $('#quantity_div').show('slow');
+                $('#remarks_div').show('slow');
+                $('#status_div').show('slow');
+            } else if (type == 'Tower') {
+                $('#material_div').hide('slow');
+                $('#serial_code_div').hide('slow');
+                $('#brand_div').hide('slow');
+                $('#model_div').hide('slow');
+                $('#port_no_div').hide('slow');
+                $('#capacity_div').hide('slow');
+                $('#status_div').hide('slow');
+
+                $('#tower_type_div').show('slow');
+                $('#tower_height_div').show('slow');
+                $('#made_by_div').show('slow');
+                $('#maintenance_date_div').show('slow');
+                $('#installation_date_div').show('slow');
+                $('#quantity_div').show('slow');
+                $('#remarks_div').show('slow');
+            } else if (type == 'WireLess') {
+                $('#tower_type_div').hide('slow');
+                $('#tower_height_div').hide('slow');
+                $('#made_by_div').hide('slow');
+                $('#maintenance_date_div').hide('slow');
+                $('#installation_date_div').hide('slow');
+                $('#port_no_div').hide('slow');
+                $('#status_div').hide('slow');
+
+                $('#material_div').show('slow');
+                $('#serial_code_div').show('slow');
+                $('#brand_div').show('slow');
+                $('#model_div').show('slow');
+                $('#capacity_div').show('slow');
+                $('#quantity_div').show('slow');
+                $('#remarks_div').show('slow');
+            }
+        }
     </script>
 
 @endsection

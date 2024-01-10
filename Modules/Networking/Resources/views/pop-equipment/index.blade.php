@@ -25,11 +25,22 @@
             <thead>
                 <tr>
                     <th>SL</th>
-                    <th>POP Name</th>
+                    <th>POP/Office Name</th>
+                    <th>Type</th>
                     <th>Material</th>
-                    <th>IP</th>
-                    <th>Subnet Mask</th>
-                    <th>Date</th>
+                    <th>Brand</th>
+                    <th>Model</th>
+                    <th>Serial Code</th>
+                    <th>Qty</th>
+                    <th>Capacity</th>
+                    <th>Ports</th>
+                    <th>Tower Type</th>
+                    <th>Tower Height (Ft)</th>
+                    <th>Installation Date</th>
+                    <th>Maintenance Date</th>
+                    <th>Made By</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -38,10 +49,21 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td><strong>{{ $popEquipment->pop->name ?? ''}}</strong></td>
+                        <td>{{ $popEquipment->equipment_type ?? ''}}</td>
                         <td>{{ $popEquipment->material->name ?? ''}}</td>
-                        <td>{{ $popEquipment->ip->address ?? ''}}</td>
-                        <td>{{ $popEquipment->subnet_mask ?? ''}}</td>
+                        <td>{{ $popEquipment->brand ?? ''}}</td>
+                        <td>{{ $popEquipment->model ?? ''}}</td>
+                        <td>{{ $popEquipment->serial_code ?? ''}}</td>
+                        <td>{{ $popEquipment->quantity ?? ''}}</td>
+                        <td>{{ $popEquipment->capacity ?? ''}}</td>
+                        <td>{{ $popEquipment->port_no ?? ''}}</td>
+                        <td>{{ $popEquipment->tower_type ?? ''}}</td>
+                        <td>{{ $popEquipment->tower_height ?? ''}}</td>
                         <td>{{ $popEquipment->installation_date ?? ''}}</td>
+                        <td>{{ $popEquipment->maintenance_date ?? ''}}</td>
+                        <td>{{ $popEquipment->made_by ?? ''}}</td>
+                        <td>{{ $popEquipment->status ?? ''}}</td>
+                        <td>{{ $popEquipment->remarks ?? ''}}</td>
                         <td>
                             <div class="icon-btn">
                                 <nobr>
