@@ -31,6 +31,9 @@ return new class extends Migration
             $table->string('port_no')->nullable();
             $table->date('installation_date')->nullable();
             $table->string('remarks')->nullable();
+            $table->string('ip_address')->nullable();
+            $table->string('subnet_mask')->nullable();
+            $table->string('gateway')->nullable();
             $table->timestamps();
         });
     }

@@ -17,7 +17,6 @@ return new class extends Migration
         Schema::create('internal_feedback_lines', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(InternalFeedback::class);
-            $table->string('connectivity_point')->nullable();
             $table->string('fr_no')->nullable();
             $table->string('contact_person')->nullable();
             $table->string('contact_number')->nullable();
