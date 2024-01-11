@@ -668,6 +668,56 @@ class SaleController extends Controller
 
         return view('sales::offers.client_offer', compact('mq_no', 'offer', 'offerData', 'uniqueEquipments'));
     }
+
+    public function clientOfferPdf($mq_no = null)
+    {
+        $offer = Offer::firstWhere('mq_no', $mq_no);
+
+        $offerData = $offer->offerDetails->map(function ($item) {
+            $item->total_product = $item->costing->costingProducts->sum(function ($item) {
+                return $item->rate * $item->quantity;
+            });
+            $offer_mrc = $item->total_offer_mrc ?? 0;
+            $product_amount = $item->offer_product_amount ?? 0;
+            $management_cost = $item->offer_management_cost ?? 0;
+            $total_mrc = $offer_mrc + $product_amount + $management_cost;
+            $profit_percentage = $item->profit_percentage = (($total_mrc / $item->total_product) * 100) - 100;
+            $item->costing->costingProducts->map(function ($item) use ($profit_percentage) {
+                $item->product_price = ($item->rate * ($profit_percentage / 100)) + $item->rate;
+                return $item;
+            });
+            // dump($item->toArray());
+            return $item;
+        });
+        // dd();
+
+        $costingProductEquipments = $offer->costing->costingProductEquipments->where('ownership', 'Client');
+        $costingLinkEquipments = $offer->costing->costingLinkEquipments->where('ownership', 'Client');
+        $mergedEquipments = $costingProductEquipments->merge($costingLinkEquipments);
+
+        $uniqueEquipments = $mergedEquipments->unique('material_id')->map(function ($item) use ($mergedEquipments) {
+            $item->sum_quantity = $mergedEquipments->where('material_id', $item->material_id)->sum('quantity');
+            $item->total_price = $mergedEquipments->where('material_id', $item->material_id)->sum(function ($item) {
+                return $item->rate * $item->quantity;
+            });
+            return $item;
+        });
+
+        return PDF::loadView('sales::offers.client_offer_pdf', compact('mq_no', 'offer', 'offerData', 'uniqueEquipments'), [], [
+            'format'                     => 'A4',
+            'orientation'                => 'L',
+            'title'                      => 'Client Offer PDF',
+            'watermark'                  => 'BBTS',
+            'show_watermark'             => true,
+            'watermark_text_alpha'       => 0.1,
+            'watermark_image_path'       => '',
+            'watermark_image_alpha'      => 0.2,
+            'watermark_image_size'       => 'D',
+            'watermark_image_position'   => 'P',
+        ])->stream('client-offer.pdf');
+    }
+
+
     public function pnlSummaryPdf($mq_no = null)
     {
         $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing')

@@ -20,36 +20,36 @@
 
 
 @section('content')
-<form action="" method="get" class="my-4">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="date_from" class="font-weight-bold">From Date:</label>
-                <input type="text" class="form-control date" id="from_date" name="from_date"
-                    aria-describedby="from_date" value="{{ old('from_date') ?? (request()?->from_date ?? null) }}"
-                    readonly>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="date_to" class="font-weight-bold">To Date:</label>
-                <input type="text" class="form-control date" id="to_date" name="to_date" aria-describedby="date_to"
-                    value="{{ old('to_date') ?? (request()?->to_date ?? null) }}" readonly>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group my-4 row">
-                <div class="col-md-6">
-                    <input type="button" onclick="resetForm()" value="Reset"
-                        class="btn btn-outline-warning btn-sm col-12">
-                </div>
-                <div class="col-md-6">
-                    <input type="submit" value="Search" class="btn btn-outline-primary btn-sm col-12">
+    <form action="" method="get" class="my-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="date_from" class="font-weight-bold">From Date:</label>
+                    <input type="text" class="form-control date" id="from_date" name="from_date"
+                        aria-describedby="from_date" value="{{ old('from_date') ?? (request()?->from_date ?? null) }}"
+                        readonly>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="date_to" class="font-weight-bold">To Date:</label>
+                    <input type="text" class="form-control date" id="to_date" name="to_date" aria-describedby="date_to"
+                        value="{{ old('to_date') ?? (request()?->to_date ?? null) }}" readonly>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group my-4 row">
+                    <div class="col-md-6">
+                        <input type="button" onclick="resetForm()" value="Reset"
+                            class="btn btn-outline-warning btn-sm col-12">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="submit" value="Search" class="btn btn-outline-primary btn-sm col-12">
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</form>
+    </form>
     <div class="dt-responsive table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
@@ -93,6 +93,8 @@
                                         <a href="{{ route('client-offer', $offer->mq_no) }}" data-toggle="tooltip"
                                             title="Client OFfer" class="btn btn-outline-success">Client Offer</a>
                                     @endcan
+                                    <a href="{{ route('client-offer-pdf', $offer->mq_no) }}" data-toggle="tooltip"
+                                        title="Client OFfer" class="btn btn-outline-primary">PDF</a>
                                 </nobr>
                             </div>
                         </td>

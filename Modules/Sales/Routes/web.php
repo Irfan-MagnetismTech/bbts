@@ -74,6 +74,7 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('pnl-approve-by-cmo/{mq_no}', [SaleController::class, 'pnlApproveByCmo'])->name('pnl-approve-by-cmo');
     Route::get('pnl-approve-by-management/{mq_no}', [SaleController::class, 'pnlApproveByManagement'])->name('pnl-approve-by-management');
     Route::get('client-offer/{mq_no}', [SaleController::class, 'clientOffer'])->name('client-offer');
+    Route::get('client-offer-pdf/{mq_no}', [SaleController::class, 'clientOfferPdf'])->name('client-offer-pdf');
     Route::get('get-pop-details', [CommonController::class, 'getPopDetails'])->name('get-pop-details');
     Route::get('get-existing-link-list', [CommonController::class, 'getExistingLinkList'])->name('get-existing-link-list');
     Route::get('export-feasibility-requirement', [FeasibilityRequirementController::class, 'exportFeasibilityRequirement'])->name('export-feasibility-requirement');
