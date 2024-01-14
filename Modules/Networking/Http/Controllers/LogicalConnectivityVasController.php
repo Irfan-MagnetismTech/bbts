@@ -156,7 +156,40 @@ class LogicalConnectivityVasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return abort(404);
+    
+            try {
+                DB::beginTransaction();
+    
+                $dataList = [];
+                foreach ($request->product_id as $key => $value) {
+                    $dataList[] = [
+                        'product_id' => $value,
+                        'product_category' => 'VAS',
+                        'quantity' => $request->quantity[$key],
+                        'remarks' => $request->remarks[$key]
+                    ];
+                }
+    
+                $request->merge([
+                    'product_category' => 'VAS',
+                ]);
+    
+                $logicalConnectivity = LogicalConnectivity::where([
+                    'fr_no' => $request->fr_no,
+                    'client_no' => $request->client_no,
+                    'product_category' => 'VAS'
+                ])->first();
+    
+                $logicalConnectivity->lines()->delete();
+                $logicalConnectivity->lines()->createMany($dataList);
+    
+                DB::commit();
+    
+                return redirect()->back()->with('message', 'Logical Connectivity VAS updated successfully!');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return redirect()->back()->withInput()->withErrors($e->getMessage());
+            }
     }
 
     /**

@@ -113,7 +113,47 @@ class ConnectivityModificationController extends Controller
      */
     public function edit($id)
     {
-        return view('networking::edit');
+        try {
+            $connectivity = Connectivity::query()
+                ->with('employee')
+                ->whereSaleId($id)
+                ->first();
+
+            $salesDetail = SaleDetail::query()
+                ->with('sale', 'client', 'frDetails')
+                ->where('sale_id', $id)
+                ->first();
+
+            $employees = Employee::latest()->get();
+
+            $physicalConnectivity = PhysicalConnectivity::query()
+                ->whereSaleIdAndFrNo($salesDetail->sale_id, $salesDetail->fr_no)
+                ->with('lines')
+                ->latest()
+                ->first();
+
+            $logicalConnectivities = LogicalConnectivity::with(['lines.product'])
+                ->forProductCategories(['VAS', 'Data', 'Internet'])
+                ->whereClientNoAndFrNo(@$physicalConnectivity->client_no, @$physicalConnectivity->fr_no)
+                ->latest()
+                ->get()
+                ->keyBy('product_category');
+
+            $facilityTypes = explode(',', $logicalConnectivities->get('Internet')?->facility_type);
+
+            $logicalConnectivityBandwidths = BandwidthDestribution::query()
+                ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')?->id)
+                ->with('ip')
+                ->get();
+
+            $clientFacility = ClientFacility::query()
+                ->where('logical_connectivity_id', $logicalConnectivities->get('Internet')?->id)
+                ->first();
+
+            return view('networking::modify_connectivities.edit', compact('salesDetail', 'employees', 'physicalConnectivity', 'logicalConnectivityBandwidths', 'logicalConnectivities', 'facilityTypes', 'clientFacility', 'connectivity'));
+        } catch (\Exception $e) {
+            return redirect()->route('connectivities.index')->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -124,7 +164,18 @@ class ConnectivityModificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+            
+            try {
+                $connectivity = Connectivity::query()
+                    ->whereSaleId($id)
+                    ->first();
+    
+                $connectivity->update(request()->all());
+    
+                return redirect()->route('connectivities.index')->with('message', 'Data has been updated successfully');
+            } catch (\Exception $e) {
+                return redirect()->route('connectivities.edit', $id)->withInput()->withErrors($e->getMessage());
+            }
     }
 
     /**
