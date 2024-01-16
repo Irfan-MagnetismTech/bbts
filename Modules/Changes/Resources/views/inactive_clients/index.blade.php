@@ -95,8 +95,8 @@
                         <td>
                             <div class="icon-btn">
                                 <nobr>
-                                    <a href="{{ url("networking/modify-connectivities/create/$inactive_request->fr_no") }}"
-                                        class="text-white" target="_blank">Commissioning</a>
+                                    <a href="{{ route('connectivities-inactive-client', $inactive_request->fr_no) }}"
+                                        class="text-success" target="_blank">Commissioning</a>
                                 </nobr>
                             </div>
                         </td>

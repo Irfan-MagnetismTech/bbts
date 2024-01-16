@@ -55,7 +55,7 @@
 @php
     $is_old = old('commissioning_Date') ? true : false;
     $form_heading = !empty($connectivity) ? 'Update' : 'Add';
-    $form_url = !empty($connectivity) ? '' : route('connectivities.store');
+    $form_url = !empty($connectivity) ? '' : route('connectivities-inactive-client-store');
     $form_method = !empty($connectivity) ? 'PUT' : 'POST';
     $is_active = old('is_active', !empty($connectivity) ? $connectivity->activations?->is_active : null);
     $sale_id = old('sale_id', !empty($connectivity) ? $connectivity->sale_id : $salesDetail->sale_id);

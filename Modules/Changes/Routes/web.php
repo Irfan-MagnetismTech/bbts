@@ -10,6 +10,7 @@ use Modules\Changes\Http\Controllers\ModifiedSurveyController;
 use Modules\Changes\Http\Controllers\ClientRequirementController;
 use Modules\Changes\Http\Controllers\ClientPlanningModificationController;
 use Modules\Changes\Http\Controllers\CostingModificationController;
+use Modules\Changes\Http\Controllers\InactiveClientController;
 use Modules\Changes\Http\Controllers\OfferModificationController;
 use Modules\Changes\Http\Controllers\SaleModificationController;
 /*
@@ -53,4 +54,6 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
     Route::get('modify-pnl-approve-by-management/{connectivity_requirement_id}', [SaleModificationController::class, 'pnlApproveByManagement'])->name('modify-pnl-approve-by-management');
     Route::get('search-client', [ClientRequirementController::class, 'searchClient'])->name('searchClient');
     Route::get('inactive-clients', [ClientRequirementController::class, 'inactiveClients'])->name('inactive-clients');
+    Route::get('connectivities-inactive-client/{fr_no}', [InactiveClientController::class, 'create'])->name('connectivities-inactive-client');
+    Route::post('connectivities-inactive-client-store', [InactiveClientController::class, 'store'])->name('connectivities-inactive-client-store');
 });
