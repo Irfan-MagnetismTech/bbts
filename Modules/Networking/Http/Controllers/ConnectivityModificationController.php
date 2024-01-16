@@ -16,6 +16,7 @@ use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
 use Modules\Networking\Entities\BandwidthDestribution;
 use Modules\Networking\Entities\Connectivity;
+use Modules\Sales\Entities\ConnectivityRequirement;
 
 class ConnectivityModificationController extends Controller
 {
@@ -164,18 +165,18 @@ class ConnectivityModificationController extends Controller
      */
     public function update(Request $request, $id)
     {
-            
-            try {
-                $connectivity = Connectivity::query()
-                    ->whereSaleId($id)
-                    ->first();
-    
-                $connectivity->update(request()->all());
-    
-                return redirect()->route('connectivities.index')->with('message', 'Data has been updated successfully');
-            } catch (\Exception $e) {
-                return redirect()->route('connectivities.edit', $id)->withInput()->withErrors($e->getMessage());
-            }
+
+        try {
+            $connectivity = Connectivity::query()
+                ->whereSaleId($id)
+                ->first();
+
+            $connectivity->update(request()->all());
+
+            return redirect()->route('connectivities.index')->with('message', 'Data has been updated successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('connectivities.edit', $id)->withInput()->withErrors($e->getMessage());
+        }
     }
 
     /**
@@ -187,4 +188,5 @@ class ConnectivityModificationController extends Controller
     {
         //
     }
+
 }

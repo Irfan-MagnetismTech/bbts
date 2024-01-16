@@ -24,7 +24,9 @@ use Modules\Networking\Entities\BandwidthDestribution;
 use Modules\Networking\Entities\Connectivity;
 use Modules\Networking\Entities\NetPopEquipment;
 use Modules\Networking\Entities\PhysicalConnectivityLines;
+use Modules\Networking\Http\Requests\ConnectivityRequest;
 use Modules\Sales\Entities\Client;
+use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\SCM\Entities\ScmErr;
 use Modules\SCM\Entities\ScmMur;
 use Modules\SCM\Entities\StockLedger;
@@ -497,4 +499,6 @@ class ConnectivityController extends Controller
             return view('networking::reports.client-wise-net-ip-report', compact('client_ip_infos', 'clients'));
         }
     }
+
+    
 }
