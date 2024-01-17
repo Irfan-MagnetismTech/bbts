@@ -12,6 +12,7 @@ use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\ConnectivityRequirementDetail;
 use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
+use Modules\SCM\Entities\ScmErr;
 
 class ConnectivityRequirement extends Model
 {
@@ -68,7 +69,7 @@ class ConnectivityRequirement extends Model
 
     public function planning(): BelongsTo
     {
-        return $this->belongsTo(Planning::class, 'fr_no', 'fr_no')->where('is_modified',0)->withDefault();
+        return $this->belongsTo(Planning::class, 'fr_no', 'fr_no')->where('is_modified', 0)->withDefault();
     }
 
     public function modificationPlan()
@@ -93,7 +94,7 @@ class ConnectivityRequirement extends Model
 
     public function survey()
     {
-        return $this->belongsTo(Survey::class, 'fr_no', 'fr_no')->where('is_modified',0);
+        return $this->belongsTo(Survey::class, 'fr_no', 'fr_no')->where('is_modified', 0);
     }
 
     public function modificationSurvey()
@@ -103,7 +104,7 @@ class ConnectivityRequirement extends Model
 
     public function costing()
     {
-        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no')->where('is_modified',0);
+        return $this->belongsTo(Costing::class, 'fr_no', 'fr_no')->where('is_modified', 0);
     }
 
     public function costingByConnectivity()
@@ -124,5 +125,10 @@ class ConnectivityRequirement extends Model
     public function modificationSale()
     {
         return $this->hasOne(Sale::class, 'connectivity_requirement_id', 'id');
+    }
+
+    public function scmErr()
+    {
+        return $this->hasOne(ScmErr::class, 'connectivity_requirement_id', 'id');
     }
 }

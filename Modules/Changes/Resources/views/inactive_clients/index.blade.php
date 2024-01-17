@@ -94,10 +94,19 @@
                         <td>{{ $inactive_request->created_at->format('d-m-Y') }}</td>
                         <td>
                             <div class="icon-btn">
-                                <nobr>
-                                    <a href="{{ route('connectivities-inactive-client', $inactive_request->fr_no) }}"
-                                        class="text-success" target="_blank">Commissioning</a>
-                                </nobr>
+                                @if (empty($inactive_request->scmErr))
+                                    <nobr>
+                                        {{-- err --}}
+                                        <a href="{{ route('errs-create', $inactive_request->id) }}" class="text-danger"
+                                            target="_blank">ERR</a>
+                                        {{-- scm --}}
+                                    </nobr>
+                                @else
+                                    <nobr>
+                                        <a href="{{ route('connectivities-inactive-client', $inactive_request->fr_no) }}"
+                                            class="text-success" target="_blank">Commissioning</a>
+                                    </nobr>
+                                @endif
                             </div>
                         </td>
                     </tr>

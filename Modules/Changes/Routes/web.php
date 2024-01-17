@@ -53,7 +53,7 @@ Route::prefix('changes')->middleware(['auth'])->group(function () {
     Route::get('modify-pnl-approve-by-cmo/{connectivity_requirement_id}', [SaleModificationController::class, 'pnlApproveByCmo'])->name('modify-pnl-approve-by-cmo');
     Route::get('modify-pnl-approve-by-management/{connectivity_requirement_id}', [SaleModificationController::class, 'pnlApproveByManagement'])->name('modify-pnl-approve-by-management');
     Route::get('search-client', [ClientRequirementController::class, 'searchClient'])->name('searchClient');
-    Route::get('inactive-clients', [ClientRequirementController::class, 'inactiveClients'])->name('inactive-clients');
+    Route::get('inactive-clients', [InactiveClientController::class, 'index'])->name('inactive-clients');
     Route::get('connectivities-inactive-client/{fr_no}', [InactiveClientController::class, 'create'])->name('connectivities-inactive-client');
     Route::post('connectivities-inactive-client-store', [InactiveClientController::class, 'store'])->name('connectivities-inactive-client-store');
 });

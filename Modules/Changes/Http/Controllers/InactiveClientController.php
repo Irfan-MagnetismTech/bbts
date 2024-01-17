@@ -12,6 +12,7 @@ use Modules\Networking\Entities\ClientFacility;
 use Modules\Networking\Entities\Connectivity;
 use Modules\Networking\Entities\LogicalConnectivity;
 use Modules\Networking\Entities\PhysicalConnectivity;
+use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\SaleDetail;
 
 class InactiveClientController extends Controller
@@ -22,7 +23,14 @@ class InactiveClientController extends Controller
      */
     public function index()
     {
-        return view('changes::index');
+        $desiredChangeType = "Permanent-Inactive";
+
+        $inactive_requests = ConnectivityRequirement::where(function ($query) use ($desiredChangeType) {
+            $query->whereJsonContains('change_type', $desiredChangeType)
+                ->orWhereJsonContains('change_type', json_encode($desiredChangeType));
+        })->get();
+
+        return view('changes::inactive_clients.index', compact('inactive_requests'));
     }
 
     /**

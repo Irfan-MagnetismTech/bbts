@@ -269,15 +269,4 @@ class ClientRequirementController extends Controller
         return response()->json($results);
     }
 
-    public function inactiveClients()
-    {
-        $desiredChangeType = "Permanent-Inactive";
-
-        $inactive_requests = ConnectivityRequirement::where(function ($query) use ($desiredChangeType) {
-            $query->whereJsonContains('change_type', $desiredChangeType)
-                ->orWhereJsonContains('change_type', json_encode($desiredChangeType));
-        })->get();
-
-        return view('changes::inactive_clients.index', compact('inactive_requests'));
-    }
 }

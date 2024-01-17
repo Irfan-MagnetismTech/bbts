@@ -111,4 +111,9 @@ class Client extends Model
     {
         return $this->hasOne(Activation::class, 'client_no', 'client_no');
     }
+
+    public function sale()
+    {
+        return $this->hasOne(Sale::class, 'client_no', 'client_no');
+    }
 }

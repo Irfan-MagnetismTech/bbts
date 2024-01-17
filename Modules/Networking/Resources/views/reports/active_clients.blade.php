@@ -43,13 +43,6 @@
                             ({{$activation->frDetails->fr_no ?? ''}})
                         </td>
                         <td>
-                            {{--                                        @foreach ($activation->connectivities->saleProductDetails as $product)--}}
-                            {{--                                            {{ $product->product_name ?? '' }}--}}
-                            {{--                                            @unless($loop->last)--}}
-                            {{--                                                ,--}}
-                            {{--                                            @endunless--}}
-                            {{--                                        @endforeach--}}
-
                             @foreach ($products as $product)
                                 {{ $product ?? '' }}
                                 @unless($loop->last)

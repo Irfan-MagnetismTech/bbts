@@ -52,10 +52,10 @@ class ScmErrController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function create($connectivity_requirement_id = null)
     {
         $formType = "create";
-        return view('scm::errs.create', compact('formType'));
+        return view('scm::errs.create', compact('formType', 'connectivity_requirement_id'));
     }
 
     /**
@@ -71,6 +71,7 @@ class ScmErrController extends Controller
             $err_data = $this->checkType($request);
             $err_data['err_no'] = $this->errNo;
             $err_data['created_by'] = auth()->id();
+            $err_data['connectivity_requirement_id'] = $request->connectivity_requirement_id ?? null;
 
             $err = ScmErr::create($err_data);
 

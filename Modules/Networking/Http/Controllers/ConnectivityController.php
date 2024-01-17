@@ -500,5 +500,14 @@ class ConnectivityController extends Controller
         }
     }
 
-    
+    public function permanentlyInactiveClients()
+    {
+        $clients = Client::with('activation', 'sale')
+                    ->whereHas('activation', function($query){
+                        $query->where('is_active', 'Inactive');
+                    })
+                    ->get();
+                    
+        return view('networking::reports.permanent-inactive-client-report', compact('activations', 'products'));
+    }
 }

@@ -81,6 +81,8 @@
             <br>
             <div class="row">
                 <input type="hidden" name="sale_id" id="sale_id" value="{{ $sale_id }}">
+                <input type="hidden" name="connectivity_requirement_id" id="connectivity_requirement_id"
+                    value="{{ !empty($connectivity) ? $connectivity->connectivity_requirement_id : '' }}">
 
                 <x-input-box colGrid="4" name="client_name" value="{{ $salesDetail->client->client_name }}"
                     label="Client Name" attr="disabled" />

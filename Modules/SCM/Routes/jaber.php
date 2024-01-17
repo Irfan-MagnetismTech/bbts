@@ -22,7 +22,8 @@ Route::get('get-stock', [ScmMirController::class, 'getChallanMaterialStock'])->n
 Route::get('get-from-and-to-branch-stock', [ScmMirController::class, 'getFromAndToBranchStock'])->name('get-from-and-to-branch-stock');
 Route::get('clientMurWiseMaterials', [ScmErrController::class, 'clientMurWiseMaterials'])->name('clientMurWiseMaterials');
 Route::get('search-serial-for-wor', [ScmWorController::class, 'searchSerialForWor'])->name('searchSerialForWor');
-route::get('receeive-type-wise-list', [ScmMirController::class, 'receiveTypeWiseList'])->name('receeive-type-wise-list');
+Route::get('receeive-type-wise-list', [ScmMirController::class, 'receiveTypeWiseList'])->name('receeive-type-wise-list');
+Route::get('errs-create/{id?}', [ScmErrController::class, 'create'])->name('errs-create');
 
 
 Route::resources([

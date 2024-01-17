@@ -75,6 +75,7 @@
                     <label class="form-check-label" for="client">
                         <input type="radio" class="form-check-input radioButton" id="client" name="type"
                             value="client" @checked(@$type == 'client' || ($form_method == 'POST' && !old()))> Client
+
                     </label>
                 </div>
                 <div class="form-check-inline">
@@ -206,6 +207,8 @@
             <input type="text" class="form-control" id="client_address" name="client_address"
                 aria-describedby="client_address" readonly
                 value="{{ old('client_address') ?? (@$client_address ?? '') }}">
+            <input type="hidden" class="form-control" id="connectivity_requirement_id" name="connectivity_requirement_id" aria-describedby="connectivity_requirement_id"
+                value="{{ old('connectivity_requirement_id') ?? ($connectivity_requirement_id ?? '') }}">
         </div>
     </div>
 
