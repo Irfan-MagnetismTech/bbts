@@ -16,6 +16,7 @@ use Modules\Sales\Entities\ClientDetail;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Modules\Sales\Entities\CollectionAddress;
+use Modules\SCM\Entities\ScmErr;
 use Modules\Ticketing\Entities\SupportTicket;
 
 class Client extends Model
@@ -115,5 +116,10 @@ class Client extends Model
     public function sale()
     {
         return $this->hasOne(Sale::class, 'client_no', 'client_no');
+    }
+
+    public function scmErr()
+    {
+        return $this->hasMany(ScmErr::class, 'client_no', 'client_no');
     }
 }
