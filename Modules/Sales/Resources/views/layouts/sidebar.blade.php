@@ -50,7 +50,8 @@
                     </li>
                 @endcan
                 @can('lead-generation')
-                    <li class="{{ request()->routeIs('lead-generation.index','lead-generation.show','lead-generation.edit') ? 'active' : null }}">
+                    <li
+                        class="{{ request()->routeIs('lead-generation.index', 'lead-generation.show', 'lead-generation.edit') ? 'active' : null }}">
                         <a href="{{ route('lead-generation.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">My Leads</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -60,7 +61,8 @@
         </li>
     @endcan
     @can('meeting')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['meeting.*','followup.create']) ? 'active pcoded-trigger' : null }}">
+        <li
+            class="pcoded-hasmenu {{ request()->routeIs(['meeting.*', 'followup.create']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-user-friends"></i><b>D</b></span>
                 <span class="pcoded-mtext">Client Meeting</span>
@@ -75,7 +77,8 @@
                     </li>
                 @endcan
                 @can('client-meeting-view')
-                    <li class="{{ request()->routeIs('meeting.index','meeting.show','meeting.edit','followup.create') ? 'active' : null }}">
+                    <li
+                        class="{{ request()->routeIs('meeting.index', 'meeting.show', 'meeting.edit', 'followup.create') ? 'active' : null }}">
                         <a href="{{ route('meeting.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -98,7 +101,7 @@
                         class="pcoded-mcaret"></span></a>
             </li> --}}
                 @can('followup-list')
-                    <li class="{{ request()->routeIs('followup.index','followup.show','followup.edit') ? 'active' : null }}">
+                    <li class="{{ request()->routeIs('followup.index', 'followup.show', 'followup.edit') ? 'active' : null }}">
                         <a href="{{ route('followup.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -109,7 +112,7 @@
     @endcan
     @can('feasibility')
         <li
-            class="pcoded-hasmenu {{ request()->routeIs(['feasibility-requirement.*','add-offer']) ? 'active pcoded-trigger' : null }}">
+            class="pcoded-hasmenu {{ request()->routeIs(['feasibility-requirement.*', 'add-offer']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-tasks"></i><b>D</b></span>
                 <span class="pcoded-mtext">Feasibility Req</span>
@@ -124,7 +127,8 @@
                     </li>
                 @endcan
                 @can('feasibility-list')
-                    <li class="{{ request()->routeIs('feasibility-requirement.index','feasibility-requirement.show','feasibility-requirement.edit','add-offer') ? 'active' : null }}">
+                    <li
+                        class="{{ request()->routeIs('feasibility-requirement.index', 'feasibility-requirement.show', 'feasibility-requirement.edit', 'add-offer') ? 'active' : null }}">
                         <a href="{{ route('feasibility-requirement.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -136,7 +140,7 @@
     {{-- connectivity requirement --}}
     @can('connectivity-requirement')
         <li
-            class="pcoded-hasmenu {{ request()->routeIs(['connectivity-requirement.*','client-requirement-modification.*','add-modified-survey','client-plan-modification.create']) ? 'active pcoded-trigger' : null }}">
+            class="pcoded-hasmenu {{ request()->routeIs(['connectivity-requirement.*', 'client-requirement-modification.*', 'add-modified-survey', 'client-plan-modification.create']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-link"></i><b>D</b></span>
                 <span class="pcoded-mtext">Connectivity Req</span>
@@ -144,7 +148,8 @@
             </a>
             @can('connectivity-requirement-list')
                 <ul class="pcoded-submenu">
-                    <li class="{{ request()->routeIs('connectivity-requirement.index','connectivity-requirement.show','connectivity-requirement.edit') ? 'active' : null }}">
+                    <li
+                        class="{{ request()->routeIs('connectivity-requirement.index', 'connectivity-requirement.show', 'connectivity-requirement.edit') ? 'active' : null }}">
                         <a href="{{ route('connectivity-requirement.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -162,7 +167,8 @@
                 </ul>
             @endcan
             <ul class="pcoded-submenu">
-                <li class="{{ request()->routeIs('client-requirement-modification.index','client-requirement-modification.edit','add-modified-survey','client-plan-modification.create') ? 'active' : null }}">
+                <li
+                    class="{{ request()->routeIs('client-requirement-modification.index', 'client-requirement-modification.edit', 'add-modified-survey', 'client-plan-modification.create') ? 'active' : null }}">
                     <a href="{{ route('client-requirement-modification.index') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification List</span><span
                             class="pcoded-mcaret"></span></a>
@@ -171,7 +177,8 @@
         </li>
     @endcan
     @can('survey')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['survey.*','survey-modification.*']) ? 'active pcoded-trigger' : null }}">
+        <li
+            class="pcoded-hasmenu {{ request()->routeIs(['survey.*', 'survey-modification.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-poll"></i><b>D</b></span>
                 <span class="pcoded-mtext">Survey</span>
@@ -179,14 +186,15 @@
             </a>
             <ul class="pcoded-submenu">
                 @can('survey-list')
-                    <li class="{{ request()->routeIs('survey.index','survey.show','survey.edit') ? 'active' : null }}">
+                    <li class="{{ request()->routeIs('survey.index', 'survey.show', 'survey.edit') ? 'active' : null }}">
                         <a href="{{ route('survey.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
                 @endcan
                 @can('modify-survey-list')
-                    <li class="{{ request()->routeIs('survey-modification.index','survey-modification.edit') ? 'active' : null }}">
+                    <li
+                        class="{{ request()->routeIs('survey-modification.index', 'survey-modification.edit') ? 'active' : null }}">
                         <a href="{{ route('survey-modification.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Modify List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -196,7 +204,8 @@
         </li>
     @endcan
     @can('plan')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['planning.*','client-plan-modification.*']) ? 'active pcoded-trigger' : null }}">
+        <li
+            class="pcoded-hasmenu {{ request()->routeIs(['planning.*', 'client-plan-modification.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-calendar-alt"></i><b>D</b></span>
                 <span class="pcoded-mtext">Planning</span>
@@ -204,12 +213,13 @@
             </a>
             <ul class="pcoded-submenu">
                 @can('plan-list')
-                    <li class="{{ request()->routeIs('planning.index','planning.show','planning.edit') ? 'active' : null }}">
+                    <li class="{{ request()->routeIs('planning.index', 'planning.show', 'planning.edit') ? 'active' : null }}">
                         <a href="{{ route('planning.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
                     </li>
-                    <li class="{{ request()->routeIs('client-plan-modification.index','client-plan-modification.show','client-plan-modification.edit') ? 'active' : null }}">
+                    <li
+                        class="{{ request()->routeIs('client-plan-modification.index', 'client-plan-modification.show', 'client-plan-modification.edit') ? 'active' : null }}">
                         <a href="{{ route('client-plan-modification.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Modification List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -219,7 +229,8 @@
         </li>
     @endcan
     @can('cost')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['costing.*','modified-costing-list']) ? 'active pcoded-trigger' : null }}">
+        <li
+            class="pcoded-hasmenu {{ request()->routeIs(['costing.*', 'modified-costing-list']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-calculator"></i><b>D</b></span>
                 <span class="pcoded-mtext">Costing</span>
@@ -227,7 +238,7 @@
             </a>
             <ul class="pcoded-submenu">
                 @can('cost-list')
-                    <li class="{{ request()->routeIs('costing.index','costing.edit','costing.show') ? 'active' : null }}">
+                    <li class="{{ request()->routeIs('costing.index', 'costing.edit', 'costing.show') ? 'active' : null }}">
                         <a href="{{ route('costing.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -242,7 +253,8 @@
         </li>
     @endcan
     @can('offer')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['offer.*','client-offer','modified-offer-list','client-offer']) ? 'active pcoded-trigger' : null }}">
+        <li
+            class="pcoded-hasmenu {{ request()->routeIs(['offer.*', 'client-offer', 'modified-offer-list', 'client-offer']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-tag"></i><b>D</b></span>
                 <span class="pcoded-mtext">Offers</span>
@@ -250,7 +262,7 @@
             </a>
             <ul class="pcoded-submenu">
                 @can('offer-list')
-                    <li class="{{ request()->routeIs('offer.index','offer.edit','client-offer') ? 'active' : null }}">
+                    <li class="{{ request()->routeIs('offer.index', 'offer.edit', 'client-offer') ? 'active' : null }}">
                         <a href="{{ route('offer.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -282,7 +294,8 @@
             @endcan
             @can('client-list')
                 <ul class="pcoded-submenu">
-                    <li class="{{ request()->routeIs('client-profile.index','client-profile.show','client-profile.edit') ? 'active' : null }}">
+                    <li
+                        class="{{ request()->routeIs('client-profile.index', 'client-profile.show', 'client-profile.edit') ? 'active' : null }}">
                         <a href="{{ route('client-profile.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">Client List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -292,7 +305,8 @@
         </li>
     @endcan
     @can('sale')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['sales.*','modified-sale-list','pnl-summary']) ? 'active pcoded-trigger' : null }}">
+        <li
+            class="pcoded-hasmenu {{ request()->routeIs(['sales.*', 'modified-sale-list', 'pnl-summary']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-coins"></i><b>D</b></span>
                 <span class="pcoded-mtext">Sales</span>
@@ -307,7 +321,7 @@
                     </li>
                 @endcan
                 @can('sale-list')
-                    <li class="{{ request()->routeIs('sales.index','sales.edit','pnl-summary') ? 'active' : null }}">
+                    <li class="{{ request()->routeIs('sales.index', 'sales.edit', 'pnl-summary') ? 'active' : null }}">
                         <a href="{{ route('sales.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -323,7 +337,8 @@
         </li>
     @endcan
     @can('report')
-        <li class="pcoded-hasmenu {{ request()->routeIs(['plan-report','plan-modification-report']) ? 'active pcoded-trigger' : '' }}">
+        <li
+            class="pcoded-hasmenu {{ request()->routeIs(['plan-report', 'plan-modification-report', 'monthly-sales-summary-report']) ? 'active pcoded-trigger' : '' }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-file-pdf"></i><b>D</b></span>
                 <span class="pcoded-mtext">Report</span>
@@ -341,6 +356,13 @@
                     <a href="{{ route('plan-modification-report') }}">
                         <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                         <span class="pcoded-mtext">Plan Modification Report</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('monthly-sales-summary-report') ? 'active' : '' }}">
+                    <a href="{{ route('monthly-sales-summary-report') }}">
+                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                        <span class="pcoded-mtext">Monthly Sales Summary Report</span>
                         <span class="pcoded-mcaret"></span>
                     </a>
                 </li>

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\SaleProductDetail;
+use Modules\SCM\Entities\ScmErr;
 
 class Connectivity extends Model
 {
@@ -58,5 +59,10 @@ class Connectivity extends Model
     public function saleProductDetails(): HasMany
     {
         return $this->hasMany(SaleProductDetail::class, 'sale_id', 'sale_id');
+    }
+
+    public function scmErr(): HasMany
+    {
+        return $this->hasMany(ScmErr::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
     }
 }

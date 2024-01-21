@@ -120,6 +120,6 @@ class Client extends Model
 
     public function scmErr()
     {
-        return $this->hasMany(ScmErr::class, 'client_no', 'client_no');
+        return $this->hasMany(ScmErr::class, 'client_no', 'client_no')->where('connectivity_requiremet', '!=', '');
     }
 }

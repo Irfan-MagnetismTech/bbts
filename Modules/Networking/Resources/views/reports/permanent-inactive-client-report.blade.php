@@ -23,47 +23,52 @@
                     <tr>
                         <th>Client</th>
                         <th>Connectivity Point</th>
-                        <th>Products</th>
-                        <th>Thana</th>
                         <th>Branch</th>
-                        <th>Contact Person</th>
-                        <th>Contact Number</th>
-                        <th>Commission Date</th>
-                        <th>Action</th>
+                        <th>Thana</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Equipment</th>
+                        <th>OTC</th>
+                        <th>Monthly Revenue</th>
+                        <th>Account Holder</th>
+                        <th>Reason</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($activations as $activationKey => $activation)
-                        <tr>
-                            <td>{{ $activation->client->client_name ?? '' }}</td>
-
-                            <td>{{ $activation->frDetails->connectivity_point ?? '' }}
-                                ({{ $activation->frDetails->fr_no ?? '' }})
-                            </td>
-                            <td>
-                                @foreach ($products as $product)
-                                    {{ $product ?? '' }}
-                                    @unless ($loop->last)
-                                        ,
-                                    @endunless
-                                @endforeach
-                            </td>
-                            <td>{{ $activation->client->thana->name ?? '' }}</td>
-                            <td>{{ $activation->client->branch->name ?? '' }}</td>
-                            <td>{{ $activation->client->contact_person ?? '' }}</td>
-                            <td>{{ $activation->client->contact_no ?? '' }}</td>
-                            <td>{{ $activation->connectivities->commissioning_date ?? '' }}</td>
-
-                            <td>
-                                <div class="icon-btn">
-                                    <nobr>
-                                        <a href="{{ route('active-clients-report-details', $activation->fr_no) }}"
-                                            data-toggle="tooltip" title="Details" class="btn btn-outline-primary"><i
-                                                class="fas fa-eye"></i></a>
-                                    </nobr>
-                                </div>
-                            </td>
-                        </tr>
+                    @foreach ($permanently_inactive_clients as $client)
+                        {{-- @dd($client['scm_err']) --}}
+                        @php
+                            $max_row = max(count($client['scm_err']), count($client['sale_product_details']));
+                        @endphp
+                        @for ($i = 0; $i < $max_row; $i++)
+                            <tr>
+                                @if ($i == 0)
+                                    <td rowspan="{{ $max_row }}">{{ $client['client_name'] }}</td>
+                                    <td rowspan="{{ $max_row }}">{{ $client['connectivity_point'] }}</td>
+                                    <td rowspan="{{ $max_row }}">{{ $client['branch'] }}</td>
+                                    <td rowspan="{{ $max_row }}">{{ $client['thana'] }}</td>
+                                @endif
+                                @if (isset($client['sale_product_details'][$i]))
+                                    <td>{{ $client['sale_product_details'][$i]->product->name }}</td>
+                                    <td>{{ $client['sale_product_details'][$i]->quantity }}</td>
+                                @else
+                                    <td></td>
+                                    <td></td>
+                                @endif
+                                @if (isset($client['scm_err'][$i]))
+                                    {{-- @dd($client['scm_err'][$i]); --}}
+                                    <td> {{ $client['scm_err'][$i]->material->name }}
+                                    @else
+                                    <td></td>
+                                @endif
+                                @if ($i == 0)
+                                    <td rowspan="{{ $max_row }}">{{ $client['otc'] }}</td>
+                                    <td rowspan="{{ $max_row }}">{{ $client['mrc'] }}</td>
+                                    <td rowspan="{{ $max_row }}">{{ $client['account_holder'] }}</td>
+                                    <td rowspan="{{ $max_row }}">{{ $client['reason'] }}</td>
+                                @endif
+                            </tr>
+                        @endfor
                     @endforeach
                 </tbody>
             </table>

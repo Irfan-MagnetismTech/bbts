@@ -502,59 +502,34 @@ class ConnectivityController extends Controller
 
     public function permanentlyInactiveClients()
     {
-        $clients = Client::with('activation', 'sale', 'scmErr')
-            ->whereHas('activation', function ($query) {
-                $query->where('is_active', 'Inactive');
-            })
-            ->get()
-            ->map(function ($client) {
-                $client->activation_date = $client->activation->commissioning_date;
-                $client->deactivation_date = $client->activation->updated_at;
-                $client->sale_date = $client->sale->created_at;
-                $client->scm_err_date = $client?->scmErr->last()?->created_at;
+        $permanently_inactive_clients = [];
+        $activations = Activation::where('is_active', 'Inactive')->get();
+        $fr_nos = $activations->pluck('fr_no')->toArray();
+        //get latest connectivity_requirement_id by wherein fr_nos
+        $connectivity_requirements = ConnectivityRequirement::whereIn('fr_no', $fr_nos)->latest()->get();
+        //remove same fr_no from connectivity_requirements
+        $connectivity_requirements = $connectivity_requirements->unique('fr_no');
+        foreach ($connectivity_requirements as $connectivity_requirement) {
+            $permanently_inactive_clients[] = [
+                'client_no' => $connectivity_requirement->client_no,
+                'client_name' => $connectivity_requirement->client->client_name,
+                'thana' => $connectivity_requirement->client->thana->name ?? '',
+                'fr_no' => $connectivity_requirement->fr_no,
+                'connectivity_requirement_id' => $connectivity_requirement->id,
+                'connectivity_requirement_date' => $connectivity_requirement->created_at,
+                'connectivity_requirement_details' => $connectivity_requirement->connectivityRequirementDetails,
+                'scm_err' => $connectivity_requirement?->scmErr->scmErrLines->load('material') ?? [],
+                'sale_product_details' => $connectivity_requirement->saleDetail->last()->load('saleProductDetails')->saleProductDetails,
+                'account_holder' => $connectivity_requirement->saleDetail->last()->sale->account_holder,
+                'reason' => $connectivity_requirement->scmErr->reason ?? '',
+                'branch' => $connectivity_requirement->FeasibilityRequirementDetail->branch->name ?? '',
+                'connectivity_point' => $connectivity_requirement->FeasibilityRequirementDetail->connectivity_point ?? '',
+                'otc' => $connectivity_requirement->saleDetail->last()->otc,
+                'mrc' => $connectivity_requirement->saleDetail->last()->mrc,
+            ];
+        }
 
-                $scm_products = [];
 
-                foreach ($client->scmErr as $scm_err) {
-                    $scm_products = array_merge(
-                        $scm_products,
-                        $scm_err->scmErrLines->map(function ($scm_err_line) {
-                            if ($scm_err_line->quantity > 0) {
-                                return [
-                                    'material_name' => $scm_err_line->material->name,
-                                    'quantity' => $scm_err_line->quantity, // Assuming you have a 'quantity' property in your Material model
-                                ];
-                            }
-                        })->toArray()
-                    );
-                }
-
-                foreach ($client->sale->saleProductDetails as $saleProductDetail) {
-                    $sale_products[] = [
-                        'material_name' => $saleProductDetail->product_name,
-                        'quantity' => $saleProductDetail->quantity,
-                    ];
-                }
-
-                //remove null values
-                $scm_products = array_filter($scm_products);
-
-                // Now $scm_products is an array of associative arrays with 'material_name' and 'quantity'
-
-                // Use the following code if you want to get unique entries based on both material_name and quantity
-                $client->scm_products = collect($scm_products)->unique(function ($item) {
-                    return $item['material_name'] . $item['quantity'];
-                })->values()->all();
-
-                $client->sale_products = collect($sale_products)->unique(function ($item) {
-                    return $item['material_name'] . $item['quantity'];
-                })->values()->all();
-
-                return $client;
-            });
-
-        dd($clients);
-
-        return view('networking::reports.permanent-inactive-client-report', compact('activations', 'products'));
+        return view('networking::reports.permanent-inactive-client-report', compact('permanently_inactive_clients'));
     }
 }

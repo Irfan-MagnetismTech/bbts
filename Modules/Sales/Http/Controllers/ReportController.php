@@ -103,7 +103,7 @@ class ReportController extends Controller
         $sales_data = [];
         //client_no, client_name, Connectivity Point, Method, Data, Internet, ip, OTC, MRC, activation_date, billing_date, billing_address, ac_holder, remarks   
         $monthly_sales_summary = Sale::query()
-            ->with('client', 'saleDetails', 'saleProductDetails', 'saleLinkDetails')
+            ->with('client', 'saleDetails', 'saleProductDetails', 'saleLinkDetails.finalSurveyDetails')
             ->when(!empty($client_no), function ($q) use ($client_no) {
                 $q->where('client_no', $client_no);
             })
@@ -123,7 +123,7 @@ class ReportController extends Controller
             ->where('is_modified', 0)
             ->get()
             ->map(function ($sale) use (&$sales_data) {
-                $sale->saleDetails->map(function ($saleDetail) use ($sale, &$sales_data) {
+                $sale->saleDetails->map(function ($saleDetail, $index) use ($sale, &$sales_data) {
                     $sales_data[] = [
                         'client_no' => $sale->client->client_no,
                         'client_name' => $sale->client->client_name,

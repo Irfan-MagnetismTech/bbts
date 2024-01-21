@@ -127,6 +127,11 @@ class ConnectivityRequirement extends Model
         return $this->hasOne(Sale::class, 'connectivity_requirement_id', 'id');
     }
 
+    public function saleDetail()
+    {
+        return $this->hasMany(SaleDetail::class, 'fr_no', 'fr_no');
+    }
+
     public function scmErr()
     {
         return $this->hasOne(ScmErr::class, 'connectivity_requirement_id', 'id');
