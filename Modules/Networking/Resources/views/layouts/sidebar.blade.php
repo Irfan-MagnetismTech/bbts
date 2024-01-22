@@ -257,7 +257,7 @@
     @endcan
     @can('networking-report-view')
         <li
-            class="pcoded-hasmenu {{ request()->routeIs(['active-clients-report', 'pop-wise-equipment-report', 'pop-wise-client-report', 'ip-report', 'vlan-report', 'client-wise-equipment-report', 'client-wise-net-ip-report']) ? 'active pcoded-trigger' : null }}">
+            class="pcoded-hasmenu {{ request()->routeIs(['active-clients-report', 'pop-wise-equipment-report', 'pop-wise-client-report', 'ip-report', 'vlan-report', 'client-wise-equipment-report', 'client-wise-net-ip-report', 'permanently-inactive-clients']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
                 <span class="pcoded-micon"><i class="fas fa-file-pdf"></i><b>D</b></span>
                 <span class="pcoded-mtext">Report</span>
@@ -267,6 +267,11 @@
                 <li class="{{ request()->routeIs('active-clients-report') ? 'active' : null }}">
                     <a href="{{ route('active-clients-report') }}"> <span class="pcoded-micon"><i
                                 class="ti-angle-right"></i></span><span class="pcoded-mtext">Active Clients</span><span
+                            class="pcoded-mcaret"></span></a>
+                </li>
+                <li class="{{ request()->routeIs('permanently-inactive-clients') ? 'active' : null }}">
+                    <a href="{{ route('permanently-inactive-clients') }}"> <span class="pcoded-micon"><i
+                                class="ti-angle-right"></i></span><span class="pcoded-mtext">Inactive Clients</span><span
                             class="pcoded-mcaret"></span></a>
                 </li>
                 <li class="{{ request()->routeIs('pop-wise-equipment-report') ? 'active' : null }}">

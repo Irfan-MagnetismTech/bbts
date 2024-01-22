@@ -689,7 +689,6 @@ class SaleController extends Controller
             // dump($item->toArray());
             return $item;
         });
-        // dd();
 
         $costingProductEquipments = $offer->costing->costingProductEquipments->where('ownership', 'Client');
         $costingLinkEquipments = $offer->costing->costingLinkEquipments->where('ownership', 'Client');

@@ -124,20 +124,28 @@ class ReportController extends Controller
             ->get()
             ->map(function ($sale) use (&$sales_data) {
                 $sale->saleDetails->map(function ($saleDetail, $index) use ($sale, &$sales_data) {
+                    // dd($saleDetail->saleLinkDetails[0]->finalSurveyDetails);
+                    $pop_name = [];
+                    $methods = [];
+                    foreach ($saleDetail->saleLinkDetails as $link) {
+                        $pop_name[] = $link->finalSurveyDetails->pop->name ?? '';
+                        $methods[] = $link->finalSurveyDetails->method ?? '';
+                    }
                     $sales_data[] = [
                         'client_no' => $sale->client->client_no,
                         'client_name' => $sale->client->client_name,
                         'connectivity_point' => $saleDetail->feasibilityRequirementDetails->connectivity_point,
                         'products' => $saleDetail->saleProductDetails,
-                        'otc' => $saleDetail->otc,
-                        'mrc' => $saleDetail->mrc,
+                        'pop' => $pop_name,
+                        'method' => $methods,
                         'activation_date' => $saleDetail?->connectivity?->commissioning_date,
                         'billing_date' => $saleDetail?->connectivity?->billing_date,
                         'billing_address' => $saleDetail->billingAddress->address,
                         'account_holder' => $sale->account_holder,
                         'remarks' => $sale->remarks,
+                        'otc' => $saleDetail->otc,
+                        'mrc' => $saleDetail->mrc,
                     ];
-                    // dd($sales_data);
                 });
             });
         $clients = Client::latest()->get();

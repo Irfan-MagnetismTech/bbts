@@ -80,8 +80,8 @@
                     <th>Client ID</th>
                     <th>Client Name</th>
                     <th>Connectivity Point</th>
-                    {{-- <th>Pop</th>
-                    <th>Method</th> --}}
+                    <th>Pop</th>
+                    <th>Method</th>
                     <th>Product</th>
                     <th>Quantity</th>
                     <th>Price</th>
@@ -109,8 +109,16 @@
                                 <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['client_no'] }}</td>
                                 <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['client_name'] }}</td>
                                 <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['connectivity_point'] }}</td>
-                                {{-- <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['pop'] }}</td>
-                                <td rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['method'] }}</td> --}}
+                            @endif
+                            @if ($monthly_sales_summary['pop'][$i] != null)
+                                <td>{!! $monthly_sales_summary['pop'][$i] !!}</td>
+                            @else
+                                <td>-</td>
+                            @endif
+                            @if ($monthly_sales_summary['method'][$i] != null)
+                                <td>{{ $monthly_sales_summary['method'][$i] }}</td>
+                            @else
+                                <td rowspan="{{ $max_rowspan }}">-</td>
                             @endif
                             <td>{{ $monthly_sales_summary['products'][$i]->product->name }}</td>
                             <td>{{ $monthly_sales_summary['products'][$i]->quantity }}</td>
