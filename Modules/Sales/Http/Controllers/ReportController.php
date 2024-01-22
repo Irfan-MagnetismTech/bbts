@@ -97,6 +97,7 @@ class ReportController extends Controller
 
     public function monthlySalesSummaryReport()
     {
+
         $dateFrom = request()->date_from ? date('Y-m-d', strtotime(request()->date_from)) : null;
         $dateTo = request()->date_to ? date('Y-m-d', strtotime(request()->date_to)) : null;
         $client_no = request()->client_no ?? '';
@@ -149,6 +150,24 @@ class ReportController extends Controller
                 });
             });
         $clients = Client::latest()->get();
+        $filter_data = [
+            'client_no' => request()->client_no ?? '',
+            'client_name' => request()->client_name ?? '',
+            'connectivity_point' => request()->connectivity_point ?? '',
+            'products' => request()->products ?? '',
+            'quantity' => request()->quantity ?? '',
+            'price' => request()->price ?? '',
+            'total' => request()->total ?? '',
+            'pop' => request()->pop ?? '',
+            'method' => request()->method ?? '',
+            'activation_date' => request()->activation_date ?? '',
+            'billing_date' => request()->billing_date ?? '',
+            'billing_address' => request()->billing_address ?? '',
+            'account_holder' => request()->account_holder ?? '',
+            'remarks' => request()->remarks ?? '',
+            'otc' => request()->otc ?? '',
+            'mrc' => request()->mrc ?? '',
+        ];
         if (request('type') == 'PDF') {
             $pdf = PDF::loadView('sales::pdf.monthly-sales-summary-report', ['sales_data' => $sales_data, 'clients' => $clients], [], [
                 'format' => 'A4',
@@ -156,7 +175,7 @@ class ReportController extends Controller
             ]);
             return $pdf->stream('monthly-sales-summary-report.pdf');
         } else {
-            return view('sales::reports.monthly-sales-summary-report', compact('sales_data', 'clients'));
+            return view('sales::reports.monthly-sales-summary-report', compact('sales_data', 'clients', 'filter_data'));
         }
     }
 }
