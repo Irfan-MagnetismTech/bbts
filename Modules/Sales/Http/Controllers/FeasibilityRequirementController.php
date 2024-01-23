@@ -122,13 +122,13 @@ class FeasibilityRequirementController extends Controller
 
                 $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
 
-                $client = $request->client_name;
-                // $to = 'sumon@magnetismtech.com';
-                $to = 'salesadmin@bbts.net';
-                $cc = 'saleha@magnetismtech.com';
+                $client = $feasibilityRequirement->client->client_name;
+                $to = 'survey@bbts.net';
+                $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
                 $receiver = '';
                 $subject = "New Feasibility Requirement Created";
-                $messageBody = "A new $feasibilityRequirement->mq_no has been created for the $client. Please find the detailed Feasibility Requirement List.";
+                $messageBody = "A new $feasibilityRequirement->mq_no has been created for the client $client ($feasibilityRequirement->client_no). Please find the details from Feasibility Requirement List.";
                 // $fromAddress = 'csd@bbts.net';
                 $fromAddress = auth()->user()->email;
                 $fromName = auth()->user()->name;
@@ -239,7 +239,22 @@ class FeasibilityRequirementController extends Controller
                     $feasibility_requirement->feasibilityRequirementDetails()->create($detailsData);
                 }
             }
-
+            $client = $feasibility_requirement->client->client_name;
+            $to = 'survey@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "Feasibility Requirement Updated";
+            $messageBody = "Feasibility Requirement $feasibility_requirement->mq_no has been updated for the client $client ($feasibility_requirement->client_no). Please find the details from Feasibility Requirement List.";
+            // $fromAddress = 'csd@bbts.net';
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+            // Mail::send('sales::email.feasibility_requirement', ['feasibilityRequirement' => $feasibilityRequirement], function ($message) use ($to, $cc, $subject) {
+            //     $message->to($to)->cc($cc)->subject($subject);
+            // });
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
         }
     }

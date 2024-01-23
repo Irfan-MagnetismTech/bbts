@@ -10,6 +10,7 @@ use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Division;
 use Illuminate\Routing\Controller;
 use App\Models\Dataencoding\Thana;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
@@ -88,7 +89,20 @@ class LeadGenerationController extends Controller
             $data['client_no'] = date('Y') . '-' . 1;
         }
         $data['created_by'] = auth()->user()->id;
-        LeadGeneration::create($data);
+        $leadGeneration = LeadGeneration::create($data);
+
+        $client = $leadGeneration->client_name;
+        $to = 'salesadmin@bbts.net';
+        $cc = 'yasir@bbts.net';
+        $receiver = '';
+        $subject = "New Lead Generation Created";
+        $messageBody = "A new lead has been created for the client $client ($leadGeneration->client_no). Please find the details from Lead Generation List.";
+        $fromAddress = auth()->user()->email;
+        $fromName = auth()->user()->name;
+
+        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+        });
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Created Successfully');
     }
 
@@ -141,6 +155,19 @@ class LeadGenerationController extends Controller
             $data['document'] = $file_name;
         }
         $lead_generation->update($data);
+
+        $client = $lead_generation->client_name;
+        $to = 'salesadmin@bbts.net';
+        $cc = 'yasir@bbts.net';
+        $receiver = '';
+        $subject = "Lead Generation Info Updated";
+        $messageBody = "Lead generation info has been updated for the client $client ($lead_generation->client_no). Please find the details from Lead Generation List.";
+        $fromAddress = auth()->user()->email;
+        $fromName = auth()->user()->name;
+
+        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+        });
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Updated Successfully');
     }
 
@@ -178,13 +205,26 @@ class LeadGenerationController extends Controller
         $lead_generation->status = $request->status;
         $lead_generation->comment = $request->comment;
         $lead_generation->save();
+
+        $client = $lead_generation->client_name;
+        $to = $lead_generation->createdBy->email;
+        $cc = 'yasir@bbts.net';
+        $receiver = '';
+        $subject = "Lead Generation Info Updated";
+        $messageBody = "Client status updated to $lead_generation->status for client $client ($lead_generation->client_no). Please find the detailed Lead Generation List.";
+        $fromAddress = 'salesadmin@bbts.net';
+        $fromName = auth()->user()->name;
+
+        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+        });
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Status Updated Successfully');
     }
 
     public function getClientInformationForProfile(Request $request)
     {
         $main_leads = [];
-        //get client where match the request data 
+        //get client where match the request data
         $lead_generations = LeadGeneration::where('client_name', 'like', '%' . $request->client_name . '%')->orWhere('client_no', 'like', '%' . $request->client_name . '%')->get();
         foreach ($lead_generations as $lead_generation) {
             $main_leads[] = [

@@ -41,6 +41,4 @@ class LeadGeneration extends Model
     {
         return $this->hasOne(Sale::class,'client_no', 'client_no')->where('management_approval','Approved');
     }
-
-
 }

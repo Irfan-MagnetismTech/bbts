@@ -10,6 +10,7 @@ use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\Planning;
 use Modules\Sales\Entities\ServicePlan;
 use Modules\Sales\Entities\EquipmentPlan;
+use Illuminate\Support\Facades\Mail;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\ConnectivityProductRequirementDetail;
@@ -79,6 +80,20 @@ class PlanningController extends Controller
             $this->createOrUpdatePlanLinks($request, $plan);
         }
 
+        $client = $plan->client->client_name;
+        $to = 'pnl@bbts.net';
+        $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+        $receiver = '';
+        $subject = "New Plan Created";
+        $messageBody = "A new plan $plan->mq_no has been created for the client $client ($plan->client_no). Please find the details from Planning List.";
+
+        $fromAddress = auth()->user()->email;
+        $fromName = auth()->user()->name;
+
+        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+        });
         DB::commit();
 
         return redirect()->route('planning.index')->with('success', 'Planning created successfully');
@@ -130,6 +145,20 @@ class PlanningController extends Controller
             if ($request->total_key > 0) {
                 $this->createOrUpdatePlanLinks($request, $plan);
             }
+            $client = $plan->client->client_name;
+            $to = 'pnl@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "Plan Updated";
+            $messageBody = "Plan $plan->mq_no has been updated for the client $client ($plan->client_no). Please find the details from Planning List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             DB::commit();
             return redirect()->route('planning.index')->with('success', 'Planning updated successfully');
         } catch (QueryException $e) {

@@ -20,9 +20,10 @@ return new class extends Migration
             $table->time('meeting_start_time')->nullable();
             $table->time('meeting_end_time')->nullable();
             $table->string('meeting_place')->nullable();
-            $table->integer('client_no')->nullable();
+            $table->string('client_no')->nullable();
             $table->text('purpose')->nullable();
             $table->string('status')->nullable()->default('Pending');
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }
