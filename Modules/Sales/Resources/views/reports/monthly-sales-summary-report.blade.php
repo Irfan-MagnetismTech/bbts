@@ -104,88 +104,97 @@
                                 <tr>
                                     <td>1</td>
                                     <td>Client ID</td>
-                                    <td><input type="checkbox" name="client_id" id="" value="client_id"></td>
+                                    <td><input type="checkbox" name="client_id" id="" checked value="client_id">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>2</td>
                                     <td>Client Name</td>
-                                    <td><input type="checkbox" name="client_name" id="" value="client_name"></td>
+                                    <td><input type="checkbox" name="client_name" id="" checked
+                                            value="client_name"></td>
                                 </tr>
                                 <tr>
                                     <td>3</td>
                                     <td>Connectivity Point</td>
-                                    <td><input type="checkbox" name="connectivity_point" id=""
+                                    <td><input type="checkbox" name="connectivity_point" checked id=""
                                             value="connectivity_point"></td>
                                 </tr>
                                 <tr>
                                     <td>4</td>
                                     <td>Pop</td>
-                                    <td><input type="checkbox" name="pop" id="" value="pop"></td>
+                                    <td><input type="checkbox" name="pop" id="" checked value="pop"></td>
                                 </tr>
                                 <tr>
                                     <td>5</td>
                                     <td>Method</td>
-                                    <td><input type="checkbox" name="method" id="" value="method"></td>
+                                    <td><input type="checkbox" name="method" id="" checked value="method"></td>
                                 </tr>
                                 <tr>
                                     <td>6</td>
                                     <td>Product</td>
-                                    <td><input type="checkbox" name="product" id="" value="product"></td>
+                                    <td><input type="checkbox" name="product" id="" checked value="product">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>7</td>
                                     <td>Quantity</td>
-                                    <td><input type="checkbox" name="quantity" id="" value="quantity"></td>
+                                    <td><input type="checkbox" name="quantity" id="" checked value="quantity">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>8</td>
                                     <td>Price</td>
-                                    <td><input type="checkbox" name="price" id="" value="price"></td>
+                                    <td><input type="checkbox" name="price" id="" checked value="price">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>9</td>
                                     <td>Total</td>
-                                    <td><input type="checkbox" name="total" id="" value="total"></td>
+                                    <td><input type="checkbox" name="total" id="" checked value="total">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>10</td>
                                     <td>OTC</td>
-                                    <td><input type="checkbox" name="otc" id="" value="otc"></td>
+                                    <td><input type="checkbox" name="otc" id="" checked value="otc">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>11</td>
                                     <td>MRC</td>
-                                    <td><input type="checkbox" name="mrc" id="" value="mrc"></td>
+                                    <td><input type="checkbox" name="mrc" id="" checked value="mrc">
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>12</td>
                                     <td>Activation Date</td>
-                                    <td><input type="checkbox" name="activation_date" id=""
+                                    <td><input type="checkbox" name="activation_date" checked id=""
                                             value="activation_date"></td>
                                 </tr>
                                 <tr>
                                     <td>13</td>
                                     <td>Billing Start Date</td>
-                                    <td><input type="checkbox" name="billing_start_date" id=""
+                                    <td><input type="checkbox" name="billing_start_date" checked id=""
                                             value="billing_start_date"></td>
                                 </tr>
                                 <tr>
                                     <td>14</td>
                                     <td>Billing Address</td>
-                                    <td><input type="checkbox" name="billing_address" id=""
+                                    <td><input type="checkbox" name="billing_address" checked id=""
                                             value="billing_address"></td>
                                 </tr>
                                 <tr>
                                     <td>15</td>
                                     <td>A/C holder</td>
-                                    <td><input type="checkbox" name="account_holder" id=""
+                                    <td><input type="checkbox" name="account_holder" checked id=""
                                             value="account_holder">
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>16</td>
                                     <td>Remarks</td>
-                                    <td><input type="checkbox" name="remarks" id="" value="remarks"></td>
+                                    <td><input type="checkbox" name="remarks" id="" checked value="remarks">
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -201,26 +210,58 @@
     <div class="dt-responsive table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
+                {{-- check empty of filter data --}}
+                @php $filter
                 <tr>
                     <th>#SL</th>
-                    <th @if (!in_array('client_no', $filter_data)) class="d-none" @else class="d-block" @endif>Client ID</th>
-                    <th @if (!in_array('client_name', $filter_data)) class="d-none" @else class="d-block" @endif>Client Name</th>
-                    <th @if (!in_array('connectivity_point', $filter_data)) class="d-none" @else class="d-block" @endif>Connectivity Point
-                    </th>
-                    <th @if (!in_array('pop', $filter_data)) class="d-none" @else class="d-block" @endif>Pop</th>
-                    <th @if (!in_array('method', $filter_data)) class="d-none" @else class="d-block" @endif>Method</th>
-                    <th @if (!in_array('product', $filter_data)) class="d-none" @else class="d-block" @endif>Product</th>
-                    <th @if (!in_array('quantity', $filter_data)) class="d-none" @else class="d-block" @endif>Quantity</th>
-                    <th @if (!in_array('price', $filter_data)) class="d-none" @else class="d-block" @endif>Price</th>
-                    <th @if (!in_array('total', $filter_data)) class="d-none" @else class="d-block" @endif>Total</th>
-                    <th @if (!in_array('otc', $filter_data)) class="d-none" @else class="d-block" @endif>OTC</th>
-                    <th @if (!in_array('mrc', $filter_data)) class="d-none" @else class="d-block" @endif>MRC</th>
-                    <th @if (!in_array('activation_date', $filter_data)) class="d-none" @else class="d-block" @endif>Activation Date</th>
-                    <th @if (!in_array('billing_start_date', $filter_data)) class="d-none" @else class="d-block" @endif>Billing Start Date
-                    </th>
-                    <th @if (!in_array('billing_address', $filter_data)) class="d-none" @else class="d-block" @endif>Billing Address</th>
-                    <th @if (!in_array('account_holder', $filter_data)) class="d-none" @else class="d-block" @endif>A/C holder</th>
-                    <th @if (!in_array('remarks', $filter_data)) class="d-none" @else class="d-block" @endif>Remarks</th>
+                    @if (in_array('client_no', $filter_data) || empty($filter_data))
+                        <th>Client ID</th>
+                    @endif
+                    @if (in_array('client_name', $filter_data))
+                        <th>Client Name</th>
+                    @endif
+                    @if (in_array('connectivity_point', $filter_data))
+                        <th>Connectivity Point</th>
+                    @endif
+                    @if (in_array('pop', $filter_data))
+                        <th>Pop</th>
+                    @endif
+                    @if (in_array('method', $filter_data))
+                        <th>Method</th>
+                    @endif
+                    @if (in_array('product', $filter_data))
+                        <th>Product</th>
+                    @endif
+                    @if (in_array('quantity', $filter_data))
+                        <th>Quantity</th>
+                    @endif
+                    @if (in_array('price', $filter_data))
+                        <th>Price</th>
+                    @endif
+                    @if (in_array('total', $filter_data))
+                        <th>Total</th>
+                    @endif
+                    @if (in_array('otc', $filter_data))
+                        <th>OTC</th>
+                    @endif
+                    @if (in_array('mrc', $filter_data))
+                        <th>MRC</th>
+                    @endif
+                    @if (in_array('activation_date', $filter_data))
+                        <th>Activation Date</th>
+                    @endif
+                    @if (in_array('billing_start_date', $filter_data))
+                        <th>Billing Start Date</th>
+                    @endif
+                    @if (in_array('billing_address', $filter_data))
+                        <th>Billing Address</th>
+                    @endif
+                    @if (in_array('account_holder', $filter_data))
+                        <th>A/C holder</th>
+                    @endif
+                    @if (in_array('remarks', $filter_data))
+                        <th>Remarks</th>
+                    @endif
                 </tr>
             </thead>
 
@@ -234,49 +275,99 @@
                         <tr>
                             @if ($i == 0)
                                 <td rowspan="{{ $max_rowspan }}">{{ $key + 1 }}</td>
-                                <td @if (!in_array('client_no', $filter_data)) class="d-none" @else class="d-block" @endif
-                                    rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['client_no'] }}</td>
-                                <td @if (!in_array('client_name', $filter_data)) class="d-none" @else class="d-block" @endif
-                                    rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['client_name'] }}</td>
-                                <td @if (!in_array('connectivity_point', $filter_data)) class="d-none" @else class="d-block" @endif
-                                    rowspan="{{ $max_rowspan }}">{{ $monthly_sales_summary['connectivity_point'] }}</td>
+                                @if (in_array('client_no', $filter_data) || empty($filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['client_no'] }}
+                                    </td>
+                                @endif
+                                @if (in_array('client_name', $filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['client_name'] }}
+                                    </td>
+                                @endif
+                                @if (in_array('connectivity_point', $filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['connectivity_point'] }}
+                                    </td>
+                                @endif
                             @endif
                             @if ($monthly_sales_summary['pop'][$i] != null)
-                                <td @if (!in_array('pop', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                    {!! $monthly_sales_summary['pop'][$i] !!}</td>
+                                @if (in_array('pop', $filter_data))
+                                    <td>
+                                        {!! $monthly_sales_summary['pop'][$i] !!}
+                                    </td>
+                                @endif
                             @else
-                                <td @if (!in_array('pop', $filter_data)) class="d-none" @else class="d-block" @endif>-</td>
+                                @if (in_array('pop', $filter_data))
+                                    <td>-</td>
+                                @endif
                             @endif
                             @if ($monthly_sales_summary['method'][$i] != null)
-                                <td @if (!in_array('method', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                    {{ $monthly_sales_summary['method'][$i] }}</td>
+                                @if (in_array('method', $filter_data))
+                                    <td>
+                                        {{ $monthly_sales_summary['method'][$i] }}
+                                    </td>
+                                @endif
                             @else
-                                <td @if (!in_array('method', $filter_data)) class="d-none" @else class="d-block" @endif>-</td>
+                                @if (in_array('method', $filter_data))
+                                    <td>-</td>
+                                @endif
                             @endif
-                            <td @if (!in_array('product', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                {{ $monthly_sales_summary['products'][$i]->product->name }}</td>
-                            <td @if (!in_array('quantity', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                {{ $monthly_sales_summary['products'][$i]->quantity }}</td>
-                            <td @if (!in_array('price', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                {{ $monthly_sales_summary['products'][$i]->price }}</td>
-                            <td @if (!in_array('total', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                {{ $monthly_sales_summary['products'][$i]->quantity * $monthly_sales_summary['products'][$i]->price }}
-                            </td>
+                            @if (in_array('product', $filter_data))
+                                <td>
+                                    {{ $monthly_sales_summary['products'][$i]->product->name }}
+                                </td>
+                            @endif
+                            @if (in_array('quantity', $filter_data))
+                                <td>
+                                    {{ $monthly_sales_summary['products'][$i]->quantity }}
+                                </td>
+                            @endif
+                            @if (in_array('price', $filter_data))
+                                <td>
+                                    {{ $monthly_sales_summary['products'][$i]->price }}
+                                </td>
+                            @endif
+                            @if (in_array('total', $filter_data))
+                                <td>
+                                    {{ $monthly_sales_summary['products'][$i]->quantity * $monthly_sales_summary['products'][$i]->price }}
+                                </td>
+                            @endif
                             @if ($i == 0)
-                                <td rowspan="{{ $max_rowspan }}" @if (!in_array('otc', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                    {{ $monthly_sales_summary['otc'] }}</td>
-                                <td rowspan="{{ $max_rowspan }}" @if (!in_array('mrc', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                    {{ $monthly_sales_summary['mrc'] }}</td>
-                                <td rowspan="{{ $max_rowspan }}" @if (!in_array('activation_date', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                    {{ $monthly_sales_summary['activation_date'] }}</td>
-                                <td rowspan="{{ $max_rowspan }}" @if (!in_array('billing_start_date', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                    {{ $monthly_sales_summary['billing_date'] }}</td>
-                                <td rowspan="{{ $max_rowspan }}"  @if (!in_array('billing_address', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                    {{ $monthly_sales_summary['billing_address'] }}</td>
-                                <td rowspan="{{ $max_rowspan }}" @if (!in_array('account_holder', $filter_data)) class="d-none" @else class="d-block" @endif>
-                                    {{ $monthly_sales_summary['account_holder'] }}</td>
-                                <td rowspan="{{ $max_rowspan }}" @if (!in_array('remarks', $filter_data)) class="d-none" @else class="d-block" @endif  >
-                                    {{ $monthly_sales_summary['remarks'] }}</td>
+                                @if (in_array('otc', $filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['otc'] }}
+                                    </td>
+                                @endif
+                                @if (in_array('mrc', $filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['mrc'] }}
+                                    </td>
+                                @endif
+                                @if (in_array('activation_date', $filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['activation_date'] }}
+                                    </td>
+                                @endif
+                                @if (in_array('billing_start_date', $filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['billing_date'] }}
+                                    </td>
+                                @endif
+                                @if (in_array('billing_address', $filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['billing_address'] }}
+                                    </td>
+                                @endif
+                                @if (in_array('account_holder', $filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['account_holder'] }}
+                                    </td>
+                                @endif
+                                @if (in_array('remarks', $filter_data))
+                                    <td rowspan="{{ $max_rowspan }}">
+                                        {{ $monthly_sales_summary['remarks'] }}</td>
+                                @endif
                             @endif
                         </tr>
                     @endfor

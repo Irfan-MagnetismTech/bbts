@@ -122,7 +122,7 @@ class FeasibilityRequirementController extends Controller
 
                 $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
 
-                $client = $feasibilityRequirement->client->client_name;
+                $client = $request->client_name;
                 // $to = 'sumon@magnetismtech.com';
                 $to = 'salesadmin@bbts.net';
                 $cc = 'saleha@magnetismtech.com';
