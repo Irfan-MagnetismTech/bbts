@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\Meeting;
+use Illuminate\Support\Facades\Mail;
 use Modules\Sales\Http\Requests\MeetingRequest;
 
 class MeetingController extends Controller
@@ -46,8 +47,22 @@ class MeetingController extends Controller
      */
     public function store(MeetingRequest $request)
     {
-        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose', 'client_type']);
-        Meeting::create($data);
+        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose', 'client_type', 'created_by']);
+        $data['created_by'] = auth()->user()->id;
+        $meeting = Meeting::create($data);
+
+        $client = $meeting->client->client_name;
+        $to = 'salesadmin@bbts.net';
+        $cc = 'yasir@bbts.net';
+        $receiver = '';
+        $subject = "New Meeting Created";
+        $messageBody = "A new meeting has been scheduled for the client $client ($meeting->client_no). Please find the detailed Client Meeting List.";
+        $fromAddress = auth()->user()->email;
+        $fromName = auth()->user()->name;
+
+        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+        });
         return redirect()->route('meeting.index')->with('success', 'Meeting created successfully');
     }
 
@@ -81,8 +96,23 @@ class MeetingController extends Controller
      */
     public function update(MeetingRequest $request, Meeting $meeting)
     {
-        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose', 'client_type']);
+        $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose', 'client_type', 'created_by']);
+        $data['created_by'] = auth()->user()->id;
         $meeting->update($data);
+
+        $client = $meeting->client->client_name;
+        $to = 'salesadmin@bbts.net';
+        $cc = 'yasir@bbts.net';
+        //        $cc = 'shiful@magnetismtech.com';
+        $receiver = '';
+        $subject = "Meeting Rescheduled";
+        $messageBody = "Meeting has been rescheduled for the client $client ($meeting->client_no). Please find the detailed Client Meeting List.";
+        $fromAddress = auth()->user()->email;
+        $fromName = auth()->user()->name;
+
+        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+        });
         return redirect()->route('meeting.index')->with('success', 'Meeting updated successfully');
     }
 
@@ -101,6 +131,20 @@ class MeetingController extends Controller
     {
         $meeting = Meeting::find($id);
         $meeting->update(['status' => $request->status]);
+
+        $client = $meeting->client->client_name;
+        $to = $meeting->createdBy->email;
+//        $cc = 'shiful@magnetismtech.com';
+        $cc = 'yasir@bbts.net';
+        $receiver = '';
+        $subject = "Meeting Info Updated";
+        $messageBody = "Meeting status updated to $meeting->status for client $client ($meeting->client_no). Please find the detailed Client Meeting List.";
+        $fromAddress = 'salesadmin@bbts.net';
+        $fromName = auth()->user()->name;
+
+        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+        });
         return redirect()->route('meeting.index')->with('success', 'Meeting status updated successfully');
     }
 }

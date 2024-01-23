@@ -14,6 +14,7 @@ use Modules\Sales\Entities\CostingProductEquipment;
 use Modules\Sales\Entities\Planning;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\LeadGeneration;
+use Illuminate\Support\Facades\Mail;
 use PDF;
 
 
@@ -84,6 +85,20 @@ class CostingController extends Controller
 
             $this->createOrUpdateCostingLinks($request, $costing);
 
+            $client = $costing->client->client_name;
+            $to = 'salesadmin@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "New Costing Created";
+            $messageBody = "A new costing $costing->mq_no has been created for the client $client ($costing->client_no). Please find the details from Costing List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             DB::commit();
             // return response()->json(['message' => 'Data saved successfully.']);
             return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
@@ -141,6 +156,20 @@ class CostingController extends Controller
 
             $this->createOrUpdateCostingLinks($request, $costing);
 
+            $client = $costing->client->client_name;
+            $to = 'salesadmin@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "Costing Updated";
+            $messageBody = "Costing $costing->mq_no has been updated for the client $client ($costing->client_no). Please find the details from Costing List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             DB::commit();
             // return response()->json(['message' => 'Data saved successfully.']);
             return redirect()->route('costing.index')->with('success', 'Data saved successfully.');

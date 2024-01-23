@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\Offer;
+use Illuminate\Support\Facades\Mail;
 use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\FeasibilityRequirement;
 
@@ -148,6 +149,21 @@ class OfferController extends Controller
             $details = $offer->offerDetails()->createMany($offerDetails)->each(function ($offerDetail, $key) use ($offerDetails) {
                 $offerDetail->offerLinks()->createMany($offerDetails[$key]['offerLinks']);
             });
+
+            $client = $offer->client->client_name;
+            $to = 'salesman@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "New Offer Created";
+            $messageBody = "A new offer $offer->mq_no has been created for the client $client ($offer->client_no). Please find the details from Offers List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             DB::commit();
 
             return $offer;
@@ -172,6 +188,21 @@ class OfferController extends Controller
             $details = $offer->offerDetails()->createMany($offerDetails)->each(function ($offerDetail, $key) use ($offerDetails) {
                 $offerDetail->offerLinks()->delete();
                 $offerDetail->offerLinks()->createMany($offerDetails[$key]['offerLinks']);
+            });
+
+            $client = $offer->client->client_name;
+            $to = 'salesman@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "Offer Updated";
+            $messageBody = "Offer $offer->mq_no has been updated for the client $client ($offer->client_no). Please find the details from Offers List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
             });
             DB::commit();
 

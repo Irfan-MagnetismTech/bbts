@@ -22,4 +22,9 @@ class Survey extends Model
     {
         return $this->hasOne(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
     }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class,'client_no', 'client_no');
+    }
 }

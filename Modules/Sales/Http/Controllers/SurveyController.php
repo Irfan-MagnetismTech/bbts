@@ -13,6 +13,7 @@ use Modules\Sales\Entities\SurveyDetail;
 use Modules\Sales\Http\Requests\SurveyRequest;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Pop;
+use Illuminate\Support\Facades\Mail;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\FinalSurveyDetail;
@@ -106,6 +107,20 @@ class SurveyController extends Controller
                 $connectivity_requirement_details['remarks'] = $request->remarks[$key];
                 SurveyDetail::create($connectivity_requirement_details);
             }
+            $client = $connectivity_requirement->client->client_name;
+            $to = 'planning@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "New Survey Created";
+            $messageBody = "A new survey $connectivity_requirement->mq_no has been created for the client $client ($connectivity_requirement->client_no). Please find the details from Survey List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             DB::commit();
             return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
         } catch (QueryException $e) {
@@ -183,6 +198,21 @@ class SurveyController extends Controller
                 $survey_details['remarks'] = $request->remarks[$key];
                 SurveyDetail::create($survey_details);
             }
+
+            $client = $survey->client->client_name;
+            $to = 'planning@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "Survey Updated";
+            $messageBody = "Survey $survey->mq_no has been updated for the client $client ($survey->client_no). Please find the details from Survey List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             DB::commit();
             return redirect()->route('survey.index')->with('success', 'Survey Updated Successfully');
         } catch (QueryException $e) {
