@@ -86,4 +86,5 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('costing-pdf/{id}', [CostingController::class, 'costingPdf'])->name('costing-pdf');
     Route::get('planning-pdf/{id}', [PlanningController::class, 'planningPdf'])->name('planning-pdf');
     Route::get('survey-pdf/{id}', [SurveyController::class, 'surveyPdf'])->name('survey-pdf');
+    Route::get('get-existing-mq-details', [LeadGenerationController::class, 'getExistingMqDetails'])->name('get-existing-mq-details');
 });

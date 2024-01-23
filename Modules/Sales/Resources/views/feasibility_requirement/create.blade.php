@@ -50,7 +50,7 @@
                             $date = $is_old ? old('date') : $feasibility_requirement->date ?? null;
                         @endphp
                         {{-- exiting or new radio button --}}
-                        <div class="col-xl-2 col-md-2">
+                        <div class="col-xl-3 col-md-3">
                             <div class="row" style="justify-content: space-evenly">
                                 <div>
                                     <input type="radio" name="is_existing" id="is_new" value="New"
@@ -65,7 +65,7 @@
 
                             </div>
                         </div>
-                        <div class="col-xl-2 col-md-2">
+                        <div class="col-xl-3 col-md-3">
                             <div class="form-item">
                                 <input type="text" class="form-control" name="client_no" id="client_id"
                                     value="{{ $client_id }}" autocomplete="off" required>
@@ -73,7 +73,7 @@
                                 <input type="hidden" name="lead_generation_id" id="lead_generation_id" value="">
                             </div>
                         </div>
-                        <div class="col-xl-5 col-md-5">
+                        <div class="col-xl-6 col-md-6">
                             <div class="form-item">
                                 <input type="text" class="form-control" name="client_name" id="client_name"
                                     value="{{ $client_name }}" autocomplete="off" required>
@@ -85,6 +85,14 @@
                                 <input type="date" name="date" id="date" class="form-control"
                                     value="{{ $date ? $date : now()->format('Y-m-d') }}" autocomplete="off">
                                 <label for="client_type">Date<span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-3 d-none existing_mq_div">
+                            <div class="form-item">
+                                <select name="existing_mq" id="existing_mq" class="form-control select2" autocomplete="off"
+                                    placeholder="Select Existing MQ">
+                                    <option value="">Select Existing MQ</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -423,19 +431,9 @@
 
 @section('script')
     <script>
-        // $('#division').on('change', function() {
-        //     var division_id = $(this).val();
-        //     $.ajax({
-        //         url: "{{ route('get-districts') }}",
-        //         data: {
-        //             division_id: division_id,
-        //             _token: "{{ csrf_token() }}"
-        //         },
-        //         success: function(data) {
-        //             $('#district').html(data);
-        //         }
-        //     });
-        // });
+        $('#is_existing').on('click', function() {
+            $('.existing_mq_div').removeClass('d-none');
+        });
 
         //get districts by last class selected division
         $(document).on('change', '.division', function() {
@@ -552,6 +550,12 @@
                     $('#client_name').val(ui.item.client_name).attr('value', ui.item.client_name);
                     $('#lead_generation_id').val(ui.item.lead_generation_id).attr('value', ui.item
                         .lead_generation_id);
+                    let existing_mq_html = '<option value="">Select Existing MQ</option>';
+                    $.each(ui.item.existing_mq, function(key, value) {
+                        existing_mq_html += '<option value="' + value + '">' + value +
+                            '</option>';
+                    });
+                    $('#existing_mq').html(existing_mq_html);
                     return false;
                 }
             });
@@ -569,6 +573,20 @@
             $('#upload-via-table').addClass('d-none');
             $('#toggle-csv').removeClass('d-none');
             console.log('Button clicked! Logging to console.');
+        });
+
+        $('#existing_mq').on('change', function() {
+            var existing_mq_id = $(this).val();
+            $.ajax({
+                url: "{{ route('get-existing-mq-details') }}",
+                data: {
+                    existing_mq_id: existing_mq_id,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(data) {
+                    console.log(data);
+                }
+            });
         });
     </script>
 @endsection
