@@ -260,16 +260,19 @@ class LeadGenerationController extends Controller
     {
         $mq_no = request()->get('existing_mq_id');
         $feasibility_requirement = FeasibilityRequirement::where('mq_no', $mq_no)->first();
-        $offer = Offer::where('mq_no', $mq_no)->first();
-        $offerDetails_fr_nos = $offer?->OfferDetails?->pluck('fr_no')->toArray();
         $sale = Sale::where('mq_no', $mq_no)->first();
-        $saleDetails_fr_nos = $sale?->saleDetails?->pluck('fr_no')->toArray();
-        //remove common fr_no from offer and sale
-        $fr_nos = array_diff($offerDetails_fr_nos, $saleDetails_fr_nos);
-        $feasibility_requirement_details = FeasibilityRequirementDetail::whereIn('fr_no', $fr_nos)->where('checked', 1)->get();
+        $saleDetails_fr_nos = $sale?->saleDetails?->where('checked', 0)->pluck('fr_no')->toArray();
+
+        $feasibility_requirement_details = FeasibilityRequirementDetail::whereIn('fr_no', $saleDetails_fr_nos)->get();
+        $districts_ids = $feasibility_requirement_details->pluck('district_id')->toArray();
+        $districts = District::whereIn('id', $districts_ids)->get();
+        $thanas_ids = $feasibility_requirement_details->pluck('thana_id')->toArray();
+        $thanas = Thana::whereIn('id', $thanas_ids)->get();
         $data = [
             'feasibility_requirement' => $feasibility_requirement,
             'feasibility_requirement_details' => $feasibility_requirement_details,
+            'districts' => $districts,
+            'thanas' => $thanas,
         ];
         return response()->json($data);
     }
