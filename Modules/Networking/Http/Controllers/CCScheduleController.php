@@ -4,6 +4,7 @@ namespace Modules\Networking\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Modules\Admin\Entities\Ip;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\SaleDetail;
 use Illuminate\Contracts\Support\Renderable;
@@ -22,7 +23,7 @@ class CCScheduleController extends Controller
      * @return Renderable
      */
     public function index()
-    { 
+    {
         $salesDetails = SaleDetail::query()
             ->with('sale', 'client', 'frDetails', 'ccSchedule','connectivities')
             ->whereHas('sale', function ($query) {
@@ -34,7 +35,7 @@ class CCScheduleController extends Controller
             // ->whereFrNo('fr-2023-6-2')
             ->latest()
             ->get()
-            ->filter(function ($saleDetail) { 
+            ->filter(function ($saleDetail) {
                 $saleDetail['physical_connectivity'] = PhysicalConnectivity::query()
                     ->where('fr_no', $saleDetail->fr_no)->where('is_modified', '0')
                     ->first() ? true : false;
@@ -98,14 +99,33 @@ class CCScheduleController extends Controller
             'approved_type' => $approved_type
         ]);
 
-        CCSchedule::updateOrCreate(
+        $cc_schedule = CCSchedule::updateOrCreate(
             [
                 'fr_no' => $request->fr_no,
                 'client_no' => $request->client_no,
             ],
             $request->all()
         );
+        $client = $cc_schedule->client->client_name;
+        $this->forwardMail('implementation@bbts.net', 'Client Preparedness Assessment',
+            "Dear Supply Chain Team,\n\n
+            We are excited to inform you that we have a new client ($client-$cc_schedule->client_no), Incored, joining us soon.
+            Please ensure that our material supplies are ready in due time date of $cc_schedule->client_readyness_date to facilitate a smooth onboarding process.");
 
+        $this->forwardMail('salesman@bbts.net', 'Client Preparedness Assessment',
+            "Dear Supply Chain Team,\n\n
+            We are excited to inform you that we have a new client ($client-$cc_schedule->client_no), Incored, joining us soon.
+            Please ensure that our material supplies are ready in due time date of $cc_schedule->client_readyness_date to facilitate a smooth onboarding process.");
+
+        $this->forwardMail('infrastructure@bbts.net', 'Client Preparedness Assessment',
+            "Dear Supply Chain Team,\n\n
+            We are excited to inform you that we have a new client ($client-$cc_schedule->client_no), Incored, joining us soon.
+            Please ensure that our material supplies are ready in due time date of $cc_schedule->client_readyness_date to facilitate a smooth onboarding process.");
+
+        $this->forwardMail('store@bbts.net', 'Client Preparedness Assessment',
+            "Dear Supply Chain Team,\n\n
+            We are excited to inform you that we have a new client ($client-$cc_schedule->client_no), Incored, joining us soon.
+            Please ensure that our material supplies are ready in due time date of $cc_schedule->client_readyness_date to facilitate a smooth onboarding process.");
         return redirect()->back()->with('message', 'Client Connectivity Schedule updated successfully.');
     }
 
@@ -148,5 +168,20 @@ class CCScheduleController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    function forwardMail($to_mail, $sub, $body){
+        $to = $to_mail;
+        $cc = 'yasir@bbts.net';
+        $receiver = '';
+        $subject = $sub;
+        $messageBody = $body;
+
+        $fromAddress = auth()->user()->email;
+        $fromName = auth()->user()->name;
+
+        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+        });
     }
 }
