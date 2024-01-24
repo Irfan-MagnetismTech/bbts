@@ -12,6 +12,10 @@ use Illuminate\Routing\Controller;
 use App\Models\Dataencoding\Thana;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use Modules\Sales\Entities\FeasibilityRequirement;
+use Modules\Sales\Entities\FeasibilityRequirementDetail;
+use Modules\Sales\Entities\Offer;
+use Modules\Sales\Entities\Sale;
 
 class LeadGenerationController extends Controller
 {
@@ -189,6 +193,7 @@ class LeadGenerationController extends Controller
                 'client_no' => $lead_generation->client_no,
                 'client_name' => $lead_generation->client_name,
                 'lead_generation_id' => $lead_generation->id,
+                'existing_mq' => FeasibilityRequirement::where('client_no', $lead_generation->client_no)->pluck('mq_no', 'id')->toArray(),
             ];
         }
         return response()->json($main_leads);
@@ -247,6 +252,24 @@ class LeadGenerationController extends Controller
             'lead_generation' => $main_leads,
             'districts' => $districts,
             'thanas' => $thanas,
+        ];
+        return response()->json($data);
+    }
+
+    public function getExistingMqDetails()
+    {
+        $mq_no = request()->get('existing_mq_id');
+        $feasibility_requirement = FeasibilityRequirement::where('mq_no', $mq_no)->first();
+        $offer = Offer::where('mq_no', $mq_no)->first();
+        $offerDetails_fr_nos = $offer?->OfferDetails?->pluck('fr_no')->toArray();
+        $sale = Sale::where('mq_no', $mq_no)->first();
+        $saleDetails_fr_nos = $sale?->saleDetails?->pluck('fr_no')->toArray();
+        //remove common fr_no from offer and sale
+        $fr_nos = array_diff($offerDetails_fr_nos, $saleDetails_fr_nos);
+        $feasibility_requirement_details = FeasibilityRequirementDetail::whereIn('fr_no', $fr_nos)->where('checked', 1)->get();
+        $data = [
+            'feasibility_requirement' => $feasibility_requirement,
+            'feasibility_requirement_details' => $feasibility_requirement_details,
         ];
         return response()->json($data);
     }
