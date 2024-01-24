@@ -54,7 +54,7 @@ class TicketMovementNotification extends Notification
         ];
     }
 
-    public function toBroadcast($notifiable)
+    public function notificationReceivers($notifiable)
     {
         return new BroadcastMessage([
             'message' => $this->message,

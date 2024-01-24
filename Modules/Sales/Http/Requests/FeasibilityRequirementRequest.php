@@ -16,7 +16,7 @@ class FeasibilityRequirementRequest extends FormRequest
         return [
             'client_no' => 'required',
             'is_existing' => 'required',
-            // 'connectivity_point' => 'required|unique:feasibility_requirement_details,connectivity_point,' . $this->id,
+            'connectivity_point' => 'required|unique:feasibility_requirement_details,connectivity_point,' . $this->id,
         ];
     }
 
