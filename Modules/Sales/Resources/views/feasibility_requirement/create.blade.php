@@ -47,6 +47,7 @@
                             $client_name = $is_old ? old('client_name') : $feasibility_requirement->lead_generation->client_name ?? null;
                             $client_id = $is_old ? old('client_id') : $feasibility_requirement->client_no ?? null;
                             $is_existing = $is_old ? old('is_existing') : $feasibility_requirement->is_existing ?? null;
+                            $existing_mq = $is_old ? old('existing_mq') : $feasibility_requirement->existing_mq ?? null;
                             $date = $is_old ? old('date') : $feasibility_requirement->date ?? null;
                         @endphp
                         {{-- exiting or new radio button --}}
@@ -87,14 +88,33 @@
                                 <label for="client_type">Date<span class="text-danger">*</span></label>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-md-3 d-none existing_mq_div">
-                            <div class="form-item">
-                                <select name="existing_mq" id="existing_mq" class="form-control select2" autocomplete="off"
-                                    placeholder="Select Existing MQ">
-                                    <option value="">Select Existing MQ</option>
-                                </select>
+                        @if ($is_existing == 'Existing')
+                            <div class="col-xl-3 col-md-3 existing_mq_div">
+                                <div class="form-item">
+                                    <select name="existing_mq" id="existing_mq" class="form-control select2"
+                                        autocomplete="off" placeholder="Select Existing MQ">
+                                        <option value="">Select Existing MQ</option>
+                                        @if (!empty($existing_mqs))
+                                            @foreach ($existing_mqs as $item)
+                                                <option value="{{ $item }}"
+                                                    {{ $existing_mq == $item ? 'selected' : '' }}>
+                                                    {{ $item }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="col-xl-3 col-md-3 d-none existing_mq_div">
+                                <div class="form-item">
+                                    <select name="existing_mq" id="existing_mq" class="form-control select2"
+                                        autocomplete="off" placeholder="Select Existing MQ">
+                                        <option value="">Select Existing MQ</option>
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -486,6 +506,7 @@
         function addRow() {
             var clone = $('.feasibility_details_row').first().clone();
             clone.find('input').val('');
+            clone.find('select').val('');
             clone.find('span').remove();
             clone.appendTo('.feasibiltyBody')
             $(".select2").select2();
@@ -584,7 +605,45 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(data) {
-                    console.log(data);
+                    //clone first row
+                    var clone = $('.feasibility_details_row').first().clone();
+                    //remove all rows
+                    $('.feasibility_details_row').remove();
+                    //append first row
+                    let district_html = '<option value="">Select District</option>';
+                    $.each(data.districts, function(key, value) {
+                        district_html += '<option value="' + value.id + '">' + value.name +
+                            '</option>';
+                    });
+                    clone.find('select[name="district_id[]"]').html(district_html);
+                    let thana_html = '<option value="">Select Thana</option>';
+                    $.each(data.thanas, function(key, value) {
+                        thana_html += '<option value="' + value.id + '">' + value.name +
+                            '</option>';
+                    });
+                    clone.find('select[name="thana_id[]"]').html(thana_html);
+                    $.each(data.feasibility_requirement_details, function(key, value) {
+                        clone.find('span').remove();
+                        clone.find('input[name="connectivity_point[]"]').val(value
+                            .connectivity_point);
+                        clone.find('select[name="aggregation_type[]"]').val(value
+                            .aggregation_type);
+                        clone.find('select[name="branch_id[]"]').val(value.branch_id);
+                        clone.find('select[name="division_id[]"]').val(value.division_id);
+                        clone.find('select[name="district_id[]"]').val(value.district_id);
+                        clone.find('select[name="thana_id[]"]').val(value.thana_id);
+                        clone.find('input[name="location[]"]').val(value.location);
+                        clone.find('input[name="lat[]"]').val(value.lat);
+                        clone.find('input[name="long[]"]').val(value.long);
+                        clone.find('input[name="contact_name[]"]').val(value.contact_name);
+                        clone.find('input[name="contact_designation[]"]').val(value
+                            .contact_designation);
+                        clone.find('input[name="contact_number[]"]').val(value.contact_number);
+                        clone.find('input[name="contact_email[]"]').val(value.contact_email);
+                        clone.find('input[name="detail_id[]"]').val(value.id);
+                        clone.appendTo('.feasibiltyBody');
+                        $(".select2").select2();
+                    });
                 }
             });
         });

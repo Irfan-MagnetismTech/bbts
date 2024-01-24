@@ -77,7 +77,7 @@ class FeasibilityRequirementController extends Controller
         } else {
             try {
                 DB::beginTransaction();
-                $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id');
+                $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id', 'existing_mq');
                 $data['user_id'] = auth()->user()->id;
                 $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
@@ -125,7 +125,6 @@ class FeasibilityRequirementController extends Controller
                 $client = $feasibilityRequirement->client->client_name;
                 $to = 'survey@bbts.net';
                 $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
                 $receiver = '';
                 $subject = "New Feasibility Requirement Created";
                 $messageBody = "A new $feasibilityRequirement->mq_no has been created for the client $client ($feasibilityRequirement->client_no). Please find the details from Feasibility Requirement List.";
@@ -174,7 +173,8 @@ class FeasibilityRequirementController extends Controller
         $branches = Branch::all();
         $districts = District::whereIn('division_id', $feasibility_requirement->feasibilityRequirementDetails->pluck('division_id'))->get();
         $thanas = Thana::whereIn('district_id', $feasibility_requirement->feasibilityRequirementDetails->pluck('district_id'))->get();
-        return view('sales::feasibility_requirement.create', compact('feasibility_requirement', 'branches', 'divisions', 'districts', 'thanas'));
+        $existing_mqs = FeasibilityRequirement::where('client_no', $feasibility_requirement->client_no)->where('id', '!=', $feasibility_requirement->id)->pluck('mq_no')->toArray();
+        return view('sales::feasibility_requirement.create', compact('feasibility_requirement', 'branches', 'divisions', 'districts', 'thanas', 'existing_mqs'));
     }
 
     /**
@@ -192,7 +192,7 @@ class FeasibilityRequirementController extends Controller
             Excel::import(new FeasibilityRequirementImportUpdate($additionalData, $feasibilityRequirement), $request->file('file'));
             return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Updated Successfully');
         } else {
-            $data = $request->only('client_no', 'is_existing', 'date');
+            $data = $request->only('client_no', 'is_existing', 'date', 'lead_generation_id', 'existing_mq');
             $data['user_id'] = auth()->user()->id;
             $data['branch_id'] = auth()->user()->branch_id ?? '1';
 
@@ -242,7 +242,7 @@ class FeasibilityRequirementController extends Controller
             $client = $feasibility_requirement->client->client_name;
             $to = 'survey@bbts.net';
             $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
+            //                $cc = 'saleha@magnetismtech.com';
             $receiver = '';
             $subject = "Feasibility Requirement Updated";
             $messageBody = "Feasibility Requirement $feasibility_requirement->mq_no has been updated for the client $client ($feasibility_requirement->client_no). Please find the details from Feasibility Requirement List.";
