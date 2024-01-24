@@ -1,16 +1,16 @@
 @extends('layouts.backend-layout')
-@section('title', 'Logical Connectivity')
+@section('title', 'Client Activation')
 
 @php
     $is_old = old('comment') ? true : false;
     $form_heading = !empty($logicalConnectivityInternet) ? 'Update' : 'Add';
     $form_url = !empty($logicalConnectivityInternet) ? route('errs.update', $logicalConnectivityInternet->id) : route('errs.store');
     $form_method = !empty($logicalConnectivityInternet) ? 'PUT' : 'POST';
-    
+
     $comment = $is_old ? old('comment') : @$logicalConnectivityInternet->comment;
     $quantity = $is_old ? old('quantity') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->lines->pluck('quantity') : null);
     $remarks = $is_old ? old('remarks') : (!empty($logicalConnectivityInternet) ? $logicalConnectivityInternet->lines->pluck('remarks') : null);
-    
+
     $effective_date = $is_old ? old('effective_date') : $sale->effective_date ?? today()->format('d-m-Y');
 @endphp
 
@@ -20,7 +20,7 @@
     @else
         Create
     @endif
-    Logical Connectivity For Internet Service
+    Client Activation Pre-Process
 @endsection
 
 @section('style')
@@ -126,7 +126,7 @@
                 <div class="form-group col-2 mt-2">
                     <div class="checkbox-fade fade-in-primary">
                         <label>
-                            <input type="checkbox" name="nttn_checkbox" class="nttn_checkbox" value="nttn" 
+                            <input type="checkbox" name="nttn_checkbox" class="nttn_checkbox" value="nttn"
                                 @checked(!empty($ccSchedules) ? in_array('nttn', $approvedType) : false)>
                             <span class="cr">
                                 <i class="cr-icon icofont icofont-ui-check txt-primary"></i>

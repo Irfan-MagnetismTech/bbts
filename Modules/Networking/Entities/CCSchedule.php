@@ -4,6 +4,7 @@ namespace Modules\Networking\Entities;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Sales\Entities\Client;
 
 class CCSchedule extends Model
 {
@@ -22,7 +23,7 @@ class CCSchedule extends Model
 
     public function setAttribute($key, $value): void
     {
-        if (in_array($key, $this->dateField)) { 
+        if (in_array($key, $this->dateField)) {
             $value = !empty($value) ? Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d') : null;
         }
 
@@ -38,5 +39,10 @@ class CCSchedule extends Model
         }
 
         return $value;
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 }
