@@ -6,6 +6,7 @@ use PDF;
 use Exception;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Services\UploadService;
 use Modules\Sales\Entities\Sale;
 use Modules\SCM\Entities\ScmMur;
@@ -91,6 +92,21 @@ class SaleController extends Controller
             $saleLink = $this->makeLinkRow($request->all(), $saleDetail);
             SaleLinkDetail::insert($saleLink);
             SaleProductDetail::insert($saleService);
+
+            $client = $sale->client->client_name;
+            $to = 'salesadmin@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "New Sale Created";
+            $messageBody = "A new sale $sale->mq_no has been created for the client $client ($sale->client_no). Please find the details from Sales List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             DB::commit();
             return redirect()->route('sales.index')->with('success', 'Sales Created Successfully');
         } catch (Exception $err) {
@@ -154,6 +170,21 @@ class SaleController extends Controller
             $saleLink = $this->makeLinkRow($request->all(), $saleDetail, true);
             SaleLinkDetail::insert($saleLink);
             SaleProductDetail::insert($saleService);
+
+            $client = $sale->client->client_name;
+            $to = 'salesadmin@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "Sale Info Updated";
+            $messageBody = "Sale $sale->mq_no has been updated for the client $client ($sale->client_no). Please find the details from Sales List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             DB::commit();
             return redirect()->route('sales.index')->with('success', 'Sales Updated Successfully');
         } catch (Exception $err) {
@@ -614,6 +645,20 @@ class SaleController extends Controller
                 'approval_date'  => now()
             ]);
 
+            $client = $sales->client->client_name;
+            $to = 'implementation@bbts.net';
+            $cc = 'yasir@bbts.net';
+//                $cc = 'saleha@magnetismtech.com';
+            $receiver = '';
+            $subject = "PNL Summary Update";
+            $messageBody = "PNL Summary management approval status updated for sale $sales->mq_no for the client $client ($sales->client_no). Please find the details from Sales List.";
+
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
             DB::commit();
             return redirect()->route('pnl-summary', $mq_no)->with('success', 'Approved Successfully');
         } catch (QueryException $e) {
