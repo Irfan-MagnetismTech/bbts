@@ -149,23 +149,32 @@ class OfferController extends Controller
             $details = $offer->offerDetails()->createMany($offerDetails)->each(function ($offerDetail, $key) use ($offerDetails) {
                 $offerDetail->offerLinks()->createMany($offerDetails[$key]['offerLinks']);
             });
+            DB::commit();
 
-            $client = $offer->client->client_name;
-            $to = 'salesman@bbts.net';
-            $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
-            $receiver = '';
-            $subject = "New Offer Created";
-            $messageBody = "A new offer $offer->mq_no has been created for the client $client ($offer->client_no). Please find the details from Offers List.";
-
+            $client = $request->client_name ?? '';
+            $client_number = $offer->client_no ?? '';
+            $offer_validity = $offer->offer_validity ?? '';
+            $mq_no = $offer->mq_no ?? '';
             $fromAddress = auth()->user()->email;
             $fromName = auth()->user()->name;
+            $to = 'salesman@bbts.net';
+            $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
+            $subject = "New Offer Created";
+            $messageBody = "Dear Sir,\n
+        I am writing to inform you about a new Offer $mq_no has been created for our esteemed client, $client ($client_number). \n
+        Offer Details:
+        Client: $client
+        Client No: $client_number
+        MQ No: $mq_no
+        Offer Validity: $offer_validity \n
+        Please find the details from software in Offer List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
             Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
                 $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
             });
-            DB::commit();
-
             return $offer;
         } catch (\Exception $e) {
             DB::rollback();
@@ -189,23 +198,32 @@ class OfferController extends Controller
                 $offerDetail->offerLinks()->delete();
                 $offerDetail->offerLinks()->createMany($offerDetails[$key]['offerLinks']);
             });
+            DB::commit();
 
-            $client = $offer->client->client_name;
-            $to = 'salesman@bbts.net';
-            $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
-            $receiver = '';
-            $subject = "Offer Updated";
-            $messageBody = "Offer $offer->mq_no has been updated for the client $client ($offer->client_no). Please find the details from Offers List.";
-
+            $client = $request->client_name ?? '';
+            $client_number = $offer->client_no ?? '';
+            $offer_validity = $offer->offer_validity ?? '';
+            $mq_no = $offer->mq_no ?? '';
             $fromAddress = auth()->user()->email;
             $fromName = auth()->user()->name;
+            $to = 'salesman@bbts.net';
+            $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
+            $subject = "Offer Updated";
+            $messageBody = "Dear Sir,\n
+        I am writing to inform you about a new Offer $mq_no has been updated for our esteemed client, $client ($client_number). \n
+        Offer Details:
+        Client: $client
+        Client No: $client_number
+        MQ No: $mq_no
+        Offer Validity: $offer_validity \n
+        Please find the details from software in Offer List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
             Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
                 $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
             });
-            DB::commit();
-
             return $offer;
         } catch (\Exception $e) {
             DB::rollback();

@@ -85,21 +85,32 @@ class CostingController extends Controller
 
             $this->createOrUpdateCostingLinks($request, $costing);
 
-            $client = $request->client_name ?? '';
-            $to = 'salesadmin@bbts.net';
-            $cc = 'yasir@bbts.net';
-            //                $cc = 'saleha@magnetismtech.com';
-            $receiver = '';
-            $subject = "New Costing Created";
-            $messageBody = "A new costing $costing->mq_no has been created for the client $client ($costing->client_no). Please find the details from Costing List.";
+            DB::commit();
 
+            $client = $request->client_name ?? '';
+            $client_number = $costing->client_no ?? '';
+            $fr_no = $costing->fr_no ?? '';
+            $mq_no = $costing->mq_no ?? '';
             $fromAddress = auth()->user()->email;
             $fromName = auth()->user()->name;
+            $to = 'salesadmin@bbts.net';
+            $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
+            $subject = "New Costing Created";
+            $messageBody = "Dear Sir,\n
+        I am writing to inform you about a new Costing $mq_no has been created for our esteemed client, $client ($client_number). \n
+        Costing Details:
+        Client: $client
+        Client No: $client_number
+        FR No: $fr_no
+        MQ No: $mq_no \n
+        Please find the details from software in Costing List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
             Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
                 $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
             });
-            DB::commit();
             // return response()->json(['message' => 'Data saved successfully.']);
             return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
         } catch (\Exception $e) {
@@ -156,21 +167,32 @@ class CostingController extends Controller
 
             $this->createOrUpdateCostingLinks($request, $costing);
 
-            $client = $request->client_name ?? '';
-            $to = 'salesadmin@bbts.net';
-            $cc = 'yasir@bbts.net';
-            //                $cc = 'saleha@magnetismtech.com';
-            $receiver = '';
-            $subject = "Costing Updated";
-            $messageBody = "Costing $costing->mq_no has been updated for the client $client ($costing->client_no). Please find the details from Costing List.";
+            DB::commit();
 
+            $client = $request->client_name ?? '';
+            $client_number = $costing->client_no ?? '';
+            $fr_no = $costing->fr_no ?? '';
+            $mq_no = $costing->mq_no ?? '';
             $fromAddress = auth()->user()->email;
             $fromName = auth()->user()->name;
+            $to = 'salesadmin@bbts.net';
+            $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
+            $subject = "Costing Updated";
+            $messageBody = "Dear Sir,\n
+        I am writing to inform you about a new Costing $mq_no has been updated for our esteemed client, $client ($client_number). \n
+        Costing Details:
+        Client: $client
+        Client No: $client_number
+        FR No: $fr_no
+        MQ No: $mq_no \n
+        Please find the details from software in Costing List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
             Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
                 $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
             });
-            DB::commit();
             // return response()->json(['message' => 'Data saved successfully.']);
             return redirect()->route('costing.index')->with('success', 'Data saved successfully.');
         } catch (\Exception $e) {
