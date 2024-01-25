@@ -105,22 +105,33 @@ class PlanningController extends Controller
         if ($request->total_key > 0) {
             $this->createOrUpdatePlanLinks($request, $plan);
         }
+        DB::commit();
         $client = $request->client_name ?? '';
-        $to = 'pnl@bbts.net';
-        $cc = 'yasir@bbts.net';
-        //                $cc = 'saleha@magnetismtech.com';
-        $receiver = '';
-        $subject = "New Plan Created";
-        $messageBody = "A new plan $plan->mq_no has been created for the client $client ($plan->client_no). Please find the details from Planning List.";
-
+        $client_number = $plan->client_no ?? '';
+        $fr_no = $plan->fr_no ?? '';
+        $mq_no = $plan->mq_no ?? '';
+        $date = $plan->date ?? '';
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
+        $to = 'pnl@bbts.net';
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
+        $subject = "New Plan Created";
+        $messageBody = "Dear Sir,\n
+        I am writing to inform you about a new Plan $mq_no has been created for our esteemed client, $client ($client_number). \n
+        Plan Details:
+        Client: $client
+        Client No: $client_number
+        FR No: $fr_no
+        MQ No: $mq_no
+        Date: $date \n
+        Please find the details from software in Planning List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
         Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
             $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
         });
-        DB::commit();
-
         return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
     }
 
@@ -176,22 +187,34 @@ class PlanningController extends Controller
             if ($request->total_key > 0) {
                 $this->createOrUpdatePlanLinks($request, $plan);
             }
+            DB::commit();
 
             $client = $request->client_name ?? '';
-            $to = 'pnl@bbts.net';
-            $cc = 'yasir@bbts.net';
-            //                $cc = 'saleha@magnetismtech.com';
-            $receiver = '';
-            $subject = "Plan Updated";
-            $messageBody = "Plan $plan->mq_no has been updated for the client $client ($plan->client_no). Please find the details from Planning List.";
-
+            $client_number = $plan->client_no ?? '';
+            $fr_no = $plan->fr_no ?? '';
+            $mq_no = $plan->mq_no ?? '';
+            $date = $plan->date ?? '';
             $fromAddress = auth()->user()->email;
             $fromName = auth()->user()->name;
+            $to = 'pnl@bbts.net';
+            $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
+            $subject = "Plan Updated";
+            $messageBody = "Dear Sir,\n
+        I am writing to inform you about a new Plan $mq_no has been updated for our esteemed client, $client ($client_number). \n
+        Plan Details:
+        Client: $client
+        Client No: $client_number
+        FR No: $fr_no
+        MQ No: $mq_no
+        Date: $date \n
+        Please find the details from software in Planning List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
             Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
                 $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
             });
-            DB::commit();
             return redirect()->route('planning.index')->with('success', 'Planning updated successfully');
         } catch (QueryException $e) {
             DB::rollback();

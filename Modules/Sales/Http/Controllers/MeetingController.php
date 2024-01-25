@@ -54,7 +54,7 @@ class MeetingController extends Controller
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
         $meeting = Meeting::create($data);
 
-        $client = $meeting->client->client_name ?? '';
+        $client = $meeting?->client->client_name ?? '';
         $client_number = $meeting->client_no ?? '';
         $visit_date = $meeting->visit_date ?? '';
         $meeting_start_time = $meeting->meeting_start_time ?? '';
@@ -126,7 +126,7 @@ class MeetingController extends Controller
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
         $meeting->update($data);
 
-        $client = $meeting->client->client_name ?? '';
+        $client = $meeting?->client->client_name ?? '';
         $client_number = $meeting->client_no ?? '';
         $visit_date = $meeting->visit_date ?? '';
         $meeting_start_time = $meeting->meeting_start_time ?? '';
@@ -177,7 +177,7 @@ class MeetingController extends Controller
         $meeting = Meeting::find($id);
         $meeting->update(['status' => $request->status]);
 
-        $client = $meeting->client->client_name ?? '';
+        $client = $meeting?->client->client_name ?? '';
         $client_number = $meeting->client_no ?? '';
         $visit_date = $meeting->visit_date ?? '';
         $meeting_start_time = $meeting->meeting_start_time ?? '';

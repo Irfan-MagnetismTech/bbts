@@ -110,8 +110,7 @@ class SurveyController extends Controller
             }
             DB::commit();
 
-            //          $client = $request->client_name ?? '';
-            $client = $connectivity_requirement?->client->client_name ?? '';
+            $client = $request->client_name ?? '';
             $client_number = $connectivity_requirement->client_no ?? '';
             $fr_no = $connectivity_requirement->fr_no ?? '';
             $mq_no = $connectivity_requirement->mq_no ?? '';
@@ -215,8 +214,7 @@ class SurveyController extends Controller
             }
             DB::commit();
 
-            //          $client = $request->client_name ?? '';
-            $client = $survey?->client->client_name ?? '';
+            $client = $request->client_name ?? '';
             $client_number = $survey->client_no ?? '';
             $fr_no = $survey->fr_no ?? '';
             $mq_no = $survey->mq_no ?? '';
