@@ -76,14 +76,14 @@
                         <div class="mt-1 col-xl-3 col-md-3">
                             <div class="form-item">
                                 <input type="time" name="meeting_start_time" id="meeting_start_time" class="form-control"
-                                    value="{{ $meeting_start_time }}" required>
+                                       value="{{ \Carbon\Carbon::parse($meeting_start_time)->format('H:i') }}" required>
                                 <label for="meeting_start_time">Time of Work Started? </label>
                             </div>
                         </div>
                         <div class="mt-1 col-xl-3 col-md-3">
                             <div class="form-item">
                                 <input type="time" name="meeting_end_time" id="meeting_end_time" class="form-control"
-                                    value="{{ $meeting_end_time }}" required>
+                                       value="{{ \Carbon\Carbon::parse($meeting_end_time)->format('H:i') }}" required>
                                 <label for="meeting_end_time">Time of Work Ended? </label>
                             </div>
                         </div>
