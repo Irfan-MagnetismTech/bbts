@@ -124,11 +124,11 @@ class FeasibilityRequirementController extends Controller
 
                 $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
 
-                $notificationReceivers = User::whereHas('roles', function ($q) {
-                    $q->where('name', 'Sales Admin');
-                })->get();
+                // $notificationReceivers = User::whereHas('roles', function ($q) {
+                //     $q->where('name', 'Sales Admin');
+                // })->get();
 
-                Notification::send($notificationReceivers, new CommonNotification('Sales Admin', 'A new feasibility requirement has been created', 'feasibility-requirement.index'));
+                // Notification::send($notificationReceivers, new CommonNotification('Sales Admin', 'A new feasibility requirement has been created', 'feasibility-requirement.index'));
 
                 $client = $request->client_name ?? '';
                 $to = 'survey@bbts.net';
