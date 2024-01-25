@@ -73,7 +73,6 @@ class FeasibilityRequirementController extends Controller
 
     public function store(FeasibilityRequirementRequest $request)
     {
-        // dd($request->all());
         if ($request->file) {
             $additionalData = $request;
             Excel::import(new FeasibilityRequirementImport($additionalData), $request->file('file'));
@@ -125,27 +124,27 @@ class FeasibilityRequirementController extends Controller
 
                 $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
 
-                $notificationReceivers = User::whereHas('roles', function ($q) {
-                    $q->where('name', 'Sales Admin');
-                })->get();
+                // $notificationReceivers = User::whereHas('roles', function ($q) {
+                //     $q->where('name', 'Sales Admin');
+                // })->get();
 
-                Notification::send($notificationReceivers, new CommonNotification('Sales Admin', 'A new feasibility requirement has been created', 'feasibility-requirement.index'));
+                // Notification::send($notificationReceivers, new CommonNotification('Sales Admin', 'A new feasibility requirement has been created', 'feasibility-requirement.index'));
 
-                // $client = $feasibilityRequirement->client->client_name;
-                // $to = 'survey@bbts.net';
-                // $cc = 'yasir@bbts.net';
-                // $receiver = '';
-                // $subject = "New Feasibility Requirement Created";
-                // $messageBody = "A new $feasibilityRequirement->mq_no has been created for the client $client ($feasibilityRequirement->client_no). Please find the details from Feasibility Requirement List.";
-                // // $fromAddress = 'csd@bbts.net';
-                // $fromAddress = auth()->user()->email;
-                // $fromName = auth()->user()->name;
-                // // Mail::send('sales::email.feasibility_requirement', ['feasibilityRequirement' => $feasibilityRequirement], function ($message) use ($to, $cc, $subject) {
-                // //     $message->to($to)->cc($cc)->subject($subject);
-                // // });
-                // Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-                //     $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+                $client = $request->client_name ?? '';
+                $to = 'survey@bbts.net';
+                $cc = 'yasir@bbts.net';
+                $receiver = '';
+                $subject = "New Feasibility Requirement Created";
+                $messageBody = "A new $feasibilityRequirement->mq_no has been created for the client $client ($feasibilityRequirement->client_no). Please find the details from Feasibility Requirement List.";
+                // $fromAddress = 'csd@bbts.net';
+                $fromAddress = auth()->user()->email;
+                $fromName = auth()->user()->name;
+                // Mail::send('sales::email.feasibility_requirement', ['feasibilityRequirement' => $feasibilityRequirement], function ($message) use ($to, $cc, $subject) {
+                //     $message->to($to)->cc($cc)->subject($subject);
                 // });
+                Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                    $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+                });
 
                 DB::commit();
                 return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
@@ -248,7 +247,7 @@ class FeasibilityRequirementController extends Controller
                     $feasibility_requirement->feasibilityRequirementDetails()->create($detailsData);
                 }
             }
-            $client = $feasibility_requirement->client->client_name;
+            $client = $request->client_name ?? '';
             $to = 'survey@bbts.net';
             $cc = 'yasir@bbts.net';
             //                $cc = 'saleha@magnetismtech.com';
