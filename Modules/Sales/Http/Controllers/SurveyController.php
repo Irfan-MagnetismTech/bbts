@@ -107,10 +107,10 @@ class SurveyController extends Controller
                 $connectivity_requirement_details['remarks'] = $request->remarks[$key];
                 SurveyDetail::create($connectivity_requirement_details);
             }
-            $client = $connectivity_requirement->client->client_name;
+            $client = $request->client_name ?? '';
             $to = 'planning@bbts.net';
             $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
+            //                $cc = 'saleha@magnetismtech.com';
             $receiver = '';
             $subject = "New Survey Created";
             $messageBody = "A new survey $connectivity_requirement->mq_no has been created for the client $client ($connectivity_requirement->client_no). Please find the details from Survey List.";
@@ -199,10 +199,10 @@ class SurveyController extends Controller
                 SurveyDetail::create($survey_details);
             }
 
-            $client = $survey->client->client_name;
+            $client = $request->client_name ?? '';
             $to = 'planning@bbts.net';
             $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
+            //                $cc = 'saleha@magnetismtech.com';
             $receiver = '';
             $subject = "Survey Updated";
             $messageBody = "Survey $survey->mq_no has been updated for the client $client ($survey->client_no). Please find the details from Survey List.";

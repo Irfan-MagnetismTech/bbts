@@ -105,10 +105,10 @@ class PlanningController extends Controller
         if ($request->total_key > 0) {
             $this->createOrUpdatePlanLinks($request, $plan);
         }
-        $client = $plan->client->client_name;
+        $client = $request->client_name ?? '';
         $to = 'pnl@bbts.net';
         $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
+        //                $cc = 'saleha@magnetismtech.com';
         $receiver = '';
         $subject = "New Plan Created";
         $messageBody = "A new plan $plan->mq_no has been created for the client $client ($plan->client_no). Please find the details from Planning List.";
@@ -177,10 +177,10 @@ class PlanningController extends Controller
                 $this->createOrUpdatePlanLinks($request, $plan);
             }
 
-            $client = $plan->client->client_name;
+            $client = $request->client_name ?? '';
             $to = 'pnl@bbts.net';
             $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
+            //                $cc = 'saleha@magnetismtech.com';
             $receiver = '';
             $subject = "Plan Updated";
             $messageBody = "Plan $plan->mq_no has been updated for the client $client ($plan->client_no). Please find the details from Planning List.";

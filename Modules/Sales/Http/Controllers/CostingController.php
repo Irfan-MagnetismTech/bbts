@@ -85,10 +85,10 @@ class CostingController extends Controller
 
             $this->createOrUpdateCostingLinks($request, $costing);
 
-            $client = $costing->client->client_name;
+            $client = $request->client_name ?? '';
             $to = 'salesadmin@bbts.net';
             $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
+            //                $cc = 'saleha@magnetismtech.com';
             $receiver = '';
             $subject = "New Costing Created";
             $messageBody = "A new costing $costing->mq_no has been created for the client $client ($costing->client_no). Please find the details from Costing List.";
@@ -156,10 +156,10 @@ class CostingController extends Controller
 
             $this->createOrUpdateCostingLinks($request, $costing);
 
-            $client = $costing->client->client_name;
+            $client = $request->client_name ?? '';
             $to = 'salesadmin@bbts.net';
             $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
+            //                $cc = 'saleha@magnetismtech.com';
             $receiver = '';
             $subject = "Costing Updated";
             $messageBody = "Costing $costing->mq_no has been updated for the client $client ($costing->client_no). Please find the details from Costing List.";
