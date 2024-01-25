@@ -91,7 +91,11 @@ class LeadGenerationController extends Controller
         $data['created_by'] = auth()->user()->id;
         $leadGeneration = LeadGeneration::create($data);
 
-        $client = $leadGeneration->client_name;
+        $client = $leadGeneration->client_name ?? '';
+        $client_number = $leadGeneration->client_no ?? '';
+        $client_address = $leadGeneration->address ?? '';
+        $client_business_type = $leadGeneration->business_type ?? '';
+        $client_status = $leadGeneration->status ?? '';
         $to = 'salesadmin@bbts.net';
         $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com'];
         $receiver = '';
@@ -99,16 +103,16 @@ class LeadGenerationController extends Controller
         $fromName = auth()->user()->name;
         $subject = "New Lead Generation Created";
         $messageBody = "Dear Sir,\n
-        I am writing to inform you about a new lead that has been generated for our esteemed client, $client ($leadGeneration->client_no). \n
-        Lead Details:\n
+        I am writing to inform you about a new lead that has been generated for our esteemed client, $client ($client_number). \n
+        Lead Details:
         Client: $client
-        Client No: $leadGeneration->client_no
-        Address: $leadGeneration->address
-        Business Type: $leadGeneration->business_type
-        Status: $leadGeneration->status\n
+        Client No: $client_number
+        Address: $client_address
+        Business Type: $client_business_type
+        Status: $client_status\n
         Please find the details from Lead Generation List.
         Thank you for your attention to this matter. I look forward to your guidance and support.\n
-        Best regards,\n
+        Best regards,
         $fromName";
 
         Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
@@ -167,14 +171,29 @@ class LeadGenerationController extends Controller
         }
         $lead_generation->update($data);
 
-        $client = $lead_generation->client_name;
+        $client = $lead_generation->client_name ?? '';
+        $client_number = $lead_generation->client_no ?? '';
+        $client_address = $lead_generation->address ?? '';
+        $client_business_type = $lead_generation->business_type ?? '';
+        $client_status = $lead_generation->status ?? '';
         $to = 'salesadmin@bbts.net';
         $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com'];
         $receiver = '';
-        $subject = "Lead Generation Info Updated";
-        $messageBody = "Lead generation info has been updated for the client $client ($lead_generation->client_no). Please find the details from Lead Generation List.";
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
+        $subject = "Lead Generation Info Updated";
+        $messageBody = "Dear Sir,\n
+        I am writing to inform you about a Lead Generation info has been updated for our esteemed client, $client ($client_number). \n
+        Lead Details:
+        Client: $client
+        Client No: $client_number
+        Address: $client_address
+        Business Type: $client_business_type
+        Status: $client_status\n
+        Please find the details from Lead Generation List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
         Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
             $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
@@ -217,15 +236,28 @@ class LeadGenerationController extends Controller
         $lead_generation->comment = $request->comment;
         $lead_generation->save();
 
-        $client = $lead_generation->client_name;
+        $client = $lead_generation->client_name ?? '';
+        $client_number = $lead_generation->client_no ?? '';
+        $client_address = $lead_generation->address ?? '';
+        $client_business_type = $lead_generation->business_type ?? '';
+        $client_status = $lead_generation->status ?? '';
         $to = $lead_generation->createdBy->email;
         $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com'];
         $receiver = '';
-        $subject = "Lead Generation Info Updated";
-        $messageBody = "Client status updated to $lead_generation->status for client $client ($lead_generation->client_no). Please find the detailed Lead Generation List.";
         $fromAddress = 'salesadmin@bbts.net';
         $fromName = auth()->user()->name;
-
+        $subject = "Lead Generation Client Status Updated";
+        $messageBody = "Dear Team Member,\n
+        Client status updated to $client_status for client $client ($client_number). \n
+        Lead Details:
+        Client: $client
+        Client No: $client_number
+        Address: $client_address
+        Business Type: $client_business_type
+        Status: $client_status
+        Please find the details from Lead Generation List.\n
+        Best regards,
+        $fromName";
         Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
             $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
         });
