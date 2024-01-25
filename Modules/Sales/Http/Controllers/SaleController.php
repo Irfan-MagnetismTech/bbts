@@ -43,6 +43,7 @@ class SaleController extends Controller
         $this->middleware('permission:sale-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:sale-delete', ['only' => ['destroy']]);
     }
+
     /**
      * Display a listing of the resource.-
      * @return Renderable
@@ -50,7 +51,7 @@ class SaleController extends Controller
     public function index()
     {
         $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
-        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
+        $to_date = request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
         $sales = Sale::activation()
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('created_at', '>=', $from_date);
@@ -82,7 +83,7 @@ class SaleController extends Controller
     {
         try {
             DB::beginTransaction();
-            $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
+            $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration', 'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
             $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale');
             $data['work_order'] = $this->uploadFile->handleFile($request->work_order, 'sales/sale');
             $sale = Sale::create($data);
@@ -93,21 +94,31 @@ class SaleController extends Controller
             SaleLinkDetail::insert($saleLink);
             SaleProductDetail::insert($saleService);
 
-            $client = $sale->client->client_name;
-            $to = 'salesadmin@bbts.net';
-            $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
-            $receiver = '';
-            $subject = "New Sale Created";
-            $messageBody = "A new sale $sale->mq_no has been created for the client $client ($sale->client_no). Please find the details from Sales List.";
+            DB::commit();
 
+            $client = $request->client_name ?? '';
+            $client_number = $sale->client_no ?? '';
+            $mq_no = $sale->mq_no ?? '';
             $fromAddress = auth()->user()->email;
             $fromName = auth()->user()->name;
+            $to = 'salesadmin@bbts.net';
+            $cc = ['yasir@bbts.net', 'saleha@magnetismtech.com', 'shiful@magnetismtech.com', $fromAddress];
+            $receiver = '';
+            $subject = "New Sale Created";
+            $messageBody = "Dear Sir,\n
+        I am writing to inform you about a new Sale $mq_no has been created for our esteemed client, $client ($client_number). \n
+        Sale Details:
+        Client: $client
+        Client No: $client_number
+        MQ No: $mq_no \n
+        Please find the details from software in Sales List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
             Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
                 $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
             });
-            DB::commit();
             return redirect()->route('sales.index')->with('success', 'Sales Created Successfully');
         } catch (Exception $err) {
             DB::rollBack();
@@ -146,7 +157,7 @@ class SaleController extends Controller
      */
     public function update(Request $request, Sale $sale)
     {
-        $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration',  'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
+        $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration', 'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
         if ($request->hasFile('sla')) {
             $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale', $sale->sla);
         } else {
@@ -171,21 +182,31 @@ class SaleController extends Controller
             SaleLinkDetail::insert($saleLink);
             SaleProductDetail::insert($saleService);
 
-            $client = $sale->client->client_name;
-            $to = 'salesadmin@bbts.net';
-            $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
-            $receiver = '';
-            $subject = "Sale Info Updated";
-            $messageBody = "Sale $sale->mq_no has been updated for the client $client ($sale->client_no). Please find the details from Sales List.";
+            DB::commit();
 
+            $client = $request->client_name ?? '';
+            $client_number = $sale->client_no ?? '';
+            $mq_no = $sale->mq_no ?? '';
             $fromAddress = auth()->user()->email;
             $fromName = auth()->user()->name;
+            $to = 'salesadmin@bbts.net';
+            $cc = ['yasir@bbts.net', 'saleha@magnetismtech.com', 'shiful@magnetismtech.com', $fromAddress];
+            $receiver = '';
+            $subject = "Sale Info Updated";
+            $messageBody = "Dear Sir,\n
+        I am writing to inform you about a new Sale $mq_no has been updated for our esteemed client, $client ($client_number). \n
+        Sale Details:
+        Client: $client
+        Client No: $client_number
+        MQ No: $mq_no \n
+        Please find the details from software in Sales List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
             Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
                 $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
             });
-            DB::commit();
             return redirect()->route('sales.index')->with('success', 'Sales Updated Successfully');
         } catch (Exception $err) {
             DB::rollBack();
@@ -218,18 +239,18 @@ class SaleController extends Controller
         $data = [];
         foreach ($raw['fr_no'] as $key => $value) {
             $data[] = [
-                'checked'               => (isset($raw['checked']) && isset($raw['checked'][$key])) ? 1 : 0,
-                'fr_no'                 => $raw['fr_no'][$key],
-                'costing_id'            => $raw['costing_id'][$key],
-                'client_no'             => $raw['client_no'],
-                'delivery_date'         => $raw['delivery_date'][$key],
-                'billing_address_id'    => $raw['billing_address_id'][$key],
+                'checked' => (isset($raw['checked']) && isset($raw['checked'][$key])) ? 1 : 0,
+                'fr_no' => $raw['fr_no'][$key],
+                'costing_id' => $raw['costing_id'][$key],
+                'client_no' => $raw['client_no'],
+                'delivery_date' => $raw['delivery_date'][$key],
+                'billing_address_id' => $raw['billing_address_id'][$key],
                 'collection_address_id' => $raw['collection_address_id'][$key],
                 // 'bill_payment_date'     => $raw['bill_payment_date'][$key],
                 // 'payment_status'        => $raw['payment_status'][$key],
-                'mrc'                   => $raw['mrc'][$key],
-                'otc'                   => $raw['otc'][$key],
-                'total_mrc'             => $raw['total_mrc'][$key]
+                'mrc' => $raw['mrc'][$key],
+                'otc' => $raw['otc'][$key],
+                'total_mrc' => $raw['total_mrc'][$key]
             ];
         }
         return $data;
@@ -241,18 +262,18 @@ class SaleController extends Controller
         foreach ($raw['fr_no'] as $key => $value) {
             foreach ($raw['product_name'][$key] as $key1 => $value) {
                 $rowData = [
-                    'product_name'      => $raw['product_name'][$key][$key1],
-                    'fr_no'             => $raw['fr_no'][$key],
-                    'product_id'        => $raw['product_id'][$key][$key1],
-                    'quantity'          => $raw['quantity'][$key][$key1],
-                    'unit'              => $raw['unit'][$key][$key1],
-                    'rate'              => $raw['rate'][$key][$key1],
-                    'price'             => $raw['price'][$key][$key1],
-                    'total_price'       => $raw['total_price'][$key][$key1],
-                    'vat_amount'        => $raw['vat_amount'][$key][$key1],
-                    'sale_id'           => $saleDetail[$key]['sale_id'],
-                    'sale_detail_id'    => $saleDetail[$key]['id'],
-                    'updated_at'        => now()
+                    'product_name' => $raw['product_name'][$key][$key1],
+                    'fr_no' => $raw['fr_no'][$key],
+                    'product_id' => $raw['product_id'][$key][$key1],
+                    'quantity' => $raw['quantity'][$key][$key1],
+                    'unit' => $raw['unit'][$key][$key1],
+                    'rate' => $raw['rate'][$key][$key1],
+                    'price' => $raw['price'][$key][$key1],
+                    'total_price' => $raw['total_price'][$key][$key1],
+                    'vat_amount' => $raw['vat_amount'][$key][$key1],
+                    'sale_id' => $saleDetail[$key]['sale_id'],
+                    'sale_detail_id' => $saleDetail[$key]['id'],
+                    'updated_at' => now()
                 ];
                 if ($includeCreatedAt) {
                     $rowData['created_at'] = now();
@@ -270,13 +291,13 @@ class SaleController extends Controller
         foreach ($raw['fr_no'] as $key => $value) {
             foreach ($raw['link_no'][$key] as $key1 => $value) {
                 $rowData = [
-                    'link_no'           => $raw['link_no'][$key][$key1],
-                    'client_no'         => $raw['client_no'],
-                    'link_type'         => $raw['link_type'][$key][$key1],
-                    'fr_no'             => $raw['fr_no'][$key],
-                    'sale_id'           => $saleDetail[$key]['sale_id'],
-                    'sale_detail_id'    => $saleDetail[$key]['id'],
-                    'updated_at'        => now()
+                    'link_no' => $raw['link_no'][$key][$key1],
+                    'client_no' => $raw['client_no'],
+                    'link_type' => $raw['link_type'][$key][$key1],
+                    'fr_no' => $raw['fr_no'][$key],
+                    'sale_id' => $saleDetail[$key]['sale_id'],
+                    'sale_detail_id' => $saleDetail[$key]['id'],
+                    'updated_at' => now()
                 ];
                 if ($includeCreatedAt) {
                     $rowData['created_at'] = now();
@@ -299,16 +320,16 @@ class SaleController extends Controller
             ->where('is_modified', 0)
             ->whereNotIn('mq_no', $existing_sales_mq)
             ->get()
-            ->map(fn ($item) => [
-                'value'                 => $item->client->client_name,
-                'label'                 => $item->client->client_name . ' ( ' . ($item->mq_no ?? '') . ' )',
-                'client_no'             => $item->client_no,
-                'client_id'             => $item->client->id,
-                'offer_id'              => $item->id,
-                'mq_no'                 => $item->mq_no,
-                'billing_address'       => BillingAddress::where('client_no', $item->client_no)->get(),
-                'collection_address'    => CollectionAddress::where('client_no', $item->client_no)->get(),
-                'details'               => $item->offerDetails
+            ->map(fn($item) => [
+                'value' => $item->client->client_name,
+                'label' => $item->client->client_name . ' ( ' . ($item->mq_no ?? '') . ' )',
+                'client_no' => $item->client_no,
+                'client_id' => $item->client->id,
+                'offer_id' => $item->id,
+                'mq_no' => $item->mq_no,
+                'billing_address' => BillingAddress::where('client_no', $item->client_no)->get(),
+                'collection_address' => CollectionAddress::where('client_no', $item->client_no)->get(),
+                'details' => $item->offerDetails
             ]);
         return response()->json($items);
     }
@@ -319,13 +340,13 @@ class SaleController extends Controller
             ->with(['client'])
             ->where('mq_no', 'like', '%' . request()->search . '%')
             ->get()
-            ->map(fn ($item) => [
-                'value'        => $item->mq_no,
-                'label'        => $item->mq_no . '( ' . ($item->client->client_name ?? '') . ' )',
-                'client_no'    => $item->client_no,
-                'client_name'  => $item->client->client_name ?? '',
-                'offer_id'     => $item->id,
-                'mq_no'        => $item->mq_no
+            ->map(fn($item) => [
+                'value' => $item->mq_no,
+                'label' => $item->mq_no . '( ' . ($item->client->client_name ?? '') . ' )',
+                'client_no' => $item->client_no,
+                'client_name' => $item->client->client_name ?? '',
+                'offer_id' => $item->id,
+                'mq_no' => $item->mq_no
             ]);
         return response()->json($items);
     }
@@ -341,10 +362,10 @@ class SaleController extends Controller
     {
         $items = Employee::where('name', 'like', '%' . request()->search . '%')
             ->get()
-            ->map(fn ($item) => [
-                'value'        => $item->name,
-                'label'        => $item->name,
-                'id'           => $item->id
+            ->map(fn($item) => [
+                'value' => $item->name,
+                'label' => $item->name,
+                'id' => $item->id
             ]);
         return response()->json($items);
     }
@@ -456,26 +477,26 @@ class SaleController extends Controller
                         $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
 
                         $link_equipment_requisition = [
-                            "client_no"         => $saleDetail->client_no,
-                            "mrs_no"            => $mrsNo,
-                            "fr_no"             => $saleDetail->fr_no,
-                            "link_no"           => $saleLinkDetail->planLinkDetail->link_no,
-                            "type"              => 'client',
-                            "requisition_by"    => auth()->id(),
-                            "branch_id"         => $saleDetail->frDetails->branch_id,
-                            "date"              => now()->format('d-m-Y'),
+                            "client_no" => $saleDetail->client_no,
+                            "mrs_no" => $mrsNo,
+                            "fr_no" => $saleDetail->fr_no,
+                            "link_no" => $saleLinkDetail->planLinkDetail->link_no,
+                            "type" => 'client',
+                            "requisition_by" => auth()->id(),
+                            "branch_id" => $saleDetail->frDetails->branch_id,
+                            "date" => now()->format('d-m-Y'),
                         ];
                         $link_equipment_requisitionData = ScmRequisition::create($link_equipment_requisition);
 
                         $link_eqp_details = [];
                         foreach ($saleLinkDetail->planLinkDetail->PlanLinkEquipments as $planLinkEquipment) {
                             $link_eqp_details[] = [
-                                "material_id"   => $planLinkEquipment->material_id,
-                                "item_code"     => $planLinkEquipment->material->code,
-                                "req_key"       => $link_equipment_requisitionData->id . '-' . $planLinkEquipment->material->code,
-                                "brand_id"      => $planLinkEquipment->brand_id,
-                                "quantity"      => $planLinkEquipment->quantity,
-                                "model"         => $planLinkEquipment->model,
+                                "material_id" => $planLinkEquipment->material_id,
+                                "item_code" => $planLinkEquipment->material->code,
+                                "req_key" => $link_equipment_requisitionData->id . '-' . $planLinkEquipment->material->code,
+                                "brand_id" => $planLinkEquipment->brand_id,
+                                "quantity" => $planLinkEquipment->quantity,
+                                "model" => $planLinkEquipment->model,
                             ];
                         }
                         $link_equipment_requisitionData->scmRequisitiondetails()->createMany($link_eqp_details);
@@ -486,25 +507,25 @@ class SaleController extends Controller
                     $mrsNo = 'MRS-' . $currentYear . '-' . $mrsNoCounter;
 
                     $product_equipment_requisitions = [
-                        "client_no"         => $saleDetail->client_no,
-                        "mrs_no"            => $mrsNo,
-                        "fr_no"             => $saleDetail->fr_no,
-                        "type"              => 'client',
-                        "requisition_by"    => auth()->id(),
-                        "branch_id"         => $saleDetail->frDetails->branch_id,
-                        "date"              => now()->format('d-m-Y'),
+                        "client_no" => $saleDetail->client_no,
+                        "mrs_no" => $mrsNo,
+                        "fr_no" => $saleDetail->fr_no,
+                        "type" => 'client',
+                        "requisition_by" => auth()->id(),
+                        "branch_id" => $saleDetail->frDetails->branch_id,
+                        "date" => now()->format('d-m-Y'),
                     ];
 
                     $product_equipment_requisitionsData = ScmRequisition::create($product_equipment_requisitions);
                     $product_eqp_details = [];
                     foreach ($saleDetail->costing->planning->equipmentPlans as $equipmentPlan) {
                         $product_eqp_details[] = [
-                            "material_id"   => $equipmentPlan->material_id,
-                            "item_code"     => $equipmentPlan->material->code,
-                            "req_key"       => $product_equipment_requisitionsData->id . '-' . $equipmentPlan->material->code,
-                            "brand_id"      => $equipmentPlan->brand_id,
-                            "quantity"      => $equipmentPlan->quantity,
-                            "model"         => $equipmentPlan->model,
+                            "material_id" => $equipmentPlan->material_id,
+                            "item_code" => $equipmentPlan->material->code,
+                            "req_key" => $product_equipment_requisitionsData->id . '-' . $equipmentPlan->material->code,
+                            "brand_id" => $equipmentPlan->brand_id,
+                            "quantity" => $equipmentPlan->quantity,
+                            "model" => $equipmentPlan->model,
                         ];
                     }
                     $product_equipment_requisitionsData->scmRequisitiondetails()->createMany($product_eqp_details);
@@ -556,11 +577,11 @@ class SaleController extends Controller
                 $TotalAmount = $saleData->otc;
                 $installation_charge = -1 * ($TotalAmount - $equipment_amount);
                 $otc = [
-                    'client_no' =>  $values->client_no,
-                    'fr_no' =>  $values->fr_no,
+                    'client_no' => $values->client_no,
+                    'fr_no' => $values->fr_no,
                     'sale_id' => $saleData->sale_id,
                     'sale_detail_id' => $saleData->id,
-                    'date' =>  Carbon::now()->format('Y-m-d'),
+                    'date' => Carbon::now()->format('Y-m-d'),
                     'user_id' => auth()->id(),
                     'equipment_amount' => $equipment_amount,
                     'installation_charge' => $installation_charge,
@@ -642,19 +663,28 @@ class SaleController extends Controller
             $sales->update([
                 'management_approval' => 'Approved',
                 'management_approved_by' => auth()->user()->id,
-                'approval_date'  => now()
+                'approval_date' => now()
             ]);
 
-            $client = $sales->client->client_name;
-            $to = 'implementation@bbts.net';
-            $cc = 'yasir@bbts.net';
-//                $cc = 'saleha@magnetismtech.com';
-            $receiver = '';
-            $subject = "PNL Summary Update";
-            $messageBody = "PNL Summary management approval status updated for sale $sales->mq_no for the client $client ($sales->client_no). Please find the details from Sales List.";
-
+            $client = $request->client_name ?? '';
+            $client_number = $sales->client_no ?? '';
+            $mq_no = $sales->mq_no ?? '';
             $fromAddress = auth()->user()->email;
             $fromName = auth()->user()->name;
+            $to = 'implementation@bbts.net';
+            $cc = ['yasir@bbts.net', 'saleha@magnetismtech.com', 'shiful@magnetismtech.com', $fromAddress];
+            $receiver = '';
+            $subject = "PNL Summary Update";
+            $messageBody = "Dear Sir,\n
+            PNL Summary management approval status updated for sale $mq_no for the client $client ($client_number). Please find the details from Sales List. \n
+            PNL Summary Details:
+            Client: $client
+            Client No: $client_number
+            MQ No: $mq_no \n
+            Please find the details from software in Sales List.
+            Thank you for your attention to this matter. I look forward to your guidance and support.\n
+            Best regards,
+            $fromName";
 
             Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
                 $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
@@ -748,16 +778,16 @@ class SaleController extends Controller
         });
 
         return PDF::loadView('sales::offers.client_offer_pdf', compact('mq_no', 'offer', 'offerData', 'uniqueEquipments'), [], [
-            'format'                     => 'A4',
-            'orientation'                => 'L',
-            'title'                      => 'Client Offer PDF',
-            'watermark'                  => 'BBTS',
-            'show_watermark'             => true,
-            'watermark_text_alpha'       => 0.1,
-            'watermark_image_path'       => '',
-            'watermark_image_alpha'      => 0.2,
-            'watermark_image_size'       => 'D',
-            'watermark_image_position'   => 'P',
+            'format' => 'A4',
+            'orientation' => 'L',
+            'title' => 'Client Offer PDF',
+            'watermark' => 'BBTS',
+            'show_watermark' => true,
+            'watermark_text_alpha' => 0.1,
+            'watermark_image_path' => '',
+            'watermark_image_alpha' => 0.2,
+            'watermark_image_size' => 'D',
+            'watermark_image_position' => 'P',
         ])->stream('client-offer.pdf');
     }
 
@@ -768,19 +798,20 @@ class SaleController extends Controller
             ->where('mq_no', $mq_no)->first();
 
         return PDF::loadView('sales::pnl.pnl_summary_pdf', ['feasibility_requirement' => $feasibility_requirement], [], [
-            'format'                     => 'A4',
-            'orientation'                => 'L',
-            'title'                      => 'PNL Summary PDF',
-            'watermark'                  => 'BBTS',
-            'show_watermark'             => true,
-            'watermark_text_alpha'       => 0.1,
-            'watermark_image_path'       => '',
-            'watermark_image_alpha'      => 0.2,
-            'watermark_image_size'       => 'D',
-            'watermark_image_position'   => 'P',
+            'format' => 'A4',
+            'orientation' => 'L',
+            'title' => 'PNL Summary PDF',
+            'watermark' => 'BBTS',
+            'show_watermark' => true,
+            'watermark_text_alpha' => 0.1,
+            'watermark_image_path' => '',
+            'watermark_image_alpha' => 0.2,
+            'watermark_image_size' => 'D',
+            'watermark_image_position' => 'P',
         ])->stream('pnl-summary.pdf');
         return view('sales::pnl.pnl_summary_pdf', compact('feasibility_requirement'));
     }
+
     public function pnlDetailsPdf($mq_no = null)
     {
         $feasibility_requirement = FeasibilityRequirement::with('feasibilityRequirementDetails.costing.costingProducts')
@@ -797,19 +828,20 @@ class SaleController extends Controller
         });
 
         return PDF::loadView('sales::pnl.pnl_details_pdf', ['feasibility_requirement' => $feasibility_requirement], [], [
-            'format'                     => 'A4',
-            'orientation'                => 'L',
-            'title'                      => 'PNL Details',
-            'watermark'                  => 'BBTS',
-            'show_watermark'             => true,
-            'watermark_text_alpha'       => 0.1,
-            'watermark_image_path'       => '',
-            'watermark_image_alpha'      => 0.2,
-            'watermark_image_size'       => 'D',
-            'watermark_image_position'   => 'P',
+            'format' => 'A4',
+            'orientation' => 'L',
+            'title' => 'PNL Details',
+            'watermark' => 'BBTS',
+            'show_watermark' => true,
+            'watermark_text_alpha' => 0.1,
+            'watermark_image_path' => '',
+            'watermark_image_alpha' => 0.2,
+            'watermark_image_size' => 'D',
+            'watermark_image_position' => 'P',
         ])->stream('details.pdf');
         return view('sales::pnl.pnl_details_pdf', compact('feasibility_requirement'));
     }
+
     public function modifiedList()
     {
         $sales = Sale::activation()
