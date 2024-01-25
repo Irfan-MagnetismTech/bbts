@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Http\Controllers\LeadGenerationController;
 use Modules\Sales\Http\Controllers\MeetingController;
 use Modules\Sales\Http\Controllers\FollowupController;
@@ -83,6 +84,7 @@ Route::prefix('sales')->middleware(['auth'])->group(function () {
     Route::get('modified-costing-list', [CostingController::class, 'modifiedList'])->name('modified-costing-list');
     Route::get('modified-offer-list', [OfferController::class, 'modifiedList'])->name('modified-offer-list');
     Route::get('modified-sale-list', [SaleController::class, 'modifiedList'])->name('modified-sale-list');
+    Route::get('lead-generation-pdf/{id}', [LeadGenerationController::class, 'leadGenerationPdf'])->name('lead-generation-pdf');
     Route::get('costing-pdf/{id}', [CostingController::class, 'costingPdf'])->name('costing-pdf');
     Route::get('planning-pdf/{id}', [PlanningController::class, 'planningPdf'])->name('planning-pdf');
     Route::get('survey-pdf/{id}', [SurveyController::class, 'surveyPdf'])->name('survey-pdf');

@@ -129,6 +129,11 @@
                                                 class="fas fa-pen"></i>
                                         </a>
                                     @endcan
+                                    {{-- pdf --}}
+                                    <a href="{{ route('lead-generation-pdf', $lead_generation->id) }}"
+                                        data-toggle="tooltip" title="PDF" class="btn btn-outline-danger"><i
+                                            class="fas fa-file-pdf"></i>
+                                    </a>
                                     @can('lead-generation-delete')
                                         <form action="{{ route('lead-generation.destroy', $lead_generation->id) }}"
                                             method="POST" data-toggle="tooltip" title="Delete" class="d-inline">

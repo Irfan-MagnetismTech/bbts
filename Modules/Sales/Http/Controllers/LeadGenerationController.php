@@ -16,6 +16,7 @@ use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\Offer;
 use Modules\Sales\Entities\Sale;
+use PDF;
 
 class LeadGenerationController extends Controller
 {
@@ -34,8 +35,8 @@ class LeadGenerationController extends Controller
 
     public function index()
     {
-        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
-        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $from_date = request()->get('from_date') ? date('Y-m-d', strtotime(request()->get('from_date'))) : date('Y-m-d');
+        $to_date = request()->get('to_date') ? date('Y-m-d', strtotime(request()->get('to_date'))) : date('Y-m-d');
         $lead_generations = LeadGeneration::with('division', 'district', 'thana')
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('created_at', '>=', $from_date);
@@ -43,6 +44,7 @@ class LeadGenerationController extends Controller
             ->when($to_date, function ($query, $to_date) {
                 return $query->whereDate('created_at', '<=', $to_date);
             })
+            ->where('created_by', auth()->user()->id)
             ->orderBy('id', 'DESC')
             ->get();
         return view('sales::lead_generation.index', compact('lead_generations'));
@@ -93,7 +95,7 @@ class LeadGenerationController extends Controller
 
         $client = $leadGeneration->client_name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com'];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com'];
         $receiver = '';
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
@@ -169,7 +171,7 @@ class LeadGenerationController extends Controller
 
         $client = $lead_generation->client_name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com'];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com'];
         $receiver = '';
         $subject = "Lead Generation Info Updated";
         $messageBody = "Lead generation info has been updated for the client $client ($lead_generation->client_no). Please find the details from Lead Generation List.";
@@ -219,7 +221,7 @@ class LeadGenerationController extends Controller
 
         $client = $lead_generation->client_name;
         $to = $lead_generation->createdBy->email;
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com'];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com'];
         $receiver = '';
         $subject = "Lead Generation Info Updated";
         $messageBody = "Client status updated to $lead_generation->status for client $client ($lead_generation->client_no). Please find the detailed Lead Generation List.";
@@ -286,5 +288,12 @@ class LeadGenerationController extends Controller
             'thanas' => $thanas,
         ];
         return response()->json($data);
+    }
+
+    public function leadGenerationPdf($id)
+    {
+        $lead_generation = LeadGeneration::with('division', 'district', 'thana')->find($id);
+        $pdf = PDF::loadView('sales::lead_generation.pdf', compact('lead_generation'));
+        return $pdf->download('lead_generation.pdf');
     }
 }
