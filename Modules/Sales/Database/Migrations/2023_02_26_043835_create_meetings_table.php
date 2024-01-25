@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->date('visit_date')->nullable();
             $table->string('sales_representative')->nullable();
-            $table->time('meeting_start_time')->nullable();
-            $table->time('meeting_end_time')->nullable();
+            $table->string('meeting_start_time')->nullable();
+            $table->string('meeting_end_time')->nullable();
             $table->string('meeting_place')->nullable();
             $table->string('client_no')->nullable();
             $table->text('purpose')->nullable();

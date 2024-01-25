@@ -96,11 +96,11 @@ class LeadGenerationController extends Controller
         $client_address = $leadGeneration->address ?? '';
         $client_business_type = $leadGeneration->business_type ?? '';
         $client_status = $leadGeneration->status ?? '';
-        $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com'];
-        $receiver = '';
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
+        $to = 'salesadmin@bbts.net';
+        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $receiver = '';
         $subject = "New Lead Generation Created";
         $messageBody = "Dear Sir,\n
         I am writing to inform you about a new lead that has been generated for our esteemed client, $client ($client_number). \n
@@ -109,8 +109,8 @@ class LeadGenerationController extends Controller
         Client No: $client_number
         Address: $client_address
         Business Type: $client_business_type
-        Status: $client_status\n
-        Please find the details from Lead Generation List.
+        Status: $client_status \n
+        Please find the details from software in Lead Generation List.
         Thank you for your attention to this matter. I look forward to your guidance and support.\n
         Best regards,
         $fromName";
@@ -176,11 +176,11 @@ class LeadGenerationController extends Controller
         $client_address = $lead_generation->address ?? '';
         $client_business_type = $lead_generation->business_type ?? '';
         $client_status = $lead_generation->status ?? '';
-        $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com'];
-        $receiver = '';
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
+        $to = 'salesadmin@bbts.net';
+        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $receiver = '';
         $subject = "Lead Generation Info Updated";
         $messageBody = "Dear Sir,\n
         I am writing to inform you about a Lead Generation info has been updated for our esteemed client, $client ($client_number). \n
@@ -189,8 +189,8 @@ class LeadGenerationController extends Controller
         Client No: $client_number
         Address: $client_address
         Business Type: $client_business_type
-        Status: $client_status\n
-        Please find the details from Lead Generation List.
+        Status: $client_status \n
+        Please find the details from software in Lead Generation List.
         Thank you for your attention to this matter. I look forward to your guidance and support.\n
         Best regards,
         $fromName";
@@ -241,13 +241,14 @@ class LeadGenerationController extends Controller
         $client_address = $lead_generation->address ?? '';
         $client_business_type = $lead_generation->business_type ?? '';
         $client_status = $lead_generation->status ?? '';
-        $to = $lead_generation->createdBy->email;
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com'];
-        $receiver = '';
         $fromAddress = 'salesadmin@bbts.net';
         $fromName = auth()->user()->name;
+        $to = $lead_generation->createdBy->email;
+        $toName = $lead_generation->createdBy->name ?? '';
+        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $receiver = '';
         $subject = "Lead Generation Client Status Updated";
-        $messageBody = "Dear Team Member,\n
+        $messageBody = "Dear $toName,\n
         Client status updated to $client_status for client $client ($client_number). \n
         Lead Details:
         Client: $client
@@ -255,7 +256,7 @@ class LeadGenerationController extends Controller
         Address: $client_address
         Business Type: $client_business_type
         Status: $client_status
-        Please find the details from Lead Generation List.\n
+        Please find the details from software in Lead Generation List.\n
         Best regards,
         $fromName";
         Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {

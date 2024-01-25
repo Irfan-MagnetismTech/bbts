@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -49,16 +50,39 @@ class MeetingController extends Controller
     {
         $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose', 'client_type', 'created_by']);
         $data['created_by'] = auth()->user()->id;
+        $data['meeting_start_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_start_time'))->format('g:i A');
+        $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
         $meeting = Meeting::create($data);
 
-        $client = $meeting->client->client_name;
-        $to = 'salesadmin@bbts.net';
-        $cc = 'yasir@bbts.net';
-        $receiver = '';
-        $subject = "New Meeting Created";
-        $messageBody = "A new meeting has been scheduled for the client $client ($meeting->client_no). Please find the detailed Client Meeting List.";
+        $client = $meeting->client->client_name ?? '';
+        $client_number = $meeting->client_no ?? '';
+        $visit_date = $meeting->visit_date ?? '';
+        $meeting_start_time = $meeting->meeting_start_time ?? '';
+        $meeting_end_time = $meeting->meeting_end_time ?? '';
+        $meeting_place = $meeting->meeting_place ?? '';
+        $purpose = $meeting->purpose ?? '';
+        $status = $meeting->status ?? '';
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
+        $to = 'salesadmin@bbts.net';
+        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $receiver = '';
+        $subject = "New Meeting Created";
+        $messageBody = "Dear Sir,\n
+        I am writing to inform you about a new meeting has been scheduled for our esteemed client, $client ($client_number). \n
+        Meeting Details:
+        Client: $client
+        Client No: $client_number
+        Visit Date: $visit_date
+        Meeting Start Time: $meeting_start_time
+        Meeting End Time: $meeting_end_time
+        Meeting Place: $meeting_place
+        Meeting Purpose: $purpose
+        Meeting Status: $status \n
+        Please find the details from software in Client Meeting List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
         Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
             $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
@@ -98,18 +122,39 @@ class MeetingController extends Controller
     {
         $data = $request->only(['visit_date', 'sales_representative', 'meeting_start_time', 'meeting_end_time', 'meeting_place', 'client_no', 'purpose', 'client_type', 'created_by']);
         $data['created_by'] = auth()->user()->id;
+        $data['meeting_start_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_start_time'))->format('g:i A');
+        $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
         $meeting->update($data);
 
-        $client = $meeting->client->client_name;
-        $to = 'salesadmin@bbts.net';
-        $cc = 'yasir@bbts.net';
-        //        $cc = 'shiful@magnetismtech.com';
-        $receiver = '';
-        $subject = "Meeting Rescheduled";
-        $messageBody = "Meeting has been rescheduled for the client $client ($meeting->client_no). Please find the detailed Client Meeting List.";
+        $client = $meeting->client->client_name ?? '';
+        $client_number = $meeting->client_no ?? '';
+        $visit_date = $meeting->visit_date ?? '';
+        $meeting_start_time = $meeting->meeting_start_time ?? '';
+        $meeting_end_time = $meeting->meeting_end_time ?? '';
+        $meeting_place = $meeting->meeting_place ?? '';
+        $purpose = $meeting->purpose ?? '';
+        $status = $meeting->status ?? '';
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
-
+        $to = 'salesadmin@bbts.net';
+        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $receiver = '';
+        $subject = "Meeting Rescheduled";
+        $messageBody = "Dear Sir,\n
+        I am writing to inform you about Meeting has been rescheduled for our esteemed client, $client ($client_number). \n
+        Meeting Details:
+        Client: $client
+        Client No: $client_number
+        Visit Date: $visit_date
+        Meeting Start Time: $meeting_start_time
+        Meeting End Time: $meeting_end_time
+        Meeting Place: $meeting_place
+        Meeting Purpose: $purpose
+        Meeting Status: $status \n
+        Please find the details from software in Client Meeting List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
         Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
             $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
         });
@@ -132,15 +177,36 @@ class MeetingController extends Controller
         $meeting = Meeting::find($id);
         $meeting->update(['status' => $request->status]);
 
-        $client = $meeting->client->client_name;
-        $to = $meeting->createdBy->email;
-//        $cc = 'shiful@magnetismtech.com';
-        $cc = 'yasir@bbts.net';
-        $receiver = '';
-        $subject = "Meeting Info Updated";
-        $messageBody = "Meeting status updated to $meeting->status for client $client ($meeting->client_no). Please find the detailed Client Meeting List.";
+        $client = $meeting->client->client_name ?? '';
+        $client_number = $meeting->client_no ?? '';
+        $visit_date = $meeting->visit_date ?? '';
+        $meeting_start_time = $meeting->meeting_start_time ?? '';
+        $meeting_end_time = $meeting->meeting_end_time ?? '';
+        $meeting_place = $meeting->meeting_place ?? '';
+        $purpose = $meeting->purpose ?? '';
+        $status = $meeting->status ?? '';
         $fromAddress = 'salesadmin@bbts.net';
         $fromName = auth()->user()->name;
+        $to = $meeting->createdBy->email;
+        $toName = $meeting->createdBy->name ?? '';
+        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $receiver = '';
+        $subject = "Meeting Status Updated";
+        $messageBody = "Dear $toName,\n
+        I am writing to inform you about Meeting status updated to $status for our esteemed client, $client ($client_number). \n
+        Meeting Details:
+        Client: $client
+        Client No: $client_number
+        Visit Date: $visit_date
+        Meeting Start Time: $meeting_start_time
+        Meeting End Time: $meeting_end_time
+        Meeting Place: $meeting_place
+        Meeting Purpose: $purpose
+        Meeting Status: $status \n
+        Please find the details from software in Client Meeting List.
+        Thank you for your attention to this matter. I look forward to your guidance and support.\n
+        Best regards,
+        $fromName";
 
         Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
             $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
