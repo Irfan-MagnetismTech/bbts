@@ -47,6 +47,10 @@ class LeadGenerationController extends Controller
             ->where('created_by', auth()->user()->id)
             ->orderBy('id', 'DESC')
             ->get();
+        if (request()->type == 'PDF') {
+            $pdf = PDF::loadView('sales::lead_generation.pdf_list', compact('lead_generations'));
+            return $pdf->download('lead_generation.pdf');
+        }
         return view('sales::lead_generation.index', compact('lead_generations'));
     }
 
@@ -101,7 +105,7 @@ class LeadGenerationController extends Controller
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "New Lead Generation Created";
         $messageBody = "Dear Sir,\n
@@ -181,7 +185,7 @@ class LeadGenerationController extends Controller
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "Lead Generation Info Updated";
         $messageBody = "Dear Sir,\n
@@ -247,7 +251,7 @@ class LeadGenerationController extends Controller
         $fromName = auth()->user()->name;
         $to = $lead_generation->createdBy->email;
         $toName = $lead_generation->createdBy->name ?? '';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "Lead Generation Client Status Updated";
         $messageBody = "Dear $toName,\n

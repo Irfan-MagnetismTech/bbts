@@ -37,6 +37,15 @@
                 </div>
             </div>
             <div class="col-md-3">
+                <div class="form-group">
+                    <label for="type" class="font-weight-bold">Select type:</label>
+                    <select name="type" id="type" class="form-control">
+                        <option value="List" {{ request()->type == 'List' ? 'selected' : '' }}>List</option>
+                        <option value="PDF" {{ request()->type == 'PDF' ? 'selected' : '' }}>PDF</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
                 <div class="form-group my-4 row">
                     <div class="col-md-6">
                         <input type="button" onclick="resetForm()" value="Reset"

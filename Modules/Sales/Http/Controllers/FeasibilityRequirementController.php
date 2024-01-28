@@ -130,21 +130,21 @@ class FeasibilityRequirementController extends Controller
 
                 Notification::send($notificationReceivers, new CommonNotification('Sales Admin', 'A new feasibility requirement has been created', 'feasibility-requirement.index'));
 
-                $client = $request->client_name ?? '';
-                $to = 'survey@bbts.net';
-                $cc = 'yasir@bbts.net';
-                $receiver = '';
-                $subject = "New Feasibility Requirement Created";
-                $messageBody = "A new $feasibilityRequirement->mq_no has been created for the client $client ($feasibilityRequirement->client_no). Please find the details from Feasibility Requirement List.";
-                // $fromAddress = 'csd@bbts.net';
-                $fromAddress = auth()->user()->email;
-                $fromName = auth()->user()->name;
+                // $client = $request->client_name ?? '';
+                // $to = 'survey@bbts.net';
+                // $cc = 'yasir@bbts.net';
+                // $receiver = '';
+                // $subject = "New Feasibility Requirement Created";
+                // $messageBody = "A new $feasibilityRequirement->mq_no has been created for the client $client ($feasibilityRequirement->client_no). Please find the details from Feasibility Requirement List.";
+                // // $fromAddress = 'csd@bbts.net';
+                // $fromAddress = auth()->user()->email;
+                // $fromName = auth()->user()->name;
                 // Mail::send('sales::email.feasibility_requirement', ['feasibilityRequirement' => $feasibilityRequirement], function ($message) use ($to, $cc, $subject) {
                 //     $message->to($to)->cc($cc)->subject($subject);
                 // });
-                Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-                    $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-                });
+                // Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                //     $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+                // });
 
                 DB::commit();
                 return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
