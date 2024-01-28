@@ -44,9 +44,12 @@ class LeadGenerationController extends Controller
             ->when($to_date, function ($query, $to_date) {
                 return $query->whereDate('created_at', '<=', $to_date);
             })
-            ->where('created_by', auth()->user()->id)
-            ->orderBy('id', 'DESC')
-            ->get();
+            ->clone();
+            
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $lead_generations = $lead_generations->where('created_by', auth()->user()->id);
+        }
+        $lead_generations = $lead_generations->latest()->get();
         if (request()->type == 'PDF') {
             $pdf = PDF::loadView('sales::lead_generation.pdf_list', compact('lead_generations'));
             return $pdf->download('lead_generation.pdf');

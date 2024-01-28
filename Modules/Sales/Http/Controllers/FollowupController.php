@@ -29,7 +29,14 @@ class FollowupController extends Controller
 
     public function index()
     {
-        $followups = Followup::with('meeting', 'client')->latest()->get();
+        $followups = Followup::with('meeting', 'client')
+                    ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $followups = $followups->whereHas('meeting', function ($query) {
+                $query->where('created_by', auth()->user()->id);
+            });
+        }
+        $followups = $followups->latest()->get();
         return view('sales::followup.index', compact('followups'));
     }
 

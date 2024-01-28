@@ -40,8 +40,8 @@ class SurveyController extends Controller
     public function index()
     {
         // dd('ok');
-        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
-        $to_date = request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : date('Y-m-d');
+        $to_date = request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : date('Y-m-d');
         $surveys = Survey::with('surveyDetails', 'lead_generation')
             ->when($from_date, function ($query, $from_date) {
                 return $query->where('created_at', '>=', $from_date);
@@ -50,8 +50,11 @@ class SurveyController extends Controller
                 return $query->where('created_at', '<=', $to_date);
             })
             ->where('is_modified', 0)
-            ->latest()
-            ->get();
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $surveys = $surveys->where('user_id', auth()->user()->id);
+        }
+        $surveys = $surveys->latest()->get();
         return view('sales::survey.index', compact('surveys'));
     }
 

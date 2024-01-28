@@ -27,7 +27,12 @@ class MeetingController extends Controller
     }
     public function index()
     {
-        $meetings = Meeting::with('client')->latest()->get();
+        $meetings = Meeting::with('client')
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $meetings = $meetings->where('created_by', auth()->user()->id);
+        }
+        $meetings = $meetings->latest()->get();
         return view('sales::meeting.index', compact('meetings'));
     }
 
@@ -65,7 +70,7 @@ class MeetingController extends Controller
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "New Meeting Created";
         $messageBody = "Dear Sir,\n
@@ -137,7 +142,7 @@ class MeetingController extends Controller
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "Meeting Rescheduled";
         $messageBody = "Dear Sir,\n
@@ -189,7 +194,7 @@ class MeetingController extends Controller
         $fromName = auth()->user()->name;
         $to = $meeting->createdBy->email;
         $toName = $meeting->createdBy->name ?? '';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "Meeting Status Updated";
         $messageBody = "Dear $toName,\n
