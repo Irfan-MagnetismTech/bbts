@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -15,6 +16,7 @@ use Modules\Sales\Entities\Planning;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\LeadGeneration;
 use Illuminate\Support\Facades\Mail;
+use Modules\Admin\Entities\User;
 use PDF;
 
 
@@ -89,6 +91,18 @@ class CostingController extends Controller
             $this->createOrUpdateCostingLinks($request, $costing);
 
             DB::commit();
+
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Planning',
+                'message' => 'A new Costing has been created by ' . auth()->user()->name,
+                'url' => 'sales/costing/' . $costing->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
             $client = $request->client_name ?? '';
             $client_number = $costing->client_no ?? '';
@@ -171,6 +185,17 @@ class CostingController extends Controller
             $this->createOrUpdateCostingLinks($request, $costing);
 
             DB::commit();
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Planning',
+                'message' => 'A Costing has been updated by ' . auth()->user()->name,
+                'url' => 'sales/costing/' . $costing->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
             $client = $request->client_name ?? '';
             $client_number = $costing->client_no ?? '';

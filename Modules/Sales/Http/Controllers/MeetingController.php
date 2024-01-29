@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\Meeting;
 use Illuminate\Support\Facades\Mail;
+use Modules\Admin\Entities\User;
 use Modules\Sales\Http\Requests\MeetingRequest;
 
 class MeetingController extends Controller
@@ -58,6 +60,20 @@ class MeetingController extends Controller
         $data['meeting_start_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_start_time'))->format('g:i A');
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
         $meeting = Meeting::create($data);
+
+        //notification send to sales admin
+        $notificationReceivers = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Sales Admin']);
+        })->get();
+
+        $notificationData = [
+            'type' => 'Sales Admin',
+            'message' => 'A new meeting schedule requested by ' . auth()->user()->name,
+            'url' => 'sales/meeting/' . $meeting->id,
+        ];
+
+        BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+
 
         $client = $meeting?->client->client_name ?? '';
         $client_number = $meeting->client_no ?? '';
@@ -130,6 +146,19 @@ class MeetingController extends Controller
         $data['meeting_start_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_start_time'))->format('g:i A');
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
         $meeting->update($data);
+
+        //notification send to sales admin
+        $notificationReceivers = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Sales Admin']);
+        })->get();
+
+        $notificationData = [
+            'type' => 'Sales Admin',
+            'message' => 'A new meeting schedule request updated by ' . auth()->user()->name,
+            'url' => 'sales/meeting/' . $meeting->id,
+        ];
+
+        BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
         $client = $meeting?->client->client_name ?? '';
         $client_number = $meeting->client_no ?? '';

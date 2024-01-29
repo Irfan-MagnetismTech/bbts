@@ -10,8 +10,10 @@ use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Division;
 use Illuminate\Routing\Controller;
 use App\Models\Dataencoding\Thana;
+use App\Services\BbtsGlobalService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\User;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\Offer;
@@ -45,7 +47,7 @@ class LeadGenerationController extends Controller
                 return $query->whereDate('created_at', '<=', $to_date);
             })
             ->clone();
-            
+
         if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
             $lead_generations = $lead_generations->where('created_by', auth()->user()->id);
         }
@@ -99,6 +101,21 @@ class LeadGenerationController extends Controller
         }
         $data['created_by'] = auth()->user()->id;
         $leadGeneration = LeadGeneration::create($data);
+
+        //notification send to sales admin
+
+        $notificationReceivers = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Sales Admin', 'Admin']);
+        })->get();
+
+        $notificationData = [
+            'type' => 'Lead Generation',
+            'message' => 'A new Lead Generation has been created by ' . auth()->user()->name,
+            'url' => 'sales/lead-generation/' . $leadGeneration->id,
+        ];
+
+        BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+
 
         $client = $leadGeneration->client_name ?? '';
         $client_number = $leadGeneration->client_no ?? '';
@@ -179,6 +196,21 @@ class LeadGenerationController extends Controller
             $data['document'] = $file_name;
         }
         $lead_generation->update($data);
+
+        //notification send to sales admin
+        $notificationReceivers = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Sales Admin', 'Admin']);
+        })->get();
+
+        $notificationData = [
+            'type' => 'Lead Generation',
+            'message' => 'A new Lead Generation has been updated by ' . auth()->user()->name,
+            'url' => 'sales/lead-generation/' . $lead_generation->id,
+        ];
+
+
+
+        BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
         $client = $lead_generation->client_name ?? '';
         $client_number = $lead_generation->client_no ?? '';

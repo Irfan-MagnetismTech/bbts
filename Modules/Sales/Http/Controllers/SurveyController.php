@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Modules\Sales\Http\Requests\SurveyRequest;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Pop;
 use Illuminate\Support\Facades\Mail;
+use Modules\Admin\Entities\User;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\FinalSurveyDetail;
@@ -112,6 +114,18 @@ class SurveyController extends Controller
                 SurveyDetail::create($connectivity_requirement_details);
             }
             DB::commit();
+            $offer = $this->updateOffer($data, $id);
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Survey',
+                'message' => 'A new Survey has been created by ' . auth()->user()->name,
+                'url' => 'sales/survey/' . $connectivity_requirement->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
             $client = $request->client_name ?? '';
             $client_number = $connectivity_requirement->client_no ?? '';
@@ -216,6 +230,18 @@ class SurveyController extends Controller
                 SurveyDetail::create($survey_details);
             }
             DB::commit();
+
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Survey',
+                'message' => 'A Survey has been updated by ' . auth()->user()->name,
+                'url' => 'sales/survey/' . $survey_details->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
             $client = $request->client_name ?? '';
             $client_number = $survey->client_no ?? '';

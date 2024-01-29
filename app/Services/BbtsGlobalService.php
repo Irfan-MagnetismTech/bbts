@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Dataencoding\Department;
 use App\Models\Dataencoding\Designation;
+use App\Notifications\CommonNotification;
+use Illuminate\Support\Facades\Notification;
 use Modules\Ticketing\Entities\SupportTeam;
 use Modules\Ticketing\Entities\TicketSource;
 use Modules\Ticketing\Entities\SupportTicket;
@@ -57,7 +59,7 @@ class BbtsGlobalService extends Controller
      * 
      * this function is used to get next auto increment value of any model
      */
-    public function getNextAutoIncrementValue($model) : int
+    public function getNextAutoIncrementValue($model): int
     {
         $table = (new $model())->getTable();
         $statement = DB::select("SHOW TABLE STATUS LIKE '$table'");
@@ -233,5 +235,11 @@ class BbtsGlobalService extends Controller
         }
 
         return $hours * 60 + $minutes;
+    }
+
+    public static function sendNotification($notificationReceivers, $notificationData)
+    {
+    
+        Notification::send($notificationReceivers, new CommonNotification($notificationData['type'], $notificationData['message'], $notificationData['url']));
     }
 }
