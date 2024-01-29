@@ -249,6 +249,9 @@ class LeadGenerationController extends Controller
      */
     public function destroy(LeadGeneration $lead_generation)
     {
+        if($lead_generation->feasibilityRequirement){
+            return redirect()->route('lead-generation.index')->with('error', 'Lead Generation can not be deleted');
+        }
         $lead_generation->delete();
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Deleted Successfully');
     }
