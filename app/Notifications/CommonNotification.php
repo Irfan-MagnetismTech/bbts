@@ -63,7 +63,7 @@ class CommonNotification extends Notification
         return [
             'message' => $this->message,
             'type' => $this->type,
-            'url' => $this->url
+            'url' => $this->url,
         ];
     }
 
@@ -72,7 +72,7 @@ class CommonNotification extends Notification
         return new BroadcastMessage([
             'message' => $this->message,
             'type' => $this->type,
-            'url' => $this->url
+            'url' => $this->url,
         ]);
     }
 }

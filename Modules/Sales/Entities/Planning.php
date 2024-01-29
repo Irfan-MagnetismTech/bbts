@@ -3,6 +3,7 @@
 namespace Modules\Sales\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Admin\Entities\User;
 
 class Planning extends Model
 {
@@ -61,5 +62,10 @@ class Planning extends Model
     public function survey()
     {
         return $this->hasOne(Survey::class, 'fr_no', 'fr_no');
+    }
+
+    public function createdBy()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

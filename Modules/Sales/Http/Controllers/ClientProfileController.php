@@ -32,7 +32,12 @@ class ClientProfileController extends Controller
 
     public function index()
     {
-        $client_profiles = Client::with('division', 'district', 'thana')->get();
+        $client_profiles = Client::with('division', 'district', 'thana')
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $client_profiles = $client_profiles->where('user_id', auth()->user()->id);
+        }
+        $client_profiles = $client_profiles->latest()->get();
         return view('sales::client_profile.index', compact('client_profiles'));
     }
 

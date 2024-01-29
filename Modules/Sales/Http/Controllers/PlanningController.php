@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ use Modules\Sales\Entities\PlanLinkEquipment;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Brand;
 use Modules\Admin\Entities\Pop;
+use Modules\Admin\Entities\User;
 use Modules\Sales\Entities\Vendor;
 use Modules\SCM\Entities\Material;
 use Modules\SCM\Entities\MaterialBrand;
@@ -46,8 +48,8 @@ class PlanningController extends Controller
 
     public function index()
     {
-        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
-        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : date('Y-m-d');
+        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : date('Y-m-d');
         $plans = Planning::with('planLinks', 'feasibilityRequirementDetail.feasibilityRequirement')
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('date', '>=', $from_date);
@@ -55,8 +57,11 @@ class PlanningController extends Controller
             ->when($to_date, function ($query, $to_date) {
                 return $query->whereDate('date', '<=', $to_date);
             })
-            ->latest()
-            ->get();
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $plans = $plans->where('user_id', auth()->user()->id);
+        }
+        $plans = $plans->latest()->get();
         return view('sales::planning.index', compact('plans'));
     }
 
@@ -89,34 +94,48 @@ class PlanningController extends Controller
 
     public function store(Request $request)
     {
-        $feasibility_requirement_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $request->fr_no)->first();
-        $request->request->add(['mq_no' => $feasibility_requirement_detail->feasibilityRequirement->mq_no]);
-        $plan_data = $request->only('mq_no', 'fr_no', 'client_no', 'remarks');
-        $plan_data['date'] = date('Y-m-d');
-        $plan_data['user_id'] = auth()->user()->id ?? '';
-        DB::beginTransaction();
+        try {
+            $feasibility_requirement_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $request->fr_no)->first();
+            $request->request->add(['mq_no' => $feasibility_requirement_detail->feasibilityRequirement->mq_no]);
+            $plan_data = $request->only('mq_no', 'fr_no', 'client_no', 'remarks');
+            $plan_data['date'] = date('Y-m-d');
+            $plan_data['user_id'] = auth()->user()->id ?? '';
+            DB::beginTransaction();
 
-        $plan = Planning::create($plan_data);
+            $plan = Planning::create($plan_data);
 
-        $this->createOrUpdateServicePlans($request, $plan);
+            $this->createOrUpdateServicePlans($request, $plan);
 
-        $this->createOrUpdateEquipmentPlans($request, $plan);
+            $this->createOrUpdateEquipmentPlans($request, $plan);
 
-        if ($request->total_key > 0) {
-            $this->createOrUpdatePlanLinks($request, $plan);
-        }
-        DB::commit();
-        $client = $request->client_name ?? '';
-        $client_number = $plan->client_no ?? '';
-        $fr_no = $plan->fr_no ?? '';
-        $mq_no = $plan->mq_no ?? '';
-        $date = $plan->date ?? '';
-        $fromAddress = auth()->user()->email;
-        $fromName = auth()->user()->name;
-        $to = 'pnl@bbts.net';
-        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
-        $subject = "New Plan Created";
-        $messageBody = "Dear Sir,\n
+            if ($request->total_key > 0) {
+                $this->createOrUpdatePlanLinks($request, $plan);
+            }
+
+            //send notification
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Planning',
+                'message' => 'A new Planning has been created by ' . auth()->user()->name,
+                'url' => 'sales/planning/' . $plan->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+            DB::commit();
+            $client = $request->client_name ?? '';
+            $client_number = $plan->client_no ?? '';
+            $fr_no = $plan->fr_no ?? '';
+            $mq_no = $plan->mq_no ?? '';
+            $date = $plan->date ?? '';
+            $fromAddress = auth()->user()->email;
+            $fromName = auth()->user()->name;
+            $to = 'pnl@bbts.net';
+            $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
+            $subject = "New Plan Created";
+            $messageBody = "Dear Sir,\n
         I am writing to inform you about a new Plan $mq_no has been created for our esteemed client, $client ($client_number). \n
         Plan Details:
         Client: $client
@@ -129,10 +148,14 @@ class PlanningController extends Controller
         Best regards,
         $fromName";
 
-        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-        });
-        return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
+            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
+                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
+            });
+            return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
+        } catch (QueryException $e) {
+            DB::rollback();
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -188,6 +211,18 @@ class PlanningController extends Controller
                 $this->createOrUpdatePlanLinks($request, $plan);
             }
             DB::commit();
+
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Planning',
+                'message' => 'A new Planning has been updated by ' . auth()->user()->name,
+                'url' => 'sales/planning/' . $plan->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
             $client = $request->client_name ?? '';
             $client_number = $plan->client_no ?? '';

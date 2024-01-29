@@ -98,7 +98,7 @@ class ConnectivityRequirementController extends Controller
                     'vendor_id' => $request->vendor_id[$key],
                 ]);
             }
-
+            
             DB::commit();
             return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
         } catch (\Exception $e) {

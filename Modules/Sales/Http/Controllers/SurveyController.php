@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use Modules\Sales\Http\Requests\SurveyRequest;
 use Illuminate\Support\Facades\DB;
 use Modules\Admin\Entities\Pop;
 use Illuminate\Support\Facades\Mail;
+use Modules\Admin\Entities\User;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\FinalSurveyDetail;
@@ -40,8 +42,8 @@ class SurveyController extends Controller
     public function index()
     {
         // dd('ok');
-        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
-        $to_date = request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : date('Y-m-d');
+        $to_date = request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : date('Y-m-d');
         $surveys = Survey::with('surveyDetails', 'lead_generation')
             ->when($from_date, function ($query, $from_date) {
                 return $query->where('created_at', '>=', $from_date);
@@ -50,8 +52,11 @@ class SurveyController extends Controller
                 return $query->where('created_at', '<=', $to_date);
             })
             ->where('is_modified', 0)
-            ->latest()
-            ->get();
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $surveys = $surveys->where('user_id', auth()->user()->id);
+        }
+        $surveys = $surveys->latest()->get();
         return view('sales::survey.index', compact('surveys'));
     }
 
@@ -109,6 +114,18 @@ class SurveyController extends Controller
                 SurveyDetail::create($connectivity_requirement_details);
             }
             DB::commit();
+            $offer = $this->updateOffer($data, $id);
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Survey',
+                'message' => 'A new Survey has been created by ' . auth()->user()->name,
+                'url' => 'sales/survey/' . $connectivity_requirement->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
             $client = $request->client_name ?? '';
             $client_number = $connectivity_requirement->client_no ?? '';
@@ -213,6 +230,18 @@ class SurveyController extends Controller
                 SurveyDetail::create($survey_details);
             }
             DB::commit();
+
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Survey',
+                'message' => 'A Survey has been updated by ' . auth()->user()->name,
+                'url' => 'sales/survey/' . $survey_details->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
             $client = $request->client_name ?? '';
             $client_number = $survey->client_no ?? '';

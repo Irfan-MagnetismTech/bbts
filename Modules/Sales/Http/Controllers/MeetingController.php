@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use Illuminate\Routing\Controller;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\Meeting;
 use Illuminate\Support\Facades\Mail;
+use Modules\Admin\Entities\User;
 use Modules\Sales\Http\Requests\MeetingRequest;
 
 class MeetingController extends Controller
@@ -27,7 +29,12 @@ class MeetingController extends Controller
     }
     public function index()
     {
-        $meetings = Meeting::with('client')->latest()->get();
+        $meetings = Meeting::with('client')
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $meetings = $meetings->where('created_by', auth()->user()->id);
+        }
+        $meetings = $meetings->latest()->get();
         return view('sales::meeting.index', compact('meetings'));
     }
 
@@ -54,6 +61,20 @@ class MeetingController extends Controller
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
         $meeting = Meeting::create($data);
 
+        //notification send to sales admin
+        $notificationReceivers = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Sales Admin']);
+        })->get();
+
+        $notificationData = [
+            'type' => 'Sales Admin',
+            'message' => 'A new meeting schedule requested by ' . auth()->user()->name,
+            'url' => 'sales/meeting/' . $meeting->id,
+        ];
+
+        BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+
+
         $client = $meeting?->client->client_name ?? '';
         $client_number = $meeting->client_no ?? '';
         $visit_date = $meeting->visit_date ?? '';
@@ -65,7 +86,7 @@ class MeetingController extends Controller
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "New Meeting Created";
         $messageBody = "Dear Sir,\n
@@ -126,6 +147,19 @@ class MeetingController extends Controller
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
         $meeting->update($data);
 
+        //notification send to sales admin
+        $notificationReceivers = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Sales Admin']);
+        })->get();
+
+        $notificationData = [
+            'type' => 'Sales Admin',
+            'message' => 'A new meeting schedule request updated by ' . auth()->user()->name,
+            'url' => 'sales/meeting/' . $meeting->id,
+        ];
+
+        BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+
         $client = $meeting?->client->client_name ?? '';
         $client_number = $meeting->client_no ?? '';
         $visit_date = $meeting->visit_date ?? '';
@@ -137,7 +171,7 @@ class MeetingController extends Controller
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "Meeting Rescheduled";
         $messageBody = "Dear Sir,\n
@@ -189,7 +223,7 @@ class MeetingController extends Controller
         $fromName = auth()->user()->name;
         $to = $meeting->createdBy->email;
         $toName = $meeting->createdBy->name ?? '';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "Meeting Status Updated";
         $messageBody = "Dear $toName,\n

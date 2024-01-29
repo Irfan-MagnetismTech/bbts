@@ -134,15 +134,11 @@
                                     </span>
                                 </a>
                                 <ul class="show-notification" id="notification-list-popup">
-
-
                                     @forelse(auth()->user()->unreadNotifications as $notification)
                                         <li>
-                                            <a href="#"
-                                            {{-- <a href="{{ route('support-tickets.show', ['support_ticket' => $notification->data['supportTicketId']]) }}" --}}
+                                            <a href="{{ url($notification->data['url']) }}"
                                                 style="font-size: 12px; padding: 0" class="text-left p-0 d-block">
                                                 {{ $notification->data['message'] }} <br>
-
                                                 <small>
                                                     at
                                                     {{ \Carbon\Carbon::parse($notification->created_at)->format('d/m/Y \a\t h:i a') }}

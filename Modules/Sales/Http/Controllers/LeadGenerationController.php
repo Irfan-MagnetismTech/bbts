@@ -10,8 +10,10 @@ use App\Models\Dataencoding\District;
 use App\Models\Dataencoding\Division;
 use Illuminate\Routing\Controller;
 use App\Models\Dataencoding\Thana;
+use App\Services\BbtsGlobalService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use Modules\Admin\Entities\User;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\Offer;
@@ -44,9 +46,16 @@ class LeadGenerationController extends Controller
             ->when($to_date, function ($query, $to_date) {
                 return $query->whereDate('created_at', '<=', $to_date);
             })
-            ->where('created_by', auth()->user()->id)
-            ->orderBy('id', 'DESC')
-            ->get();
+            ->clone();
+
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $lead_generations = $lead_generations->where('created_by', auth()->user()->id);
+        }
+        $lead_generations = $lead_generations->latest()->get();
+        if (request()->type == 'PDF') {
+            $pdf = PDF::loadView('sales::lead_generation.pdf_list', compact('lead_generations'));
+            return $pdf->download('lead_generation.pdf');
+        }
         return view('sales::lead_generation.index', compact('lead_generations'));
     }
 
@@ -93,6 +102,21 @@ class LeadGenerationController extends Controller
         $data['created_by'] = auth()->user()->id;
         $leadGeneration = LeadGeneration::create($data);
 
+        //notification send to sales admin
+
+        $notificationReceivers = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Sales Admin', 'Admin']);
+        })->get();
+
+        $notificationData = [
+            'type' => 'Lead Generation',
+            'message' => 'A new Lead Generation has been created by ' . auth()->user()->name,
+            'url' => 'sales/lead-generation/' . $leadGeneration->id,
+        ];
+
+        BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+
+
         $client = $leadGeneration->client_name ?? '';
         $client_number = $leadGeneration->client_no ?? '';
         $client_address = $leadGeneration->address ?? '';
@@ -101,7 +125,7 @@ class LeadGenerationController extends Controller
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "New Lead Generation Created";
         $messageBody = "Dear Sir,\n
@@ -173,6 +197,21 @@ class LeadGenerationController extends Controller
         }
         $lead_generation->update($data);
 
+        //notification send to sales admin
+        $notificationReceivers = User::whereHas('roles', function ($q) {
+            $q->whereIn('name', ['Sales Admin', 'Admin']);
+        })->get();
+
+        $notificationData = [
+            'type' => 'Lead Generation',
+            'message' => 'A new Lead Generation has been updated by ' . auth()->user()->name,
+            'url' => 'sales/lead-generation/' . $lead_generation->id,
+        ];
+
+
+
+        BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+
         $client = $lead_generation->client_name ?? '';
         $client_number = $lead_generation->client_no ?? '';
         $client_address = $lead_generation->address ?? '';
@@ -181,7 +220,7 @@ class LeadGenerationController extends Controller
         $fromAddress = auth()->user()->email;
         $fromName = auth()->user()->name;
         $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "Lead Generation Info Updated";
         $messageBody = "Dear Sir,\n
@@ -247,7 +286,7 @@ class LeadGenerationController extends Controller
         $fromName = auth()->user()->name;
         $to = $lead_generation->createdBy->email;
         $toName = $lead_generation->createdBy->name ?? '';
-        $cc = ['yasir@bbts.net','shiful@magnetismtech.com','saleha@magnetismtech.com',$fromAddress];
+        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
         $receiver = '';
         $subject = "Lead Generation Client Status Updated";
         $messageBody = "Dear $toName,\n

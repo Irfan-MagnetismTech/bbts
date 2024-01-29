@@ -16,6 +16,7 @@ use App\Exports\FeasibilityRequirementExport;
 use App\Imports\FeasibilityRequirementImport;
 use App\Imports\FeasibilityRequirementImportUpdate;
 use App\Notifications\CommonNotification;
+use App\Services\BbtsGlobalService;
 use App\Services\EmailService;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Mail;
@@ -40,8 +41,8 @@ class FeasibilityRequirementController extends Controller
 
     public function index()
     {
-        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
-        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : date('Y-m-d');
+        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : date('Y-m-d');
         $feasibility_requirements = FeasibilityRequirement::with('lead_generation', 'feasibilityRequirementDetails')
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('date', '>=', $from_date);
@@ -49,7 +50,12 @@ class FeasibilityRequirementController extends Controller
             ->when($to_date, function ($query, $to_date) {
                 return $query->whereDate('date', '<=', $to_date);
             })
-            ->orderBy('id', 'desc')->get();
+            ->where('branch_id', auth()->user()->branch_id ?? '1')
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $feasibility_requirements = $feasibility_requirements->where('user_id', auth()->user()->id);
+        }
+        $feasibility_requirements = $feasibility_requirements->latest()->get();
         return view('sales::feasibility_requirement.index', compact('feasibility_requirements'));
     }
 
@@ -125,10 +131,16 @@ class FeasibilityRequirementController extends Controller
                 $feasibilityRequirement->feasibilityRequirementDetails()->createMany($feasibilityDetails);
 
                 $notificationReceivers = User::whereHas('roles', function ($q) {
-                    $q->where('name', 'Sales Admin');
+                    $q->whereIn('name', ['Sales Admin', 'Survey-Manager']);
                 })->get();
 
-                Notification::send($notificationReceivers, new CommonNotification('Sales Admin', 'A new feasibility requirement has been created', 'feasibility-requirement.index'));
+                $notificationData = [
+                    'type' => 'Feasibility Requirement',
+                    'message' => 'A new feasibility requirement has been created by ' . auth()->user()->name,
+                    'url' => 'sales/feasibility-requirement/' . $feasibilityRequirement->id,
+                ];
+
+                BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
                 $client = $request->client_name ?? '';
                 $to = 'survey@bbts.net';
@@ -136,7 +148,7 @@ class FeasibilityRequirementController extends Controller
                 $receiver = '';
                 $subject = "New Feasibility Requirement Created";
                 $messageBody = "A new $feasibilityRequirement->mq_no has been created for the client $client ($feasibilityRequirement->client_no). Please find the details from Feasibility Requirement List.";
-                // $fromAddress = 'csd@bbts.net';
+                // // $fromAddress = 'csd@bbts.net';
                 $fromAddress = auth()->user()->email;
                 $fromName = auth()->user()->name;
                 // Mail::send('sales::email.feasibility_requirement', ['feasibilityRequirement' => $feasibilityRequirement], function ($message) use ($to, $cc, $subject) {
@@ -247,6 +259,18 @@ class FeasibilityRequirementController extends Controller
                     $feasibility_requirement->feasibilityRequirementDetails()->create($detailsData);
                 }
             }
+
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->where('name', 'Sales Admin');
+            })->get();
+
+            $notificationData = [
+                'type' => 'Feasibility Requirement',
+                'message' => 'A new feasibility requirement has been updated by ' . auth()->user()->name,
+                'url' => 'sales/feasibility-requirement/' . $feasibility_requirement->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
             $client = $request->client_name ?? '';
             $to = 'survey@bbts.net';
             $cc = 'yasir@bbts.net';
