@@ -29,16 +29,21 @@ class LeadGeneration extends Model
 
     public function createdBy()
     {
-        return $this->belongsTo(User::class,'created_by', 'id');
+        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
     public function client()
     {
-        return $this->belongsTo(Client::class,'client_no', 'client_no');
+        return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 
     public function sale()
     {
-        return $this->hasOne(Sale::class,'client_no', 'client_no')->where('management_approval','Approved');
+        return $this->hasOne(Sale::class, 'client_no', 'client_no')->where('management_approval', 'Approved');
+    }
+
+    public function feasibilityRequirement()
+    {
+        return $this->hasOne(FeasibilityRequirement::class, 'client_no', 'client_no');
     }
 }
