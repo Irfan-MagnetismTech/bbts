@@ -271,9 +271,10 @@
                 @foreach ($sales_data as $key => $monthly_sales_summary)
                     {{-- @dd($monthly_sales_summary['products']) --}}
                     @php
-                        $max_rowspan = $monthly_sales_summary['products']->count();
+                        $max_rowspan = max(count($monthly_sales_summary['products']), count($monthly_sales_summary['pop']));
+                        dump($monthly_sales_summary);
                     @endphp
-                    @for ($i = 0; $i < $max_rowspan; $i++)
+                    {{-- @for ($i = 0; $i <= $max_rowspan; $i++)
                         <tr>
                             @if ($i == 0)
                                 <td rowspan="{{ $max_rowspan }}">{{ $key + 1 }}</td>
@@ -293,7 +294,7 @@
                                     </td>
                                 @endif
                             @endif
-                            @if ($monthly_sales_summary['pop'][$i] != null)
+                            @if (isset($monthly_sales_summary['pop'][$i]))
                                 @if (in_array('pop', $filter_data) || empty($filter_data))
                                     <td>
                                         {!! $monthly_sales_summary['pop'][$i] !!}
@@ -304,7 +305,7 @@
                                     <td>-</td>
                                 @endif
                             @endif
-                            @if ($monthly_sales_summary['method'][$i] != null)
+                            @if (isset($monthly_sales_summary['method'][$i]))
                                 @if (in_array('method', $filter_data) || empty($filter_data))
                                     <td>
                                         {{ $monthly_sales_summary['method'][$i] }}
@@ -372,7 +373,7 @@
                                 @endif
                             @endif
                         </tr>
-                    @endfor
+                    @endfor --}}
                 @endforeach
             </tbody>
         </table>

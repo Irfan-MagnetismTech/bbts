@@ -529,6 +529,14 @@ class ConnectivityController extends Controller
             ];
         }
 
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('networking::pdf.permanent-inactive-client-report', ['permanently_inactive_clients' => $permanently_inactive_clients], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('permanent-inactive-client-report.pdf');
+        }
+
 
         return view('networking::reports.permanent-inactive-client-report', compact('permanently_inactive_clients'));
     }

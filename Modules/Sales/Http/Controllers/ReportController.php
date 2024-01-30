@@ -168,6 +168,7 @@ class ReportController extends Controller
             'otc' => request()->otc ?? '',
             'mrc' => request()->mrc ?? '',
         ];
+
         if (request('type') == 'PDF') {
             $pdf = PDF::loadView('sales::pdf.monthly-sales-summary-report', ['sales_data' => $sales_data, 'clients' => $clients], [], [
                 'format' => 'A4',

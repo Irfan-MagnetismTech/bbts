@@ -50,13 +50,13 @@ class LeadGenerationController extends Controller
 
         if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
             $lead_generations = $lead_generations->where('created_by', auth()->user()->id);
-        }elseif(!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))){
+        } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
             $lead_generations = $lead_generations->where('created_by', auth()->user()->id)->take(10);
         }
         $lead_generations = $lead_generations->latest()->get();
         if (request()->type == 'PDF') {
             $pdf = PDF::loadView('sales::lead_generation.pdf_list', compact('lead_generations'));
-            return $pdf->download('lead_generation.pdf');
+            return $pdf->stream('lead_generation.pdf');
         }
         return view('sales::lead_generation.index', compact('lead_generations'));
     }

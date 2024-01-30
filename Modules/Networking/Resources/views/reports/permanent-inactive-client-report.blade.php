@@ -6,7 +6,7 @@
 @endsection
 
 @section('breadcrumb-title')
-    Active Clients Report
+    Inactive Clients Report
 @endsection
 
 @section('style')
@@ -15,8 +15,27 @@
 @endsection
 
 @section('content')
-    <form action="{{ url('scm/scm-material-stock-report') }}" method="get" class="custom-form">
-        @csrf
+    <form action="" method="get" class="custom-form" target="_blank">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="ticket_no" class="font-weight-bold">Type:</label>
+                    <select name="type" id="type" class="form-control select2">
+                        <option value="">Select Type</option>
+                        <option value="Report">Report</option>
+                        <option value="PDF">PDF</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group my-4 row">
+                    <div class="col-md-6">
+                        <input type="submit" value="Search" class="btn btn-outline-primary btn-sm col-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
         <div class="dt-responsive table-responsive">
             <table id="dataTable" class="table table-striped table-bordered">
                 <thead>
