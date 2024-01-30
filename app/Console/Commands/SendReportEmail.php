@@ -26,15 +26,13 @@ class SendReportEmail extends Command
      */
     public function handle()
     {
+        $month = now()->format('F-Y');
         $data["email"] = "saleha@magnetismtech.com";
-        $data["title"] = "Monthly Sales Report";
-        $data["body"] = "This is Demo";
+        $data["title"] = "Monthly Sales Report of $month";
+        $data["body"]  = "Please find attached the monthly sales report for $month.";
 
-
-        // $dateFrom = now()->firstOfMonth()->format('Y-m-d');
-        // $dateTo = now()->lastOfMonth()->format('Y-m-d');
-        $dateFrom = '2023-12-01';
-        $dateTo = '2024-01-01';
+        $dateFrom = now()->firstOfMonth()->format('Y-m-d');
+        $dateTo = now()->lastOfMonth()->format('Y-m-d'); 
         $sales_data = [];
         Sale::query()
             ->with('client', 'saleDetails', 'saleProductDetails', 'saleLinkDetails.finalSurveyDetails')
@@ -68,41 +66,20 @@ class SendReportEmail extends Command
                     ];
                 });
             });
-        $clients = Client::latest()->get();
 
-        $pdf = PDF::loadView('sales::pdf.monthly-sales-summary-report', ['sales_data' => $sales_data, 'clients' => $clients], [], [
+        $clientWiseSalesPdf = PDF::loadView('sales::pdf.monthly-sales-summary-report', ['sales_data' => $sales_data,], [], [
             'format' => 'A4',
             'orientation' => 'L'
         ]);
-        // return $pdf->stream('monthly-sales-summary-report.pdf');
+        $AccountHolderWiseSalesPdf = PDF::loadView('sales::pdf.monthly-sales-summary-report', ['sales_data' => $sales_data,], [], [
+            'format' => 'A4',
+            'orientation' => 'L'
+        ]); 
 
-        // $pdf = PDF::loadView('mail.report_mail', $data);
-
-        Mail::send('mail.report_mail', $data, function ($message) use ($data, $pdf) {
+        Mail::send('mail.report_mail', $data, function ($message) use ($data, $clientWiseSalesPdf) {
             $message->to($data["email"], $data["email"])
                 ->subject($data["title"])
-                ->attachData($pdf->output(), "text.pdf");
+                ->attachData($clientWiseSalesPdf->output(), "clientWiseSales.pdf");
         });
-
-
-        // Your logic to generate the report data
-        //  $reportData = // ...
-
-        //  // Generate and save the report file
-        //  $reportFileName = 'report_' . now()->format('Ymd_His') . '.pdf';
-        //  $reportFilePath = storage_path('app/reports/' . $reportFileName);
-
-        //  // Your logic to generate and save the report file, e.g., using a PDF generation library
-        //  // Example: PDF::loadView('reports.report', compact('reportData'))->save($reportFilePath);
-
-        //  // Send email with attached report
-        //  Mail::to('saleha@magnetismtech.com')->send(new ReportEmail($reportData, $reportFilePath));
-
-        //  // Optionally, delete the report file after sending the email
-        //  // unlink($reportFilePath);
-
-        //  $this->info('Report sent successfully.');
-
-        // return Command::SUCCESS;
     }
 }
