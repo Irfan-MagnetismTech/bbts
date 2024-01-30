@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Modules\Sales\Entities\Costing;
 use Modules\Sales\Entities\LeadGeneration;
 use Modules\Sales\Entities\Offer;
 use Illuminate\Support\Facades\Mail;
+use Modules\Admin\Entities\User;
 use Modules\Sales\Entities\Product;
 use Modules\Sales\Entities\FeasibilityRequirement;
 
@@ -31,8 +33,8 @@ class OfferController extends Controller
 
     public function index()
     {
-        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
-        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : date('Y-m-d');
+        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : date('Y-m-d');
         $offers = Offer::with('offerDetails.offerLinks')->where('is_modified', 0)
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('created_at', '>=', $from_date);
@@ -40,8 +42,13 @@ class OfferController extends Controller
             ->when($to_date, function ($query, $to_date) {
                 return $query->whereDate('created_at', '<=', $to_date);
             })
-            ->latest()
-            ->get();
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
+            $offers = $offers->where('created_by', auth()->user()->id);
+        } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
+            $offers = $offers->where('created_by', auth()->user()->id)->take(10);
+        }
+        $offers = $offers->latest()->get();
         return view('sales::offers.index', compact('offers'));
     }
 
@@ -66,6 +73,17 @@ class OfferController extends Controller
         try {
 
             $offer = $this->createOffer($data);
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Planning',
+                'message' => 'A new offer has been created by ' . auth()->user()->name,
+                'url' => 'sales/offer/' . $offer->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
             return redirect()->route('offers.index')->with('success', 'Offer created successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -104,6 +122,17 @@ class OfferController extends Controller
         $data = $request->all();
         try {
             $offer = $this->updateOffer($data, $id);
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Planning',
+                'message' => 'A offer has been updated by ' . auth()->user()->name,
+                'url' => 'sales/offer/' . $offer->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
             return redirect()->route('offers.index')->with('success', 'Offer created successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());

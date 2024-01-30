@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -15,6 +16,7 @@ use Modules\Sales\Entities\Planning;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 use Modules\Sales\Entities\LeadGeneration;
 use Illuminate\Support\Facades\Mail;
+use Modules\Admin\Entities\User;
 use PDF;
 
 
@@ -33,8 +35,8 @@ class CostingController extends Controller
     }
     public function index()
     {
-        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? '';
-        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? '';
+        $from_date = date('Y-m-d', strtotime(request()->get('from_date'))) ?? date('Y-m-d');
+        $to_date = date('Y-m-d', strtotime(request()->get('to_date'))) ?? date('Y-m-d');
         $costings = Costing::with('costingProducts', 'costingLinks', 'costingLinks.costingLinkEquipments')
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('created_at', '>=', $from_date);
@@ -42,8 +44,11 @@ class CostingController extends Controller
             ->when($to_date, function ($query, $to_date) {
                 return $query->whereDate('created_at', '<=', $to_date);
             })
-            ->latest()
-            ->get();
+            ->clone();
+        // if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+        //     $costings = $costings->where('created_by', auth()->user()->id);
+        // }
+        $costings = $costings->latest()->get();
         return view('sales::costing.index', compact('costings'));
     }
 
@@ -86,6 +91,18 @@ class CostingController extends Controller
             $this->createOrUpdateCostingLinks($request, $costing);
 
             DB::commit();
+
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Planning',
+                'message' => 'A new Costing has been created by ' . auth()->user()->name,
+                'url' => 'sales/costing/' . $costing->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
             $client = $request->client_name ?? '';
             $client_number = $costing->client_no ?? '';
@@ -168,6 +185,17 @@ class CostingController extends Controller
             $this->createOrUpdateCostingLinks($request, $costing);
 
             DB::commit();
+            $notificationReceivers = User::whereHas('roles', function ($q) {
+                $q->whereIn('name', ['Sales Admin', 'Admin']);
+            })->get();
+
+            $notificationData = [
+                'type' => 'Planning',
+                'message' => 'A Costing has been updated by ' . auth()->user()->name,
+                'url' => 'sales/costing/' . $costing->id,
+            ];
+
+            BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
             $client = $request->client_name ?? '';
             $client_number = $costing->client_no ?? '';

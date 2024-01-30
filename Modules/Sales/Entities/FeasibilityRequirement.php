@@ -3,6 +3,7 @@
 namespace Modules\Sales\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Admin\Entities\User;
 use Modules\Sales\Entities\FeasibilityRequirementDetail;
 
 class FeasibilityRequirement extends Model
@@ -25,7 +26,13 @@ class FeasibilityRequirement extends Model
         return $this->hasOne(Offer::class, 'mq_no', 'mq_no');
     }
 
-    public function client(){
+    public function client()
+    {
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
+    }
+
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

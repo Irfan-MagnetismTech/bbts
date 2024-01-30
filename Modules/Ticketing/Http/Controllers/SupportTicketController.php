@@ -2,6 +2,7 @@
 
 namespace Modules\Ticketing\Http\Controllers;
 
+use App\Notifications\CommonNotification;
 use Illuminate\Support\Str;
 use App\Services\SmsService;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ use Modules\Ticketing\Entities\SupportTeamMember;
 use Modules\Ticketing\Entities\SupportQuickSolution;
 use Modules\Ticketing\Http\Requests\SupportTicketRequest;
 use Termwind\Components\Dd;
+use App\Services\BbtsGlobalService;
 
 class SupportTicketController extends Controller
 {
@@ -580,8 +582,12 @@ class SupportTicketController extends Controller
 
                 $notificationMessage = "Ticket " . $supportTicket->ticket_no . " is reopened by " . auth()->user()->name;
                 $authorizedMember = User::findOrFail($supportTicket->supportTicketLifeCycles->where('status', 'Accepted')->first()->user_id);
-
-                Notification::send($authorizedMember, new TicketMovementNotification($supportTicket, 'reopen', $notificationMessage));
+                $notificationData = [
+                    'type' => 'Support Ticket Reopen',
+                    'message' => $notificationMessage,
+                    'url' => 'ticketing/support-tickets/' . $supportTicket->id . '/show'
+                ];
+                BbtsGlobalService::sendNotification($authorizedMember, $notificationData);
             });
 
 

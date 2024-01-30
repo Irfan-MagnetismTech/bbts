@@ -59,8 +59,13 @@ class SaleController extends Controller
             ->when($to_date, function ($query, $to_date) {
                 return $query->whereDate('created_at', '<=', $to_date);
             })
-            ->latest()
-            ->get();
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
+            $sales = $sales->where('created_by', auth()->user()->id);
+        } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
+            $sales = $sales->where('created_by', auth()->user()->id)->take(10);
+        }
+        $sales = $sales->latest()->get();
         return view('sales::sales.index', compact('sales'));
     }
 
@@ -86,6 +91,7 @@ class SaleController extends Controller
             $data = $request->only('wo_no', 'grand_total', 'effective_date', 'contract_duration', 'remarks', 'offer_id', 'account_holder', 'client_no', 'mq_no', 'employee_id');
             $data['sla'] = $this->uploadFile->handleFile($request->sla, 'sales/sale');
             $data['work_order'] = $this->uploadFile->handleFile($request->work_order, 'sales/sale');
+            $data['created_by'] = auth()->user()->id;
             $sale = Sale::create($data);
             $detailsData = $this->makeRow($request->all());
             $saleDetail = $sale->saleDetails()->createMany($detailsData);
@@ -320,7 +326,7 @@ class SaleController extends Controller
             ->where('is_modified', 0)
             ->whereNotIn('mq_no', $existing_sales_mq)
             ->get()
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'value' => $item->client->client_name,
                 'label' => $item->client->client_name . ' ( ' . ($item->mq_no ?? '') . ' )',
                 'client_no' => $item->client_no,
@@ -340,7 +346,7 @@ class SaleController extends Controller
             ->with(['client'])
             ->where('mq_no', 'like', '%' . request()->search . '%')
             ->get()
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'value' => $item->mq_no,
                 'label' => $item->mq_no . '( ' . ($item->client->client_name ?? '') . ' )',
                 'client_no' => $item->client_no,
@@ -362,7 +368,7 @@ class SaleController extends Controller
     {
         $items = Employee::where('name', 'like', '%' . request()->search . '%')
             ->get()
-            ->map(fn($item) => [
+            ->map(fn ($item) => [
                 'value' => $item->name,
                 'label' => $item->name,
                 'id' => $item->id
