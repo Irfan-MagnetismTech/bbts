@@ -58,9 +58,11 @@ class PlanningController extends Controller
                 return $query->whereDate('date', '<=', $to_date);
             })
             ->clone();
-        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
-            $plans = $plans->where('user_id', auth()->user()->id);
-        }
+            if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
+                $plans = $plans->where('user_id', auth()->user()->id);
+            } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
+                $plans = $plans->where('user_id', auth()->user()->id)->take(10);
+            }
         $plans = $plans->latest()->get();
         return view('sales::planning.index', compact('plans'));
     }

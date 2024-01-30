@@ -41,8 +41,8 @@ class FeasibilityRequirementController extends Controller
 
     public function index()
     {
-        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : date('Y-m-d');
-        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : date('Y-m-d');
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
+        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
         $feasibility_requirements = FeasibilityRequirement::with('lead_generation', 'feasibilityRequirementDetails')
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('date', '>=', $from_date);
@@ -52,8 +52,10 @@ class FeasibilityRequirementController extends Controller
             })
             ->where('branch_id', auth()->user()->branch_id ?? '1')
             ->clone();
-        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
             $feasibility_requirements = $feasibility_requirements->where('user_id', auth()->user()->id);
+        } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
+            $feasibility_requirements = $feasibility_requirements->where('user_id', auth()->user()->id)->take(10);
         }
         $feasibility_requirements = $feasibility_requirements->latest()->get();
         return view('sales::feasibility_requirement.index', compact('feasibility_requirements'));
