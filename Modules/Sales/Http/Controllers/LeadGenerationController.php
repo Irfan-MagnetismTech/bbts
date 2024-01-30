@@ -37,8 +37,8 @@ class LeadGenerationController extends Controller
 
     public function index()
     {
-        $from_date = request()->get('from_date') ? date('Y-m-d', strtotime(request()->get('from_date'))) : date('Y-m-d');
-        $to_date = request()->get('to_date') ? date('Y-m-d', strtotime(request()->get('to_date'))) : date('Y-m-d');
+        $from_date = request()->get('from_date') ? date('Y-m-d', strtotime(request()->get('from_date'))) : '';
+        $to_date = request()->get('to_date') ? date('Y-m-d', strtotime(request()->get('to_date'))) : '';
         $lead_generations = LeadGeneration::with('division', 'district', 'thana')
             ->when($from_date, function ($query, $from_date) {
                 return $query->whereDate('created_at', '>=', $from_date);
@@ -48,8 +48,10 @@ class LeadGenerationController extends Controller
             })
             ->clone();
 
-        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
             $lead_generations = $lead_generations->where('created_by', auth()->user()->id);
+        }elseif(!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))){
+            $lead_generations = $lead_generations->where('created_by', auth()->user()->id)->take(10);
         }
         $lead_generations = $lead_generations->latest()->get();
         if (request()->type == 'PDF') {
@@ -249,7 +251,7 @@ class LeadGenerationController extends Controller
      */
     public function destroy(LeadGeneration $lead_generation)
     {
-        if($lead_generation->feasibilityRequirement){
+        if ($lead_generation->feasibilityRequirement) {
             return redirect()->route('lead-generation.index')->with('error', 'Lead Generation can not be deleted');
         }
         $lead_generation->delete();
@@ -369,6 +371,6 @@ class LeadGenerationController extends Controller
     {
         $lead_generation = LeadGeneration::with('division', 'district', 'thana')->find($id);
         $pdf = PDF::loadView('sales::lead_generation.pdf', compact('lead_generation'));
-        return $pdf->download('lead_generation.pdf');
+        return $pdf->stream('lead_generation.pdf');
     }
 }

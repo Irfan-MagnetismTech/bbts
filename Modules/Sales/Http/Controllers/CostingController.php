@@ -45,9 +45,9 @@ class CostingController extends Controller
                 return $query->whereDate('created_at', '<=', $to_date);
             })
             ->clone();
-        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
-            $costings = $costings->where('created_by', auth()->user()->id);
-        }
+        // if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+        //     $costings = $costings->where('created_by', auth()->user()->id);
+        // }
         $costings = $costings->latest()->get();
         return view('sales::costing.index', compact('costings'));
     }

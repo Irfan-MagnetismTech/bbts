@@ -42,8 +42,8 @@ class SurveyController extends Controller
     public function index()
     {
         // dd('ok');
-        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : date('Y-m-d');
-        $to_date = request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : date('Y-m-d');
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
+        $to_date = request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
         $surveys = Survey::with('surveyDetails', 'lead_generation')
             ->when($from_date, function ($query, $from_date) {
                 return $query->where('created_at', '>=', $from_date);
@@ -53,8 +53,10 @@ class SurveyController extends Controller
             })
             ->where('is_modified', 0)
             ->clone();
-        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
             $surveys = $surveys->where('user_id', auth()->user()->id);
+        } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
+            $surveys = $surveys->where('user_id', auth()->user()->id)->take(10);
         }
         $surveys = $surveys->latest()->get();
         return view('sales::survey.index', compact('surveys'));

@@ -42,8 +42,13 @@ class OfferController extends Controller
             ->when($to_date, function ($query, $to_date) {
                 return $query->whereDate('created_at', '<=', $to_date);
             })
-            ->latest()
-            ->get();
+            ->clone();
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
+            $offers = $offers->where('created_by', auth()->user()->id);
+        } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
+            $offers = $offers->where('created_by', auth()->user()->id)->take(10);
+        }
+        $offers = $offers->latest()->get();
         return view('sales::offers.index', compact('offers'));
     }
 
