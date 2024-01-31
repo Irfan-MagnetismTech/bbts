@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('command:monthlyReportSend')->everyMinute();
+        $schedule->command('command:monthlyReportSend');
+        // ->everyMinute();
         // $schedule->command('inspire')->hourly();
     }
 

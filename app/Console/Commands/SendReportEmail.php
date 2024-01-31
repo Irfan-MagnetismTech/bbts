@@ -76,10 +76,11 @@ class SendReportEmail extends Command
             'orientation' => 'L'
         ]); 
 
-        Mail::send('mail.report_mail', $data, function ($message) use ($data, $clientWiseSalesPdf) {
+        Mail::send('mail.report_mail', $data, function ($message) use ($data, $clientWiseSalesPdf, $AccountHolderWiseSalesPdf) {
             $message->to($data["email"], $data["email"])
                 ->subject($data["title"])
-                ->attachData($clientWiseSalesPdf->output(), "clientWiseSales.pdf");
+                ->attachData($clientWiseSalesPdf->output(), "clientWiseSales.pdf")
+                ->attachData($AccountHolderWiseSalesPdf->output(), "clientWiseSalesdgd.pdf");
         });
     }
 }
