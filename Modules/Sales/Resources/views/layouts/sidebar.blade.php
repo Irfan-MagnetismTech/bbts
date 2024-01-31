@@ -336,7 +336,7 @@
             </ul>
         </li>
     @endcan
-    @can('report')
+    @can('sales-report')
         <li
             class="pcoded-hasmenu {{ request()->routeIs(['plan-report', 'plan-modification-report', 'monthly-sales-summary-report']) ? 'active pcoded-trigger' : '' }}">
             <a href="javascript:void(0)">
