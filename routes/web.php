@@ -54,13 +54,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('search-cs-no/{supplierId}', [CommonApiController::class, 'searchCsNo'])->name('searchCsNo');
     Route::get('search-support-ticket', [CommonApiController::class, 'getSupportTicket'])->name('search-support-ticket');
     Route::get('search-link-no', [CommonApiController::class, 'getLinkNo'])->name('getLinkNo');
-
     Route::get('all-notifications', [DashboardController::class, 'allNotifications'])->name('all-notifications');
     Route::get('read-all-notification', [DashboardController::class, 'readAllNotification'])->name('read-all-notification');
-
     Route::get('provide-feedback/{slug}', [ClientFeedbackController::class, 'provideFeedback'])->name('provide-feedback');
     Route::post('store-client-feedback/{slug}', [ClientFeedbackController::class, 'storeClientFeedback'])->name('store-client-feedback');
-
     Route::get('search-ip', [CommonApiController::class, 'searchIp'])->name('searchIp');
     Route::get('get-links-by-fr/{client_id}/{fr_no}', [CommonApiController::class, 'getLinksByFr'])->name('get-links-by-fr');
     Route::get('search-vendor', [CommonApiController::class, 'searchVendor'])->name('searchVendor');
