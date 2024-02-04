@@ -66,6 +66,10 @@
             text-align: left;
         }
 
+        .font-weight-bold {
+            font-weight: bold;
+        }
+
         @page {
             margin: 150px 0px 40px 0px;
         }
@@ -90,24 +94,24 @@
 
     </htmlpageheader>
 
-  
+
     <div class="dt-responsive table-responsive">
         <table id="dataTable" class="table table-striped table-bordered">
             <tbody>
                 @foreach ($product_data as $key => $product)
-                    <tr style="background-color: rgb(213, 255, 177) !important; font-weight:bold;">
+                    <tr style="background-color: #c5d9f1 !important;">
                         <td colspan="10" class="text-center font-weight-bold">{{ $key }}</td>
                     </tr>
-                    <tr style="background-color: rgb(177, 255, 229) !important; font-weight:bold;">
-                        <td>#SL</td>
-                        <td>Client No</td>
-                        <td>Client Name</td>
-                        <td>Quantity</td>
-                        <td>Price</td>
-                        <td>Total</td>
-                        <td>Activation Date</td>
-                        <td>Billing Start Date</td>
-                        <td>Account Holder</td>
+                    <tr style="background-color: #e2e2e2 !important;">
+                        <td class="font-weight-bold">#SL</td>
+                        <td class="font-weight-bold">Client No</td>
+                        <td class="font-weight-bold">Client Name</td>
+                        <td class="font-weight-bold">Quantity</td>
+                        <td class="font-weight-bold">Price</td>
+                        <td class="font-weight-bold">Total</td>
+                        <td class="font-weight-bold">Activation Date</td>
+                        <td class="font-weight-bold">Billing Start Date</td>
+                        <td class="font-weight-bold">Account Holder</td>
                     </tr>
                     @foreach ($product as $single_product)
                         <tr>

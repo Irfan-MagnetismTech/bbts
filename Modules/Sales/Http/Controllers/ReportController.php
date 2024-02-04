@@ -6,6 +6,7 @@ use App\Models\Dataencoding\Employee;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Admin\Entities\Branch;
 use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\Planning;
 use Modules\Sales\Entities\Product;
@@ -172,110 +173,117 @@ class ReportController extends Controller
         ];
 
         if (request('type') == 'PDF') {
-            $pdf = PDF::loadView('sales::pdf.monthly-sales-summary-report', ['sales_data' => $sales_data, 'clients' => $clients], [], [
+            $pdf = PDF::loadView('sales::pdf.activation_report_pdf.monthly-sales-summary-report', ['sales_data' => $sales_data, 'clients' => $clients], [], [
                 'format' => 'A4',
                 'orientation' => 'L'
             ]);
             return $pdf->stream('monthly-sales-summary-report.pdf');
         } else {
-            return view('sales::reports.monthly-sales-summary-report', compact('sales_data', 'clients', 'filter_data'));
+            return view('sales::reports.activation_report.monthly-sales-summary-report', compact('sales_data', 'clients', 'filter_data'));
         }
     }
 
-    // public function accountHolderWiseReport()
-    // {
-    //     $dateFrom = request()->date_from ? date('Y-m-d', strtotime(request()->date_from)) : null;
-    //     $dateTo = request()->date_to ? date('Y-m-d', strtotime(request()->date_to)) : null;
-    //     $account_holder_name = request()->account_holder_name ?? '';
-    //     $sales_data = [];
-    //     //client_no, client_name, Connectivity Point, Method, Data, Internet, ip, OTC, MRC, activation_date, billing_date, billing_address, ac_holder, remarks   
-    //     $monthly_sales_summary = Sale::query()
-    //         ->with('client', 'saleDetails', 'saleProductDetails', 'saleLinkDetails.finalSurveyDetails')
-    //         ->when(!empty($account_holder_name), function ($q) use ($account_holder_name) {
-    //             $q->where('account_holder', $account_holder_name);
-    //         })
-    //         ->when(!empty($dateFrom) && !empty($dateTo), function ($q) use ($dateFrom, $dateTo) {
-
-    //             $q->whereBetween('created_at', [$dateFrom, $dateTo]);
-    //         })
-    //         ->when(!empty($dateFrom) && empty($dateTo), function ($q) use ($dateFrom) {
-    //             $q->where('created_at', '>=', $dateFrom);
-    //         })
-    //         ->when(!empty($dateTo) && empty($dateFrom), function ($q) use ($dateTo) {
-    //             $q->where('created_at', '<=', empty($dateTo));
-    //         })
-    //         ->when(empty($dateFrom) && empty($dateTo) && empty($client_no), function ($q) {
-    //             $q->where('created_at', '>=', now()->subDays(30));
-    //         })
-    //         ->where('is_modified', 0)
-    //         ->get()
-    //         ->map(function ($sale) use (&$sales_data) {
-    //             $sale->saleDetails->map(function ($saleDetail, $index) use ($sale, &$sales_data) {
-    //                 // dd($saleDetail->saleLinkDetails[0]->finalSurveyDetails);
-    //                 $pop_name = [];
-    //                 $methods = [];
-    //                 foreach ($saleDetail->saleLinkDetails as $link) {
-    //                     $pop_name[] = $link->finalSurveyDetails->pop->name ?? '';
-    //                     $methods[] = $link->finalSurveyDetails->method ?? '';
-    //                 }
-    //                 $sales_data[] = [
-    //                     'client_no' => $sale->client->client_no,
-    //                     'client_name' => $sale->client->client_name,
-    //                     'connectivity_point' => $saleDetail->feasibilityRequirementDetails->connectivity_point,
-    //                     'products' => $saleDetail->saleProductDetails,
-    //                     'pop' => $pop_name,
-    //                     'method' => $methods,
-    //                     'activation_date' => $saleDetail?->connectivity?->commissioning_date,
-    //                     'billing_date' => $saleDetail?->connectivity?->billing_date,
-    //                     'billing_address' => $saleDetail->billingAddress->address,
-    //                     'account_holder' => $sale->account_holder,
-    //                     'remarks' => $sale->remarks,
-    //                     'otc' => $saleDetail->otc,
-    //                     'mrc' => $saleDetail->mrc,
-    //                 ];
-    //             });
-    //         });
-    //     $employees = Employee::get();
-    //     $filter_data = [
-    //         'client_no' => request()->client_no ?? '',
-    //         'client_name' => request()->client_name ?? '',
-    //         'connectivity_point' => request()->connectivity_point ?? '',
-    //         'product' => request()->product ?? '',
-    //         'quantity' => request()->quantity ?? '',
-    //         'price' => request()->price ?? '',
-    //         'total' => request()->total ?? '',
-    //         'pop' => request()->pop ?? '',
-    //         'method' => request()->method ?? '',
-    //         'activation_date' => request()->activation_date ?? '',
-    //         'billing_date' => request()->billing_start_date ?? '',
-    //         'billing_address' => request()->billing_address ?? '',
-    //         'account_holder' => request()->account_holder ?? '',
-    //         'remarks' => request()->remarks ?? '',
-    //         'otc' => request()->otc ?? '',
-    //         'mrc' => request()->mrc ?? '',
-    //     ];
-
-    //     if (request('type') == 'PDF') {
-    //         $pdf = PDF::loadView('sales::pdf.monthly-sales-summary-report', ['sales_data' => $sales_data, 'clients' => $employees], [], [
-    //             'format' => 'A4',
-    //             'orientation' => 'L'
-    //         ]);
-    //         return $pdf->stream('monthly-sales-summary-report.pdf');
-    //     } else {
-    //         return view('sales::reports.account-holder-wise-report', compact('sales_data', 'employees', 'filter_data'));
-    //     }
-    // }
-
-    public function productWiseReport()
+    public function accountHolderWiseActivationReport()
     {
         $dateFrom = request()->date_from ? date('Y-m-d', strtotime(request()->date_from)) : null;
         $dateTo = request()->date_to ? date('Y-m-d', strtotime(request()->date_to)) : null;
-        $product_id = request()->product_id ?? '';
-        $product_data = [];
+        $account_holder_name = request()->account_holder_name ?? '';
+        $sales_data = [];
+        //client_no, client_name, Connectivity Point, Method, Data, Internet, ip, OTC, MRC, activation_date, billing_date, billing_address, ac_holder, remarks   
+        $monthly_sales_summary = Sale::query()
+            ->with('client', 'saleDetails', 'saleProductDetails', 'saleLinkDetails.finalSurveyDetails')
+            ->when(!empty($account_holder_name), function ($q) use ($account_holder_name) {
+                $q->where('account_holder', $account_holder_name);
+            })
+            ->when(!empty($dateFrom) && !empty($dateTo), function ($q) use ($dateFrom, $dateTo) {
 
-        $data = SaleDetail::with('sale.client', 'sale.saleDetails', 'sale.saleProductDetails', 'sale.saleLinkDetails.finalSurveyDetails')
-            ->when(!empty($product_id), function ($q) use ($product_id) {
-                $q->where('product_id', $product_id);
+                $q->whereBetween('created_at', [$dateFrom, $dateTo]);
+            })
+            ->when(!empty($dateFrom) && empty($dateTo), function ($q) use ($dateFrom) {
+                $q->where('created_at', '>=', $dateFrom);
+            })
+            ->when(!empty($dateTo) && empty($dateFrom), function ($q) use ($dateTo) {
+                $q->where('created_at', '<=', empty($dateTo));
+            })
+            ->when(empty($dateFrom) && empty($dateTo) && empty($client_no), function ($q) {
+                $q->where('created_at', '>=', now()->subDays(30));
+            })
+            ->where('is_modified', 0)
+            ->get()
+            ->map(function ($sale) use (&$sales_data) {
+                $sale->saleDetails->map(function ($saleDetail, $index) use ($sale, &$sales_data) {
+                    // dd($saleDetail->saleLinkDetails[0]->finalSurveyDetails);
+                    $pop_name = [];
+                    $methods = [];
+                    foreach ($saleDetail->saleLinkDetails as $link) {
+                        $pop_name[] = $link->finalSurveyDetails->pop->name ?? '';
+                        $methods[] = $link->finalSurveyDetails->method ?? '';
+                    }
+                    $sales_data[] = [
+                        'client_no' => $sale->client->client_no,
+                        'client_name' => $sale->client->client_name,
+                        'connectivity_point' => $saleDetail->feasibilityRequirementDetails->connectivity_point,
+                        'products' => $saleDetail->saleProductDetails,
+                        'pop' => $pop_name,
+                        'method' => $methods,
+                        'activation_date' => $saleDetail?->connectivity?->commissioning_date,
+                        'billing_date' => $saleDetail?->connectivity?->billing_date,
+                        'billing_address' => $saleDetail->billingAddress->address,
+                        'account_holder' => $sale->account_holder,
+                        'remarks' => $sale->remarks,
+                        'otc' => $saleDetail->otc,
+                        'mrc' => $saleDetail->mrc,
+                    ];
+                });
+            });
+
+        $sales_data = collect($sales_data)->groupBy('account_holder')->toArray();
+        $employees = Employee::get();
+        $filter_data = [
+            'client_no' => request()->client_no ?? '',
+            'client_name' => request()->client_name ?? '',
+            'connectivity_point' => request()->connectivity_point ?? '',
+            'product' => request()->product ?? '',
+            'quantity' => request()->quantity ?? '',
+            'price' => request()->price ?? '',
+            'total' => request()->total ?? '',
+            'pop' => request()->pop ?? '',
+            'method' => request()->method ?? '',
+            'activation_date' => request()->activation_date ?? '',
+            'billing_date' => request()->billing_start_date ?? '',
+            'billing_address' => request()->billing_address ?? '',
+            'account_holder' => request()->account_holder ?? '',
+            'remarks' => request()->remarks ?? '',
+            'otc' => request()->otc ?? '',
+            'mrc' => request()->mrc ?? '',
+        ];
+
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('sales::pdf.activation_report_pdf.account-holder-wise-report', ['sales_data' => $sales_data, 'clients' => $employees], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('monthly-sales-summary-report.pdf');
+        } else {
+            return view('sales::reports.activation_report.account-holder-wise-report', compact('sales_data', 'employees', 'filter_data'));
+        }
+    }
+
+    public function branchWiseActivationReport()
+    {
+        $dateFrom = request()->date_from ? date('Y-m-d', strtotime(request()->date_from)) : null;
+        $dateTo = request()->date_to ? date('Y-m-d', strtotime(request()->date_to)) : null;
+        $branch_id = request()->branch_id ?? '';
+        $sales_data = [];
+        //client_no, client_name, Connectivity Point, Method, Data, Internet, ip, OTC, MRC, activation_date, billing_date, billing_address, ac_holder, remarks   
+        $monthly_sales_summary = Sale::query()
+            ->with('client', 'saleDetails', 'saleProductDetails', 'saleLinkDetails.finalSurveyDetails')
+            ->when(!empty($branch_id), function ($q) use ($branch_id) {
+                $q->whereHas('saleDetails', function ($q) use ($branch_id) {
+                    $q->whereHas('feasibilityRequirementDetails', function ($q) use ($branch_id) {
+                        $q->where('branch_id', $branch_id);
+                    });
+                });
             })
             ->when(!empty($dateFrom) && !empty($dateTo), function ($q) use ($dateFrom, $dateTo) {
                 $q->whereBetween('created_at', [$dateFrom, $dateTo]);
@@ -286,10 +294,97 @@ class ReportController extends Controller
             ->when(!empty($dateTo) && empty($dateFrom), function ($q) use ($dateTo) {
                 $q->where('created_at', '<=', empty($dateTo));
             })
-            ->when(empty($dateFrom) && empty($dateTo) && empty($product_id), function ($q) {
-                $q->where('created_at', '<=', now()->subDays(30));
+            ->when(empty($dateFrom) && empty($dateTo) && empty($client_no), function ($q) {
+                $q->where('created_at', '>=', now()->subDays(30));
             })
-            ->whereHas('sale', function ($q) {
+            ->where('is_modified', 0)
+            ->get()
+            ->map(function ($sale) use (&$sales_data) {
+                $sale->saleDetails->map(function ($saleDetail, $index) use ($sale, &$sales_data) {
+                    // dd($saleDetail->saleLinkDetails[0]->finalSurveyDetails);
+                    $pop_name = [];
+                    $methods = [];
+                    foreach ($saleDetail->saleLinkDetails as $link) {
+                        $pop_name[] = $link->finalSurveyDetails->pop->name ?? '';
+                        $methods[] = $link->finalSurveyDetails->method ?? '';
+                    }
+                    $sales_data[] = [
+                        'client_no' => $sale->client->client_no,
+                        'client_name' => $sale->client->client_name,
+                        'connectivity_point' => $saleDetail->feasibilityRequirementDetails->connectivity_point,
+                        'branch' => $saleDetail->feasibilityRequirementDetails->branch->name,
+                        'products' => $saleDetail->saleProductDetails,
+                        'pop' => $pop_name,
+                        'method' => $methods,
+                        'activation_date' => $saleDetail?->connectivity?->commissioning_date,
+                        'billing_date' => $saleDetail?->connectivity?->billing_date,
+                        'billing_address' => $saleDetail->billingAddress->address,
+                        'account_holder' => $sale->account_holder,
+                        'remarks' => $sale->remarks,
+                        'otc' => $saleDetail->otc,
+                        'mrc' => $saleDetail->mrc,
+                    ];
+                });
+            });
+
+        $sales_data = collect($sales_data)->groupBy('branch')->toArray();
+        $branches = Branch::get();
+        $filter_data = [
+            'client_no' => request()->client_no ?? '',
+            'client_name' => request()->client_name ?? '',
+            'connectivity_point' => request()->connectivity_point ?? '',
+            'product' => request()->product ?? '',
+            'quantity' => request()->quantity ?? '',
+            'price' => request()->price ?? '',
+            'total' => request()->total ?? '',
+            'pop' => request()->pop ?? '',
+            'method' => request()->method ?? '',
+            'activation_date' => request()->activation_date ?? '',
+            'billing_date' => request()->billing_start_date ?? '',
+            'billing_address' => request()->billing_address ?? '',
+            'account_holder' => request()->account_holder ?? '',
+            'remarks' => request()->remarks ?? '',
+            'otc' => request()->otc ?? '',
+            'mrc' => request()->mrc ?? '',
+        ];
+
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('sales::pdf.activation_report_pdf.branch-wise-report', ['sales_data' => $sales_data, 'clients' => $branches], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('monthly-sales-summary-report.pdf');
+        } else {
+            return view('sales::reports.activation_report.branch-wise-report', compact('sales_data', 'branches', 'filter_data'));
+        }
+    }
+
+    public function productWiseReport()
+    {
+        $dateFrom = request()->date_from ? date('Y-m-d', strtotime(request()->date_from)) : null;
+        $dateTo = request()->date_to ? date('Y-m-d', strtotime(request()->date_to)) : null;
+        $product_id = request()->product_id ?? '';
+        $product_data = [];
+
+        $data = SaleDetail::with('sale.client', 'sale.saleDetails', 'saleProductDetails', 'sale.saleProductDetails', 'sale.saleLinkDetails.finalSurveyDetails')
+            ->when(!empty($product_id), function ($q) use ($product_id) {
+                $q->whereHas('saleProductDetails', function ($q) use ($product_id) {
+                    $q->where('product_id', $product_id);
+                });
+            })
+            ->when(!empty($dateFrom) && !empty($dateTo), function ($q) use ($dateFrom, $dateTo) {
+                $q->whereBetween('created_at', [$dateFrom, $dateTo]);
+            })
+            ->when(!empty($dateFrom) && empty($dateTo), function ($q) use ($dateFrom) {
+                $q->where('created_at', '<=', $dateFrom);
+            })
+            ->when(!empty($dateTo) && empty($dateFrom), function ($q) use ($dateTo) {
+                $q->where('created_at', '>=', empty($dateTo));
+            })
+            ->when(empty($dateFrom) && empty($dateTo) && empty($product_id), function ($q) {
+                $q->where('created_at', '>=', now()->subDays(30));
+            })
+            ->whereHas('sale', function ($q) use ($product_id) {
                 $q->where('is_modified', 0);
             })
             ->get()
@@ -308,6 +403,10 @@ class ReportController extends Controller
                     ];
                 });
             });
+
+        if (!empty($product_id)) {
+            $product_data = collect($product_data)->where('product_name', Product::find($product_id)->name)->toArray();
+        }
         //product data group by
         $product_data = collect($product_data)->groupBy('product_name')->toArray();
         $products = Product::get();
@@ -327,12 +426,14 @@ class ReportController extends Controller
     {
         $dateFrom = request()->date_from ? date('Y-m-d', strtotime(request()->date_from)) : null;
         $dateTo = request()->date_to ? date('Y-m-d', strtotime(request()->date_to)) : null;
-        $product_id = request()->product_id ?? '';
+        $branch_id = request()->branch_id ?? '';
         $product_data = [];
 
         $data = SaleDetail::with('sale.client', 'sale.saleDetails', 'sale.saleProductDetails', 'sale.saleLinkDetails.finalSurveyDetails')
-            ->when(!empty($product_id), function ($q) use ($product_id) {
-                $q->where('product_id', $product_id);
+            ->when(!empty($branch_id), function ($q) use ($branch_id) {
+                $q->whereHas('feasibilityRequirementDetails', function ($q) use ($branch_id) {
+                    $q->where('branch_id', $branch_id);
+                });
             })
             ->when(!empty($dateFrom) && !empty($dateTo), function ($q) use ($dateFrom, $dateTo) {
                 $q->whereBetween('created_at', [$dateFrom, $dateTo]);
@@ -344,7 +445,7 @@ class ReportController extends Controller
                 $q->where('created_at', '<=', empty($dateTo));
             })
             ->when(empty($dateFrom) && empty($dateTo) && empty($product_id), function ($q) {
-                $q->where('created_at', '<=', now()->subDays(30));
+                $q->where('created_at', '>=', now()->subDays(30));
             })
             ->whereHas('sale', function ($q) {
                 $q->where('is_modified', 0);
@@ -368,16 +469,16 @@ class ReportController extends Controller
             });
         //product data group by
         $product_data = collect($product_data)->groupBy('branch')->toArray();
-        $products = Product::get();
+        $branches = Branch::get();
 
         if (request('type') == 'PDF') {
-            $pdf = PDF::loadView('sales::pdf.product_report_pdf.branch-wise-report', ['products' => $products, 'product_data' => $product_data], [], [
+            $pdf = PDF::loadView('sales::pdf.product_report_pdf.branch-wise-report', ['branches' => $branches, 'product_data' => $product_data], [], [
                 'format' => 'A4',
                 'orientation' => 'L'
             ]);
             return $pdf->stream('product-wise-report.pdf');
         } else {
-            return view('sales::reports.product_report.branch-wise-report', compact('products', 'product_data'));
+            return view('sales::reports.product_report.branch-wise-report', compact('branches', 'product_data'));
         }
     }
 
@@ -385,12 +486,14 @@ class ReportController extends Controller
     {
         $dateFrom = request()->date_from ? date('Y-m-d', strtotime(request()->date_from)) : null;
         $dateTo = request()->date_to ? date('Y-m-d', strtotime(request()->date_to)) : null;
-        $product_id = request()->product_id ?? '';
+        $account_holder_name = request()->account_holder_name ?? '';
         $product_data = [];
 
         $data = SaleDetail::with('sale.client', 'sale.saleDetails', 'sale.saleProductDetails', 'sale.saleLinkDetails.finalSurveyDetails')
-            ->when(!empty($product_id), function ($q) use ($product_id) {
-                $q->where('product_id', $product_id);
+            ->when(!empty($account_holder_name), function ($q) use ($account_holder_name) {
+                $q->whereHas('sale', function ($q) use ($account_holder_name) {
+                    $q->where('account_holder', $account_holder_name);
+                });
             })
             ->when(!empty($dateFrom) && !empty($dateTo), function ($q) use ($dateFrom, $dateTo) {
                 $q->whereBetween('created_at', [$dateFrom, $dateTo]);
@@ -402,7 +505,7 @@ class ReportController extends Controller
                 $q->where('created_at', '<=', empty($dateTo));
             })
             ->when(empty($dateFrom) && empty($dateTo) && empty($product_id), function ($q) {
-                $q->where('created_at', '<=', now()->subDays(30));
+                $q->where('created_at', '>=', now()->subDays(30));
             })
             ->whereHas('sale', function ($q) {
                 $q->where('is_modified', 0);
@@ -426,16 +529,17 @@ class ReportController extends Controller
             });
         //product data group by
         $product_data = collect($product_data)->groupBy('account_holder')->toArray();
-        $products = Product::get();
+        $employees = Employee::get();
 
         if (request('type') == 'PDF') {
-            $pdf = PDF::loadView('sales::pdf.product_report_pdf.account-holder-wise-report', ['products' => $products, 'product_data' => $product_data], [], [
+            $pdf = PDF::loadView('sales::pdf.product_report_pdf.account-holder-wise-report', ['employees' => $employees, 'product_data' => $product_data], [], [
                 'format' => 'A4',
                 'orientation' => 'L'
             ]);
             return $pdf->stream('product-wise-report.pdf');
         } else {
-            return view('sales::reports.product_report.account-holder-wise-report', compact('products', 'product_data'));
+            // dd($product_data);
+            return view('sales::reports.product_report.account-holder-wise-report', compact('employees', 'product_data'));
         }
     }
 }

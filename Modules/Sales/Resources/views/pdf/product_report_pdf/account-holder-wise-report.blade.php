@@ -66,6 +66,10 @@
             text-align: left;
         }
 
+        .text-bold {
+            font-weight: bold;
+        }
+
         @page {
             margin: 150px 0px 40px 0px;
         }
@@ -94,19 +98,19 @@
         <table id="dataTable" class="table table-striped table-bordered">
             <tbody>
                 @foreach ($product_data as $key => $product)
-                    <tr style="background-color: rgb(213, 255, 177) !important; font-weight:bold;">
-                        <td colspan="10" class="text-center font-weight-bold">{{ $key }}</td>
+                    <tr style="background-color: #c5d9f1; !important;;">
+                        <td colspan="10" class="text-center text-bold">{{ $key }}</td>
                     </tr>
-                    <tr style="background-color: rgb(177, 255, 229) !important; font-weight:bold;">
-                        <td>#SL</td>
-                        <td>Client No</td>
-                        <td>Client Name</td>
-                        <td>Product</td>
-                        <td>Quantity</td>
-                        <td>Price</td>
-                        <td>Total</td>
-                        <td>Activation Date</td>
-                        <td>Billing Start Date</td>
+                    <tr style="background-color: #e2e2e2; !important;">
+                        <td class="text-bold">#SL</td>
+                        <td class="text-bold">Client No</td>
+                        <td class="text-bold">Client Name</td>
+                        <td class="text-bold">Product</td>
+                        <td class="text-bold">Quantity</td>
+                        <td class="text-bold">Price</td>
+                        <td class="text-bold">Total</td>
+                        <td class="text-bold">Activation Date</td>
+                        <td class="text-bold">Billing Start Date</td>
                     </tr>
                     @foreach ($product as $single_product)
                         <tr>

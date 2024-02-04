@@ -25,11 +25,13 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="ticket_no" class="font-weight-bold">Product:</label>
-                    <select name="product_id" id="product_id" class="form-control select2">
-                        <option value="">Select Product</option>
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                    <label for="ticket_no" class="font-weight-bold">Employee:</label>
+                    <select name="account_holder_name" id="account_holder_name" class="form-control select2">
+                        <option value="">Select Employee</option>
+                        @foreach ($employees as $employee)
+                            <option value="{{ $employee->name }}"
+                                {{ old('account_holder_name') == $employee->id ? 'selected' : '' }}>
+                                {{ $employee->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -94,14 +96,14 @@
                     @foreach ($product as $single_product)
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
-                            <td>{{ $single_product['client_no'] }}</td>
-                            <td>{{ $single_product['client_name'] }}</td>
-                            <td>{{ $single_product['product_name'] }}</td>
-                            <td>{{ $single_product['quantity'] }}</td>
-                            <td>{{ $single_product['price'] }}</td>
-                            <td>{{ $single_product['total'] }}</td>
-                            <td>{{ $single_product['activation_date'] }}</td>
-                            <td>{{ $single_product['billing_date'] }}</td>
+                            <td>{{ $single_product['client_no'] ?? '' }}</td>
+                            <td>{{ $single_product['client_name'] ?? '' }}</td>
+                            <td>{{ $single_product['product_name'] ?? '' }}</td>
+                            <td>{{ $single_product['quantity'] ?? '' }}</td>
+                            <td>{{ $single_product['price'] ?? '' }}</td>
+                            <td>{{ $single_product['total'] ?? '' }}</td>
+                            <td>{{ $single_product['activation_date'] ?? '' }}</td>
+                            <td>{{ $single_product['billing_date'] ?? '' }}</td>
                         </tr>
                     @endforeach
                 @endforeach

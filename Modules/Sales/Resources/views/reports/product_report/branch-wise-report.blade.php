@@ -25,11 +25,12 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="ticket_no" class="font-weight-bold">Product:</label>
-                    <select name="product_id" id="product_id" class="form-control select2">
-                        <option value="">Select Product</option>
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->name }}</option>
+                    <label for="ticket_no" class="font-weight-bold">Branch:</label>
+                    <select name="branch_id" id="branch_id" class="form-control select2">
+                        <option value="">Select Branch</option>
+                        @foreach ($branches as $branch)
+                            <option value="{{ $branch->id }}" @if (request()->branch_id == $branch->id) selected @endif>
+                                {{ $branch->name }}</option>
                         @endforeach
                     </select>
                 </div>

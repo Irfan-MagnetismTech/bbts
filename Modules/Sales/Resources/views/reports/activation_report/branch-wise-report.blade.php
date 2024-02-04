@@ -28,13 +28,12 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="ticket_no" class="font-weight-bold">Account Holder:</label>
-                    <select name="account_holder_name" id="account_holder_name" class="form-control select2">
-                        <option value="">Select Account Holder</option>
-                        @foreach ($employees as $employee)
-                            <option value="{{ $employee->name }}"
-                                {{ old('account_holder') == $employee->name ? 'selected' : '' }}>{{ $employee->name }}
-                            </option>
+                    <label for="ticket_no" class="font-weight-bold">Branch:</label>
+                    <select name="branch_id" id="branch_id" class="form-control select2">
+                        <option value="">Select Branch</option>
+                        @foreach ($branches as $branch)
+                            <option value="{{ $branch->id }}" @if (request()->branch_id == $branch->id) selected @endif>
+                                {{ $branch->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -220,172 +219,175 @@
     </form>
 
     <div class="dt-responsive table-responsive">
-        <table id="dataTable" class="table table-striped table-bordered">
+        <table id="dataTable" class="table table-bordered">
             <thead>
                 {{-- check empty of filter data --}}
                 @php
                     $filter_data = array_filter($filter_data);
                 @endphp
-                <tr>
-                    <th>#SL</th>
-                    @if (in_array('account_holder', $filter_data) || empty($filter_data))
-                        <th>A/C holder</th>
-                    @endif
-                    @if (in_array('client_id', $filter_data) || empty($filter_data))
-                        <th>Client ID</th>
-                    @endif
-                    @if (in_array('client_name', $filter_data) || empty($filter_data))
-                        <th>Client Name</th>
-                    @endif
-                    @if (in_array('connectivity_point', $filter_data) || empty($filter_data))
-                        <th>Connectivity Point</th>
-                    @endif
-                    @if (in_array('pop', $filter_data) || empty($filter_data))
-                        <th>Pop</th>
-                    @endif
-                    @if (in_array('method', $filter_data) || empty($filter_data))
-                        <th>Method</th>
-                    @endif
-                    @if (in_array('product', $filter_data) || empty($filter_data))
-                        <th>Product</th>
-                    @endif
-                    @if (in_array('quantity', $filter_data) || empty($filter_data))
-                        <th>Quantity</th>
-                    @endif
-                    @if (in_array('price', $filter_data) || empty($filter_data))
-                        <th>Price</th>
-                    @endif
-                    @if (in_array('total', $filter_data) || empty($filter_data))
-                        <th>Total</th>
-                    @endif
-                    @if (in_array('otc', $filter_data) || empty($filter_data))
-                        <th>OTC</th>
-                    @endif
-                    @if (in_array('mrc', $filter_data) || empty($filter_data))
-                        <th>MRC</th>
-                    @endif
-                    @if (in_array('activation_date', $filter_data) || empty($filter_data))
-                        <th>Activation Date</th>
-                    @endif
-                    @if (in_array('billing_start_date', $filter_data) || empty($filter_data))
-                        <th>Billing Start Date</th>
-                    @endif
-                    @if (in_array('billing_address', $filter_data) || empty($filter_data))
-                        <th>Billing Address</th>
-                    @endif
-                    @if (in_array('remarks', $filter_data) || empty($filter_data))
-                        <th>Remarks</th>
-                    @endif
-                </tr>
+
             </thead>
 
             <tbody>
-                @foreach ($sales_data as $key => $monthly_sales_summary)
-                    {{-- @dd($monthly_sales_summary['products']) --}}
-                    @php
-                        $max_rowspan = $monthly_sales_summary['products']->count();
-                    @endphp
-                    @for ($i = 0; $i < $max_rowspan; $i++)
-                        <tr>
-                            @if ($i == 0)
-                                <td rowspan="{{ $max_rowspan }}">{{ $key + 1 }}</td>
-                                @if (in_array('account_holder', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['account_holder'] }}
-                                    </td>
-                                @endif
-                                @if (in_array('client_no', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['client_no'] }}
-                                    </td>
-                                @endif
-                                @if (in_array('client_name', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['client_name'] }}
-                                    </td>
-                                @endif
-                                @if (in_array('connectivity_point', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['connectivity_point'] }}
-                                    </td>
-                                @endif
-                            @endif
-                            @if (isset($monthly_sales_summary['pop'][$i]))
-                                @if (in_array('pop', $filter_data) || empty($filter_data))
-                                    <td>
-                                        {!! $monthly_sales_summary['pop'][$i] !!}
-                                    </td>
-                                @endif
-                            @else
-                                @if (in_array('pop', $filter_data) || empty($filter_data))
-                                    <td>-</td>
-                                @endif
-                            @endif
+                @foreach ($sales_data as $key => $monthly_summary)
+                    <tr style="background-color: #c5d9f1; font-weight: bold;">
+                        <td colspan="16" class="text-center">
+                            {{ $key }}
+                        </td>
+                    </tr>
+                    <tr style="background-color: #e2e2e2; font-weight: bold;">
+                        @if (in_array('client_id', $filter_data) || empty($filter_data))
+                            <td>Client ID</td>
+                        @endif
+                        @if (in_array('client_name', $filter_data) || empty($filter_data))
+                            <td>Client Name</td>
+                        @endif
+                        @if (in_array('connectivity_point', $filter_data) || empty($filter_data))
+                            <td>Connectivity Point</td>
+                        @endif
+                        @if (in_array('pop', $filter_data) || empty($filter_data))
+                            <td>Pop</td>
+                        @endif
+                        @if (in_array('method', $filter_data) || empty($filter_data))
+                            <td>Method</td>
+                        @endif
+                        @if (in_array('product', $filter_data) || empty($filter_data))
+                            <td>Product</td>
+                        @endif
+                        @if (in_array('quantity', $filter_data) || empty($filter_data))
+                            <td>Quantity</td>
+                        @endif
+                        @if (in_array('price', $filter_data) || empty($filter_data))
+                            <td>Price</td>
+                        @endif
+                        @if (in_array('total', $filter_data) || empty($filter_data))
+                            <td>Total</td>
+                        @endif
+                        @if (in_array('otc', $filter_data) || empty($filter_data))
+                            <td>OTC</td>
+                        @endif
+                        @if (in_array('mrc', $filter_data) || empty($filter_data))
+                            <td>MRC</td>
+                        @endif
+                        @if (in_array('activation_date', $filter_data) || empty($filter_data))
+                            <td>Activation Date</td>
+                        @endif
+                        @if (in_array('billing_start_date', $filter_data) || empty($filter_data))
+                            <td>Billing Start Date</td>
+                        @endif
+                        @if (in_array('billing_address', $filter_data) || empty($filter_data))
+                            <td>Billing Address</td>
+                        @endif
+                        @if (in_array('remarks', $filter_data) || empty($filter_data))
+                            <td>Remarks</td>
+                        @endif
+                    </tr>
+                    @foreach ($monthly_summary as $monthly_sales_summary)
+                        @php
+                            $max_rowspan = $monthly_sales_summary['products']->count();
+                        @endphp
 
-                            @if (isset($monthly_sales_summary['method'][$i]))
-                                @if (in_array('method', $filter_data) || empty($filter_data))
+                        @for ($i = 0; $i < $max_rowspan; $i++)
+                            <tr style="background-color: #f2f2f2;">
+                                @if ($i == 0)
+                                    @if (in_array('account_holder', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['account_holder'] }}
+                                        </td>
+                                    @endif
+                                    @if (in_array('client_no', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['client_no'] }}
+                                        </td>
+                                    @endif
+                                    @if (in_array('client_name', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['client_name'] }}
+                                        </td>
+                                    @endif
+                                    @if (in_array('connectivity_point', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['connectivity_point'] }}
+                                        </td>
+                                    @endif
+                                @endif
+                                @if (isset($monthly_sales_summary['pop'][$i]))
+                                    @if (in_array('pop', $filter_data) || empty($filter_data))
+                                        <td>
+                                            {!! $monthly_sales_summary['pop'][$i] !!}
+                                        </td>
+                                    @endif
+                                @else
+                                    @if (in_array('pop', $filter_data) || empty($filter_data))
+                                        <td>-</td>
+                                    @endif
+                                @endif
+
+                                @if (isset($monthly_sales_summary['method'][$i]))
+                                    @if (in_array('method', $filter_data) || empty($filter_data))
+                                        <td>
+                                            {!! $monthly_sales_summary['method'][$i] !!}
+                                        </td>
+                                    @endif
+                                @else
+                                    @if (in_array('method', $filter_data) || empty($filter_data))
+                                        <td>-</td>
+                                    @endif
+                                @endif
+                                @if (in_array('product', $filter_data) || empty($filter_data))
                                     <td>
-                                        {!! $monthly_sales_summary['method'][$i] !!}
+                                        {{ $monthly_sales_summary['products'][$i]->product->name ?? '' }}
                                     </td>
                                 @endif
-                            @else
-                                @if (in_array('method', $filter_data) || empty($filter_data))
-                                    <td>-</td>
-                                @endif
-                            @endif
-                            @if (in_array('product', $filter_data) || empty($filter_data))
-                                <td>
-                                    {{ $monthly_sales_summary['products'][$i]->product->name ?? '' }}
-                                </td>
-                            @endif
-                            @if (in_array('quantity', $filter_data) || empty($filter_data))
-                                <td>
-                                    {{ $monthly_sales_summary['products'][$i]->quantity ?? '' }}
-                                </td>
-                            @endif
-                            @if (in_array('price', $filter_data) || empty($filter_data))
-                                <td>
-                                    {{ $monthly_sales_summary['products'][$i]->price }}
-                                </td>
-                            @endif
-                            @if (in_array('total', $filter_data) || empty($filter_data))
-                                <td>
-                                    {{ $monthly_sales_summary['products'][$i]->quantity * $monthly_sales_summary['products'][$i]->price }}
-                                </td>
-                            @endif
-                            @if ($i == 0)
-                                @if (in_array('otc', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['otc'] }}
+                                @if (in_array('quantity', $filter_data) || empty($filter_data))
+                                    <td>
+                                        {{ $monthly_sales_summary['products'][$i]->quantity ?? '' }}
                                     </td>
                                 @endif
-                                @if (in_array('mrc', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['mrc'] }}
+                                @if (in_array('price', $filter_data) || empty($filter_data))
+                                    <td>
+                                        {{ $monthly_sales_summary['products'][$i]->price }}
                                     </td>
                                 @endif
-                                @if (in_array('activation_date', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['activation_date'] }}
+                                @if (in_array('total', $filter_data) || empty($filter_data))
+                                    <td>
+                                        {{ $monthly_sales_summary['products'][$i]->quantity * $monthly_sales_summary['products'][$i]->price }}
                                     </td>
                                 @endif
-                                @if (in_array('billing_start_date', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['billing_date'] }}
-                                    </td>
+                                @if ($i == 0)
+                                    @if (in_array('otc', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['otc'] }}
+                                        </td>
+                                    @endif
+                                    @if (in_array('mrc', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['mrc'] }}
+                                        </td>
+                                    @endif
+                                    @if (in_array('activation_date', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['activation_date'] }}
+                                        </td>
+                                    @endif
+                                    @if (in_array('billing_start_date', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['billing_date'] }}
+                                        </td>
+                                    @endif
+                                    @if (in_array('billing_address', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['billing_address'] }}
+                                        </td>
+                                    @endif
+                                    @if (in_array('remarks', $filter_data) || empty($filter_data))
+                                        <td rowspan="{{ $max_rowspan }}">
+                                            {{ $monthly_sales_summary['remarks'] }}</td>
+                                    @endif
                                 @endif
-                                @if (in_array('billing_address', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['billing_address'] }}
-                                    </td>
-                                @endif
-                                @if (in_array('remarks', $filter_data) || empty($filter_data))
-                                    <td rowspan="{{ $max_rowspan }}">
-                                        {{ $monthly_sales_summary['remarks'] }}</td>
-                                @endif
-                            @endif
-                        </tr>
-                    @endfor
+                            </tr>
+                        @endfor
+                    @endforeach
                 @endforeach
             </tbody>
         </table>
