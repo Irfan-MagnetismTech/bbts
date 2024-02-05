@@ -54,9 +54,13 @@ class SurveyController extends Controller
             ->where('is_modified', 0)
             ->clone();
         if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
-            $surveys = $surveys->where('user_id', auth()->user()->id);
+            $surveys = $surveys->whereHas('feasibilityRequirementDetails.feasibilityRequirement', function ($q) {
+                $q->where('user_id', auth()->user()->id);
+            });
         } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
-            $surveys = $surveys->where('user_id', auth()->user()->id)->take(10);
+            $surveys = $surveys->whereHas('feasibilityRequirementDetails.feasibilityRequirement', function ($q) {
+                $q->where('user_id', auth()->user()->id);
+            })->take(10);
         }
         $surveys = $surveys->latest()->get();
         return view('sales::survey.index', compact('surveys'));

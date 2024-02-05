@@ -13,14 +13,14 @@ class ReportEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $reportData;
-    public $reportFilePath;
+    // public $reportData;
+    // public $reportFilePath;
 
 
-    public function __construct($reportData, $reportFilePath)
+    public function __construct()
     {
-        $this->reportData = $reportData;
-        $this->reportFilePath = $reportFilePath;
+        // $this->reportData = $reportData;
+        // $this->reportFilePath = $reportFilePath;
     }
 
     /**
@@ -37,11 +37,14 @@ class ReportEmail extends Mailable
 
     public function build()
     {
-        return $this->view('emails.report')
-            ->with(['reportData' => $this->reportData])
-            ->attach($this->reportFilePath, [
-                'as' => 'report.pdf', // Specify the desired filename for the attachment
-            ]);
+        return $this->view('mail.report_mail')
+            ->subject('Scheduled Email Subject');
+
+        // return $this->view('emails.report')
+        //     ->with(['reportData' => $this->reportData])
+        //     ->attach($this->reportFilePath, [
+        //         'as' => 'report.pdf', // Specify the desired filename for the attachment
+        //     ]);
     }
 
     /**

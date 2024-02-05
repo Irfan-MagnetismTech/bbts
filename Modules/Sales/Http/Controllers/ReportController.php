@@ -154,20 +154,21 @@ class ReportController extends Controller
             'client_no' => request()->client_no ?? '',
             'client_name' => request()->client_name ?? '',
             'connectivity_point' => request()->connectivity_point ?? '',
-            'products' => request()->products ?? '',
+            'product' => request()->product ?? '',
             'quantity' => request()->quantity ?? '',
             'price' => request()->price ?? '',
             'total' => request()->total ?? '',
             'pop' => request()->pop ?? '',
             'method' => request()->method ?? '',
             'activation_date' => request()->activation_date ?? '',
-            'billing_date' => request()->billing_date ?? '',
+            'billing_date' => request()->billing_start_date ?? '',
             'billing_address' => request()->billing_address ?? '',
             'account_holder' => request()->account_holder ?? '',
             'remarks' => request()->remarks ?? '',
             'otc' => request()->otc ?? '',
             'mrc' => request()->mrc ?? '',
         ];
+
         if (request('type') == 'PDF') {
             $pdf = PDF::loadView('sales::pdf.monthly-sales-summary-report', ['sales_data' => $sales_data, 'clients' => $clients], [], [
                 'format' => 'A4',

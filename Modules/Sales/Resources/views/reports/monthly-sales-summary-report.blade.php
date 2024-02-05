@@ -216,7 +216,7 @@
                 @endphp
                 <tr>
                     <th>#SL</th>
-                    @if (in_array('client_no', $filter_data) || empty($filter_data))
+                    @if (in_array('client_id', $filter_data) || empty($filter_data))
                         <th>Client ID</th>
                     @endif
                     @if (in_array('client_name', $filter_data) || empty($filter_data))
@@ -293,7 +293,7 @@
                                     </td>
                                 @endif
                             @endif
-                            @if ($monthly_sales_summary['pop'][$i] != null)
+                            @if (isset($monthly_sales_summary['pop'][$i]))
                                 @if (in_array('pop', $filter_data) || empty($filter_data))
                                     <td>
                                         {!! $monthly_sales_summary['pop'][$i] !!}
@@ -304,10 +304,11 @@
                                     <td>-</td>
                                 @endif
                             @endif
-                            @if ($monthly_sales_summary['method'][$i] != null)
+
+                            @if (isset($monthly_sales_summary['method'][$i]))
                                 @if (in_array('method', $filter_data) || empty($filter_data))
                                     <td>
-                                        {{ $monthly_sales_summary['method'][$i] }}
+                                        {!! $monthly_sales_summary['method'][$i] !!}
                                     </td>
                                 @endif
                             @else
@@ -317,12 +318,12 @@
                             @endif
                             @if (in_array('product', $filter_data) || empty($filter_data))
                                 <td>
-                                    {{ $monthly_sales_summary['products'][$i]->product->name }}
+                                    {{ $monthly_sales_summary['products'][$i]->product->name ?? '' }}
                                 </td>
                             @endif
                             @if (in_array('quantity', $filter_data) || empty($filter_data))
                                 <td>
-                                    {{ $monthly_sales_summary['products'][$i]->quantity }}
+                                    {{ $monthly_sales_summary['products'][$i]->quantity ?? '' }}
                                 </td>
                             @endif
                             @if (in_array('price', $filter_data) || empty($filter_data))
