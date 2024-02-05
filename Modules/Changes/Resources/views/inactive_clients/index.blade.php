@@ -1,12 +1,12 @@
 @extends('layouts.backend-layout')
-@section('title', 'Costing List')
+@section('title', 'Permanent Inactive Client Requests')
 
 @section('style')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/Datatables/dataTables.bootstrap4.min.css') }}">
 @endsection
 
 @section('breadcrumb-title')
-    Costing List
+    Permanent Inactive Client Requests
 @endsection
 
 @section('style')

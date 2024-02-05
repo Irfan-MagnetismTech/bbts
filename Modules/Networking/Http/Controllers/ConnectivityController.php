@@ -500,7 +500,7 @@ class ConnectivityController extends Controller
         }
     }
 
-    public function permanentlyInactiveClients()
+    public function   permanentlyInactiveClients()
     {
         $permanently_inactive_clients = [];
         $activations = Activation::where('is_active', 'Inactive')->get();
@@ -530,7 +530,7 @@ class ConnectivityController extends Controller
         }
 
         if (request('type') == 'PDF') {
-            $pdf = PDF::loadView('networking::pdf.permanent-inactive-client-report', ['permanently_inactive_clients' => $permanently_inactive_clients], [], [
+            $pdf = PDF::loadView('networking::pdf.inactive_report.permanent-inactive-client-report', ['permanently_inactive_clients' => $permanently_inactive_clients], [], [
                 'format' => 'A4',
                 'orientation' => 'L'
             ]);
@@ -538,7 +538,7 @@ class ConnectivityController extends Controller
         }
 
 
-        return view('networking::reports.permanent-inactive-client-report', compact('permanently_inactive_clients'));
+        return view('networking::reports.inactive_report.permanent-inactive-client-report', compact('permanently_inactive_clients'));
     }
 
     public function accountHolderWiseInactiveReport()
@@ -573,7 +573,7 @@ class ConnectivityController extends Controller
 
 
         $permanently_inactive_clients = collect($permanently_inactive_clients)->groupBy('account_holder');
-        if (request('type') == 'PDF') {
+        if (request()->type == 'PDF') {
             $pdf = PDF::loadView('networking::pdf.inactive_report.account-holder-wise-report', ['permanently_inactive_clients' => $permanently_inactive_clients], [], [
                 'format' => 'A4',
                 'orientation' => 'L'
@@ -583,7 +583,8 @@ class ConnectivityController extends Controller
         return view('networking::reports.inactive_report.account-holder-wise-report', compact('permanently_inactive_clients'));
     }
 
-    public function branchWiseInactiveReport(){
+    public function branchWiseInactiveReport()
+    {
         $permanently_inactive_clients = [];
         $activations = Activation::where('is_active', 'Inactive')->get();
         $fr_nos = $activations->pluck('fr_no')->toArray();
