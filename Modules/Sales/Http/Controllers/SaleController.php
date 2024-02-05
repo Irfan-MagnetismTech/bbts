@@ -52,18 +52,18 @@ class SaleController extends Controller
     {
         $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
         $to_date = request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
-        $sales = Sale::activation()
-            ->when($from_date, function ($query, $from_date) {
+        $sales = Sale::with('feasibilityRequirement')->activation()
+            ->when(!empty($from_date), function ($query) use ($from_date) {
                 return $query->whereDate('created_at', '>=', $from_date);
             })
-            ->when($to_date, function ($query, $to_date) {
+            ->when(!empty($to_date), function ($query) use ($to_date) {
                 return $query->whereDate('created_at', '<=', $to_date);
             })
             ->clone();
-        if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
-            $sales = $sales->where('created_by', auth()->user()->id);
-        } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
-            $sales = $sales->where('created_by', auth()->user()->id)->take(10);
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
+            $sales = $sales->whereHas('feasibilityRequirement', function ($qr) {
+                $qr->where('user_id', auth()->user()->id);
+            });
         }
         $sales = $sales->latest()->get();
         return view('sales::sales.index', compact('sales'));

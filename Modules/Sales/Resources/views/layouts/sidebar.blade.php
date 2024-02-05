@@ -213,7 +213,8 @@
             </a>
             <ul class="pcoded-submenu">
                 @can('plan-list')
-                    <li class="{{ request()->routeIs('planning.index', 'planning.show', 'planning.edit') ? 'active' : null }}">
+                    <li
+                        class="{{ request()->routeIs('planning.index', 'planning.show', 'planning.edit') ? 'active' : null }}">
                         <a href="{{ route('planning.index') }}"> <span class="pcoded-micon"><i
                                     class="ti-angle-right"></i></span><span class="pcoded-mtext">List</span><span
                                 class="pcoded-mcaret"></span></a>
@@ -336,7 +337,7 @@
             </ul>
         </li>
     @endcan
-    @can('report')
+    @can('sales-report')
         <li
             class="pcoded-hasmenu {{ request()->routeIs(['plan-report', 'plan-modification-report', 'monthly-sales-summary-report']) ? 'active pcoded-trigger' : '' }}">
             <a href="javascript:void(0)">
@@ -363,6 +364,46 @@
                     <a href="{{ route('monthly-sales-summary-report') }}">
                         <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                         <span class="pcoded-mtext">Monthly Sales Summary Report</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+
+                <li class="{{ request()->routeIs('account-holder-wise-activation-report') ? 'active' : '' }}">
+                    <a href="{{ route('account-holder-wise-activation-report') }}">
+                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                        <span class="pcoded-mtext">Account Holder Wise Report (MSSR)</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+
+                <li class="{{ request()->routeIs('branch-wise-activation-report') ? 'active' : '' }}">
+                    <a href="{{ route('branch-wise-activation-report') }}">
+                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                        <span class="pcoded-mtext">Branch Wise Report (MSSR)</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+
+                <li class="{{ request()->routeIs('product-wise-report') ? 'active' : '' }}">
+                    <a href="{{ route('product-wise-report') }}">
+                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                        <span class="pcoded-mtext">Product Wise Report</span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+
+                <li class="{{ request()->routeIs('account-holder-wise-report') ? 'active' : '' }}">
+                    <a href="{{ route('account-holder-wise-report') }}">
+                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                        <span class="pcoded-mtext">Account Holder Wise Report (PWR) </span>
+                        <span class="pcoded-mcaret"></span>
+                    </a>
+                </li>
+
+                <li class="{{ request()->routeIs('branch-wise-report') ? 'active' : '' }}">
+                    <a href="{{ route('branch-wise-report') }}">
+                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+                        <span class="pcoded-mtext">Branch Wise Report (PWR) </span>
                         <span class="pcoded-mcaret"></span>
                     </a>
                 </li>

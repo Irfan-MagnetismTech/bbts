@@ -540,4 +540,85 @@ class ConnectivityController extends Controller
 
         return view('networking::reports.permanent-inactive-client-report', compact('permanently_inactive_clients'));
     }
+
+    public function accountHolderWiseInactiveReport()
+    {
+        $permanently_inactive_clients = [];
+        $activations = Activation::where('is_active', 'Inactive')->get();
+        $fr_nos = $activations->pluck('fr_no')->toArray();
+        //get latest connectivity_requirement_id by wherein fr_nos
+        $connectivity_requirements = ConnectivityRequirement::whereIn('fr_no', $fr_nos)->latest()->get();
+        //remove same fr_no from connectivity_requirements
+        $connectivity_requirements = $connectivity_requirements->unique('fr_no');
+        foreach ($connectivity_requirements as $connectivity_requirement) {
+            $permanently_inactive_clients[] = [
+                'client_no' => $connectivity_requirement->client_no,
+                'client_name' => $connectivity_requirement->client->client_name,
+                'thana' => $connectivity_requirement->client->thana->name ?? '',
+                'fr_no' => $connectivity_requirement->fr_no,
+                'connectivity_requirement_id' => $connectivity_requirement->id,
+                'connectivity_requirement_date' => $connectivity_requirement->created_at,
+                'connectivity_requirement_details' => $connectivity_requirement->connectivityRequirementDetails,
+                'scm_err' => $connectivity_requirement?->scmErr->scmErrLines->load('material') ?? [],
+                'sale_product_details' => $connectivity_requirement->saleDetail->last()->load('saleProductDetails')->saleProductDetails,
+                'account_holder' => $connectivity_requirement->saleDetail->last()->sale->account_holder,
+                'reason' => $connectivity_requirement->scmErr->reason ?? '',
+                'branch' => $connectivity_requirement->FeasibilityRequirementDetail->branch->name ?? '',
+                'connectivity_point' => $connectivity_requirement->FeasibilityRequirementDetail->connectivity_point ?? '',
+                'otc' => $connectivity_requirement->saleDetail->last()->otc,
+                'mrc' => $connectivity_requirement->saleDetail->last()->mrc,
+            ];
+        }
+
+
+
+        $permanently_inactive_clients = collect($permanently_inactive_clients)->groupBy('account_holder');
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('networking::pdf.inactive_report.account-holder-wise-report', ['permanently_inactive_clients' => $permanently_inactive_clients], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('permanent-inactive-client-report.pdf');
+        }
+        return view('networking::reports.inactive_report.account-holder-wise-report', compact('permanently_inactive_clients'));
+    }
+
+    public function branchWiseInactiveReport(){
+        $permanently_inactive_clients = [];
+        $activations = Activation::where('is_active', 'Inactive')->get();
+        $fr_nos = $activations->pluck('fr_no')->toArray();
+        //get latest connectivity_requirement_id by wherein fr_nos
+        $connectivity_requirements = ConnectivityRequirement::whereIn('fr_no', $fr_nos)->latest()->get();
+        //remove same fr_no from connectivity_requirements
+        $connectivity_requirements = $connectivity_requirements->unique('fr_no');
+        foreach ($connectivity_requirements as $connectivity_requirement) {
+            $permanently_inactive_clients[] = [
+                'client_no' => $connectivity_requirement->client_no,
+                'client_name' => $connectivity_requirement->client->client_name,
+                'thana' => $connectivity_requirement->client->thana->name ?? '',
+                'fr_no' => $connectivity_requirement->fr_no,
+                'connectivity_requirement_id' => $connectivity_requirement->id,
+                'connectivity_requirement_date' => $connectivity_requirement->created_at,
+                'connectivity_requirement_details' => $connectivity_requirement->connectivityRequirementDetails,
+                'scm_err' => $connectivity_requirement?->scmErr->scmErrLines->load('material') ?? [],
+                'sale_product_details' => $connectivity_requirement->saleDetail->last()->load('saleProductDetails')->saleProductDetails,
+                'account_holder' => $connectivity_requirement->saleDetail->last()->sale->account_holder,
+                'reason' => $connectivity_requirement->scmErr->reason ?? '',
+                'branch' => $connectivity_requirement->FeasibilityRequirementDetail->branch->name ?? '',
+                'connectivity_point' => $connectivity_requirement->FeasibilityRequirementDetail->connectivity_point ?? '',
+                'otc' => $connectivity_requirement->saleDetail->last()->otc,
+                'mrc' => $connectivity_requirement->saleDetail->last()->mrc,
+            ];
+        }
+
+        $permanently_inactive_clients = collect($permanently_inactive_clients)->groupBy('branch');
+        if (request('type') == 'PDF') {
+            $pdf = PDF::loadView('networking::pdf.inactive_report.branch-wise-report', ['permanently_inactive_clients' => $permanently_inactive_clients], [], [
+                'format' => 'A4',
+                'orientation' => 'L'
+            ]);
+            return $pdf->stream('permanent-inactive-client-report.pdf');
+        }
+        return view('networking::reports.inactive_report.branch-wise-report', compact('permanently_inactive_clients'));
+    }
 }

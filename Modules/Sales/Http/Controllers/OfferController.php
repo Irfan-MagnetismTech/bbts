@@ -33,20 +33,22 @@ class OfferController extends Controller
 
     public function index()
     {
-        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : date('Y-m-d');
-        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : date('Y-m-d');
-        $offers = Offer::with('offerDetails.offerLinks')->where('is_modified', 0)
-            ->when($from_date, function ($query, $from_date) {
+        $from_date = request()->from_date ? date('Y-m-d', strtotime(request()->from_date)) : '';
+        $to_date =  request()->to_date ? date('Y-m-d', strtotime(request()->to_date)) : '';
+
+        $offers = Offer::with('offerDetails.offerLinks', 'feasibilityRequirement')->where('is_modified', 0)
+
+            ->when(!empty($from_date), function ($query) use ($from_date) {
                 return $query->whereDate('created_at', '>=', $from_date);
             })
-            ->when($to_date, function ($query, $to_date) {
+            ->when(!empty($to_date), function ($query) use ($to_date){
                 return $query->whereDate('created_at', '<=', $to_date);
             })
             ->clone();
-        if (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && !empty(request()->get('from_date')) && !empty(request()->get('to_date'))) {
-            $offers = $offers->where('created_by', auth()->user()->id);
-        } elseif (!auth()->user()->hasRole(['Admin', 'Super-Admin']) && empty(request()->get('from_date')) && empty(request()->get('to_date'))) {
-            $offers = $offers->where('created_by', auth()->user()->id)->take(10);
+        if (!auth()->user()->hasRole(['Admin', 'Super-Admin'])) {
+            $offers = $offers->whereHas('feasibilityRequirement', function ($query) {
+                $query->where('user_id', auth()->user()->id);
+            });
         }
         $offers = $offers->latest()->get();
         return view('sales::offers.index', compact('offers'));

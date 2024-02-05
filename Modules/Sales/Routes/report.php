@@ -8,3 +8,8 @@ use Modules\Sales\Http\Controllers\ReportController;
 Route::get('plan-report', [ReportController::class, 'planReport'])->name('plan-report');
 Route::get('plan-modification-report', [ReportController::class, 'planModificationReport'])->name('plan-modification-report');
 Route::get('monthly-sales-summary-report', [ReportController::class, 'monthlySalesSummaryReport'])->name('monthly-sales-summary-report');
+Route::get('account-holder-wise-activation-report', [ReportController::class, 'accountHolderWiseActivationReport'])->name('account-holder-wise-activation-report');
+Route::get('branch-wise-activation-report', [ReportController::class, 'branchWiseActivationReport'])->name('branch-wise-activation-report');
+Route::get('account-holder-wise-report', [ReportController::class, 'accountHolderWiseReport'])->name('account-holder-wise-report');
+Route::get('product-wise-report', [ReportController::class, 'productWiseReport'])->name('product-wise-report');
+Route::get('branch-wise-report', [ReportController::class, 'branchWiseReport'])->name('branch-wise-report');

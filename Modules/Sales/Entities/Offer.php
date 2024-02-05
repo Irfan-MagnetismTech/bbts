@@ -29,6 +29,11 @@ class Offer extends Model
         !empty($input) ? $this->attributes['offer_validity'] = Carbon::createFromFormat('d/m/Y', $input)->format('Y-m-d') : null;
     }
 
+    public function feasibilityRequirement()
+    {
+        return $this->belongsTo(FeasibilityRequirement::class, 'mq_no', 'mq_no');
+    }
+
     public function lead_generation()
     {
         return $this->belongsTo(LeadGeneration::class, 'client_no', 'client_no');

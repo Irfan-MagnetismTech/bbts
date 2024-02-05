@@ -48,7 +48,9 @@ Route::prefix('networking')->middleware(['auth'])->group(function () {
     Route::get('pop-wise-equipment-report', [ConnectivityController::class, 'popWiseEquipmentReport'])->name('pop-wise-equipment-report');
     Route::get('client-wise-equipment-report', [ConnectivityController::class, 'clientWiseEquipmentReport'])->name('client-wise-equipment-report');
     Route::get('client-wise-net-ip-report', [ConnectivityController::class, 'clientWiseNetIpReport'])->name('client-wise-net-ip-report');
-   Route::get('permanently-inactive-clients', [ConnectivityController::class, 'permanentlyInactiveClients'])->name('permanently-inactive-clients');
+    Route::get('permanently-inactive-clients', [ConnectivityController::class, 'permanentlyInactiveClients'])->name('permanently-inactive-clients');
+    Route::get('account-holder-wise-inactive-report', [ConnectivityController::class, 'accountHolderWiseInactiveReport'])->name('account-holder-wise-inactive-report');
+    Route::get('branch-wise-inactive-report', [ConnectivityController::class, 'branchWiseInactiveReport'])->name('branch-wise-inactive-report');
     require __DIR__ . '/irfan.php';
     require __DIR__ . '/jaber.php';
 });

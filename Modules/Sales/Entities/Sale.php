@@ -59,6 +59,11 @@ class Sale extends Model
         return $this->belongsTo(Client::class, 'client_no', 'client_no');
     }
 
+    public function feasibilityRequirement()
+    {
+        return $this->belongsTo(FeasibilityRequirement::class, 'mq_no', 'mq_no');
+    }
+
     public function offerDetails(): HasMany
     {
         return $this->hasMany(OfferDetail::class, 'offer_id', 'id');
