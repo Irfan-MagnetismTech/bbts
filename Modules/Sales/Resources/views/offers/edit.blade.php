@@ -22,6 +22,9 @@
 
 @section('content-grid', null)
 
+@section('style')
+@endsection
+
 @section('content')
 
     {!! Form::open([
@@ -65,30 +68,44 @@
                             @php $row_no++ @endphp
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="tableHeading" style="background-color: #024FA7">
+                                    {{-- <div class="tableHeading" style="background-color: #024FA7">
                                         <h5> <span> &#10070; </span> FR NO - {{ $details->fr_no }} <span>&#10070;</span>
                                         </h5>
                                         <input type="hidden" name="fr_no_{{ $row_no }}"
                                             value="{{ $details->fr_no }}">
                                         <input type="hidden" name="row_no" value="{{ $row_no }}">
+                                    </div> --}}
+                                    {{-- @dd($details) --}}
+                                    <div class="tableHeading" style="background-color: #b8d2d7;">
+                                        <h6 style="color:rgb(35, 33, 33);">{{ $details->frDetails->connectivity_point }}
+                                            ({{ $details->fr_no }}) <span class="btn btn-sm"
+                                                style="background: #2272a0;  padding: 5px 10px; margin-left: 10px;">
+                                                <a href="{{ route('planning-pdf', $details->planning->id) }}"
+                                                    class="text-white" target="_blank">Plan</a>
+                                            </span>
+                                        </h6>
                                     </div>
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead>
-                                                <th style="background-color:#057097">Select</th>
-                                                <th style="background-color:#057097">Link Type</th>
-                                                <th style="background-color:#057097">Option</th>
-                                                <th style="background-color:#057097">Existing/New</th>
-                                                <th style="background-color:#057097">Method</th>
-                                                <th style="background-color:#057097">Vendor</th>
-                                                <th style="background-color:#057097">BBTS/POP/LDP</th>
-                                                <th style="background-color:#057097">Distance</th>
-                                                <th style="background-color:#057097">Client <br> Equipment</th>
-                                                <th style="background-color:#057097">OTC</th>
-                                                <th style="background-color:#057097">Mo <br> Cost</th>
-                                                <th style="background-color:#057097">Offer <br> OTC</th>
-                                                <th style="background-color:#057097">Total <br> OTC</th>
-                                                <th style="background-color:#057097">Offer <br> MRC</th>
+                                                <tr style="background-color:#c0e4ce ; color:black">
+                                                    <th style="background-color:#c0e4ce ; color: black;">Select</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Link Type</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Option</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Existing/New</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Method</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Vendor</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">BBTS/POP/LDP</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Distance</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Client <br>
+                                                        Equipment
+                                                    </th>
+                                                    <th style="background-color:#c0e4ce ; color: black">OTC</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Mo <br> Cost</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Offer <br> OTC</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Total <br> OTC</th>
+                                                    <th style="background-color:#c0e4ce ; color: black">Offer <br> MRC</th>
+                                                </tr>
                                             </thead>
                                             <tbody class="mainRow">
                                                 @foreach ($details->offerLinks as $key => $link)
@@ -197,8 +214,8 @@
                                                                 <input type="text"
                                                                     name="offer_otc_{{ $row_no }}[]"
                                                                     class="form-control text-right offer_otc"
-                                                                    value="{{ $link->offer_otc }}" id="offer_otc">
-                                                            </div>
+                                                                    value="{{ $link->offer_otc }}" id="offer_otc"
+                                                                    style="background: #aff6d36e;">
                                                         </td>
                                                         <td>
                                                             <div class="input-group input-group-sm input-group-primary">
@@ -215,7 +232,7 @@
                                                                     name="offer_mrc_{{ $row_no }}[]"
                                                                     value="{{ $link->offer_mrc }}"
                                                                     class="form-control text-right offer_mrc "
-                                                                    id="offer_mrc">
+                                                                    id="offer_mrc" style="background: #aff6d36e;">
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -312,7 +329,7 @@
                                                                 name="equipment_offer_price_{{ $row_no }}"
                                                                 class="form-control equipment_offer_price text-right"
                                                                 value="{{ $details->equipment_offer_price }}"
-                                                                id="equipment_offer_price">
+                                                                id="equipment_offer_price" style="background: #aff6d36e;">
                                                         </div>
                                                     </td>
                                                     <td>
@@ -330,7 +347,7 @@
                                                                 name="equipment_total_mrc_{{ $row_no }}"
                                                                 value="{{ $details->equipment_total_mrc }}"
                                                                 class="form-control equipment_total_mrc text-right"
-                                                                id="equipment_total_mrc">
+                                                                id="equipment_total_mrc" style="background: #aff6d36e;">
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -357,7 +374,7 @@
                                                                 name="offer_product_amount_{{ $row_no }}"
                                                                 value="{{ $details->offer_product_amount }}"
                                                                 class="form-control offer_product_amount text-right"
-                                                                id="offer_product_amount">
+                                                                id="offer_product_amount" style="background: #aff6d36e;">
                                                         </div>
                                                     </td>
                                                 </tr>

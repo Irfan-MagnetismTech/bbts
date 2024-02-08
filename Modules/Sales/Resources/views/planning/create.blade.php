@@ -51,10 +51,15 @@
         }
 
         /* .table_heading {
-                                    background-color: #007af5 !important;
-                                    color: white !important;
-                                    font-size: 14px !important;
-                                } */
+                                                        background-color: #007af5 !important;
+                                                        color: white !important;
+                                                        font-size: 14px !important;
+                                                    } */
+
+        .noWrapStyle {
+            white-space: normal;
+            max-width: 6rem;
+        }
     </style>
 @endsection
 
@@ -134,8 +139,9 @@
                                 <tr>
                                     <th class="table_label">Email</th>
                                     <td>{{ $feasibilityRequirementDetail->contact_email }}</td>
-                                    <th class="table_label">Address</th>
-                                    <td> {{ $feasibilityRequirementDetail->location }}</td>
+                                    <th class="table_label" style="max-height: 200px;">Address</th>
+                                    <td class="noWrapStyle">
+                                        {{ $feasibilityRequirementDetail->location }}</td>
                                     <th class="table_label">Document</th>
                                     <td>
                                         @if ($lead_generation->document)

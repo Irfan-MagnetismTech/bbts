@@ -79,13 +79,13 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="tableHeading" style="background-color: #b8d2d7;">
-                                            <h5 style="color:rgb(35, 33, 33);">{{ $details->connectivity_point }}
+                                            <h6 style="color:rgb(35, 33, 33);">{{ $details->connectivity_point }}
                                                 ({{ $details->fr_no }}) <span class="btn btn-sm"
                                                     style="background: #2272a0;  padding: 5px 10px; margin-left: 10px;">
                                                     <a href="{{ route('planning.show', $details->planning->id) }}"
                                                         class="text-white" target="_blank">Plan</a>
                                                 </span>
-                                            </h5>
+                                            </h6>
                                         </div>
                                         <div class="table-responsive">
                                             <table class="table table-bordered ">
@@ -429,7 +429,6 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-
                                                 </tbody>
                                             </table>
                                         </div>

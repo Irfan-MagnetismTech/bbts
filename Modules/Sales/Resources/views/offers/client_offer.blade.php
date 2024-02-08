@@ -83,9 +83,9 @@
                                         <td>{{ $product->product->name }}</td>
                                         <td>{{ $product->quantity }}</td>
                                         <td>{{ $product->unit }}</td>
-                                        <td>{{ $product->product_price }}</td>
-                                        <td>{{ $totalProductPrice }}</td>
-                                        <td>{{ $vat }}</td>
+                                        <td>{{ number_format($product->product_price, 2) }}</td>
+                                        <td>{{ number_format($totalProductPrice, 2) }}</td>
+                                        <td>{{ number_format($vat, 2) }}</td>
                                         <td class="text-right"><b>@formatFloat($totalProductPrice + $vat)</b></td>
                                     </tr>
                                 @endforeach

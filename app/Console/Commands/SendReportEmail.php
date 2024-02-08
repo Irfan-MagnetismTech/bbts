@@ -28,6 +28,9 @@ class SendReportEmail extends Command
         $productWiseReport = (new ReportMailService)->productWiseReport();
         $branchWiseProductReport = (new ReportMailService)->branchWiseProductReport();
         $accountHolderWiseProductReport = (new ReportMailService)->accountHolderWiseReport();
+        $permanentlyInactiveClients = (new ReportMailService)->permanentlyInactiveClients();
+        $accountHolderWiseInactiveReport = (new ReportMailService)->accountHolderWiseInactiveReport();
+        $branchWiseInactiveReport = (new ReportMailService)->branchWiseInactiveReport();
 
 
         $clientWiseSalesPdf        = PDF::loadView(
@@ -72,7 +75,28 @@ class SendReportEmail extends Command
             ['format' => 'A4', 'orientation' => 'L']
         );
 
-        Mail::send('mail.report_mail', $data, function ($message) use ($data, $clientWiseSalesPdf, $branchWiseSalesPdf, $accountHolderWiseSalesPdf, $productWiseSalesPdf, $branchWiseProductReportPdf, $accountHolderWiseProductReportPdf) {
+        $permanentlyInactiveClientsPdf = PDF::loadView(
+            'networking::pdf.inactive_report.permanent-inactive-client-report',
+            ['clients' => $permanentlyInactiveClients],
+            [],
+            ['format' => 'A4', 'orientation' => 'L']
+        );
+
+        $accountHolderWiseInactiveReportPdf = PDF::loadView(
+            'networking::pdf.inactive_report.account-holder-wise-report',
+            ['clients' => $accountHolderWiseInactiveReport],
+            [],
+            ['format' => 'A4', 'orientation' => 'L']
+        );
+
+        $branchWiseInactiveReportPdf = PDF::loadView(
+            'networking::pdf.inactive_report.branch-wise-report',
+            ['clients' => $branchWiseInactiveReport],
+            [],
+            ['format' => 'A4', 'orientation' => 'L']
+        );
+
+        Mail::send('mail.report_mail', $data, function ($message) use ($data, $clientWiseSalesPdf, $branchWiseSalesPdf, $accountHolderWiseSalesPdf, $productWiseSalesPdf, $branchWiseProductReportPdf, $accountHolderWiseProductReportPdf, $permanentlyInactiveClientsPdf, $accountHolderWiseInactiveReportPdf, $branchWiseInactiveReportPdf) {
             $message->to($data["email"], $data["email"])
                 ->subject($data["title"])
                 ->attachData($clientWiseSalesPdf->output(), "clientWiseSales.pdf")
@@ -80,7 +104,10 @@ class SendReportEmail extends Command
                 ->attachData($accountHolderWiseSalesPdf->output(), "clientWiseSalesAcocuntHolderWise.pdf")
                 ->attachData($productWiseSalesPdf->output(), "productWiseSales.pdf")
                 ->attachData($branchWiseProductReportPdf->output(), "branchWiseProductReport.pdf")
-                ->attachData($accountHolderWiseProductReportPdf->output(), "accountHolderWiseProductReport.pdf");
+                ->attachData($accountHolderWiseProductReportPdf->output(), "accountHolderWiseProductReport.pdf")
+                ->attachData($permanentlyInactiveClientsPdf->output(), "permanentlyInactiveClientsPdf.pdf")
+                ->attachData($accountHolderWiseInactiveReportPdf->output(), "accountHolderWiseInactiveReportPdf.pdf")
+                ->attachData($branchWiseInactiveReportPdf->output(), "branchWiseInactiveReportPdf.pdf");
         });
     }
 }

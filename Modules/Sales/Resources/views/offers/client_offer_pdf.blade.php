@@ -205,9 +205,9 @@
                                     <td>{{ $product->product->name }}</td>
                                     <td>{{ $product->quantity }}</td>
                                     <td>{{ $product->unit }}</td>
-                                    <td>{{ $product->product_price }}</td>
-                                    <td>{{ $totalProductPrice }}</td>
-                                    <td>{{ $vat }}</td>
+                                    <td>{{ number_format($product->product_price, 2) }}</td>
+                                    <td>{{ number_format($totalProductPrice, 2) }}</td>
+                                    <td>{{ number_format($vat, 2) }}</td>
                                     <td class="text-right"><b>@formatFloat($totalProductPrice + $vat)</b></td>
                                 </tr>
                             @endforeach
@@ -250,8 +250,8 @@
                                         <td>{{ $equipment->sum_quantity }}</td>
                                         <td>{{ $equipment->unit }}</td>
                                         <td>{{ $equipment->ownership }}</td>
-                                        <td>{{ $equipment->rate }}</td>
-                                        <td>{{ $equipment->total_price }}</td>
+                                        <td>{{ number_format($equipment->rate, 2) }}</td>
+                                        <td>{{ number_format($equipment->total_price, 2) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -266,7 +266,7 @@
                 Total MRC
             </span>
             <span class="p-2 border border-primary text-dark">
-                {{ $total_mrc }}
+                {{ number_format($total_mrc, 2) }}
             </span>
         </div>
     </div>

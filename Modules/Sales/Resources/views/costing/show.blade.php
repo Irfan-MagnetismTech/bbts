@@ -137,11 +137,11 @@
                                     @foreach ($costing->costingProductEquipments as $product_equipment)
                                         <tr class="connectivity_details_row">
                                             <td>{{ $product_equipment->material->name ?? '' }}</td>
-                                            <td>{{ $product_equipment->quantity }}</td>
+                                            <td class="text-right">{{ $product_equipment->quantity }}</td>
                                             <td>{{ $product_equipment->unit }}</td>
                                             <td>{{ $product_equipment->ownership }}</td>
-                                            <td>{{ $product_equipment->rate }}</td>
-                                            <td>{{ $product_equipment->total }}</td>
+                                            <td class="text-right">{{ $product_equipment->rate }}</td>
+                                            <td class="text-right">{{ $product_equipment->total }}</td>
                                         </tr>
                                     @endforeach
                                     <tr>
@@ -256,10 +256,10 @@
                                         <td>
                                             <span>{{ $link_equipment->ownership }}</span>
                                         </td>
-                                        <td>
+                                        <td class="text-right">
                                             <span>{{ $link_equipment->quantity ?? '' }}</span>
                                         </td>
-                                        <td>
+                                        <td class="text-right">
                                             <span>{{ $link_equipment->rate ?? '' }}</span>
                                         </td>
                                         <td class="text-right">
