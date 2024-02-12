@@ -464,7 +464,8 @@
         $(document).on('change', '.material_name', function() {
             let material_id = $(this).val();
             let this_material = $(this);
-            materials.find(material => {
+            
+            materials.forEach(material => {
                 if (material.value == material_id) {
                     this_material.closest('tr').find('.unit').val(material.unit);
                     this_material.closest('tr').find('.item_code').val(material.code);

@@ -15,6 +15,8 @@ use Modules\Sales\Http\Requests\FeasibilityRequirementRequest;
 use App\Exports\FeasibilityRequirementExport;
 use App\Imports\FeasibilityRequirementImport;
 use App\Imports\FeasibilityRequirementImportUpdate;
+use App\Jobs\SendEmailNotificationJob;
+use App\Mail\CommonNotificationEmail;
 use App\Notifications\CommonNotification;
 use App\Services\BbtsGlobalService;
 use App\Services\EmailService;
@@ -144,22 +146,26 @@ class FeasibilityRequirementController extends Controller
 
                 BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
-                $client = $request->client_name ?? '';
-                $to = 'survey@bbts.net';
-                $cc = 'yasir@bbts.net';
-                $receiver = '';
-                $subject = "New Feasibility Requirement Created";
-                $messageBody = "A new $feasibilityRequirement->mq_no has been created for the client $client ($feasibilityRequirement->client_no). Please find the details from Feasibility Requirement List.";
-                // // $fromAddress = 'csd@bbts.net';
-                $fromAddress = auth()->user()->email;
-                $fromName = auth()->user()->name;
-                // Mail::send('sales::email.feasibility_requirement', ['feasibilityRequirement' => $feasibilityRequirement], function ($message) use ($to, $cc, $subject) {
-                //     $message->to($to)->cc($cc)->subject($subject);
-                // });
-                Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-                    $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-                });
+                $data = [
+                    'to' => 'survey@bbts.net',
+                    'cc' => 'yasir@bbts.net',
+                    'heading' => 'New Feasibility Requirement Created',
+                    'greetings' => 'Dear Sir/Madam,',
+                    'message' => "A new $feasibilityRequirement->mq_no has been created for the client $request->client_name ($feasibilityRequirement->client_no). Please find the details from Feasibility Requirement Show.",
+                    'url' =>  route('feasibility-requirement.show', $feasibilityRequirement->id),
+                    'buttonText' => 'View Feasibility Requirement',
+                    'client_name' => $request->client_name ?? '',
+                    'client_no' => $feasibilityRequirement->client_no,
+                    'mq_no' => $feasibilityRequirement->mq_no,
+                    'created_by' => auth()->user()->name,
+                    'created_at' => $feasibilityRequirement->created_at,
+                    'client_email' => $request->client_email ?? 'N/A',
+                    'fr_no' => '',
+                    'auto_mail_alert' => 'This is an auto generated send to you from BBTS.' . PHP_EOL . 'Please do not reply to this email.',
+                    'regards' => 'BBTS',
+                ];
 
+                SendEmailNotificationJob::dispatch($data);
                 DB::commit();
                 return redirect()->route('feasibility-requirement.index')->with('success', 'Feasibility Requirement Created Successfully');
             } catch (\Exception $e) {
