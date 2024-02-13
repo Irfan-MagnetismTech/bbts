@@ -60,6 +60,7 @@ class MeetingController extends Controller
         $data['created_by'] = auth()->user()->id;
         $data['meeting_start_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_start_time'))->format('g:i A');
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
+        $data['created_by'] = auth()->user()->id;
         $meeting = Meeting::create($data);
 
         //notification send to sales admin
@@ -82,7 +83,7 @@ class MeetingController extends Controller
             'greetings' => 'Dear Sir/Madam,',
             'message' => "I am writing to inform you about a new meeting request that has been generated for our esteemed client",
             'url' =>  route('meeting.show', $meeting->id),
-            'button_text' => 'View Lead Generation',
+            'button_text' => 'View Meeting Request',
             'client_name' => $meeting->client_name ?? '',
             'client_no' => $meeting->client_no,
             'mq_no' => '',
@@ -132,6 +133,7 @@ class MeetingController extends Controller
         $data['created_by'] = auth()->user()->id;
         $data['meeting_start_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_start_time'))->format('g:i A');
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
+        $data['created_by'] = auth()->user()->id;
         $meeting->update($data);
 
         //notification send to sales admin

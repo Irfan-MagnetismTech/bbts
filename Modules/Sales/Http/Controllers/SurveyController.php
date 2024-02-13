@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Jobs\SendEmailNotificationJob;
 use App\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\QueryException;
@@ -88,39 +89,39 @@ class SurveyController extends Controller
     public function store(Request $request)
     {
         $feasibility_requirement_detail = FeasibilityRequirementDetail::with('feasibilityRequirement')->where('fr_no', $request->fr_no)->first();
-        $connectivity_requirement_data = $request->only('date', 'client_no', 'fr_no', 'survey_remarks');
-        $connectivity_requirement_data['user_id'] = auth()->user()->id ?? '';
-        $connectivity_requirement_data['branch_id'] = auth()->user()->branch_id ?? null;
-        $connectivity_requirement_data['date'] = date('Y-m-d', strtotime($request->date));
-        $connectivity_requirement_data['mq_no'] = FeasibilityRequirement::where('client_no', $connectivity_requirement_data['client_no'])->first()->mq_no;
-        $connectivity_requirement_data['lead_generation_id'] = LeadGeneration::where('client_no', $connectivity_requirement_data['client_no'])->first()->id;
-        $connectivity_requirement_data['feasibility_requirement_details_id'] = FeasibilityRequirementDetail::where('fr_no', $connectivity_requirement_data['fr_no'])->first()->id;
+        $survey_data = $request->only('date', 'client_no', 'fr_no', 'survey_remarks');
+        $survey_data['user_id'] = auth()->user()->id ?? '';
+        $survey_data['branch_id'] = auth()->user()->branch_id ?? null;
+        $survey_data['date'] = date('Y-m-d', strtotime($request->date));
+        $survey_data['mq_no'] = FeasibilityRequirement::where('client_no', $survey_data['client_no'])->first()->mq_no;
+        $survey_data['lead_generation_id'] = LeadGeneration::where('client_no', $survey_data['client_no'])->first()->id;
+        $survey_data['feasibility_requirement_details_id'] = FeasibilityRequirementDetail::where('fr_no', $survey_data['fr_no'])->first()->id;
         if ($request->hasFile('document')) {
             $file_name = CommonService::fileUpload($request->file('survey_document'), 'uploads/survey');
-            $data['document'] = $file_name;
+            $survey_data['document'] = $file_name;
         }
         DB::beginTransaction();
         try {
-            $connectivity_requirement = Survey::create($connectivity_requirement_data);
+            $survey = Survey::create($survey_data);
             foreach ($request->link_type as $key => $value) {
-                $connectivity_requirement_details['survey_id'] = $connectivity_requirement->id;
-                $connectivity_requirement_details['link_type'] = $value;
-                $connectivity_requirement_details['link_no'] = $connectivity_requirement_data['fr_no'] . '-' . substr($value, 0, 1) . $key + 1;
-                $connectivity_requirement_details['option'] = $request->option[$key];
-                $connectivity_requirement_details['status'] = $request->status[$key];
-                $connectivity_requirement_details['method'] = $request->method[$key];
-                $connectivity_requirement_details['vendor_id'] = $request->vendor[$key];
-                $connectivity_requirement_details['pop_id'] = $request->pop[$key];
-                $connectivity_requirement_details['ldp'] = $request->ldp[$key];
-                $connectivity_requirement_details['lat'] = $request->lat[$key];
-                $connectivity_requirement_details['long'] = $request->long[$key];
-                $connectivity_requirement_details['distance'] = $request->distance[$key];
-                $connectivity_requirement_details['current_capacity'] = $request->current_capacity[$key] ?? '';
-                $connectivity_requirement_details['remarks'] = $request->remarks[$key];
-                SurveyDetail::create($connectivity_requirement_details);
+                $survey_details['survey_id'] = $survey->id;
+                $survey_details['link_type'] = $value;
+                $survey_details['link_no'] = $survey_data['fr_no'] . '-' . substr($value, 0, 1) . $key + 1;
+                $survey_details['option'] = $request->option[$key];
+                $survey_details['status'] = $request->status[$key];
+                $survey_details['method'] = $request->method[$key];
+                $survey_details['vendor_id'] = $request->vendor[$key];
+                $survey_details['pop_id'] = $request->pop[$key];
+                $survey_details['ldp'] = $request->ldp[$key];
+                $survey_details['lat'] = $request->lat[$key];
+                $survey_details['long'] = $request->long[$key];
+                $survey_details['distance'] = $request->distance[$key];
+                $survey_details['current_capacity'] = $request->current_capacity[$key] ?? '';
+                $survey_details['remarks'] = $request->remarks[$key];
+                SurveyDetail::create($survey_details);
             }
             DB::commit();
-            $offer = $this->updateOffer($data, $id);
+
             $notificationReceivers = User::whereHas('roles', function ($q) {
                 $q->whereIn('name', ['Sales Admin', 'Admin']);
             })->get();
@@ -128,37 +129,31 @@ class SurveyController extends Controller
             $notificationData = [
                 'type' => 'Survey',
                 'message' => 'A new Survey has been created by ' . auth()->user()->name,
-                'url' => 'sales/survey/' . $connectivity_requirement->id,
+                'url' => 'sales/survey/' . $survey->id,
             ];
 
             BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
-            $client = $request->client_name ?? '';
-            $client_number = $connectivity_requirement->client_no ?? '';
-            $fr_no = $connectivity_requirement->fr_no ?? '';
-            $mq_no = $connectivity_requirement->mq_no ?? '';
-            $date = $connectivity_requirement->date ?? '';
-            $fromAddress = auth()->user()->email;
-            $fromName = auth()->user()->name;
-            $to = 'planning@bbts.net';
-            $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
-            $subject = "New Survey Created";
-            $messageBody = "Dear Sir,\n
-        I am writing to inform you about a new Survey $mq_no has been created for our esteemed client, $client ($client_number). \n
-        Survey Details:
-        Client: $client
-        Client No: $client_number
-        FR No: $fr_no
-        MQ No: $mq_no
-        Date: $date \n
-        Please find the details from software in Survey List.
-        Thank you for your attention to this matter. I look forward to your guidance and support.\n
-        Best regards,
-        $fromName";
+            $data = [
+                'to' => 'planning@bbts.net',
+                'cc' => 'yasir@bbts.net',
+                'heading' => 'New Survey Created',
+                'greetings' => 'Dear Sir/Madam,',
+                'message' => "I am writing to inform you about a new survey that has been generated for our esteemed client",
+                'url' =>  route('survey.show', $survey->id),
+                'button_text' => 'View Survey',
+                'client_name' => $request->client_name ?? '',
+                'client_no' => $survey->client_no,
+                'mq_no' => $survey->mq_no,
+                'created_by' => auth()->user()->name,
+                'created_at' => $survey->created_at,
+                'client_email' => '',
+                'fr_no' => $survey->fr_no,
+                'auto_mail_alert' => 'This is an auto generated send to you from BBTS.' . PHP_EOL . 'Please do not reply to this email.',
+                'regards' => 'BBTS',
+            ];
 
-            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-            });
+            SendEmailNotificationJob::dispatch($data);
             return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
         } catch (QueryException $e) {
             DB::rollback();

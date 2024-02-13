@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Jobs\SendEmailNotificationJob;
 use PDF;
 use Exception;
 use Carbon\Carbon;
@@ -27,12 +28,16 @@ use Modules\Billing\Entities\BillingOtcBill;
 use Modules\Networking\Entities\NetServiceRequisition;
 use Modules\Networking\Http\Controllers\NetServiceRequisitionController;
 use Modules\Networking\Http\Requests\NetServiceRequisitionRequest;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\CostingLinkEquipment;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\CostingProductEquipment;
+use Modules\Sales\Entities\LeadGeneration;
+use Modules\Sales\Entities\Meeting;
+use Modules\Sales\Entities\Survey;
 
 class SaleController extends Controller
 {
@@ -102,29 +107,26 @@ class SaleController extends Controller
 
             DB::commit();
 
-            $client = $request->client_name ?? '';
-            $client_number = $sale->client_no ?? '';
-            $mq_no = $sale->mq_no ?? '';
-            $fromAddress = auth()->user()->email;
-            $fromName = auth()->user()->name;
-            $to = 'salesadmin@bbts.net';
-            $cc = ['yasir@bbts.net', 'saleha@magnetismtech.com', 'shiful@magnetismtech.com', $fromAddress];
-            $receiver = '';
-            $subject = "New Sale Created";
-            $messageBody = "Dear Sir,\n
-        I am writing to inform you about a new Sale $mq_no has been created for our esteemed client, $client ($client_number). \n
-        Sale Details:
-        Client: $client
-        Client No: $client_number
-        MQ No: $mq_no \n
-        Please find the details from software in Sales List.
-        Thank you for your attention to this matter. I look forward to your guidance and support.\n
-        Best regards,
-        $fromName";
+            $data = [
+                'to' => 'salesadmin@bbts.net',
+                'cc' => 'yasir@bbts.net',
+                'heading' => 'New Sale Created',
+                'greetings' => 'Dear Sir/Madam,',
+                'message' => "I am writing to inform you about a new sale that has been generated for our esteemed client",
+                'url' =>  route('sales.show', $sale->id),
+                'button_text' => 'View Sale',
+                'client_name' => $request->client_name ?? '',
+                'client_no' => $sale->client_no,
+                'mq_no' => $sale->mq_no,
+                'created_by' => auth()->user()->name,
+                'created_at' => $sale->created_at,
+                'client_email' => '',
+                'fr_no' => '',
+                'auto_mail_alert' => 'This is an auto generated send to you from BBTS.' . PHP_EOL . 'Please do not reply to this email.',
+                'regards' => 'BBTS',
+            ];
 
-            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-            });
+            SendEmailNotificationJob::dispatch($data);
             return redirect()->route('sales.index')->with('success', 'Sales Created Successfully');
         } catch (Exception $err) {
             DB::rollBack();
@@ -854,5 +856,30 @@ class SaleController extends Controller
             ->where('is_modified', 1)
             ->get();
         return view('sales::sales.modification_list', compact('sales'));
+    }
+
+    public function salesDashboard()
+    {
+        $total_lead_generation = LeadGeneration::where('created_by', auth()->id())->count();
+        $total_client = Client::where('user_id', auth()->id())->count();
+        $total_survey = Survey::whereHas('feasibilityRequirementDetails', function ($qr) {
+            $qr->where('user_id', auth()->id());
+        })->count();
+        $total_sales = Sale::whereHas('feasibilityRequirement', function ($qr) {
+            $qr->where('user_id', auth()->id());
+        })->count();
+        $total_feasibility = FeasibilityRequirement::where('user_id', auth()->id())->count();
+        $total_planning = Planning::whereHas('feasibilityRequirementDetail', function ($qr) {
+            $qr->where('user_id', auth()->id());
+        })->count();
+        $meetings = Meeting::whereHas('client', function ($qr) {
+            $qr->where('created_by', auth()->id());
+        })->latest()->limit(5)->get();
+
+        return view('sales::dashboard.sales_dashboard', compact('total_lead_generation', 'total_client', 'total_survey', 'total_sales', 'total_feasibility', 'total_planning', 'meetings'));
+    }
+
+    public function salesAdminDashboard(){
+        return view('sales::dashboard.sales_admin_dashboard');
     }
 }

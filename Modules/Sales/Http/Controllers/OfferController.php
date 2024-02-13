@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Jobs\SendEmailNotificationJob;
 use App\Services\BbtsGlobalService;
 use Exception;
 use Illuminate\Contracts\Support\Renderable;
@@ -86,6 +87,28 @@ class OfferController extends Controller
             ];
 
             BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+
+            $data = [
+                'to' => 'salesadmin@bbts.net',
+                'cc' => 'yasir@bbts.net',
+                'heading' => 'New Offer Created',
+                'greetings' => 'Dear Sir/Madam,',
+                'message' => "I am writing to inform you about a new offer that has been generated for our esteemed client",
+                'url' =>  route('sales.show', $offer->id),
+                'button_text' => 'View Sale',
+                'client_name' => $request->client_name ?? '',
+                'client_no' => $offer->client_no,
+                'mq_no' => $offer->mq_no,
+                'created_by' => auth()->user()->name,
+                'created_at' => $offer->created_at,
+                'client_email' => '',
+                'fr_no' => '',
+                'auto_mail_alert' => 'This is an auto generated send to you from BBTS.' . PHP_EOL . 'Please do not reply to this email.',
+                'regards' => 'BBTS',
+            ];
+
+            SendEmailNotificationJob::dispatch($data);
+
             return redirect()->route('offers.index')->with('success', 'Offer created successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
