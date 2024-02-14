@@ -24,6 +24,7 @@ use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Admin\Entities\User;
 use Modules\Billing\Entities\BillingOtcBill;
 use Modules\Networking\Entities\NetServiceRequisition;
 use Modules\Networking\Http\Controllers\NetServiceRequisitionController;
@@ -879,7 +880,47 @@ class SaleController extends Controller
         return view('sales::dashboard.sales_dashboard', compact('total_lead_generation', 'total_client', 'total_survey', 'total_sales', 'total_feasibility', 'total_planning', 'meetings'));
     }
 
-    public function salesAdminDashboard(){
-        return view('sales::dashboard.sales_admin_dashboard');
+    public function salesAdminDashboard()
+    {
+        $this_month_sale = Sale::whereMonth('created_at', now()->month)->count();
+        $this_year_sale = Sale::whereYear('created_at', now()->year)->count();
+        $this_month_fr = FeasibilityRequirement::whereMonth('created_at', now()->month)->count();
+        $this_year_fr = FeasibilityRequirement::whereYear('created_at', now()->year)->count();
+        $total_client = Client::count();
+        $pending_lead_generation = LeadGeneration::where('status', 'Pending')->count();
+        $total_lead_generation = LeadGeneration::count();
+        $meeting_request = Meeting::where('status', 'Pending')->count();
+
+        $salesMan = User::role('Salesman')->pluck('id');
+        $this_year_salesman_sale = Sale::with('feasibilityRequirement.created_by')
+            ->whereHas('feasibilityRequirement', function ($qr) use ($salesMan) {
+                $qr->whereIn('user_id', $salesMan);
+            })
+            ->whereYear('created_at', now()->year)
+            ->get()
+            ->groupBy(function ($query) {
+                return $query->feasibilityRequirement->created_by->name;
+            })
+            ->map(function ($item) {
+                return $item->count();
+            });
+
+        $this_year_product_wise_total_sale_amount = SaleProductDetail::with('product')
+            ->whereHas('sale', function ($qr) {
+                $qr->whereYear('created_at', now()->year);
+            })
+            ->get()
+            ->groupBy(function ($query) {
+                return $query->product->name;
+            })
+            ->map(function ($item) {
+                return $item->sum('total_price');
+            });
+
+        
+
+
+
+        return view('sales::dashboard.sales_admin_dashboard', compact('this_month_sale', 'this_year_sale', 'this_month_fr', 'this_year_fr', 'total_client', 'pending_lead_generation', 'total_lead_generation', 'meeting_request', 'this_year_salesman_sale', 'this_year_product_wise_total_sale_amount'));
     }
 }

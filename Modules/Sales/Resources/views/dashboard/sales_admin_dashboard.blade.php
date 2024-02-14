@@ -212,45 +212,82 @@
         <div class="page-wrapper">
             <div class="page-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="row">
-                            <div class="col-xl-6 col-md-6">
+                            <div class="col-xl-3 col-md-3">
                                 <div class="card bg-c-orenge text-white">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                <p class="m-b-5">Total Sales Achievement</p>
-                                                <h4 class="m-b-0">852</h4>
+                                                <p class="m-b-5">Total Sales</p>
+                                                <h4 class="m-b-0">{{ $this_month_sale }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="fas fa-hand-holding-usd f-50 text-c-orenge"></i>
+                                                <p class="label label-success" style="margin-top: 15px;">This Month</p>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-md-6">
+                            <div class="col-xl-3 col-md-3">
                                 <div class="card bg-c-lite-green text-white">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                <p class="m-b-5">No of Client &nbsp; &nbsp; Involvement </p>
-                                                <h4 class="m-b-0">852</h4>
+                                                <p class="m-b-5">Total Sales </p>
+                                                <h4 class="m-b-0">{{ $this_year_sale }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="fas fa-user-tie f-50 text-c-lite-green"></i>
+                                                <p class="label label-warning" style="margin-top: 15px;">This Year</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-md-6">
+
+                            <div class="col-xl-3 col-md-3">
+                                <div class="card bg-c-yellow text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total FR</p>
+                                                <h4 class="m-b-0">{{ $this_month_fr }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="far fa-user f-50 text-c-yellow"></i>
+                                                <p class="label label-success" style="margin-top: 15px;">This Month</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-3">
+                                <div class="card bg-c-green text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total FR</p>
+                                                <h4 class="m-b-0">{{ $this_year_fr }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="far fa-user f-50 text-c-green"></i>
+                                                <p class="label label-warning" style="margin-top: 15px;">This Year</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-3">
                                 <div class="card bg-c-yellow text-white">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
                                                 <p class="m-b-5">Total Pre-Sales</p>
-                                                <h4 class="m-b-0">852</h4>
+                                                <h4 class="m-b-0">{{ $total_lead_generation }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="fas fa-briefcase f-50 text-c-yellow"></i>
@@ -259,13 +296,45 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-md-6">
+                            <div class="col-xl-3 col-md-3">
                                 <div class="card bg-c-green text-white">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                <p class="m-b-5">Total Workorder</p>
-                                                <h4 class="m-b-0">105</h4>
+                                                <p class="m-b-5">Pending Pre Sales</p>
+                                                <h4 class="m-b-0">{{ $pending_lead_generation }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="far fa-user f-50 text-c-green"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-3">
+                                <div class="card bg-c-orenge text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Client</p>
+                                                <h4 class="m-b-0">{{ $total_client }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="far fa-user f-50 text-c-green"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-3">
+                                <div class="card bg-c-blue text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Meeting Request</p>
+                                                <h4 class="m-b-0">{{ $meeting_request }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="far fa-user f-50 text-c-green"></i>
@@ -275,110 +344,56 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-12 col-md-12" style="padding:0px;">
-                            <div class="card past-payment-card">
-                                <div class="card-header">
-                                    <div class="card-header-center text-center ">
-                                        <h5 class="">List of Salesman</h5>
-                                    </div>
-                                </div <div class="table-responsive">
-                                <table id="simpletable" class="table table-striped table-bordered nowrap">
-                                    <tbody>
-                                        <tr>
-                                            <td>John</td>
-                                            <td>
-                                                <span class="label label-success f-15">Target:</span> 1000
-                                            </td>
-                                            <td>
-                                                <span class="label label-danger">Achievement:</span>900
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>John</td>
-                                            <td>
-                                                <span class="label label-success">Target:</span> 1000
-                                            </td>
-                                            <td>
-                                                <span class="label label-danger">Achievement:</span>900
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div>
-                            {{-- top performer --}}
-                            <div class="col-xl-12 col-md-12" style="padding:0px;">
-                                <div class="card past-payment-card">
-                                    <div class="card-header">
-                                        <div class="card-header-center text-center ">
-                                            <h5 class="">Top Performer</h5>
-                                        </div>
-                                    </div>
-                                    <div class="card-body card-body-center">
-                                        <table class="table table-striped table-bordered nowrap">
-                                            <thead>
-                                                <tr>
-                                                    <th>Rank</th>
-                                                    <th>Name</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>John</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>John</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>John</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div id="chartsView"></div>
-
-                        </div>
-                        <div>
-                            <table class="highcharts-data-table table table-striped table-bordered nowrap">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Data</th>
-                                        <th>Internet</th>
-                                        <th>Data & Internet</th>
-                                        <th>IoT</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>OTC</td>
-                                        <td>143,000</td>
-                                        <td>260,000</td>
-                                        <td>143,000</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>MRC</td>
-                                        <td>143,000</td>
-                                        <td>260,000</td>
-                                        <td>143,000</td>
-                                        <td>-</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                </div>
+                {{-- <div class="row">
+                    <div id="chartsView" style="width: 100%"></div>
+                </div> --}}
+                <div>
+                    <table class="highcharts-data-table table table-striped table-bordered nowrap">
+                        <thead>
+                            @php
+                                $colspan = count($this_year_salesman_sale);
+                            @endphp
+                            <tr>
+                                <th colspan="{{ $colspan }}">Salesman Wise Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @foreach ($this_year_salesman_sale as $key => $value)
+                                    <td>{{ $key }}</td>
+                                @endforeach
+                            </tr>
+                            <tr>
+                                @foreach ($this_year_salesman_sale as $key => $value)
+                                    <td>{{ $value }}</td>
+                                @endforeach
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="highcharts-data-table table table-striped table-bordered nowrap">
+                        <thead>
+                            @php
+                                $colspan = count($this_year_product_wise_total_sale_amount);
+                            @endphp
+                            <tr>
+                                <th colspan="{{ $colspan }}">Produt Wise Sale Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @foreach ($this_year_product_wise_total_sale_amount as $key => $value)
+                                    <td>{{ $key }}</td>
+                                @endforeach
+                            </tr>
+                            <tr>
+                                @foreach ($this_year_product_wise_total_sale_amount as $key => $value)
+                                    <td>{{ $value }}</td>
+                                @endforeach
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -454,13 +469,14 @@
             responsive: {
                 rules: [{
                     condition: {
-                        maxWidth: 500
+                        width: '100%'
                     },
                     chartOptions: {
                         legend: {
                             layout: 'horizontal',
                             align: 'center',
-                            verticalAlign: 'bottom'
+                            verticalAlign: 'bottom',
+                            width: '100%'
                         }
                     }
                 }]
