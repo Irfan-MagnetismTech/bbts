@@ -346,9 +346,10 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="row">
+                <p class="text-center">Month Wise Product Sales</p>
+                <div class="row">
                     <div id="chartsView" style="width: 100%"></div>
-                </div> --}}
+                </div>
                 <div>
                     <table class="highcharts-data-table table table-striped table-bordered nowrap">
                         <thead>
@@ -414,58 +415,45 @@
 
 
         Highcharts.chart('chartsView', {
-
             title: {
                 text: '',
                 align: 'left'
             },
-
-            // subtitle: {
-            //     text: 'Source: <a href="https://irecusa.org/programs/solar-jobs-census/" target="_blank">IREC</a>',
-            //     align: 'left'
-            // },
-
-            // yAxis: {
-            //     title: {
-            //         text: 'Number of Employees'
-            //     }
-            // },
-
-            // xAxis: {
-            //     accessibility: {
-            //         rangeDescription: 'Range: 2010 to 2020'
-            //     }
-            // },
-
             legend: {
                 layout: 'vertical',
                 align: 'right',
                 verticalAlign: 'middle'
             },
-
             plotOptions: {
                 series: {
                     label: {
                         connectorAllowed: false
                     },
-                    pointStart: 2010
+                    pointStart: 1
                 }
             },
-
-            series: [{
-                name: 'Data',
-                data: [10000, 15000, 20000, 12000, 25000, 28000]
-            }, {
-                name: 'Internet',
-                data: [24916, 30000, 29742, 29851, 32490, 30282]
-            }, {
-                name: 'Data & Internet',
-                data: [11744, 30000, 16005, 19771, 20185, 24377]
-            }, {
-                name: 'IoT',
-                data: [null, null, null, null, null, null, null]
-            }, ],
-
+            xAxis: {
+                categories: [
+                    @foreach ($month_list as $month => $value)
+                        '{{ $month }}',
+                    @endforeach
+                ],
+                accessibility: {
+                    rangeDescription: 'Range: 2010 to 2020'
+                }
+            },
+            series: [
+                @foreach ($month_wise_product_sale as $key => $value)
+                    {
+                        name: '{{ $key }}',
+                        data: [
+                            @foreach ($value as $key => $value)
+                                {{ $value }},
+                            @endforeach
+                        ]
+                    },
+                @endforeach
+            ],
             responsive: {
                 rules: [{
                     condition: {
@@ -481,7 +469,6 @@
                     }
                 }]
             }
-
         });
     </script>
 @endsection

@@ -882,8 +882,8 @@ class SaleController extends Controller
 
     public function salesAdminDashboard()
     {
-        $this_month_sale = Sale::whereMonth('created_at', now()->month)->count();
-        $this_year_sale = Sale::whereYear('created_at', now()->year)->count();
+        $this_month_sale = Sale::count();
+        $this_year_sale = Sale::count();
         $this_month_fr = FeasibilityRequirement::whereMonth('created_at', now()->month)->count();
         $this_year_fr = FeasibilityRequirement::whereYear('created_at', now()->year)->count();
         $total_client = Client::count();
@@ -896,7 +896,7 @@ class SaleController extends Controller
             ->whereHas('feasibilityRequirement', function ($qr) use ($salesMan) {
                 $qr->whereIn('user_id', $salesMan);
             })
-            ->whereYear('created_at', now()->year)
+            // ->whereYear('created_at', now()->year)
             ->get()
             ->groupBy(function ($query) {
                 return $query->feasibilityRequirement->created_by->name;
@@ -907,7 +907,7 @@ class SaleController extends Controller
 
         $this_year_product_wise_total_sale_amount = SaleProductDetail::with('product')
             ->whereHas('sale', function ($qr) {
-                $qr->whereYear('created_at', now()->year);
+                // $qr->whereYear('created_at', now()->year);
             })
             ->get()
             ->groupBy(function ($query) {
@@ -917,10 +917,43 @@ class SaleController extends Controller
                 return $item->sum('total_price');
             });
 
-        
+        $month_list = [
+            'delowar' => '00',
+            'January' => '01',
+            'February' => '02',
+            'March' => '03',
+            'April' => '04',
+            'May' => '05',
+            'June' => '06',
+            'July' => '07',
+            'August' => '08',
+            'September' => '09',
+            'October' => '10',
+            'November' => '11',
+            'December' => '12',
+        ];
+
+        $month_and_product_wise_sale = [];
+
+        $month_wise_product_sale = SaleProductDetail::with('product')
+            ->get()
+            ->groupBy('product.name') // Group by product name
+            ->map(function ($item) use ($month_list) {
+                $month_wise_sale = [];
+
+                foreach ($month_list as $key => $value) {
+                    $month_wise_sale[$key] = $item->filter(function ($sale) use ($value) {
+                        return strpos($sale->created_at, '2023' . '-' . $value) === 0; // Filter by year and month
+                    })->sum('total_price');
+                }
+
+                return $month_wise_sale;
+            });
 
 
 
-        return view('sales::dashboard.sales_admin_dashboard', compact('this_month_sale', 'this_year_sale', 'this_month_fr', 'this_year_fr', 'total_client', 'pending_lead_generation', 'total_lead_generation', 'meeting_request', 'this_year_salesman_sale', 'this_year_product_wise_total_sale_amount'));
+
+
+        return view('sales::dashboard.sales_admin_dashboard', compact('this_month_sale', 'this_year_sale', 'this_month_fr', 'this_year_fr', 'total_client', 'pending_lead_generation', 'total_lead_generation', 'meeting_request', 'this_year_salesman_sale', 'this_year_product_wise_total_sale_amount', 'month_and_product_wise_sale', 'month_wise_product_sale', 'month_list'));
     }
 }
