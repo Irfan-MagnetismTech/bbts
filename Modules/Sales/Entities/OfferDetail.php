@@ -30,4 +30,9 @@ class OfferDetail extends Model
     {
         return $this->belongsTo(FeasibilityRequirementDetail::class, 'fr_no', 'fr_no');
     }
+
+    public function planning(): BelongsTo
+    {
+        return $this->belongsTo(Planning::class, 'fr_no', 'fr_no')->where('is_modified', 0);
+    }
 }

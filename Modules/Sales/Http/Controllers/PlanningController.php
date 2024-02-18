@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Jobs\SendEmailNotificationJob;
 use App\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Database\QueryException;
@@ -118,7 +119,7 @@ class PlanningController extends Controller
                 $this->createOrUpdatePlanLinks($request, $plan);
             }
 
-            //send notification
+            send notification
             $notificationReceivers = User::whereHas('roles', function ($q) {
                 $q->whereIn('name', ['Sales Admin', 'Admin']);
             })->get();
@@ -131,32 +132,27 @@ class PlanningController extends Controller
 
             BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
             DB::commit();
-            $client = $request->client_name ?? '';
-            $client_number = $plan->client_no ?? '';
-            $fr_no = $plan->fr_no ?? '';
-            $mq_no = $plan->mq_no ?? '';
-            $date = $plan->date ?? '';
-            $fromAddress = auth()->user()->email;
-            $fromName = auth()->user()->name;
-            $to = 'pnl@bbts.net';
-            $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
-            $subject = "New Plan Created";
-            $messageBody = "Dear Sir,\n
-        I am writing to inform you about a new Plan $mq_no has been created for our esteemed client, $client ($client_number). \n
-        Plan Details:
-        Client: $client
-        Client No: $client_number
-        FR No: $fr_no
-        MQ No: $mq_no
-        Date: $date \n
-        Please find the details from software in Planning List.
-        Thank you for your attention to this matter. I look forward to your guidance and support.\n
-        Best regards,
-        $fromName";
 
-            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-            });
+            $data = [
+                'to' => 'pnl@bbts.net',
+                'cc' => 'yasir@bbts.net',
+                'heading' => 'New Planning Created',
+                'greetings' => 'Dear Sir/Madam,',
+                'message' => "I am writing to inform you about a new planning that has been generated for our esteemed client",
+                'url' =>  route('planning.show', $plan->id),
+                'button_text' => 'View Planning',
+                'client_name' => $request->client_name ?? '',
+                'client_no' => $plan->client_no,
+                'mq_no' => $plan->mq_no,
+                'created_by' => auth()->user()->name,
+                'created_at' => $plan->created_at,
+                'client_email' => '',
+                'fr_no' => $plan->fr_no,
+                'auto_mail_alert' => 'This is an auto generated send to you from BBTS.' . PHP_EOL . 'Please do not reply to this email.',
+                'regards' => 'BBTS',
+            ];
+
+            SendEmailNotificationJob::dispatch($data);
             return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
         } catch (QueryException $e) {
             DB::rollback();

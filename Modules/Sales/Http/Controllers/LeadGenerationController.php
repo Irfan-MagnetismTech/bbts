@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Jobs\SendEmailNotificationJob;
 use Modules\Sales\Http\Requests\LeadGenerationRequest;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Sales\Entities\LeadGeneration;
@@ -117,35 +118,28 @@ class LeadGenerationController extends Controller
         ];
 
         BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+        $data = [
+            'to' => 'salesadmin@bbts.net',
+            'cc' => 'yasir@bbts.net',
+            'heading' => 'New Lead Generation Requirement Created',
+            'greetings' => 'Dear Sir/Madam,',
+            'message' => "I am writing to inform you about a new lead that has been generated for our esteemed client",
+            'url' =>  route('lead-generation.show', $leadGeneration->id),
+            'button_text' => 'View Lead Generation',
+            'client_name' => $leadGeneration->client_name ?? '',
+            'client_no' => $leadGeneration->client_no,
+            'mq_no' => '',
+            'created_by' => auth()->user()->name,
+            'created_at' => $leadGeneration->created_at,
+            'client_email' => $leadGeneration->email ?? 'N/A',
+            'fr_no' => '',
+            'auto_mail_alert' => 'This is an auto generated send to you from BBTS.' . PHP_EOL . 'Please do not reply to this email.',
+            'regards' => 'BBTS',
+        ];
+
+        SendEmailNotificationJob::dispatch($data);
 
 
-        $client = $leadGeneration->client_name ?? '';
-        $client_number = $leadGeneration->client_no ?? '';
-        $client_address = $leadGeneration->address ?? '';
-        $client_business_type = $leadGeneration->business_type ?? '';
-        $client_status = $leadGeneration->status ?? '';
-        $fromAddress = auth()->user()->email;
-        $fromName = auth()->user()->name;
-        $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
-        $receiver = '';
-        $subject = "New Lead Generation Created";
-        $messageBody = "Dear Sir,\n
-        I am writing to inform you about a new lead that has been generated for our esteemed client, $client ($client_number). \n
-        Lead Details:
-        Client: $client
-        Client No: $client_number
-        Address: $client_address
-        Business Type: $client_business_type
-        Status: $client_status \n
-        Please find the details from software in Lead Generation List.
-        Thank you for your attention to this matter. I look forward to your guidance and support.\n
-        Best regards,
-        $fromName";
-
-        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-        });
         return redirect()->route('lead-generation.index')->with('success', 'Lead Generation Created Successfully');
     }
 

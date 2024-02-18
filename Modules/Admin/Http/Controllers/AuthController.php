@@ -26,6 +26,15 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
         $data = ['token' => $user->createToken('web')->plainTextToken];
+        if ($user->hasRole('Admin')) // 'admin' is the role name
+        {
+            return redirect()->route('sales-admin-dashboard');
+        } else if ($user->hasRole('Salesman')) // 'admin' is the role name
+        {
+            return redirect()->route('sales-dashboard');
+        } else {
+            return redirect()->route('login');
+        }
 
         return redirect()->intended();
     }
@@ -46,15 +55,15 @@ class AuthController extends Controller
         $user_details = User::where('id', auth()->id())->pluck('password');
         $password_hash = Hash::check($request->old_password, $user_details[0]);
 
-        if($password_hash){
-            if($request->new_password == $request->confirm_password){
+        if ($password_hash) {
+            if ($request->new_password == $request->confirm_password) {
                 $data['password'] = Hash::make(trim($request->confirm_password));
                 User::where('id', auth()->id())->update($data);
                 return redirect()->back()->with('message', 'Password has been updated successfully');
-            }else{
+            } else {
                 return redirect()->back()->withErrors(['message' => 'Confirm Password does not match']);
             }
-        }else{
+        } else {
             return redirect()->back()->withErrors(['message' => 'Old Password does not Exists']);
         }
     }

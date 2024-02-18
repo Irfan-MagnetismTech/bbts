@@ -212,45 +212,82 @@
         <div class="page-wrapper">
             <div class="page-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="row">
-                            <div class="col-xl-6 col-md-6">
+                            <div class="col-xl-3 col-md-3">
                                 <div class="card bg-c-orenge text-white">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                <p class="m-b-5">Total Sales Achievement</p>
-                                                <h4 class="m-b-0">852</h4>
+                                                <p class="m-b-5">Total Sales</p>
+                                                <h4 class="m-b-0">{{ $this_month_sale }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="fas fa-hand-holding-usd f-50 text-c-orenge"></i>
+                                                <p class="label label-success" style="margin-top: 15px;">This Month</p>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-md-6">
+                            <div class="col-xl-3 col-md-3">
                                 <div class="card bg-c-lite-green text-white">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                <p class="m-b-5">No of Client &nbsp; &nbsp; Involvement </p>
-                                                <h4 class="m-b-0">852</h4>
+                                                <p class="m-b-5">Total Sales </p>
+                                                <h4 class="m-b-0">{{ $this_year_sale }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="fas fa-user-tie f-50 text-c-lite-green"></i>
+                                                <p class="label label-warning" style="margin-top: 15px;">This Year</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-md-6">
+
+                            <div class="col-xl-3 col-md-3">
+                                <div class="card bg-c-yellow text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total FR</p>
+                                                <h4 class="m-b-0">{{ $this_month_fr }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="far fa-user f-50 text-c-yellow"></i>
+                                                <p class="label label-success" style="margin-top: 15px;">This Month</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-3">
+                                <div class="card bg-c-green text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total FR</p>
+                                                <h4 class="m-b-0">{{ $this_year_fr }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="far fa-user f-50 text-c-green"></i>
+                                                <p class="label label-warning" style="margin-top: 15px;">This Year</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-3">
                                 <div class="card bg-c-yellow text-white">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
                                                 <p class="m-b-5">Total Pre-Sales</p>
-                                                <h4 class="m-b-0">852</h4>
+                                                <h4 class="m-b-0">{{ $total_lead_generation }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="fas fa-briefcase f-50 text-c-yellow"></i>
@@ -259,13 +296,45 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-md-6">
+                            <div class="col-xl-3 col-md-3">
                                 <div class="card bg-c-green text-white">
                                     <div class="card-block">
                                         <div class="row align-items-center">
                                             <div class="col">
-                                                <p class="m-b-5">Total Workorder</p>
-                                                <h4 class="m-b-0">105</h4>
+                                                <p class="m-b-5">Pending Pre Sales</p>
+                                                <h4 class="m-b-0">{{ $pending_lead_generation }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="far fa-user f-50 text-c-green"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-3">
+                                <div class="card bg-c-orenge text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Total Client</p>
+                                                <h4 class="m-b-0">{{ $total_client }}</h4>
+                                            </div>
+                                            <div class="col col-auto text-right">
+                                                <i class="far fa-user f-50 text-c-green"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-3 col-md-3">
+                                <div class="card bg-c-blue text-white">
+                                    <div class="card-block">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <p class="m-b-5">Meeting Request</p>
+                                                <h4 class="m-b-0">{{ $meeting_request }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="far fa-user f-50 text-c-green"></i>
@@ -275,111 +344,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-12 col-md-12" style="padding:0px;">
-                            <div class="card past-payment-card">
-                                <div class="card-header">
-                                    <div class="card-header-center text-center ">
-                                        <h5 class="">List of Salesman</h5>
-                                    </div>
-                                </div <div class="table-responsive">
-                                <table id="simpletable" class="table table-striped table-bordered nowrap">
-                                    <tbody>
-                                        <tr>
-                                            <td>John</td>
-                                            <td>
-                                                <span class="label label-success f-15">Target:</span> 1000
-                                            </td>
-                                            <td>
-                                                <span class="label label-danger">Achievement:</span>900
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>John</td>
-                                            <td>
-                                                <span class="label label-success">Target:</span> 1000
-                                            </td>
-                                            <td>
-                                                <span class="label label-danger">Achievement:</span>900
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div>
-                            {{-- top performer --}}
-                            <div class="col-xl-12 col-md-12" style="padding:0px;">
-                                <div class="card past-payment-card">
-                                    <div class="card-header">
-                                        <div class="card-header-center text-center ">
-                                            <h5 class="">Top Performer</h5>
-                                        </div>
-                                    </div>
-                                    <div class="card-body card-body-center">
-                                        <table class="table table-striped table-bordered nowrap">
-                                            <thead>
-                                                <tr>
-                                                    <th>Rank</th>
-                                                    <th>Name</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>John</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>John</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>John</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="row">
-                            <div id="chartsView"></div>
-
-                        </div>
-                        <div>
-                            <table class="highcharts-data-table table table-striped table-bordered nowrap">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Data</th>
-                                        <th>Internet</th>
-                                        <th>Data & Internet</th>
-                                        <th>IoT</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>OTC</td>
-                                        <td>143,000</td>
-                                        <td>260,000</td>
-                                        <td>143,000</td>
-                                        <td>-</td>
-                                    </tr>
-                                    <tr>
-                                        <td>MRC</td>
-                                        <td>143,000</td>
-                                        <td>260,000</td>
-                                        <td>143,000</td>
-                                        <td>-</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
+                <p class="text-center">Month Wise Product Sales</p>
+                <div class="row">
+                    <div id="chartsView" style="width: 100%"></div>
+                </div>
+                <div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="container"></div>
+            </div>
+            <div class="col-md-6">
+                <div id="productSale"></div>
             </div>
         </div>
     </div>
@@ -399,72 +379,170 @@
 
 
         Highcharts.chart('chartsView', {
-
             title: {
                 text: '',
                 align: 'left'
             },
-
-            // subtitle: {
-            //     text: 'Source: <a href="https://irecusa.org/programs/solar-jobs-census/" target="_blank">IREC</a>',
-            //     align: 'left'
-            // },
-
-            // yAxis: {
-            //     title: {
-            //         text: 'Number of Employees'
-            //     }
-            // },
-
-            // xAxis: {
-            //     accessibility: {
-            //         rangeDescription: 'Range: 2010 to 2020'
-            //     }
-            // },
-
             legend: {
                 layout: 'vertical',
                 align: 'right',
                 verticalAlign: 'middle'
             },
-
             plotOptions: {
                 series: {
                     label: {
                         connectorAllowed: false
                     },
-                    pointStart: 2010
+                    pointStart: 1
                 }
             },
-
-            series: [{
-                name: 'Data',
-                data: [10000, 15000, 20000, 12000, 25000, 28000]
-            }, {
-                name: 'Internet',
-                data: [24916, 30000, 29742, 29851, 32490, 30282]
-            }, {
-                name: 'Data & Internet',
-                data: [11744, 30000, 16005, 19771, 20185, 24377]
-            }, {
-                name: 'IoT',
-                data: [null, null, null, null, null, null, null]
-            }, ],
-
+            xAxis: {
+                categories: [
+                    @foreach ($month_list as $month => $value)
+                        '{{ $month }}',
+                    @endforeach
+                ],
+                accessibility: {
+                    rangeDescription: 'Range: 2010 to 2020'
+                }
+            },
+            series: [
+                @foreach ($month_wise_product_sale as $key => $value)
+                    {
+                        name: '{{ $key }}',
+                        data: [
+                            @foreach ($value as $key => $value)
+                                {{ $value }},
+                            @endforeach
+                        ]
+                    },
+                @endforeach
+            ],
             responsive: {
                 rules: [{
                     condition: {
-                        maxWidth: 500
+                        width: '100%'
                     },
                     chartOptions: {
                         legend: {
                             layout: 'horizontal',
                             align: 'center',
-                            verticalAlign: 'bottom'
+                            verticalAlign: 'bottom',
+                            width: '100%'
                         }
                     }
                 }]
             }
+        });
+
+        // Data retrieved from https://gs.statcounter.com/browser-market-share#monthly-202201-202201-bar
+
+        // Create the chart
+        Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                align: 'left',
+                text: 'Total Sales Amount of Salesman in this year'
+            },
+
+            accessibility: {
+                announceNewData: {
+                    enabled: true
+                }
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total Sales Amount'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.1f}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+            },
+
+            series: [{
+                name: 'Browsers',
+                colorByPoint: true,
+                data: [
+                    @foreach ($this_year_salesman_sale as $key => $value)
+                        {
+                            name: '{{ $key }}',
+                            y: {{ $value }},
+                            drilldown: '{{ $key }}'
+                        },
+                    @endforeach
+                ]
+            }],
+
+        });
+
+        Highcharts.chart('productSale', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                align: 'left',
+                text: 'Total Sales Amount of Product in this year'
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total Sales Amount'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.1f}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+            },
+
+            series: [{
+                name: 'Browsers',
+                colorByPoint: true,
+                data: [
+                    @foreach ($this_year_product_wise_total_sale_amount as $key => $value)
+                        {
+                            name: '{{ $key }}',
+                            y: {{ $value }},
+                            drilldown: '{{ $key }}'
+                        },
+                    @endforeach
+                ]
+            }],
 
         });
     </script>

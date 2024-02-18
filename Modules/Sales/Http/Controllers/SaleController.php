@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Jobs\SendEmailNotificationJob;
 use PDF;
 use Exception;
 use Carbon\Carbon;
@@ -23,16 +24,21 @@ use Modules\SCM\Entities\ScmRequisition;
 use Modules\Sales\Entities\BillingAddress;
 use Modules\Sales\Entities\SaleLinkDetail;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Admin\Entities\User;
 use Modules\Billing\Entities\BillingOtcBill;
 use Modules\Networking\Entities\NetServiceRequisition;
 use Modules\Networking\Http\Controllers\NetServiceRequisitionController;
 use Modules\Networking\Http\Requests\NetServiceRequisitionRequest;
+use Modules\Sales\Entities\Client;
 use Modules\Sales\Entities\CollectionAddress;
 use Modules\Sales\Entities\SaleProductDetail;
 use Modules\Sales\Entities\CostingLinkEquipment;
 use Modules\Sales\Entities\FeasibilityRequirement;
 use Modules\Sales\Entities\ConnectivityRequirement;
 use Modules\Sales\Entities\CostingProductEquipment;
+use Modules\Sales\Entities\LeadGeneration;
+use Modules\Sales\Entities\Meeting;
+use Modules\Sales\Entities\Survey;
 
 class SaleController extends Controller
 {
@@ -102,29 +108,26 @@ class SaleController extends Controller
 
             DB::commit();
 
-            $client = $request->client_name ?? '';
-            $client_number = $sale->client_no ?? '';
-            $mq_no = $sale->mq_no ?? '';
-            $fromAddress = auth()->user()->email;
-            $fromName = auth()->user()->name;
-            $to = 'salesadmin@bbts.net';
-            $cc = ['yasir@bbts.net', 'saleha@magnetismtech.com', 'shiful@magnetismtech.com', $fromAddress];
-            $receiver = '';
-            $subject = "New Sale Created";
-            $messageBody = "Dear Sir,\n
-        I am writing to inform you about a new Sale $mq_no has been created for our esteemed client, $client ($client_number). \n
-        Sale Details:
-        Client: $client
-        Client No: $client_number
-        MQ No: $mq_no \n
-        Please find the details from software in Sales List.
-        Thank you for your attention to this matter. I look forward to your guidance and support.\n
-        Best regards,
-        $fromName";
+            $data = [
+                'to' => 'salesadmin@bbts.net',
+                'cc' => 'yasir@bbts.net',
+                'heading' => 'New Sale Created',
+                'greetings' => 'Dear Sir/Madam,',
+                'message' => "I am writing to inform you about a new sale that has been generated for our esteemed client",
+                'url' =>  route('sales.show', $sale->id),
+                'button_text' => 'View Sale',
+                'client_name' => $request->client_name ?? '',
+                'client_no' => $sale->client_no,
+                'mq_no' => $sale->mq_no,
+                'created_by' => auth()->user()->name,
+                'created_at' => $sale->created_at,
+                'client_email' => '',
+                'fr_no' => '',
+                'auto_mail_alert' => 'This is an auto generated send to you from BBTS.' . PHP_EOL . 'Please do not reply to this email.',
+                'regards' => 'BBTS',
+            ];
 
-            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-            });
+            SendEmailNotificationJob::dispatch($data);
             return redirect()->route('sales.index')->with('success', 'Sales Created Successfully');
         } catch (Exception $err) {
             DB::rollBack();
@@ -854,5 +857,103 @@ class SaleController extends Controller
             ->where('is_modified', 1)
             ->get();
         return view('sales::sales.modification_list', compact('sales'));
+    }
+
+    public function salesDashboard()
+    {
+        $total_lead_generation = LeadGeneration::where('created_by', auth()->id())->count();
+        $total_client = Client::where('user_id', auth()->id())->count();
+        $total_survey = Survey::whereHas('feasibilityRequirementDetails', function ($qr) {
+            $qr->where('user_id', auth()->id());
+        })->count();
+        $total_sales = Sale::whereHas('feasibilityRequirement', function ($qr) {
+            $qr->where('user_id', auth()->id());
+        })->count();
+        $total_feasibility = FeasibilityRequirement::where('user_id', auth()->id())->count();
+        $total_planning = Planning::whereHas('feasibilityRequirementDetail', function ($qr) {
+            $qr->where('user_id', auth()->id());
+        })->count();
+        $meetings = Meeting::whereHas('client', function ($qr) {
+            $qr->where('created_by', auth()->id());
+        })->latest()->limit(5)->get();
+
+        return view('sales::dashboard.sales_dashboard', compact('total_lead_generation', 'total_client', 'total_survey', 'total_sales', 'total_feasibility', 'total_planning', 'meetings'));
+    }
+
+    public function salesAdminDashboard()
+    {
+        $this_month_sale = Sale::count();
+        $this_year_sale = Sale::count();
+        $this_month_fr = FeasibilityRequirement::whereMonth('created_at', now()->month)->count();
+        $this_year_fr = FeasibilityRequirement::whereYear('created_at', now()->year)->count();
+        $total_client = Client::count();
+        $pending_lead_generation = LeadGeneration::where('status', 'Pending')->count();
+        $total_lead_generation = LeadGeneration::count();
+        $meeting_request = Meeting::where('status', 'Pending')->count();
+
+        $salesMan = User::role('Salesman')->pluck('id');
+        $this_year_salesman_sale = Sale::with('feasibilityRequirement.created_by')
+            ->whereHas('feasibilityRequirement', function ($qr) use ($salesMan) {
+                $qr->whereIn('user_id', $salesMan);
+            })
+            // ->whereYear('created_at', now()->year)
+            ->get()
+            ->groupBy(function ($query) {
+                return $query->feasibilityRequirement->created_by->name;
+            })
+            ->map(function ($item) {
+                return $item->sum('grand_total');
+            });
+
+        $this_year_product_wise_total_sale_amount = SaleProductDetail::with('product')
+            ->whereHas('sale', function ($qr) {
+                // $qr->whereYear('created_at', now()->year);
+            })
+            ->get()
+            ->groupBy(function ($query) {
+                return $query->product->name;
+            })
+            ->map(function ($item) {
+                return $item->sum('total_price');
+            });
+
+        $month_list = [
+            'delowar' => '00',
+            'January' => '01',
+            'February' => '02',
+            'March' => '03',
+            'April' => '04',
+            'May' => '05',
+            'June' => '06',
+            'July' => '07',
+            'August' => '08',
+            'September' => '09',
+            'October' => '10',
+            'November' => '11',
+            'December' => '12',
+        ];
+
+        $month_and_product_wise_sale = [];
+
+        $month_wise_product_sale = SaleProductDetail::with('product')
+            ->get()
+            ->groupBy('product.name') // Group by product name
+            ->map(function ($item) use ($month_list) {
+                $month_wise_sale = [];
+
+                foreach ($month_list as $key => $value) {
+                    $month_wise_sale[$key] = $item->filter(function ($sale) use ($value) {
+                        return strpos($sale->created_at, '2023' . '-' . $value) === 0; // Filter by year and month
+                    })->sum('total_price');
+                }
+
+                return $month_wise_sale;
+            });
+
+
+
+
+
+        return view('sales::dashboard.sales_admin_dashboard', compact('this_month_sale', 'this_year_sale', 'this_month_fr', 'this_year_fr', 'total_client', 'pending_lead_generation', 'total_lead_generation', 'meeting_request', 'this_year_salesman_sale', 'this_year_product_wise_total_sale_amount', 'month_and_product_wise_sale', 'month_wise_product_sale', 'month_list'));
     }
 }

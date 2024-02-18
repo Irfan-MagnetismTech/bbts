@@ -301,49 +301,51 @@
                 @endif
 
             </div>
-            <div class="text-center">
-                <h5 style="margin: 0px; padding:0px; margin-top:10px;"> Link Details </h5>
-            </div>
-            <hr />
             @foreach ($costing->costingLinks as $costing_link)
-                <div style="border: 2px solid gray; border-radius: 15px; padding: 15px; margin-top: 15px;">
+                <div style="margin-top: 15px;">
                     <div>
-                        <table style="width: 100%">
+                        <table style="width: 100%" class="productEquipmentTable">
                             <tbody>
+                                <tr style="background: #f2f2f2; text-align: center; font-size: 14px; font-weight:bold;">
+                                    <td colspan="3" style="text-align: center;">
+                                        <p style="font-size: 14px; font-weight:bold;">Link Details
+                                        </p>
+                                    </td>
+                                </tr>
                                 <tr>
+
                                     <td>
-                                        <span style="font-size: 14px;">Link Type: </span> <span
-                                            style="font-size: 14px; font-weight:bold">{{ $costing_link->link_type }}</span>
+                                        <span>Link Type: </span> <span
+                                            style="font-weight:bold">{{ $costing_link->link_type }}</span>
                                     </td>
                                     <td>
-                                        <span style="font-size: 14px;">Option: </span> <span
-                                            style="font-size: 14px; font-weight:bold">{{ $costing_link->option }}</span>
+                                        <span>Option: </span> <span
+                                            style="font-weight:bold">{{ $costing_link->option }}</span>
                                     </td>
                                     <td>
-                                        <span style="font-size: 14px;">Capacity: </span> <span
-                                            style="font-size: 14px; font-weight:bold">{{ $costing_link->transmission_capacity }}</span>
+                                        <span>Capacity: </span> <span
+                                            style="font-weight:bold">{{ $costing_link->transmission_capacity }}</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span style="font-size: 14px;">Quantity: </span> <span
-                                            style="font-size: 14px; font-weight:bold">{{ $costing_link->quantity }}</span>
+                                        <span>Quantity: </span> <span
+                                            style="font-weight:bold">{{ $costing_link->quantity }}</span>
                                     </td>
                                     <td>
-                                        <span style="font-size: 14px;">Rate: </span> <span
-                                            style="font-size: 14px; font-weight:bold">{{ $costing_link->rate }}</span>
+                                        <span>Rate: </span> <span
+                                            style="font-weight:bold">{{ $costing_link->rate }}</span>
                                     </td>
                                     <td>
-                                        <span style="font-size: 14px;">Total: </span> <span
-                                            style="font-size: 14px; font-weight:bold">{{ $costing_link->total }}</span>
+                                        <span>Total: </span> <span
+                                            style="font-weight:bold">{{ $costing_link->total }}</span>
                                     </td>
                                 </tr>
                             </tbody>
 
                         </table>
                     </div>
-                    <hr />
-                    <div>
+                    <div style="margin-top: 15px;">
                         <table class="equipementTable">
                             <thead>
                                 <tr class="text-center">

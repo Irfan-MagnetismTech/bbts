@@ -180,7 +180,7 @@
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <p class="m-b-5">Total Pre-Sales</p>
-                                        <h4 class="m-b-0">852</h4>
+                                        <h4 class="m-b-0">{{ $total_lead_generation }}
                                     </div>
                                     <div class="col col-auto text-right">
                                         <i class="fas fa-briefcase f-50 text-c-yellow"></i>
@@ -195,7 +195,7 @@
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <p class="m-b-5">Total Client</p>
-                                        <h4 class="m-b-0">105</h4>
+                                        <h4 class="m-b-0">{{ $total_client }}</h4>
                                     </div>
                                     <div class="col col-auto text-right">
                                         <i class="far fa-user f-50 text-c-green"></i>
@@ -210,7 +210,7 @@
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <p class="m-b-5">Total FR</p>
-                                        <h4 class="m-b-0">40</h4>
+                                        <h4 class="m-b-0">{{ $total_feasibility }}</h4>
                                     </div>
                                     <div class="col col-auto text-right">
                                         <i class="fas fa-search-location f-50 text-c-pink"></i>
@@ -225,7 +225,7 @@
                                 <div class="row align-items-center">
                                     <div class="col">
                                         <p class="m-b-5">Total Sales</p>
-                                        <h4 class="m-b-0">502</h4>
+                                        <h4 class="m-b-0">{{ $total_sales }}</h4>
                                     </div>
                                     <div class="col col-auto text-right">
                                         <i class="fas fa-shopping-cart f-50 text-c-blue"></i>
@@ -244,7 +244,7 @@
                                         <div class="row align-items-center">
                                             <div class="col">
                                                 <p class="m-b-5">Total Survey</p>
-                                                <h4 class="m-b-0">852</h4>
+                                                <h4 class="m-b-0">{{ $total_survey }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="fas fa-broadcast-tower f-50 text-c-orenge"></i>
@@ -259,7 +259,7 @@
                                         <div class="row align-items-center">
                                             <div class="col">
                                                 <p class="m-b-5">Total Planning</p>
-                                                <h4 class="m-b-0">852</h4>
+                                                <h4 class="m-b-0">{{ $total_planning }}</h4>
                                             </div>
                                             <div class="col col-auto text-right">
                                                 <i class="fas fa-route f-50 text-c-lite-green"></i>
@@ -269,7 +269,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-12 col-md-12" style="padding:0px;">
+                        {{-- <div class="col-xl-12 col-md-12" style="padding:0px;">
                             <div class="card">
                                 <div class="card-block">
                                     <div class="row">
@@ -311,7 +311,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="col-xl-6 col-md-6">
                         <div class="card past-payment-card">
@@ -327,41 +327,21 @@
                                             <tr>
                                                 <th>Client</th>
                                                 <th>Type</th>
-                                                <th>Date & Time</th>
+                                                <th>Date</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    <p class="d-inline-block m-l-10 f-w-600">Erwin Brown</p>
-                                                </td>
-                                                <td>Meeting</td>
-                                                <td>
-                                                    <p>23 oct, 2017 6:23</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p class="d-inline-block m-l-10 f-w-600">Erwin Brown</p>
-                                                </td>
-                                                <td>
-                                                    Schedule
-                                                </td>
-                                                <td>
-                                                    <p>23 oct, 2017 6:23</p>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <p class="d-inline-block m-l-10 f-w-600">Erwin Brown</p>
-                                                </td>
-                                                <td>
-                                                    Meeting
-                                                </td>
-                                                <td>
-                                                    <p>23 oct, 2017 6:23</p>
-                                                </td>
-                                            </tr>
+                                            @foreach ($meetings as $meeting)
+                                                <tr>
+                                                    <td>
+                                                        <p>{{ $meeting->client->client_name }}</p>
+                                                    </td>
+                                                    <td>{{ $meeting->status }}</td>
+                                                    <td>
+                                                        <p>{{ $meeting->visit_date }}</p>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </div>

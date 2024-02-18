@@ -117,4 +117,9 @@ class Sale extends Model
     {
         return $this->hasOne(Costing::class, 'connectivity_requirement_id', 'connectivity_requirement_id');
     }
+
+    public function created_by()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 }

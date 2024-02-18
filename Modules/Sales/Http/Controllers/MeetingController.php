@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Jobs\SendEmailNotificationJob;
 use App\Services\BbtsGlobalService;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
@@ -59,55 +60,42 @@ class MeetingController extends Controller
         $data['created_by'] = auth()->user()->id;
         $data['meeting_start_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_start_time'))->format('g:i A');
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
+        $data['created_by'] = auth()->user()->id;
         $meeting = Meeting::create($data);
 
         //notification send to sales admin
-        $notificationReceivers = User::whereHas('roles', function ($q) {
-            $q->whereIn('name', ['Sales Admin']);
-        })->get();
+        // $notificationReceivers = User::whereHas('roles', function ($q) {
+        //     $q->whereIn('name', ['Sales Admin']);
+        // })->get();
 
-        $notificationData = [
-            'type' => 'Sales Admin',
-            'message' => 'A new meeting schedule requested by ' . auth()->user()->name,
-            'url' => 'sales/meeting/' . $meeting->id,
+        // $notificationData = [
+        //     'type' => 'Sales Admin',
+        //     'message' => 'A new meeting schedule requested by ' . auth()->user()->name,
+        //     'url' => 'sales/meeting/' . $meeting->id,
+        // ];
+
+        // BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
+
+        $data = [
+            'to' => 'salesadmin@bbts.net',
+            'cc' => 'yasir@bbts.net',
+            'heading' => 'New Client Meeting Request Created',
+            'greetings' => 'Dear Sir/Madam,',
+            'message' => "I am writing to inform you about a new meeting request that has been generated for our esteemed client",
+            'url' =>  route('meeting.show', $meeting->id),
+            'button_text' => 'View Meeting Request',
+            'client_name' => $meeting->client_name ?? '',
+            'client_no' => $meeting->client_no,
+            'mq_no' => '',
+            'created_by' => auth()->user()->name,
+            'created_at' => $meeting->created_at,
+            'client_email' => $meeting->email ?? 'N/A',
+            'fr_no' => '',
+            'auto_mail_alert' => 'This is an auto generated send to you from BBTS.' . PHP_EOL . 'Please do not reply to this email.',
+            'regards' => 'BBTS',
         ];
 
-        BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
-
-
-        $client = $meeting?->client->client_name ?? '';
-        $client_number = $meeting->client_no ?? '';
-        $visit_date = $meeting->visit_date ?? '';
-        $meeting_start_time = $meeting->meeting_start_time ?? '';
-        $meeting_end_time = $meeting->meeting_end_time ?? '';
-        $meeting_place = $meeting->meeting_place ?? '';
-        $purpose = $meeting->purpose ?? '';
-        $status = $meeting->status ?? '';
-        $fromAddress = auth()->user()->email;
-        $fromName = auth()->user()->name;
-        $to = 'salesadmin@bbts.net';
-        $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
-        $receiver = '';
-        $subject = "New Meeting Created";
-        $messageBody = "Dear Sir,\n
-        I am writing to inform you about a new meeting has been scheduled for our esteemed client, $client ($client_number). \n
-        Meeting Details:
-        Client: $client
-        Client No: $client_number
-        Visit Date: $visit_date
-        Meeting Start Time: $meeting_start_time
-        Meeting End Time: $meeting_end_time
-        Meeting Place: $meeting_place
-        Meeting Purpose: $purpose
-        Meeting Status: $status \n
-        Please find the details from software in Client Meeting List.
-        Thank you for your attention to this matter. I look forward to your guidance and support.\n
-        Best regards,
-        $fromName";
-
-        Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-            $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-        });
+        SendEmailNotificationJob::dispatch($data);
         return redirect()->route('meeting.index')->with('success', 'Meeting created successfully');
     }
 
@@ -145,6 +133,7 @@ class MeetingController extends Controller
         $data['created_by'] = auth()->user()->id;
         $data['meeting_start_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_start_time'))->format('g:i A');
         $data['meeting_end_time'] = Carbon::createFromFormat('H:i', $request->input('meeting_end_time'))->format('g:i A');
+        $data['created_by'] = auth()->user()->id;
         $meeting->update($data);
 
         //notification send to sales admin

@@ -2,6 +2,7 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Jobs\SendEmailNotificationJob;
 use App\Services\BbtsGlobalService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -104,30 +105,26 @@ class CostingController extends Controller
 
             BbtsGlobalService::sendNotification($notificationReceivers, $notificationData);
 
-            $client = $request->client_name ?? '';
-            $client_number = $costing->client_no ?? '';
-            $fr_no = $costing->fr_no ?? '';
-            $mq_no = $costing->mq_no ?? '';
-            $fromAddress = auth()->user()->email;
-            $fromName = auth()->user()->name;
-            $to = 'salesadmin@bbts.net';
-            $cc = ['yasir@bbts.net', 'shiful@magnetismtech.com', 'saleha@magnetismtech.com', $fromAddress];
-            $subject = "New Costing Created";
-            $messageBody = "Dear Sir,\n
-        I am writing to inform you about a new Costing $mq_no has been created for our esteemed client, $client ($client_number). \n
-        Costing Details:
-        Client: $client
-        Client No: $client_number
-        FR No: $fr_no
-        MQ No: $mq_no \n
-        Please find the details from software in Costing List.
-        Thank you for your attention to this matter. I look forward to your guidance and support.\n
-        Best regards,
-        $fromName";
+            $data = [
+                'to' => 'salesadmin@bbts.net',
+                'cc' => 'yasir@bbts.net',
+                'heading' => 'New Costing Created',
+                'greetings' => 'Dear Sir/Madam,',
+                'message' => "I am writing to inform you about a new costing that has been generated for our esteemed client",
+                'url' =>  route('costing.show', $costing->id),
+                'button_text' => 'View Costing',
+                'client_name' => $request->client_name ?? '',
+                'client_no' => $costing->client_no,
+                'mq_no' => $costing->mq_no,
+                'created_by' => auth()->user()->name,
+                'created_at' => $costing->created_at,
+                'client_email' => '',
+                'fr_no' => $costing->fr_no,
+                'auto_mail_alert' => 'This is an auto generated send to you from BBTS.' . PHP_EOL . 'Please do not reply to this email.',
+                'regards' => 'BBTS',
+            ];
 
-            Mail::raw($messageBody, function ($message) use ($to, $cc, $subject, $fromAddress, $fromName) {
-                $message->from($fromAddress, $fromName)->to($to)->cc($cc)->subject($subject);
-            });
+            SendEmailNotificationJob::dispatch($data);
             // return response()->json(['message' => 'Data saved successfully.']);
             return redirect()->route('feasibility-requirement.show', $feasibility_requirement_detail->feasibilityRequirement->id)->with('success', 'Connectivity Requirement Created Successfully');
         } catch (\Exception $e) {
