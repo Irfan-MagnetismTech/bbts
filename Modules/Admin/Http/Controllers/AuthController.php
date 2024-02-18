@@ -27,7 +27,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         $data = ['token' => $user->createToken('web')->plainTextToken];
         if ($user->hasRole('Admin')) // 'admin' is the role name
-        {
+        { 
             return redirect()->route('sales-admin-dashboard');
         } else if ($user->hasRole('Salesman')) // 'admin' is the role name
         {

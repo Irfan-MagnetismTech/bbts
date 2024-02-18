@@ -950,10 +950,6 @@ class SaleController extends Controller
                 return $month_wise_sale;
             });
 
-
-
-
-
         return view('sales::dashboard.sales_admin_dashboard', compact('this_month_sale', 'this_year_sale', 'this_month_fr', 'this_year_fr', 'total_client', 'pending_lead_generation', 'total_lead_generation', 'meeting_request', 'this_year_salesman_sale', 'this_year_product_wise_total_sale_amount', 'month_and_product_wise_sale', 'month_wise_product_sale', 'month_list'));
     }
 }

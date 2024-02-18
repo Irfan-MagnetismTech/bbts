@@ -403,7 +403,7 @@
                     @endforeach
                 ],
                 accessibility: {
-                    rangeDescription: 'Range: 2010 to 2020'
+                    rangeDescription: 'Range: 2021 to 2022'
                 }
             },
             series: [
