@@ -902,7 +902,7 @@ class SaleController extends Controller
                 return $query->feasibilityRequirement->created_by->name;
             })
             ->map(function ($item) {
-                return $item->count();
+                return $item->sum('grand_total');
             });
 
         $this_year_product_wise_total_sale_amount = SaleProductDetail::with('product')

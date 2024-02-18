@@ -351,51 +351,15 @@
                     <div id="chartsView" style="width: 100%"></div>
                 </div>
                 <div>
-                    <table class="highcharts-data-table table table-striped table-bordered nowrap">
-                        <thead>
-                            @php
-                                $colspan = count($this_year_salesman_sale);
-                            @endphp
-                            <tr>
-                                <th colspan="{{ $colspan }}">Salesman Wise Sales</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                @foreach ($this_year_salesman_sale as $key => $value)
-                                    <td>{{ $key }}</td>
-                                @endforeach
-                            </tr>
-                            <tr>
-                                @foreach ($this_year_salesman_sale as $key => $value)
-                                    <td>{{ $value }}</td>
-                                @endforeach
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="highcharts-data-table table table-striped table-bordered nowrap">
-                        <thead>
-                            @php
-                                $colspan = count($this_year_product_wise_total_sale_amount);
-                            @endphp
-                            <tr>
-                                <th colspan="{{ $colspan }}">Produt Wise Sale Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                @foreach ($this_year_product_wise_total_sale_amount as $key => $value)
-                                    <td>{{ $key }}</td>
-                                @endforeach
-                            </tr>
-                            <tr>
-                                @foreach ($this_year_product_wise_total_sale_amount as $key => $value)
-                                    <td>{{ $value }}</td>
-                                @endforeach
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="container"></div>
+            </div>
+            <div class="col-md-6">
+                <div id="productSale"></div>
             </div>
         </div>
     </div>
@@ -469,6 +433,117 @@
                     }
                 }]
             }
+        });
+
+        // Data retrieved from https://gs.statcounter.com/browser-market-share#monthly-202201-202201-bar
+
+        // Create the chart
+        Highcharts.chart('container', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                align: 'left',
+                text: 'Total Sales Amount of Salesman in this year'
+            },
+
+            accessibility: {
+                announceNewData: {
+                    enabled: true
+                }
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total Sales Amount'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.1f}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+            },
+
+            series: [{
+                name: 'Browsers',
+                colorByPoint: true,
+                data: [
+                    @foreach ($this_year_salesman_sale as $key => $value)
+                        {
+                            name: '{{ $key }}',
+                            y: {{ $value }},
+                            drilldown: '{{ $key }}'
+                        },
+                    @endforeach
+                ]
+            }],
+
+        });
+
+        Highcharts.chart('productSale', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                align: 'left',
+                text: 'Total Sales Amount of Product in this year'
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Total Sales Amount'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.1f}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+            },
+
+            series: [{
+                name: 'Browsers',
+                colorByPoint: true,
+                data: [
+                    @foreach ($this_year_product_wise_total_sale_amount as $key => $value)
+                        {
+                            name: '{{ $key }}',
+                            y: {{ $value }},
+                            drilldown: '{{ $key }}'
+                        },
+                    @endforeach
+                ]
+            }],
+
         });
     </script>
 @endsection
