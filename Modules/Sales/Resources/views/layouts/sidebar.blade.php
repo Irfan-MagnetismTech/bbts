@@ -2,6 +2,22 @@
 <ul class="pcoded-item pcoded-left-item">
     {{-- @hasanyrole('super-admin|admin') --}}
     @can('sales-configuration')
+        @if(auth()->user()->hasRole('Admin'))
+        <li class="{{ request()->routeIs('sales-admin-dashboard') ? 'active' : null }}">
+            <a href="{{ route('sales-admin-dashboard') }}">
+                <span class="pcoded-micon"><i class="fas fa-tachometer-alt"></i><b>D</b></span>
+                <span class="pcoded-mtext">Dashboard</span>
+                <span class="pcoded-mcaret"></span>
+            </a>
+        </li>
+        @elseif(auth()->user()->hasRole('Salesman'))
+        <li class="{{ request()->routeIs('sales-dashboard') ? 'active' : null }}">
+            <a href="{{ route('sales-dashboard') }}">
+                <span class="pcoded-micon"><i class="fas fa-tachometer-alt"></i><b>D</b></span>
+                <span class="pcoded-mtext">Dashboard</span>
+                <span class="pcoded-mcaret"></span>
+            </a>
+        </li>
         <li
             class="pcoded-hasmenu {{ request()->routeIs(['category.*', 'product.*', 'vendor.*']) ? 'active pcoded-trigger' : null }}">
             <a href="javascript:void(0)">
